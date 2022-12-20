@@ -1,0 +1,74 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/top_curved_layout"
+    android:backgroundTint="@color/purple_gray_00"
+    android:paddingBottom="20dp">
+
+    <ImageView
+        android:id="@+id/ivTopAction"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/curved_button"
+        android:backgroundTint="@color/purple_gray_50"
+        android:padding="12dp"
+        android:src="@drawable/ic_close"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/purple_gray_800" />
+
+    <TextView
+        android:id="@+id/tvTitleAllocation"
+        style="@style/SubheadMabry"
+        android:layout_width="0dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center_horizontal"
+        android:text="@string/allocation"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@id/tvAssetsName"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ivTopAction"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+    <TextView
+        android:id="@+id/tvAssetsName"
+        style="@style/SubheadMabry"
+        android:layout_width="0dp"
+        android:layout_marginEnd="16dp"
+        android:gravity="center_horizontal"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        android:textColor="@color/purple_gray_500"
+        app:layout_constraintBottom_toBottomOf="@id/ivTopAction"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTitleAllocation"
+        tools:text="Bitcoin (BTC) " />
+
+    <NumberPicker
+        android:id="@+id/allocationSpinner"
+        style="@style/SubheadMabry"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginVertical="12dp"
+        android:divider="@drawable/divider"
+        android:selectionDividerHeight="1dp"
+        app:layout_constraintBottom_toTopOf="@+id/btnSetAllocation"
+        app:layout_constraintTop_toBottomOf="@+id/ivTopAction" />
+
+    <Button
+        android:id="@+id/btnSetAllocation"
+        style="@style/ButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="16dp"
+        android:background="@drawable/button_purple_500"
+        android:text="Set this allocation"
+        app:layout_constraintBottom_toBottomOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

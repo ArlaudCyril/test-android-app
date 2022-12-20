@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/tvOne"
+        style="@style/HeadingStyle"
+        android:layout_width="77dp"
+        android:layout_height="48dp"
+        android:layout_margin="24dp"
+        android:gravity="center"
+        android:text="1"
+        app:layout_constraintBottom_toTopOf="@id/tvFour"
+        app:layout_constraintEnd_toStartOf="@id/tvTwo"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvTwo"
+        style="@style/HeadingStyle"
+        android:layout_width="77dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="24dp"
+        android:gravity="center"
+        android:text="2"
+        app:layout_constraintBottom_toTopOf="@id/tvFive"
+        app:layout_constraintEnd_toStartOf="@id/tvThree"
+        app:layout_constraintStart_toEndOf="@id/tvOne" />
+
+    <TextView
+        android:id="@+id/tvThree"
+        style="@style/HeadingStyle"
+        android:layout_width="77dp"
+        android:layout_height="48dp"
+        android:layout_margin="24dp"
+        android:gravity="center"
+        android:src="@drawable/ic_back"
+        android:text="3"
+        app:layout_constraintBottom_toTopOf="@id/tvSix"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tvTwo" />
+
+
+    <TextView
+        android:id="@+id/tvFour"
+        style="@style/HeadingStyle"
+        android:layout_width="77dp"
+        android:layout_height="48dp"
+        android:layout_margin="24dp"
+        android:gravity="center"
+        android:text="4"
+        app:layout_constraintBottom_toTopOf="@id/tvSeven"
+        app:layout_constraintEnd_toStartOf="@id/tvFive"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvFive"
+        style="@style/HeadingStyle"
+        android:layout_width="77dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="24dp"
+        android:gravity="center"
+        android:text="5"
+        app:layout_constraintBottom_toTopOf="@id/tvEight"
+        app:layout_constraintEnd_toStartOf="@id/tvSix"
+        app:layout_constraintStart_toEndOf="@id/tvFour" />
+
+    <TextView
+        android:id="@+id/tvSix"
+        style="@style/HeadingStyle"
+        android:layout_width="77dp"
+        android:layout_height="48dp"
+        android:layout_margin="24dp"
+        android:gravity="center"
+        android:src="@drawable/ic_back"
+        android:text="6"
+        app:layout_constraintBottom_toTopOf="@id/tvNine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tvFive" />
+
+
+    <TextView
+        android:id="@+id/tvSeven"
+        style="@style/HeadingStyle"
+        android:layout_width="77dp"
+        android:layout_height="48dp"
+        android:layout_margin="24dp"
+        android:gravity="center"
+        android:text="7"
+        app:layout_constraintBottom_toTopOf="@id/tvDot"
+        app:layout_constraintEnd_toStartOf="@id/tvEight"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvEight"
+        style="@style/HeadingStyle"
+        android:layout_width="77dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="24dp"
+        android:gravity="center"
+        android:text="8"
+        app:layout_constraintBottom_toTopOf="@id/tvZero"
+        app:layout_constraintEnd_toStartOf="@id/tvNine"
+        app:layout_constraintStart_toEndOf="@id/tvSeven" />
+
+    <TextView
+        android:id="@+id/tvNine"
+        style="@style/HeadingStyle"
+        android:layout_width="77dp"
+        android:layout_height="48dp"
+        android:layout_margin="24dp"
+        android:gravity="center"
+        android:src="@drawable/ic_back"
+        android:text="9"
+        app:layout_constraintBottom_toTopOf="@id/tvBackArrow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tvEight" />
+
+
+    <TextView
+        android:id="@+id/tvDot"
+        style="@style/HeadingStyle"
+        android:layout_width="77dp"
+        android:layout_height="48dp"
+        android:layout_margin="24dp"
+        android:gravity="center"
+        android:text="."
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tvZero"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvZero"
+        style="@style/HeadingStyle"
+        android:layout_width="77dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="24dp"
+        android:gravity="center"
+        android:text="0"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/tvBackArrow"
+        app:layout_constraintStart_toEndOf="@id/tvDot" />
+
+    <ImageView
+        android:id="@+id/tvBackArrow"
+        style="@style/HeadingStyle"
+        android:layout_width="77dp"
+        android:layout_height="48dp"
+        android:layout_margin="24dp"
+        android:gravity="center"
+        android:src="@drawable/ic_back"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tvZero" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

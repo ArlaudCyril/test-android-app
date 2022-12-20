@@ -1,0 +1,173 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/top_curved_layout"
+    android:backgroundTint="@color/purple_gray_00"
+    android:paddingHorizontal="16dp"
+    android:paddingBottom="40dp">
+
+    <ImageView
+        android:id="@+id/ivTopAction"
+        style="@style/TopActionView"
+        android:layout_marginStart="-8dp"
+        android:background="@android:color/transparent"
+        android:layout_marginTop="12dp"
+        android:src="@drawable/ic_close"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        style="@style/SubheadMabry"
+        android:text="Frequency"
+        android:textColor="#423D33"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/ivTopAction"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ivTopAction" />
+
+    <!-- once -->
+
+    <TextView
+        android:id="@+id/tvTitleOnce"
+        style="@style/SubheadMabry"
+        android:layout_width="0dp"
+        android:layout_marginTop="36dp"
+        android:text="Once"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/ivArrowOnce"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivTopAction" />
+
+    <TextView
+        android:id="@+id/tvSubTitleOnce"
+        style="@style/BodyMabry"
+        android:layout_width="0dp"
+        android:text="@string/unique_investment"
+        android:textColor="@color/purple_gray_500"
+        app:layout_constraintEnd_toStartOf="@+id/ivArrowOnce"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTitleOnce" />
+
+    <ImageView
+        android:id="@+id/ivArrowOnce"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_right_arrow_grey"
+        app:layout_constraintBottom_toBottomOf="@id/tvSubTitleOnce"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvTitleOnce" />
+
+    <!-- daily -->
+
+    <TextView
+        android:id="@+id/tvTitleDaily"
+        style="@style/SubheadMabry"
+        android:layout_width="0dp"
+        android:layout_marginTop="32dp"
+        android:text="Daily"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/ivArrowDaily"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvSubTitleOnce" />
+
+    <TextView
+        android:id="@+id/tvSubTitleDaily"
+        style="@style/BodyMabry"
+        android:layout_width="0dp"
+        android:text="Everyday"
+        android:textColor="@color/purple_gray_500"
+        app:layout_constraintEnd_toStartOf="@+id/ivArrowDaily"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTitleDaily" />
+
+    <ImageView
+        android:id="@+id/ivArrowDaily"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_right_arrow_grey"
+        app:layout_constraintBottom_toBottomOf="@id/tvSubTitleDaily"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvTitleDaily" />
+
+    <!-- weekly -->
+
+    <TextView
+        android:id="@+id/tvTitleWeekly"
+        style="@style/SubheadMabry"
+        android:layout_width="0dp"
+        android:layout_marginTop="32dp"
+        android:text="Weekly"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/ivArrowWeekly"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvSubTitleDaily" />
+
+    <TextView
+        android:id="@+id/tvSubTitleWeekly"
+        style="@style/BodyMabry"
+        android:layout_width="0dp"
+        android:text="Every thursday"
+        android:textColor="@color/purple_gray_500"
+        app:layout_constraintEnd_toStartOf="@+id/ivArrowWeekly"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTitleWeekly" />
+
+    <ImageView
+        android:id="@+id/ivArrowWeekly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_right_arrow_grey"
+        app:layout_constraintBottom_toBottomOf="@id/tvSubTitleWeekly"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvTitleWeekly" />
+
+    <!-- monthly -->
+
+    <TextView
+        android:id="@+id/tvTitleMonthly"
+        style="@style/SubheadMabry"
+        android:layout_width="0dp"
+        android:layout_marginTop="32dp"
+        android:text="Monthly"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/ivArrowMonthly"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvSubTitleWeekly" />
+
+    <TextView
+        android:id="@+id/tvSubTitleMonthly"
+        style="@style/BodyMabry"
+        android:layout_width="0dp"
+        android:text="Every 21st of the month"
+        android:textColor="@color/purple_gray_500"
+        app:layout_constraintEnd_toStartOf="@+id/ivArrowMonthly"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTitleMonthly" />
+
+<!--    <TextView
+        android:id="@+id/tvRecommended"
+        style="@style/BodyMabry"
+        android:background="@drawable/curved_button"
+        android:backgroundTint="@color/purple_gray_50"
+        android:paddingHorizontal="10dp"
+        android:paddingVertical="8dp"
+        android:text="Recommended"
+        android:textColor="@color/purple_500_"
+        app:layout_constraintBottom_toBottomOf="@id/tvSubTitleMonthly"
+        app:layout_constraintEnd_toStartOf="@id/ivArrowMonthly"
+        app:layout_constraintTop_toTopOf="@id/tvTitleMonthly" />-->
+
+    <ImageView
+        android:id="@+id/ivArrowMonthly"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_right_arrow_grey"
+        app:layout_constraintBottom_toBottomOf="@id/tvSubTitleMonthly"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvTitleMonthly" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

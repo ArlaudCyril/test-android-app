@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/ripple_click_background"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:paddingHorizontal="12dp"
+    android:paddingBottom="16dp">
+
+    <LinearLayout
+        android:id="@+id/llFiatWallet"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:orientation="horizontal"
+        android:visibility="gone"
+        app:layout_constraintTop_toTopOf="parent">
+
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:background="@color/purple_gray_100" />
+
+
+        <TextView
+            android:id="@+id/tvFiatWallet"
+            style="@style/BodyMabry"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="12dp"
+            android:gravity="center"
+            android:text="FIAT Wallet"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            android:textColor="@color/purple_gray_400"
+            android:visibility="visible" />
+
+        <View
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_gravity="center_vertical"
+            android:layout_weight="1"
+            android:background="@color/purple_gray_100" />
+
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/ivAssetIcon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="18dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llFiatWallet"
+        tools:src="@drawable/ic_ether" />
+
+
+    <TextView
+        android:id="@+id/tvAssetNameCenter"
+        style="@style/SubheadMabry"
+        android:layout_marginStart="12dp"
+        android:gravity="center_vertical"
+        android:textStyle="bold"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@id/ivAssetIcon"
+        app:layout_constraintStart_toEndOf="@+id/ivAssetIcon"
+        app:layout_constraintTop_toTopOf="@+id/ivAssetIcon"
+        tools:text="Ether" />
+
+    <TextView
+        android:id="@+id/tvAssetName"
+        style="@style/SubheadMabry"
+        android:layout_marginStart="12dp"
+        android:gravity="center_vertical"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ivAssetIcon"
+        app:layout_constraintTop_toBottomOf="@+id/llFiatWallet"
+        tools:text="Ether" />
+
+    <TextView
+        android:id="@+id/tvAssetVariation"
+        style="@style/BodyMabry"
+        android:layout_marginStart="12dp"
+        android:textColor="@color/purple_gray_500"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ivAssetIcon"
+        app:layout_constraintTop_toBottomOf="@+id/tvAssetName"
+        tools:text="+23%" />
+
+    <TextView
+        android:id="@+id/tvAssetAmountCenter"
+        style="@style/SubheadMabry"
+        android:layout_marginEnd="12dp"
+        android:gravity="center_vertical"
+        android:textColor="@color/purple_gray_700"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@id/ivAssetIcon"
+        app:layout_constraintEnd_toStartOf="@id/ivDropIcon"
+        app:layout_constraintTop_toTopOf="@+id/ivAssetIcon"
+        tools:text="1€" />
+
+
+    <TextView
+        android:id="@+id/tvAssetAmount"
+        style="@style/SubheadMabry"
+        android:layout_marginTop="18dp"
+        android:layout_marginEnd="12dp"
+        android:textColor="@color/purple_gray_700"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/ivDropIcon"
+        app:layout_constraintTop_toBottomOf="@id/llFiatWallet"
+        tools:text="966,8€" />
+
+    <TextView
+        android:id="@+id/tvAssetAmountInCrypto"
+        style="@style/BodyMabry"
+        android:layout_marginEnd="12dp"
+        android:textColor="@color/purple_gray_500"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toStartOf="@id/ivDropIcon"
+        app:layout_constraintTop_toBottomOf="@id/tvAssetAmount"
+        tools:text="0.001234 ETH" />
+
+    <ImageView
+        android:id="@+id/ivDropIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_drop_down"
+        app:layout_constraintBottom_toBottomOf="@id/ivAssetIcon"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ivAssetIcon" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

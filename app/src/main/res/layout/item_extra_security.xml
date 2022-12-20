@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="12dp"
+    android:layout_marginBottom="12dp"
+    android:background="@drawable/round_stroke_gray_100"
+    android:paddingVertical="16dp">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        style="@style/SubheadMabry"
+        android:layout_alignParentStart="true"
+        android:layout_centerVertical="true"
+        tools:text="72 Hours" />
+
+    <ImageView
+        android:id="@+id/ivRadio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        tools:src="@drawable/radio_unselect" />
+
+</RelativeLayout>

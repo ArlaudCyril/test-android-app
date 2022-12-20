@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:paddingHorizontal="12dp"
+    android:paddingVertical="16dp">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        style="@style/SubheadMabry"
+        android:text="Bought BTC"
+        android:textColor="@color/purple_gray_700"
+        android:textStyle="bold" />
+
+    <TextView
+        android:id="@+id/tvPriceTitle"
+        style="@style/SubheadMabry"
+        android:layout_alignParentEnd="true"
+        android:text="20€"
+        android:textColor="@color/purple_gray_700" />
+
+    <TextView
+        android:id="@+id/tvSubTitle"
+        style="@style/BodyMabry"
+        android:layout_below="@id/tvTitle"
+        android:text="Credit card (***00103)"
+        android:textColor="@color/purple_gray_500" />
+
+    <TextView
+        android:id="@+id/tvPriceSubTitle"
+        style="@style/BodyMabry"
+        android:layout_below="@id/tvPriceTitle"
+        android:layout_alignParentEnd="true"
+        android:text="0.0002 BTC"
+        android:textColor="@color/purple_gray_500" />
+
+</RelativeLayout>

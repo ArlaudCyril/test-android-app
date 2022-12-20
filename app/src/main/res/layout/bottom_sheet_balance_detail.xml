@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:minHeight="320dp"
+    android:background="@drawable/top_curved_layout"
+    android:backgroundTint="@color/purple_gray_00">
+
+
+    <ImageView
+        android:id="@+id/ivProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:src="@drawable/ic_progress_large" />
+
+    <LinearLayout
+        android:id="@+id/llContent"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp"
+        android:visibility="gone">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <ImageView
+                android:id="@+id/ivTopAction"
+                android:layout_width="48dp"
+                android:layout_height="48dp"
+                android:layout_marginStart="-8dp"
+                android:backgroundTint="@color/purple_gray_50"
+                android:padding="12dp"
+                android:src="@drawable/ic_close"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:tint="@color/purple_gray_800" />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvTitleBalance"
+                    style="@style/SubheadMabry"
+                    android:layout_gravity="center"
+                    android:text="Balance"
+                    android:textColor="#423D33"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvSubTitle"
+                    style="@style/BodyMabry"
+                    android:layout_gravity="center"
+                    android:text="Bitcoin (BTC)"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                    android:textColor="@color/purple_gray_500" />
+            </LinearLayout>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivTopAction">
+
+            <TextView
+                android:id="@+id/tvAssetValueCrypto"
+                style="@style/SubheadMabry"
+                android:layout_marginTop="20dp"
+                android:text="0.001234 BTC"
+                android:textColor="@color/purple_gray_500" />
+
+            <TextView
+                android:id="@+id/tvValueAmount"
+                style="@style/HeadingStyle"
+                android:text="133,2€"
+                android:textColor="@color/purple_gray_900"
+                android:textSize="40sp" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvBalanceInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:orientation="horizontal"
+                android:layoutAnimation="@anim/recycler_view_item_animation"
+                tools:itemCount="2"
+                tools:listitem="@layout/item_balance_detail_portfolio" />
+
+            <TextView
+                android:id="@+id/tvHistory"
+                style="@style/TitleText"
+                android:layout_marginTop="32dp"
+                android:text="History"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textColor="@color/purple_gray_900" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvHistory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:layoutAnimation="@anim/recycler_view_item_animation"
+                android:background="@drawable/curved_button"
+                android:backgroundTint="@color/purple_gray_50"
+                tools:itemCount="2"
+                tools:listitem="@layout/item_balance_portfolio_history" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</RelativeLayout>

@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <ImageView
+        android:id="@+id/imageViewHalf"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/tvTitle"
+        android:layout_marginHorizontal="20dp"
+        android:layout_marginBottom="56dp"
+        android:scaleType="center" />
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/tvTitle"
+        android:layout_alignParentTop="true"
+        android:layout_marginBottom="30dp"
+        android:scaleType="center" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        style="@style/HeadingStyle"
+        android:layout_above="@id/tvSubTitle"
+        android:layout_marginHorizontal="24dp"
+        android:layout_width="match_parent"
+        android:layout_marginBottom="8dp"
+        />
+
+    <TextView
+        android:id="@+id/tvSubTitle"
+        style="@style/SubHeadlineStyle"
+        android:layout_above="@id/btnNext"
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginBottom="24dp"
+        android:lineSpacingExtra="6dp" />
+
+    <Button
+        android:id="@+id/btnNext"
+        style="@style/ButtonStyle"
+        android:layout_alignParentBottom="true"
+        android:layout_marginHorizontal="20dp"
+        android:backgroundTint="@color/purple_500_"
+        android:text="Next" />
+
+
+</RelativeLayout>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/top_curved_layout"
+    android:backgroundTint="@color/purple_gray_00"
+    android:paddingBottom="20dp">
+
+    <ImageView
+        android:id="@+id/ivTopAction"
+        style="@style/TopActionView"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:background="@android:color/transparent"
+        android:backgroundTint="@color/purple_gray_50"
+        android:padding="12dp"
+        android:src="@drawable/ic_close"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        style="@style/SubheadMabry"
+        android:text="Deposit or singular buy"
+        android:textColor="#423D33"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/ivTopAction"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ivTopAction" />
+
+    <ImageView
+        android:id="@+id/ivInvestSingleAsset"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/circle_drawable"
+        android:backgroundTint="@color/purple_gray_50"
+        android:padding="2dp"
+        android:src="@drawable/ic_invest_single_assets"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivTopAction" />
+
+    <TextView
+        android:id="@+id/tvTitleSingleAsset"
+        style="@style/SubheadMabry"
+        android:layout_width="0dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="36dp"
+        android:text="Invest on a single asset"
+        android:textColor="@color/purple_gray_700"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/imageView4"
+        app:layout_constraintStart_toEndOf="@id/ivInvestSingleAsset"
+        app:layout_constraintTop_toBottomOf="@id/ivTopAction" />
+
+    <TextView
+        android:id="@+id/tvSubtitleSingleAsset"
+        style="@style/BodyMabry"
+        android:layout_width="0dp"
+        android:layout_marginStart="12dp"
+        android:text="Without going through my strategy"
+        android:textColor="@color/purple_gray_500"
+        app:layout_constraintEnd_toStartOf="@+id/imageView4"
+        app:layout_constraintStart_toEndOf="@id/ivInvestSingleAsset"
+        app:layout_constraintTop_toBottomOf="@id/tvTitleSingleAsset" />
+
+    <ImageView
+        android:id="@+id/imageView4"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/ic_right_arrow_grey"
+        app:layout_constraintBottom_toBottomOf="@id/tvSubtitleSingleAsset"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvTitleSingleAsset" />
+
+
+    <ImageView
+        android:id="@+id/ivMoneyDeposit"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/circle_drawable"
+        android:backgroundTint="@color/purple_gray_50"
+        android:padding="2dp"
+        android:src="@drawable/ic_invest_money"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivInvestSingleAsset"
+        app:tint="@color/purple_500_" />
+
+    <TextView
+        android:id="@+id/tvTitleMoneyDeposit"
+        style="@style/SubheadMabry"
+        android:layout_width="0dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="36dp"
+        android:text="Money deposit"
+        android:textColor="@color/purple_gray_700"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@+id/imageView5"
+        app:layout_constraintStart_toEndOf="@id/ivMoneyDeposit"
+        app:layout_constraintTop_toBottomOf="@id/ivInvestSingleAsset" />
+
+    <TextView
+        android:id="@+id/tvSubtitleMoneyDeposit"
+        style="@style/BodyMabry"
+        android:layout_width="0dp"
+        android:layout_marginStart="12dp"
+        android:text="Without going through my strategy"
+        android:textColor="@color/purple_gray_500"
+        app:layout_constraintEnd_toStartOf="@+id/imageView5"
+        app:layout_constraintStart_toEndOf="@id/ivMoneyDeposit"
+        app:layout_constraintTop_toBottomOf="@id/tvTitleMoneyDeposit" />
+
+    <ImageView
+        android:id="@+id/imageView5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:src="@drawable/ic_right_arrow_grey"
+        app:layout_constraintBottom_toBottomOf="@id/tvSubtitleMoneyDeposit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvTitleMoneyDeposit" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

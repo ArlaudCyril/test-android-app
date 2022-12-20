@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/curved_button"
+    android:backgroundTint="@color/purple_gray_50"
+    android:padding="12dp">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        style="@style/BodyMabry"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:text="Total earnings"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        android:textColor="@color/purple_gray_500" />
+
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/tvTitle"
+        android:layout_alignBottom="@id/tvTitle"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/ic_info_small" />
+
+    <TextView
+        android:id="@+id/tvSubTitle"
+        style="@style/TitleText"
+        android:layout_below="@id/tvTitle"
+        android:layout_marginTop="4dp"
+        android:text="13,2229€"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textColor="@color/purple_gray_800" />
+
+    <TextView
+        android:id="@+id/tvBottomText"
+        style="@style/BodyMabry"
+        android:layout_below="@id/tvSubTitle"
+        android:layout_marginTop="24dp"
+        android:text="+0.00034 BTC"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        android:textColor="@color/purple_gray_500" />
+
+</RelativeLayout>

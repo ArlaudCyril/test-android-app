@@ -1,0 +1,151 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="12dp">
+
+    <RelativeLayout
+        android:id="@+id/rlCustom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            style="@style/DialogTitle"
+            android:layout_centerHorizontal="true"
+            android:padding="2dp"
+            android:textStyle="bold"
+            tools:text="@string/activate_face_id" />
+
+        <TextView
+            android:id="@+id/tvMessage"
+            style="@style/DialogMessage"
+            android:layout_below="@id/tvTitle"
+            android:layout_centerHorizontal="true"
+            android:layout_marginHorizontal="12dp"
+            android:gravity="center"
+            android:padding="2dp"
+            tools:text="@string/activate_face_message" />
+
+
+        <View
+            android:id="@+id/viewDivider"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_below="@id/tvMessage"
+            android:layout_marginTop="16dp"
+            android:alpha="0.5"
+            android:background="#3F3F3F" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/viewDivider"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/tvNegativeButton"
+                style="@style/DialogNegativeButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingVertical="12dp"
+                tools:text="@string/decline" />
+
+            <TextView
+                android:id="@+id/tvPositiveButton"
+                style="@style/DialogPositiveButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingVertical="12dp"
+                tools:text="@string/activate" />
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/rlStrategy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingTop="16dp"
+        android:visibility="gone">
+
+
+        <TextView
+            style="@style/DialogTitle"
+            android:layout_gravity="center"
+            android:padding="2dp"
+            android:textStyle="bold"
+            android:text="@string/build_strategy" />
+
+
+        <TextView
+            style="@style/DialogMessage"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="20dp"
+            android:padding="2dp"
+            android:gravity="center"
+            android:text="Enter your strategy name" />
+
+        <EditText
+            android:id="@+id/etInput"
+            style="@style/EditTextTheme"
+            android:layout_width="match_parent"
+            android:layout_height="44dp"
+            android:textColorHint="@color/purple_gray_500"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/edit_text_background"
+            android:hint="Enter your strategy name"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="12dp" />
+
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginTop="16dp"
+            android:alpha="0.5"
+            android:background="#3F3F3F" />
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:weightSum="2">
+
+            <TextView
+                android:id="@+id/tvCancel"
+                style="@style/DialogNegativeButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingVertical="12dp"
+                android:text="Cancel" />
+
+            <TextView
+                android:id="@+id/tvSave"
+                style="@style/DialogPositiveButton"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:layout_weight="1"
+                android:gravity="center"
+                android:paddingVertical="12dp"
+                android:text="Save" />
+
+        </LinearLayout>
+
+
+    </LinearLayout>
+
+</LinearLayout>

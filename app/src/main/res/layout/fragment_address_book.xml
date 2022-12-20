@@ -1,0 +1,217 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <ImageView
+        android:id="@+id/ivTopAction"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="16dp"
+        android:padding="12dp"
+        android:src="@drawable/ic_back" />
+
+
+    <androidx.coordinatorlayout.widget.CoordinatorLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ivTopAction">
+
+        <com.google.android.material.appbar.AppBarLayout
+            android:id="@+id/appBar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            app:elevation="0dp">
+
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/collapseToolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fitsSystemWindows="true"
+                    android:orientation="vertical"
+                    app:layout_collapseMode="none">
+
+                    <TextView
+                        style="@style/TitleText"
+                        android:layout_width="match_parent"
+                        android:layout_marginHorizontal="24dp"
+                        android:layout_marginTop="20dp"
+                        android:text="Crypto address book" />
+
+                    <TextView
+                        style="@style/SubheadMabry"
+                        android:layout_width="match_parent"
+                        android:layout_marginHorizontal="24dp"
+                        android:layout_marginTop="4dp"
+                        android:lineSpacingExtra="6dp"
+                        android:text="@string/subtitle_crypto_book"
+                        android:textColor="@color/purple_gray_600" />
+
+                    <LinearLayout
+                        android:id="@+id/llWhitelisting"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginHorizontal="24dp"
+                        android:layout_marginTop="24dp"
+                        android:background="@drawable/curved_button"
+                        android:backgroundTint="@color/purple_gray_50"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="16dp">
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center_vertical"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/SubheadMabry"
+                                android:gravity="center_vertical"
+                                android:text="Whitelisting" />
+
+                            <LinearLayout
+                                android:id="@+id/llDurationInfo"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal">
+
+                                <TextView
+                                    style="@style/BodyMabry"
+                                    android:gravity="center_vertical"
+                                    android:text="Security:"
+                                    android:textColor="@color/purple_gray_600" />
+
+                                <TextView
+                                    android:id="@+id/tvDuration"
+                                    style="@style/BodyMabry"
+                                    android:layout_marginStart="4dp"
+                                    android:gravity="center_vertical"
+                                    android:text="72H"
+                                    android:textColor="@color/green_500" />
+                            </LinearLayout>
+
+                        </LinearLayout>
+
+                        <View
+                            android:layout_width="0dp"
+                            android:layout_height="1dp"
+                            android:layout_weight="1" />
+
+                        <androidx.appcompat.widget.SwitchCompat
+                            android:id="@+id/switchWhitelisting"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:enabled="true"
+                            android:minHeight="36dp"
+                            android:thumb="@drawable/custom_thumb"
+                            app:track="@drawable/custom_track" />
+
+                    </LinearLayout>
+
+                </LinearLayout>
+
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+
+        </com.google.android.material.appbar.AppBarLayout>
+
+        <androidx.core.widget.NestedScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <EditText
+                    android:id="@+id/etSearch"
+                    style="@style/EditTextTheme"
+                    android:layout_height="44dp"
+                    android:layout_gravity="bottom"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@drawable/edit_text_background"
+                    android:drawableStart="@drawable/search"
+                    android:drawablePadding="12dp"
+                    android:hint="Search"
+                    android:paddingHorizontal="16dp"
+                    android:paddingVertical="12dp" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvAddresses"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="8dp"
+                    android:layoutAnimation="@anim/recycler_view_item_animation" />
+
+            </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llBottom"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentBottom="true"
+                    android:background="@drawable/top_curved_layout"
+                    android:backgroundTint="@color/purple_gray_50"
+                    android:orientation="vertical"
+                    android:paddingHorizontal="24dp"
+                    android:paddingTop="24dp"
+                    android:paddingBottom="48dp"
+                    android:translationZ="8dp">
+
+
+                    <LinearLayout
+                        android:id="@+id/llAddAddress"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:background="@drawable/curved_button"
+                        android:backgroundTint="@color/purple_gray_00"
+                        android:gravity="center"
+                        android:orientation="horizontal"
+                        android:paddingVertical="12dp">
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="4dp"
+                            android:src="@drawable/ic_add" />
+
+                        <TextView
+                            style="@style/SubheadMabry"
+                            android:layout_marginStart="4dp"
+                            android:text="Add a new address" />
+
+                    </LinearLayout>
+
+
+                </LinearLayout>
+
+            </RelativeLayout>
+
+        </androidx.core.widget.NestedScrollView>
+
+    </androidx.coordinatorlayout.widget.CoordinatorLayout>
+
+
+
+
+
+</RelativeLayout>

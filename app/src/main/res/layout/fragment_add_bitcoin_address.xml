@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/ivTopAction"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:padding="12dp"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            android:paddingBottom="24dp">
+
+
+            <TextView
+                android:id="@+id/tvTitle"
+                style="@style/TitleText"
+                android:layout_width="0dp"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="20dp"
+                android:text="Add a Crypto address"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvTitleAddressName"
+                style="@style/BodyMabry"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="24dp"
+                android:text="Address name"
+                android:textColor="@color/purple_gray_500"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+
+            <EditText
+                android:id="@+id/etAddressName"
+                style="@style/EditTextTheme"
+                android:layout_width="match_parent"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/edit_text_background"
+                android:hint="Address name"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="12dp"
+                app:layout_constraintTop_toBottomOf="@id/tvTitleAddressName" />
+
+            <TextView
+                android:id="@+id/tvTitleNetwork"
+                style="@style/BodyMabry"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:text="Network"
+                android:textColor="@color/purple_gray_500"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/etAddressName" />
+
+            <LinearLayout
+                android:id="@+id/llNetwork"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/round_stroke_gray_100"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/tvTitleNetwork">
+
+                <ImageView
+                    android:id="@+id/ivNetwork"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="start|center_vertical"
+                    android:paddingVertical="12dp"
+                    android:src="@drawable/ic_bitcoin" />
+
+                <EditText
+                    android:id="@+id/etNetwork"
+                    style="@style/EditTextTheme"
+                    android:layout_width="match_parent"
+                    android:background="@android:color/transparent"
+                    android:cursorVisible="false"
+                    android:drawableEnd="@drawable/ic_drop_down"
+                    android:drawablePadding="12dp"
+                    android:focusable="true"
+                    android:focusableInTouchMode="false"
+                    android:hint="@string/choose"
+                    android:paddingStart="12dp"
+                    android:paddingEnd="12dp"
+                    tools:ignore="RtlSymmetry" />
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/tvTitleAddress"
+                style="@style/BodyMabry"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:text="Address"
+                android:textColor="@color/purple_gray_500"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/llNetwork" />
+
+            <RelativeLayout
+                android:id="@+id/rlAddress"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                app:layout_constraintTop_toBottomOf="@id/tvTitleAddress">
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/ttlAddress"
+                    android:layout_width="match_parent"
+                    app:hintEnabled="false"
+                    app:helperTextTextColor="@color/red_500"
+                    android:layout_marginHorizontal="20dp"
+                    android:layout_height="wrap_content">
+
+                    <com.google.android.material.textfield.TextInputEditText
+                        android:id="@+id/etAddress"
+                        android:layout_marginHorizontal="4dp"
+                        style="@style/EditTextTheme"
+                        android:layout_width="match_parent"
+                        android:background="@drawable/edit_text_background"
+                        android:hint="@string/enter_or_scan_an_address"
+                        android:drawableEnd="@drawable/ic_code_scanner"
+                        android:drawablePadding="12dp"
+                        android:paddingHorizontal="16dp"
+                        android:singleLine="true" />
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+            </RelativeLayout>
+
+
+            <TextView
+                android:id="@+id/tvTitleOrigin"
+                style="@style/BodyMabry"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/origin"
+                android:textColor="@color/purple_gray_500"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/rlAddress" />
+
+
+            <LinearLayout
+                android:id="@+id/llOriginExchange"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@drawable/round_stroke_purple_500"
+                android:orientation="horizontal"
+                android:padding="12dp"
+                app:layout_constraintEnd_toStartOf="@id/llOriginWallet"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvTitleOrigin">
+
+                <ImageView
+                    android:id="@+id/ivRadioExchange"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/radio_select" />
+
+                <TextView
+                    android:id="@+id/tvExchange"
+                    style="@style/SubheadMabry"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="12dp"
+                    android:gravity="center"
+                    android:text="@string/exchange"
+                    android:textColor="@color/purple_500_" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/llOriginWallet"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="24dp"
+                android:background="@drawable/round_stroke_gray_100"
+                android:orientation="horizontal"
+                android:padding="12dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/llOriginExchange"
+                app:layout_constraintTop_toBottomOf="@id/tvTitleOrigin">
+
+                <ImageView
+                    android:id="@+id/ivRadioWallet"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/radio_unselect" />
+
+                <TextView
+                    android:id="@+id/tvWallet"
+                    style="@style/SubheadMabry"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="12dp"
+                    android:gravity="center"
+                    android:text="Wallet" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvTitleSelectExchange"
+                style="@style/BodyMabry"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:text="Select exchange"
+                android:textColor="@color/purple_gray_500"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/llOriginExchange" />
+
+            <EditText
+                android:id="@+id/etExchange"
+                style="@style/EditTextTheme"
+                android:layout_width="match_parent"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/edit_text_background"
+                android:cursorVisible="false"
+                android:drawableEnd="@drawable/ic_drop_down"
+                android:drawablePadding="12dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                android:hint="@string/choose"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="12dp"
+                app:layout_constraintTop_toBottomOf="@id/tvTitleSelectExchange" />
+
+            <TextView
+                android:id="@+id/tvNote"
+                style="@style/BodyMabry"
+                android:layout_width="match_parent"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/curved_button"
+                android:backgroundTint="#FFF2D9"
+                android:lineSpacingExtra="6dp"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="16dp"
+                android:text="@string/note_add_bitcoin_address"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:textColor="@color/purple_gray_800"
+                app:layout_constraintTop_toBottomOf="@id/etExchange" />
+
+            <Button
+                android:id="@+id/btnAddUseAddress"
+                style="@style/ButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/curved_button"
+                android:backgroundTint="@color/purple_500_"
+                android:gravity="center"
+                android:text="@string/add_address"
+                android:textColor="@color/purple_gray_00"
+                app:layout_constraintTop_toBottomOf="@id/tvNote" />
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+</LinearLayout>

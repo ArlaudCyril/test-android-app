@@ -1,0 +1,154 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:fillViewport="true"
+    android:orientation="vertical"
+    android:scrollbars="none">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fitsSystemWindows="true">
+
+
+        <ImageView
+            android:id="@+id/ivTopAction"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginTop="12dp"
+            android:backgroundTint="@color/purple_gray_50"
+            android:padding="12dp"
+            android:src="@drawable/ic_back"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvTitle"
+            style="@style/HeadingStyle"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="20dp"
+            android:text="Add a credit card"
+            android:textSize="24sp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/ivTopAction" />
+
+        <EditText
+            android:id="@+id/etName"
+            style="@style/EditTextTheme"
+            android:layout_width="match_parent"
+            android:layout_marginHorizontal="24dp"
+            android:maxLines="1"
+            android:imeOptions="actionNext"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/edit_text_background"
+            android:digits="@string/alphabets"
+            android:hint="Name"
+            android:inputType="textPersonName"
+            android:paddingHorizontal="12dp"
+            app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+
+        <EditText
+            android:id="@+id/etCardNumber"
+            style="@style/EditTextTheme"
+            android:layout_width="match_parent"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="16dp"
+            android:maxLines="1"
+            android:maxLength="16"
+            android:imeOptions="actionNext"
+            android:background="@drawable/edit_text_background"
+            android:digits="0123456789"
+            android:drawableStart="@drawable/ic_credit_card_outline"
+            android:drawablePadding="12dp"
+            android:hint="Card number"
+            android:inputType="number"
+            android:paddingHorizontal="12dp"
+            app:layout_constraintTop_toBottomOf="@id/etName" />
+
+
+        <EditText
+            android:id="@+id/etExpire"
+            style="@style/EditTextTheme"
+            android:layout_width="0dp"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/edit_text_background"
+            android:digits="0123456789"
+            android:drawableEnd="@drawable/ic_drop_down"
+            android:drawablePadding="12dp"
+            android:hint="Expire"
+            android:inputType="number"
+            android:paddingHorizontal="12dp"
+            app:layout_constraintEnd_toStartOf="@id/etCVV"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etCardNumber" />
+
+        <EditText
+            android:id="@+id/etCVV"
+            style="@style/EditTextTheme"
+            android:layout_width="0dp"
+            android:layout_marginStart="8dp"
+            android:maxLength="4"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="24dp"
+            android:maxLines="1"
+            android:imeOptions="actionNext"
+            android:background="@drawable/edit_text_background"
+            android:digits="0123456789"
+            android:hint="CVV"
+            android:inputType="number"
+            android:paddingHorizontal="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/etExpire"
+            app:layout_constraintTop_toBottomOf="@id/etCardNumber" />
+
+
+        <EditText
+            android:id="@+id/etZipCode"
+            style="@style/EditTextTheme"
+            android:layout_width="match_parent"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/edit_text_background"
+            android:digits="0123456789"
+            android:hint="ZIP Code"
+            android:inputType="number"
+            android:imeOptions="actionDone"
+            android:maxLines="1"
+            android:maxLength="6"
+            android:paddingHorizontal="12dp"
+            app:layout_constraintTop_toBottomOf="@id/etExpire" />
+
+        <Button
+            android:id="@+id/btnAdd"
+            style="@style/ButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/button_purple_500"
+            android:text="Add"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            app:layout_constraintTop_toBottomOf="@id/etZipCode" />
+
+        <TextView
+            style="@style/BodyMabry"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:lineSpacingExtra="4dp"
+            android:text="By adding a new card, you accept the terms and\nconditions."
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btnAdd" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

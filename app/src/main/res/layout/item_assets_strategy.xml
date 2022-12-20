@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:paddingVertical="4dp"
+    >
+
+    <ImageView
+        android:id="@+id/ivColor"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:background="@drawable/curved_layout_4_dp"
+        android:backgroundTint="@color/purple_500_"
+        app:layout_constraintBottom_toBottomOf="@id/tvAssetsName"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvAssetsName"
+        style="@style/DialogTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="4dp"
+        android:textColor="@color/purple_gray_500"
+        app:layout_constraintEnd_toStartOf="@+id/tvAssetPercent"
+        app:layout_constraintStart_toEndOf="@+id/ivColor"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="BTC" />
+
+    <TextView
+        android:id="@+id/tvAssetPercent"
+        style="@style/DialogTitle"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:layout_gravity="end"
+        android:gravity="end"
+        android:textColor="@color/purple_gray_700"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tvAssetsName"
+        app:layout_constraintTop_toTopOf="parent"
+        android:text="20%" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

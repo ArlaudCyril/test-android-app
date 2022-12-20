@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+
+    <ImageView
+        android:id="@+id/ivTopAction"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="12dp"
+        android:backgroundTint="@color/purple_gray_50"
+        android:padding="12dp"
+        android:src="@drawable/ic_back" />
+
+
+    <TextView
+        android:id="@+id/tvTitle"
+        style="@style/SubheadMabry"
+        android:layout_width="wrap_content"
+        android:layout_alignTop="@id/ivTopAction"
+        android:layout_alignBottom="@id/ivTopAction"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:textColor="#423D33" />
+
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/btnCancelInvestment"
+        android:layout_below="@id/ivTopAction"
+        android:fillViewport="true"
+        android:paddingBottom="24dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/llContent"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+
+                <com.au.lyber.ui.fragments.StrategyView
+                    android:id="@+id/strategyView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="12dp"
+                    android:visibility="gone"
+                    app:layout_constraintTop_toBottomOf="@id/ivTopAction" />
+
+                <RelativeLayout
+                    android:id="@+id/rlAssetDetail"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="12dp"
+                    android:paddingVertical="12dp"
+                    android:visibility="gone">
+
+
+                    <TextView
+                        android:id="@+id/tvAssetFrequency"
+                        style="@style/SubheadMabry"
+                        android:layout_alignParentStart="true"
+                        android:layout_centerVertical="true"
+                        tools:text="Bitcoin" />
+
+                    <TextView
+                        android:id="@+id/tvAssetPrice"
+                        style="@style/SubheadMabry"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        tools:text="100" />
+
+                </RelativeLayout>
+
+
+            </LinearLayout>
+
+
+            <TextView
+                android:id="@+id/tvHistory"
+                style="@style/TitleText"
+                android:layout_width="wrap_content"
+                android:layout_gravity="start"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginVertical="12dp"
+                android:gravity="start"
+                android:text="History"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                android:visibility="gone" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvHistory"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:background="@drawable/curved_button"
+                android:backgroundTint="@color/purple_gray_50"
+                android:nestedScrollingEnabled="false" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+
+    <Button
+        android:id="@+id/btnCancelInvestment"
+        style="@style/ButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/curved_button"
+        android:backgroundTint="@color/purple_500_"
+        android:text="Cancel Investment" />
+
+</RelativeLayout>

@@ -1,0 +1,155 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:background="@drawable/top_curved_layout"
+    android:backgroundTint="@color/purple_gray_00"
+    android:fitsSystemWindows="true"
+    android:minHeight="360dp">
+
+    <ImageView
+        android:id="@+id/ivTopAction"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="18dp"
+        android:backgroundTint="@color/purple_gray_50"
+        android:padding="12dp"
+        android:src="@drawable/ic_close"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/purple_gray_800" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        style="@style/DialogTitle"
+        android:gravity="center"
+        android:text="Add an asset"
+        android:textColor="#423D33"
+        app:layout_constraintBottom_toBottomOf="@id/ivTopAction"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ivTopAction" />
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="20dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivTopAction"
+        app:tabBackground="@drawable/tab__indcator"
+        app:tabIndicator="@null"
+        app:tabMode="auto"
+        app:tabSelectedTextColor="@color/purple_500_"
+        app:tabTextAppearance="@style/tab_text"
+        app:tabTextColor="@color/purple_gray_500" />
+
+    <ImageView
+        android:id="@+id/ivProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+        android:layout_marginVertical="12dp"
+        android:src="@drawable/ic_progress_large"
+        android:visibility="gone"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tabLayout" />
+
+    <EditText
+        android:id="@+id/etSearch"
+        style="@style/EditTextTheme"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginVertical="12dp"
+        android:background="@drawable/edit_text_background"
+        android:drawableStart="@drawable/search"
+        android:drawablePadding="12dp"
+        android:hint="Search asset"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="12dp"
+        android:singleLine="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+        android:visibility="visible"
+        app:layout_constraintTop_toBottomOf="@id/tabLayout" />
+
+
+
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/rvRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_marginHorizontal="24dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etSearch">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvAddAsset"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layoutAnimation="@anim/recycler_view_item_animation"
+            android:visibility="visible"
+            app:layout_behavior="@string/appbar_scrolling_view_behavior"
+            tools:itemCount="6"
+            tools:listitem="@layout/item_asset" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+    <!--<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:orientation="vertical"
+        android:visibility="visible"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tabLayout">
+
+
+
+&lt;!&ndash;        <TextView&ndash;&gt;
+&lt;!&ndash;            android:id="@+id/tvViewAllAssets"&ndash;&gt;
+&lt;!&ndash;            style="@style/SubheadMabry"&ndash;&gt;
+&lt;!&ndash;            android:layout_width="match_parent"&ndash;&gt;
+&lt;!&ndash;            android:layout_marginHorizontal="24dp"&ndash;&gt;
+&lt;!&ndash;            android:gravity="center"&ndash;&gt;
+&lt;!&ndash;            android:paddingVertical="16dp"&ndash;&gt;
+&lt;!&ndash;            android:text="@string/view_all_16_available_assets"&ndash;&gt;
+&lt;!&ndash;            android:textColor="@color/purple_500_"&ndash;&gt;
+&lt;!&ndash;            android:visibility="gone" />&ndash;&gt;
+
+        <TextView
+            android:id="@+id/tvAvailableFiat"
+            style="@style/TitleText"
+            android:layout_marginVertical="24dp"
+            android:layout_marginStart="24dp"
+            android:text="Available FIAT"
+            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textColor="@color/purple_gray_900"
+            android:textStyle="bold"
+            android:visibility="gone" />
+
+        <include
+            android:id="@+id/includedMyAsset"
+            layout="@layout/item_my_asset"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginBottom="24dp"
+            android:visibility="gone" />
+
+    </LinearLayout>-->
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+
+

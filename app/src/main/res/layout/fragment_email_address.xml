@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        style="@style/TitleText"
+        android:text="@string/adresse_email" />
+
+    <TextView
+        style="@style/SubTitleText"
+        android:layout_marginTop="4dp"
+        android:lineSpacingExtra="4dp"
+        android:text="@string/subtitle_email" />
+
+    <EditText
+        android:id="@+id/etEmail"
+        style="@style/EditTextTheme"
+        android:layout_marginTop="24dp"
+        android:background="@drawable/edit_text_background"
+        android:focusable="true"
+        android:hint="@string/hint_email"
+        android:inputType="textEmailAddress"
+        android:maxLines="1"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="16dp" />
+
+    <com.google.android.material.textfield.TextInputLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:background="@null"
+        app:hintAnimationEnabled="false"
+        app:hintEnabled="false"
+        app:passwordToggleEnabled="true">
+
+        <EditText
+            android:id="@+id/etPassword"
+            style="@style/EditTextTheme"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/edit_text_background"
+            android:focusable="true"
+            android:hint="@string/password"
+            android:inputType="textPassword"
+            android:maxLines="1"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="16dp" />
+    </com.google.android.material.textfield.TextInputLayout>
+
+
+</LinearLayout>

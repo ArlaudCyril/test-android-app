@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/curved_button"
+    android:backgroundTint="@color/purple_gray_50"
+    android:padding="12dp">
+
+    <TextView
+        android:id="@+id/tvTotalEarning"
+        style="@style/BodyMabry"
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="16dp"
+        android:layout_toStartOf="@+id/ivInfo"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/total_earnings"
+        android:textColor="@color/purple_gray_500" />
+
+    <ImageView
+        android:id="@+id/ivInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:src="@drawable/ic_info_small" />
+
+    <TextView
+        android:id="@+id/tvValueTotalEarning"
+        style="@style/TitleText"
+        android:layout_below="@id/tvTotalEarning"
+        android:layout_marginTop="2dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textColor="@color/purple_gray_800"
+        android:textStyle="bold"
+        tools:text="80,666€" />
+
+    <com.au.lyber.utils.AppLineChart
+        android:id="@+id/lineChart"
+        android:layout_width="match_parent"
+        android:layout_height="88dp"
+        android:layout_below="@id/tvValueTotalEarning"
+        android:layout_marginTop="6dp" />
+
+</RelativeLayout>

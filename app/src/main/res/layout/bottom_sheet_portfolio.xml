@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@android:color/transparent">
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/top_curved_layout"
+        android:backgroundTint="@color/purple_500_">
+
+        <TextView
+            android:id="@+id/tvTitle"
+            style="@style/DialogTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="32dp"
+            android:text="@string/complete_your_account"
+            android:textColor="@color/purple_gray_00" />
+
+        <TextView
+            android:id="@+id/tvSubTitle"
+            style="@style/DialogMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvTitle"
+            android:layout_alignStart="@id/tvTitle"
+            android:layout_marginBottom="32dp"
+            android:text="@string/to_start_investing"
+            android:textColor="@color/purple_gray_00" />
+
+        <ImageView
+            android:id="@+id/ivDropDown"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/tvTitle"
+            android:layout_alignBottom="@id/tvSubTitle"
+            android:layout_alignParentEnd="true"
+            android:layout_marginEnd="16dp"
+            android:padding="8dp"
+            android:src="@drawable/ic_right_arrow_white" />
+
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tvSubTitle"
+            android:background="@drawable/top_curved_layout"
+            android:backgroundTint="@color/white"
+            android:paddingHorizontal="24dp"
+            android:paddingVertical="16dp">
+
+
+            <ImageView
+                android:id="@+id/ivWithdraw"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_alignParentStart="true"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/circle_drawable"
+                android:backgroundTint="@color/purple_gray_50"
+                android:padding="4dp"
+                android:src="@drawable/ic_withdraw_dull" />
+
+            <TextView
+                android:id="@+id/tvTitleWithdraw"
+                style="@style/SubheadMabry"
+                android:layout_alignParentTop="true"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="16dp"
+                android:layout_toEndOf="@id/ivWithdraw"
+                android:text="@string/withdraw"
+                android:textColor="@color/purple_gray_500"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvSubTitleWithdraw"
+                style="@style/BodyMabry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvTitleWithdraw"
+                android:layout_alignStart="@id/tvTitleWithdraw"
+                android:text="@string/your_assets_to_your_bank_account"
+                android:textColor="@color/purple_gray_500" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/tvTitleWithdraw"
+                android:layout_alignBottom="@id/tvSubTitleWithdraw"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/ic_right_arrow_grey" />
+
+
+            <ImageView
+                android:id="@+id/ivExchange"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_below="@id/tvSubTitleWithdraw"
+                android:layout_alignParentStart="true"
+                android:layout_marginTop="36dp"
+                android:background="@drawable/circle_drawable"
+                android:backgroundTint="@color/purple_gray_50"
+                android:padding="4dp"
+                android:alpha="0.6"
+                android:src="@drawable/ic_exchange" />
+
+            <TextView
+                android:id="@+id/tvTitleExchange"
+                style="@style/SubheadMabry"
+                android:layout_below="@id/tvSubTitleWithdraw"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="32dp"
+                android:layout_toEndOf="@id/ivWithdraw"
+                android:text="@string/exchange"
+                android:textColor="@color/purple_gray_500"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvSubTitleExchange"
+                style="@style/BodyMabry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvTitleExchange"
+                android:layout_alignStart="@id/tvTitleExchange"
+                android:layout_marginBottom="18dp"
+                android:text="@string/trade_one_asset_against_another"
+                android:textColor="@color/purple_gray_500" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/tvTitleExchange"
+                android:layout_alignBottom="@id/tvSubTitleExchange"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="10dp"
+                android:src="@drawable/ic_right_arrow_grey" />
+
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+</LinearLayout>

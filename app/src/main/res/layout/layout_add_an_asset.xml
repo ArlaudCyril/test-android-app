@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/relativeLayout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/top_curved_layout"
+    android:backgroundTint="@color/purple_gray_00"
+    android:minHeight="400dp">
+
+    <ImageView
+        android:id="@+id/ivTopAction"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="18dp"
+        android:backgroundTint="@color/purple_gray_50"
+        android:padding="12dp"
+        android:src="@drawable/ic_close" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        style="@style/SubheadMabry"
+        android:layout_alignTop="@id/ivTopAction"
+        android:layout_alignBottom="@id/ivTopAction"
+        android:layout_centerHorizontal="true"
+        android:gravity="center"
+        android:text="Add an asset"
+        android:textColor="#423D33" />
+
+
+
+    <com.google.android.material.tabs.TabLayout
+        android:id="@+id/tabLayout"
+        android:layout_width="match_parent"
+        android:layout_height="32dp"
+        android:layout_below="@id/ivTopAction"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="20dp"
+        app:tabBackground="@drawable/tab__indcator"
+        app:tabIndicator="@null"
+        app:tabMode="auto"
+        app:tabSelectedTextColor="@color/purple_500_"
+        app:tabTextAppearance="@style/tab_text"
+        app:tabTextColor="@color/purple_gray_500" />
+
+    <ImageView
+        android:id="@+id/ivProgress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:layout_centerVertical="true"
+        android:layout_marginVertical="12dp"
+        android:src="@drawable/ic_progress_large"
+        android:visibility="gone" />
+
+    <EditText
+        android:id="@+id/etSearch"
+        style="@style/EditTextTheme"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_below="@id/tabLayout"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginVertical="12dp"
+        android:background="@drawable/edit_text_background"
+        android:drawableStart="@drawable/search"
+        android:drawablePadding="12dp"
+        android:hint="Search asset"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="12dp"
+        android:singleLine="true"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        android:visibility="visible" />
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/rvRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/etSearch"
+        android:layout_marginHorizontal="24dp">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rvAddAsset"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layoutAnimation="@anim/recycler_view_item_animation"
+            tools:itemCount="6"
+            tools:listitem="@layout/item_asset" />
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+</RelativeLayout>

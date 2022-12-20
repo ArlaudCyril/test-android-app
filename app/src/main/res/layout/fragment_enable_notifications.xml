@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:paddingVertical="20dp">
+
+
+    <TextView
+        android:id="@+id/tvTitle"
+        style="@style/TitleText"
+        android:text="@string/enable_notifications" />
+
+    <TextView
+        android:id="@+id/tvSubTitle"
+        style="@style/SubTitleText"
+        android:layout_below="@id/tvTitle"
+        android:layout_marginTop="4dp"
+        android:text="@string/enable_notifications_so_you_don_t_miss_any_updates_from_lyber" />
+
+    <LinearLayout
+        android:id="@+id/rlPhoneNumber"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:layout_above="@id/btnEnableNotifications"
+        android:layout_below="@id/tvSubTitle"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/enable_notifications" />
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/btnEnableNotifications"
+        style="@style/ButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_above="@id/tvNotNow"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/purple_500_"
+        android:text="@string/activate"
+        android:textColor="@color/white" />
+
+    <TextView
+        android:id="@+id/tvNotNow"
+        style="@style/ButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:backgroundTint="@color/purple_gray_50"
+        android:gravity="center"
+        android:text="@string/ask_me_later"
+        android:textColor="@color/purple_gray_800" />
+
+</RelativeLayout>

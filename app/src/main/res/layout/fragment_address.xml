@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:orientation="vertical"
+    android:scrollbars="none">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/TitleText"
+            android:text="@string/address" />
+
+        <TextView
+            style="@style/SubTitleText"
+            android:layout_marginTop="4dp"
+            android:lineSpacingExtra="4dp"
+            android:text="@string/subtitle_address" />
+
+        <EditText
+            android:id="@+id/etStreetNumber"
+            style="@style/EditTextTheme"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/edit_text_background"
+            android:hint="@string/hint_street_and_number"
+            android:inputType="number"
+            android:digits="1234567890"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="16dp"
+            tools:ignore="TextFields" />
+
+        <EditText
+            android:id="@+id/etBuildingNumberFloor"
+            style="@style/EditTextTheme"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/edit_text_background"
+            android:hint="@string/hint_building_floor"
+            android:inputType="textPostalAddress"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="16dp"
+            tools:ignore="TextFields" />
+
+        <EditText
+            android:id="@+id/etCity"
+            style="@style/EditTextTheme"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/edit_text_background"
+            android:hint="@string/hint_city"
+            android:inputType="text"
+            android:imeOptions="actionNext"
+            android:maxLines="1"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="16dp" />
+
+        <EditText
+            android:id="@+id/etState"
+            style="@style/EditTextTheme"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/edit_text_background"
+            android:hint="@string/hint_state"
+            android:inputType="text"
+            android:imeOptions="actionNext"
+            android:maxLines="1"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="16dp" />
+
+        <EditText
+            android:id="@+id/etZipCode"
+            style="@style/EditTextTheme"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/edit_text_background"
+            android:hint="@string/hint_zip_code"
+            android:inputType="number"
+            android:digits="1234567890"
+            android:imeOptions="actionDone"
+            android:maxLength="6"
+            android:maxLines="1"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="16dp" />
+
+        <EditText
+            android:id="@+id/etCountry"
+            style="@style/EditTextTheme"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/edit_text_background"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:drawableEnd="@drawable/ic_drop_down"
+            android:hint="@string/hint_country"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="16dp" />
+
+
+    </LinearLayout>
+
+</ScrollView>

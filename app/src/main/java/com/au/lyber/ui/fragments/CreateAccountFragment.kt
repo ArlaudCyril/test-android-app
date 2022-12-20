@@ -1,0 +1,318 @@
+package com.au.lyber.ui.fragments
+
+import android.annotation.SuppressLint
+import android.content.res.Configuration
+import android.os.Bundle
+import android.util.Log
+import android.view.View
+import android.view.ViewTreeObserver
+import android.widget.ScrollView
+import androidx.appcompat.app.AppCompatActivity
+import com.au.countrycodepicker.CountryPicker
+import com.au.lyber.R
+import com.au.lyber.databinding.FragmentCreateAccountBinding
+import com.au.lyber.utils.App
+import com.au.lyber.utils.CommonMethods.Companion.checkInternet
+import com.au.lyber.utils.CommonMethods.Companion.fadeIn
+import com.au.lyber.utils.CommonMethods.Companion.fadeOut
+import com.au.lyber.utils.CommonMethods.Companion.getViewModel
+import com.au.lyber.utils.CommonMethods.Companion.gone
+import com.au.lyber.utils.CommonMethods.Companion.isValidEmail
+import com.au.lyber.utils.CommonMethods.Companion.requestKeyboard
+import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
+import com.au.lyber.utils.CommonMethods.Companion.showToast
+import com.au.lyber.utils.CommonMethods.Companion.visible
+import com.au.lyber.viewmodels.SignUpViewModel
+import com.nimbusds.srp6.SRP6ClientSession
+import com.nimbusds.srp6.XRoutineWithUserIdentity
+
+class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View.OnClickListener {
+
+    private lateinit var viewModel: SignUpViewModel
+
+    private val mobile get() = binding.etPhone.text.trim().toString()
+    private val countryCode get() = binding.tvCountryCode.text.trim().toString()
+    private val email get() = binding.etEmail.text.trim().toString()
+    private val password get() = binding.etPassword.text.trim().toString()
+
+    override fun bind() = FragmentCreateAccountBinding.inflate(layoutInflater)
+
+    @SuppressLint("FragmentLiveDataObserve")
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        (requireParentFragment() as SignUpFragment).setIndicators(0)
+        App.prefsManager.accessToken = ""
+
+        viewModel = getViewModel(requireParentFragment())
+        viewModel.listener = this
+        binding.tvCountryCode.text = viewModel.countryCode
+
+
+        if (viewModel.forLogin) {
+            binding.tvTitle.text = getString(R.string.happy_to_see_you_back)
+            binding.tvSubTitle.text =
+                getString(R.string.phone_login_helper_text)
+            binding.tvLoginViaEmail.fadeIn()
+            binding.tvLoginViaEmail.visible()
+            binding.tilPassword.visible()
+        }
+
+        binding.tvLoginViaEmail.setOnClickListener(this)
+        binding.tvLoginViaPhone.setOnClickListener(this)
+        binding.btnNext.setOnClickListener(this)
+
+        binding.tvCountryCode.setOnClickListener(this)
+        binding.etPassword.onFocusChangeListener = focusChange
+        binding.etPhone.onFocusChangeListener = focusChange
+        binding.etEmail.onFocusChangeListener = focusChange
+
+        binding.root.viewTreeObserver?.addOnGlobalLayoutListener(
+            keyboardLayoutListener
+        )
+
+    }
+
+    private val focusChange = View.OnFocusChangeListener { v, hasFocus ->
+        if (hasFocus) {
+            (requireParentFragment() as SignUpFragment).view?.findViewById<ScrollView>(R.id.scrollView)
+                ?.let {
+                    it.smoothScrollTo(0, it.height)
+                }
+        }
+    }
+
+    override fun onClick(v: View?) {
+
+        binding.apply {
+
+            when (v!!) {
+
+                tvCountryCode ->
+                    CountryPicker.Builder().with(requireContext())
+                        .listener {
+                            tvCountryCode.text = it.dialCode
+                            viewModel.countryCode = it.dialCode
+                        }
+                        .style(R.style.CountryPickerStyle)
+                        .sortBy(CountryPicker.SORT_BY_NAME)
+                        .build()
+                        .showDialog(
+                            requireActivity() as AppCompatActivity,
+                            R.style.CountryPickerStyle,
+                            false
+                        )
+
+                tvLoginViaPhone -> {
+
+                    tvTitle.text = getString(R.string.happy_to_see_you_back)
+                    tvSubTitle.text = getString(R.string.phone_login_helper_text)
+
+                    tvCountryCode.fadeIn()
+                    etPhone.fadeIn()
+                    tvCountryCode.visible()
+                    etPhone.visible()
+                    etEmail.gone()
+                    etEmail.fadeOut()
+                    tvLoginViaEmail.visible()
+                    tvLoginViaPhone.gone()
+                    etPhone.setText("")
+                    etPassword.setText("")
+                    etPhone.requestKeyboard()
+                }
+
+                tvLoginViaEmail -> {
+
+                    tvTitle.text = getString(R.string.nice_to_see_you_again)
+                    tvSubTitle.text = getString(R.string.email_login_helper_text)
+
+                    tvCountryCode.fadeOut()
+                    etPhone.fadeOut()
+                    tvCountryCode.gone()
+                    etPhone.gone()
+                    etEmail.visible()
+                    etEmail.fadeIn()
+                    tvLoginViaEmail.gone()
+                    tvLoginViaPhone.visible()
+                    etEmail.setText("")
+                    etPassword.setText("")
+                    etEmail.requestKeyboard()
+                }
+
+                btnNext -> {
+
+                    // login case
+                    if (viewModel.forLogin) {
+
+                        (requireParentFragment() as SignUpFragment).client =
+                            SRP6ClientSession()
+                        (requireParentFragment() as SignUpFragment).client.xRoutine =
+                            XRoutineWithUserIdentity()
+
+
+                        when {
+
+                            // phone case
+                            etPhone.isShown -> when {
+
+                                verifyMobile() && verifyPassword() ->
+                                    checkInternet(requireContext()) {
+                                        showProgressDialog(requireContext())
+                                        viewModel.mobileNumber = mobile
+                                        viewModel.countryCode = countryCode
+                                        viewModel.password = password
+
+                                        (requireParentFragment() as SignUpFragment).client.step1(
+                                            mobile,
+                                            password
+                                        )
+                                        viewModel.userChallenge(phone = "${countryCode}$mobile")
+//                                        viewModel.userChallenge(phone = mobile)
+
+                                    }
+
+                            }
+
+                            // email case
+                            else -> when {
+                                verifyEmail() && verifyPassword() ->
+                                    checkInternet(requireContext()) {
+                                        showProgressDialog(requireContext())
+                                        viewModel.email = email
+                                        viewModel.password = password
+                                        (requireParentFragment() as SignUpFragment).client.step1(
+                                            email,
+                                            password
+                                        )
+                                        viewModel.userChallenge(email = viewModel.email)
+                                    }
+                            }
+
+                        }
+
+                    }
+                    // sign up case
+                    else
+                        when {
+                            verifyMobile() ->
+                                checkInternet(requireContext()) {
+                                    showProgressDialog(requireContext())
+                                    viewModel.mobileNumber = mobile
+                                    viewModel.countryCode = countryCode
+                                    viewModel.setPhone(
+                                        viewModel.countryCode,
+                                        viewModel.mobileNumber
+                                    )
+
+                                }
+                        }
+
+                }
+
+            }
+
+        }
+    }
+
+    private fun verifyMobile(): Boolean {
+        return when {
+            mobile.isEmpty() -> {
+                binding.etPhone.requestKeyboard()
+                "Please enter Phone number.".showToast(requireContext())
+                false
+            }
+
+            mobile.length !in 7..15 -> {
+                "Please enter valid Phone number.".showToast(requireContext())
+                false
+            }
+            else -> true
+        }
+    }
+
+    private fun verifyEmail(): Boolean {
+        return when {
+            email.isEmpty() -> {
+                binding.etEmail.requestKeyboard()
+                "Please enter email address.".showToast(requireContext())
+                false
+            }
+
+            !isValidEmail(email) -> {
+                "Please enter valid email.".showToast(requireContext())
+                binding.etEmail.requestKeyboard()
+                false
+            }
+            else -> true
+        }
+    }
+
+    private fun verifyPassword(): Boolean {
+        return when {
+            password.isEmpty() -> {
+                "Please enter password.".showToast(requireContext())
+                binding.etPassword.requestFocus()
+                false
+            }
+            else -> true
+        }
+    }
+
+
+    override fun onDestroyView() {
+        binding.root.viewTreeObserver?.removeOnGlobalLayoutListener(
+            keyboardLayoutListener
+        )
+        super.onDestroyView()
+    }
+
+
+    private var mLastContentHeight = 0
+
+    private val keyboardLayoutListener: ViewTreeObserver.OnGlobalLayoutListener =
+        ViewTreeObserver.OnGlobalLayoutListener {
+
+            try {
+
+                val currentContentHeight = binding.view.height
+
+                Log.d(
+                    "ViewTreeObserver",
+                    "current = $currentContentHeight, previous = $mLastContentHeight"
+                )
+
+                if (currentContentHeight > mLastContentHeight) {
+                    Log.d("ViewTreeObserver", "closed")
+                } else {
+                    Log.d("ViewTreeObserver", "opened")
+                    (requireParentFragment() as SignUpFragment).binding.apply {
+                        scrollView.smoothScrollTo(0, scrollView.height)
+                    }
+                }
+
+                mLastContentHeight = currentContentHeight
+            } catch (e: Exception) {
+                print(e.message)
+            }
+        }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
+
+        when (newConfig.hardKeyboardHidden) {
+            Configuration.HARDKEYBOARDHIDDEN_NO -> "closed".showToast(requireContext())
+
+            Configuration.HARDKEYBOARDHIDDEN_YES -> {
+                "opened".showToast(requireContext())
+                (requireParentFragment() as SignUpFragment).view?.findViewById<ScrollView>(R.id.scrollView)
+                    ?.let {
+                        it.smoothScrollTo(0, it.height)
+                    }
+            }
+            else -> {
+
+            }
+        }
+    }
+
+}

@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        style="@style/TitleText"
+        android:text="@string/v_rification_email" />
+
+    <TextView
+        android:id="@+id/tvSubTitle"
+        style="@style/SubTitleText"
+        android:layout_marginTop="4dp"
+        android:lineSpacingExtra="4dp"
+        android:text="@string/subtitle_verification_email" />
+
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="44dp">
+
+        <!--<ImageView
+            android:id="@+id/ivAppleMail"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/ic_apple_email" />
+
+        <TextView
+            android:id="@+id/tvOpenApple"
+            style="@style/DialogTitle"
+            android:layout_alignTop="@id/ivAppleMail"
+            android:layout_alignBottom="@id/ivAppleMail"
+            android:layout_marginHorizontal="12dp"
+            android:layout_toStartOf="@id/ivLinkApple"
+            android:layout_toEndOf="@id/ivAppleMail"
+            android:gravity="center_vertical"
+            android:text="@string/open_apple_mail" />
+
+        <ImageView
+            android:id="@+id/ivLinkApple"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/ivAppleMail"
+            android:layout_alignBottom="@id/ivAppleMail"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_link" />
+-->
+
+        <ImageView
+            android:id="@+id/ivGmail"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_alignParentStart="true"
+            android:src="@drawable/ic_gmail" />
+
+        <TextView
+            android:id="@+id/tvOpenGmail"
+            style="@style/DialogTitle"
+            android:layout_alignTop="@id/ivGmail"
+            android:layout_alignBottom="@id/ivGmail"
+            android:layout_marginHorizontal="12dp"
+            android:layout_toStartOf="@id/ivLinkGmail"
+            android:layout_toEndOf="@id/ivGmail"
+            android:gravity="center_vertical"
+            android:text="@string/open_gmail" />
+
+        <ImageView
+            android:id="@+id/ivLinkGmail"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignTop="@id/ivGmail"
+            android:layout_alignBottom="@id/ivGmail"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_link" />
+
+    </RelativeLayout>
+
+    <TextView
+        android:id="@+id/tvResendEmail"
+        style="@style/SubheadMabry"
+        android:layout_marginTop="16dp"
+        android:paddingVertical="4dp"
+        android:text="@string/resend_email"
+        android:textColor="@color/purple_500_" />
+
+    <View
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:layout_weight="1" />
+
+
+</LinearLayout>

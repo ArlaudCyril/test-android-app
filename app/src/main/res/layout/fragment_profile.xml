@@ -1,0 +1,392 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:fitsSystemWindows="true"
+    android:background="@color/white"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/ivTopAction"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:padding="12dp"
+        android:src="@drawable/ic_close"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true"
+        android:scrollbars="none">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:id="@+id/tvName"
+                    style="@style/HeadingStyle"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginEnd="12dp"
+                    android:layout_toStartOf="@+id/ivProfile"
+                    android:text="Frida Kahlo"
+                    android:textSize="40sp" />
+
+                <TextView
+                    android:id="@+id/tvEmail"
+                    style="@style/SubheadMabry"
+                    android:layout_below="@id/tvName"
+                    android:layout_alignEnd="@+id/tvName"
+                    android:layout_marginTop="2dp"
+                    android:text="frida@gmail.com"
+                    android:layout_alignStart="@id/tvName"
+                    android:textColor="@color/purple_gray_500"
+                    android:textStyle="bold" />
+
+                <ImageView
+                    android:id="@+id/ivProfile"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_alignParentEnd="true"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/circle_stroke_profile"
+                    android:padding="2dp"
+                    />
+
+            </RelativeLayout>
+
+            <TextView
+                style="@style/TitleText"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="32dp"
+                android:text="Transaction"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textColor="@color/purple_gray_900" />
+
+            <RelativeLayout
+                android:id="@+id/llTransactions"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="24dp"
+                android:animateLayoutChanges="true"
+                android:background="@drawable/curved_button"
+                android:backgroundTint="@color/purple_gray_50"
+                android:orientation="vertical"
+                android:paddingVertical="16dp">
+
+                <TextView
+                    android:id="@+id/tvNoTransaction"
+                    style="@style/SubheadMabry"
+                    android:layout_centerInParent="true"
+                    android:text="No Transactions"
+                    android:textColor="@color/purple_gray_600"
+                    android:visibility="gone" />
+
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvTransactions"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentTop="true"
+                    android:layoutAnimation="@anim/recycler_view_item_animation" />
+
+                <TextView
+                    android:id="@+id/tvViewAllTransaction"
+                    style="@style/SubheadMabry"
+                    android:layout_below="@id/rvTransactions"
+                    android:layout_alignParentBottom="true"
+                    android:layout_centerHorizontal="true"
+                    android:layout_gravity="center"
+                    android:layout_marginVertical="8dp"
+                    android:text="@string/view_all_underline"
+                    android:textColor="@color/purple_500_"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+            <TextView
+                style="@style/TitleText"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="32dp"
+                android:text="Payment method"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textColor="@color/purple_gray_900" />
+
+            <LinearLayout
+                android:id="@+id/llPaymentMethods"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="24dp"
+                android:animateLayoutChanges="true"
+                android:background="@drawable/curved_button"
+                android:backgroundTint="@color/purple_gray_50"
+                android:orientation="vertical"
+                android:paddingBottom="16dp">
+
+                <LinearLayout
+                    android:id="@+id/llBankInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:visibility="gone">
+
+                    <TextView
+                        style="@style/SubheadMabry"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="12dp"
+                        android:text="IBAN number"
+                        android:textColor="@color/purple_gray_600" />
+
+                    <TextView
+                        android:id="@+id/tvIban"
+                        style="@style/SubheadMabry"
+                        android:layout_marginStart="16dp"
+                        android:textColor="@color/purple_gray_700"
+                        android:textStyle="bold"
+                        tools:text="55786454653" />
+
+                    <TextView
+                        style="@style/SubheadMabry"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginTop="24dp"
+                        android:text="BIC number"
+                        android:textColor="@color/purple_gray_600" />
+
+                    <TextView
+                        android:id="@+id/tvBic"
+                        style="@style/SubheadMabry"
+                        android:layout_marginStart="16dp"
+                        android:textStyle="bold"
+                        android:textColor="@color/purple_gray_700"
+                        tools:text="55786454653" />
+                </LinearLayout>
+
+                <TextView
+                    android:id="@+id/tvAddPaymentMethod"
+                    style="@style/SubheadMabry"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/add_payment_method"
+                    android:textColor="@color/purple_500_" />
+
+            </LinearLayout>
+
+            <TextView
+                style="@style/TitleText"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="32dp"
+                android:text="Account"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textColor="@color/purple_gray_900" />
+
+            <LinearLayout
+                android:id="@+id/llAccount"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="24dp"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="16dp"
+                android:background="@drawable/curved_button"
+                android:backgroundTint="@color/purple_gray_50"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/llNotification"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    >
+
+                    <TextView
+                        style="@style/SubheadMabry"
+                        android:layout_alignParentStart="true"
+                        android:text="Notifications"
+                        android:textColor="@color/purple_gray_700"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_right_arrow_grey" />
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+            <TextView
+                style="@style/TitleText"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="32dp"
+                android:text="Security"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textColor="@color/purple_gray_900" />
+
+
+            <LinearLayout
+                android:id="@+id/rlSecurity"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/curved_button"
+                android:backgroundTint="@color/purple_gray_50"
+                android:orientation="vertical">
+
+                <RelativeLayout
+                    android:id="@+id/llStrongAuthentication"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="16dp">
+
+                    <TextView
+                        android:id="@+id/tvTitleStrongAuth"
+                        style="@style/SubheadMabry"
+                        android:layout_alignParentStart="true"
+                        android:text="Strong authentication"
+                        android:textColor="@color/purple_gray_700"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvStatusStrongAuth"
+                        style="@style/BodyMabry"
+                        android:layout_below="@id/tvTitleStrongAuth"
+                        android:layout_alignParentStart="true"
+                        android:text="Disabled"
+                        android:textColor="@color/purple_gray_500" />
+
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_right_arrow_grey" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/rlAddressBook"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="16dp">
+
+                    <TextView
+                        android:id="@+id/tvTitleAddressBook"
+                        style="@style/SubheadMabry"
+                        android:layout_alignParentStart="true"
+                        android:text="Crypto address book"
+                        android:textColor="@color/purple_gray_700"
+                        android:textStyle="bold" />
+
+                    <TextView
+                        android:id="@+id/tvStatusAddressBook"
+                        style="@style/BodyMabry"
+                        android:layout_below="@id/tvTitleAddressBook"
+                        android:layout_alignParentStart="true"
+                        android:text="Whitelisting: Disabled"
+                        android:textColor="@color/purple_gray_500" />
+
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_right_arrow_grey" />
+                </RelativeLayout>
+
+                <LinearLayout
+                    android:id="@+id/llChangePin"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="16dp">
+
+                    <TextView
+                        android:id="@+id/tvChangePin"
+                        style="@style/SubheadMabry"
+                        android:text="Change pin"
+                        android:textColor="@color/purple_gray_700"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_right_arrow_grey" />
+                </LinearLayout>
+
+                <LinearLayout
+                    android:id="@+id/llFaceId"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="16dp">
+
+                    <TextView
+                        style="@style/SubheadMabry"
+                        android:text="Face ID"
+                        android:textColor="@color/purple_gray_700"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                    <androidx.appcompat.widget.SwitchCompat
+                        android:id="@+id/switchFaceId"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:enabled="true"
+                        android:minHeight="36dp"
+                        android:thumb="@drawable/custom_thumb"
+                        app:track="@drawable/custom_track" />
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvLogout"
+                style="@style/SubheadMabry"
+                android:layout_gravity="center"
+                android:layout_marginVertical="24dp"
+                android:padding="8dp"
+                android:text="@string/log_out"
+                android:textColor="@color/purple_500_" />
+
+
+        </LinearLayout>
+    </ScrollView>
+</LinearLayout>

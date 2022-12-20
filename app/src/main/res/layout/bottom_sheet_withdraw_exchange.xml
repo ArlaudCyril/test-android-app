@@ -1,0 +1,212 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/top_curved_layout"
+    android:backgroundTint="@color/purple_gray_00"
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/ivTopAction"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:backgroundTint="@color/purple_gray_50"
+        android:padding="12dp"
+        android:layout_marginStart="-8dp"
+        android:src="@drawable/ic_close"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/purple_gray_800" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        style="@style/SubheadMabry"
+        android:text="Withdraw, deposit or exchange"
+        android:textColor="#423D33"
+        app:layout_constraintBottom_toBottomOf="@id/ivTopAction"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ivTopAction" />
+
+    <ImageView
+        android:id="@id/ivWithdraw"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/circle_drawable"
+        android:backgroundTint="@color/purple_gray_50"
+        android:padding="4dp"
+        android:src="@drawable/ic_withdraw"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivTopAction" />
+
+    <TextView
+        android:id="@+id/tvTitleWithdraw"
+        style="@style/SubheadMabry"
+        android:layout_width="0dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="36dp"
+        android:text="Withdraw"
+        android:textColor="@color/purple_gray_700"
+        app:layout_constraintEnd_toStartOf="@+id/ivRightArrowWithdraw"
+        app:layout_constraintStart_toEndOf="@id/ivWithdraw"
+        app:layout_constraintTop_toBottomOf="@id/ivTopAction" />
+
+    <TextView
+        android:id="@+id/tvSubTitleWithdraw"
+        style="@style/BodyMabry"
+        android:layout_width="0dp"
+        android:layout_marginStart="12dp"
+        android:text="Your assets to your bank account"
+        android:textColor="@color/purple_gray_500"
+        app:layout_constraintEnd_toStartOf="@+id/ivRightArrowWithdraw"
+        app:layout_constraintStart_toEndOf="@id/ivWithdraw"
+        app:layout_constraintTop_toBottomOf="@id/tvTitleWithdraw" />
+
+    <ImageView
+        android:id="@+id/ivRightArrowWithdraw"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:src="@drawable/ic_right_arrow_grey"
+        app:layout_constraintBottom_toBottomOf="@id/tvSubTitleWithdraw"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvTitleWithdraw" />
+
+
+    <ImageView
+        android:id="@id/ivExchange"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/circle_drawable"
+        android:backgroundTint="@color/purple_gray_50"
+        android:padding="4dp"
+        android:src="@drawable/ic_exchange"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivWithdraw" />
+
+    <TextView
+        android:id="@+id/tvTitleExchange"
+        style="@style/SubheadMabry"
+        android:layout_width="0dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="36dp"
+        android:text="Exchange"
+        android:textColor="@color/purple_gray_700"
+        app:layout_constraintEnd_toStartOf="@+id/ivRightArrowExchange"
+        app:layout_constraintStart_toEndOf="@id/ivExchange"
+        app:layout_constraintTop_toBottomOf="@id/ivWithdraw" />
+
+    <TextView
+        android:id="@+id/tvSubTitleExchange"
+        style="@style/BodyMabry"
+        android:layout_width="0dp"
+        android:layout_marginStart="12dp"
+        android:text="Trade one asset against another"
+        android:textColor="@color/purple_gray_500"
+        app:layout_constraintEnd_toStartOf="@+id/ivRightArrowExchange"
+        app:layout_constraintStart_toEndOf="@id/ivExchange"
+        app:layout_constraintTop_toBottomOf="@id/tvTitleExchange" />
+
+    <ImageView
+        android:id="@+id/ivRightArrowExchange"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:src="@drawable/ic_right_arrow_grey"
+        app:layout_constraintBottom_toBottomOf="@id/tvSubTitleExchange"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvTitleExchange" />
+
+
+    <ImageView
+        android:id="@+id/ivDeposit"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/circle_drawable"
+        android:backgroundTint="@color/purple_gray_50"
+        android:padding="4dp"
+        android:src="@drawable/ic_deposit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivExchange" />
+
+    <TextView
+        android:id="@+id/tvTitleDeposit"
+        style="@style/SubheadMabry"
+        android:layout_width="0dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="36dp"
+        android:text="Deposit FIAT"
+        android:textColor="@color/purple_gray_700"
+        app:layout_constraintEnd_toStartOf="@+id/ivRightArrowDeposit"
+        app:layout_constraintStart_toEndOf="@id/ivDeposit"
+        app:layout_constraintTop_toBottomOf="@id/ivExchange" />
+
+    <TextView
+        android:id="@+id/tvSubTitleDeposit"
+        style="@style/BodyMabry"
+        android:layout_width="0dp"
+        android:layout_marginStart="12dp"
+        android:text="Money to Lyber"
+        android:textColor="@color/purple_gray_500"
+        app:layout_constraintEnd_toStartOf="@+id/ivRightArrowDeposit"
+        app:layout_constraintStart_toEndOf="@id/ivDeposit"
+        app:layout_constraintTop_toBottomOf="@id/tvTitleDeposit" />
+
+    <ImageView
+        android:id="@+id/ivRightArrowDeposit"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:src="@drawable/ic_right_arrow_grey"
+        app:layout_constraintBottom_toBottomOf="@id/tvSubTitleDeposit"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvTitleDeposit" />
+
+
+    <ImageView
+        android:id="@+id/ivDepositAsset"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/circle_drawable"
+        android:backgroundTint="@color/purple_gray_50"
+        android:padding="4dp"
+        android:src="@drawable/ic_deposit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivDeposit" />
+
+    <TextView
+        android:id="@+id/tvTitleDepositAsset"
+        style="@style/SubheadMabry"
+        android:layout_width="0dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="36dp"
+        android:text="Sell"
+        android:textColor="@color/purple_gray_700"
+        app:layout_constraintEnd_toStartOf="@+id/ivRightArrowDepositAsset"
+        app:layout_constraintStart_toEndOf="@id/ivDepositAsset"
+        app:layout_constraintTop_toBottomOf="@id/ivDeposit" />
+
+    <TextView
+        android:id="@+id/tvSubTitleDepositAsset"
+        style="@style/BodyMabry"
+        android:layout_width="0dp"
+        android:layout_marginStart="12dp"
+        android:text="For fiat currency"
+        android:textColor="@color/purple_gray_500"
+        app:layout_constraintEnd_toStartOf="@+id/ivRightArrowDepositAsset"
+        app:layout_constraintStart_toEndOf="@id/ivDepositAsset"
+        app:layout_constraintTop_toBottomOf="@id/tvTitleDepositAsset" />
+
+    <ImageView
+        android:id="@+id/ivRightArrowDepositAsset"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:src="@drawable/ic_right_arrow_grey"
+        app:layout_constraintBottom_toBottomOf="@id/tvSubTitleDepositAsset"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvTitleDepositAsset" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

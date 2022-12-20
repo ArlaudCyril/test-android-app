@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingHorizontal="12dp"
+    android:paddingVertical="16dp">
+
+    <ImageView
+        android:id="@+id/ivItem"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:background="@drawable/circle_drawable"
+        android:backgroundTint="@color/purple_gray_50"
+        android:padding="4dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/tvStartTitleCenter"
+        style="@style/SubheadMabry"
+        android:layout_marginStart="12dp"
+        app:layout_constraintBottom_toBottomOf="@id/ivItem"
+        app:layout_constraintStart_toEndOf="@id/ivItem"
+        app:layout_constraintTop_toTopOf="@id/ivItem" />
+
+    <TextView
+        android:id="@+id/tvStartTitle"
+        style="@style/SubheadMabry"
+        android:layout_marginStart="12dp"
+        android:textColor="@color/purple_gray_700"
+        app:layout_constraintStart_toEndOf="@id/ivItem"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="PayPal" />
+
+    <TextView
+        android:id="@+id/tvStartSubTitle"
+        style="@style/BodyMabry"
+        android:layout_marginStart="12dp"
+        android:textColor="@color/purple_gray_500"
+        app:layout_constraintStart_toEndOf="@id/ivItem"
+        app:layout_constraintTop_toBottomOf="@id/tvStartTitle"
+        tools:text="fri****@gmail.com" />
+
+
+    <TextView
+        android:id="@+id/tvEndTitle"
+        style="@style/SubheadMabry"
+        android:layout_marginEnd="12dp"
+        android:textColor="@color/purple_gray_700"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toStartOf="@id/ivEndIcon"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="3 114,19€" />
+
+    <TextView
+        android:id="@+id/tvEndSubTitle"
+        style="@style/BodyMabry"
+        android:layout_marginEnd="12dp"
+        android:textColor="@color/purple_gray_500"
+        app:layout_constraintEnd_toStartOf="@id/ivEndIcon"
+        app:layout_constraintTop_toBottomOf="@id/tvEndTitle"
+        tools:text="554260" />
+
+    <TextView
+        android:id="@+id/tvEndTitleCenter"
+        style="@style/SubheadMabry"
+        android:layout_marginEnd="12dp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toBottomOf="@id/ivItem"
+        app:layout_constraintEnd_toStartOf="@id/ivEndIcon"
+        app:layout_constraintTop_toTopOf="@id/ivItem" />
+
+    <ImageView
+        android:id="@+id/ivEndIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:src="@drawable/ic_right_arrow_grey" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

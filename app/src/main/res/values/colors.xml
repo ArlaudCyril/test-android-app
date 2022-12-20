@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="purple_500">#FF6200EE</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="purple_gray_50">#F7F7F8</color>
+    <color name="purple_gray_00">#FFFFFF</color>
+
+    <color name="purple_00">#F5F1FD</color>
+    <color name="purple_500_">#7C38EA</color>
+    <color name="purple_600">#5825AC</color>
+    <color name="purple_400">#945DEE</color>
+    <color name="purple_200">#C5A7F5</color>
+    <color name="purple_800">#35126D</color>
+    <color name="purple_700">#3E167D</color>
+    <color name="purple_300">#AC82F2</color>
+    <color name="purple_100">#DDCCF9</color>
+
+    <color name="purple_gray_800">#29262D</color>
+    <color name="purple_gray_100">#E7E5EA</color>
+    <color name="purple_gray_400">#9F98AA</color>
+    <color name="purple_gray_500">#877E95</color>
+    <color name="purple_gray_600">#6C6577</color>
+    <color name="purple_gray_700">#36323C</color>
+    <color name="purple_gray_900">#1B191E</color>
+
+    <color name="green_500">#1EB35A</color>
+    <color name="red_500">#DF5A43</color>
+
+
+    <!-- asset colors -->
+
+    <color name="bitcoinColor">#F7931A</color>
+    <color name="etherColor">#343434</color>
+    <color name="solanaColor">#14F195</color>
+    <color name="ftxColor">#62D1E5</color>
+    <color name="bnbColor">#F0B90B</color>
+    <color name="lunaColor">#2845AE</color>
+    <color name="dogecoinColor">#C2A633</color>
+    <color name="avaxColor">#E84142</color>
+    <color name="srmColor">#77E3EF</color>
+    <color name="egldColor">#0D022B</color>
+    <color name="linkColor">#335DD2</color>
+    <color name="adacoinColor">#0033AD</color>
+    <color name="xrpColor">#000000</color>
+    <color name="shibColor">#EC442D</color>
+    <color name="dotColor">#E6007A</color>
+    <color name="usdcColor">#2775CA</color>
+
+</resources>

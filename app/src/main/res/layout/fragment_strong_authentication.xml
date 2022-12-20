@@ -1,0 +1,180 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+
+    <ImageView
+        android:id="@+id/ivTopAction"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:padding="12dp"
+        android:src="@drawable/ic_back" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:orientation="vertical">
+
+            <TextView
+                style="@style/HeadingStyle"
+                android:layout_marginTop="8dp"
+                android:text="Strong authentification" />
+
+            <TextView
+                style="@style/SubheadMabry"
+                android:layout_marginTop="4dp"
+                android:lineSpacingExtra="6dp"
+                android:text="For added security on your Lyber account, enable strong authentication. "
+                android:textColor="@color/purple_gray_500" />
+
+            <RelativeLayout
+                android:id="@+id/rlBySms"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/curved_button"
+                android:backgroundTint="@color/purple_gray_50"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="16dp">
+
+                <LinearLayout
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:orientation="vertical">
+
+                    <TextView
+                        style="@style/SubheadMabry"
+                        android:text="By SMS" />
+
+                    <TextView
+                        android:id="@+id/tvNumber"
+                        style="@style/BodyMabry"
+                        android:text="To: 0677543708"
+                        android:textColor="@color/purple_gray_500" />
+                </LinearLayout>
+
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switchStrongAuthentication"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentEnd="true"
+                    android:enabled="true"
+                    android:minHeight="28dp"
+                    android:thumb="@drawable/custom_thumb"
+                    app:track="@drawable/custom_track" />
+
+
+            </RelativeLayout>
+
+
+            <RelativeLayout
+                android:id="@+id/rlCases"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="4dp"
+                android:orientation="vertical"
+                android:paddingVertical="12dp"
+                android:visibility="gone">
+
+                <TextView
+                    android:id="@+id/tvManageAuthentication"
+                    style="@style/SubheadMabry"
+                    android:text="Manage the application cases of SMS authentication"
+                    android:textColor="@color/purple_gray_500" />
+
+                <TextView
+                    android:id="@+id/tvValidateWithdraw"
+                    style="@style/SubheadMabry"
+                    android:layout_alignTop="@id/switchValidateWithdraw"
+                    android:layout_alignBottom="@id/switchValidateWithdraw"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginEnd="16dp"
+                    android:layout_toStartOf="@+id/switchValidateWithdraw"
+                    android:gravity="center|start"
+                    android:text="Validate a withdraw" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switchValidateWithdraw"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvManageAuthentication"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="24dp"
+                    android:enabled="true"
+                    android:minHeight="36dp"
+                    android:thumb="@drawable/custom_thumb"
+                    app:track="@drawable/custom_track" />
+
+
+                <TextView
+                    android:id="@+id/tvEnableWhitelisting"
+                    style="@style/SubheadMabry"
+                    android:layout_alignTop="@id/switchWhitelisting"
+                    android:layout_alignBottom="@id/switchWhitelisting"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginEnd="16dp"
+                    android:layout_toStartOf="@+id/switchWhitelisting"
+                    android:gravity="center|start"
+                    android:text="Enable/Disable whitelisting" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switchWhitelisting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/switchValidateWithdraw"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="16dp"
+                    android:checked="true"
+                    android:enabled="true"
+                    android:minHeight="36dp"
+                    android:thumb="@drawable/custom_thumb"
+                    app:track="@drawable/custom_track" />
+
+
+                <TextView
+                    android:id="@+id/tvEditAccount"
+                    style="@style/SubheadMabry"
+                    android:layout_alignTop="@id/switchEditAccount"
+                    android:layout_alignBottom="@id/switchEditAccount"
+                    android:layout_alignParentStart="true"
+                    android:layout_marginEnd="16dp"
+                    android:layout_toStartOf="@+id/switchEditAccount"
+                    android:gravity="center|start"
+                    android:text="Edit account" />
+
+                <androidx.appcompat.widget.SwitchCompat
+                    android:id="@+id/switchEditAccount"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/switchWhitelisting"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="16dp"
+                    android:checked="true"
+                    android:enabled="true"
+                    android:minHeight="36dp"
+                    android:thumb="@drawable/custom_thumb"
+                    app:track="@drawable/custom_track" />
+
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+    </androidx.core.widget.NestedScrollView>
+
+
+</LinearLayout>

@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/curved_button"
+    android:backgroundTint="@color/purple_gray_50"
+    android:orientation="vertical"
+    android:elevation="4dp"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="2dp">
+
+    <TextView
+        android:id="@+id/tvPrice"
+        style="@style/BodyMabry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/purple_500_"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginBottom="2dp"
+        tools:text="$1234" />
+
+    <TextView
+        android:id="@+id/tvDate"
+        style="@style/BodyMabry"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/purple_500_"
+        android:layout_gravity="center_horizontal"
+        android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+        tools:text="12 Sep 20:10" />
+
+</LinearLayout>

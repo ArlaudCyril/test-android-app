@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/ivTopAction"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="12dp"
+        android:padding="12dp"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:fillViewport="true">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:fitsSystemWindows="true"
+            android:paddingBottom="24dp">
+
+            <TextView
+                android:id="@+id/tvTitle"
+                style="@style/TitleText"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="20dp"
+                android:text="Crypto asset deposit"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tvTitleAsset"
+                style="@style/BodyMabry"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:text="Asset"
+                android:textColor="@color/purple_gray_500"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+
+            <LinearLayout
+                android:id="@+id/llNetwork"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/round_stroke_gray_100"
+                android:orientation="horizontal"
+                app:layout_constraintTop_toBottomOf="@id/tvTitleAsset">
+
+                <ImageView
+                    android:id="@+id/ivNetwork"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="start|center_vertical"
+                    android:paddingVertical="12dp"
+                    android:src="@drawable/ic_bitcoin" />
+
+                <EditText
+                    android:id="@+id/etAssets"
+                    style="@style/EditTextTheme"
+                    android:layout_width="match_parent"
+                    android:paddingEnd="12dp"
+                    android:background="@android:color/transparent"
+                    android:cursorVisible="false"
+                    android:paddingStart="12dp"
+                    android:drawableEnd="@drawable/ic_drop_down"
+                    android:drawablePadding="12dp"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:hint="Bitcoin (BTC)"
+                    tools:ignore="RtlSymmetry" />
+
+            </LinearLayout>
+
+            <TextView
+                android:id="@+id/tvTitleDepositAddress"
+                style="@style/BodyMabry"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:text="Deposit adress"
+                android:textColor="@color/purple_gray_500"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/llNetwork" />
+
+            <EditText
+                android:id="@+id/etAddress"
+                style="@style/EditTextTheme"
+                android:layout_width="match_parent"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/edit_text_background"
+                android:drawableEnd="@drawable/ic_code_scanner"
+                android:drawablePadding="12dp"
+                android:hint="1123djsgiuieijb3iuhiduhiuhaisuclkjlvl"
+                android:paddingHorizontal="16dp"
+                android:singleLine="true"
+                app:layout_constraintTop_toBottomOf="@id/tvTitleDepositAddress" />
+
+            <TextView
+                android:id="@+id/tvNote"
+                style="@style/BodyMabry"
+                android:layout_width="match_parent"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/curved_button"
+                android:backgroundTint="#FFF2D9"
+                android:lineSpacingExtra="6dp"
+                android:paddingHorizontal="16dp"
+                android:paddingVertical="16dp"
+                android:text="@string/note_crypto_asset"
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:textColor="@color/purple_gray_800"
+                app:layout_constraintTop_toBottomOf="@id/etAddress" />
+
+            <View
+                android:id="@+id/viewLeft"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="32dp"
+                android:background="#EEEEEE"
+                app:layout_constraintEnd_toStartOf="@id/tvOr"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvNote" />
+
+            <TextView
+                android:id="@+id/tvOr"
+                style="@style/BodyMabry"
+                android:layout_marginHorizontal="12dp"
+                android:text="Or"
+                android:textColor="@color/purple_gray_500"
+                app:layout_constraintBottom_toBottomOf="@id/viewLeft"
+                app:layout_constraintEnd_toStartOf="@id/viewRight"
+                app:layout_constraintStart_toEndOf="@id/viewLeft"
+                app:layout_constraintTop_toTopOf="@id/viewRight" />
+
+            <View
+                android:id="@+id/viewRight"
+                android:layout_width="0dp"
+                android:layout_height="1dp"
+                android:layout_marginTop="32dp"
+                android:layout_marginEnd="24dp"
+                android:background="#EEEEEE"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tvOr"
+                app:layout_constraintTop_toBottomOf="@id/tvNote" />
+
+            <Button
+                android:id="@+id/btnAddUseAddress"
+                style="@style/ButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/curved_button"
+                android:backgroundTint="@color/purple_gray_50"
+                android:gravity="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:text="Buy Bitcoin on Lyber"
+                android:textColor="@color/purple_gray_700"
+                app:layout_constraintTop_toBottomOf="@id/tvOr" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </ScrollView>
+
+</LinearLayout>

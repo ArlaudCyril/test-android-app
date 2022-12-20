@@ -1,0 +1,194 @@
+package com.au.lyber.viewmodels
+
+import androidx.lifecycle.MutableLiveData
+import com.au.lyber.models.*
+
+class PortfolioViewModel : NetworkViewModel() {
+
+
+    private var _selectedAsset: Assets? = null
+    var selectedAsset
+        get() = _selectedAsset
+        set(value) {
+            _selectedAsset = value
+        }
+
+    private var _personalData: PersonalDataResponse? = null
+    var personalData
+        get() = _personalData
+        set(value) {
+            _personalData = value
+        }
+
+    private var _identityDocumentImage: String? = null
+    var identityDocument
+        get() = _identityDocumentImage
+        set(value) {
+            _identityDocumentImage = value
+        }
+
+    private var _selfieImage: String? = null
+    var selfieImage
+        get() = _selfieImage
+        set(value) {
+            _selfieImage = value
+        }
+
+
+    private var _identityVerificationInitiated: Boolean = false
+    var verificationInitiated
+        get() = _identityVerificationInitiated
+        set(value) {
+            _identityVerificationInitiated = value
+        }
+
+    private var _verifyIdentity: Boolean = false
+    var identityVerified
+        get() = _verifyIdentity
+        set(value) {
+            _verifyIdentity = value
+        }
+
+
+    private var _portfolioBuildUpState: Int = 0
+    var portfolioState
+        get() = when {
+            personalData == null -> 0
+            !verificationInitiated -> 1
+            verificationInitiated -> if (identityVerified) 3 else 2
+            else -> -1
+        }
+        set(value) {
+            _portfolioBuildUpState = value
+        }
+
+    /* screen count */
+    // this fragment manages multiple screens
+    // this variable helps to identify the particular screen
+    // 0-> Home Screen, 1-> Asset Detail Screen 2-> Asset Breakdown screen
+
+    var chosenAssets: AssetData? = null
+
+    private var _screenCount: Int = 0
+    var screenCount
+        get() = _screenCount
+        set(value) {
+            _screenCount = value
+        }
+
+    /* to check whether the live data instance contains data or not */
+    fun notHaveData(): Boolean {
+        return getAssetResponse.value == null
+                || trendingCoinResponse.value == null
+                || recurringInvestmentResponse.value == null
+    }
+
+
+    private var _totalPortfolio: Double = 0.0
+    var totalPortfolio
+        get() = _totalPortfolio
+        set(value) {
+            _totalPortfolio = value
+        }
+
+
+    /* strategy viewModel migration */
+
+    private var _selectedStrategy: Strategy? = null
+    var selectedStrategy
+        get() = _selectedStrategy
+        set(value) {
+            _selectedStrategy = value
+        }
+
+    private var _selectedOption: String = ""
+    var selectedOption
+        get() = _selectedOption
+        set(value) {
+            _selectedOption = value
+        }
+
+    private var _selectedFrequency: String = ""
+    var selectedFrequency
+        get() = _selectedFrequency
+        set(value) {
+            _selectedFrequency = value
+        }
+
+    private var _amount: String = ""
+    var amount
+        get() = _amount
+        set(value) {
+            _amount = value
+        }
+
+    private var _assetAmount: String = ""
+    var assetAmount: String
+        get() = _assetAmount
+        set(value) {
+            _assetAmount = value
+        }
+
+    private var _exchangeFromAmount: String = ""
+    var exchangeFromAmount
+        get() = _exchangeFromAmount
+        set(value) {
+            _exchangeFromAmount = value
+        }
+
+    private var _exchangeToAmount: String = ""
+    var exchangeToAmount
+        get() = _exchangeToAmount
+        set(value) {
+            _exchangeToAmount = value
+        }
+
+    private var _exchangeAssetFrom: Assets? = null
+    var exchangeAssetFrom
+        get() = _exchangeAssetFrom
+        set(value) {
+            _exchangeAssetFrom = value
+        }
+
+    private var _exchangeAssetTo: Assets? = null
+    var exchangeAssetTo
+        get() = _exchangeAssetTo
+        set(value) {
+            _exchangeAssetTo = value
+        }
+
+    var allMyPortfolio: String = ""
+
+    private var _withdrawAsset: Assets? = null
+    var withdrawAsset
+        get() = _withdrawAsset
+        set(value) {
+            _withdrawAsset = value
+        }
+
+
+    /* investment strategy view model migration */
+
+    private val _strategyPosition = MutableLiveData<Int>()
+    val strategyPositionSelected
+        get() = _strategyPosition
+
+    private val _addedAssets: MutableList<AddedAsset> = mutableListOf()
+    val addedAsset get() = _addedAssets
+
+
+    /* apis */
+
+    fun chooseStrategy() {
+        selectedStrategy?.let {
+            chooseStrategy(it)
+        }
+    }
+
+    fun buildOwnStrategy(strategyName: String) {
+        buildOwnStrategy(strategyName, addedAsset)
+    }
+
+
+    data class ChooseAssets(val asset_id: String, val allocation: Int)
+}

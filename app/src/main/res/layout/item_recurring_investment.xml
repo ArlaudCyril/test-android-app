@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@android:color/transparent"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="12dp">
+
+    <ImageView
+        android:id="@+id/ivInvestment"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        tools:src="@drawable/ic_ether" />
+
+    <TextView
+        android:id="@+id/tvInvestmentTitle"
+        style="@style/SubheadMabry"
+        android:layout_marginStart="12dp"
+        android:layout_toEndOf="@id/ivInvestment"
+        android:textColor="@color/purple_gray_700"
+        android:textStyle="bold"
+        tools:text="Intermediate strategy" />
+
+    <TextView
+        android:id="@+id/tvInvestmentAmount"
+        style="@style/SubheadMabry"
+        android:layout_alignParentEnd="true"
+        android:textColor="@color/purple_gray_700"
+        android:textStyle="bold"
+        tools:text="100€" />
+
+    <TextView
+        android:id="@+id/tvInvestmentFrequency"
+        style="@style/BodyMabry"
+        android:layout_below="@id/tvInvestmentTitle"
+        android:layout_alignStart="@id/tvInvestmentTitle"
+        android:textColor="@color/purple_gray_500"
+        tools:text="Weekly" />
+
+    <TextView
+        android:id="@+id/tvInvestmentUpcomingPayment"
+        style="@style/BodyMabry"
+        android:layout_below="@id/tvInvestmentFrequency"
+        android:layout_alignStart="@id/tvInvestmentFrequency"
+        android:textColor="@color/purple_gray_500"
+        tools:text="Upcoming Payment:April 27" />
+
+
+</RelativeLayout>

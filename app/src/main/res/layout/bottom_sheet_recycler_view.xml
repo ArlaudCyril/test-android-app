@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/top_curved_layout"
+    android:backgroundTint="@color/purple_gray_00"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/ivTopAction"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:src="@drawable/ic_close"
+        android:padding="12dp"
+        android:backgroundTint="@color/purple_gray_50"
+        app:tint="@color/purple_gray_800" />
+
+    <TextView
+        android:id="@+id/tvTitleBottomSheet"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/purple_gray_800"
+        android:textStyle="bold"
+        android:fontFamily="@font/atypdisplay_regular"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="20dp"
+        tools:text="@string/bottom_sheet_cypto_exp_title" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvBottomSheet"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="8dp" />
+
+</LinearLayout>

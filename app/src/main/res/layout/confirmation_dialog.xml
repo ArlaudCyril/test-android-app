@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/curved_button"
+    android:orientation="vertical"
+    android:padding="20dp">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        style="@style/SubheadMabry"
+        android:layout_gravity="center"
+        android:fontFamily="@font/mabry_pro_bold"
+        android:text="Successfully bought"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textStyle="bold" />
+
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        android:background="@drawable/curved_24_button"
+        android:backgroundTint="@color/purple_500_"
+        android:orientation="horizontal"
+        android:padding="12dp">
+
+        <ImageView
+            android:id="@+id/ivAsset"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            tools:src="@drawable/ic_bitcoin" />
+
+        <TextView
+            android:id="@+id/tvAssetAmount"
+            style="@style/SubheadMabry"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="12dp"
+            android:textColor="@color/white"
+            tools:text="0.008" />
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/tvMessage"
+        style="@style/SubheadMabry"
+        android:layout_gravity="center"
+        android:layout_marginTop="16dp"
+        tools:text="you now own BNB 0.09" />
+
+    <TextView
+        style="@style/SubheadMabry"
+        android:layout_gravity="center"
+        android:layout_marginTop="32dp"
+        android:text="Tap anywhere to dismiss" />
+
+</LinearLayout>

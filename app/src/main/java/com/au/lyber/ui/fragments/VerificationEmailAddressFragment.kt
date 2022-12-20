@@ -1,0 +1,97 @@
+package com.au.lyber.ui.fragments
+
+import android.content.ActivityNotFoundException
+import android.content.Intent
+import android.os.Build
+import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
+import android.text.Html
+import android.view.View
+import com.au.lyber.databinding.FragmentVerificationEmailBinding
+import com.au.lyber.utils.CommonMethods
+import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
+import com.au.lyber.utils.CommonMethods.Companion.showToast
+import com.au.lyber.viewmodels.PersonalDataViewModel
+
+class VerificationEmailAddressFragment : BaseFragment<FragmentVerificationEmailBinding>() {
+
+    private lateinit var viewModel: PersonalDataViewModel
+    private var canCheck: Boolean = false
+    override fun bind() = FragmentVerificationEmailBinding.inflate(layoutInflater)
+
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        (requireParentFragment() as FillDetailFragment).position = 2
+        (requireParentFragment() as FillDetailFragment).setUpViews(2)
+
+        canCheck = false
+        viewModel = CommonMethods.getViewModel(requireParentFragment())
+
+       /* viewModel.resendEmailResponse.observe(viewLifecycleOwner) {
+            CommonMethods.dismissProgressDialog()
+            it.message.showToast(requireContext())
+        }*/
+
+        /*binding.tvOpenApple.setOnClickListener {
+            (requireParentFragment() as FillPersonalDetailFragment).moveToNext()
+//            try {
+//                val intent = Intent(Intent.ACTION_MAIN)
+//                intent.addCategory(Intent.CATEGORY_APP_EMAIL)
+//                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+//                startActivity(Intent.createChooser(intent, "Email"))
+//                canCheck = true
+//            } catch (e: ActivityNotFoundException) {
+//                "Application Not Found".showToast(requireContext())
+//            } catch (e: Exception) {
+//            }
+        }*/
+        binding.tvOpenGmail.setOnClickListener {
+
+            try {
+                val intent = Intent(Intent.ACTION_MAIN)
+                intent.addCategory(Intent.CATEGORY_APP_EMAIL)
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                startActivity(Intent.createChooser(intent, "Email"))
+                canCheck = true
+            } catch (e: ActivityNotFoundException) {
+                "Application Not Found".showToast(requireContext())
+            } catch (e: Exception) {
+            }
+        }
+
+        binding.tvResendEmail.setOnClickListener {
+            showProgressDialog(requireContext())
+            Handler(Looper.getMainLooper()).postDelayed({
+                CommonMethods.dismissProgressDialog()
+                "Email sent successfully.".showToast(requireContext())
+            }, 2000)
+
+//            CommonMethods.checkInternet(requireContext()) {
+//                CommonMethods.showProgressDialog(requireContext())
+//                viewModel.sendEmail(true)
+//            }
+
+        }
+    }
+
+    fun checkVerificationStatus() {
+        CommonMethods.checkInternet(requireContext()) {
+            CommonMethods.showProgressDialog(requireContext())
+            viewModel.emailVerification()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val string =
+            "We have sent an email to <b>${viewModel.email}</b> Check your mailbox and click on the confirmation link to continue."
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            binding.tvSubTitle.text = Html.fromHtml(string, 0)
+        } else binding.tvSubTitle.text = Html.fromHtml(string)
+
+    }
+
+}

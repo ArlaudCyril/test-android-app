@@ -1,0 +1,358 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <ImageView
+        android:id="@+id/ivTopAction"
+        style="@style/TopActionView"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_goneMarginTop="16dp"
+        app:tint="@color/purple_gray_800" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/llBottom"
+        app:layout_constraintTop_toBottomOf="@id/ivTopAction">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/ivTopAction">
+
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:id="@+id/tvAmount"
+                    style="@style/HeadingStyle"
+                    android:layout_width="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/purple_500_"
+                    tools:text="100€" />
+
+                <ImageView
+                    android:id="@+id/ivSingleAsset"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_toEndOf="@id/tvAmount"
+                    android:layout_alignTop="@id/tvAmount"
+                    android:layout_alignBottom="@id/tvAmount"
+                    android:layout_gravity="center_vertical"
+                    android:layout_marginStart="4dp"
+                    android:visibility="gone" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/llInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="24dp"
+                android:background="@drawable/curved_button"
+                android:backgroundTint="@color/purple_gray_50"
+                android:orientation="vertical"
+                android:paddingHorizontal="12dp">
+
+
+                <TextView
+                    android:id="@+id/tvAssetPrice"
+                    style="@style/SubheadMabry"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="BTC price"
+                    android:textColor="@color/purple_gray_500" />
+
+                <TextView
+                    android:id="@+id/tvValueAssetPrice"
+                    style="@style/SubheadMabry"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="472156€"
+                    android:textColor="@color/purple_gray_700"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvNestedAmount"
+                    style="@style/SubheadMabry"
+                    android:layout_below="@id/tvAssetPrice"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/amount"
+                    android:textColor="@color/purple_gray_500" />
+
+                <TextView
+                    android:id="@+id/tvNestedAmountValue"
+                    style="@style/SubheadMabry"
+                    android:layout_below="@id/tvValueAssetPrice"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="16dp"
+                    android:text="100€"
+                    android:textColor="@color/purple_gray_700"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:id="@+id/tvExchangeFrom"
+                    style="@style/SubheadMabry"
+                    android:layout_below="@id/tvNestedAmount"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="Exchange From"
+                    android:textColor="@color/purple_gray_500"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tvExchangeFromValue"
+                    style="@style/SubheadMabry"
+                    android:layout_below="@id/tvNestedAmountValue"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="32dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="BTC"
+                    android:textColor="@color/purple_gray_700"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+
+                <TextView
+                    android:id="@+id/tvExchangeTo"
+                    style="@style/SubheadMabry"
+                    android:layout_below="@id/tvExchangeFrom"
+                    android:layout_marginTop="16dp"
+                    android:text="Exchange To"
+                    android:textColor="@color/purple_gray_500"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tvExchangeToValue"
+                    style="@style/SubheadMabry"
+                    android:layout_below="@id/tvExchangeFromValue"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="16dp"
+                    android:text="ETH"
+                    android:textColor="@color/purple_gray_700"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+
+                <TextView
+                    android:id="@+id/tvFrequency"
+                    style="@style/SubheadMabry"
+                    android:layout_below="@id/tvExchangeTo"
+                    android:layout_marginTop="32dp"
+                    android:text="Frequency"
+                    android:textColor="@color/purple_gray_500"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/tvValueFrequency"
+                    style="@style/SubheadMabry"
+                    android:layout_below="@id/tvExchangeToValue"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="32dp"
+                    android:text="Tous les mois"
+                    android:textColor="@color/purple_gray_700"
+                    android:textStyle="bold"
+                    android:visibility="visible" />
+
+
+                <TextView
+                    android:id="@+id/tvPayment"
+                    style="@style/SubheadMabry"
+                    android:layout_below="@id/tvFrequency"
+                    android:layout_marginTop="32dp"
+                    android:text="Payment"
+                    android:textColor="@color/purple_gray_500"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tvValuePayment"
+                    style="@style/SubheadMabry"
+                    android:layout_below="@id/tvValueFrequency"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="32dp"
+                    android:text="Mastercard ···· 0103"
+                    android:textColor="@color/purple_gray_700"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+
+                <TextView
+                    android:id="@+id/tvBuy"
+                    style="@style/SubheadMabry"
+                    android:layout_below="@id/tvPayment"
+                    android:layout_marginTop="32dp"
+                    android:text="Buy"
+                    android:textColor="@color/purple_gray_500"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tvValueBuy"
+                    style="@style/SubheadMabry"
+                    android:layout_below="@id/tvValuePayment"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="32dp"
+                    android:text="99,92€"
+                    android:textColor="@color/purple_gray_700"
+                    android:textStyle="bold"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tvLyberFee"
+                    style="@style/SubheadMabry"
+                    android:layout_below="@id/tvBuy"
+                    android:layout_marginTop="32dp"
+                    android:text="Lyber fees"
+                    android:textColor="@color/purple_gray_500" />
+
+                <TextView
+                    android:id="@+id/tvValueLyberFee"
+                    style="@style/SubheadMabry"
+                    android:layout_below="@id/tvValueBuy"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="32dp"
+                    android:text="0,08€"
+                    android:textColor="@color/purple_gray_700"
+                    android:textStyle="bold" />
+
+
+                <!-- Deposit fees -->
+
+                <TextView
+                    android:id="@+id/tvDeposit"
+                    style="@style/SubheadMabry"
+                    android:layout_below="@id/tvLyberFee"
+                    android:layout_marginTop="32dp"
+                    android:text="Deposit"
+                    android:textColor="@color/purple_gray_500" />
+
+                <TextView
+                    android:id="@+id/tvValueDeposit"
+                    style="@style/SubheadMabry"
+                    android:layout_below="@id/tvValueLyberFee"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="32dp"
+                    android:text="99,92€"
+                    android:textColor="@color/purple_gray_700"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvDepositFee"
+                    style="@style/SubheadMabry"
+                    android:layout_below="@id/tvDeposit"
+                    android:layout_marginTop="32dp"
+                    android:text="Deposit fees"
+                    android:textColor="@color/purple_gray_500" />
+
+                <TextView
+                    android:id="@+id/tvValueDepositFee"
+                    style="@style/SubheadMabry"
+                    android:layout_below="@id/tvValueDeposit"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="32dp"
+                    android:text="99,92€"
+                    android:textColor="@color/purple_gray_700"
+                    android:textStyle="bold" />
+
+
+                <TextView
+                    android:id="@+id/tvTotal"
+                    style="@style/SubheadMabry"
+                    android:layout_below="@id/tvDepositFee"
+                    android:layout_marginVertical="32dp"
+                    android:text="Total"
+                    android:textColor="@color/purple_gray_700" />
+
+                <TextView
+                    android:id="@+id/tvValueTotal"
+                    style="@style/SubheadMabry"
+                    android:layout_below="@id/tvValueDepositFee"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="32dp"
+                    android:text="100€"
+                    android:textColor="@color/purple_gray_700"
+                    android:textStyle="bold" />
+
+                <TextView
+                    android:id="@+id/tvAllocation"
+                    style="@style/SubheadMabry"
+                    android:layout_below="@id/tvTotal"
+                    android:text="Allocation"
+                    android:textColor="@color/purple_gray_700"
+                    android:textStyle="bold" />
+
+                <com.au.lyber.ui.fragments.AllocationView
+                    android:id="@+id/allocationView"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvAllocation" />
+
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/SubheadMabry"
+        android:text="Confirm investment"
+        app:layout_constraintBottom_toBottomOf="@+id/ivTopAction"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ivTopAction" />
+
+    <LinearLayout
+        android:id="@+id/llBottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/top_curved_layout"
+        android:backgroundTint="@color/purple_gray_50"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:translationZ="4dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:id="@+id/btnConfirmInvestment"
+            style="@style/ButtonStyle"
+            android:background="@drawable/button_purple_500"
+            android:gravity="center"
+            android:text="Confirm Investment" />
+
+        <TextView
+            style="@style/BodyMabry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:lineSpacingExtra="6dp"
+            android:text="The price of cryptocurrencies is volatile. The value of your investment can go up, down or to zero."
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            android:textColor="@color/purple_gray_500" />
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

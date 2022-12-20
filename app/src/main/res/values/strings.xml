@@ -1,0 +1,261 @@
+<resources>
+    <string name="app_name">Lyber</string>
+    <string name="lyber_investments_reinvented">Lyber. Investments, reinvented.</string>
+    <string name="diversified_regular_simple">Diversified. Regular. Simple.</string>
+    <string name="sign_up">Sign up</string>
+    <string name="log_in">Log in</string>
+    <string name="your_phone_number">Your phone number</string>
+    <string name="for_security_phone">For security reasons, we need your phone number. We’ll send you a confirmation code by message.</string>
+    <string name="we_ve_sent_you_a_confirmation_code">We’ve sent you a confirmation code.</string>
+    <string name="enter_code">Enter code</string>
+    <string name="create_a_pin">Create a PIN</string>
+    <string name="secure_your_account_by_creating_a_4_digit_code">Secure your account by creating a 4 digit code.</string>
+    <string name="enable_notifications">Enable notifications</string>
+    <string name="enable_notifications_so_you_don_t_miss_any_updates_from_lyber">Enable notifications so you don\'t miss any updates from Lyber.</string>
+    <string name="not_now">Not now</string>
+    <string name="a_new_code_will_be_sent_in_00_15">A new code will be sent in 00:15</string>
+    <string name="confirm_pin">Confirm PIN</string>
+    <string name="title_activity_scrolling">ScrollingActivity</string>
+    <string name="large_text">
+        "Material is the metaphor.\n\n"
+
+        "A material metaphor is the unifying theory of a rationalized space and a system of motion."
+        "The material is grounded in tactile reality, inspired by the study of paper and ink, yet "
+        "technologically advanced and open to imagination and magic.\n"
+        "Surfaces and edges of the material provide visual cues that are grounded in reality. The "
+        "use of familiar tactile attributes helps users quickly understand affordances. Yet the "
+        "flexibility of the material creates new affordances that supercede those in the physical "
+        "world, without breaking the rules of physics.\n"
+        "The fundamentals of light, surface, and movement are key to conveying how objects move, "
+        "interact, and exist in space and in relation to each other. Realistic lighting shows "
+        "seams, divides space, and indicates moving parts.\n\n"
+
+        "Bold, graphic, intentional.\n\n"
+
+        "The foundational elements of print based design typography, grids, space, scale, color, "
+        "and use of imagery guide visual treatments. These elements do far more than please the "
+        "eye. They create hierarchy, meaning, and focus. Deliberate color choices, edge to edge "
+        "imagery, large scale typography, and intentional white space create a bold and graphic "
+        "interface that immerse the user in the experience.\n"
+        "An emphasis on user actions makes core functionality immediately apparent and provides "
+        "waypoints for the user.\n\n"
+
+        "Motion provides meaning.\n\n"
+
+        "Motion respects and reinforces the user as the prime mover. Primary user actions are "
+        "inflection points that initiate motion, transforming the whole design.\n"
+        "All action takes place in a single environment. Objects are presented to the user without "
+        "breaking the continuity of experience even as they transform and reorganize.\n"
+        "Motion is meaningful and appropriate, serving to focus attention and maintain continuity. "
+        "Feedback is subtle yet clear. Transitions are efﬁcient yet coherent.\n\n"
+
+        "3D world.\n\n"
+
+        "The material environment is a 3D space, which means all objects have x, y, and z "
+        "dimensions. The z-axis is perpendicularly aligned to the plane of the display, with the "
+        "positive z-axis extending towards the viewer. Every sheet of material occupies a single "
+        "position along the z-axis and has a standard 1dp thickness.\n"
+        "On the web, the z-axis is used for layering and not for perspective. The 3D world is "
+        "emulated by manipulating the y-axis.\n\n"
+
+        "Light and shadow.\n\n"
+
+        "Within the material environment, virtual lights illuminate the scene. Key lights create "
+        "directional shadows, while ambient light creates soft shadows from all angles.\n"
+        "Shadows in the material environment are cast by these two light sources. In Android "
+        "development, shadows occur when light sources are blocked by sheets of material at "
+        "various positions along the z-axis. On the web, shadows are depicted by manipulating the "
+        "y-axis only. The following example shows the card with a height of 6dp.\n\n"
+
+        "Resting elevation.\n\n"
+
+        "All material objects, regardless of size, have a resting elevation, or default elevation "
+        "that does not change. If an object changes elevation, it should return to its resting "
+        "elevation as soon as possible.\n\n"
+
+        "Component elevations.\n\n"
+
+        "The resting elevation for a component type is consistent across apps (e.g., FAB elevation "
+        "does not vary from 6dp in one app to 16dp in another app).\n"
+        "Components may have different resting elevations across platforms, depending on the depth "
+        "of the environment (e.g., TV has a greater depth than mobile or desktop).\n\n"
+
+        "Responsive elevation and dynamic elevation offsets.\n\n"
+
+        "Some component types have responsive elevation, meaning they change elevation in response "
+        "to user input (e.g., normal, focused, and pressed) or system events. These elevation "
+        "changes are consistently implemented using dynamic elevation offsets.\n"
+        "Dynamic elevation offsets are the goal elevation that a component moves towards, relative "
+        "to the component’s resting state. They ensure that elevation changes are consistent "
+        "across actions and component types. For example, all components that lift on press have "
+        "the same elevation change relative to their resting elevation.\n"
+        "Once the input event is completed or cancelled, the component will return to its resting "
+        "elevation.\n\n"
+
+        "Avoiding elevation interference.\n\n"
+
+        "Components with responsive elevations may encounter other components as they move between "
+        "their resting elevations and dynamic elevation offsets. Because material cannot pass "
+        "through other material, components avoid interfering with one another any number of ways, "
+        "whether on a per component basis or using the entire app layout.\n"
+        "On a component level, components can move or be removed before they cause interference. "
+        "For example, a floating action button (FAB) can disappear or move off screen before a "
+        "user picks up a card, or it can move if a snackbar appears.\n"
+        "On the layout level, design your app layout to minimize opportunities for interference. "
+        "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
+        "when a user tries to pick up one of cards.\n\n"
+    </string>
+    <string name="action_settings">Settings</string>
+    <string name="activate_face_id">Activate Face ID</string>
+    <string name="activate_face_message">Access Lyber fast and easily by logging with Face ID.</string>
+    <string name="decline">Decline</string>
+    <string name="activate">Activate</string>
+
+    <string name="choose_strategy">Choose a strategy</string>
+
+    <string name="titleOne">A diversified strategy</string>
+    <string name="titleTwo">A flexible frequency</string>
+    <string name="titleThree">An evolving and automated portfolio</string>
+
+    <string name="subTitleOne">Choose an investment strategy according to your risk profile. The allocation to crypto-currencies or FIAT will depend on your selection.</string>
+    <string name="subTitleTwo">Investing the same amount regularly is the best way to see profits. Every week, every month, it\'s up to you.</string>
+    <string name="subTitleThree">Once the regular investment is set, your portfolio will be managed automatically and you will be able to see its evolution.</string>
+    <string name="next">Next</string>
+    <string name="complete_acc_to_start_investing">Complete your account to start investing</string>
+
+    <string name="create_an_account">Create an account</string>
+    <string name="create_an_account_strike"><strike>Create an account</strike></string>
+    <string name="_2">2</string>
+
+    <string name="fill_personal_data">Fill personal data</string>
+    <string name="fill_personal_data_strike"><strike>Fill personal data</strike></string>
+
+    <string name="verify_your_identity">Verify your identity</string>
+    <string name="verify_your_identity_strike"><strike>Verify your identity</strike></string>
+
+    <string name="_3">3</string>
+    <string name="make_your_first_investment">Make your first investment</string>
+    <string name="make_your_first_investment_strike"><strike>Make your first investment</strike></string>
+
+    <string name="_4">4</string>
+    <string name="invest_money">Invest money</string>
+    <string name="complete_your_account">Complete your account</string>
+    <string name="to_start_investing">To start investing</string>
+    <string name="withdraw">Withdraw</string>
+    <string name="your_assets_to_your_bank_account">Your assets to your bank account</string>
+    <string name="exchange">Exchange</string>
+    <string name="trade_one_asset_against_another">Trade one asset against another</string>
+    <string name="personal_data">Personal data</string>
+    <string name="personal_data_subtitle">For legal reasons, we need you to answer some questions and provide us with personal information.</string>
+    <string name="hint_first_name">First Name</string>
+    <string name="hint_last_name">Last Name</string>
+    <string name="hint_birth_date">Birth Date</string>
+    <string name="hint_nationality">Nationality</string>
+    <string name="send_to_lyber">Send pictures to Lyber</string>
+    <string name="adresse_email">Address email</string>
+    <string name="subtitle_email">This information will be used for security purposes and to confirm your transactions.</string>
+    <string name="hint_email">Email</string>
+    <string name="v_rification_email">Email verification</string>
+    <string name="subtitle_verification_email">We have sent an email to frida@gmail.com Check your mailbox and click on the confirmation link to continue.</string>
+    <string name="open_apple_mail">Open Apple Mail</string>
+    <string name="open_gmail">Open Gmail</string>
+    <string name="address">Address</string>
+    <string name="subtitle_address">We need this information to ensure that crypto services are legal in your country of residence.</string>
+    <string name="hint_street_and_number">Street and number</string>
+    <string name="hint_building_floor">Building, floor</string>
+    <string name="hint_city">City</string>
+    <string name="hint_zip_code">ZIP code</string>
+    <string name="hint_country">Country</string>
+    <string name="investment_experience">Investment experience</string>
+    <string name="subtitle_investment_exp">You must answer these questions within the legal framework of international investment regulations.</string>
+    <string name="hint_choose_cryptos">Your investment experience with cryptos</string>
+    <string name="hint_choose">Choose</string>
+    <string name="hint_source_income">Your source of income</string>
+    <string name="hint_work_industry">Your work industry</string>
+    <string name="hint_annual_income">Your annual income</string>
+    <string name="bottom_sheet_cypto_exp_title">What’s your investment experience with cryptos ?</string>
+    <string name="verification_ongoing">Verification ongoing …</string>
+    <string name="identity_verification">Identity verification</string>
+    <string name="subtitle_verify_your_identity">This step protects you from fraud and identity theft. Use your phone to:</string>
+    <string name="_1">1</string>
+    <string name="take_a_picture_of_your_papers"><stroke>Take a picture of your documents</stroke></string>
+    <string name="national_id_card_passport_ou_driving_license"><stroke>National ID card, passport or driving license</stroke></string>
+    <string name="take_a_selfie"><stroke>Take a selfie</stroke></string>
+    <string name="open_camera">Open camera</string>
+    <string name="openSettings">Open settings</string>
+    <string name="setting">Settings</string>
+    <string name="cancel">Cancel</string>
+    <string name="investment_strategies">Investment strategies</string>
+    <string name="subtitle_investment_strategies">The strategies are there to help you dilute your investments over several assets.</string>
+    <string name="build_my_own_strategy">Build my own strategy</string>
+    <string name="choose_this_strategy">Choose this strategy</string>
+    <string name="a_new_code_will_be_sent_in">A new code will be sent in</string>
+    <string name="subtitle_build_strategy">Add as many assets as you wish and choose their respective allocation.</string>
+    <string name="save_my_strategy">Save my strategy</string>
+    <string name="save_strategy_caption">Vous devez ajouter un asset minimum pour créer votre stratégie.</string>
+    <string name="view_all_16_available_assets"><u>View all 16 available assets</u></string>
+    <string name="auto">Auto</string>
+    <string name="allocations">Allocations</string>
+    <string name="allocation">Allocation</string>
+    <string name="edit_my_strategy"><u>Edit my strategy</u></string>
+    <string name="pick_another_strategy">Pick another strategy</string>
+    <string name="invest_using_my_strategy">Invest Using my Strategy</string>
+    <string name="using_my_strategy">Using my strategy</string>
+    <string name="deposit_or_singular_buy"><u>Deposit or singular buy</u></string>
+    <string name="ask_me_later">Ask me later</string>
+    <string name="btc_eth_sol_avax_5_other_assets">BTC, ETH, SOL, AVAX +5 other assets</string>
+    <string name="preview_my_investment">Preview my investment</string>
+    <string name="add_a_frequency">Add a frequency</string>
+    <string name="amount">Amount</string>
+    <string name="credit_card">Credit card</string>
+    <string name="_0103">***0103</string>
+    <string name="apple_pay">Apple pay</string>
+    <string name="bank_account">Bank account</string>
+    <string name="add_a_bank_account">Add a bank account</string>
+    <string name="add_a_credit_card">Add a credit card</string>
+    <string name="unique_investment">Unique investment</string>
+    <string name="resend"><u>Resend code</u></string>
+    <string name="alphabets">qwertyuiopasdfghjklzxcvbnm QWERTYUIOPASDFGHJKLZXCVBNM</string>
+    <string name="my_assets">My assets</string>
+    <string name="analytics">Analytics</string>
+    <string name="recurring_investment">Recurring investment</string>
+    <string name="view_all"><u>View all</u></string>
+    <string name="total_earnings">Total earnings</string>
+    <string name="about_value">Bitcoin is a decentralized digital currency, without a central bank or gove... <b><u>View more</u></b></string>
+    <string name="log_out"><u>Log out</u></string>
+    <string name="view_all_underline"><u>View all</u></string>
+    <string name="add_payment_method"><u>Add payment method</u></string>
+    <string name="make_investment">Make investment</string>
+    <string name="birth_place">Birth Place</string>
+    <string name="name_test"></string>
+    <string name="birth_country">Birth Country</string>
+    <string name="specified_us_person">Specified US Person</string>
+    <string name="hint_state">State</string>
+    <string name="hint_personal_assets">Your personal assets</string>
+    <string name="edit"><b><u>Edit</u></b></string>
+    <string name="resend_email"><u>RESEND EMAIL</u></string>
+    <string name="logout_message">"Are you sure you want to logout ? "</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="logout"><u>Logout</u></string>
+    <string name="note_add_bitcoin_address"><b>Important note:</b> Your note goes here and goes on a big amount of line</string>
+    <string name="subtitle_crypto_book">View and add your favorite crypto addresses here, you can also enable Whitelisting for these addresses.</string>
+    <string name="login_by_email"><u>Login by email</u></string>
+    <string name="login_by_phone"><u>Login by phone</u></string>
+    <string name="note_crypto_asset">Send only Bitcoin (BTC) to this address, using the native Bitcoin protocol.</string>
+    <string name="permission_required">Permissions Required !</string>
+    <string name="message_permission_required">Permissions are required to perform these actions.</string>
+    <string name="build_strategy">Build Strategy</string>
+    <string name="choose">Choose</string>
+    <string name="enter_or_scan_an_address">Enter or scan an address</string>
+    <string name="origin">Origin</string>
+    <string name="add_address">Add address</string>
+    <string name="password">Password</string>
+    <string name="hint_enter_password">Enter password</string>
+    <string name="happy_to_see_you_back">Happy to see you back!</string>
+    <string name="phone_login_helper_text">Enter your phone number to login, we’ll send you a verification code.</string>
+    <string name="nice_to_see_you_again">Nice to see you again!</string>
+    <string name="email_login_helper_text">Enter your email to login, we’ll send you a link by email.</string>
+    <string name="hint_enter_phone_number">Enter phone number</string>
+    <string name="hint_enter_email_address">Enter email address</string>
+</resources>

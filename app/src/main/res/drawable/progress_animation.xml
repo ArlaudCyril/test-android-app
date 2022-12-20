@@ -1,0 +1,99 @@
+<animated-vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt">
+    <aapt:attr name="android:drawable">
+        <vector
+            android:width="80dp"
+            android:height="80dp"
+            android:viewportWidth="80"
+            android:viewportHeight="80">
+
+            <path
+                android:name="pathOne"
+                android:fillColor="#00000000"
+                android:pathData="M40,16.667V22.5"
+                android:strokeWidth="5"
+                android:strokeColor="#7C38EA"
+                android:strokeLineCap="round"
+                android:strokeLineJoin="round" />
+            <path
+                android:name="pathTwo"
+                android:fillColor="#00000000"
+                android:pathData="M23.5,23.5L27.633,27.633"
+                android:strokeWidth="5"
+                android:strokeColor="#7C38EA"
+                android:strokeLineCap="round"
+                android:strokeLineJoin="round" />
+            <path
+                android:name="pathThree"
+                android:fillColor="#00000000"
+                android:pathData="M16.667,40H22.5"
+                android:strokeWidth="5"
+                android:strokeColor="#7C38EA"
+                android:strokeLineCap="round"
+                android:strokeLineJoin="round" />
+            <path
+                android:name="pathFour"
+                android:fillColor="#00000000"
+                android:pathData="M23.5,56.5L27.633,52.367"
+                android:strokeWidth="5"
+                android:strokeColor="#7C38EA"
+                android:strokeLineCap="round"
+                android:strokeLineJoin="round" />
+            <path
+                android:name="pathFive"
+                android:fillColor="#00000000"
+                android:pathData="M40,63.333V57.5"
+                android:strokeWidth="5"
+                android:strokeColor="#7C38EA"
+                android:strokeLineCap="round"
+                android:strokeLineJoin="round" />
+            <path
+                android:name="pathSix"
+                android:fillColor="#00000000"
+                android:pathData="M56.5,56.5L52.367,52.367"
+                android:strokeWidth="5"
+                android:strokeColor="#7C38EA"
+                android:strokeLineCap="round"
+                android:strokeLineJoin="round" />
+            <path
+                android:name="pathSeven"
+                android:fillColor="#00000000"
+                android:pathData="M63.333,40H57.5"
+                android:strokeWidth="5"
+                android:strokeColor="#7C38EA"
+                android:strokeLineCap="round"
+                android:strokeLineJoin="round" />
+            <path
+                android:name="pathEight"
+                android:fillColor="#00000000"
+                android:pathData="M56.5,23.5L52.367,27.633"
+                android:strokeWidth="5"
+                android:strokeColor="#7C38EA"
+                android:strokeLineCap="round"
+                android:strokeLineJoin="round" />
+        </vector>
+
+    </aapt:attr>
+    <target android:name="pathOne">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="1500"
+                android:interpolator="@android:interpolator/fast_out_slow_in"
+                android:propertyName="trimPathEnd"
+                android:valueFrom="0"
+                android:valueTo="1"
+                android:valueType="floatType" />
+        </aapt:attr>
+    </target>
+    <target android:name="pathEight">
+        <aapt:attr name="android:animation">
+            <objectAnimator
+                android:duration="1500"
+                android:interpolator="@android:interpolator/fast_out_slow_in"
+                android:propertyName="trimPathEnd"
+                android:valueFrom="0"
+                android:valueTo="1"
+                android:valueType="floatType" />
+        </aapt:attr>
+    </target>
+</animated-vector>

@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:fitsSystemWindows="true"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <ImageView
+        android:id="@+id/ivtopAction"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="12dp"
+        android:padding="12dp"
+        android:src="@drawable/ic_back" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+
+            <TextView
+                style="@style/TitleText"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="20dp"
+                android:text="Enable whitelisting" />
+
+
+            <TextView
+                style="@style/SubheadMabry"
+                android:layout_width="match_parent"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="4dp"
+                android:lineSpacingExtra="6dp"
+                android:text="Whitelisting is a feature that limits your withdrawals and deposits to addresses in your Lyber address book."
+                android:textColor="@color/purple_gray_600" />
+
+
+            <TextView
+                style="@style/TitleText"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="24dp"
+                android:text="Extra security"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rvExtraSecurity"
+                android:layout_width="match_parent"
+                android:layout_marginTop="12dp"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:nestedScrollingEnabled="false" />
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="16dp"
+                android:background="@drawable/curved_button"
+                android:backgroundTint="@color/purple_gray_50"
+                android:orientation="horizontal"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="16dp">
+
+
+                <ImageView
+                    android:id="@+id/ivInfo"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentTop="true"
+                    android:layout_marginTop="0dp"
+                    android:src="@drawable/ic_info" />
+
+                <TextView
+                    style="@style/BodyMabry"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginStart="12dp"
+                    android:layout_toEndOf="@id/ivInfo"
+                    android:gravity="top"
+                    android:lineSpacingExtra="6dp"
+                    android:text="Allows you to block the addition of new addresses during a given period (effective 4H after its activation)." />
+
+
+            </RelativeLayout>
+
+
+            <Button
+                android:id="@+id/btnEnableWhitelisting"
+                style="@style/ButtonStyle"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="32dp"
+                android:background="@drawable/curved_button"
+                android:backgroundTint="@color/purple_500_"
+                android:text="Enable whitelisting"
+                android:textColor="@color/white" />
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+</LinearLayout>

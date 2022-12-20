@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/text"
+    android:layout_height="wrap_content"
+    android:layout_width="match_parent"
+    android:drawablePadding="12dp"
+    android:textColor="@color/purple_gray_900"
+    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
+    android:fontFamily="@font/atypdisplay_medium"
+    android:gravity="center_vertical"
+    android:orientation="horizontal"
+    android:paddingVertical="16dp"
+    app:drawableEndCompat="@drawable/ic_right_arrow_grey"
+    tools:text="I have never invested" />

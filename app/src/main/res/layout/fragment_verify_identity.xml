@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+
+    <!--android:background="@drawable/curved_button"-->
+
+    <ImageView
+        android:id="@+id/ivTopAction"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:backgroundTint="@color/purple_gray_50"
+        android:padding="12dp"
+        android:src="@drawable/ic_close"
+        app:layout_constraintBottom_toTopOf="@id/topGuide"
+        app:layout_constraintStart_toStartOf="parent"
+        app:tint="@color/purple_gray_800" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        style="@style/TitleText"
+        android:layout_width="0dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="16dp"
+        android:text="@string/identity_verification"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/topGuide" />
+
+    <TextView
+        android:id="@+id/tvSubTitle"
+        style="@style/SubTitleText"
+        android:layout_width="0dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="8dp"
+        android:text="@string/subtitle_verify_your_identity"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+
+
+    <Button
+        android:id="@+id/btnEditPersonalInfo"
+        style="@style/ButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginBottom="16dp"
+        android:backgroundTint="@color/purple_500_"
+        android:text="Edit personal info"
+        android:textColor="@color/white"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/btnStart" />
+
+
+    <Button
+        android:id="@+id/btnStart"
+        style="@style/ButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginBottom="24dp"
+        android:backgroundTint="@color/purple_500_"
+        android:text="Start"
+        android:textColor="@color/white"
+        app:layout_constraintBottom_toTopOf="@id/btnVerificationInProcess" />
+
+    <TextView
+        android:id="@+id/btnVerificationInProcess"
+        style="@style/ButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginBottom="24dp"
+        android:drawablePadding="12dp"
+        android:gravity="center"
+        android:text="Verification is in process"
+        android:textColor="@color/purple_gray_700"
+        android:visibility="gone"
+        app:drawableStartCompat="@drawable/ic_verification_icon"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
+
+
+    <ImageView
+        android:id="@+id/imageView6"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:src="@drawable/image"
+        app:layout_constraintBottom_toTopOf="@+id/btnEditPersonalInfo"
+        app:layout_constraintTop_toBottomOf="@+id/tvSubTitle"
+        tools:layout_editor_absoluteX="76dp" />
+
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/topGuide"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_percent="0.10" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    >
+
+    <TextView
+        android:id="@+id/tvTop"
+        style="@style/DialogTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/radioButton"
+        android:layout_alignBottom="@id/radioButton"
+        android:layout_alignParentStart="true"
+        android:layout_marginEnd="16dp"
+        android:layout_toStartOf="@id/radioButton"
+        android:gravity="center_vertical"
+        tools:text="Safe" />
+
+
+    <ImageView
+        android:id="@+id/radioButton"
+        android:layout_width="28dp"
+        android:layout_height="28dp"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:enabled="false"
+        android:src="@drawable/radio_unselect" />
+
+    <TextView
+        style="@style/SubTitleText"
+        android:id="@+id/tvPriceStrategy"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentEnd="true"
+        android:visibility="gone"
+        android:enabled="false"
+        android:src="@drawable/radio_unselect" />
+
+    <ImageView
+        android:id="@+id/ivYield"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvTop"
+        android:layout_marginTop="18.29dp"
+        android:src="@drawable/ic_yield_chart" />
+
+    <TextView
+        android:id="@+id/tvYield"
+        style="@style/SubTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvTop"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="16dp"
+        android:layout_toEndOf="@id/ivYield"
+        android:text="Yield:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+    <TextView
+        android:id="@+id/tvValueYield"
+        style="@style/DialogTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvTop"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="16dp"
+        android:layout_toEndOf="@id/tvYield"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        tools:text="~10% APY" />
+
+    <ImageView
+        android:id="@+id/ivInfo"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/tvValueYield"
+        android:layout_alignBottom="@id/tvValueYield"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@id/tvValueYield"
+        android:src="@drawable/ic_info_medium" />
+
+
+    <ImageView
+        android:id="@+id/ivRisk"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ivYield"
+        android:layout_marginTop="16.29dp"
+        android:src="@drawable/ic_risk" />
+
+
+    <TextView
+        android:id="@+id/tvRisk"
+        style="@style/SubTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ivYield"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="14dp"
+        android:layout_toEndOf="@id/ivRisk"
+        android:text="Risk:"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+    <TextView
+        android:id="@+id/tvValueRisk"
+        style="@style/DialogTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ivYield"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="16dp"
+        android:layout_toEndOf="@id/tvRisk"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        tools:text="Medium" />
+
+    <com.au.lyber.ui.fragments.AllocationView
+        android:id="@+id/allocationView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvRisk"
+        android:layout_marginTop="12dp" />
+
+    <TextView
+        android:id="@+id/btnInvestUsingMyStrategy"
+        style="@style/ButtonStyle"
+        android:layout_below="@id/allocationView"
+        android:layout_marginTop="8dp"
+        android:background="@drawable/button_purple_500"
+        android:gravity="center"
+        android:text="@string/make_investment"
+        android:textColor="@color/white"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tvEditMyStrategy"
+        style="@style/SubheadMabry"
+        android:layout_width="match_parent"
+        android:layout_below="@id/allocationView"
+        android:layout_marginTop="8dp"
+        android:gravity="center"
+        android:padding="16dp"
+        android:text="@string/edit_my_strategy"
+        android:textColor="@color/purple_500_"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/btnPickAnotherStrategy"
+        style="@style/SubheadMabry"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_below="@id/btnInvestUsingMyStrategy"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/curved_button"
+        android:backgroundTint="@color/purple_gray_50"
+        android:gravity="center"
+        android:text="@string/pick_another_strategy"
+        android:textColor="@color/purple_gray_800"
+        android:textStyle="bold"
+        android:visibility="gone" />
+
+</merge>

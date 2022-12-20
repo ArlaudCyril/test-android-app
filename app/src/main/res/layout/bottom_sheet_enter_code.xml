@@ -1,0 +1,200 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/top_curved_layout"
+    android:backgroundTint="@color/purple_gray_00"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+
+    <TextView
+        style="@style/HeadingStyle"
+        android:layout_gravity="center"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/atypdisplay_semibold"
+        android:gravity="center"
+        android:text="Enter code"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+    <TextView
+        style="@style/SubheadMabry"
+        android:layout_gravity="center"
+        android:layout_marginTop="4dp"
+        android:text="We've sent you a confimation code." />
+
+    <TextView
+        android:id="@+id/tvPhoneNumber"
+        style="@style/EditTextTheme"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:gravity="center"
+        android:text="+ 33 6 77 54 37 08"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        android:textColor="@color/purple_gray_800" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/rlEnterOtp"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvSubTitle"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
+        android:fitsSystemWindows="true"
+        android:visibility="visible">
+
+
+        <EditText
+            android:id="@+id/etCodeOne"
+            style="@style/EditTextTheme"
+            android:layout_width="0dp"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="24dp"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/edit_text_background"
+            android:focusedByDefault="false"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:paddingHorizontal="12dp"
+            app:layout_constraintEnd_toStartOf="@id/etCodeTwo"
+            app:layout_constraintHorizontal_chainStyle="spread"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <EditText
+            android:id="@+id/etCodeTwo"
+            style="@style/EditTextTheme"
+            android:layout_width="0dp"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_marginStart="4dp"
+            android:background="@drawable/edit_text_background"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:paddingHorizontal="12dp"
+            app:layout_constraintEnd_toStartOf="@id/etCodeThree"
+            app:layout_constraintStart_toEndOf="@id/etCodeOne"
+            app:layout_constraintTop_toTopOf="@id/etCodeOne" />
+
+        <EditText
+            android:id="@+id/etCodeThree"
+            style="@style/EditTextTheme"
+            android:layout_width="0dp"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_marginStart="8dp"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/edit_text_background"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:paddingHorizontal="12dp"
+            app:layout_constraintEnd_toStartOf="@id/etCodeFour"
+            app:layout_constraintStart_toEndOf="@id/etCodeTwo"
+            app:layout_constraintTop_toTopOf="@id/etCodeTwo" />
+
+        <EditText
+            android:id="@+id/etCodeFour"
+            style="@style/EditTextTheme"
+            android:layout_width="0dp"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="8dp"
+            android:background="@drawable/edit_text_background"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:paddingHorizontal="12dp"
+            app:layout_constraintEnd_toStartOf="@id/etCodeFive"
+            app:layout_constraintStart_toEndOf="@id/etCodeThree"
+            app:layout_constraintTop_toTopOf="@id/etCodeThree" />
+
+        <EditText
+            android:id="@+id/etCodeFive"
+            style="@style/EditTextTheme"
+            android:layout_width="0dp"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_marginEnd="4dp"
+            android:background="@drawable/edit_text_background"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:paddingHorizontal="12dp"
+            app:layout_constraintEnd_toStartOf="@id/etCodeSix"
+            app:layout_constraintStart_toEndOf="@id/etCodeFour"
+            app:layout_constraintTop_toTopOf="@id/etCodeFour" />
+
+        <EditText
+            android:id="@+id/etCodeSix"
+            style="@style/EditTextTheme"
+            android:layout_width="0dp"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="24dp"
+            android:background="@drawable/edit_text_background"
+            android:gravity="center"
+            android:inputType="number"
+            android:maxLength="1"
+            android:paddingHorizontal="12dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/etCodeFive"
+            app:layout_constraintTop_toTopOf="@id/etCodeFive" />
+
+
+        <LinearLayout
+            android:id="@+id/llNewCodeSentIn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:orientation="horizontal"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etCodeOne">
+
+            <TextView
+                android:id="@+id/tvNewOtpSentIn"
+                style="@style/SubTitleText"
+                android:layout_marginEnd="4dp"
+                android:text="@string/a_new_code_will_be_sent_in" />
+
+            <TextView
+                android:id="@+id/tvTimerOptSent"
+                style="@style/SubTitleText"
+                android:layout_width="60dp"
+                android:layout_gravity="center"
+                android:text="00:15" />
+
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tvResendCode"
+            style="@style/BodyMabry"
+            android:layout_marginTop="24dp"
+            android:text="@string/resend"
+            android:textColor="@color/purple_500_"
+            android:visibility="gone"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/etCodeOne" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+    <Button
+        android:id="@+id/btnCancel"
+        style="@style/ButtonStyle"
+        android:layout_width="match_parent"
+        android:layout_margin="24dp"
+        android:background="@drawable/curved_button"
+        android:backgroundTint="@color/purple_gray_50"
+        android:fitsSystemWindows="true"
+        android:fontFamily="@font/mabry_pro"
+        android:text="@string/cancel"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:textColor="@color/purple_gray_700" />
+
+
+</LinearLayout>
