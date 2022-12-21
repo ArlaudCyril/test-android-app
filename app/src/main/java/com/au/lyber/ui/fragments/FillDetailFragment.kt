@@ -90,7 +90,6 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
 
         viewModel.getUserResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                it[0]
                 dismissProgressDialog()
             }
         }
@@ -112,6 +111,10 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
         viewModel.finishRegistrationResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
+
+                prefsManager.accessToken = it.data.access_token
+                prefsManager.refreshToken = it.data.refresh_token
+
                 prefsManager.personalDataSteps = Constants.INVESTMENT_EXP
                 prefsManager.portfolioCompletionStep = Constants.PERSONAL_DATA_FILLED
                 childFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)

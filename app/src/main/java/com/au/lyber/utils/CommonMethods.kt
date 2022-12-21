@@ -13,7 +13,6 @@ import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.net.Uri
 import android.os.Environment
 import android.os.Looper
 import android.provider.Settings
@@ -67,6 +66,8 @@ import java.io.FileOutputStream
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.math.abs
+import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
 
 @Suppress("INTEGER_OVERFLOW")
@@ -206,12 +207,12 @@ class CommonMethods {
                 is String -> {
 
 
-                        if (any.startsWith("http"))
-                            Glide.with(this).load(any).apply(RequestOptions.circleCropTransform())
-                                .into(this)
-                        else
-                            Glide.with(this).load(Constants.BASE_IMAGE_URL_ORIGINAL + any)
-                                .apply(RequestOptions.circleCropTransform()).into(this)
+                    if (any.startsWith("http"))
+                        Glide.with(this).load(any).apply(RequestOptions.circleCropTransform())
+                            .into(this)
+                    else
+                        Glide.with(this).load(Constants.BASE_IMAGE_URL_ORIGINAL + any)
+                            .apply(RequestOptions.circleCropTransform()).into(this)
 
                 }
 
@@ -229,19 +230,19 @@ class CommonMethods {
 
 
 
-                        if (placeHolderRes != -1)
-                            Glide.with(this).load(any)
-                                .placeholder(placeHolderRes!!)
-                                .apply(RequestOptions.circleCropTransform())
-                                .diskCacheStrategy(
-                                    DiskCacheStrategy.RESOURCE
-                                ).into(this)
-                        else Glide.with(this).load(any).apply(RequestOptions.circleCropTransform())
+                    if (placeHolderRes != -1)
+                        Glide.with(this).load(any)
+                            .placeholder(placeHolderRes!!)
+                            .apply(RequestOptions.circleCropTransform())
                             .diskCacheStrategy(
                                 DiskCacheStrategy.RESOURCE
-                            )
-                            .placeholder(placeHolderRes)
-                            .into(this)
+                            ).into(this)
+                    else Glide.with(this).load(any).apply(RequestOptions.circleCropTransform())
+                        .diskCacheStrategy(
+                            DiskCacheStrategy.RESOURCE
+                        )
+                        .placeholder(placeHolderRes)
+                        .into(this)
 
 
                 }
@@ -333,9 +334,13 @@ class CommonMethods {
             }
         }
 
-        val Long.is1DayOld: Boolean get() = (System.currentTimeMillis() - this) >= (24 * 3600000)
+        fun Long.is1DayOld(): Boolean {
+            return abs((System.currentTimeMillis() - absoluteValue)) > abs((24 * 3600000))
+        }
 
-        val Long.is30DaysOld: Boolean get() = (System.currentTimeMillis() - this) >= 30 * (24 * 3600000)
+        fun Long.is30DaysOld(): Boolean {
+            return abs((System.currentTimeMillis() - absoluteValue)) > abs(30 * (24 * 3600000))
+        }
 
         val Int.px: Int get() = (this * getSystem().displayMetrics.density).toInt()
 

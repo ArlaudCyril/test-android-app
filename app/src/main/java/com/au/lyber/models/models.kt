@@ -621,9 +621,9 @@ data class NewsResponse(
 )
 
 data class News(
-    val content: String,
+    val url: String,
     val date: String,
-    val image: String,
+    val image_url: String,
     val title: String
 )
 

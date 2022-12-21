@@ -244,7 +244,7 @@ interface Api {
     suspend fun setInvestmentExp(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
 
     @POST("user-service/finish-registration")
-    suspend fun finishRegistration(): Response<MessageResponse>
+    suspend fun finishRegistration(): Response<UserLoginResponse>
 
     @GET("news-service/news")
     suspend fun getNews(@Query("id") id: String): Response<NewsResponse>

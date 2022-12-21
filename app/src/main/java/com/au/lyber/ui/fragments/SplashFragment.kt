@@ -9,7 +9,7 @@ import android.widget.MediaController
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentSplashBinding
 import com.au.lyber.utils.App
-import com.au.lyber.utils.Constants
+import com.au.lyber.utils.CommonMethods.Companion.is30DaysOld
 
 class SplashFragment : BaseFragment<FragmentSplashBinding>() {
 
@@ -29,13 +29,24 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>() {
 
         Handler(Looper.getMainLooper()).postDelayed({
 
-            when (App.prefsManager.savedScreen) {
+            // 1- 30 days check if greater then logout if not normal flow
+            // check for 24 hours if greater hit api for refresh token if not normal flow
+            // if not check for user pin
 
-                "" -> requireActivity().supportFragmentManager.beginTransaction()
-                        .replace(R.id.flSplashActivity, DiscoveryFragment()).commit()
 
-                CreatePinFragment::class.java.name -> {
+            if (App.prefsManager.tokenSavedAt.is30DaysOld()) {
 
+                App.prefsManager.logout()
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.flSplashActivity, DiscoveryFragment()).commit()
+
+            } else {
+
+                if (App.prefsManager.userPin.isNotEmpty())
+
+                    requireActivity().supportFragmentManager.beginTransaction()
+                        .replace(R.id.flSplashActivity, UnlockAppFragment()).commit()
+                else {
                     requireActivity().supportFragmentManager.beginTransaction()
                         .replace(R.id.flSplashActivity, DiscoveryFragment())
                         .commit()
@@ -44,13 +55,44 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>() {
                         .replace(R.id.flSplashActivity, SignUpFragment())
                         .addToBackStack(null)
                         .commit()
+                }
+
+            }
+
+            /* when (App.prefsManager.savedScreen) {
+
+                 "" -> requireActivity().supportFragmentManager.beginTransaction()
+                     .replace(R.id.flSplashActivity, DiscoveryFragment()).commit()
+
+                 CreatePinFragment::class.java.name -> {
+
+                     requireActivity().supportFragmentManager.beginTransaction()
+                         .replace(R.id.flSplashActivity, DiscoveryFragment())
+                         .commit()
+
+                     requireActivity().supportFragmentManager.beginTransaction()
+                         .replace(R.id.flSplashActivity, SignUpFragment())
+                         .addToBackStack(null)
+                         .commit()
+
+                 }
+
+                 else -> {
+
+
+                     *//*if (App.prefsManager.userPin.isNotEmpty())
+                        requireActivity().supportFragmentManager.beginTransaction()
+                            .replace(R.id.flSplashActivity, UnlockAppFragment()).commit()
+                    else
+                        requireActivity().supportFragmentManager.beginTransaction()
+                            .replace(R.id.flSplashActivity, DiscoveryFragment()).commit()*//*
 
                 }
 
-                else -> requireActivity().supportFragmentManager.beginTransaction()
-                        .replace(R.id.flSplashActivity, UnlockAppFragment()).commit()
+                requireActivity().supportFragmentManager.beginTransaction()
+                    .replace(R.id.flSplashActivity, UnlockAppFragment()).commit()
+            }*/
 
-            }
 
         }, 1500)
 

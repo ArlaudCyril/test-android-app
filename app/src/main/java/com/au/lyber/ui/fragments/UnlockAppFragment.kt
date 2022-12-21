@@ -10,25 +10,32 @@ import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
+import androidx.lifecycle.Lifecycle
 import androidx.transition.Fade
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentUnlockAppBinding
 import com.au.lyber.utils.App
+import com.au.lyber.utils.CommonMethods.Companion.checkInternet
+import com.au.lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.getViewModel
 import com.au.lyber.utils.CommonMethods.Companion.gone
+import com.au.lyber.utils.CommonMethods.Companion.is1DayOld
 import com.au.lyber.utils.CommonMethods.Companion.isBiometricReady
 import com.au.lyber.utils.CommonMethods.Companion.replaceFragment
 import com.au.lyber.utils.CommonMethods.Companion.setBiometricPromptInfo
+import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.showToast
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.OnTextChange
-import com.au.lyber.viewmodels.VerifyIdentityViewModel
+import com.au.lyber.viewmodels.NetworkViewModel
 import okhttp3.ResponseBody
 
 class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClickListener {
 
     private val pin get() = binding.etPin.text.trim().toString()
-    private lateinit var viewModel: VerifyIdentityViewModel
+
+    private lateinit var viewModel: NetworkViewModel
+
     override fun bind() = FragmentUnlockAppBinding.inflate(layoutInflater)
 
 
@@ -37,15 +44,28 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
         exitTransition = Fade()
     }
 
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = getViewModel(this)
         viewModel.listener = this
-//        viewModel.verifyPinResponse.observe(viewLifecycleOwner) {
-//            dismissProgressDialog()
-//            verified()
-//        }
+
+        viewModel.userLoginResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                dismissProgressDialog()
+                App.prefsManager.accessToken = it.data.access_token
+                App.prefsManager.refreshToken = it.data.refresh_token
+
+                requireActivity().replaceFragment(
+                    R.id.flSplashActivity,
+                    PortfolioFragment(),
+                    false
+                )
+
+            }
+        }
+
 
         binding.etPin.addTextChangedListener(onTextChange)
 
@@ -82,55 +102,59 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
 
     private fun verified() {
 
-        when (App.prefsManager.savedScreen) {
+        when {
 
-            EducationStrategyHolderFragment::class.java.name -> {
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.flSplashActivity, PortfolioFragment()).commit()
+            App.prefsManager.refreshToken.isEmpty() -> {
+
+                when (App.prefsManager.savedScreen) {
+
+                    EnableNotificationFragment::class.java.name -> {
+
+                        requireActivity().supportFragmentManager.beginTransaction()
+                            .replace(R.id.flSplashActivity, DiscoveryFragment()).commit()
+
+                        requireActivity().replaceFragment(
+                            R.id.flSplashActivity,
+                            SignUpFragment(),
+                            topBottom = true
+                        )
+
+                    }
+
+                    CompletePortfolioFragment::class.java.name ->
+                        requireActivity().replaceFragment(
+                            R.id.flSplashActivity,
+                            CompletePortfolioFragment(),
+                            false
+                        )
+
+
+                    else -> requireActivity().replaceFragment(
+                        R.id.flSplashActivity,
+                        DiscoveryFragment(),
+                        false
+                    )
+
+                }
             }
 
-            EnableNotificationFragment::class.java.name -> {
-
-                requireActivity().supportFragmentManager.beginTransaction()
-                    .replace(R.id.flSplashActivity, DiscoveryFragment()).commit()
-
-                requireActivity().replaceFragment(
-                    R.id.flSplashActivity,
-                    SignUpFragment(),
-                    topBottom = true
-                )
-
+            App.prefsManager.refreshTokenSavedAt.is1DayOld() -> {
+                checkInternet(requireContext()) {
+                    showProgressDialog(requireContext())
+                    viewModel.refreshToken()
+                }
             }
 
-            CompletePortfolioFragment::class.java.name ->
-                requireActivity().replaceFragment(
-                    R.id.flSplashActivity,
-                    CompletePortfolioFragment(),
-                    false
-                )
-
-            PickYourStrategyFragment::class.java.name ->
+            else ->
                 requireActivity().replaceFragment(
                     R.id.flSplashActivity,
                     PortfolioFragment(),
                     false
                 )
 
-            PortfolioFragment::class.java.name -> {
-                requireActivity().replaceFragment(
-                    R.id.flSplashActivity,
-                    PortfolioFragment(),
-                    false
-                )
-            }
-
-            else -> requireActivity().replaceFragment(
-                R.id.flSplashActivity,
-                DiscoveryFragment(),
-                false
-            )
 
         }
+
 
     }
 
@@ -186,12 +210,8 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
                         "Incorrect Pin".showToast(requireContext())
                         binding.etPin.setText("")
                     }
-                },200)
+                }, 200)
 
-//                checkInternet(requireContext()) {
-//                    showProgressDialog(requireContext())
-//                    viewModel.verifyPin(pin)
-//                }
             }
         }
     }

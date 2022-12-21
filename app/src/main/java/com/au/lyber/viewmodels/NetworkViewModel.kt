@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.au.lyber.models.*
 import com.au.lyber.network.RestClient
+import com.au.lyber.utils.App
 import com.au.lyber.utils.Constants
 import kotlinx.coroutines.CoroutineExceptionHandler
-import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -24,10 +24,9 @@ open class NetworkViewModel : ViewModel() {
             _listener = value
         }
 
-    private var currentJob: Job? = null
 
     private val exceptionHandler = CoroutineExceptionHandler { coroutineContext, exception ->
-        Log.d("exception", exception.message ?: "")
+        Log.d("exceptionHandler", exception.message ?: "")
 
         /* handle exception */
     }
@@ -181,7 +180,7 @@ open class NetworkViewModel : ViewModel() {
     private val _setUserAddressResponse = MutableLiveData<MessageResponse>()
     val setUserAddressResponse get() = _setUserAddressResponse
 
-    private val _finishRegistrationResponse = MutableLiveData<MessageResponse>()
+    private val _finishRegistrationResponse = MutableLiveData<UserLoginResponse>()
     val finishRegistrationResponse get() = _finishRegistrationResponse
 
     private val _setInvestmentExpResponse = MutableLiveData<MessageResponse>()
@@ -199,11 +198,11 @@ open class NetworkViewModel : ViewModel() {
 
 
     fun cancelJob() {
-        currentJob?.cancel()
+
     }
 
     fun educationStrategy() {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().educationStrategy()
             if (res.isSuccessful)
                 _educationStrategyResponse.postValue(res.body())
@@ -214,7 +213,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun getStrategies() {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().getStrategies()
             if (res.isSuccessful)
                 _getStrategiesResponse.postValue(res.body())
@@ -228,7 +227,7 @@ open class NetworkViewModel : ViewModel() {
 //            hashMap["assets"] = list
             hashMap["is_own_strategy"] = 0
             hashMap["investment_strategy_id"] = it._id
-            currentJob = viewModelScope.launch(exceptionHandler) {
+            viewModelScope.launch(exceptionHandler) {
                 val res = RestClient.get().chooseStrategy(hashMap)
                 if (res.isSuccessful)
                     _selectedStrategyResponse.postValue(res.body())
@@ -252,7 +251,7 @@ open class NetworkViewModel : ViewModel() {
         hashMap["is_own_strategy"] = 1
         hashMap["strategy_name"] = strategyName
 
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().chooseStrategy(hashMap)
             if (res.isSuccessful)
                 _buildStrategyResponse.postValue(res.body())
@@ -267,7 +266,7 @@ open class NetworkViewModel : ViewModel() {
         order: String = Constants.VOLUME_DESC,
         keyword: String = ""
     ) {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = if (keyword.isNotEmpty()) RestClient.get()
                 .trendingCoin(order = order, keyword = keyword, limit = limit)
             else RestClient.get().trendingCoins(order = order, limit = limit)
@@ -287,7 +286,7 @@ open class NetworkViewModel : ViewModel() {
             hashMap["asset_amount"] = assetAmount
             if (frequency.isNotEmpty())
                 hashMap["frequency"] = frequency
-            currentJob = viewModelScope.launch(exceptionHandler) {
+            viewModelScope.launch(exceptionHandler) {
                 val res = RestClient.get().investOnSingleAsset(hashMap)
                 if (res.isSuccessful)
                     _investSingleAssetResponse.postValue(res.body())
@@ -297,7 +296,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun investStrategy(strategyId: String, frequency: String, amount: Int) {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().investOnStrategy(
                 hashMapOf(
                     "user_investment_strategy_id" to strategyId,
@@ -312,7 +311,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun withdraw(assetId: String, amount: String, assetAmount: Float, wallet_address: String) {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val hash = hashMapOf<String, Any>()
             hash["asset_id"] = assetId
             hash["amount"] = amount
@@ -331,7 +330,7 @@ open class NetworkViewModel : ViewModel() {
         exchangeFromAmount: String,
         exchangeToAmount: String
     ) {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val hashMap = hashMapOf<String, Any>()
             hashMap["exchange_from"] = assetIdFrom.lowercase()
             hashMap["exchange_to"] = assetIdTo.lowercase()
@@ -345,7 +344,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun getTransactions(page: Int = 1, limit: Int = 10, assetId: String = "") {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = if (assetId.isEmpty()) RestClient.get()
                 .getTransactions(page, limit)
             else RestClient.get()
@@ -357,7 +356,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun logout(deviceId: String) {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().logout(hashMapOf("device_id" to deviceId))
             if (res.isSuccessful)
                 _logoutResponse.postValue(res.body())
@@ -366,7 +365,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun sendOtpPinChange() {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().sendOtpForChangePin()
             if (res.isSuccessful)
                 _otpForPinChangeResponse.postValue(res.body())
@@ -375,7 +374,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun verifyPhoneForPin(otp: String) {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().verifyPhoneForPinChange(hashMapOf("otp" to otp.toInt()))
             if (res.isSuccessful)
                 _verifyPhoneForPinResponse.postValue(res.body())
@@ -384,7 +383,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun updatePin(pin: String) {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().updatePin(hashMapOf("newPin" to pin.toInt()))
             if (res.isSuccessful)
                 _updatePinResponse.postValue(res.body())
@@ -393,7 +392,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun getAssetDetail(asset: String) {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().getAssetDetail(asset)
             if (res.isSuccessful)
                 _getAssetDetail.postValue(res.body())
@@ -402,7 +401,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun getAssets() {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().getAssets()
             if (res.isSuccessful)
                 getAssetResponse.postValue(res.body())
@@ -411,7 +410,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun getRecurringInvestments() {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().getRecurringInvestments()
             if (res.isSuccessful) _recurringInvestmentResponse.postValue(res.body())
             else listener?.onRetrofitError(res.errorBody())
@@ -422,7 +421,7 @@ open class NetworkViewModel : ViewModel() {
         val hashMap = hashMapOf<String, Any>()
         hashMap["face_id"] = faceId
         hashMap["enable_face_id"] = if (enableFaceId) 1 else 0
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().setFaceId(hashMap)
             if (res.isSuccessful)
                 _faceIdResponse.postValue(res.body())
@@ -432,7 +431,7 @@ open class NetworkViewModel : ViewModel() {
 
     fun addBankInfo(iban: String, bic: String) {
 
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val hashMap = hashMapOf<String, Any>()
             hashMap["iban"] = iban
             hashMap["bic"] = bic
@@ -444,7 +443,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun enableStrongAuthentication(enable: Boolean) {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().enableStrongAuthentication(hashMapOf("enable" to enable))
             if (res.isSuccessful)
                 _enableStrongAuthentication.postValue(res.body())
@@ -453,7 +452,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun verifyStrongAuthentication(otp: String) {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().verifyStrongAuthentication(hashMapOf("otp" to otp.toInt()))
             if (res.isSuccessful)
                 _verifyStrongAuthentication.postValue(res.body())
@@ -462,7 +461,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun enableWhitelisting(enable: Boolean, extraSecurity: String) {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().enableWhitelisting(
                 hashMapOf(
                     "enable" to enable,
@@ -478,7 +477,7 @@ open class NetworkViewModel : ViewModel() {
 
 
     fun getNetworks() {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().getNetworks()
             if (res.isSuccessful)
                 _networksResponse.postValue(res.body())
@@ -487,7 +486,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun getExchangeListing() {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().getExchangeListing()
             if (res.isSuccessful)
                 _exchangeListingResponse.postValue(res.body())
@@ -503,7 +502,7 @@ open class NetworkViewModel : ViewModel() {
         exchange: String,
         logo: String
     ) {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val hashMap: HashMap<String, Any> = hashMapOf()
             hashMap["name"] = name
             hashMap["network"] = network
@@ -520,7 +519,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun getWhiteListings() {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().getWhitelistedAddress()
             if (res.isSuccessful)
                 _getWhiteListing.postValue(res.body())
@@ -530,7 +529,7 @@ open class NetworkViewModel : ViewModel() {
 
 
     fun searchWhitelist(keyword: String) {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().getWhitelistedAddress(keyword = keyword)
             if (res.isSuccessful)
                 _searchWhitelisting.postValue(res.body())
@@ -539,7 +538,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun upload(file: File) {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val fileRequestBody = file.asRequestBody("image/*".toMediaTypeOrNull())
             val multiPart = MultipartBody.Part.createFormData(
                 "file",
@@ -554,7 +553,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun deleteWhiteList(hashMap: HashMap<String, Any>) {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().deleteWhiteListing(hashMap)
             if (res.isSuccessful) _deleteWhiteListResponse.postValue(res.body())
             else listener?.onRetrofitError(res.errorBody())
@@ -562,7 +561,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun updateWhiteList(hashMap: HashMap<String, Any>) {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().updateWhiteList(hashMap)
             if (res.isSuccessful)
                 _updateWhiteListResponse.postValue(res.body())
@@ -571,7 +570,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun updateUser(hashMap: HashMap<String, Any>) {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().updateUser(hashMap)
             if (res.isSuccessful)
                 _updateUserResponse.postValue(res.body())
@@ -580,7 +579,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun assetsToChoose(keyword: String = "") {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = if (keyword.isEmpty()) RestClient.get().getAssetsToChoose()
             else RestClient.get().getAssetsToChoose(keyword)
             if (res.isSuccessful) _assetsToChoose.postValue(res.body())
@@ -589,7 +588,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun getRecurringInvestmentDetail(investmentId: String) {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().getRecurringInvestmentDetail(investmentId)
             if (res.isSuccessful)
                 _recurringInvestmentDetail.postValue(res.body())
@@ -598,7 +597,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun cancelRecurringInvestment(investmentId: String) {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().cancelRecurringInvestment(hashMapOf("id" to investmentId))
             if (res.isSuccessful) _cancelRecurringInvestment.postValue(res.body())
             else listener?.onRetrofitError(res.errorBody())
@@ -606,7 +605,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun getPriceGraph(assetId: String, duration: Duration) {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().getPriceGraph(assetId, duration.duration)
             if (res.isSuccessful)
                 _priceGraphResponse.postValue(res.body())
@@ -615,7 +614,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun withdrawFiat(amount: String) {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().withdrawFiat(hashMapOf("amount" to amount))
             if (res.isSuccessful)
                 _withdrawFiatResponse.postValue(res.body())
@@ -624,7 +623,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun userChallenge(phone: String = "", email: String = "") {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val param = phone.ifEmpty { email }
             val key = if (phone.isEmpty()) "email" else "phoneNo"
             val res = RestClient.get(Constants.NEW_BASE_URL).userChallenge(hashMapOf(key to param))
@@ -635,7 +634,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun authenticateUser(a: String, m1: String) {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
 
             val param = hashMapOf<String, Any>()
             param["method"] = "srp"
@@ -650,9 +649,20 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
+    fun refreshToken() {
+        viewModelScope.launch(exceptionHandler) {
+            val hashMap = hashMapOf<String, Any>()
+            hashMap["method"] = "refresh_token"
+            hashMap["refresh_token"] = App.prefsManager.refreshToken
+            val res = RestClient.get(Constants.NEW_BASE_URL).userLogin(hashMap)
+            if (res.isSuccessful)
+                _userLoginResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
 
     fun userLogin(phone: String = "", email: String = "") {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val param = phone.ifEmpty { email }
             val key = if (phone.isEmpty()) "email" else "phoneNo"
             val res = RestClient.get(Constants.NEW_BASE_URL).userChallenge(hashMapOf(key to param))
@@ -663,7 +673,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun setPhone(countryCode: String, phone: String) {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get(Constants.NEW_BASE_URL)
                 .setPhone(hashMapOf("countryCode" to countryCode.toInt(), "phoneNo" to phone))
             if (res.isSuccessful)
@@ -673,7 +683,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun verifyPhone(code: String) {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get(Constants.NEW_BASE_URL)
                 .verifyPhone(hashMapOf("code" to code.toInt()))
             if (res.isSuccessful)
@@ -691,7 +701,7 @@ open class NetworkViewModel : ViewModel() {
         nationality: String,
         isUSCitizen: Boolean
     ) {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
 
             val hashMap = hashMapOf<String, Any>()
             hashMap["firstName"] = firstName
@@ -716,7 +726,7 @@ open class NetworkViewModel : ViewModel() {
         phoneSalt: String,
         phoneVerifier: String
     ) {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val hashMap = hashMapOf<String, Any>()
             hashMap["email"] = email
             hashMap["emailSalt"] = emailSalt
@@ -733,7 +743,7 @@ open class NetworkViewModel : ViewModel() {
 
 
     fun verifyEmail(uuid: String, code: String) {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
 
 //            val hash = hashMapOf<String, Any>()
 //            hash["uuid"] = uuid
@@ -759,7 +769,7 @@ open class NetworkViewModel : ViewModel() {
         zipCode: String,
         country: String
     ) {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val hash = hashMapOf<String, Any>()
             hash["streetNumber"] = streetNumber.toInt()
             hash["street"] = street
@@ -776,7 +786,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun finishRegistration() {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get(Constants.NEW_BASE_URL).finishRegistration()
             if (res.isSuccessful)
                 _finishRegistrationResponse.postValue(res.body())
@@ -791,7 +801,7 @@ open class NetworkViewModel : ViewModel() {
         incomeRange: String,
         personalAssets: String
     ) {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val hash = hashMapOf<String, Any>()
             hash["investmentExperience"] = investmentExperience
             hash["incomeSource"] = incomeSource
@@ -807,7 +817,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun getUser() {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get(Constants.NEW_BASE_URL).getUser()
             if (res.isSuccessful)
                 _getUserResponse.postValue(res.body())
@@ -816,7 +826,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun getNews(id: String = "btc") {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get(Constants.NEW_BASE_URL).getNews(id)
             if (res.isSuccessful)
                 _newsResponse.postValue(res.body())
@@ -825,7 +835,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun getPrice(id: String = "btc", tf: String = "1h") {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get(Constants.NEW_BASE_URL).getPrice(id, tf)
             if (res.isSuccessful)
                 _priceResponse.postValue(res.body())
@@ -834,7 +844,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun getAssetList() {
-        currentJob = viewModelScope.launch(exceptionHandler) {
+        viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get(Constants.NEW_BASE_URL).getAssetList()
             if (res.isSuccessful)
                 _assetResponse.postValue(res.body())

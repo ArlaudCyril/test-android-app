@@ -9,7 +9,9 @@ import com.google.gson.GsonBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import okhttp3.OkHttpClient
+import okhttp3.Protocol
 import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -17,6 +19,7 @@ import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
 import java.net.URL
+import java.util.*
 import java.util.concurrent.TimeUnit
 import javax.net.SocketFactory
 
@@ -70,6 +73,7 @@ object RestClient {
         httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
 
         val builder = OkHttpClient.Builder()
+        builder.protocols(Collections.singletonList(Protocol.HTTP_1_1))
         builder.connectTimeout(5, TimeUnit.MINUTES)
         builder.readTimeout(5, TimeUnit.MINUTES)
         builder.socketFactory(SocketFactory.getDefault())
@@ -101,7 +105,9 @@ object RestClient {
 //                        .build()
 //                val request = Request.Builder().url(url).build()
         CoroutineScope(Dispatchers.IO).launch {
-            val connection = URL(url).openConnection()
+            val connection = withContext(Dispatchers.IO) {
+                URL(url).openConnection()
+            }
 //            connection.doInput = true
             val bitmap: Bitmap = BitmapFactory.decodeStream(connection.getInputStream())
             setImageBitmap(bitmap)

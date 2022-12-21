@@ -79,7 +79,7 @@ class AllAssetAdapter(private val clickListener: (AssetData) -> Unit = { _ -> })
 
 //                    ivAsset.loadCircleCrop(it.image)
 
-                    tvAssetName.text = it.id
+                    tvAssetName.text = it.id.uppercase()
                     tvAssetNameCode.text = it.id
                     tvAssetValue.text = it.lastPrice.roundFloat().commaFormatted + Constants.EURO
                 }

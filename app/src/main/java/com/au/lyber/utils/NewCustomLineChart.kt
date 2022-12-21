@@ -83,6 +83,7 @@ class NewCustomLineChart : RelativeLayout {
         get() = _lineData
         set(value) {
             _lineData = value
+            selectedPosition = value.count() - 1
             postInvalidate()
         }
 
@@ -344,8 +345,9 @@ class NewCustomLineChart : RelativeLayout {
 
         binding.tvPrice.text = lineData[position].commaFormatted + "€"
 
-        if (timeSeries.isNotEmpty())
-            binding.tvDate.text = timeSeries[position][0].toLong().toGraphTime()
+        binding.tvDate.text = System.currentTimeMillis().toGraphTime()
+//        if (timeSeries.isNotEmpty())
+//            binding.tvDate.text = timeSeries[position][0].toLong().toGraphTime()
 
         binding.tvPrice.setTextColor(textColor)
         binding.tvDate.setTextColor(textColor)

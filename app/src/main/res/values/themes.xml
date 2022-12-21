@@ -15,6 +15,7 @@
         <!-- Customize your theme here. -->
     </style>
 
+
     <style name="TabLayout" parent="Widget.Design.TabLayout">
         <item name="tabIndicator">@drawable/selected_tab_background</item>
     </style>

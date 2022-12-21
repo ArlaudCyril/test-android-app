@@ -10,9 +10,11 @@ import com.au.lyber.databinding.FragmentAllAssetsBinding
 import com.au.lyber.models.AssetData
 import com.au.lyber.models.Data
 import com.au.lyber.ui.adapters.AllAssetAdapter
+import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.getViewModel
 import com.au.lyber.utils.CommonMethods.Companion.replaceFragment
+import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.au.lyber.utils.Constants
 import com.au.lyber.utils.OnTextChange
 import com.au.lyber.viewmodels.PortfolioViewModel
@@ -31,16 +33,12 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
     private var page: Int = 1
     private var limit: Int = 10
 
-    private var searching: Boolean = false
-
     private var assets = mutableListOf<AssetData>()
+    private var topGainers = mutableListOf<AssetData>()
+    private var topLosers = mutableListOf<AssetData>()
 
-    private var trendings = mutableListOf<Data>()
-    private var topGainers = mutableListOf<Data>()
-    private var topLosers = mutableListOf<Data>()
-    private var stables = mutableListOf<Data>()
+    private val searchText get() = binding.etSearch.text.trim().toString()
 
-    private var recursiveItems = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -59,87 +57,26 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
         viewModel = getViewModel(requireActivity())
         viewModel.listener = this
 
-        viewModel.trendingCoinResponse.observe(viewLifecycleOwner) {
-
-            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-
-                /* remove refresh loader */
-                binding.rvRefresh.isRefreshing = false
-
-                /* remove bottom progress */
-//                if (page > 1 && !searching)
-//                    adapter.removeProgress()
-
-
-                it.data?.let { data ->
-
-//                    if (searching) {
-//                        adapter.setList(data)
-//                    } else
-
-                    when (binding.tabLayout.selectedTabPosition) {
-
-                        0 -> {
-                            if (page == 1)
-                                trendings.clear()
-                            trendings.addAll(data)
-                        }
-
-                        1 -> {
-                            if (page == 1)
-                                topGainers.clear()
-                            topGainers.addAll(data)
-                        }
-
-                        2 -> {
-                            if (page == 1)
-                                topLosers.clear()
-                            topLosers.addAll(data)
-                        }
-
-                        else -> {
-                            if (page == 1)
-                                stables.clear()
-                            stables.addAll(data)
-                        }
-
-                    }
-
-                    shouldLoad = data.count() > limit - 1
-
-//                    if (page == 1) {
-//                        binding.rvAddAsset.startLayoutAnimation()
-                    /*if (recursiveItems) {
-                        if (adapter.itemCount == data.count()) {
-                            for (position in 0 until data.count()) {
-                                adapter.getItem(position)?.let {
-                                    if (it.current_price != data[position].current_price) {
-                                        adapter.changeItemAt(position, data[position])
-                                    }
-                                }
-                            }
-                        } else adapter.setList(data)
-                    } else adapter.setList(data)*/
-//                    } else adapter.addList(data)
-
-                    /*Handler(Looper.getMainLooper()).postDelayed({
-                        if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                            recursiveItems = true
-                            getCoins()
-                        }
-                    }, 3000)*/
-
-                    binding.rvRefresh.isRefreshing = false
-
-                }
-            }
-        }
-
         viewModel.assetsResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                dismissProgressDialog()
+
+                assets.clear()
+                topLosers.clear()
+                topGainers.clear()
+
                 assets.addAll(it.data)
-                adapter.addList(it.data)
+                topLosers.addAll(assets.topLosers())
+                topGainers.addAll(topLosers.reversed())
+
+                when (binding.tabLayout.selectedTabPosition) {
+                    0 -> adapter.setList(assets)
+                    1 -> adapter.setList(topGainers)
+                    2 -> adapter.setList(topLosers)
+                    else -> {}
+                }
+
+                dismissProgressDialog()
+                binding.rvRefresh.isRefreshing = false
             }
         }
 
@@ -152,11 +89,6 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
             it.tabLayout.addTab(it.tabLayout.newTab().apply { text = "Top loosers" })
 //            it.tabLayout.addTab(it.tabLayout.newTab().apply { text = "Stable" })
             it.tabLayout.addOnTabSelectedListener(tabSelectedListener)
-
-            binding.rvRefresh.setOnRefreshListener {
-                viewModel.cancelJob()
-                page = 1
-            }
 
             adapter = AllAssetAdapter(::assetClicked)
             layoutManager = LinearLayoutManager(requireContext())
@@ -172,27 +104,56 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
 
             it.etSearch.addTextChangedListener(object : OnTextChange {
                 override fun onTextChange() {
-                    viewModel.cancelJob()
+
+                    when (binding.tabLayout.selectedTabPosition) {
+                        0 -> {
+                            if (searchText.isNotEmpty())
+                                adapter.setList(assets.filter { it.id.contains(searchText) })
+                            else adapter.setList(assets)
+                        }
+                        1 -> {
+                            if (searchText.isNotEmpty())
+                                adapter.setList(topGainers.filter { it.id.contains(searchText) })
+                            else adapter.setList(topGainers)
+                        }
+                        2 -> {
+                            if (searchText.isNotEmpty())
+                                adapter.setList(topLosers.filter { it.id.contains(searchText) })
+                            else adapter.setList(topLosers)
+                        }
+
+                        else -> {
+
+                        }
+                    }
                 }
             })
 
         }
 
-        viewModel.getAssetList()
+        checkInternet(requireContext()) {
+            showProgressDialog(requireContext())
+            viewModel.getAssetList()
+        }
 
+        binding.rvRefresh.setOnRefreshListener {
+            viewModel.getAssetList()
+        }
+
+
+    }
+
+    private fun List<AssetData>.topLosers(): List<AssetData> {
+        return sortedBy { it.change.toFloat() }
     }
 
 
     private val tabSelectedListener = object : TabLayout.OnTabSelectedListener {
-
         override fun onTabSelected(tab: TabLayout.Tab?) {
-            page = 1
-            adapter.clearList()
-            viewModel.cancelJob()
             when (tab?.position) {
-                0 -> {}
-                1 -> {}
-                2 -> {}
+                0 -> adapter.setList(assets)
+                1 -> adapter.setList(topGainers)
+                2 -> adapter.setList(topLosers)
                 else -> {}
             }
         }

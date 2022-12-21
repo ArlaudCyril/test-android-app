@@ -16,6 +16,8 @@
         android:layout_width="160dp"
         android:layout_gravity="start"
         android:gravity="start"
+        android:maxLines="2"
+        android:ellipsize="end"
         android:lineSpacingExtra="4dp"
         android:textColor="@color/purple_gray_700"
         tools:text="Bitcoin 101, from basics to advance ..." />

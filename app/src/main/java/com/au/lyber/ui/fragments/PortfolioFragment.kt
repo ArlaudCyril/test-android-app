@@ -239,9 +239,10 @@ class PortfolioFragment : BaseFragment<FragmentPortfolioBinding>(), ActivityCall
         addObservers()
 
         checkInternet(requireContext()) {
-            showProgressDialog(requireContext())
-            viewModel.getNews()
-            viewModel.getPrice()
+            if (viewModel.screenCount == 1) {
+                viewModel.getPrice(viewModel.chosenAssets?.id ?: "btc")
+                viewModel.getNews(viewModel.chosenAssets?.id ?: "btc")
+            }
         }
 
         if (viewModel.screenCount == 1) {
@@ -249,8 +250,10 @@ class PortfolioFragment : BaseFragment<FragmentPortfolioBinding>(), ActivityCall
 
                 llTabLayout.fadeIn()
                 nestedScrollView.scrollTo(0, root.top)
+
                 includedMyAsset.root.background =
                     ContextCompat.getDrawable(requireContext(), R.drawable.curved_button)
+
                 includedMyAsset.root.setBackgroundTint(R.color.purple_gray_50)
 
                 includedMyAsset.apply {
@@ -269,7 +272,7 @@ class PortfolioFragment : BaseFragment<FragmentPortfolioBinding>(), ActivityCall
 //                tvInvestMoney.text = "Invest in ${asset.asset_id.uppercase()}"
                 tvAssetVariation.visible()
 
-                if (true) {
+                if (false) {
                     llAssetBreakdown.goneToRight()
                     llAssetPortfolio.visibleFromLeft()
                     zoomIn(btnPlaceOrder)
@@ -305,8 +308,7 @@ class PortfolioFragment : BaseFragment<FragmentPortfolioBinding>(), ActivityCall
         viewModel.priceResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
-                if (viewModel.screenCount > 0)
-                    binding.lineChart.lineData = it.data.prices.toFloats()
+                binding.lineChart.lineData = it.data.prices.toFloats()
             }
         }
 

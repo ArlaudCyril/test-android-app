@@ -63,15 +63,15 @@ class PreferenceManager(context: Context) {
         }
 
     var tokenSavedAt: Long
-        get() = mSharedPreferences.getLong("tokenSavedAt", 0)
+        get() = mSharedPreferences.getLong("tokenSavedAt", 0L)
         private set(value) {
-            mEditor.putLong("tokenSavedAt", value)
+            mEditor.putLong("tokenSavedAt", value).apply()
         }
 
     var refreshTokenSavedAt: Long
-        get() = mSharedPreferences.getLong("refreshTokenSavedAt", 0)
+        get() = mSharedPreferences.getLong("refreshTokenSavedAt", 0L)
         private set(value) {
-            mEditor.putLong("refreshTokenSavedAt", value)
+            mEditor.putLong("refreshTokenSavedAt", value).apply()
         }
 
 
