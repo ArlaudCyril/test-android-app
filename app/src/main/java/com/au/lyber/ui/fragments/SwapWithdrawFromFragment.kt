@@ -96,8 +96,8 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
             binding.includedAsset.ivDropIcon.setImageResource(R.drawable.ic_right_arrow_grey)
             binding.includedAsset.tvAssetName.text = "Euro"
             binding.includedAsset.tvAssetAmountCenter.visible()
-            binding.includedAsset.tvAssetAmountCenter.text =
-                "${App.prefsManager.getBalance()}${Constants.EURO}"
+//            binding.includedAsset.tvAssetAmountCenter.text =
+//                "${App.prefsManager.getBalance()}${Constants.EURO}"
             binding.tvAmountAllPortfolio.text =
                 "${viewModel.totalPortfolio.commaFormatted}${Constants.EURO}"
         }

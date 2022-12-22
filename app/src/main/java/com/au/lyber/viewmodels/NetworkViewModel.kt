@@ -207,8 +207,6 @@ open class NetworkViewModel : ViewModel() {
             if (res.isSuccessful)
                 _educationStrategyResponse.postValue(res.body())
             else listener?.onRetrofitError(res.errorBody())
-
-
         }
     }
 

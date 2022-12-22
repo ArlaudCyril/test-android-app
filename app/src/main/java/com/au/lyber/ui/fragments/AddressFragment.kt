@@ -34,7 +34,7 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
 
         (requireParentFragment() as FillDetailFragment).position = 3
         (requireParentFragment() as FillDetailFragment).setUpViews(3)
-        if (App.prefsManager.user?.personal_info_step == Constants.EMAIL_VERIFIED)
+//        if (App.prefsManager.user?.personal_info_step == Constants.EMAIL_VERIFIED)
             (requireParentFragment() as FillDetailFragment).binding.ivTopAction.setBackgroundResource(
                 R.drawable.ic_close
             )
@@ -43,12 +43,12 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
         binding.etCountry.setOnClickListener { openCountryPicker() }
 
         personalDataViewModel.personalData?.let {
-            val data = it.address1.split(",")
-            binding.etStreetNumber.setText(data[0].trim())
-            binding.etBuildingNumberFloor.setText(data[1].trim())
-            binding.etCity.setText(it.city)
-            binding.etState.setText(it.state)
-            binding.etZipCode.setText((it.zip_code).toString())
+//            val data = it.address1.split(",")
+//            binding.etStreetNumber.setText(data[0].trim())
+//            binding.etBuildingNumberFloor.setText(data[1].trim())
+//            binding.etCity.setText(it.city)
+//            binding.etState.setText(it.state)
+//            binding.etZipCode.setText((it.zip_code).toString())
 
 //            val countrySelected = CountryPicker.getCountryName(it.country)
 //            country = countrySelected.code

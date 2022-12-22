@@ -346,8 +346,8 @@ class NewCustomLineChart : RelativeLayout {
         binding.tvPrice.text = lineData[position].commaFormatted + "€"
 
         binding.tvDate.text = System.currentTimeMillis().toGraphTime()
-//        if (timeSeries.isNotEmpty())
-//            binding.tvDate.text = timeSeries[position][0].toLong().toGraphTime()
+        if (timeSeries.isNotEmpty())
+            binding.tvDate.text = timeSeries[position][0].toLong().toGraphTime()
 
         binding.tvPrice.setTextColor(textColor)
         binding.tvDate.setTextColor(textColor)

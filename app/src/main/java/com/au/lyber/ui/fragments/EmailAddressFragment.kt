@@ -28,7 +28,7 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
         (requireParentFragment() as FillDetailFragment).position = 1
         (requireParentFragment() as FillDetailFragment).setUpViews(1)
 
-        if (App.prefsManager.user?.personal_info_step == Constants.PERSONAL_DATA)
+//        if (App.prefsManager.user?.personal_info_step == Constants.PERSONAL_DATA)
             (requireParentFragment() as FillDetailFragment).binding.ivTopAction.setBackgroundResource(
                 R.drawable.ic_close
             )

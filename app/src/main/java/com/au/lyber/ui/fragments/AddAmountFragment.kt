@@ -127,7 +127,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
         binding.apply {
 
-            tvBalance.text = "${App.prefsManager.getBalance()}${Constants.EURO}"
+//            tvBalance.text = "${App.prefsManager.getBalance()}${Constants.EURO}"
 
             when (viewModel.selectedOption) {
 
@@ -136,7 +136,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                     tvAssetConversion.gone()
                     tvSubTitle.gone()
                     tvTitle.text = "Euro Deposit"
-                    maxValue = App.prefsManager.getBalance().toDouble()
+//                    maxValue = App.prefsManager.getBalance().toDouble()
                 }
 
                 Constants.USING_STRATEGY -> {
@@ -148,7 +148,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                     mCurrency = Constants.EURO
                     mConversionCurrency = Constants.EURO
                     valueConversion = 1.0
-                    maxValue = App.prefsManager.getBalance().toDouble()
+//                    maxValue = App.prefsManager.getBalance().toDouble()
                 }
 
                 Constants.USING_SINGULAR_ASSET -> {
@@ -167,7 +167,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                     mConversionCurrency = viewModel.selectedAsset?.asset_id?.uppercase() ?: ""
                     valueConversion = viewModel.selectedAsset?.euro_amount.toString().toDouble()
 
-                    maxValue = App.prefsManager.getBalance().toDouble()
+//                    maxValue = App.prefsManager.getBalance().toDouble()
 
                     tvTitle.text = "Invest in " + viewModel.selectedAsset?.asset_id?.uppercase()
                     tvAssetConversion.text =
@@ -303,9 +303,9 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                     btnPreviewInvestment.text = "Next"
                     mConversionCurrency = Constants.EURO
                     valueConversion = 1.0
-                    maxValue = App.prefsManager.getBalance().toDouble()
+//                    maxValue = App.prefsManager.getBalance().toDouble()
                     tvTitle.text = "Withdraw from Fiat"
-                    tvSubTitle.text = "${App.prefsManager.getBalance().commaFormatted} Available"
+//                    tvSubTitle.text = "${App.prefsManager.getBalance().commaFormatted} Available"
 
                     tvAssetConversion.text = "0.00${Constants.EURO}"
 
@@ -822,12 +822,12 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
             }
 
             Constants.USING_STRATEGY -> {
-                binding.etAmount.setText("${App.prefsManager.getBalance().commaFormatted}${Constants.EURO}")
+//                binding.etAmount.setText("${App.prefsManager.getBalance().commaFormatted}${Constants.EURO}")
             }
 
             Constants.USING_WITHDRAW_FIAT -> {
                 if (viewModel.allMyPortfolio.isEmpty()) {
-                    binding.etAmount.setText("${App.prefsManager.getBalance().commaFormatted}${Constants.EURO}")
+//                    binding.etAmount.setText("${App.prefsManager.getBalance().commaFormatted}${Constants.EURO}")
                 }
             }
 

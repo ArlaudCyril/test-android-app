@@ -36,16 +36,16 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
         viewModel = getViewModel(this)
         viewModel.listener = this
 
-        if (App.prefsManager.isStrongAuth()) {
-            binding.switchStrongAuthentication.isChecked = App.prefsManager.isStrongAuth()
-            binding.rlCases.visible()
-            binding.rlCases.fadeIn()
-        } else {
-            binding.rlCases.gone()
-            binding.rlCases.fadeOut()
-        }
+//        if (App.prefsManager.isStrongAuth()) {
+//            binding.switchStrongAuthentication.isChecked = App.prefsManager.isStrongAuth()
+//            binding.rlCases.visible()
+//            binding.rlCases.fadeIn()
+//        } else {
+//            binding.rlCases.gone()
+//            binding.rlCases.fadeOut()
+//        }
 
-        binding.tvNumber.text = "To: ${App.prefsManager.user?.phone_no ?: 1122334455}"
+//        binding.tvNumber.text = "To: ${App.prefsManager.user?.phone_no ?: 1122334455}"
 
         viewModel.enableStrongAuthentication.observe(viewLifecycleOwner) {
             if (Lifecycle.State.RESUMED == lifecycle.currentState) {
@@ -59,15 +59,15 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                 dismissProgressDialog()
                 bottomSheet.dismiss()
                 bottomSheet.clearFields()
-                App.prefsManager.setStrongAuth(!App.prefsManager.isStrongAuth())
-                binding.switchStrongAuthentication.isChecked = App.prefsManager.isStrongAuth()
-                if (App.prefsManager.isStrongAuth()) {
-                    binding.rlCases.visible()
-                    binding.rlCases.fadeIn()
-                } else {
-                    binding.rlCases.gone()
-                    binding.rlCases.fadeOut()
-                }
+//                App.prefsManager.setStrongAuth(!App.prefsManager.isStrongAuth())
+//                binding.switchStrongAuthentication.isChecked = App.prefsManager.isStrongAuth()
+//                if (App.prefsManager.isStrongAuth()) {
+//                    binding.rlCases.visible()
+//                    binding.rlCases.fadeIn()
+//                } else {
+//                    binding.rlCases.gone()
+//                    binding.rlCases.fadeOut()
+//                }
             }
         }
 
@@ -94,12 +94,12 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
     }
 
     override fun onResume() {
-        binding.switchWhitelisting.isChecked = App.prefsManager.isWhitelisting()
+//        binding.switchWhitelisting.isChecked = App.prefsManager.isWhitelisting()
         super.onResume()
     }
 
     fun dismiss(){
-        binding.switchStrongAuthentication.isChecked = App.prefsManager.isStrongAuth()
+//        binding.switchStrongAuthentication.isChecked = App.prefsManager.isStrongAuth()
     }
 
     override fun onClick(v: View?) {

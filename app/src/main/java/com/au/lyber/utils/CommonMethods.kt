@@ -37,7 +37,6 @@ import androidx.biometric.BiometricPrompt
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
-import androidx.core.view.updatePadding
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -991,15 +990,23 @@ class CommonMethods {
             }
         }
 
+        @SuppressLint("SimpleDateFormat")
+        fun String.toMilli(): Long {
+            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(this)?.let {
+                return it.time
+            }
+            return System.currentTimeMillis()
+        }
+
         val ImageView.setProfile: Unit
             get() = kotlin.run {
-                if (prefsManager.haveDefaultImage) {
-                    updatePadding(8.px, 8.px, 8.px, 8.px)
-                    setImageResource(Constants.defaults[prefsManager.defaultImage])
-                } else if (!prefsManager.user?.profile_pic.isNullOrEmpty()) {
-                    updatePadding(2.px, 2.px, 2.px, 2.px)
-                    loadImage(prefsManager.user?.profile_pic ?: "")
-                } else setImageResource(R.drawable.ic_profile)
+//                if (prefsManager.haveDefaultImage) {
+//                    updatePadding(8.px, 8.px, 8.px, 8.px)
+//                    setImageResource(Constants.defaults[prefsManager.defaultImage])
+//                } else if (!prefsManager.user?.profile_pic.isNullOrEmpty()) {
+//                    updatePadding(2.px, 2.px, 2.px, 2.px)
+//                    loadImage(prefsManager.user?.profile_pic ?: "")
+//                } else setImageResource(R.drawable.ic_profile)
             }
 
         val List<List<Double>>.lineData: MutableList<Float>

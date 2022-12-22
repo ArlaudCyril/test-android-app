@@ -166,7 +166,7 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
 
             dismissProgressDialog()
             viewModel.enterPhoneResponse.value?.let {
-                App.prefsManager.user = it.user
+//                App.prefsManager.user = it.user
             }
             childFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
             mPosition = 2
@@ -179,48 +179,48 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
 
             viewModel.enterPhoneResponse.value?.let {
 
-                App.prefsManager.user = it.user
+//                App.prefsManager.user = it.user
 
                 if (viewModel.forLogin) {
                     when {
-
-                        it.user.step == Constants.PROFILE_COMPLETED -> {
-                            requireActivity().clearBackStack()
-                            requireActivity().addFragment(
-                                R.id.flSplashActivity,
-                                PortfolioFragment()
-                            )
-                        }
+//
+//                        it.user.step == Constants.PROFILE_COMPLETED -> {
+//                            requireActivity().clearBackStack()
+//                            requireActivity().addFragment(
+//                                R.id.flSplashActivity,
+//                                PortfolioFragment()
+//                            )
+//                        }
 
                         // haven't set login pin yet
-                        !it.user.login_pin_set -> {
-                            childFragmentManager.popBackStack(
-                                null,
-                                FragmentManager.POP_BACK_STACK_INCLUSIVE
-                            )
-                            mPosition = 2
-                            replace(R.id.frameLayoutSignUp, fragments[mPosition], false)
-                        }
+//                        !it.user.login_pin_set -> {
+//                            childFragmentManager.popBackStack(
+//                                null,
+//                                FragmentManager.POP_BACK_STACK_INCLUSIVE
+//                            )
+//                            mPosition = 2
+//                            replace(R.id.frameLayoutSignUp, fragments[mPosition], false)
+//                        }
 
                         // haven't enabled push notification
-                        it.user.is_push_enabled == 0 -> {
-                            childFragmentManager.popBackStack(
-                                null,
-                                FragmentManager.POP_BACK_STACK_INCLUSIVE
-                            )
-                            mPosition = 4
-                            replace(R.id.frameLayoutSignUp, fragments[mPosition], false)
-                        }
+//                        it.user.is_push_enabled == 0 -> {
+//                            childFragmentManager.popBackStack(
+//                                null,
+//                                FragmentManager.POP_BACK_STACK_INCLUSIVE
+//                            )
+//                            mPosition = 4
+//                            replace(R.id.frameLayoutSignUp, fragments[mPosition], false)
+//                        }
 
                         // haven't filled personal info yet
-                        it.user.first_name.isNullOrEmpty() ||
-                                it.user.profile_verification_status == "Pending" -> {
-                            requireActivity().clearBackStack()
-                            requireActivity().addFragment(
-                                R.id.flSplashActivity,
-                                CompletePortfolioFragment()
-                            )
-                        }
+//                        it.user.first_name.isNullOrEmpty() ||
+//                                it.user.profile_verification_status == "Pending" -> {
+//                            requireActivity().clearBackStack()
+//                            requireActivity().addFragment(
+//                                R.id.flSplashActivity,
+//                                CompletePortfolioFragment()
+//                            )
+//                        }
                     }
                 } else {
 
@@ -240,7 +240,7 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
 
             dismissProgressDialog()
             viewModel.enterPhoneResponse.value?.let {
-                App.prefsManager.user = it.user
+//                App.prefsManager.user = it.user
             }
             childFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
             mPosition = 2
@@ -250,7 +250,7 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
 
         viewModel.setPinResponse.observe(viewLifecycleOwner) {
             dismissProgressDialog()
-            App.prefsManager.loginPinSet()
+//            App.prefsManager.loginPinSet()
             showDialog()
         }
 

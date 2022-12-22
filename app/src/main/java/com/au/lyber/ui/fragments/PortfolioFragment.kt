@@ -46,6 +46,7 @@ import com.au.lyber.utils.CommonMethods.Companion.replaceFragment
 import com.au.lyber.utils.CommonMethods.Companion.roundFloat
 import com.au.lyber.utils.CommonMethods.Companion.setBackgroundTint
 import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
+import com.au.lyber.utils.CommonMethods.Companion.toMilli
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.CommonMethods.Companion.visibleFromLeft
 import com.au.lyber.utils.CommonMethods.Companion.visibleFromRight
@@ -154,8 +155,8 @@ class PortfolioFragment : BaseFragment<FragmentPortfolioBinding>(), ActivityCall
                 binding.includedBreakDown.ivAssetIcon.setImageResource(R.drawable.ic_euro)
                 binding.includedBreakDown.tvAssetAmountCenter.addTypeface(Typeface.BOLD)
                 binding.includedBreakDown.tvAssetNameCenter.text = "Euro"
-                binding.includedBreakDown.tvAssetAmountCenter.text =
-                    "${App.prefsManager.user?.balance.commaFormatted}${Constants.EURO}"
+//                binding.includedBreakDown.tvAssetAmountCenter.text =
+//                    "${App.prefsManager.user?.balance.commaFormatted}${Constants.EURO}"
             }
 
         }
@@ -176,17 +177,8 @@ class PortfolioFragment : BaseFragment<FragmentPortfolioBinding>(), ActivityCall
             it.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
                 override fun onTabSelected(tab: TabLayout.Tab?) {
-                    viewModel.selectedAsset?.let { asset ->
-                        when (it.selectedTabPosition) {
-                            0 -> getPriceChart(asset.asset_name.lowercase(), Duration.ONE_HOUR)
-                            1 -> getPriceChart(asset.asset_name.lowercase(), Duration.FOUR_HOUR)
-                            2 -> getPriceChart(asset.asset_name.lowercase(), Duration.DAY)
-                            3 -> getPriceChart(asset.asset_name.lowercase(), Duration.WEEK)
-                            4 -> getPriceChart(asset.asset_name.lowercase(), Duration.MONTH)
-//                            3 -> getPriceChart(asset.asset_name.lowercase(), Duration.YEAR)
-                            else -> getPriceChart(asset.asset_name.lowercase(), Duration.MAX)
-                        }
-
+                    viewModel.chosenAssets?.let { asset ->
+                        viewModel.getPrice(asset.id, (tab?.text ?: "1h").toString().lowercase())
                     }
                 }
 
@@ -243,6 +235,7 @@ class PortfolioFragment : BaseFragment<FragmentPortfolioBinding>(), ActivityCall
                 viewModel.getPrice(viewModel.chosenAssets?.id ?: "btc")
                 viewModel.getNews(viewModel.chosenAssets?.id ?: "btc")
             }
+            viewModel.getUser()
         }
 
         if (viewModel.screenCount == 1) {
@@ -308,10 +301,44 @@ class PortfolioFragment : BaseFragment<FragmentPortfolioBinding>(), ActivityCall
         viewModel.priceResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
-                binding.lineChart.lineData = it.data.prices.toFloats()
+
+                val timeFrame =
+                    (binding.tabLayout.getTabAt(binding.tabLayout.selectedTabPosition)?.text
+                        ?: "1h").toString().lowercase()
+
+                binding.lineChart.timeSeries =
+                    it.data.prices.toTimeSeries(it.data.lastUpdate, timeFrame)
             }
         }
 
+        viewModel.getUserResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                dismissProgressDialog()
+                App.prefsManager.user = it.data
+            }
+        }
+
+    }
+
+    private fun List<String>.toTimeSeries(
+        lastUpdate: String,
+        tf: String = "1h"
+    ): List<List<Double>> {
+        val last = lastUpdate.toMilli()
+        val timeSeries = mutableListOf<List<Double>>()
+        val timeInterval = when (tf) {
+            "1h" -> 60 * 1000
+            "4h" -> 5 * 60 * 1000
+            "1d" -> 30 * 60 * 1000
+            "1w" -> 4 * 60 * 60 * 1000
+            "1m" -> 12 * 60 * 60 * 1000
+            else -> 7 * 24 * 60 * 60 * 1000
+        }
+        for (i in 0 until count()) {
+            val date = (last - (count() - i) * timeInterval).toDouble()
+            timeSeries.add(listOf(date, this[i].toDouble()))
+        }
+        return timeSeries
     }
 
     private fun List<String>.toFloats(): MutableList<Float> {

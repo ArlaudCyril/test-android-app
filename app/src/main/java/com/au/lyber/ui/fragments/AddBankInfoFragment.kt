@@ -28,7 +28,7 @@ class AddBankInfoFragment : BaseFragment<FragmentAddBankBinding>() {
         viewModel.addBankAccount.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
-                App.prefsManager.setBankInfo(iban, bic)
+//                App.prefsManager.setBankInfo(iban, bic)
                 requireActivity().supportFragmentManager.popBackStackImmediate()
                 requireActivity().onBackPressed()
             }

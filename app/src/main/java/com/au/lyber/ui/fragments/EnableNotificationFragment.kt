@@ -30,7 +30,7 @@ class EnableNotificationFragment : BaseFragment<FragmentEnableNotificationsBindi
 
 
         onBoardingViewModel.enableNotificationResponse.observe(viewLifecycleOwner) {
-            App.prefsManager.enableNotification(enableNotification)
+//            App.prefsManager.enableNotification(enableNotification)
             dismissProgressDialog()
             requireActivity().clearBackStack()
             requireActivity().supportFragmentManager.beginTransaction()

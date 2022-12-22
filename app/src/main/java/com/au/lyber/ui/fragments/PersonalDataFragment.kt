@@ -60,21 +60,21 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding>(), View.O
             dismissProgressDialog()
             viewModel.personalData = it
 
-            binding.etFirstName.setText(it.first_name)
-            binding.etLastName.setText("${it.last_name}")
+//            binding.etFirstName.setText(it.first_name)
+//            binding.etLastName.setText("${it.last_name}")
 
-            val countryBirth = CountryPicker.getCountryName(it.birth_country)
-            birthCountry = countryBirth.code
-            binding.etBirthCountry.setText(countryBirth.name)
+//            val countryBirth = CountryPicker.getCountryName(it.birth_country)
+//            birthCountry = countryBirth.code
+//            binding.etBirthCountry.setText(countryBirth.name)
 
-            binding.etBirthPlace.setText(it.birth_place)
+//            binding.etBirthPlace.setText(it.birth_place)
             val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
             val outputFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
 
-            birthDate = it.dob
+//            birthDate = it.dob
             binding.etBirthDate.setText(outputFormat.format(inputFormat.parse(birthDate) ?: ""))
 
-            binding.etSpecifiedUsPerson.setText(if (it.specifiedUSPerson) "Yes" else "No")
+//            binding.etSpecifiedUsPerson.setText(if (it.specifiedUSPerson) "Yes" else "No")
 
             val national = CountryPicker.getCountryName(it.nationality)
             nationality = national.code

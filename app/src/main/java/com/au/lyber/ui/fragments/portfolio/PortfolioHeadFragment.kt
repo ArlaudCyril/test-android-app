@@ -27,7 +27,7 @@ class PortfolioHeadFragment : BaseFragment<FragmentTestPortfolioHeadBinding>() {
         viewModel.getAssetResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
 
-                App.prefsManager.setBalance(it.total_euros_available.toString().toFloat())
+//                App.prefsManager.setBalance(it.total_euros_available.toString().toFloat())
 
                 if (it.assets.isNotEmpty()) {
 

@@ -51,81 +51,6 @@ data class Identification(
 data class EnterPhoneResponse(
     val message: String,
     val token: String,
-    val user: User
-)
-
-data class User(
-    val __v: Int,
-    val _id: String,
-    var balance: Float,
-    val bank_account_added: Boolean,
-    var bic: Any,
-    val country_code: String,
-    val created_on: String,
-    val devices: List<Any>,
-    val document_verification: Boolean,
-    val email: Any,
-    val email_verification_token: Any,
-    val email_verified: Boolean,
-    val face_id: Any,
-    val first_name: String?,
-    val forgot_password_token: Any,
-    var iban: Any,
-    val id: String,
-    val is_blocked: Boolean,
-    val is_deleted: Boolean,
-    var is_face_id_enabled: Int,
-    val is_logOut: Boolean,
-    var is_push_enabled: Int,
-    val is_sms_enabled: Int,
-    val iso_code: Any,
-    val last_login: String,
-    val last_name: String,
-    val login_pin: Int,
-    val birth_country: String,
-    val specifiedUSPerson: Boolean,
-    val nationality: String,
-    val dob: String,
-    var login_pin_set: Boolean,
-    val login_pin_verified: Boolean,
-    val modified_on: String,
-    val nexo_user_id: Any,
-    val nexo_user_secret: Any,
-    val notification_count: Int,
-    val password: Any,
-    val payout_pin: Int,
-    val payout_set: Int,
-    var personal_info_step: Int,
-    val phone_no: Long,
-    val birth_place: String,
-    val city: String,
-    val state: String,
-    val zip_code: String,
-    val country: String,
-    val phone_no_verified: Boolean,
-    val phone_verification_code: Int,
-    val address1: String,
-    val incomeRange: String,
-    val personalAssets: String,
-    val occupation: String,
-    val phone_verification_code_generated_at: String,
-    val pin_verification_code: Int,
-    val pin_verification_code_generated_at: Any,
-    var profile_pic: String? = "",
-    var step: Int,
-    val profile_verification_status: String,
-    val promo_code: Any,
-    var is_strong_auth_enabled: Boolean,
-    var is_strong_auth_verified: Boolean,
-    var is_address_whitelisting_enabled: Boolean,
-    var extra_security: String,
-    var whitelistAddedAt: Long = 10000L,
-    val registration_date: String,
-    val two_auth_pin_verified: Boolean,
-    val vault_account_id: Any,
-    val vault_account_name: Any,
-    val wrong_attempt: Int,
-    var default_image: Int = -1
 )
 
 
@@ -595,9 +520,9 @@ data class SetPhoneResponse(val data: DataNew)
 
 data class DataNew(val token: String)
 
-class GetUserResponse : ArrayList<GetUserResponseItem>()
+data class GetUserResponse(val data: User)
 
-data class GetUserResponseItem(
+data class User(
     val email: String,
     val firstName: String,
     val lastName: String,

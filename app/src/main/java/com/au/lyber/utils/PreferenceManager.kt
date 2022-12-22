@@ -44,7 +44,7 @@ class PreferenceManager(context: Context) {
                 Gson().fromJson((mSharedPreferences.getString("user", "") ?: ""), User::class.java)
             } else null
         set(value) {
-            mEditor.putString("user", Gson().toJson(user).toString())
+            mEditor.putString("user", Gson().toJson(value).toString())
             mEditor.apply()
         }
 
@@ -75,121 +75,12 @@ class PreferenceManager(context: Context) {
         }
 
 
-    fun setProfileInfoSteps(step: Int) {
-        user?.let {
-            it.personal_info_step = step
-            user = (it)
-        }
-    }
+
 
 
     var portfolioCompletionStep: Int
         get() = mSharedPreferences.getInt("portfolioCompletionStep", Constants.ACCOUNT_CREATED)
         set(value) = mEditor.putInt("portfolioCompletionStep", value).apply()
-
-
-    fun setFaceIdEnabled(isEnabled: Boolean) {
-        user?.let {
-            it.is_face_id_enabled = if (isEnabled) 1 else 0
-            user = (it)
-        }
-    }
-
-
-    fun loginPinSet() {
-        user?.let {
-            it.login_pin_set = true
-            user = (it)
-        }
-    }
-
-    fun enableNotification(enable: Boolean) {
-        user?.let {
-            it.is_push_enabled = if (enable) 1 else 2
-            user = (it)
-        }
-    }
-
-    fun setBankInfo(iban: String, bic: String) {
-        user?.let {
-            it.iban = iban
-            it.bic = bic
-            user = (it)
-        }
-    }
-
-
-    fun setWhitelisting(isSet: Boolean) {
-        user?.let {
-            it.is_address_whitelisting_enabled = isSet
-            user = (it)
-        }
-    }
-
-    fun isWhitelisting(): Boolean {
-        user?.let {
-            return it.is_address_whitelisting_enabled
-        }
-        return false
-    }
-
-    fun setExtraSecurity(security: String) {
-        user?.let {
-            it.extra_security = security
-            user = (it)
-        }
-    }
-
-    fun getExtraSecurity(): String {
-        return user?.extra_security ?: ""
-    }
-
-    fun isStrongAuth(): Boolean {
-        user?.let {
-            return it.is_strong_auth_enabled
-        }
-        return false
-    }
-
-    fun setStrongAuth(isSet: Boolean) {
-        user?.let {
-            it.is_strong_auth_enabled = isSet
-            user = (it)
-        }
-    }
-
-    fun setProfileImage(image: String) {
-        user?.let {
-            it.profile_pic = image
-            user = (it)
-        }
-    }
-
-    fun setBalance(balance: Float) {
-        user?.let {
-            it.balance = balance
-            user = (it)
-        }
-    }
-
-    fun getBalance(): Float {
-        user?.let {
-            return it.balance
-        }
-        return 0F
-    }
-
-
-    val haveDefaultImage get() = user?.default_image != -1
-
-    var defaultImage: Int
-        get() = user?.default_image ?: -1
-        set(value) {
-            user?.let {
-                it.default_image = value
-                user = (it)
-            }
-        }
 
 
     fun setPhone(phone: String) {

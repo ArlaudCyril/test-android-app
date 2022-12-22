@@ -39,30 +39,30 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
         viewModel.enableWhitelisting.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
-                App.prefsManager.setWhitelisting(!App.prefsManager.isWhitelisting())
+//                App.prefsManager.setWhitelisting(!App.prefsManager.isWhitelisting())
                 val security: String = when (selectedPosition) {
                     0 -> Constants.HOURS_72
                     1 -> Constants.HOURS_24
                     else -> Constants.NO_EXTRA_SECURITY
                 }
-                App.prefsManager.setExtraSecurity(security)
+//                App.prefsManager.setExtraSecurity(security)
                 requireActivity().onBackPressed()
             }
         }
 
         /* if whitelisting is enabled */
-        if (App.prefsManager.isWhitelisting()) {
-            binding.btnEnableWhitelisting.setBackgroundTint(R.color.purple_500_)
-            binding.btnEnableWhitelisting.setTextColor(
-                getColor(requireContext(), R.color.purple_gray_00)
-            )
-            binding.btnEnableWhitelisting.text = "Disable whitelisting"
-            selectedPosition = when (App.prefsManager.getExtraSecurity()) {
-                Constants.HOURS_72 -> 0
-                Constants.HOURS_24 -> 1
-                else -> 2
-            }
-        }
+//        if (App.prefsManager.isWhitelisting()) {
+//            binding.btnEnableWhitelisting.setBackgroundTint(R.color.purple_500_)
+//            binding.btnEnableWhitelisting.setTextColor(
+//                getColor(requireContext(), R.color.purple_gray_00)
+//            )
+//            binding.btnEnableWhitelisting.text = "Disable whitelisting"
+//            selectedPosition = when (App.prefsManager.getExtraSecurity()) {
+//                Constants.HOURS_72 -> 0
+//                Constants.HOURS_24 -> 1
+//                else -> 2
+//            }
+//        }
 
 
         binding.rvExtraSecurity.let {
@@ -77,7 +77,7 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
 
         binding.btnEnableWhitelisting.setOnClickListener {
 
-            checkInternet(requireContext()) {
+           /* checkInternet(requireContext()) {
                 showProgressDialog(requireContext())
                 viewModel.enableWhitelisting(
                     !App.prefsManager.isWhitelisting(),
@@ -87,7 +87,7 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
                         else -> Constants.NO_EXTRA_SECURITY
                     }
                 )
-            }
+            }*/
         }
     }
 
@@ -155,12 +155,12 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
                         )
 
                         ivRadio.setImageResource(R.drawable.radio_unselect)
-                        tvTitle.setTextColor(
-                            getColor(
-                                tvTitle.context,
-                                if (App.prefsManager.isWhitelisting()) R.color.purple_gray_500 else R.color.purple_gray_700
-                            )
-                        )
+//                        tvTitle.setTextColor(
+//                            getColor(
+//                                tvTitle.context,
+//                                if (App.prefsManager.isWhitelisting()) R.color.purple_gray_500 else R.color.purple_gray_700
+//                            )
+//                        )
 
 
                     }
@@ -174,7 +174,7 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
             RecyclerView.ViewHolder(binding.root) {
             init {
                 binding.root.setOnClickListener {
-                    if (!App.prefsManager.isWhitelisting())
+//                    if (!App.prefsManager.isWhitelisting())
                         itemClicked(adapterPosition)
                 }
             }

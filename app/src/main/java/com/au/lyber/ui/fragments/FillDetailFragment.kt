@@ -285,7 +285,7 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
             0 -> {
 
                 position++
-                prefsManager.setProfileInfoSteps(Constants.PERSONAL_DATA)
+//                prefsManager.setProfileInfoSteps(Constants.PERSONAL_DATA)
                 replace(R.id.flFillPersonalData, fragmentList[position], false)
 
             }
@@ -293,7 +293,7 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
             1 -> {
 
                 position++
-                prefsManager.setProfileInfoSteps(Constants.EMAIL_ADDRESS)
+//                prefsManager.setProfileInfoSteps(Constants.EMAIL_ADDRESS)
                 replace(R.id.flFillPersonalData, fragmentList[position])
 
             }
@@ -304,7 +304,7 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
                 childFragmentManager.popBackStack(
                     null, FragmentManager.POP_BACK_STACK_INCLUSIVE
                 )
-                prefsManager.setProfileInfoSteps(Constants.EMAIL_VERIFIED)
+//                prefsManager.setProfileInfoSteps(Constants.EMAIL_VERIFIED)
                 replace(R.id.flFillPersonalData, fragmentList[position], false)
 
             }
@@ -313,7 +313,7 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
 
                 position++
 //                childFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-                prefsManager.setProfileInfoSteps(Constants.ADDRESS)
+//                prefsManager.setProfileInfoSteps(Constants.ADDRESS)
                 replace(R.id.flFillPersonalData, fragmentList[position], true)
 
             }

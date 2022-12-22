@@ -144,8 +144,11 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
     }
 
     private val onTextChange = object : TextWatcher {
+
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
+
         override fun afterTextChanged(s: Editable?) {
             checkInternet(requireContext()) {
                 adapter.setList(emptyList())
@@ -162,19 +165,19 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
     }
 
     override fun onResume() {
-        with(App.prefsManager.isWhitelisting()) {
-            binding.switchWhitelisting.isChecked = this
-            if (this) {
-                binding.llDurationInfo.visible()
-                binding.tvDuration.text = when (App.prefsManager.getExtraSecurity()) {
-                    Constants.HOURS_72 -> "72H"
-                    Constants.HOURS_24 -> "24H"
-                    else -> "No Security"
-                }
-            } else {
-                binding.llDurationInfo.gone()
-            }
-        }
+//        with(App.prefsManager.isWhitelisting()) {
+//            binding.switchWhitelisting.isChecked = this
+//            if (this) {
+//                binding.llDurationInfo.visible()
+//                binding.tvDuration.text = when (App.prefsManager.getExtraSecurity()) {
+//                    Constants.HOURS_72 -> "72H"
+//                    Constants.HOURS_24 -> "24H"
+//                    else -> "No Security"
+//                }
+//            } else {
+//                binding.llDurationInfo.gone()
+//            }
+//        }
 
         super.onResume()
     }
@@ -184,14 +187,15 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
             when (v!!) {
 
                 ivTopAction -> requireActivity().onBackPressed()
-                llAddAddress ->
-                    if (App.prefsManager.user?.is_address_whitelisting_enabled == true)
-                        requireActivity().replaceFragment(
-                            R.id.flSplashActivity,
-                            AddCryptoAddress()
-                        ) else "Please enable whitelisting to add addresses".showToast(
-                        requireContext()
-                    )
+                llAddAddress -> {
+//                    if (App.prefsManager.user?.is_address_whitelisting_enabled == true)
+//                        requireActivity().replaceFragment(
+//                            R.id.flSplashActivity,
+//                            AddCryptoAddress()
+//                        ) else "Please enable whitelisting to add addresses".showToast(
+//                        requireContext()
+//                    )
+                }
 
             }
         }

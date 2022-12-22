@@ -36,7 +36,7 @@ class PersonalDataViewModel : NetworkViewModel() {
         set(value) {
             _firstname = value
             if (personalData != null) {
-                if (value != personalData!!.first_name)
+//                if (value != personalData!!.first_name)
                     hashMap["first_name"] = value
             } else
                 hashMap["first_name"] = value
@@ -48,7 +48,7 @@ class PersonalDataViewModel : NetworkViewModel() {
         set(value) {
             _lastname = value
             if (personalData != null) {
-                if (value != personalData!!.last_name)
+//                if (value != personalData!!.last_name)
                     hashMap["last_name"] = value
             } else
                 hashMap["last_name"] = value
@@ -60,7 +60,7 @@ class PersonalDataViewModel : NetworkViewModel() {
         set(value) {
             _birthdate = value
             if (personalData != null) {
-                if (value != personalData!!.last_name)
+//                if (value != personalData!!.last_name)
                     hashMap["dob"] = value
             } else
                 hashMap["dob"] = value
@@ -72,7 +72,7 @@ class PersonalDataViewModel : NetworkViewModel() {
         set(value) {
             _birthPlace = value
             if (personalData != null) {
-                if (value != personalData!!.birth_place)
+//                if (value != personalData!!.birth_place)
                     hashMap["birth_place"] = value
             } else
                 hashMap["birth_place"] = value
@@ -84,7 +84,7 @@ class PersonalDataViewModel : NetworkViewModel() {
         set(value) {
             _birthCountry = value
             if (personalData != null) {
-                if (value != personalData!!.birth_place)
+//                if (value != personalData!!.birth_place)
                     hashMap["birth_country"] = value
             } else
                 hashMap["birth_country"] = value
@@ -104,7 +104,7 @@ class PersonalDataViewModel : NetworkViewModel() {
         set(value) {
             _nationality = value
             if (personalData != null) {
-                if (value != personalData!!.birth_place)
+//                if (value != personalData!!.birth_place)
                     hashMap["nationality"] = value
             } else
                 hashMap["nationality"] = value
@@ -116,7 +116,7 @@ class PersonalDataViewModel : NetworkViewModel() {
         set(value) {
             _email = value
             if (personalData != null) {
-                if (value != personalData!!.birth_place)
+//                if (value != personalData!!.birth_place)
                     hashMap["email"] = value
             } else
                 hashMap["email"] = value
@@ -150,7 +150,7 @@ class PersonalDataViewModel : NetworkViewModel() {
         set(value) {
             _city = value
             if (personalData != null) {
-                if (value != personalData!!.city)
+//                if (value != personalData!!.city)
                     hashMap["city"] = value
             } else
                 hashMap["city"] = value
@@ -162,7 +162,7 @@ class PersonalDataViewModel : NetworkViewModel() {
         set(value) {
             _state = value
             if (personalData != null) {
-                if (value != personalData!!.state)
+//                if (value != personalData!!.state)
                     hashMap["state"] = value
             } else
                 hashMap["state"] = value
@@ -174,7 +174,7 @@ class PersonalDataViewModel : NetworkViewModel() {
         set(value) {
             _zipCode = value
             if (personalData != null) {
-                if (value != personalData!!.zip_code.toString())
+//                if (value != personalData!!.zip_code.toString())
                     hashMap["zip_code"] = value.toLong()
             } else
                 hashMap["zip_code"] = value.toLong()
@@ -186,7 +186,7 @@ class PersonalDataViewModel : NetworkViewModel() {
         set(value) {
             _country = value
             if (personalData != null) {
-                if (value != personalData!!.country)
+//                if (value != personalData!!.country)
                     hashMap["country"] = value
             } else
                 hashMap["country"] = value
@@ -198,7 +198,7 @@ class PersonalDataViewModel : NetworkViewModel() {
         set(value) {
             _completeAddress = value
             if (personalData != null) {
-                if (value != personalData!!.address1)
+//                if (value != personalData!!.address1)
                     hashMap["address1"] = value
             } else
                 hashMap["address1"] = value
@@ -225,7 +225,7 @@ class PersonalDataViewModel : NetworkViewModel() {
         set(value) {
             _workIndustry = value
             if (personalData != null) {
-                if (value != personalData!!.occupation)
+//                if (value != personalData!!.occupation)
                     hashMap["occupation"] = value
             } else
                 hashMap["occupation"] = value
@@ -237,7 +237,7 @@ class PersonalDataViewModel : NetworkViewModel() {
         set(value) {
             _annualIncome = value
             if (personalData != null) {
-                if (value != personalData!!.incomeRange)
+//                if (value != personalData!!.incomeRange)
                     hashMap["incomeRange"] = value
             } else
                 hashMap["incomeRange"] = value
@@ -249,7 +249,7 @@ class PersonalDataViewModel : NetworkViewModel() {
         set(value) {
             _personalAssets = value
             if (personalData != null) {
-                if (value != personalData!!.personalAssets)
+//                if (value != personalData!!.personalAssets)
                     hashMap["personalAssets"] = value
             } else
                 hashMap["personalAssets"] = value

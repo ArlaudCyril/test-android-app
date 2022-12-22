@@ -234,7 +234,7 @@ interface Api {
     suspend fun verifyEmail(@Query("code") code: String, @Query("uuid") uuid: String): Response<Any>
 
 
-    @GET("user-service/me")
+    @GET("user-service/user")
     suspend fun getUser(): Response<GetUserResponse>
 
     @POST("user-service/set-user-address")

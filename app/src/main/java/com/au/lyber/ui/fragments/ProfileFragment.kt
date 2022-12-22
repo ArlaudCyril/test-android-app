@@ -105,15 +105,17 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         }
 
         App.prefsManager.user?.let {
-            binding.tvName.text = "${it.first_name} ${it.last_name}"
-            binding.tvEmail.text = "${it.email}"
-            binding.switchFaceId.isChecked = it.is_face_id_enabled == 1
-            if (it.bic != null && it.iban != null) {
-                binding.llBankInfo.visible()
-                binding.tvIban.text = "${it.iban}"
-                binding.tvBic.text = "${it.bic}"
-                binding.tvAddPaymentMethod.gone()
-            }
+            binding.tvName.text = "${it.firstName} ${it.lastName}"
+            binding.tvEmail.text = it.email
+//            binding.tvName.text = "${it.first_name} ${it.last_name}"
+//            binding.tvEmail.text = "${it.email}"
+//            binding.switchFaceId.isChecked = it.is_face_id_enabled == 1
+//            if (it.bic != null && it.iban != null) {
+//                binding.llBankInfo.visible()
+//                binding.tvIban.text = "${it.iban}"
+//                binding.tvBic.text = "${it.bic}"
+//                binding.tvAddPaymentMethod.gone()
+//            }
         }
 
         viewModel.logoutResponse.observe(viewLifecycleOwner) {
@@ -135,14 +137,14 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         viewModel.faceIdResponse.observe(viewLifecycleOwner) {
             if (Lifecycle.State.RESUMED == lifecycle.currentState) {
                 dismissProgressDialog()
-                App.prefsManager.setFaceIdEnabled(App.prefsManager.user?.is_face_id_enabled == 0)
-                binding.switchFaceId.isChecked = App.prefsManager.user?.is_face_id_enabled == 1
+//                App.prefsManager.setFaceIdEnabled(App.prefsManager.user?.is_face_id_enabled == 0)
+//                binding.switchFaceId.isChecked = App.prefsManager.user?.is_face_id_enabled == 1
             }
         }
 
         viewModel.uploadResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                App.prefsManager.setProfileImage(it.s3Url)
+//                App.prefsManager.setProfileImage(it.s3Url)
                 checkInternet(requireContext()) {
                     viewModel.updateUser(hashMapOf("profile_pic" to it.s3Url))
                 }
@@ -152,18 +154,18 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         viewModel.updateUser.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
-                App.prefsManager.defaultImage = -1
+//                App.prefsManager.defaultImage = -1
                 binding.ivProfile.setProfile
             }
         }
 
 
 
-        binding.tvStatusStrongAuth.text =
-            if (App.prefsManager.isStrongAuth()) "Enabled" else "Disabled"
+//        binding.tvStatusStrongAuth.text =
+//            if (App.prefsManager.isStrongAuth()) "Enabled" else "Disabled"
 
-        binding.tvStatusAddressBook.text =
-            if (App.prefsManager.isWhitelisting()) "Whitelisting: Enabled" else "Whitelisting: Disabled"
+//        binding.tvStatusAddressBook.text =
+//            if (App.prefsManager.isWhitelisting()) "Whitelisting: Enabled" else "Whitelisting: Disabled"
 
 //        binding.ivTopAction.setOnClickListener(this)
 //        binding.llChangePin.setOnClickListener(this)
@@ -172,7 +174,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         binding.tvLogout.setOnClickListener(this)
 //        binding.llStrongAuthentication.setOnClickListener(this)
 //        binding.rlAddressBook.setOnClickListener(this)
-//        binding.ivProfile.setOnClickListener(this)
+        binding.ivProfile.setOnClickListener(this)
 //        binding.llNotification.setOnClickListener(this)
 
         binding.switchFaceId.setOnCheckedChangeListener { button, isChecked ->

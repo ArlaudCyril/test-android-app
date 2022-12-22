@@ -28,7 +28,7 @@ class SelectedProfilePictureFragment : BaseFragment<FragmentSelectedProfilePictu
         binding.ivProfile.setImageResource(Constants.defaults[profilePIc])
 
         binding.btnSave.setOnClickListener {
-            App.prefsManager.defaultImage = profilePIc
+//            App.prefsManager.defaultImage = profilePIc
             requireActivity().supportFragmentManager.popBackStack()
             requireActivity().supportFragmentManager.popBackStack()
         }
