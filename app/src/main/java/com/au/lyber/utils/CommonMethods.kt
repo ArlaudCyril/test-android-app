@@ -207,11 +207,11 @@ class CommonMethods {
 
 
                     if (any.startsWith("http"))
-                        Glide.with(this).load(any).apply(RequestOptions.circleCropTransform())
+                        Glide.with(this).load(any).apply(RequestOptions.fitCenterTransform())
                             .into(this)
                     else
                         Glide.with(this).load(Constants.BASE_IMAGE_URL_ORIGINAL + any)
-                            .apply(RequestOptions.circleCropTransform()).into(this)
+                            .apply(RequestOptions.fitCenterTransform()).into(this)
 
                 }
 

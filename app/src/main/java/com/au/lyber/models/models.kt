@@ -452,6 +452,29 @@ data class GetAssetsResponseItem(
     val image: String
 )
 
+class priceServiceResumeResponse(
+    val data: List<priceServiceResume>
+    )
+data class priceServiceResume (
+    val id: String,
+    val lastPrice: String,
+    val change: String,
+    val squiggleURL: String,
+    val isAuto: Boolean,
+)
+
+class AssetBaseDataResponse(
+    val data: List<AssetBaseData>
+)
+data class AssetBaseData(
+    val id: String,
+    val fullName: String,
+    val image: String,
+    val isUIActive: Boolean,
+    val isTradeActive: Boolean,
+    val isDepositActive: Boolean,
+    val isWithdrawalActive: Boolean,
+)
 
 data class RecurringInvestmentDetailResponse(
     val _id: String,
@@ -560,14 +583,3 @@ data class PriceData(
     val lastUpdate: String,
     val prices: List<String>
 )
-
-data class AssetResponse(
-    val data: List<AssetData>
-)
-
-data class AssetData(
-    val change: String,
-    val id: String,
-    val lastPrice: String
-)
-

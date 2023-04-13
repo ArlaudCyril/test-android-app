@@ -352,11 +352,11 @@ class AddAssetBottomSheet(private val clickListener: (Data) -> Unit = { _ -> }) 
                                 }%"
                             tvAssetVariation.setTextColor(tvAssetVariation.context.getColor(R.color.green_500))
 
-                            lineChart.setLineData(
-                                it.sparkline_in_7d.price.formLineData(),
-                                R.color.green_500,
-                                R.drawable.drawable_green_fill_line_chart
-                            )
+//                            lineChart.setLineData(
+//                                it.sparkline_in_7d.price.formLineData(),
+//                                R.color.green_500,
+//                                R.drawable.drawable_green_fill_line_chart
+//                            )
                         } else {
                             tvAssetVariation.text =
                                 "${
@@ -364,11 +364,11 @@ class AddAssetBottomSheet(private val clickListener: (Data) -> Unit = { _ -> }) 
                                         .roundFloat().commaFormatted
                                 }%"
                             tvAssetVariation.setTextColor(tvAssetVariation.context.getColor(R.color.red_500))
-                            lineChart.setLineData(
-                                it.sparkline_in_7d.price.formLineData(),
-                                R.color.red_500,
-                                R.drawable.drawable_red_fill_line_chart
-                            )
+//                            lineChart.setLineData(
+//                                it.sparkline_in_7d.price.formLineData(),
+//                                R.color.red_500,
+//                                R.drawable.drawable_red_fill_line_chart
+//                            )
                         }
                             ivAsset.loadCircleCrop(it.image)
 

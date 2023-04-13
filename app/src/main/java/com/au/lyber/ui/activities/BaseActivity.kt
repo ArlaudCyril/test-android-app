@@ -4,8 +4,13 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
+import com.au.lyber.models.AssetBaseData
 
 abstract class BaseActivity<viewBinding : ViewBinding> : AppCompatActivity() {
+    //Global variables
+    companion object {
+        var currencies = ArrayList<AssetBaseData>()
+    }
 
     private var _binding: viewBinding? = null
     val binding get() = _binding!!

@@ -3,7 +3,7 @@ package com.au.lyber.ui.fragments
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.transition.Fade
+import androidx.transition.Fade
 import android.view.View
 import android.widget.MediaController
 import com.au.lyber.R
@@ -43,9 +43,11 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>() {
             } else {
 
                 if (App.prefsManager.userPin.isNotEmpty())
-
+                {
                     requireActivity().supportFragmentManager.beginTransaction()
-                        .replace(R.id.flSplashActivity, UnlockAppFragment()).commit()
+                        .replace(R.id.flSplashActivity, UnlockAppFragment())
+                        .commit()
+                }
                 else {
                     requireActivity().supportFragmentManager.beginTransaction()
                         .replace(R.id.flSplashActivity, DiscoveryFragment())

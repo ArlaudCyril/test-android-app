@@ -197,6 +197,12 @@ interface Api {
     @GET("assets")
     suspend fun getAssetsToChoose(): Response<GetAssetsResponse>
 
+    @GET("price-service/resume")
+    suspend fun getAllAssets(): Response<priceServiceResumeResponse>
+
+    @GET("asset-service/assets")
+    suspend fun getAllAssetsDetail(): Response<AssetBaseDataResponse>
+
     @GET("user/investment")
     suspend fun getRecurringInvestmentDetail(@Query("id") id: String): Response<RecurringInvestmentDetailResponse>
 
@@ -254,9 +260,4 @@ interface Api {
         @Query("id") id: String,
         @Query("tf") timeFrame: String
     ): Response<PriceResponse>
-
-    @GET("price-service/resume")
-    suspend fun getAssetList(): Response<AssetResponse>
-
-
 }

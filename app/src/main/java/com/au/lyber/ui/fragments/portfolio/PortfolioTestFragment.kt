@@ -5,10 +5,7 @@ import android.view.View
 import androidx.fragment.app.Fragment
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentTestPortfolioBinding
-import com.au.lyber.models.AnalyticsData
-import com.au.lyber.models.Assets
-import com.au.lyber.models.Data
-import com.au.lyber.models.Investment
+import com.au.lyber.models.*
 import com.au.lyber.ui.adapters.*
 import com.au.lyber.ui.fragments.*
 import com.au.lyber.utils.CommonMethods
@@ -100,13 +97,13 @@ class PortfolioTestFragment : BaseFragment<FragmentTestPortfolioBinding>() {
         }
     }
 
-    private fun availableAssetClicked(asset: Data) {
-        CommonMethods.checkInternet(requireContext()) {
+    private fun availableAssetClicked(asset: priceServiceResume) {
+        /*CommonMethods.checkInternet(requireContext()) {
             viewModel.selectedAsset = asset.extractAsset()
             viewModel.screenCount = 1
             CommonMethods.showProgressDialog(requireContext())
             viewModel.getAssetDetail(asset.id)
-        }
+        }*/
 
     }
 

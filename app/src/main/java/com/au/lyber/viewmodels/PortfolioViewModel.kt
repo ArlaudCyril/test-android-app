@@ -5,7 +5,6 @@ import com.au.lyber.models.*
 
 class PortfolioViewModel : NetworkViewModel() {
 
-
     private var _selectedAsset: Assets? = null
     var selectedAsset
         get() = _selectedAsset
@@ -67,7 +66,7 @@ class PortfolioViewModel : NetworkViewModel() {
     // this variable helps to identify the particular screen
     // 0-> Home Screen, 1-> Asset Detail Screen 2-> Asset Breakdown screen
 
-    var chosenAssets: AssetData? = null
+    var chosenAssets: priceServiceResume? = null
 
     private var _screenCount: Int = 0
     var screenCount
@@ -84,7 +83,7 @@ class PortfolioViewModel : NetworkViewModel() {
     }
 
 
-    private var _totalPortfolio: Double = 0.0
+    private var _totalPortfolio: Double = 100.0
     var totalPortfolio
         get() = _totalPortfolio
         set(value) {

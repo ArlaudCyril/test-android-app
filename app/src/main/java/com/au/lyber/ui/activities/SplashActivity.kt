@@ -30,6 +30,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
 
 
 
+    @Deprecated("Deprecated in Java")
     override fun onBackPressed() {
         if (activityCallbacks != null) {
             if (activityCallbacks!!.onBackPressed())

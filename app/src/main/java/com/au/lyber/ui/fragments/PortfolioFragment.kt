@@ -23,6 +23,7 @@ import com.au.lyber.R
 import com.au.lyber.databinding.FragmentPortfolioBinding
 import com.au.lyber.databinding.LoaderViewBinding
 import com.au.lyber.models.*
+import com.au.lyber.ui.activities.BaseActivity
 import com.au.lyber.ui.activities.SplashActivity
 import com.au.lyber.ui.adapters.*
 import com.au.lyber.ui.fragments.bottomsheetfragments.InvestBottomSheet
@@ -236,8 +237,32 @@ class PortfolioFragment : BaseFragment<FragmentPortfolioBinding>(), ActivityCall
                 viewModel.getNews(viewModel.chosenAssets?.id ?: "btc")
             }
             viewModel.getUser()
+            viewModel.getAllAssetsDetail()
         }
+        if(viewModel.screenCount == 0){
+            //My assets Part (waiting API)
+//            var listAssets = ArrayList<AssetBaseData>()
+//            var asset = AssetBase(id = "btc", fullName = "Bitcoin",
+//            image = "https://static.staging.lyber.com/assets/btc.png",
+//            isUIActive = true,
+//            isTradeActive = true,
+//            isDepositActive = false,
+//            isWithdrawalActive = false)
+//            listAssets.add(asset)
+//            adapterMyAsset.addList(listAssets)
 
+            //Analytics Part (waiting API)
+
+
+            // Recurring Investment Part (waiting API)
+
+
+            // All assets available part
+            viewModel.getAllAssets()
+
+
+
+        }
         if (viewModel.screenCount == 1) {
             binding.apply {
 
@@ -295,6 +320,18 @@ class PortfolioFragment : BaseFragment<FragmentPortfolioBinding>(), ActivityCall
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
                 resourcesAdapter.setList(it.data)
+            }
+        }
+
+        viewModel.allAssetsDetail.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                BaseActivity.currencies = it.data as ArrayList<AssetBaseData>
+            }
+        }
+
+        viewModel.allAssets.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                adapterAllAsset.setList(it.data.subList(0,6))
             }
         }
 
@@ -396,12 +433,12 @@ class PortfolioFragment : BaseFragment<FragmentPortfolioBinding>(), ActivityCall
         }
     }
 
-    override fun availableAssetClicked(asset: Data) {
+    override fun availableAssetClicked(asset: priceServiceResume) {
         checkInternet(requireContext()) {
-            viewModel.selectedAsset = asset.extractAsset()
+         /*   viewModel.selectedAsset = asset
             viewModel.screenCount = 1
             showProgressDialog(requireContext())
-            viewModel.getAssetDetail(asset.id)
+            viewModel.getAssetDetail(asset._id)*/
         }
 
     }

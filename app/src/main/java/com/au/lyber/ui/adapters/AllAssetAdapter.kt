@@ -8,14 +8,16 @@ import androidx.recyclerview.widget.RecyclerView.NO_POSITION
 import com.au.lyber.R
 import com.au.lyber.databinding.ItemAssetBinding
 import com.au.lyber.databinding.LoaderViewBinding
-import com.au.lyber.models.AssetData
+import com.au.lyber.models.priceServiceResume
+import com.au.lyber.ui.activities.BaseActivity
 import com.au.lyber.utils.CommonMethods.Companion.commaFormatted
 import com.au.lyber.utils.CommonMethods.Companion.loadCircleCrop
+import com.au.lyber.utils.CommonMethods.Companion.loadImage
 import com.au.lyber.utils.CommonMethods.Companion.roundFloat
 import com.au.lyber.utils.Constants
 
-class AllAssetAdapter(private val clickListener: (AssetData) -> Unit = { _ -> }) :
-    BaseAdapter<AssetData>() {
+class AllAssetAdapter(private val clickListener: (priceServiceResume) -> Unit = { _ -> }) :
+    BaseAdapter<priceServiceResume>() {
 
 
     private var oldPosition: Int = 0
@@ -58,29 +60,21 @@ class AllAssetAdapter(private val clickListener: (AssetData) -> Unit = { _ -> })
 
             (holder as AssetViewHolder).binding.apply {
                 itemList[position]?.let {
-
                     if (it.change.roundFloat().toFloat() > 0) {
                         tvAssetVariation.text = "+${it.change.roundFloat().commaFormatted}%"
                         tvAssetVariation.setTextColor(tvAssetVariation.context.getColor(R.color.green_500))
-                        /*lineChart.setLineData(
-                            it.sparkline_in_7d.price.formLineData(),
-                            R.color.green_500,
-                            R.drawable.drawable_green_fill_line_chart
-                        )*/
                     } else {
                         tvAssetVariation.text = "${it.change.roundFloat().commaFormatted}%"
                         tvAssetVariation.setTextColor(tvAssetVariation.context.getColor(R.color.red_500))
-                        /*lineChart.setLineData(
-                            it.sparkline_in_7d.price.formLineData(),
-                            R.color.red_500,
-                            R.drawable.drawable_red_fill_line_chart
-                        )*/
+
                     }
+                    val urlLineChart = it.squiggleURL
+                    lineChart.loadImage(urlLineChart)
+                    val id = it.id
+                    BaseActivity.currencies.firstNotNullOfOrNull{ item -> item.takeIf {item.id == id}}
+                        ?.let { it1 -> ivAsset.loadCircleCrop(it1.image); tvAssetName.text = it1.fullName }
 
-//                    ivAsset.loadCircleCrop(it.image)
-
-                    tvAssetName.text = it.id.uppercase()
-                    tvAssetNameCode.text = it.id
+                    tvAssetNameCode.text = it.id.uppercase()
                     tvAssetValue.text = it.lastPrice.roundFloat().commaFormatted + Constants.EURO
                 }
             }

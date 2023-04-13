@@ -21,7 +21,7 @@ object Constants {
     const val IS_LOGOUT: String = "is_logout"
 
     //    const val BASE_URL = "http://104.211.21.101:3000/"
-    const val BASE_URL = "https://lyber.com:3001/"
+    const val BASE_URL = "https://staging.lyber.com/"
     const val NEW_BASE_URL = "https://staging.lyber.com/"
     const val PICTURE_DIRECTORY = "Lyber/Images"
 

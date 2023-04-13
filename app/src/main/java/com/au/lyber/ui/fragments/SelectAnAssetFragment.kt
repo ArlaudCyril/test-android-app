@@ -334,20 +334,20 @@ class SelectAnAssetFragment : BaseFragment<FragmentSelectAnAssetBinding>() {
                                 "+${it.price_change_percentage_24h.toString().roundFloat()}%"
                             tvAssetVariation.setTextColor(tvAssetVariation.context.getColor(R.color.green_500))
 
-                            lineChart.setLineData(
-                                it.sparkline_in_7d.price.formLineData(),
-                                R.color.green_500,
-                                R.drawable.drawable_green_fill_line_chart
-                            )
+//                                lineChart.setLineData(
+//                                it.sparkline_in_7d.price.formLineData(),
+//                                R.color.green_500,
+//                                R.drawable.drawable_green_fill_line_chart
+//                            )
                         } else {
                             tvAssetVariation.text =
                                 "${it.price_change_percentage_24h.toString().roundFloat()}%"
                             tvAssetVariation.setTextColor(tvAssetVariation.context.getColor(R.color.red_500))
-                            lineChart.setLineData(
-                                it.sparkline_in_7d.price.formLineData(),
-                                R.color.red_500,
-                                R.drawable.drawable_red_fill_line_chart
-                            )
+//                            lineChart.setLineData(
+//                                it.sparkline_in_7d.price.formLineData(),
+//                                R.color.red_500,
+//                                R.drawable.drawable_red_fill_line_chart
+//                            )
                         }
 
                         tvAssetName.text = it.name

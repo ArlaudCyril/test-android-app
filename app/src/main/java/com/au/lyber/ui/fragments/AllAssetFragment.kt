@@ -7,8 +7,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentAllAssetsBinding
-import com.au.lyber.models.AssetData
 import com.au.lyber.models.Data
+import com.au.lyber.models.priceServiceResume
 import com.au.lyber.ui.adapters.AllAssetAdapter
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.dismissProgressDialog
@@ -33,9 +33,9 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
     private var page: Int = 1
     private var limit: Int = 10
 
-    private var assets = mutableListOf<AssetData>()
-    private var topGainers = mutableListOf<AssetData>()
-    private var topLosers = mutableListOf<AssetData>()
+    private var assets = mutableListOf<priceServiceResume>()
+    private var topGainers = mutableListOf<priceServiceResume>()
+    private var topLosers = mutableListOf<priceServiceResume>()
 
     private val searchText get() = binding.etSearch.text.trim().toString()
 
@@ -57,7 +57,7 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
         viewModel = getViewModel(requireActivity())
         viewModel.listener = this
 
-        viewModel.assetsResponse.observe(viewLifecycleOwner) {
+        viewModel.allAssets.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
 
                 assets.clear()
@@ -65,6 +65,7 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
                 topGainers.clear()
 
                 assets.addAll(it.data)
+                topLosers.topLosers()
                 topLosers.addAll(assets.topLosers())
                 topGainers.addAll(topLosers.reversed())
 
@@ -133,17 +134,17 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
 
         checkInternet(requireContext()) {
             showProgressDialog(requireContext())
-            viewModel.getAssetList()
+            viewModel.getAllAssets()
         }
 
         binding.rvRefresh.setOnRefreshListener {
-            viewModel.getAssetList()
+            viewModel.getAllAssets()
         }
 
 
     }
 
-    private fun List<AssetData>.topLosers(): List<AssetData> {
+    private fun List<priceServiceResume>.topLosers(): List<priceServiceResume> {
         return sortedBy { it.change.toFloat() }
     }
 
@@ -163,15 +164,15 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
 
     }
 
-    private fun assetClicked(asset: AssetData) {
+    private fun assetClicked(asset: priceServiceResume) {
 
-        getViewModel<PortfolioViewModel>(requireActivity()).let {
-//            it.selectedAsset = asset
-            it.chosenAssets = asset
-            it.screenCount = 1
-            viewModel.selectedAsset = it.selectedAsset
-            requireActivity().onBackPressed()
-        }
+//        getViewModel<PortfolioViewModel>(requireActivity()).let {
+////            it.selectedAsset = asset
+//            it.chosenAssets = asset
+//            it.screenCount = 1
+//            viewModel.selectedAsset = it.selectedAsset
+//            requireActivity().onBackPressed()
+//        }
 
         /*if (type.isNotEmpty()) {
             viewModel.exchangeAssetTo = asset.extractAsset()

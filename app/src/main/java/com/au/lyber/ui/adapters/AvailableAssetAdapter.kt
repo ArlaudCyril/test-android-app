@@ -1,18 +1,23 @@
 package com.au.lyber.ui.adapters
 
-import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.getColor
 import androidx.recyclerview.widget.RecyclerView
 import com.au.lyber.R
 import com.au.lyber.databinding.ItemAssetAvailableBinding
+import com.au.lyber.models.AssetBaseData
+import com.au.lyber.models.priceServiceResume
 import com.au.lyber.models.Data
+import com.au.lyber.ui.activities.BaseActivity
 import com.au.lyber.utils.CommonMethods.Companion.commaFormatted
 import com.au.lyber.utils.CommonMethods.Companion.loadCircleCrop
+import com.au.lyber.viewmodels.PortfolioViewModel
+import kotlin.reflect.KFunction1
 
-class AvailableAssetAdapter(private val clickListener: (Data) -> Unit = { _ -> }) :
-    BaseAdapter<Data>() {
+class AvailableAssetAdapter(
+    private val clickListener: (priceServiceResume) -> Unit = { _ -> }) :
+    BaseAdapter<priceServiceResume>() {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -30,25 +35,28 @@ class AvailableAssetAdapter(private val clickListener: (Data) -> Unit = { _ -> }
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
         if (itemList[position] != null)
             (holder as AvailableAssetViewHolder).binding.apply {
-                itemList[position]?.let {
+                itemList[position]?.let { it ->
+                    val id = it.id
+                    val currency : AssetBaseData? = BaseActivity.currencies.firstNotNullOfOrNull{ item -> item.takeIf {item.id == id}}
+                    if (currency != null) {
+                        ivAsset.loadCircleCrop(currency.image)
+                    }
 
-                    ivAsset.loadCircleCrop(it.image)
-
-                    tvAssetNameCode.text = it.symbol?.uppercase()
-                    if (it.price_change_percentage_24h.toFloat() > 0) {
+                    tvAssetNameCode.text = it.id?.uppercase()
+                    if (it.change.toFloat() > 0) {
                         tvAssetVariation.setTextColor(
                             getColor(
                                 tvAssetVariation.context,
                                 R.color.green_500)
                         )
-                        tvAssetVariation.text = "+${it.price_change_percentage_24h.commaFormatted}%"
+                        tvAssetVariation.text = "+${it.change.commaFormatted}%"
                     } else {
                         tvAssetVariation.setTextColor(
                             getColor(
                                 tvAssetVariation.context,
                                 R.color.red_500)
                         )
-                        tvAssetVariation.text = "${it.price_change_percentage_24h.commaFormatted}%"
+                        tvAssetVariation.text = "${it.change.commaFormatted}%"
                     }
                 }
             }

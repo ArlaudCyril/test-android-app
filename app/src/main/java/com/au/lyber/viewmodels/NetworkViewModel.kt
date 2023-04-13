@@ -139,6 +139,12 @@ open class NetworkViewModel : ViewModel() {
     private val _assetsToChoose = MutableLiveData<GetAssetsResponse>()
     val assetsToChoose get() = _assetsToChoose
 
+    private val _allAssets = MutableLiveData<priceServiceResumeResponse>()
+    val allAssets get() = _allAssets
+
+    private val _allAssetsDetail = MutableLiveData<AssetBaseDataResponse>()
+    val allAssetsDetail get() = _allAssetsDetail
+
     private val _recurringInvestmentDetail =
         MutableLiveData<RecurringInvestmentDetailResponse>()
     val recurringInvestmentDetail get() = _recurringInvestmentDetail
@@ -192,9 +198,6 @@ open class NetworkViewModel : ViewModel() {
 
     private val _priceResponse = MutableLiveData<PriceResponse>()
     val priceResponse get() = _priceResponse
-
-    private val _assetResponse = MutableLiveData<AssetResponse>()
-    val assetsResponse get() = _assetResponse
 
 
     fun cancelJob() {
@@ -585,6 +588,21 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
+    fun getAllAssets() {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().getAllAssets()
+            if (res.isSuccessful) _allAssets.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+    fun getAllAssetsDetail() {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().getAllAssetsDetail()
+            if (res.isSuccessful) _allAssetsDetail.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
     fun getRecurringInvestmentDetail(investmentId: String) {
         viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().getRecurringInvestmentDetail(investmentId)
@@ -840,15 +858,5 @@ open class NetworkViewModel : ViewModel() {
             else listener?.onRetrofitError(res.errorBody())
         }
     }
-
-    fun getAssetList() {
-        viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get(Constants.NEW_BASE_URL).getAssetList()
-            if (res.isSuccessful)
-                _assetResponse.postValue(res.body())
-            else listener?.onRetrofitError(res.errorBody())
-        }
-    }
-
 
 }
