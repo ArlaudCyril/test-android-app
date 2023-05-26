@@ -1,7 +1,6 @@
 package com.au.lyber.ui.fragments
 
 import android.annotation.SuppressLint
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -19,15 +18,13 @@ import com.au.lyber.databinding.LoaderViewBinding
 import com.au.lyber.models.Data
 import com.au.lyber.ui.adapters.BaseAdapter
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
-import com.au.lyber.utils.CommonMethods.Companion.extractAsset
-import com.au.lyber.utils.CommonMethods.Companion.formLineData
 import com.au.lyber.utils.CommonMethods.Companion.getViewModel
 import com.au.lyber.utils.CommonMethods.Companion.loadCircleCrop
 import com.au.lyber.utils.CommonMethods.Companion.replaceFragment
 import com.au.lyber.utils.CommonMethods.Companion.roundFloat
 import com.au.lyber.utils.Constants
 import com.au.lyber.utils.OnTextChange
-import com.au.lyber.viewmodels.PortfolioViewModel
+import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.google.android.material.tabs.TabLayout
 
 class SelectAnAssetFragment : BaseFragment<FragmentSelectAnAssetBinding>() {
@@ -277,7 +274,7 @@ class SelectAnAssetFragment : BaseFragment<FragmentSelectAnAssetBinding>() {
     }
 
     private fun onAssetSelected(item: Data) {
-        viewModel.selectedAsset = item.extractAsset()
+        //viewModel.selectedAsset = item.extractAsset()
         requireActivity().replaceFragment(R.id.flSplashActivity, AddAmountFragment())
     }
 

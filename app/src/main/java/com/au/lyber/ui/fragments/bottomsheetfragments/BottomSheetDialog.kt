@@ -9,20 +9,20 @@ import com.au.lyber.R
 import com.au.lyber.databinding.BottomSheetPortfolioBinding
 import com.au.lyber.databinding.BottomSheetRecyclerViewBinding
 import com.au.lyber.databinding.BottomSheetWithdrawExchangeBinding
-import com.au.lyber.models.Assets
+import com.au.lyber.models.AssetBaseData
 import com.au.lyber.models.DataBottomSheet
 import com.au.lyber.ui.adapters.BottomSheetAdapter
 import com.au.lyber.utils.CommonMethods.Companion.getViewModel
 import com.au.lyber.utils.CommonMethods.Companion.gone
 import com.au.lyber.utils.CommonMethods.Companion.toPx
 import com.au.lyber.utils.Constants.LYBER_ASSETS
-import com.au.lyber.viewmodels.PortfolioViewModel
+import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class BottomSheetDialog(
     private val listenItemClicked: (tag: String, item: String) -> Unit = { _, _ -> },
-    private val selectedAsset: Assets? = null,
+    private val selectedAsset: AssetBaseData? = null,
     private val fromDetailScreen: Boolean = false
 ) :
     BottomSheetDialogFragment(), BottomSheetAdapter.ItemListener {
@@ -129,7 +129,7 @@ class BottomSheetDialog(
                     selectedAsset?.let {
 
                         val isLyberAsset =
-                            LYBER_ASSETS.contains(it.asset_id) || LYBER_ASSETS.contains(it.asset_id.uppercase()) || it.asset_name in LYBER_ASSETS
+                            LYBER_ASSETS.contains(it.id) || LYBER_ASSETS.contains(it.id.uppercase()) || it.fullName in LYBER_ASSETS
 
                         if (!isLyberAsset) {
                             withdrawBinding.apply {
@@ -145,7 +145,7 @@ class BottomSheetDialog(
                         }
 
                         withdrawBinding.apply {
-                            tvTitleDepositAsset.text = "Sell ${it.asset_id.uppercase()}"
+                            tvTitleDepositAsset.text = "Sell ${it.id.uppercase()}"
 //                        tvSubTitleDepositAsset.text =
 //                            "Sell ${it.asset_id.uppercase()} from your wallet"
                         }

@@ -30,12 +30,12 @@
         <item name="windowMinWidthMajor">80pt</item>
         <item name="windowMinWidthMinor">80pt</item>
         <item name="android:minWidth">320dp</item>
-        <item name="colorAccent">@color/purple_500_</item>
+        <item name="colorAccent">@color/purple_500</item>
     </style>
 
     <style name="CardExpire" parent="Theme.AppCompat.DayNight.Dialog">
         <item name="android:datePickerStyle">@style/SpinnerDatePicker</item>
-        <item name="colorAccent">@color/purple_500_</item>
+        <item name="colorAccent">@color/purple_500</item>
         <item name="colorOnPrimary">@color/purple_gray_900</item>
     </style>
 
@@ -45,12 +45,12 @@
     </style>
 
     <style name="ExpirePicker" parent="Theme.AppCompat.Dialog.Alert">
-        <item name="colorAccent">@color/purple_500_</item>
+        <item name="colorAccent">@color/purple_500</item>
         <item name="colorOnPrimary">@color/purple_gray_900</item>
     </style>
 
     <style name="DatePickerTheme" parent="Theme.AppCompat.DayNight.Dialog">
-        <item name="colorAccent">@color/purple_500_</item>
+        <item name="colorAccent">@color/purple_500</item>
         <item name="colorOnPrimary">@color/purple_gray_900</item>
     </style>
 

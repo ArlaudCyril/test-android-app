@@ -117,7 +117,6 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
                 checkInternet(requireContext()) {
                     viewModel.authenticateUser(creds.A.toString(), creds.M1.toString())
                 }
-//                }
 
             }
         }
@@ -188,7 +187,7 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
 //                            requireActivity().clearBackStack()
 //                            requireActivity().addFragment(
 //                                R.id.flSplashActivity,
-//                                PortfolioFragment()
+//                                PortfolioHomeFragment()
 //                            )
 //                        }
 

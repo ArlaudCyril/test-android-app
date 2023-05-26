@@ -25,7 +25,7 @@ import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.showToast
 import com.au.lyber.utils.CommonMethods.Companion.toPx
 import com.au.lyber.utils.CommonMethods.Companion.visible
-import com.au.lyber.viewmodels.PortfolioViewModel
+import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 
 class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View.OnClickListener {
 
@@ -117,7 +117,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                     binding.tvAllocationInfo.visible()
                     binding.tvNumberAssets.setTextColor(redColor)
                     binding.tvAllocationInfo.setTextColor(redColor)
-                    binding.tvNumberAssets.text = "${count()} Assets"
+                    binding.tvNumberAssets.text = "${count()} AssetBaseData"
                     binding.tvAllocationInfo.text =
                         "Your allocations is greater than 100%, remove ${(count - 100).toInt()}%"
                     binding.btnSaveMyStrategy.background =
@@ -130,7 +130,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                     binding.tvAllocationInfo.visible()
                     binding.tvNumberAssets.setTextColor(redColor)
                     binding.tvAllocationInfo.setTextColor(redColor)
-                    binding.tvNumberAssets.text = "${count()} Assets"
+                    binding.tvNumberAssets.text = "${count()} AssetBaseData"
                     binding.tvAllocationInfo.text =
                         "Your allocations is less than 100%, add ${(100 - count).toInt()}%"
                     binding.btnSaveMyStrategy.background =
@@ -144,7 +144,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                     binding.tvAllocationInfo.visible()
                     binding.tvNumberAssets.setTextColor(one)
                     binding.tvAllocationInfo.setTextColor(two)
-                    binding.tvNumberAssets.text = "${count()} Assets"
+                    binding.tvNumberAssets.text = "${count()} AssetBaseData"
                     binding.tvAllocationInfo.text =
                         "Your strategy is ready to be saved."
                     binding.btnSaveMyStrategy.setBackgroundResource(R.drawable.button_purple_500)

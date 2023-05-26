@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
+import android.graphics.DashPathEffect
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
@@ -13,10 +14,12 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
+import android.view.animation.AccelerateInterpolator
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
+import androidx.core.content.res.ResourcesCompat
 import com.au.lyber.R
 import com.au.lyber.databinding.ItemHighlighterGraphBinding
 import com.au.lyber.databinding.YAxisTextBinding
@@ -24,6 +27,7 @@ import com.au.lyber.utils.CommonMethods.Companion.commaFormatted
 import com.au.lyber.utils.CommonMethods.Companion.lineData
 import com.au.lyber.utils.CommonMethods.Companion.toGraphTime
 import com.bumptech.glide.Glide
+import font.FontSize
 
 class NewCustomLineChart : RelativeLayout {
 
@@ -39,7 +43,6 @@ class NewCustomLineChart : RelativeLayout {
     ) : super(context, attributeSet, defStyle, defStyleRes) {
 
         setWillNotDraw(true)
-
         drawableView = ImageView(context)
         dottedLineView = View(context)
         textView = TextView(context)
@@ -57,11 +60,16 @@ class NewCustomLineChart : RelativeLayout {
 
         setBackgroundColor(Color.TRANSPARENT)
 
+        binding.tvPrice.textSize = FontSize.MEDIUM
+        binding.tvPrice.typeface = ResourcesCompat.getFont(context, R.font.atyptext_medium)
+        binding.tvDate.textSize = FontSize.SMALL
+        binding.tvPrice.typeface = ResourcesCompat.getFont(context, R.font.atyptext_medium)
+
     }
 
     private var animator: ValueAnimator? = null
 
-    private val binding: ItemHighlighterGraphBinding by lazy {
+    private val binding: ItemHighlighterGraphBinding by lazy{
         ItemHighlighterGraphBinding.inflate(LayoutInflater.from(context))
     }
 
@@ -102,6 +110,8 @@ class NewCustomLineChart : RelativeLayout {
 
     private var pointMax: Point? = null
     private var pointMin: Point? = null
+    private var lastPoint: Point? = null
+
 
     private var animationDot: ImageView
     private var drawableView: ImageView
@@ -110,20 +120,20 @@ class NewCustomLineChart : RelativeLayout {
 
 
     var xUnit: Int = 0
-    var textColor: Int = Color.BLUE
-    var textTypeface: Typeface = Typeface.DEFAULT
-    var textSize: Float = 16f
-    var selectorLineColor: Int = Color.BLUE
+    var textColor: Int = context.getColor(R.color.purple_500)
+    var textTypeface: Typeface = ResourcesCompat.getFont(context, R.font.mabry_pro) ?: Typeface.DEFAULT
+    var textSize: Float = 25f
+    var selectorLineColor: Int = context.getColor(R.color.purple_500)
 
-    var selectorDrawable: Drawable? = getDrawable(context, R.drawable.radio_select)
-    var selectorPointSize: Int = 40
+    var selectorDrawable: Drawable? = getDrawable(context, R.drawable.circle_drawable_purple_500)
+    var selectorPointSize: Int = 30
 
-    var horizontalPadding: Int = 32
-    var heightFraction: Float = 1.0f
+    var horizontalPadding: Int = 60
+    var heightFraction: Float = 0.8f
     var bottomPadding: Int = 24
 
-    var lineWidth = 4f
-    var lineColor = Color.BLUE
+    var lineThickness = 9f
+    var lineColor = context.getColor(R.color.purple_500)
 
     var mCanvas: Canvas? = null
     var selectedPosition: Int = 0
@@ -143,7 +153,8 @@ class NewCustomLineChart : RelativeLayout {
 
 
     override fun onInterceptTouchEvent(ev: MotionEvent?): Boolean {
-        return onTouchEvent(ev)
+        parent.requestDisallowInterceptTouchEvent(true)
+        return true
     }
 
     @SuppressLint("ClickableViewAccessibility")
@@ -211,6 +222,8 @@ class NewCustomLineChart : RelativeLayout {
                 if (lineData[i] == max) pointMax = Point(width.toFloat(), startY)
                 else if (lineData[i] == min) pointMin = Point(width.toFloat(), startY)
 
+                if(i == lineData.count() - 1) lastPoint = Point(startX, startY)
+
                 points.add(Point(startX, startY))
             }
         else {
@@ -222,6 +235,8 @@ class NewCustomLineChart : RelativeLayout {
 
                 if (lineData[i] == max) pointMax = Point(width.toFloat(), startY)
                 else if (lineData[i] == min) pointMin = Point(width.toFloat(), startY)
+
+                if(i == lineData.count() - 1) lastPoint = Point(startX, startY)
 
                 points.add(Point(startX, startY))
             }
@@ -286,54 +301,22 @@ class NewCustomLineChart : RelativeLayout {
 
             }
         }
-
-//        drawLines(width.toFloat(), height.toFloat(), width.toFloat(), 0F, mCanvas)
-
-        /*pointMax?.let {
-            mCanvas.drawLine(
-                it.x - endPadding,
-                it.y,
-                it.x,
-                it.y,
-                Paint().apply {
-                    strokeCap = Paint.Cap.ROUND
-                    strokeWidth = lineWidth
-                    color = lineColor
-                })
+        val paint = Paint().apply {
+            color = Color.LTGRAY
+            strokeWidth = 4f
         }
 
-        pointMin?.let {
-            mCanvas.drawLine(
-                it.x - endPadding,
-                it.y,
-                it.x,
-                it.y,
-                Paint().apply {
-                    strokeCap = Paint.Cap.ROUND
-                    strokeWidth = lineWidth
-                    color = lineColor
-                })
+        lastPoint?.let {
+           mCanvas.drawLine(
+                it.x, 0F,
+                it.x, height.toFloat(), paint)
         }
-
-        pointMid?.let {
-            mCanvas.drawLine(
-                it.x - endPadding,
-                it.y,
-                it.x,
-                it.y,
-                Paint().apply {
-                    strokeCap = Paint.Cap.ROUND
-                    strokeWidth = lineWidth
-                    color = lineColor
-                })
-        }*/
-
     }
 
     private fun drawLines(xStart: Float, yStart: Float, xEnd: Float, yEnd: Float, mCanvas: Canvas) {
         mCanvas.drawLine(xStart, yStart, xEnd, yEnd, Paint().apply {
             strokeCap = Paint.Cap.ROUND
-            strokeWidth = lineWidth
+            strokeWidth = lineThickness
             color = lineColor
         })
     }
@@ -353,12 +336,10 @@ class NewCustomLineChart : RelativeLayout {
         binding.tvDate.setTextColor(textColor)
 
         drawableView.layoutParams = LayoutParams(selectorPointSize, selectorPointSize)
-        Glide.with(drawableView).load(R.raw.animation_1).into(drawableView)
+        Glide.with(drawableView).load(selectorDrawable).into(drawableView)
 
-//        drawableView.background = selectorDrawable
-
-//        animationDot.layoutParams = LayoutParams(selectorPointSize, selectorPointSize)
-//        animationDot.background = getDrawable(context, R.drawable.point_drawable)
+        animationDot.layoutParams = LayoutParams(selectorPointSize, selectorPointSize)
+        animationDot.background = getDrawable(context, R.drawable.point_drawable)
 
 
         if (x < (binding.root.width / 2)) binding.root.x = 0F
@@ -366,18 +347,19 @@ class NewCustomLineChart : RelativeLayout {
             (width - binding.root.width).toFloat() - horizontalPadding - (binding.root.paddingStart / 2)
         else binding.root.x = x - (binding.root.width / 2)
 
-        binding.root.y = 0F
+        if (y - binding.root.height*1.5F > 0F) binding.root.y = y - binding.root.height*1.5F
+        else binding.root.y = y + binding.root.height*0.5F
 
         drawableView.translationZ = 2F
         drawableView.x = x - (drawableView.width / 2)
         drawableView.y = y - (drawableView.width / 2)
 
 
-        /*if (animator == null)
+        if (animator == null)
             animator =
                 ValueAnimator.ofInt(selectorPointSize, ((selectorPointSize * 2.5).toInt())).apply {
                     interpolator = AccelerateInterpolator(3F)
-                    duration = 450
+                    duration = 1000
                     repeatCount = ValueAnimator.INFINITE
 
                     val diff = (selectorPointSize * 2.5) - selectorPointSize
@@ -401,7 +383,7 @@ class NewCustomLineChart : RelativeLayout {
             animationDot.x = x - (animationDot.width / 2)
             animationDot.y = y - (animationDot.width / 2)
             if (animator?.isRunning == false)
-                animator?.start()*/
+                animator?.start()
 
 
     }

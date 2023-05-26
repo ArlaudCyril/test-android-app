@@ -8,7 +8,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentAllAssetsBinding
 import com.au.lyber.models.Data
-import com.au.lyber.models.priceServiceResume
+import com.au.lyber.models.PriceServiceResume
 import com.au.lyber.ui.adapters.AllAssetAdapter
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.dismissProgressDialog
@@ -17,7 +17,8 @@ import com.au.lyber.utils.CommonMethods.Companion.replaceFragment
 import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.au.lyber.utils.Constants
 import com.au.lyber.utils.OnTextChange
-import com.au.lyber.viewmodels.PortfolioViewModel
+import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
+import com.au.lyber.utils.CommonMethods
 import com.google.android.material.tabs.TabLayout
 
 class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickListener {
@@ -33,9 +34,11 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
     private var page: Int = 1
     private var limit: Int = 10
 
-    private var assets = mutableListOf<priceServiceResume>()
-    private var topGainers = mutableListOf<priceServiceResume>()
-    private var topLosers = mutableListOf<priceServiceResume>()
+    private var assets = mutableListOf<PriceServiceResume>()
+    private var trendings = mutableListOf<PriceServiceResume>()
+    private var topGainers = mutableListOf<PriceServiceResume>()
+    private var topLosers = mutableListOf<PriceServiceResume>()
+    private var stables = mutableListOf<PriceServiceResume>()
 
     private val searchText get() = binding.etSearch.text.trim().toString()
 
@@ -57,22 +60,32 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
         viewModel = getViewModel(requireActivity())
         viewModel.listener = this
 
-        viewModel.allAssets.observe(viewLifecycleOwner) {
+        viewModel.priceServiceResumes.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
 
                 assets.clear()
+                trendings.clear()
                 topLosers.clear()
                 topGainers.clear()
+                stables.clear()
 
-                assets.addAll(it.data)
-                topLosers.topLosers()
+
+                assets.addAll(it)
+                trendings.addAll(assets)
                 topLosers.addAll(assets.topLosers())
                 topGainers.addAll(topLosers.reversed())
+                stables.addAll(assets.stables())
+
+                trendings.removeAll(stables)
+                topLosers.removeAll(stables)
+                topGainers.removeAll(stables)
+
 
                 when (binding.tabLayout.selectedTabPosition) {
-                    0 -> adapter.setList(assets)
+                    0 -> adapter.setList(trendings)
                     1 -> adapter.setList(topGainers)
                     2 -> adapter.setList(topLosers)
+                    3 -> adapter.setList(stables)
                     else -> {}
                 }
 
@@ -88,7 +101,7 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
             it.tabLayout.addTab(it.tabLayout.newTab().apply { text = "Trending" })
             it.tabLayout.addTab(it.tabLayout.newTab().apply { text = "Top gainers" })
             it.tabLayout.addTab(it.tabLayout.newTab().apply { text = "Top loosers" })
-//            it.tabLayout.addTab(it.tabLayout.newTab().apply { text = "Stable" })
+            it.tabLayout.addTab(it.tabLayout.newTab().apply { text = "Stable" })
             it.tabLayout.addOnTabSelectedListener(tabSelectedListener)
 
             adapter = AllAssetAdapter(::assetClicked)
@@ -97,7 +110,6 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
             it.rvAddAsset.adapter = adapter
             it.rvAddAsset.layoutManager = layoutManager
             it.rvAddAsset.itemAnimator = null
-
             it.tvTitle.text = "All assets"
             it.ivTopAction.setImageResource(R.drawable.ic_back)
             it.ivTopAction.setOnClickListener(this)
@@ -109,20 +121,28 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
                     when (binding.tabLayout.selectedTabPosition) {
                         0 -> {
                             if (searchText.isNotEmpty())
-                                adapter.setList(assets.filter { it.id.contains(searchText) })
-                            else adapter.setList(assets)
+                                adapter.setList(assets.filter { it.id.startsWith(searchText, true)
+                                        || CommonMethods.getCurrency(it.id).fullName.startsWith(searchText, true)})
+                            else adapter.setList(trendings)
                         }
                         1 -> {
                             if (searchText.isNotEmpty())
-                                adapter.setList(topGainers.filter { it.id.contains(searchText) })
+                                adapter.setList(assets.filter { it.id.startsWith(searchText, true)
+                                        || CommonMethods.getCurrency(it.id).fullName.startsWith(searchText, true)})
                             else adapter.setList(topGainers)
                         }
                         2 -> {
                             if (searchText.isNotEmpty())
-                                adapter.setList(topLosers.filter { it.id.contains(searchText) })
+                                adapter.setList(assets.filter { it.id.startsWith(searchText, true)
+                                        || CommonMethods.getCurrency(it.id).fullName.startsWith(searchText, true)})
                             else adapter.setList(topLosers)
                         }
-
+                        3 -> {
+                            if (searchText.isNotEmpty())
+                                adapter.setList(assets.filter { it.id.startsWith(searchText, true)
+                                        || CommonMethods.getCurrency(it.id).fullName.startsWith(searchText, true)})
+                            else adapter.setList(stables)
+                        }
                         else -> {
 
                         }
@@ -134,27 +154,31 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
 
         checkInternet(requireContext()) {
             showProgressDialog(requireContext())
-            viewModel.getAllAssets()
+            viewModel.getAllPriceResume()
         }
 
         binding.rvRefresh.setOnRefreshListener {
-            viewModel.getAllAssets()
+            viewModel.getAllPriceResume()
         }
 
 
     }
 
-    private fun List<priceServiceResume>.topLosers(): List<priceServiceResume> {
-        return sortedBy { it.change.toFloat() }
+    private fun List<PriceServiceResume>.topLosers(): List<PriceServiceResume> {
+        return sortedBy { it.priceServiceResumeData.change.toFloat() }
     }
 
+    private fun List<PriceServiceResume>.stables(): List<PriceServiceResume> {
+        return filter { CommonMethods.getCurrency(it.id).isStablecoin }
+    }//get is stable add the parameter and dispatch it from the others list
 
     private val tabSelectedListener = object : TabLayout.OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab?) {
             when (tab?.position) {
-                0 -> adapter.setList(assets)
+                0 -> adapter.setList(trendings)
                 1 -> adapter.setList(topGainers)
                 2 -> adapter.setList(topLosers)
+                3 -> adapter.setList(stables)
                 else -> {}
             }
         }
@@ -164,15 +188,15 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
 
     }
 
-    private fun assetClicked(asset: priceServiceResume) {
+    private fun assetClicked(asset: PriceServiceResume) {
 
-//        getViewModel<PortfolioViewModel>(requireActivity()).let {
-////            it.selectedAsset = asset
-//            it.chosenAssets = asset
-//            it.screenCount = 1
-//            viewModel.selectedAsset = it.selectedAsset
-//            requireActivity().onBackPressed()
-//        }
+        getViewModel<PortfolioViewModel>(requireActivity()).let {
+            //it.selectedAsset = asset
+            it.chosenAssets = asset
+            it.screenCount = 1
+            viewModel.selectedAsset = it.selectedAsset
+            requireActivity().onBackPressed()
+        }
 
         /*if (type.isNotEmpty()) {
             viewModel.exchangeAssetTo = asset.extractAsset()

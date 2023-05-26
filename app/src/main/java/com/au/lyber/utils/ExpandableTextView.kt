@@ -130,7 +130,7 @@ class ExpandableTextView : TextView {
 
                             override fun updateDrawState(ds: TextPaint) {
                                 highlightColor = Color.TRANSPARENT
-                                ds.color = resources.getColor(R.color.purple_500_, context.theme)
+                                ds.color = resources.getColor(R.color.purple_500, context.theme)
                                 ds.typeface = Typeface.DEFAULT_BOLD
                                 ds.isUnderlineText = true
                                 super.updateDrawState(ds)
@@ -153,7 +153,7 @@ class ExpandableTextView : TextView {
             SpannableString(finalString).let {
 
 //                it.setSpan(
-//                    ForegroundColorSpan(ContextCompat.getColor(context, R.color.purple_500_)),
+//                    ForegroundColorSpan(ContextCompat.getColor(context, R.color.purple_500)),
 //                    string.length + 3,
 //                    finalString.length,
 //                    Spannable.SPAN_EXCLUSIVE_INCLUSIVE
@@ -167,7 +167,7 @@ class ExpandableTextView : TextView {
 
                         override fun updateDrawState(ds: TextPaint) {
                             highlightColor = Color.TRANSPARENT
-                            ds.color = resources.getColor(R.color.purple_500_, context.theme)
+                            ds.color = resources.getColor(R.color.purple_500, context.theme)
                             ds.typeface = Typeface.DEFAULT_BOLD
                             ds.isUnderlineText = true
                             super.updateDrawState(ds)

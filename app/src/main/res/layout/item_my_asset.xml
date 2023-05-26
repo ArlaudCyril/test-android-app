@@ -60,51 +60,17 @@
 
 
     <TextView
-        android:id="@+id/tvAssetNameCenter"
-        style="@style/SubheadMabry"
-        android:layout_marginStart="12dp"
-        android:gravity="center_vertical"
-        android:textStyle="bold"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@id/ivAssetIcon"
-        app:layout_constraintStart_toEndOf="@+id/ivAssetIcon"
-        app:layout_constraintTop_toTopOf="@+id/ivAssetIcon"
-        tools:text="Ether" />
-
-    <TextView
         android:id="@+id/tvAssetName"
         style="@style/SubheadMabry"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="16dp"
         android:gravity="center_vertical"
+        android:layout_marginTop="13dp"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/ivAssetIcon"
         app:layout_constraintTop_toBottomOf="@+id/llFiatWallet"
+        app:layout_constraintVertical_bias="0.622"
         tools:text="Ether" />
-
-    <TextView
-        android:id="@+id/tvAssetVariation"
-        style="@style/BodyMabry"
-        android:layout_marginStart="12dp"
-        android:textColor="@color/purple_gray_500"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/ivAssetIcon"
-        app:layout_constraintTop_toBottomOf="@+id/tvAssetName"
-        tools:text="+23%" />
-
-    <TextView
-        android:id="@+id/tvAssetAmountCenter"
-        style="@style/SubheadMabry"
-        android:layout_marginEnd="12dp"
-        android:gravity="center_vertical"
-        android:textColor="@color/purple_gray_700"
-        android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@id/ivAssetIcon"
-        app:layout_constraintEnd_toStartOf="@id/ivDropIcon"
-        app:layout_constraintTop_toTopOf="@+id/ivAssetIcon"
-        tools:text="1€" />
-
 
     <TextView
         android:id="@+id/tvAssetAmount"

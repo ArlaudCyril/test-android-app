@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    package="com.au.lyber">
+    xmlns:tools="http://schemas.android.com/tools">
 
 
     <uses-permission android:name="android.webkit.PermissionRequest" />
@@ -35,7 +34,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Liber"
         android:usesCleartextTraffic="true"
-        tools:targetApi="33">
+        tools:targetApi="33"
+        android:enableOnBackInvokedCallback="true">
 
         <activity
             android:name=".ui.activities.SplashActivity"

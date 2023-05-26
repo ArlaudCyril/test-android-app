@@ -125,9 +125,6 @@ interface Api {
     ): Response<TransactionResponse>
 
 
-    @GET("coingecko/coin")
-    suspend fun getAssetDetail(@Query("asset") asset: String): Response<Data>
-
     @GET("user/assets")
     suspend fun getAssets(): Response<MyAssetResponse>
 
@@ -198,10 +195,13 @@ interface Api {
     suspend fun getAssetsToChoose(): Response<GetAssetsResponse>
 
     @GET("price-service/resume")
-    suspend fun getAllAssets(): Response<priceServiceResumeResponse>
+    suspend fun getAllPriceResume(): Response<PriceServiceResumeResponse>
 
     @GET("asset-service/assets")
-    suspend fun getAllAssetsDetail(): Response<AssetBaseDataResponse>
+    suspend fun getAllAssets(): Response<AssetBaseDataResponse>
+
+    @GET("asset-service/asset")
+    suspend fun getAssetDetail(@Query("id") id: String): Response<AssetDetailBaseDataResponse>
 
     @GET("user/investment")
     suspend fun getRecurringInvestmentDetail(@Query("id") id: String): Response<RecurringInvestmentDetailResponse>
@@ -260,4 +260,7 @@ interface Api {
         @Query("id") id: String,
         @Query("tf") timeFrame: String
     ): Response<PriceResponse>
+
+    @GET("wallet-service/balance")
+    suspend fun getBalance(): Response<BalanceResponse>
 }

@@ -139,7 +139,7 @@
                         android:gravity="center"
                         android:textColor="@color/white"
                         tools:background="@drawable/circle_drawable"
-                        tools:backgroundTint="@color/purple_500_"
+                        tools:backgroundTint="@color/purple_500"
                         tools:text="@string/_2" />
 
 
@@ -166,7 +166,7 @@
                         android:layout_toEndOf="@id/ivFillPersonalData"
                         android:gravity="center_vertical"
                         android:text="@string/fill_personal_data"
-                        android:textColor="@color/purple_500_"
+                        android:textColor="@color/purple_500"
                         app:drawableEndCompat="@drawable/ic_right_arrow_purple" />
 
                     <!--                    <TextView-->
@@ -181,7 +181,7 @@
                     <!--                        android:paddingHorizontal="4dp"-->
                     <!--                        android:text="@string/edit"-->
                     <!--                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"-->
-                    <!--                        android:textColor="@color/purple_500_" />-->
+                    <!--                        android:textColor="@color/purple_500" />-->
 
                     <ImageView
                         android:id="@+id/ivVerifyYourIdentity"
@@ -239,7 +239,7 @@
                             style="@style/SubTitleText"
                             android:gravity="center_vertical"
                             android:text="@string/verify_your_identity"
-                            android:textColor="@color/purple_500_" />
+                            android:textColor="@color/purple_500" />
 
                         <TextView
                             style="@style/SubTitleText"

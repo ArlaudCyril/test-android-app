@@ -1,7 +1,6 @@
 package com.au.lyber.ui.fragments.bottomsheetfragments
 
 import android.content.DialogInterface
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -20,14 +19,13 @@ import com.au.lyber.models.Data
 import com.au.lyber.ui.adapters.BaseAdapter
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.commaFormatted
-import com.au.lyber.utils.CommonMethods.Companion.formLineData
 import com.au.lyber.utils.CommonMethods.Companion.getViewModel
 import com.au.lyber.utils.CommonMethods.Companion.loadCircleCrop
 import com.au.lyber.utils.CommonMethods.Companion.roundFloat
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
 import com.au.lyber.utils.OnTextChange
-import com.au.lyber.viewmodels.PortfolioViewModel
+import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.tabs.TabLayout
 

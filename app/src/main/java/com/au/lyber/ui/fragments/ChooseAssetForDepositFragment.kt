@@ -1,7 +1,6 @@
 package com.au.lyber.ui.fragments
 
 import android.annotation.SuppressLint
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -22,7 +21,7 @@ import com.au.lyber.utils.CommonMethods.Companion.loadCircleCrop
 import com.au.lyber.utils.CommonMethods.Companion.replaceFragment
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
-import com.au.lyber.viewmodels.PortfolioViewModel
+import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import java.util.*
 
 class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBinding>() {
@@ -94,7 +93,7 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
 
 
         viewModel.selectedAsset?.let {
-            binding.btnAddUseAddress.text = "Buy ${it.asset_name.capitalize()} on Lyber"
+            binding.btnAddUseAddress.text = "Buy ${it.fullName.capitalize()} on Lyber"
         }
 
         checkInternet(requireContext()) {

@@ -26,6 +26,7 @@ import com.au.lyber.R
 import com.au.lyber.databinding.CustomDialogLayoutBinding
 import com.au.lyber.databinding.DialogSettingBinding
 import com.au.lyber.databinding.FragmentVerifyYourIdentityBinding
+import com.au.lyber.ui.portfolio.fragment.PortfolioHomeFragment
 import com.au.lyber.utils.App
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.clearBackStack
@@ -36,7 +37,7 @@ import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.strikeText
 import com.au.lyber.utils.Constants
 import com.au.lyber.utils.Constants.PICTURE_DIRECTORY
-import com.au.lyber.viewmodels.PortfolioViewModel
+import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.viewmodels.VerifyIdentityViewModel
 import java.io.File
 import java.text.SimpleDateFormat
@@ -360,7 +361,7 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
                         App.prefsManager.portfolioCompletionStep = Constants.PROFILE_COMPLETED
                         requireActivity().clearBackStack()
                         requireActivity().supportFragmentManager.beginTransaction()
-                            .replace(R.id.flSplashActivity, PortfolioFragment()).commit()
+                            .replace(R.id.flSplashActivity, PortfolioHomeFragment()).commit()
                     } else
                         dialogVerify(
                             "Verify identity",
@@ -371,7 +372,7 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
 //                    App.prefsManager.portfolioCompletionStep = Constants.PROFILE_COMPLETED
 //                    requireActivity().clearBackStack()
 //                    requireActivity().supportFragmentManager.beginTransaction()
-//                        .replace(R.id.flSplashActivity, PortfolioFragment()).commit()
+//                        .replace(R.id.flSplashActivity, PortfolioHomeFragment()).commit()
 
 //                    if (verifyIdentityViewModel.imageCaptured != TWO) {
 //                        if (!requireActivity().checkPermission(CAMERA) || !requireActivity().checkPermission(

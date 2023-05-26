@@ -1,6 +1,5 @@
 package com.au.lyber.ui.fragments
 
-import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -13,13 +12,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.au.lyber.databinding.AppItemLayoutBinding
 import com.au.lyber.databinding.FragmentSearchAssetsBinding
 import com.au.lyber.databinding.LoaderViewBinding
-import com.au.lyber.models.Assets
+import com.au.lyber.models.AssetBaseData
 import com.au.lyber.models.GetAssetsResponseItem
 import com.au.lyber.ui.adapters.BaseAdapter
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.getViewModel
 import com.au.lyber.utils.CommonMethods.Companion.loadCircleCrop
-import com.au.lyber.viewmodels.PortfolioViewModel
+import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 
 class SearchAssetsFragment :
     BaseFragment<FragmentSearchAssetsBinding>() {
@@ -62,15 +61,15 @@ class SearchAssetsFragment :
 
     private fun itemClicked(item: GetAssetsResponseItem) {
 
-        val asset = Assets(
+        /*val asset = AssetBaseData(
             asset_id = item.asset_id,
             asset_name = item.asset_name.lowercase(),
             euro_amount = 0.0,
             total_balance = 0.0,
             coin_detail = null
-        )
+        ) TODO*/
 
-        viewModel.selectedAsset = asset
+        //viewModel.selectedAsset = asset TODO
         viewModel.screenCount = 1
         requireActivity().onBackPressed()
 

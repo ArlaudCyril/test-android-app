@@ -351,24 +351,8 @@ data class Transaction(
 
 data class MyAssetResponse(
     val total_euros_available: Double,
-    val assets: List<Assets>,
+    val assets: List<AssetBaseData>,
     val count: Int
-)
-
-data class Assets(
-    val __v: Int = 0,
-    val _id: String? = "",
-    val asset_id: String,
-    val asset_name: String,
-    val created_at: String? = "",
-    val tag: Any? = null,
-    var euro_amount: Double,
-    val name: String = "",
-    var total_balance: Double = 0.0,
-    val updated_at: String = "",
-    val user_id: String = "",
-    val coin_detail: Data?,
-    val image: String? = "",
 )
 
 data class RecurringInvestmentResponse(
@@ -452,15 +436,19 @@ data class GetAssetsResponseItem(
     val image: String
 )
 
-class priceServiceResumeResponse(
-    val data: List<priceServiceResume>
+class PriceServiceResumeResponse(
+    val data: Map<String, PriceServiceResumeData>
     )
-data class priceServiceResume (
-    val id: String,
+
+data class PriceServiceResumeData (
     val lastPrice: String,
     val change: String,
     val squiggleURL: String,
     val isAuto: Boolean,
+)
+data class PriceServiceResume (
+    val id: String,
+    val priceServiceResumeData: PriceServiceResumeData
 )
 
 class AssetBaseDataResponse(
@@ -472,8 +460,30 @@ data class AssetBaseData(
     val image: String,
     val isUIActive: Boolean,
     val isTradeActive: Boolean,
+    val isStablecoin: Boolean,
     val isDepositActive: Boolean,
     val isWithdrawalActive: Boolean,
+)
+
+class AssetDetailBaseDataResponse(
+    val data: AssetDetailBaseData
+)
+data class AssetDetailBaseData(
+    val id: String,
+    val fullName: String,
+    val image: String,
+    val about: Description,
+    val marketRank: Int,
+    val isUIActive: Boolean,
+    val isTradeActive: Boolean,
+    val isStablecoin: Boolean,
+    val isDepositActive: Boolean,
+    val isWithdrawalActive: Boolean,
+)
+
+data class Description(
+    val fr: String,
+    val en: String
 )
 
 data class RecurringInvestmentDetailResponse(
@@ -582,4 +592,18 @@ data class PriceResponse(
 data class PriceData(
     val lastUpdate: String,
     val prices: List<String>
+)
+
+data class BalanceResponse(
+    val data: Map<String, BalanceData>
+)
+
+data class BalanceData(
+    val balance: String,
+    val euroBalance: String
+)
+
+data class Balance(
+    val id: String,
+    val balanceData: BalanceData
 )

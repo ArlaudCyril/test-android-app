@@ -45,7 +45,7 @@ class AddPaymentMethodFragment : BaseFragment<FragmentAddPaymentMethodBinding>()
                                 Icon.createWithResource(
                                     requireContext(),
                                     R.drawable.ic_credit_card_outline
-                                ).setTint(getColor(requireContext(), R.color.purple_500_))
+                                ).setTint(getColor(requireContext(), R.color.purple_500))
                             )
                         }
                         /*  2 -> {

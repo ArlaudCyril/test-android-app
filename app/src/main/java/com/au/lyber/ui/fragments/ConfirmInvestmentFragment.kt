@@ -2,7 +2,6 @@ package com.au.lyber.ui.fragments
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.net.Uri
 import android.os.Bundle
 import android.view.View
 import android.view.Window
@@ -11,6 +10,7 @@ import com.au.lyber.R
 import com.au.lyber.databinding.ConfirmationDialogBinding
 import com.au.lyber.databinding.FragmentConfirmInvestmentBinding
 import com.au.lyber.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
+import com.au.lyber.ui.portfolio.fragment.PortfolioHomeFragment
 import com.au.lyber.utils.CommonMethods.Companion.addFragment
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.clearBackStack
@@ -24,7 +24,7 @@ import com.au.lyber.utils.CommonMethods.Companion.roundFloat
 import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
-import com.au.lyber.viewmodels.PortfolioViewModel
+import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import java.util.*
 
 class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>(),
@@ -49,7 +49,7 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                 showDialog(
                     viewModel.selectedAsset?.image ?: "",
                     viewModel.assetAmount,
-                    viewModel.selectedAsset?.asset_id ?: ""
+                    viewModel.selectedAsset?.id ?: ""
                 )
 //                ConfirmationBottomSheet().show(childFragmentManager, "")
             }
@@ -110,8 +110,8 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                             checkInternet(requireContext()) {
                                 showProgressDialog(requireContext())
                                 viewModel.exchange(
-                                    viewModel.exchangeAssetFrom?.asset_id ?: "",
-                                    viewModel.exchangeAssetTo?.asset_id ?: "",
+                                    viewModel.exchangeAssetFrom?.id ?: "",
+                                    viewModel.exchangeAssetTo?.id ?: "",
                                     viewModel.exchangeFromAmount,
                                     viewModel.exchangeToAmount
                                 )
@@ -126,7 +126,7 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                             requireActivity().clearBackStack()
                             requireActivity().addFragment(
                                 R.id.flSplashActivity,
-                                PortfolioFragment()
+                                PortfolioHomeFragment()
                             )
                         }
                     }
@@ -226,10 +226,10 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
 
 
                     tvAssetPrice.text =
-                        viewModel.selectedAsset?.asset_name?.capitalize(Locale.ROOT) + " Price"
-                    tvValueAssetPrice.text =
+                        viewModel.selectedAsset?.fullName?.capitalize(Locale.ROOT) + " Price"
+                    /*tvValueAssetPrice.text =
                         ((viewModel.selectedAsset?.euro_amount.toString()
-                            .roundFloat().commaFormatted)) + Constants.EURO
+                            .roundFloat().commaFormatted)) + Constants.EURO TODO*/
                     tvValueFrequency.text = viewModel.selectedFrequency
 
                     tvAmount.text = viewModel.assetAmount.commaFormatted
@@ -264,20 +264,20 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                     ).gone()
 
                     tvAmount.text =
-                        "${viewModel.assetAmount.commaFormatted} ${viewModel.exchangeAssetTo?.asset_id?.uppercase()}"
+                        "${viewModel.assetAmount.commaFormatted} ${viewModel.exchangeAssetTo?.id?.uppercase()}"
 
                     tvNestedAmount.text =
-                        "${viewModel.exchangeAssetFrom?.asset_name?.capitalize()} Price"
-                    tvNestedAmountValue.text =
+                        "${viewModel.exchangeAssetFrom?.fullName?.capitalize()} Price"
+                    /*tvNestedAmountValue.text =
                         "${viewModel.exchangeAssetFrom?.euro_amount.commaFormatted} ${Constants.EURO}"
-
+                    TODO */
                     tvExchangeFromValue.text =
-                        "${viewModel.amount.commaFormatted} ${viewModel.exchangeAssetFrom?.asset_id?.uppercase()}"
+                        "${viewModel.amount.commaFormatted} ${viewModel.exchangeAssetFrom?.id?.uppercase()}"
                     tvExchangeToValue.text =
-                        "${viewModel.assetAmount.commaFormatted} ${viewModel.exchangeAssetTo?.asset_id?.uppercase()}"
+                        "${viewModel.assetAmount.commaFormatted} ${viewModel.exchangeAssetTo?.id?.uppercase()}"
 
 
-                    tvValueTotal.text = "${viewModel.assetAmount.commaFormatted} ${viewModel.exchangeAssetTo?.asset_id?.uppercase()}"
+                    tvValueTotal.text = "${viewModel.assetAmount.commaFormatted} ${viewModel.exchangeAssetTo?.id?.uppercase()}"
 
                     btnConfirmInvestment.text = "Confirm exchange"
                     title.text = "Confirm exchange"

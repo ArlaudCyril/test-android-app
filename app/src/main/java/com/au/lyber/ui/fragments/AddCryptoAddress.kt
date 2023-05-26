@@ -257,7 +257,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                 binding.llOriginExchange.background =
                     getDrawable(requireContext(), R.drawable.round_stroke_purple_500)
                 binding.ivRadioExchange.setImageResource(R.drawable.radio_select)
-                binding.tvExchange.setTextColor(getColor(requireContext(), R.color.purple_500_))
+                binding.tvExchange.setTextColor(getColor(requireContext(), R.color.purple_500))
 
                 binding.llOriginWallet.background =
                     getDrawable(requireContext(), R.drawable.round_stroke_gray_100)
@@ -272,7 +272,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                 binding.llOriginWallet.background =
                     getDrawable(requireContext(), R.drawable.round_stroke_purple_500)
                 binding.ivRadioWallet.setImageResource(R.drawable.radio_select)
-                binding.tvWallet.setTextColor(getColor(requireContext(), R.color.purple_500_))
+                binding.tvWallet.setTextColor(getColor(requireContext(), R.color.purple_500))
 
                 binding.llOriginExchange.background =
                     getDrawable(requireContext(), R.drawable.round_stroke_gray_100)

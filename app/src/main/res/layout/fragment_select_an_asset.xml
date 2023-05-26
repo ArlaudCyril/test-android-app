@@ -45,7 +45,7 @@
         app:tabBackground="@drawable/tab__indcator"
         app:tabIndicator="@null"
         app:tabMode="auto"
-        app:tabSelectedTextColor="@color/purple_500_"
+        app:tabSelectedTextColor="@color/purple_500"
         app:tabTextAppearance="@style/tab_text"
         app:tabTextColor="@color/purple_gray_500" />
 

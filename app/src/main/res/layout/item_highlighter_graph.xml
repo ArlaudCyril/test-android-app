@@ -15,17 +15,19 @@
         style="@style/BodyMabry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/purple_500_"
+        android:textColor="@color/purple_500"
         android:layout_gravity="center_horizontal"
         android:layout_marginBottom="2dp"
         tools:text="$1234" />
+
 
     <TextView
         android:id="@+id/tvDate"
         style="@style/BodyMabry"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textColor="@color/purple_500_"
+        android:textColor="@color/purple_500"
+        android:textFontWeight="@integer/material_motion_duration_medium_1"
         android:layout_gravity="center_horizontal"
         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
         tools:text="12 Sep 20:10" />

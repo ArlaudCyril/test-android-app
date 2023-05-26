@@ -10,7 +10,7 @@ import com.au.lyber.utils.CommonMethods.Companion.getViewModel
 import com.au.lyber.utils.CommonMethods.Companion.requestKeyboard
 import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.showToast
-import com.au.lyber.viewmodels.PortfolioViewModel
+import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 
 class EnterWalletAddressFragment : BaseFragment<FragmentEnterWalletAddressBinding>() {
 
@@ -52,7 +52,7 @@ class EnterWalletAddressFragment : BaseFragment<FragmentEnterWalletAddressBindin
                         viewModel.withdrawFiat(viewModel.amount)
                     else {
                         viewModel.selectedAsset?.let {
-                            viewModel.withdraw(it.asset_id,viewModel.amount,viewModel.assetAmount.toFloat(),address)
+                            viewModel.withdraw(it.id,viewModel.amount,viewModel.assetAmount.toFloat(),address)
                         }
                     }
                 }

@@ -23,8 +23,7 @@ import com.au.lyber.utils.CommonMethods.Companion.toDateFormat
 import com.au.lyber.utils.CommonMethods.Companion.toDateFormatTwo
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
-import com.au.lyber.viewmodels.PortfolioViewModel
-import com.au.lyber.viewmodels.ProfileViewModel
+import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 
 class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
 

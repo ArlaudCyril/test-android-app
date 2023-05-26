@@ -7,17 +7,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.au.lyber.R
 import com.au.lyber.databinding.ItemAssetAvailableBinding
 import com.au.lyber.models.AssetBaseData
-import com.au.lyber.models.priceServiceResume
-import com.au.lyber.models.Data
+import com.au.lyber.models.PriceServiceResume
 import com.au.lyber.ui.activities.BaseActivity
 import com.au.lyber.utils.CommonMethods.Companion.commaFormatted
 import com.au.lyber.utils.CommonMethods.Companion.loadCircleCrop
-import com.au.lyber.viewmodels.PortfolioViewModel
-import kotlin.reflect.KFunction1
 
 class AvailableAssetAdapter(
-    private val clickListener: (priceServiceResume) -> Unit = { _ -> }) :
-    BaseAdapter<priceServiceResume>() {
+    private val clickListener: (PriceServiceResume) -> Unit = { _ -> }) :
+    BaseAdapter<PriceServiceResume>() {
 
     override fun onCreateViewHolder(
         parent: ViewGroup,
@@ -43,20 +40,20 @@ class AvailableAssetAdapter(
                     }
 
                     tvAssetNameCode.text = it.id?.uppercase()
-                    if (it.change.toFloat() > 0) {
+                    if (it.priceServiceResumeData.change.toFloat() > 0) {
                         tvAssetVariation.setTextColor(
                             getColor(
                                 tvAssetVariation.context,
                                 R.color.green_500)
                         )
-                        tvAssetVariation.text = "+${it.change.commaFormatted}%"
+                        tvAssetVariation.text = "+${it.priceServiceResumeData.change.commaFormatted}%"
                     } else {
                         tvAssetVariation.setTextColor(
                             getColor(
                                 tvAssetVariation.context,
                                 R.color.red_500)
                         )
-                        tvAssetVariation.text = "${it.change.commaFormatted}%"
+                        tvAssetVariation.text = "${it.priceServiceResumeData.change.commaFormatted}%"
                     }
                 }
             }

@@ -190,7 +190,7 @@
                     android:layout_marginStart="12dp"
                     android:gravity="center"
                     android:text="@string/exchange"
-                    android:textColor="@color/purple_500_" />
+                    android:textColor="@color/purple_500" />
 
             </LinearLayout>
 
@@ -274,7 +274,7 @@
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="32dp"
                 android:background="@drawable/curved_button"
-                android:backgroundTint="@color/purple_500_"
+                android:backgroundTint="@color/purple_500"
                 android:gravity="center"
                 android:text="@string/add_address"
                 android:textColor="@color/purple_gray_00"

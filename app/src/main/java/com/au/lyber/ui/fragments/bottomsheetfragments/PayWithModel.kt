@@ -1,7 +1,6 @@
 package com.au.lyber.ui.fragments.bottomsheetfragments
 
 import android.graphics.drawable.Icon
-import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -16,7 +15,7 @@ import com.au.lyber.R
 import com.au.lyber.databinding.AppItemLayoutBinding
 import com.au.lyber.databinding.LoaderViewBinding
 import com.au.lyber.databinding.PayWithModelBottomSheetBinding
-import com.au.lyber.models.Assets
+import com.au.lyber.models.AssetBaseData
 import com.au.lyber.models.WhitelistingResponse
 import com.au.lyber.models.Whitelistings
 import com.au.lyber.ui.adapters.BaseAdapter
@@ -28,14 +27,14 @@ import com.au.lyber.utils.CommonMethods.Companion.loadCircleCrop
 import com.au.lyber.utils.CommonMethods.Companion.replaceFragment
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
-import com.au.lyber.viewmodels.PortfolioViewModel
+import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.google.gson.Gson
 
 class PayWithModel(
     private val handle: (Whitelistings?, String?) -> Unit = { _, _ -> }
 ) : BaseBottomSheet<PayWithModelBottomSheetBinding>(), View.OnClickListener {
 
-    private var selectedAsset: Assets? = null
+    private var selectedAsset: AssetBaseData? = null
     private var withdrawTo: Boolean = false
     private var withdrawAllAsset: Boolean = false
 
@@ -49,7 +48,7 @@ class PayWithModel(
         adapter = PayAdapter(handle)
         arguments?.let {
             val data = it.getString(SELECTED_ASSET, "") ?: ""
-            selectedAsset = Gson().fromJson(data, Assets::class.java)
+            selectedAsset = Gson().fromJson(data, AssetBaseData::class.java)
             withdrawTo = it.getBoolean(WITHDRAW, false)
             withdrawAllAsset = it.getBoolean(ALL_PORTFOLIO, false)
         }
@@ -112,7 +111,7 @@ class PayWithModel(
                     requireContext(),
                     R.drawable.ic_bank_fill
                 ).apply {
-                    setTint(getColor(requireContext(), R.color.purple_500_))
+                    setTint(getColor(requireContext(), R.color.purple_500))
                 })
             it.ivEndIcon.setImageResource(R.drawable.ic_right_arrow_grey)
             it.tvStartTitle.text = "Add a bank account"
@@ -121,7 +120,7 @@ class PayWithModel(
         binding.includeAddCryptoAddress.let {
             it.ivEndIcon.setImageResource(R.drawable.ic_right_arrow_grey)
             it.ivItem.setImageResource(R.drawable.ic_add_btc_address)
-            it.tvStartTitle.text = "Add ${viewModel.withdrawAsset?.asset_id?.uppercase()} address"
+            it.tvStartTitle.text = "Add ${viewModel.withdrawAsset?.id?.uppercase()} address"
             it.tvStartSubTitle.text = "Unlimited withdrawal"
         }
     }
@@ -153,7 +152,7 @@ class PayWithModel(
         private const val ALL_PORTFOLIO = "allPortfolio"
 
         fun getToWithdraw(
-            asset: Assets?,
+            asset: AssetBaseData?,
             handle: (Whitelistings?, String?) -> Unit,
             withdraw: Boolean = false,
             allPortfolio: Boolean = false

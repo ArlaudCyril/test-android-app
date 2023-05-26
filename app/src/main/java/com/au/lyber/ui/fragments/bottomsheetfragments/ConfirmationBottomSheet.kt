@@ -7,7 +7,7 @@ import com.au.lyber.databinding.FragmentConfirmationBinding
 import com.au.lyber.utils.CommonMethods.Companion.clearBackStack
 import com.au.lyber.utils.CommonMethods.Companion.getViewModel
 import com.au.lyber.utils.Constants
-import com.au.lyber.viewmodels.PortfolioViewModel
+import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {

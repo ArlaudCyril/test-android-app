@@ -50,7 +50,7 @@
         android:layout_width="match_parent"
         android:layout_marginHorizontal="24dp"
         android:layout_marginBottom="16dp"
-        android:backgroundTint="@color/purple_500_"
+        android:backgroundTint="@color/purple_500"
         android:text="Edit personal info"
         android:textColor="@color/white"
         android:visibility="gone"
@@ -63,7 +63,7 @@
         android:layout_width="match_parent"
         android:layout_marginHorizontal="24dp"
         android:layout_marginBottom="24dp"
-        android:backgroundTint="@color/purple_500_"
+        android:backgroundTint="@color/purple_500"
         android:text="Start"
         android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@id/btnVerificationInProcess" />

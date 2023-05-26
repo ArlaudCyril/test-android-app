@@ -116,7 +116,7 @@
                     android:layout_gravity="center"
                     android:layout_marginVertical="8dp"
                     android:text="@string/view_all_underline"
-                    android:textColor="@color/purple_500_"
+                    android:textColor="@color/purple_500"
                     android:visibility="gone" />
 
             </RelativeLayout>
@@ -185,7 +185,7 @@
                     android:layout_gravity="center"
                     android:layout_marginTop="16dp"
                     android:text="@string/add_payment_method"
-                    android:textColor="@color/purple_500_" />
+                    android:textColor="@color/purple_500" />
 
             </LinearLayout>
 
@@ -384,7 +384,7 @@
                 android:layout_marginVertical="24dp"
                 android:padding="8dp"
                 android:text="@string/log_out"
-                android:textColor="@color/purple_500_" />
+                android:textColor="@color/purple_500" />
 
 
         </LinearLayout>

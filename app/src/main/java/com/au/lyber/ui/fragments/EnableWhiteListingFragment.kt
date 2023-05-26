@@ -52,7 +52,7 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
 
         /* if whitelisting is enabled */
 //        if (App.prefsManager.isWhitelisting()) {
-//            binding.btnEnableWhitelisting.setBackgroundTint(R.color.purple_500_)
+//            binding.btnEnableWhitelisting.setBackgroundTint(R.color.purple_500)
 //            binding.btnEnableWhitelisting.setTextColor(
 //                getColor(requireContext(), R.color.purple_gray_00)
 //            )
@@ -145,7 +145,7 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
                             root.context,
                             R.drawable.round_stroke_purple_500
                         )
-                        tvTitle.setTextColor(getColor(tvTitle.context, R.color.purple_500_))
+                        tvTitle.setTextColor(getColor(tvTitle.context, R.color.purple_500))
                         ivRadio.setImageResource(R.drawable.radio_select)
                     } else {
 

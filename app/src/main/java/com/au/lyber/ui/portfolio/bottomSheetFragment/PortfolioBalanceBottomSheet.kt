@@ -1,4 +1,4 @@
-package com.au.lyber.ui.fragments.bottomsheetfragments
+package com.au.lyber.ui.portfolio.bottomSheetFragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -17,6 +17,8 @@ import com.au.lyber.databinding.ItemBalancePortfolioHistoryBinding
 import com.au.lyber.databinding.LoaderViewBinding
 import com.au.lyber.models.Transaction
 import com.au.lyber.ui.adapters.BaseAdapter
+import com.au.lyber.ui.fragments.bottomsheetfragments.BaseBottomSheet
+import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.commaFormatted
 import com.au.lyber.utils.CommonMethods.Companion.decimalPoints
@@ -26,9 +28,7 @@ import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.CommonMethods.Companion.zoomIn
 import com.au.lyber.utils.Constants
 import com.au.lyber.utils.ItemOffsetDecoration
-import com.au.lyber.viewmodels.PortfolioViewModel
 import okhttp3.ResponseBody
-import kotlin.math.roundToInt
 
 class PortfolioBalanceBottomSheet(private val clickListener: (BalanceInfo) -> Unit = { _ -> }) :
     BaseBottomSheet<BottomSheetBalanceDetailBinding>() {
@@ -55,11 +55,11 @@ class PortfolioBalanceBottomSheet(private val clickListener: (BalanceInfo) -> Un
                 dismissProgress()
 
                 viewModel.selectedAsset?.let {
-                    binding.tvSubTitle.text = "${it.name} (${it.asset_id.uppercase()})"
-                    binding.tvAssetValueCrypto.text =
-                        "${it.total_balance} ${it.asset_id.uppercase()}"
+                    binding.tvSubTitle.text = "${it.fullName} (${it.id.uppercase()})"
+                    /*binding.tvAssetValueCrypto.text =
+                        "${it.total_balance} ${it.id.uppercase()}"
                     binding.tvValueAmount.text =
-                        "${(it.total_balance * it.euro_amount).commaFormatted}${Constants.EURO}"
+                        "${(it.total_balance * it.euro_amount).commaFormatted}${Constants.EURO}" TODO*/
                 }
 
                 binding.llContent.visible()
@@ -103,7 +103,7 @@ class PortfolioBalanceBottomSheet(private val clickListener: (BalanceInfo) -> Un
         viewModel.selectedAsset?.let {
             checkInternet(requireContext()) {
                 showProgress()
-                viewModel.getTransactions(page, limit, it.asset_id)
+                viewModel.getTransactions(page, limit, it.id)
             }
         }
     }

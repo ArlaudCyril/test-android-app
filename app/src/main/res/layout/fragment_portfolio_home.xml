@@ -1,0 +1,264 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/screenContent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/splash_background"
+    android:fitsSystemWindows="true">
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nestedScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:id="@+id/mainContent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:animateLayoutChanges="true"
+            android:orientation="vertical"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="20dp">
+
+                <TextView
+                    android:id="@+id/tvPortfolioAssetPrice"
+                    style="@style/SubheadMabry"
+                    android:text="Portfolio"
+                    android:textColor="@color/purple_gray_500" />
+
+                <TextView
+                    android:id="@+id/tvValuePortfolioAndAssetPrice"
+                    style="@style/HeadingStyle"
+                    android:layout_below="@id/tvPortfolioAssetPrice"
+                    android:layout_marginTop="2dp"
+                    android:textSize="40sp"
+                    tools:text="1312€" />
+
+                <ImageView
+                    android:id="@+id/ivProfile"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_alignBottom="@id/tvValuePortfolioAndAssetPrice"
+                    android:layout_alignParentEnd="true"
+                    android:background="@drawable/circle_stroke_profile"
+                    android:padding="2dp" />
+
+            </RelativeLayout>
+
+            <com.au.lyber.utils.NewCustomLineChart
+                android:id="@+id/lineChart"
+                android:layout_width="match_parent"
+                android:layout_height="160dp"
+                android:layout_gravity="center"
+                android:layout_marginHorizontal="12dp"
+                android:layout_marginVertical="24dp"
+                android:animateLayoutChanges="true"
+                android:background="@android:color/transparent" />
+
+            <LinearLayout
+                android:id="@+id/llTabLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginBottom="24dp"
+                android:background="@drawable/curved_button"
+                android:backgroundTint="@color/purple_gray_50"
+                android:padding="4dp"
+                android:visibility="invisible">
+
+                <com.google.android.material.tabs.TabLayout
+                    android:id="@+id/tabLayout"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:background="@android:color/transparent"
+                    app:tabBackground="@drawable/portfolio_tab_background"
+                    app:tabGravity="fill"
+                    app:tabIndicator="@android:color/transparent"
+                    app:tabMode="fixed"
+                    app:tabSelectedTextColor="@color/purple_gray_800"
+                    app:tabTextAppearance="@style/TextAppearance.AppCompat.Caption"
+                    app:tabTextColor="@color/purple_gray_400" />
+
+            </LinearLayout>
+
+            <RelativeLayout
+                android:id="@+id/tableView"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:background="@drawable/top_curved_layout"
+                android:backgroundTint="@color/purple_gray_00"
+                android:elevation="4dp"
+                android:paddingHorizontal="16dp"
+                android:paddingBottom="48dp"
+                android:translationZ="4dp">
+
+
+                <LinearLayout
+                    android:id="@+id/llPortfolio"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:animateLayoutChanges="true"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/tvMyAssets"
+                        style="@style/TitleText"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="32dp"
+                        android:text="@string/my_assets"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                        android:textColor="@color/purple_gray_900" />
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:background="@drawable/curved_button"
+                        android:backgroundTint="@color/purple_gray_50"
+                        android:orientation="vertical">
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rvMyAssets"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layoutAnimation="@anim/recycler_view_item_animation"
+                            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+                    </LinearLayout>
+
+                    <TextView
+                        android:id="@+id/tvAnalytics"
+                        style="@style/TitleText"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="40dp"
+                        android:text="@string/analytics"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                        android:textColor="@color/purple_gray_900" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvAnalytics"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:backgroundTint="@color/purple_gray_50"
+                        android:layoutAnimation="@anim/recycler_view_item_animation" />
+
+                    <TextView
+                        android:id="@+id/tvTitleRecurringInvestment"
+                        style="@style/TitleText"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="40dp"
+                        android:text="@string/recurring_investment"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                        android:textColor="#423D33" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvRecurringInvestments"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:background="@drawable/curved_button"
+                        android:backgroundTint="@color/purple_gray_50"
+                        android:layoutAnimation="@anim/recycler_view_item_animation" />
+
+                    <TextView
+                        style="@style/TitleText"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginTop="40dp"
+                        android:text="All assets available"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                        android:textColor="#423D33" />
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvAllAssetsAvailable"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="24dp"
+                        android:backgroundTint="@color/purple_gray_50"
+                        android:layoutAnimation="@anim/recycler_view_item_animation" />
+
+                    <TextView
+                        android:id="@+id/tvViewAll"
+                        style="@style/TitleText"
+                        android:layout_gravity="center"
+                        android:layout_marginTop="24dp"
+                        android:layout_marginBottom="48dp"
+                        android:gravity="center"
+                        android:text="@string/view_all"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                        android:textColor="@color/purple_500" />
+
+                </LinearLayout>
+
+
+            </RelativeLayout>
+
+        </LinearLayout>
+
+
+    </androidx.core.widget.NestedScrollView>
+
+    <LinearLayout
+        android:id="@+id/btnPlaceOrder"
+        style="@style/ButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="24dp"
+        android:background="@drawable/button_purple_500"
+        android:minHeight="?attr/actionBarSize"
+        android:paddingHorizontal="20dp"
+        android:paddingVertical="16dp"
+        android:translationZ="4dp">
+
+        <TextView
+            android:id="@+id/tvInvestMoney"
+            style="@style/SubheadMabry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:drawablePadding="12dp"
+            android:text="Invest Money"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:textColor="@color/purple_gray_00"
+            app:drawableStartCompat="@drawable/ic_invest_money_white" />
+    </LinearLayout>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/llThreeDot"
+        style="@style/ButtonStyle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="12dp"
+        android:layout_marginBottom="24dp"
+        android:layout_toStartOf="@id/btnPlaceOrder"
+        android:background="@drawable/curved_button"
+        android:backgroundTint="@color/purple_gray_00"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp">
+
+        <ImageView
+            style="@style/ButtonStyle"
+            android:layout_width="56dp"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:src="@drawable/ic_three_dots" />
+
+    </androidx.cardview.widget.CardView>
+
+</RelativeLayout>
+
+

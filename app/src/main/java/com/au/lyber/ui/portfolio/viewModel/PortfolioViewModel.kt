@@ -1,16 +1,26 @@
-package com.au.lyber.viewmodels
+package com.au.lyber.ui.portfolio.viewModel
 
 import androidx.lifecycle.MutableLiveData
 import com.au.lyber.models.*
+import com.au.lyber.viewmodels.NetworkViewModel
 
 class PortfolioViewModel : NetworkViewModel() {
 
-    private var _selectedAsset: Assets? = null
+    private var _selectedAsset: AssetBaseData? = null
     var selectedAsset
         get() = _selectedAsset
         set(value) {
             _selectedAsset = value
         }
+
+    private var _selectedAssetDetail: AssetDetailBaseData? = null
+    var selectedAssetDetail
+        get() = _selectedAssetDetail
+        set(value) {
+            _selectedAssetDetail = value
+        }
+
+    var selectedBalance : Balance? = null
 
     private var _personalData: PersonalDataResponse? = null
     var personalData
@@ -66,7 +76,7 @@ class PortfolioViewModel : NetworkViewModel() {
     // this variable helps to identify the particular screen
     // 0-> Home Screen, 1-> Asset Detail Screen 2-> Asset Breakdown screen
 
-    var chosenAssets: priceServiceResume? = null
+    var chosenAssets: PriceServiceResume? = null
 
     private var _screenCount: Int = 0
     var screenCount
@@ -142,14 +152,14 @@ class PortfolioViewModel : NetworkViewModel() {
             _exchangeToAmount = value
         }
 
-    private var _exchangeAssetFrom: Assets? = null
+    private var _exchangeAssetFrom: AssetBaseData? = null
     var exchangeAssetFrom
         get() = _exchangeAssetFrom
         set(value) {
             _exchangeAssetFrom = value
         }
 
-    private var _exchangeAssetTo: Assets? = null
+    private var _exchangeAssetTo: AssetBaseData? = null
     var exchangeAssetTo
         get() = _exchangeAssetTo
         set(value) {
@@ -158,7 +168,7 @@ class PortfolioViewModel : NetworkViewModel() {
 
     var allMyPortfolio: String = ""
 
-    private var _withdrawAsset: Assets? = null
+    private var _withdrawAsset: AssetBaseData? = null
     var withdrawAsset
         get() = _withdrawAsset
         set(value) {
@@ -186,6 +196,10 @@ class PortfolioViewModel : NetworkViewModel() {
 
     fun buildOwnStrategy(strategyName: String) {
         buildOwnStrategy(strategyName, addedAsset)
+    }
+
+    fun getBalance(){
+        getBalanceApi()
     }
 
 

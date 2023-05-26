@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/splashFragment">
+    <fragment
+        android:id="@+id/splashFragment"
+        android:name="com.au.lyber.ui.fragments.SplashFragment"
+        android:label="SplashFragment" >
+        <action
+            android:id="@+id/action_splashFragment_to_unlockAppFragment2"
+            app:destination="@id/unlockAppFragment" />
+        <action
+            android:id="@+id/action_splashFragment_to_discoveryFragment"
+            app:destination="@id/discoveryFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/unlockAppFragment"
+        android:name="com.au.lyber.ui.fragments.UnlockAppFragment"
+        android:label="UnlockAppFragment" >
+        <action
+            android:id="@+id/action_unlockAppFragment2_to_portfolioFragment"
+            app:destination="@id/portfolioHomeFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/portfolioHomeFragment"
+        android:name="com.au.lyber.ui.portfolio.fragment.PortfolioHomeFragment"
+        android:label="PortfolioHomeFragment">
+        <action
+            android:id="@+id/action_portfolioFragment_to_allAssetFragment"
+            app:destination="@id/allAssetFragment" />
+        <action
+            android:id="@+id/action_portfolioFragment_to_portfolioDetailFragment"
+            app:destination="@id/portfolioDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/allAssetFragment"
+        android:name="com.au.lyber.ui.fragments.AllAssetFragment"
+        android:label="AllAssetFragment" >
+        <action
+            android:id="@+id/action_allAssetFragment_to_portfolioDetailFragment"
+            app:destination="@id/portfolioDetailFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/portfolioDetailFragment"
+        android:name="com.au.lyber.ui.portfolio.fragment.PortfolioDetailFragment"
+        android:label="PortfolioDetailFragment" >
+        <action
+            android:id="@+id/action_portfolioDetailFragment_to_allAssetFragment"
+            app:destination="@id/allAssetFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/discoveryFragment"
+        android:name="com.au.lyber.ui.fragments.DiscoveryFragment"
+        android:label="DiscoveryFragment" />
+</navigation>

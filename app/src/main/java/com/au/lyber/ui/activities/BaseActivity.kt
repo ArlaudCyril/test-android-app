@@ -5,11 +5,14 @@ import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
 import com.au.lyber.models.AssetBaseData
+import com.au.lyber.models.Balance
 
 abstract class BaseActivity<viewBinding : ViewBinding> : AppCompatActivity() {
     //Global variables
     companion object {
         var currencies = ArrayList<AssetBaseData>()
+        var balances = ArrayList<Balance>()
+
     }
 
     private var _binding: viewBinding? = null

@@ -63,7 +63,7 @@
         style="@style/SubheadMabry"
         android:layout_marginTop="16dp"
         android:paddingVertical="8dp"
-        android:textColor="@color/purple_500_"
+        android:textColor="@color/purple_500"
         tools:text="@string/login_by_phone" />
 
     <View
@@ -76,7 +76,7 @@
         style="@style/ButtonStyle"
         android:layout_gravity="bottom"
         android:background="@drawable/curved_button"
-        android:backgroundTint="@color/purple_500_"
+        android:backgroundTint="@color/purple_500"
         android:text="Next"
         android:textAllCaps="false"
         android:textColor="@color/white" />

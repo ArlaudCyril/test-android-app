@@ -1,7 +1,6 @@
 package com.au.lyber.ui.fragments
 
 import android.annotation.SuppressLint
-import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -12,9 +11,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentSwapFromBinding
 import com.au.lyber.databinding.ItemMyAssetBinding
-import com.au.lyber.models.Assets
+import com.au.lyber.models.AssetBaseData
 import com.au.lyber.ui.adapters.BaseAdapter
-import com.au.lyber.utils.App
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.commaFormatted
 import com.au.lyber.utils.CommonMethods.Companion.dismissProgressDialog
@@ -26,7 +24,7 @@ import com.au.lyber.utils.CommonMethods.Companion.roundFloat
 import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
-import com.au.lyber.viewmodels.PortfolioViewModel
+import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import java.util.*
 
 class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnClickListener {
@@ -95,7 +93,6 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
             binding.includedAsset.ivAssetIcon.setImageResource(R.drawable.ic_euro)
             binding.includedAsset.ivDropIcon.setImageResource(R.drawable.ic_right_arrow_grey)
             binding.includedAsset.tvAssetName.text = "Euro"
-            binding.includedAsset.tvAssetAmountCenter.visible()
 //            binding.includedAsset.tvAssetAmountCenter.text =
 //                "${App.prefsManager.getBalance()}${Constants.EURO}"
             binding.tvAmountAllPortfolio.text =
@@ -103,7 +100,7 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
         }
     }
 
-    private fun itemClicked(myAsset: Assets, position: Int) {
+    private fun itemClicked(myAsset: AssetBaseData, position: Int) {
 
         if (viewModel.selectedOption == Constants.USING_EXCHANGE)
             viewModel.exchangeAssetFrom = myAsset
@@ -114,10 +111,10 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
     }
 
     class SwapFromAdapter(
-        private val itemClicked: (Assets, Int) -> Unit = { _, _ -> },
+        private val itemClicked: (AssetBaseData, Int) -> Unit = { _, _ -> },
         private val toExchange: Boolean = false
     ) :
-        BaseAdapter<Assets>() {
+        BaseAdapter<AssetBaseData>() {
 
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SwapViewHolder {
@@ -135,23 +132,18 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
             (holder as SwapViewHolder).binding.apply {
                 itemList[position]?.let { it ->
 
-                    val value = it.total_balance * it.euro_amount
-
+                    //val value = it.total_balance * it.euro_amount TODO
+                    val value = 0 // TODO : Remove this line
                     if (toExchange) {
 
                         if (!it.image.isNullOrEmpty())
                              ivAssetIcon.loadCircleCrop(it.image)
 
-                        tvAssetNameCenter.text = it.asset_name.replaceFirstChar {
-                            if (it.isLowerCase()) it.titlecase(
-                                Locale.getDefault()
-                            ) else it.toString()
-                        }
 
                         tvAssetAmount.text = "${value.commaFormatted}${Constants.EURO}"
-                        tvAssetAmountInCrypto.text = "${
+                       /* tvAssetAmountInCrypto.text = "${
                             it.total_balance.toString().commaFormatted
-                        }${it.asset_id.uppercase()}"
+                        }${it.id.uppercase()}" TODO*/
 
                     } else {
 //                            if (position == itemList.count() - 1) {
@@ -182,17 +174,12 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
                         if (!it.image.isNullOrEmpty())
                             ivAssetIcon.loadCircleCrop(it.image)
 
-                        tvAssetNameCenter.text = it.asset_name.replaceFirstChar {
-                            if (it.isLowerCase()) it.titlecase(
-                                Locale.getDefault()
-                            ) else it.toString()
-                        }
                         tvAssetAmount.text =
                             "${value.toString().roundFloat()}${Constants.EURO}"
 
-                        tvAssetAmountInCrypto.text = "${
+                        /*tvAssetAmountInCrypto.text = "${
                             it.total_balance.toString().roundFloat()
-                        }${it.asset_id.uppercase()}"
+                        }${it.id.uppercase()}" TODO*/
 
                     }
                 }
@@ -207,9 +194,7 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
             init {
                 binding.apply {
                     // view preparation
-                    tvAssetNameCenter.visible()
                     tvAssetName.gone()
-                    tvAssetVariation.gone()
                     ivDropIcon.setImageResource(R.drawable.ic_right_arrow_grey)
 
                     root.setOnClickListener {

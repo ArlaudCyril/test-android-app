@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.au.lyber.models.*
 import com.au.lyber.network.RestClient
+import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.App
 import com.au.lyber.utils.Constants
 import kotlinx.coroutines.CoroutineExceptionHandler
@@ -85,9 +86,6 @@ open class NetworkViewModel : ViewModel() {
     private var _getAssetsResponse = MutableLiveData<MyAssetResponse>()
     val getAssetResponse get() = _getAssetsResponse
 
-    private var _getAssetDetail = MutableLiveData<Data>()
-    val getAssetDetail get() = _getAssetDetail
-
     private var _recurringInvestmentResponse = MutableLiveData<RecurringInvestmentResponse>()
     val recurringInvestmentResponse get() = _recurringInvestmentResponse
 
@@ -139,11 +137,14 @@ open class NetworkViewModel : ViewModel() {
     private val _assetsToChoose = MutableLiveData<GetAssetsResponse>()
     val assetsToChoose get() = _assetsToChoose
 
-    private val _allAssets = MutableLiveData<priceServiceResumeResponse>()
+    private val _priceServiceResumes = MutableLiveData<ArrayList<PriceServiceResume>>()
+    val priceServiceResumes get() = _priceServiceResumes
+
+    private val _allAssets = MutableLiveData<AssetBaseDataResponse>()
     val allAssets get() = _allAssets
 
-    private val _allAssetsDetail = MutableLiveData<AssetBaseDataResponse>()
-    val allAssetsDetail get() = _allAssetsDetail
+    private val _getAssetDetail = MutableLiveData<AssetDetailBaseDataResponse>()
+    val getAssetDetail get() = _getAssetDetail
 
     private val _recurringInvestmentDetail =
         MutableLiveData<RecurringInvestmentDetailResponse>()
@@ -195,10 +196,11 @@ open class NetworkViewModel : ViewModel() {
     private val _newsResponse = MutableLiveData<NewsResponse>()
     val newsResponse get() = _newsResponse
 
-
     private val _priceResponse = MutableLiveData<PriceResponse>()
     val priceResponse get() = _priceResponse
 
+    private val _balanceResponse = MutableLiveData<BalanceResponse>()
+    val balanceResponse get() = _balanceResponse
 
     fun cancelJob() {
 
@@ -278,12 +280,12 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun investSingleAsset(coinDetail: Assets?, amount: Int, assetAmount: Float, frequency: String) {
+    fun investSingleAsset(coinDetail: AssetBaseData?, amount: Int, assetAmount: Float, frequency: String) {
         coinDetail?.let {
             val hashMap: HashMap<String, Any> = hashMapOf()
-            hashMap["asset_id"] = it.asset_id
+            hashMap["asset_id"] = it.id
             hashMap["amount"] = amount
-            hashMap["asset_name"] = it.asset_name
+            hashMap["asset_name"] = it.fullName
             hashMap["asset_amount"] = assetAmount
             if (frequency.isNotEmpty())
                 hashMap["frequency"] = frequency
@@ -388,15 +390,6 @@ open class NetworkViewModel : ViewModel() {
             val res = RestClient.get().updatePin(hashMapOf("newPin" to pin.toInt()))
             if (res.isSuccessful)
                 _updatePinResponse.postValue(res.body())
-            else listener?.onRetrofitError(res.errorBody())
-        }
-    }
-
-    fun getAssetDetail(asset: String) {
-        viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().getAssetDetail(asset)
-            if (res.isSuccessful)
-                _getAssetDetail.postValue(res.body())
             else listener?.onRetrofitError(res.errorBody())
         }
     }
@@ -588,6 +581,21 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
+    fun getAllPriceResume() {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().getAllPriceResume()
+            if (res.isSuccessful){
+                val priceServiceResumeDict = res.body()?.data
+                val priceServiceResumeArray = ArrayList<PriceServiceResume>()
+                priceServiceResumeDict?.forEach {
+                    val priceServiceResume = PriceServiceResume(id = it.key, priceServiceResumeData = it.value)
+                    priceServiceResumeArray.add(priceServiceResume)
+                }
+                _priceServiceResumes.postValue(priceServiceResumeArray)
+            }
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
     fun getAllAssets() {
         viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().getAllAssets()
@@ -595,10 +603,11 @@ open class NetworkViewModel : ViewModel() {
             else listener?.onRetrofitError(res.errorBody())
         }
     }
-    fun getAllAssetsDetail() {
+
+    fun getAssetDetail(assetId: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().getAllAssetsDetail()
-            if (res.isSuccessful) _allAssetsDetail.postValue(res.body())
+            val res = RestClient.get().getAssetDetail(assetId)
+            if (res.isSuccessful) _getAssetDetail.postValue(res.body())
             else listener?.onRetrofitError(res.errorBody())
         }
     }
@@ -640,7 +649,9 @@ open class NetworkViewModel : ViewModel() {
 
     fun userChallenge(phone: String = "", email: String = "") {
         viewModelScope.launch(exceptionHandler) {
-            val param = phone.ifEmpty { email }
+            var phoneNumber = ""
+            if(phone.isNotEmpty()) phoneNumber = phone.substring(1)//remove the "+"
+            val param = phoneNumber.ifEmpty { email }
             val key = if (phone.isEmpty()) "email" else "phoneNo"
             val res = RestClient.get(Constants.NEW_BASE_URL).userChallenge(hashMapOf(key to param))
             if (res.isSuccessful)
@@ -855,6 +866,16 @@ open class NetworkViewModel : ViewModel() {
             val res = RestClient.get(Constants.NEW_BASE_URL).getPrice(id, tf)
             if (res.isSuccessful)
                 _priceResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun getBalanceApi(){
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).getBalance()
+            if (res.isSuccessful)
+                _balanceResponse.postValue(res.body())
+
             else listener?.onRetrofitError(res.errorBody())
         }
     }

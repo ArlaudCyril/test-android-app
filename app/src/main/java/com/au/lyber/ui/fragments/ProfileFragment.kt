@@ -45,7 +45,7 @@ import com.au.lyber.utils.CommonMethods.Companion.showToast
 import com.au.lyber.utils.CommonMethods.Companion.toDateFormatTwo
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
-import com.au.lyber.viewmodels.PortfolioViewModel
+import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -327,7 +327,6 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             (holder as TransactionViewHolder).binding.apply {
                 itemList[position]?.let {
-                    tvAssetVariation.text = it.created_at.toLong().toDateFormatTwo()
                     when (it.type) {
                         1 -> { //exchange
                             ivAssetIcon.setImageResource(R.drawable.ic_exchange)

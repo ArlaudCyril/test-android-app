@@ -21,7 +21,7 @@ import com.au.lyber.utils.CommonMethods.Companion.replaceFragment
 import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.showToast
 import com.au.lyber.utils.ItemOffsetDecoration
-import com.au.lyber.viewmodels.PortfolioViewModel
+import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 
 class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>(),
     View.OnClickListener {

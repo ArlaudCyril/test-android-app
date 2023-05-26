@@ -3,6 +3,7 @@ package com.au.lyber.ui.fragments.bottomsheetfragments
 import android.os.Bundle
 import android.view.View
 import com.au.lyber.databinding.BottomSheetInvestBinding
+import com.au.lyber.ui.portfolio.fragment.PortfolioHomeFragment
 
 class InvestBottomSheet(val clickListener: (Boolean) -> Unit) :
     BaseBottomSheet<BottomSheetInvestBinding>(), View.OnClickListener {
@@ -39,6 +40,14 @@ class InvestBottomSheet(val clickListener: (Boolean) -> Unit) :
             }
         }
     }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        val view = PortfolioHomeFragment.fragmentPortfolio.binding.screenContent
+        val viewToDelete = view.getChildAt(view.childCount-1)
+        view.removeView(viewToDelete)
+    }
+
 
 
 }

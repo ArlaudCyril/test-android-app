@@ -46,7 +46,7 @@
         app:tabBackground="@drawable/tab__indcator"
         app:tabIndicator="@null"
         app:tabMode="auto"
-        app:tabSelectedTextColor="@color/purple_500_"
+        app:tabSelectedTextColor="@color/purple_500"
         app:tabTextAppearance="@style/tab_text"
         app:tabTextColor="@color/purple_gray_500" />
 
@@ -124,7 +124,7 @@
 &lt;!&ndash;            android:gravity="center"&ndash;&gt;
 &lt;!&ndash;            android:paddingVertical="16dp"&ndash;&gt;
 &lt;!&ndash;            android:text="@string/view_all_16_available_assets"&ndash;&gt;
-&lt;!&ndash;            android:textColor="@color/purple_500_"&ndash;&gt;
+&lt;!&ndash;            android:textColor="@color/purple_500"&ndash;&gt;
 &lt;!&ndash;            android:visibility="gone" />&ndash;&gt;
 
         <TextView

@@ -155,7 +155,7 @@
         android:paddingHorizontal="10dp"
         android:paddingVertical="8dp"
         android:text="Recommended"
-        android:textColor="@color/purple_500_"
+        android:textColor="@color/purple_500"
         app:layout_constraintBottom_toBottomOf="@id/tvSubTitleMonthly"
         app:layout_constraintEnd_toStartOf="@id/ivArrowMonthly"
         app:layout_constraintTop_toTopOf="@id/tvTitleMonthly" />-->

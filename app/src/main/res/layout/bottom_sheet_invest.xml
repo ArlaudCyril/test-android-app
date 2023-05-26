@@ -38,7 +38,7 @@
         android:background="@drawable/circle_drawable"
         android:backgroundTint="@color/purple_gray_50"
         android:padding="4dp"
-        app:tint="@color/purple_500_"
+        app:tint="@color/purple_500"
         android:src="@drawable/ic_invest_money"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ivTopAction" />
@@ -87,7 +87,7 @@
         android:src="@drawable/ic_invest_single_assets"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ivWithdraw"
-        app:tint="@color/purple_500_" />
+        app:tint="@color/purple_500" />
 
     <TextView
         android:id="@+id/tvTitleSingleAsset"

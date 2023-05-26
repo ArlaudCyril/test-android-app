@@ -11,9 +11,11 @@ import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.NavHostFragment
 import androidx.transition.Fade
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentUnlockAppBinding
+import com.au.lyber.ui.portfolio.fragment.PortfolioHomeFragment
 import com.au.lyber.utils.App
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.dismissProgressDialog
@@ -57,11 +59,10 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
                 App.prefsManager.accessToken = it.data.access_token
                 App.prefsManager.refreshToken = it.data.refresh_token
 
-                requireActivity().replaceFragment(
-                    R.id.flSplashActivity,
-                    PortfolioFragment(),
-                    false
-                )
+                val navHostFragment =
+                    requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+                val navController = navHostFragment.navController
+                navController.navigate(R.id.portfolioHomeFragment)
 
             }
         }
@@ -145,13 +146,12 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
                 }
             }
 
-            else ->
-                requireActivity().replaceFragment(
-                    R.id.flSplashActivity,
-                    PortfolioFragment(),
-                    false
-                )
-
+            else -> {
+                val navHostFragment =
+                    requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+                val navController = navHostFragment.navController
+                navController.navigate(R.id.portfolioHomeFragment)
+            }
 
         }
 
@@ -196,7 +196,7 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
                     val imageView = it.getChildAt(i)
                     if (i <= pinCount - 1) {
                         val drawable = getDrawable(requireContext(), R.drawable.circle_dot_selected)
-                        drawable?.setTint(getColor(requireContext(), R.color.purple_500_))
+                        drawable?.setTint(getColor(requireContext(), R.color.purple_500))
                         imageView.background = drawable
                     } else
                         imageView.setBackgroundResource(R.drawable.circle_dot_unselected)

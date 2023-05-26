@@ -8,7 +8,7 @@
             <solid android:color="@android:color/transparent"/>
             <stroke
                 android:width="2dp"
-                android:color="@color/purple_500_"
+                android:color="@color/purple_500"
                 android:dashGap="6dp"
                 android:dashWidth="6dp"/>
         </shape>

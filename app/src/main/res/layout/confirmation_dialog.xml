@@ -23,7 +23,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="16dp"
         android:background="@drawable/curved_24_button"
-        android:backgroundTint="@color/purple_500_"
+        android:backgroundTint="@color/purple_500"
         android:orientation="horizontal"
         android:padding="12dp">
 

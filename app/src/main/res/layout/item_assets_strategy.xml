@@ -12,7 +12,7 @@
         android:layout_width="12dp"
         android:layout_height="12dp"
         android:background="@drawable/curved_layout_4_dp"
-        android:backgroundTint="@color/purple_500_"
+        android:backgroundTint="@color/purple_500"
         app:layout_constraintBottom_toBottomOf="@id/tvAssetsName"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

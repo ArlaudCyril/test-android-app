@@ -3,6 +3,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/screenContent"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/splash_background"
@@ -14,6 +15,7 @@
         android:layout_height="wrap_content">
 
         <LinearLayout
+            android:id="@+id/mainContent"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:animateLayoutChanges="true"
@@ -27,7 +29,7 @@
                 android:layout_marginTop="12dp"
                 android:animateLayoutChanges="true"
                 android:paddingHorizontal="16dp"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <ImageView
                     android:id="@+id/ivTopAction"
@@ -38,7 +40,8 @@
                     android:backgroundTint="@color/purple_gray_00"
                     android:padding="12dp"
                     android:src="@drawable/ic_back"
-                    app:tint="@color/purple_gray_800" />
+                    app:tint="@color/purple_gray_800"
+                    android:contentDescription="@string/back_button" />
 
                 <TextView
                     android:id="@+id/tvAssetName"
@@ -60,19 +63,18 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
-                android:layout_marginTop="20dp">
+                android:layout_marginTop="10dp">
 
                 <TextView
                     android:id="@+id/tvPortfolioAssetPrice"
                     style="@style/SubheadMabry"
-                    android:text="Portfolio"
+                    android:text="Price"
                     android:textColor="@color/purple_gray_500" />
 
                 <TextView
                     android:id="@+id/tvValuePortfolioAndAssetPrice"
                     style="@style/HeadingStyle"
-                    android:layout_below="@id/tvPortfolioAssetPrice"
-                    android:layout_marginTop="2dp"
+                    android:layout_marginTop="12dp"
                     android:textSize="40sp"
                     tools:text="1312€" />
 
@@ -84,17 +86,7 @@
                     android:text="▲ + 2,87% (118,4€)"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                     android:textColor="@color/purple_gray_700"
-                    android:visibility="gone" />
-
-                <ImageView
-                    android:id="@+id/ivProfile"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_alignBottom="@id/tvValuePortfolioAndAssetPrice"
-                    android:layout_alignParentEnd="true"
-                    android:background="@drawable/circle_stroke_profile"
-                    android:padding="2dp"
-                    />
+                    android:visibility="visible" />
 
             </RelativeLayout>
 
@@ -103,10 +95,10 @@
                 android:layout_width="match_parent"
                 android:layout_height="160dp"
                 android:layout_gravity="center"
-                android:background="@android:color/transparent"
-                android:animateLayoutChanges="true"
                 android:layout_marginHorizontal="12dp"
-                android:layout_marginVertical="24dp" />
+                android:layout_marginVertical="18dp"
+                android:animateLayoutChanges="true"
+                android:background="@android:color/transparent" />
 
             <LinearLayout
                 android:id="@+id/llTabLayout"
@@ -115,9 +107,9 @@
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginBottom="24dp"
                 android:background="@drawable/curved_button"
-                android:backgroundTint="@color/purple_gray_50"
+                android:backgroundTint="@color/white_transparent"
                 android:padding="4dp"
-                android:visibility="gone">
+                android:visibility="visible">
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tabLayout"
@@ -136,6 +128,7 @@
             </LinearLayout>
 
             <RelativeLayout
+                android:id="@+id/tableView"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@drawable/top_curved_layout"
@@ -145,112 +138,6 @@
                 android:paddingBottom="48dp"
                 android:translationZ="4dp">
 
-
-                <LinearLayout
-                    android:id="@+id/llPortfolio"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:animateLayoutChanges="true"
-                    android:orientation="vertical"
-                    android:visibility="visible">
-
-                    <TextView
-                        android:id="@+id/tvMyAssets"
-                        style="@style/TitleText"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="32dp"
-                        android:text="@string/my_assets"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                        android:textColor="@color/purple_gray_900" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
-                        android:background="@drawable/curved_button"
-                        android:backgroundTint="@color/purple_gray_50"
-                        android:orientation="vertical">
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/rvMyAssets"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layoutAnimation="@anim/recycler_view_item_animation"
-                            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-                        <include
-                            android:id="@+id/includedEuro"
-                            layout="@layout/item_my_asset"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:visibility="gone" />
-
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/tvAnalytics"
-                        style="@style/TitleText"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="40dp"
-                        android:text="@string/analytics"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                        android:textColor="@color/purple_gray_900" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvAnalytics"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
-                        android:backgroundTint="@color/purple_gray_50"
-                        android:layoutAnimation="@anim/recycler_view_item_animation" />
-
-                    <TextView
-                        android:id="@+id/tvTitleRecurringInvestment"
-                        style="@style/TitleText"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="40dp"
-                        android:text="@string/recurring_investment"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                        android:textColor="#423D33" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvRecurringInvestments"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
-                        android:background="@drawable/curved_button"
-                        android:backgroundTint="@color/purple_gray_50"
-                        android:layoutAnimation="@anim/recycler_view_item_animation" />
-
-                    <TextView
-                        style="@style/TitleText"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="40dp"
-                        android:text="All assets available"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                        android:textColor="#423D33" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvAllAssetsAvailable"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
-                        android:backgroundTint="@color/purple_gray_50"
-                        android:layoutAnimation="@anim/recycler_view_item_animation" />
-
-                    <TextView
-                        android:id="@+id/tvViewAll"
-                        style="@style/TitleText"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="24dp"
-                        android:layout_marginBottom="48dp"
-                        android:gravity="center"
-                        android:text="@string/view_all"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                        android:textColor="@color/purple_500_" />
-
-                </LinearLayout>
-
                 <LinearLayout
                     android:id="@+id/llAssetPortfolio"
                     android:layout_width="match_parent"
@@ -258,7 +145,7 @@
                     android:animateLayoutChanges="true"
                     android:orientation="vertical"
                     android:paddingBottom="48dp"
-                    android:visibility="gone">
+                    android:visibility="visible">
 
                     <TextView
                         android:id="@+id/tvTitleMyBalance"
@@ -332,7 +219,7 @@
                             android:layout_marginTop="32dp"
                             android:text="Trading activity"
                             android:textColor="@color/purple_gray_500"
-                            android:visibility="gone" />
+                            android:visibility="visible" />
 
                         <TextView
                             android:id="@+id/tvValueTradingActivity"
@@ -343,7 +230,7 @@
                             android:text="+2,4%"
                             android:textColor="@color/purple_gray_700"
                             android:textStyle="bold"
-                            android:visibility="gone" />
+                            android:visibility="visible" />
 
 
                         <TextView
@@ -372,7 +259,7 @@
                             android:layout_marginTop="32dp"
                             android:text="Share of crypto market"
                             android:textColor="@color/purple_gray_500"
-                            android:visibility="gone" />
+                            android:visibility="visible" />
 
                         <TextView
                             android:id="@+id/tvValueShareOfCrypto"
@@ -383,7 +270,7 @@
                             android:text="40,96%"
                             android:textColor="@color/purple_gray_700"
                             android:textStyle="bold"
-                            android:visibility="gone" />
+                            android:visibility="visible" />
 
 
                         <TextView
@@ -425,7 +312,8 @@
                         android:lineSpacingExtra="6dp"
                         android:paddingHorizontal="12dp"
                         android:paddingVertical="16dp"
-                        tools:text="@string/about_value" />
+                        tools:text="@string/about_value"
+                        tools:visibility="visible" />
 
                     <TextView
                         style="@style/TitleText"
@@ -439,47 +327,6 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="24dp"
                         android:layoutAnimation="@anim/recycler_view_item_animation" />
-
-
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/llAssetBreakdown"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:animateLayoutChanges="true"
-                    android:orientation="vertical"
-                    android:paddingBottom="48dp"
-                    android:visibility="gone">
-
-                    <TextView
-                        style="@style/TitleText"
-                        android:layout_marginTop="32dp"
-                        android:text="Assets breakdown"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                        android:textColor="@color/purple_gray_900" />
-
-                    <LinearLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
-                        android:background="@drawable/curved_button"
-                        android:backgroundTint="@color/purple_gray_50"
-                        android:orientation="vertical">
-
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/rvAssetBreaddown"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layoutAnimation="@anim/recycler_view_item_animation" />
-
-                        <include
-                            android:id="@+id/includedBreakDown"
-                            layout="@layout/item_my_asset"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content" />
-
-                    </LinearLayout>
 
 
                 </LinearLayout>

@@ -15,8 +15,7 @@ import com.au.lyber.utils.CommonMethods.Companion.replaceFragment
 import com.au.lyber.utils.CommonMethods.Companion.strikeText
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
-import com.au.lyber.utils.PreferenceManager
-import com.au.lyber.viewmodels.PortfolioViewModel
+import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 
 class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>(),
     View.OnClickListener {
@@ -104,7 +103,7 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
                 tvNumFillPersonalData.text = getString(R.string._2)
                 tvNumFillPersonalData.setTextColor(requireContext().getColor(R.color.white))
                 tvFillPersonalData.text = getString(R.string.fill_personal_data)
-                tvFillPersonalData.setTextColor(requireContext().getColor(R.color.purple_500_))
+                tvFillPersonalData.setTextColor(requireContext().getColor(R.color.purple_500))
             }
         }
     }
@@ -121,7 +120,7 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
             tvNumVerifyYourIdentity.setTextColor(requireContext().getColor(R.color.white))
             tvNumVerifyYourIdentity.text = getString(R.string._3)
 
-            tvVerifyYourIdentity.setTextColor(requireContext().getColor(R.color.purple_500_))
+            tvVerifyYourIdentity.setTextColor(requireContext().getColor(R.color.purple_500))
             tvVerifyYourIdentity.setOnClickListener(this@CompletePortfolioFragment)
             tvVerifyYourIdentity.setCompoundDrawablesWithIntrinsicBounds(
                 null,
@@ -199,7 +198,7 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
                     R.drawable.ic_invest_money_white
                 )
 
-            btnInvestMoney.setBackgroundTint(R.color.purple_500_)
+            btnInvestMoney.setBackgroundTint(R.color.purple_500)
 
             tvNumMakeFirstInvestment.setTextColor(requireContext().getColor(R.color.white))
             tvNumMakeFirstInvestment.text = "4"
@@ -211,7 +210,7 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
                     R.drawable.ic_right_arrow_purple
                 ), null
             )
-            tvMakeFirstInvestment.setTextColor(requireContext().getColor(R.color.purple_500_))
+            tvMakeFirstInvestment.setTextColor(requireContext().getColor(R.color.purple_500))
             tvMakeFirstInvestment.setOnClickListener(this@CompletePortfolioFragment)
 
         }

@@ -1,4 +1,4 @@
-package com.au.lyber.ui.fragments
+package com.au.lyber.ui.portfolio.action
 
 import com.au.lyber.models.*
 
@@ -8,12 +8,11 @@ interface PortfolioFragmentActions {
 
     fun investMoneyClicked(toStrategy: Boolean)
 
-    fun assetClicked(asset: Assets)
+    fun assetClicked(balance: Balance)
 
-    fun availableAssetClicked(asset: priceServiceResume)
+    fun availableAssetClicked(asset: PriceServiceResume)
 
     fun menuOptionSelected(tag:String,option:String)
 
-    fun clickedAnalytics(analyticsData: AnalyticsData)
 
 }

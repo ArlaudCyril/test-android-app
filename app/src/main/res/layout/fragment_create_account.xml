@@ -101,7 +101,7 @@
         android:layout_marginTop="16dp"
         android:paddingVertical="8dp"
         android:text="@string/login_by_phone"
-        android:textColor="@color/purple_500_"
+        android:textColor="@color/purple_500"
         android:visibility="gone" />
 
     <TextView
@@ -110,7 +110,7 @@
         android:layout_marginTop="16dp"
         android:paddingVertical="8dp"
         android:text="@string/login_by_email"
-        android:textColor="@color/purple_500_"
+        android:textColor="@color/purple_500"
         android:visibility="gone" />
 
     <View
@@ -124,7 +124,7 @@
         style="@style/ButtonStyle"
         android:layout_gravity="bottom"
         android:background="@drawable/curved_button"
-        android:backgroundTint="@color/purple_500_"
+        android:backgroundTint="@color/purple_500"
         android:text="@string/next"
         android:textAllCaps="false"
         android:textColor="@color/white" />

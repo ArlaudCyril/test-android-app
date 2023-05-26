@@ -12,7 +12,7 @@
             <corners android:radius="18dp" />
             <solid android:color="@color/purple_gray_00" />
             <size android:width="32dp" android:height="32dp" />
-            <stroke android:width="4dp" android:color="@color/purple_500_" />
+            <stroke android:width="4dp" android:color="@color/purple_500" />
         </shape>
     </item>
 </selector>

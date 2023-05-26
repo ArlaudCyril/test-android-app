@@ -6,6 +6,7 @@ import android.os.Looper
 import androidx.transition.Fade
 import android.view.View
 import android.widget.MediaController
+import androidx.navigation.fragment.NavHostFragment
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentSplashBinding
 import com.au.lyber.utils.App
@@ -44,9 +45,12 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>() {
 
                 if (App.prefsManager.userPin.isNotEmpty())
                 {
-                    requireActivity().supportFragmentManager.beginTransaction()
-                        .replace(R.id.flSplashActivity, UnlockAppFragment())
-                        .commit()
+                    val navHostFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+                    val navController = navHostFragment.navController
+                    navController.navigate(R.id.unlockAppFragment)
+//                    requireActivity().supportFragmentManager.beginTransaction()
+//                        .replace(R.id.flSplashActivity, UnlockAppFragment())
+//                        .commit()
                 }
                 else {
                     requireActivity().supportFragmentManager.beginTransaction()

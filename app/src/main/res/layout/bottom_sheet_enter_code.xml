@@ -174,7 +174,7 @@
             style="@style/BodyMabry"
             android:layout_marginTop="24dp"
             android:text="@string/resend"
-            android:textColor="@color/purple_500_"
+            android:textColor="@color/purple_500"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

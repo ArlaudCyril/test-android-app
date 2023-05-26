@@ -8,6 +8,7 @@ import androidx.lifecycle.Lifecycle
 import com.au.lyber.R
 import com.au.lyber.databinding.CustomDialogLayoutBinding
 import com.au.lyber.databinding.FragmentVerifyIdentityBinding
+import com.au.lyber.ui.portfolio.fragment.PortfolioHomeFragment
 import com.au.lyber.utils.App
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.clearBackStack
@@ -18,8 +19,7 @@ import com.au.lyber.utils.CommonMethods.Companion.replaceFragment
 import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
-import com.au.lyber.utils.PreferenceManager
-import com.au.lyber.viewmodels.PortfolioViewModel
+import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.viewmodels.VerifyIdentityViewModel
 
 class VerifyIdentityFragment : BaseFragment<FragmentVerifyIdentityBinding>() {
@@ -185,7 +185,7 @@ class VerifyIdentityFragment : BaseFragment<FragmentVerifyIdentityBinding>() {
                     App.prefsManager.portfolioCompletionStep = Constants.PROFILE_COMPLETED
                     requireActivity().clearBackStack()
                     requireActivity().supportFragmentManager.beginTransaction()
-                        .replace(R.id.flSplashActivity, PortfolioFragment()).commit()
+                        .replace(R.id.flSplashActivity, PortfolioHomeFragment()).commit()
                 }
                 show()
             }

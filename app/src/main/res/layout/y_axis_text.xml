@@ -4,5 +4,5 @@
     android:id="@+id/tvY"
     style="@style/SubheadMabry"
     android:fontFamily="@font/mabry_pro_light"
-    android:textSize="10sp"
+    android:textSize="12sp"
     tools:text="Testing" />

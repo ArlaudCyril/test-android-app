@@ -111,7 +111,7 @@ object Constants {
         add(R.color.purple_800)
 //        add(R.color.purple_700)
         add(R.color.purple_600)
-//        add(R.color.purple_500_)
+//        add(R.color.purple_500)
         add(R.color.purple_400)
 //        add(R.color.purple_300)
         add(R.color.purple_200)

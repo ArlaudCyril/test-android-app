@@ -45,7 +45,7 @@
         style="@style/ButtonStyle"
         android:layout_alignParentBottom="true"
         android:layout_marginHorizontal="20dp"
-        android:backgroundTint="@color/purple_500_"
+        android:backgroundTint="@color/purple_500"
         android:text="Next" />
 
 

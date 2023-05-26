@@ -1,23 +1,28 @@
 package com.au.lyber.ui.adapters
 
+import android.annotation.SuppressLint
+import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
+import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.NO_POSITION
 import com.au.lyber.R
 import com.au.lyber.databinding.ItemAssetBinding
 import com.au.lyber.databinding.LoaderViewBinding
-import com.au.lyber.models.priceServiceResume
+import com.au.lyber.models.Asset
+import com.au.lyber.models.PriceServiceResume
 import com.au.lyber.ui.activities.BaseActivity
 import com.au.lyber.utils.CommonMethods.Companion.commaFormatted
+import com.au.lyber.utils.CommonMethods.Companion.currencyFormatted
 import com.au.lyber.utils.CommonMethods.Companion.loadCircleCrop
 import com.au.lyber.utils.CommonMethods.Companion.loadImage
 import com.au.lyber.utils.CommonMethods.Companion.roundFloat
 import com.au.lyber.utils.Constants
 
-class AllAssetAdapter(private val clickListener: (priceServiceResume) -> Unit = { _ -> }) :
-    BaseAdapter<priceServiceResume>() {
+class AllAssetAdapter(private val clickListener: (PriceServiceResume) -> Unit = { _ -> }) :
+    BaseAdapter<PriceServiceResume>() {
 
 
     private var oldPosition: Int = 0
@@ -54,109 +59,37 @@ class AllAssetAdapter(private val clickListener: (priceServiceResume) -> Unit = 
         )
     }
 
+    @RequiresApi(Build.VERSION_CODES.O)
+    @SuppressLint("SetTextI18n")
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
 
         if (itemList[position] != null) {
 
             (holder as AssetViewHolder).binding.apply {
                 itemList[position]?.let {
-                    if (it.change.roundFloat().toFloat() > 0) {
-                        tvAssetVariation.text = "+${it.change.roundFloat().commaFormatted}%"
+                    if (it.priceServiceResumeData.change.roundFloat().toFloat() > 0) {
+                        tvAssetVariation.text = "+${it.priceServiceResumeData.change.roundFloat().commaFormatted}%"
                         tvAssetVariation.setTextColor(tvAssetVariation.context.getColor(R.color.green_500))
                     } else {
-                        tvAssetVariation.text = "${it.change.roundFloat().commaFormatted}%"
+                        tvAssetVariation.text = "${it.priceServiceResumeData.change.roundFloat().commaFormatted}%"
                         tvAssetVariation.setTextColor(tvAssetVariation.context.getColor(R.color.red_500))
 
                     }
-                    val urlLineChart = it.squiggleURL
+                    val urlLineChart = it.priceServiceResumeData.squiggleURL
                     lineChart.loadImage(urlLineChart)
                     val id = it.id
                     BaseActivity.currencies.firstNotNullOfOrNull{ item -> item.takeIf {item.id == id}}
                         ?.let { it1 -> ivAsset.loadCircleCrop(it1.image); tvAssetName.text = it1.fullName }
 
+                    val context = ivAsset.context
+                    tvAssetValue.typeface = context.resources.getFont(R.font.mabry_pro_medium)
+                    tvAssetValue.setTextColor(context.getColor(R.color.purple_gray_700))
+                    ivAsset.context.resources.getFont(R.font.mabry_pro_medium)
                     tvAssetNameCode.text = it.id.uppercase()
-                    tvAssetValue.text = it.lastPrice.roundFloat().commaFormatted + Constants.EURO
+                    tvAssetValue.text = it.priceServiceResumeData.lastPrice.currencyFormatted
+
                 }
             }
         }
-    }
-
-    /*@SuppressLint("SetTextI18n")
-    override fun onBindViewHolder(
-        holder: RecyclerView.ViewHolder,
-        position: Int,
-        payloads: MutableList<Any>
-    ) {
-        if (!payloads.isNullOrEmpty())
-            (payloads[position] as MutableList<Data>)[position].let {
-                val item = itemList[position]
-                if (item != null) {
-
-                    if (item.current_price != it.current_price) {
-
-                        (holder as AssetViewHolder).binding.apply {
-
-                            tvAssetValue.text =
-                                it.current_price.toString()
-                                    .roundFloat().commaFormatted + Constants.EURO
-
-                            if (it.price_change_percentage_24h > 0) {
-
-                                tvAssetVariation.text =
-                                    "+${
-                                        it.price_change_percentage_24h.toString()
-                                            .roundFloat().commaFormatted
-                                    }%"
-                                tvAssetVariation.setTextColor(tvAssetVariation.context.getColor(R.color.green_500))
-                                lineChart.setLineData(
-                                    it.sparkline_in_7d.price.formLineData(),
-                                    R.color.green_500,
-                                    R.drawable.drawable_green_fill_line_chart
-                                )
-                            } else {
-                                tvAssetVariation.text =
-                                    "${
-                                        it.price_change_percentage_24h.toString()
-                                            .roundFloat().commaFormatted
-                                    }%"
-                                tvAssetVariation.setTextColor(tvAssetVariation.context.getColor(R.color.red_500))
-                                lineChart.setLineData(
-                                    it.sparkline_in_7d.price.formLineData(),
-                                    R.color.red_500,
-                                    R.drawable.drawable_red_fill_line_chart
-                                )
-                            }
-
-                        }
-
-                    } else super.onBindViewHolder(holder, position, payloads)
-
-                } else super.onBindViewHolder(holder, position, payloads)
-            }
-        else super.onBindViewHolder(holder, position, payloads)
-    }*/
-
-
-    override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
-        super.onViewAttachedToWindow(holder)
-
-        if (holder.adapterPosition != NO_POSITION) {
-            itemList[holder.adapterPosition]?.let {
-                (holder as AssetViewHolder).binding.root.animation =
-                    AnimationUtils.loadAnimation(
-                        holder.binding.root.context,
-                        R.anim.zoom_in
-                    )
-            }
-        }
-
-    }
-
-    override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
-        super.onViewDetachedFromWindow(holder)
-        if (holder.adapterPosition != NO_POSITION)
-            itemList[holder.adapterPosition]?.let {
-                (holder as AssetViewHolder).binding.root.clearAnimation()
-            }
     }
 }

@@ -22,6 +22,7 @@ import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
+import android.text.style.RelativeSizeSpan
 import android.util.Log
 import android.util.TypedValue
 import android.view.*
@@ -46,10 +47,11 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import com.au.lyber.R
 import com.au.lyber.databinding.ProgressBarBinding
-import com.au.lyber.models.Assets
+import com.au.lyber.models.AssetBaseData
 import com.au.lyber.models.Data
 import com.au.lyber.models.ErrorResponse
 import com.au.lyber.network.RestClient
+import com.au.lyber.ui.activities.BaseActivity
 import com.au.lyber.ui.activities.SplashActivity
 import com.au.lyber.utils.App.Companion.prefsManager
 import com.au.lyber.utils.Constants.CAP_RANGE
@@ -68,6 +70,7 @@ import java.util.*
 import kotlin.math.abs
 import kotlin.math.absoluteValue
 import kotlin.math.roundToInt
+
 
 @Suppress("INTEGER_OVERFLOW")
 class CommonMethods {
@@ -114,19 +117,6 @@ class CommonMethods {
                 it.findViewById<ImageView>(R.id.progressImage).clearAnimation()
                 it.dismiss()
             }
-        }
-
-        fun Data.extractAsset(): Assets {
-            return Assets(
-                asset_id = symbol ?: "",
-                asset_name = id,
-                name = name,
-                euro_amount = current_price,
-                total_balance = 0.0,
-                coin_detail = this,
-                image = image,
-                created_at = System.currentTimeMillis().toString()
-            )
         }
 
         @SuppressLint("SimpleDateFormat")
@@ -381,6 +371,13 @@ class CommonMethods {
 
         fun View.fadeOut() {
             val animation = AlphaAnimation(1F, 0.0F)
+            animation.duration = 300
+            startAnimation(animation)
+            gone()
+        }
+
+        fun View.focusOut() {
+            val animation = AlphaAnimation(0.0f, 0.5f)
             animation.duration = 300
             startAnimation(animation)
             gone()
@@ -752,6 +749,53 @@ class CommonMethods {
 
             }
 
+        val String.currencyFormatted: SpannableString
+            get() = kotlin.run {
+                if(this.isEmpty()){
+                    SpannableString("0.00"+Constants.EURO)
+                }else{
+                    val value: Double = this.toDouble()
+                    var numberZerosLeft = 0 // we count also the coma
+                    var format = DecimalFormat()
+                    if (value > 10000) {
+                        format = DecimalFormat(",###")
+                    } else if (value > 1000) {
+                        format = DecimalFormat(",###.#")
+                    } else if (value > 1) {
+                        format = DecimalFormat("#.##")
+                    } else if (value > 0.1) {
+                        numberZerosLeft = 2
+                        format = DecimalFormat("#.###")
+                    } else if (value > 0.01) {
+                        numberZerosLeft = 3
+                        format = DecimalFormat("#.####")
+                    } else if (value > 0.001) {
+                        numberZerosLeft = 4
+                        format = DecimalFormat("#.#####")
+                    } else if (value > 0.0001) {
+                        numberZerosLeft = 5
+                        format = DecimalFormat("#.######")
+                    } else if (value > 0.00001) {
+                        numberZerosLeft = 6
+                        format = DecimalFormat("#.#######")
+                    } else if (value > 0.000001) {
+                        numberZerosLeft = 7
+                        format = DecimalFormat("#.########")
+                    } else if (value > 0.0000001) {
+                        numberZerosLeft = 8
+                        format = DecimalFormat("#.#########")
+                    } else if (value > 0.00000001) {
+                        numberZerosLeft = 9
+                        format = DecimalFormat("#.##########")
+                    }
+
+                    val stringFormatted = format.format(value)+Constants.EURO
+                    val ss1 = SpannableString(stringFormatted)
+                    ss1.setSpan(RelativeSizeSpan(0.8f), 0, numberZerosLeft, 0) // set size
+                    ss1
+                }
+            }
+
         fun TextView.expandWith(string: String) {
 
             measureLayout()
@@ -809,7 +853,7 @@ class CommonMethods {
             SpannableString(finalString).let {
 
                 it.setSpan(
-                    ForegroundColorSpan(getColor(context, R.color.purple_500_)),
+                    ForegroundColorSpan(getColor(context, R.color.purple_500)),
                     string.length,
                     finalString.length,
                     Spannable.SPAN_EXCLUSIVE_INCLUSIVE
@@ -849,7 +893,7 @@ class CommonMethods {
 
                     /* color span */
                     setSpan(
-                        ForegroundColorSpan(resources.getColor(R.color.purple_500_, context.theme)),
+                        ForegroundColorSpan(resources.getColor(R.color.purple_500, context.theme)),
                         (string.length - spanText.length),
                         string.length,
                         Spannable.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -865,7 +909,7 @@ class CommonMethods {
                             override fun updateDrawState(ds: TextPaint) {
                                 super.updateDrawState(ds)
                                 highlightColor = Color.TRANSPARENT
-                                ds.color = resources.getColor(R.color.purple_500_, context.theme)
+                                ds.color = resources.getColor(R.color.purple_500, context.theme)
                                 ds.typeface = Typeface.DEFAULT_BOLD
                                 ds.isUnderlineText = true
                             }
@@ -1147,8 +1191,11 @@ class CommonMethods {
 
             }
         }
+        fun getCurrency(id: String): AssetBaseData
+        {
+            return BaseActivity.currencies.first { it.id == id }
+        }
     }
-
 }
 
 

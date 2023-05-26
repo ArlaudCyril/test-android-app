@@ -29,7 +29,7 @@
         android:padding="12dp"
         android:src="@drawable/ic_close"
         android:text="@string/logout"
-        android:textColor="@color/purple_500_"
+        android:textColor="@color/purple_500"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/topGuide"
         app:layout_constraintStart_toStartOf="parent"

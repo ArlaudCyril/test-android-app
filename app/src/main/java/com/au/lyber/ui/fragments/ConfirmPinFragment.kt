@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentConfirmPinBinding
+import com.au.lyber.ui.portfolio.fragment.PortfolioHomeFragment
 import com.au.lyber.utils.App
 import com.au.lyber.utils.CommonMethods.Companion.clearBackStack
 import com.au.lyber.utils.CommonMethods.Companion.getViewModel
@@ -89,10 +90,11 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
                     App.prefsManager.userPin = pinConfirm
 
                     if (viewModel.forLogin) {
+
                         requireActivity().clearBackStack()
                         requireActivity().replaceFragment(
                             R.id.flSplashActivity,
-                            PortfolioFragment()
+                            PortfolioHomeFragment()
                         )
                     } else (requireParentFragment() as SignUpFragment).showDialog()
 
