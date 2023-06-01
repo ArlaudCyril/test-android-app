@@ -43,11 +43,11 @@
         />
 
     <include
-        android:id="@+id/llDepositFiat"
+        android:id="@+id/llSell"
         layout="@layout/app_item_layout" />
 
     <include
-        android:id="@+id/llSell"
+        android:id="@+id/llDepositFiat"
         layout="@layout/app_item_layout" />
 
 

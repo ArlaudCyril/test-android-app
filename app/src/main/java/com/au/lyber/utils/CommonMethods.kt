@@ -48,7 +48,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import com.au.lyber.R
 import com.au.lyber.databinding.ProgressBarBinding
 import com.au.lyber.models.AssetBaseData
-import com.au.lyber.models.Data
+import com.au.lyber.models.Balance
 import com.au.lyber.models.ErrorResponse
 import com.au.lyber.network.RestClient
 import com.au.lyber.ui.activities.BaseActivity
@@ -64,11 +64,14 @@ import okhttp3.ResponseBody
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.absoluteValue
+import kotlin.math.ceil
+import kotlin.math.log10
 import kotlin.math.roundToInt
 
 
@@ -756,45 +759,85 @@ class CommonMethods {
                 }else{
                     val value: Double = this.toDouble()
                     var numberZerosLeft = 0 // we count also the coma
-                    var format = DecimalFormat()
+                    var formatter = DecimalFormat()
                     if (value > 10000) {
-                        format = DecimalFormat(",###")
+                        formatter.maximumFractionDigits = 0
+                        formatter.minimumFractionDigits = 0
                     } else if (value > 1000) {
-                        format = DecimalFormat(",###.#")
+                        formatter.maximumFractionDigits = 1
+                        formatter.minimumFractionDigits = 1
                     } else if (value > 1) {
-                        format = DecimalFormat("#.##")
+                        formatter.maximumFractionDigits = 2
+                        formatter.minimumFractionDigits = 2
                     } else if (value > 0.1) {
                         numberZerosLeft = 2
-                        format = DecimalFormat("#.###")
+                        formatter.maximumFractionDigits = 3
+                        formatter.minimumFractionDigits = 3
                     } else if (value > 0.01) {
                         numberZerosLeft = 3
-                        format = DecimalFormat("#.####")
+                        formatter.maximumFractionDigits = 4
+                        formatter.minimumFractionDigits = 4
                     } else if (value > 0.001) {
                         numberZerosLeft = 4
-                        format = DecimalFormat("#.#####")
+                        formatter.maximumFractionDigits = 5
+                        formatter.minimumFractionDigits = 5
                     } else if (value > 0.0001) {
                         numberZerosLeft = 5
-                        format = DecimalFormat("#.######")
+                        formatter.maximumFractionDigits = 6
+                        formatter.minimumFractionDigits = 6
                     } else if (value > 0.00001) {
                         numberZerosLeft = 6
-                        format = DecimalFormat("#.#######")
+                        formatter.maximumFractionDigits = 7
+                        formatter.minimumFractionDigits = 7
                     } else if (value > 0.000001) {
                         numberZerosLeft = 7
-                        format = DecimalFormat("#.########")
+                        formatter.maximumFractionDigits = 8
+                        formatter.minimumFractionDigits = 8
                     } else if (value > 0.0000001) {
                         numberZerosLeft = 8
-                        format = DecimalFormat("#.#########")
+                        formatter.maximumFractionDigits = 9
+                        formatter.minimumFractionDigits = 9
                     } else if (value > 0.00000001) {
                         numberZerosLeft = 9
-                        format = DecimalFormat("#.##########")
+                        formatter.maximumFractionDigits = 10
+                        formatter.minimumFractionDigits = 10
                     }
 
-                    val stringFormatted = format.format(value)+Constants.EURO
+                    val stringFormatted = formatter.format(value)+Constants.EURO
                     val ss1 = SpannableString(stringFormatted)
                     ss1.setSpan(RelativeSizeSpan(0.8f), 0, numberZerosLeft, 0) // set size
                     ss1
                 }
             }
+
+        fun String.formattedAsset(price: Double?, rounding : RoundingMode): String {
+             if (this == "" || price == null || price == 0.0 || price.isNaN()) {
+                 return "0.00"
+             }
+
+             val formatter = DecimalFormat()
+
+             // Pour trouver la précision, ici X
+             // Prix * 10e-X >= 0.01 (centimes)
+             // => X >= -log(0,01/Prix)
+             val precision = ceil(-log10(0.01 / price)).toInt()
+             if (precision > 0) {
+                 formatter.maximumFractionDigits = precision
+                 formatter.minimumFractionDigits = precision
+             } else {
+                 formatter.maximumFractionDigits = 0
+                 formatter.minimumFractionDigits = 0
+             }
+
+             formatter.roundingMode = rounding
+
+             val valueFormatted = formatter.format(this.toDouble() ?: 0.0)
+
+             return valueFormatted.toString()
+         }
+
+
+
 
         fun TextView.expandWith(string: String) {
 
@@ -1191,9 +1234,13 @@ class CommonMethods {
 
             }
         }
-        fun getCurrency(id: String): AssetBaseData
+        fun getAsset(id: String): AssetBaseData
         {
-            return BaseActivity.currencies.first { it.id == id }
+            return BaseActivity.assets.first { it.id == id }
+        }
+        fun getBalance(id: String): Balance?
+        {
+            return BaseActivity.balances.firstOrNull { it.id == id }
         }
     }
 }

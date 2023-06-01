@@ -10,7 +10,7 @@ import com.au.lyber.models.Balance
 abstract class BaseActivity<viewBinding : ViewBinding> : AppCompatActivity() {
     //Global variables
     companion object {
-        var currencies = ArrayList<AssetBaseData>()
+        var assets = ArrayList<AssetBaseData>()
         var balances = ArrayList<Balance>()
 
     }

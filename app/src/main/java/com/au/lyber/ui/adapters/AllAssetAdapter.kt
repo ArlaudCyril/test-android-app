@@ -4,14 +4,11 @@ import android.annotation.SuppressLint
 import android.os.Build
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.view.animation.AnimationUtils
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import androidx.recyclerview.widget.RecyclerView.NO_POSITION
 import com.au.lyber.R
 import com.au.lyber.databinding.ItemAssetBinding
 import com.au.lyber.databinding.LoaderViewBinding
-import com.au.lyber.models.Asset
 import com.au.lyber.models.PriceServiceResume
 import com.au.lyber.ui.activities.BaseActivity
 import com.au.lyber.utils.CommonMethods.Companion.commaFormatted
@@ -19,7 +16,6 @@ import com.au.lyber.utils.CommonMethods.Companion.currencyFormatted
 import com.au.lyber.utils.CommonMethods.Companion.loadCircleCrop
 import com.au.lyber.utils.CommonMethods.Companion.loadImage
 import com.au.lyber.utils.CommonMethods.Companion.roundFloat
-import com.au.lyber.utils.Constants
 
 class AllAssetAdapter(private val clickListener: (PriceServiceResume) -> Unit = { _ -> }) :
     BaseAdapter<PriceServiceResume>() {
@@ -78,7 +74,7 @@ class AllAssetAdapter(private val clickListener: (PriceServiceResume) -> Unit = 
                     val urlLineChart = it.priceServiceResumeData.squiggleURL
                     lineChart.loadImage(urlLineChart)
                     val id = it.id
-                    BaseActivity.currencies.firstNotNullOfOrNull{ item -> item.takeIf {item.id == id}}
+                    BaseActivity.assets.firstNotNullOfOrNull{ item -> item.takeIf {item.id == id}}
                         ?.let { it1 -> ivAsset.loadCircleCrop(it1.image); tvAssetName.text = it1.fullName }
 
                     val context = ivAsset.context

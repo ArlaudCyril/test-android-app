@@ -10,7 +10,7 @@ interface PortfolioFragmentActions {
 
     fun assetClicked(balance: Balance)
 
-    fun availableAssetClicked(asset: PriceServiceResume)
+    fun availableAssetClicked(priceResume: PriceServiceResume)
 
     fun menuOptionSelected(tag:String,option:String)
 

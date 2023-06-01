@@ -32,6 +32,9 @@
         <action
             android:id="@+id/action_portfolioFragment_to_portfolioDetailFragment"
             app:destination="@id/portfolioDetailFragment" />
+        <action
+            android:id="@+id/action_portfolioHomeFragment_to_portfolioThreeDots"
+            app:destination="@id/portfolioThreeDots" />
     </fragment>
     <fragment
         android:id="@+id/allAssetFragment"
@@ -48,9 +51,16 @@
         <action
             android:id="@+id/action_portfolioDetailFragment_to_allAssetFragment"
             app:destination="@id/allAssetFragment" />
+        <action
+            android:id="@+id/action_portfolioDetailFragment_to_portfolioThreeDots"
+            app:destination="@id/portfolioThreeDots" />
     </fragment>
     <fragment
         android:id="@+id/discoveryFragment"
         android:name="com.au.lyber.ui.fragments.DiscoveryFragment"
         android:label="DiscoveryFragment" />
+    <dialog
+        android:id="@+id/portfolioThreeDots"
+        android:name="com.au.lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDots"
+        android:label="PortfolioThreeDots" />
 </navigation>

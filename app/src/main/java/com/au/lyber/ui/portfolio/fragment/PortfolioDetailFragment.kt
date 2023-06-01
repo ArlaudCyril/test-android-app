@@ -2,27 +2,19 @@ package com.au.lyber.ui.portfolio.fragment
 
 import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.util.Log
-import android.view.MotionEvent
 import android.view.View
 import android.view.animation.AnimationUtils
-import android.widget.RelativeLayout
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
-import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentPortfolioDetailBinding
-import com.au.lyber.models.AssetBaseData
 import com.au.lyber.models.Duration
-import com.au.lyber.models.Resources
-import com.au.lyber.ui.activities.BaseActivity
 import com.au.lyber.ui.activities.SplashActivity
-import com.au.lyber.ui.adapters.AvailableAssetAdapter
 import com.au.lyber.ui.adapters.BalanceAdapter
 import com.au.lyber.ui.adapters.ResourcesAdapter
 import com.au.lyber.ui.fragments.AddAmountFragment
@@ -34,25 +26,34 @@ import com.au.lyber.ui.fragments.SearchAssetsFragment
 import com.au.lyber.ui.fragments.SelectAnAssetFragment
 import com.au.lyber.ui.fragments.SwapWithdrawFromFragment
 import com.au.lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDots
+import com.au.lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDotsDismissListener
 import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.App
 import com.au.lyber.utils.CommonMethods
 import com.au.lyber.utils.CommonMethods.Companion.commaFormatted
 import com.au.lyber.utils.CommonMethods.Companion.currencyFormatted
+import com.au.lyber.utils.CommonMethods.Companion.formattedAsset
 import com.au.lyber.utils.CommonMethods.Companion.loadCircleCrop
-import com.au.lyber.utils.CommonMethods.Companion.px
 import com.au.lyber.utils.CommonMethods.Companion.replaceFragment
-import com.au.lyber.utils.CommonMethods.Companion.roundFloat
 import com.au.lyber.utils.CommonMethods.Companion.setBackgroundTint
 import com.au.lyber.utils.CommonMethods.Companion.toMilli
-import com.au.lyber.utils.CommonMethods.Companion.visible
-import com.au.lyber.utils.CommonMethods.Companion.visibleFromRight
 import com.au.lyber.utils.Constants
 import com.au.lyber.utils.ItemOffsetDecoration
 import com.google.android.material.tabs.TabLayout
+import okhttp3.OkHttpClient
+import okhttp3.Request
+import okhttp3.Response
+import okhttp3.WebSocket
+import okhttp3.WebSocketListener
+import org.json.JSONObject
+import java.math.RoundingMode
+import java.util.Calendar
+import java.util.Date
+import java.util.Timer
+import java.util.TimerTask
 
 class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
-    View.OnClickListener {
+    View.OnClickListener, PortfolioThreeDotsDismissListener {
 
     /* adapters */
     private lateinit var adapterBalance: BalanceAdapter
@@ -61,7 +62,20 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
     private lateinit var viewModel: PortfolioViewModel
 
+    private lateinit var webSocket: WebSocket
+    private var socketOpen = false
+    private val client = OkHttpClient()
+    private var timer = Timer()
+    private var grayOverlay: View? = null
     override fun bind() = FragmentPortfolioDetailBinding.inflate(layoutInflater)
+
+    override fun onDestroyView() {
+        Log.d(TAG, "onDestroyView: ")
+        SplashActivity.activityCallbacks = null
+        webSocket.close(1000, "Goodbye !")
+        this.stopTimer()
+        super.onDestroyView()
+    }
 
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SetTextI18n", "ClickableViewAccessibility")
@@ -73,7 +87,6 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
         App.prefsManager.savedScreen = javaClass.name
 
-
         requireActivity().window.statusBarColor =
             ContextCompat.getColor(requireContext(), android.R.color.transparent)
 
@@ -82,7 +95,6 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         resourcesAdapter = ResourcesAdapter()
         assetBreakdownAdapter = BalanceAdapter(isAssetBreakdown = true)
 
-        /* setting up recycler views */
         binding.apply {
 
             rvResources.let {
@@ -95,9 +107,11 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
             includedMyAsset.let {
 
-
-                it.tvAssetAmount.text = viewModel.selectedBalance?.balanceData?.euroBalance
-                it.tvAssetAmountInCrypto.text = viewModel.selectedBalance?.balanceData?.balance
+                val priceCoin = viewModel.selectedBalance?.balanceData?.euroBalance?.toDouble()
+                    ?.div(viewModel.selectedBalance?.balanceData?.balance?.toDouble() ?: 1.0)
+                it.tvAssetAmount.text = viewModel.selectedBalance?.balanceData?.euroBalance?.currencyFormatted
+                it.tvAssetAmountInCrypto.text =
+                    viewModel.selectedBalance?.balanceData?.balance?.formattedAsset(price = priceCoin, rounding = RoundingMode.DOWN)
             }
 
             viewModel.selectedAsset?.id?.let { viewModel.getAssetDetail(it) }
@@ -114,8 +128,9 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             tvAssetName.text = "${viewModel.selectedAsset?.fullName}"
             tvAssetName.typeface = context?.resources?.getFont(R.font.mabry_pro_medium)
 
-
-
+            val request = Request.Builder().url(Constants.SOCKET_BASE_URL
+                    + "${viewModel.selectedAsset?.id}eur").build()
+            webSocket = client.newWebSocket(request, PortfolioDetailWebSocketListener())
         }
 
         /* setting up tabs */
@@ -136,6 +151,8 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 override fun onTabSelected(tab: TabLayout.Tab?) {
                     viewModel.selectedAsset?.let { asset ->
                         viewModel.getPrice(asset.id, (tab?.text ?: "1h").toString().lowercase())
+                        stopTimer()
+                        setTimer((tab?.text ?: "1h").toString().lowercase())
                     }
                 }
 
@@ -197,6 +214,8 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                     it.data.prices.toTimeSeries(it.data.lastUpdate, timeFrame)
 
                 binding.tvValuePortfolioAndAssetPrice.text = "${it.data.prices.last().currencyFormatted}"
+
+                this.setTimer("1h")// le code ne s'exécute pas
             }
         }
 
@@ -213,7 +232,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
     private fun List<String>.toTimeSeries(
         lastUpdate: String, tf: String = "1h"
-    ): List<List<Double>> {
+    ): MutableList<List<Double>> {
         val last = lastUpdate.toMilli()
         val timeSeries = mutableListOf<List<Double>>()
         val timeInterval = when (tf) {
@@ -231,16 +250,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         return timeSeries
     }
 
-    private fun List<String>.toFloats(): MutableList<Float> {
-        val list = mutableListOf<Float>()
-        forEach {
-            list.add(it.roundFloat().toFloat())
-        }
-        return list
-
-    }
-
-    private fun getLineData(value: Double, straightLine: Boolean = false): List<List<Double>> {
+    private fun getLineData(value: Double, straightLine: Boolean = false): MutableList<List<Double>> {
         val list = mutableListOf<List<Double>>()
         if (!straightLine) list.add(listOf(System.currentTimeMillis().toDouble(), 0.0))
         for (i in 0..8) list.add(listOf(System.currentTimeMillis().toDouble(), value))
@@ -257,7 +267,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
     }
 
 
-    fun menuOptionSelected(tag: String, option: String) {
+    private fun menuOptionSelected(tag: String, option: String) {
 
         viewModel.selectedAsset
 
@@ -304,12 +314,6 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
     }
 
 
-    override fun onDestroyView() {
-        Log.d(TAG, "onDestroyView: ")
-        SplashActivity.activityCallbacks = null
-        super.onDestroyView()
-    }
-
     @SuppressLint("InflateParams")
     override fun onClick(v: View?) {
         binding.apply {
@@ -325,28 +329,17 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
 
                 llThreeDot -> {
-                    PortfolioThreeDots(::menuOptionSelected).show(
+                    val portfolioThreeDotsFragment = PortfolioThreeDots(::menuOptionSelected)
+                    portfolioThreeDotsFragment.dismissListener = this@PortfolioDetailFragment
+                    portfolioThreeDotsFragment.typePopUp = "AssetPopUp"
+                    portfolioThreeDotsFragment.show(
                         childFragmentManager,
-                        ""
+                        "PortfolioThreeDots"
                     )
-                    // Create a transparent color view
-                   // _fragmentPortfolio = this@PortfolioHomeFragment
-                    var transparentView = View(context)
-                    transparentView.setBackgroundColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.semi_transparent_dark
-                        )
-                    )
-
-                    // Set layout parameters for the transparent view
-                    val viewParams = RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.MATCH_PARENT,
-                        RelativeLayout.LayoutParams.MATCH_PARENT
-                    )
-
-                    // Add the transparent view to the RelativeLayout
-                    screenContent.addView(transparentView, viewParams)
+                    grayOverlay = View(requireContext())
+                    grayOverlay?.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.semi_transparent_dark))
+                    grayOverlay?.alpha = 1.0f
+                    screenContent.addView(grayOverlay)
                 }
 
                 ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
@@ -369,4 +362,106 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         }
     }
 
+
+    //MARK:- Web Socket Listener
+    private inner class PortfolioDetailWebSocketListener: WebSocketListener() {
+        override fun onOpen(webSocket: WebSocket, response: Response) {
+            super.onOpen(webSocket, response)
+            socketOpen = true
+        }
+
+        override fun onMessage(webSocket: WebSocket, text: String) {
+            if(!socketOpen) return
+            requireActivity().runOnUiThread {
+                val jsonObject = JSONObject(text)
+                if(lifecycle.currentState == Lifecycle.State.RESUMED) {
+                    val price = jsonObject.getString("Price")
+                    binding.tvValuePortfolioAndAssetPrice.text = price.currencyFormatted
+                    binding.lineChart.updateValueLastPoint(price.toFloat())
+                }
+            }
+        }
+
+        override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
+            super.onClosed(webSocket, code, reason)
+            socketOpen = false
+        }
+    }
+    //MARK: - Timer
+    private fun setTimer(timeFrame: String) {
+        var interval = 0.0
+        var date = Date(binding.lineChart.timeSeries.last()[0].toLong())
+        when (timeFrame) {
+            "1h" -> {
+                // Every minute
+                date = Calendar.getInstance().apply {
+                    time = date
+                    add(Calendar.MINUTE, 1)
+                }.time
+                interval = 60.0
+            }
+            "4h" -> {
+                // Every 5 minutes
+                date = Calendar.getInstance().apply {
+                    time = date
+                    add(Calendar.MINUTE, 5)
+                }.time
+                interval = 60.0 * 5.0
+            }
+            "1d" -> {
+                // Every 30 minutes
+                date = Calendar.getInstance().apply {
+                    time = date
+                    add(Calendar.MINUTE, 30)
+                }.time
+                interval = 60.0 * 30.0
+            }
+            "1w" -> {
+                // Every 4 hours
+                date = Calendar.getInstance().apply {
+                    time = date
+                    add(Calendar.HOUR_OF_DAY, 4)
+                }.time
+                interval = 60.0 * 60.0 * 4.0
+            }
+            "1m" -> {
+                // Every 12 hours
+                date = Calendar.getInstance().apply {
+                    time = date
+                    add(Calendar.HOUR_OF_DAY, 12)
+                }.time
+                interval = 60.0 * 60.0 * 12.0
+            }
+            "1y" -> {
+                // Every 7 days
+                date = Calendar.getInstance().apply {
+                    time = date
+                    add(Calendar.DAY_OF_YEAR, 7)
+                }.time
+                interval = 60.0 * 60.0 * 24.0 * 7.0
+            }
+            else -> {
+                println("timeFrame not recognized")
+            }
+        }
+
+        timer = Timer()
+        timer.schedule(object : TimerTask() {
+            override fun run() {
+               requireActivity().runOnUiThread() {
+                   binding.lineChart.addPoint()
+               }
+            }
+        }, date, (interval * 1000).toLong())
+
+    }
+
+    private fun stopTimer() {
+        timer.cancel()
+    }
+
+    override fun onPortfolioThreeDotsDismissed() {
+        // Code to remove the overlay view from the parent fragment's layout
+        binding.screenContent.removeView(grayOverlay)
+    }
 }

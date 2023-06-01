@@ -34,7 +34,7 @@ class AvailableAssetAdapter(
             (holder as AvailableAssetViewHolder).binding.apply {
                 itemList[position]?.let { it ->
                     val id = it.id
-                    val currency : AssetBaseData? = BaseActivity.currencies.firstNotNullOfOrNull{ item -> item.takeIf {item.id == id}}
+                    val currency : AssetBaseData? = BaseActivity.assets.firstNotNullOfOrNull{ item -> item.takeIf {item.id == id}}
                     if (currency != null) {
                         ivAsset.loadCircleCrop(currency.image)
                     }

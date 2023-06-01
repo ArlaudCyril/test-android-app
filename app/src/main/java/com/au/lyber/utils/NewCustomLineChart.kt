@@ -24,10 +24,12 @@ import com.au.lyber.R
 import com.au.lyber.databinding.ItemHighlighterGraphBinding
 import com.au.lyber.databinding.YAxisTextBinding
 import com.au.lyber.utils.CommonMethods.Companion.commaFormatted
+import com.au.lyber.utils.CommonMethods.Companion.currencyFormatted
 import com.au.lyber.utils.CommonMethods.Companion.lineData
 import com.au.lyber.utils.CommonMethods.Companion.toGraphTime
 import com.bumptech.glide.Glide
 import font.FontSize
+import java.util.Date
 
 class NewCustomLineChart : RelativeLayout {
 
@@ -95,7 +97,7 @@ class NewCustomLineChart : RelativeLayout {
             postInvalidate()
         }
 
-    private var _timeSeries = List<List<Double>>(0) { _ ->
+    private var _timeSeries = MutableList<List<Double>>(0) { _ ->
         emptyList()
     }
     var timeSeries
@@ -139,7 +141,7 @@ class NewCustomLineChart : RelativeLayout {
     var selectedPosition: Int = 0
     var selectedPoint: Point? = null
 
-    data class Point(val x: Float, val y: Float)
+    data class Point(var x: Float, var y: Float)
 
     private val points: MutableList<Point> = mutableListOf()
 
@@ -386,6 +388,30 @@ class NewCustomLineChart : RelativeLayout {
                 animator?.start()
 
 
+    }
+
+    fun updateValueLastPoint(value: Float) {
+        if(selectedPoint == points.last() && lineData[lineData.lastIndex] != value){
+            binding.tvPrice.text = value.toString().currencyFormatted
+        }
+        lineData[lineData.lastIndex] = value
+        calculatePoints()
+        invalidate()
+
+    }
+
+    fun addPoint() {//add a new point
+        timeSeries.removeFirst()
+        timeSeries.add(listOf(Date().time.toDouble(), lineData.last().toDouble()))
+        lineData.removeFirst()
+        lineData.add(lineData.last())
+        if (selectedPosition in 1 until points.count()-1) {
+            selectedPosition--
+            selectedPoint = points[selectedPosition]
+            selectedPoint?.let {
+                pointSelected(it.x, it.y, selectedPosition)
+            }
+        }
     }
 
 }

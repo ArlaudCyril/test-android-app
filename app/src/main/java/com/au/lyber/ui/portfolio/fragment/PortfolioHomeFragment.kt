@@ -228,7 +228,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
         viewModel.allAssets.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                BaseActivity.currencies = it.data as ArrayList<AssetBaseData>
+                BaseActivity.assets = it.data as ArrayList<AssetBaseData>
             }
         }
 
@@ -275,7 +275,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
     private fun List<String>.toTimeSeries(
         lastUpdate: String, tf: String = "1h"
-    ): List<List<Double>> {
+    ): MutableList<List<Double>> {
         val last = lastUpdate.toMilli()
         val timeSeries = mutableListOf<List<Double>>()
         val timeInterval = when (tf) {
@@ -302,7 +302,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
     }
 
-    private fun getLineData(value: Double, straightLine: Boolean = false): List<List<Double>> {
+    private fun getLineData(value: Double, straightLine: Boolean = false): MutableList<List<Double>> {
         val list = mutableListOf<List<Double>>()
         if (!straightLine) list.add(listOf(System.currentTimeMillis().toDouble(), 0.0))
         for (i in 0..8) list.add(listOf(System.currentTimeMillis().toDouble(), value))
@@ -329,18 +329,19 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             val navHostFragment =  requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
             val navController = navHostFragment.findNavController()
             navController.navigate(R.id.portfolioDetailFragment)
-            viewModel.selectedAsset = CommonMethods.getCurrency(balance.id)
+            viewModel.selectedAsset = CommonMethods.getAsset(balance.id)
             viewModel.selectedBalance = balance
         }
     }
 
-    override fun availableAssetClicked(asset: PriceServiceResume) {
+    override fun availableAssetClicked(priceResume: PriceServiceResume) {
         checkInternet(requireContext()) {
-            /*   viewModel.selectedAsset = asset
-               viewModel.screenCount = 1
-               showProgressDialog(requireContext())
-               viewModel.getAssetDetail(asset._id)*/
-        }//TODO
+            val navHostFragment =  requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+            val navController = navHostFragment.findNavController()
+            navController.navigate(R.id.portfolioDetailFragment)
+            viewModel.selectedAsset = CommonMethods.getAsset(priceResume.id)
+            viewModel.selectedBalance = CommonMethods.getBalance(priceResume.id)
+        }
 
     }
 

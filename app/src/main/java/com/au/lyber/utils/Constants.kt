@@ -23,6 +23,7 @@ object Constants {
     //    const val BASE_URL = "http://104.211.21.101:3000/"
     const val BASE_URL = "https://staging.lyber.com/"
     const val NEW_BASE_URL = "https://staging.lyber.com/"
+    const val SOCKET_BASE_URL = "ws://ws.lyber.com:80/websocket/"
     const val PICTURE_DIRECTORY = "Lyber/Images"
 
 

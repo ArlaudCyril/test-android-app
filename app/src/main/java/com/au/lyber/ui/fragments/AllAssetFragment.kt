@@ -122,25 +122,25 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
                         0 -> {
                             if (searchText.isNotEmpty())
                                 adapter.setList(assets.filter { it.id.startsWith(searchText, true)
-                                        || CommonMethods.getCurrency(it.id).fullName.startsWith(searchText, true)})
+                                        || CommonMethods.getAsset(it.id).fullName.startsWith(searchText, true)})
                             else adapter.setList(trendings)
                         }
                         1 -> {
                             if (searchText.isNotEmpty())
                                 adapter.setList(assets.filter { it.id.startsWith(searchText, true)
-                                        || CommonMethods.getCurrency(it.id).fullName.startsWith(searchText, true)})
+                                        || CommonMethods.getAsset(it.id).fullName.startsWith(searchText, true)})
                             else adapter.setList(topGainers)
                         }
                         2 -> {
                             if (searchText.isNotEmpty())
                                 adapter.setList(assets.filter { it.id.startsWith(searchText, true)
-                                        || CommonMethods.getCurrency(it.id).fullName.startsWith(searchText, true)})
+                                        || CommonMethods.getAsset(it.id).fullName.startsWith(searchText, true)})
                             else adapter.setList(topLosers)
                         }
                         3 -> {
                             if (searchText.isNotEmpty())
                                 adapter.setList(assets.filter { it.id.startsWith(searchText, true)
-                                        || CommonMethods.getCurrency(it.id).fullName.startsWith(searchText, true)})
+                                        || CommonMethods.getAsset(it.id).fullName.startsWith(searchText, true)})
                             else adapter.setList(stables)
                         }
                         else -> {
@@ -169,7 +169,7 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
     }
 
     private fun List<PriceServiceResume>.stables(): List<PriceServiceResume> {
-        return filter { CommonMethods.getCurrency(it.id).isStablecoin }
+        return filter { CommonMethods.getAsset(it.id).isStablecoin }
     }//get is stable add the parameter and dispatch it from the others list
 
     private val tabSelectedListener = object : TabLayout.OnTabSelectedListener {
