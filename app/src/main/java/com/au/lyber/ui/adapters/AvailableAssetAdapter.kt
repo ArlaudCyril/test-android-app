@@ -36,7 +36,7 @@ class AvailableAssetAdapter(
                     val id = it.id
                     val currency : AssetBaseData? = BaseActivity.assets.firstNotNullOfOrNull{ item -> item.takeIf {item.id == id}}
                     if (currency != null) {
-                        ivAsset.loadCircleCrop(currency.image)
+                        ivAsset.loadCircleCrop(currency.imageUrl)
                     }
 
                     tvAssetNameCode.text = it.id?.uppercase()

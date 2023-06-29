@@ -75,7 +75,7 @@ class AllAssetAdapter(private val clickListener: (PriceServiceResume) -> Unit = 
                     lineChart.loadImage(urlLineChart)
                     val id = it.id
                     BaseActivity.assets.firstNotNullOfOrNull{ item -> item.takeIf {item.id == id}}
-                        ?.let { it1 -> ivAsset.loadCircleCrop(it1.image); tvAssetName.text = it1.fullName }
+                        ?.let { it1 -> ivAsset.loadCircleCrop(it1.imageUrl); tvAssetName.text = it1.fullName }
 
                     val context = ivAsset.context
                     tvAssetValue.typeface = context.resources.getFont(R.font.mabry_pro_medium)

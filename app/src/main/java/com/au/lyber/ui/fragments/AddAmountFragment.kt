@@ -195,7 +195,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                             it.total_balance.toString().roundFloat().commaFormatted
                         } ${it.id.uppercase()} Available"TODO*/
 
-                         ivAssetSwapFrom.loadCircleCrop(it.image?:"")
+                         ivAssetSwapFrom.loadCircleCrop(it.imageUrl?:"")
 
                         tvSwapAssetFrom.text = it.id.uppercase()
 
@@ -208,7 +208,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                             it.euro_amount.toString().roundFloat().commaFormatted TODO*/
                         mConversionCurrency = it.id.uppercase()
 
-                         ivAssetSwapTo.loadCircleCrop(it.image?:"")
+                         ivAssetSwapTo.loadCircleCrop(it.imageUrl?:"")
                         tvSwapAssetTo.text = it.id.uppercase()
                     }
 
@@ -732,11 +732,11 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
 //                    maxValue = to.total_balance
 
-                   binding.ivAssetSwapFrom.loadCircleCrop(to.image ?: "")
+                   binding.ivAssetSwapFrom.loadCircleCrop(to.imageUrl ?: "")
 
                     binding.tvSwapAssetFrom.text = to.id.uppercase()
 
-                    binding.ivAssetSwapTo.loadCircleCrop(from.image ?: "")
+                    binding.ivAssetSwapTo.loadCircleCrop(from.imageUrl ?: "")
 
                     binding.tvSwapAssetTo.text = from.id.uppercase()
 
@@ -777,11 +777,11 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
 //                    maxValue = from.total_balance
 
-                     binding.ivAssetSwapFrom.loadCircleCrop(from.image ?: "")
+                     binding.ivAssetSwapFrom.loadCircleCrop(from.imageUrl ?: "")
 
                     binding.tvSwapAssetFrom.text = from.id.uppercase()
 
-                     binding.ivAssetSwapTo.loadCircleCrop(to.image ?: "")
+                     binding.ivAssetSwapTo.loadCircleCrop(to.imageUrl ?: "")
 
                     binding.tvSwapAssetTo.text = to.id.uppercase()
 

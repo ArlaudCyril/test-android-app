@@ -39,7 +39,7 @@ class BalanceAdapter(
                 itemList[position]?.let {
                     val balanceId = it.id
                     val currency = BaseActivity.assets.find { it.id == balanceId}
-                    ivAssetIcon.loadCircleCrop(currency?.image?:"")
+                    ivAssetIcon.loadCircleCrop(currency?.imageUrl?:"")
 
                     if (isAssetBreakdown) {
                         tvAssetName.visible()

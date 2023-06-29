@@ -47,7 +47,7 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
                 showDialog(
-                    viewModel.selectedAsset?.image ?: "",
+                    viewModel.selectedAsset?.imageUrl ?: "",
                     viewModel.assetAmount,
                     viewModel.selectedAsset?.id ?: ""
                 )
@@ -233,9 +233,9 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                     tvValueFrequency.text = viewModel.selectedFrequency
 
                     tvAmount.text = viewModel.assetAmount.commaFormatted
-                    viewModel.selectedAsset?.image?.let {
+                    viewModel.selectedAsset?.imageUrl?.let {
                         ivSingleAsset.visible()
-                        ivSingleAsset.loadCircleCrop(viewModel.selectedAsset?.image ?: "")
+                        ivSingleAsset.loadCircleCrop(viewModel.selectedAsset?.imageUrl ?: "")
                     }
 
                 }

@@ -136,8 +136,8 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
                     val value = 0 // TODO : Remove this line
                     if (toExchange) {
 
-                        if (!it.image.isNullOrEmpty())
-                             ivAssetIcon.loadCircleCrop(it.image)
+                        if (!it.imageUrl.isNullOrEmpty())
+                             ivAssetIcon.loadCircleCrop(it.imageUrl)
 
 
                         tvAssetAmount.text = "${value.commaFormatted}${Constants.EURO}"
@@ -171,8 +171,8 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
 //
 //                            } else {
 
-                        if (!it.image.isNullOrEmpty())
-                            ivAssetIcon.loadCircleCrop(it.image)
+                        if (!it.imageUrl.isNullOrEmpty())
+                            ivAssetIcon.loadCircleCrop(it.imageUrl)
 
                         tvAssetAmount.text =
                             "${value.toString().roundFloat()}${Constants.EURO}"

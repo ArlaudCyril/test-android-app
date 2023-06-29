@@ -3,8 +3,11 @@ package com.au.lyber.ui.fragments
 import android.app.Dialog
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.view.Window
 import android.widget.ImageView
+import android.widget.RelativeLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
@@ -12,6 +15,9 @@ import com.au.lyber.R
 import com.au.lyber.databinding.CustomDialogLayoutBinding
 import com.au.lyber.databinding.FragmentTestSignUpBinding
 import com.au.lyber.ui.activities.SplashActivity
+import com.au.lyber.ui.fragments.bottomsheetfragments.InvestBottomSheet
+import com.au.lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet
+import com.au.lyber.ui.portfolio.fragment.PortfolioHomeFragment
 import com.au.lyber.utils.ActivityCallbacks
 import com.au.lyber.utils.App
 import com.au.lyber.utils.App.Companion.prefsManager
@@ -125,16 +131,47 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
 
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
-                prefsManager.accessToken = it.data.access_token
-                App.accessToken = it.data.access_token
-                prefsManager.refreshToken = it.data.refresh_token
+                if(it.data.access_token != null){
 
-                childFragmentManager.popBackStack(
-                    null, FragmentManager.POP_BACK_STACK_INCLUSIVE
-                )
+                    prefsManager.accessToken = it.data.access_token
+                    App.accessToken = it.data.access_token
+                    prefsManager.refreshToken = it.data.refresh_token
 
-                mPosition = 2
-                replace(R.id.frameLayoutSignUp, fragments[mPosition], false)
+                    childFragmentManager.popBackStack(
+                        null, FragmentManager.POP_BACK_STACK_INCLUSIVE
+                    )
+
+                    mPosition = 2
+                    replace(R.id.frameLayoutSignUp, fragments[mPosition], false)
+                }else{
+                    // Create a transparent color view
+                    val transparentView = View(context)
+                    transparentView.setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.semi_transparent_dark
+                        )
+                    )
+
+                    // Set layout parameters for the transparent view
+                    val viewParams = RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.MATCH_PARENT
+                    )
+
+                    val vc  = VerificationBottomSheet()
+                    vc.typeVerification = it.data.type2FA
+                    vc.viewToDelete = transparentView
+                    vc.mainView = getView()?.rootView as ViewGroup
+                    vc.viewModel = viewModel
+                    vc.show(childFragmentManager, "")
+
+                    // Add the transparent view to the RelativeLayout
+                    val mainView = getView()?.rootView as ViewGroup
+                    mainView.addView(transparentView, viewParams)
+
+                }
+
 
             }
 

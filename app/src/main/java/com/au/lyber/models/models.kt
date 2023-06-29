@@ -457,7 +457,7 @@ class AssetBaseDataResponse(
 data class AssetBaseData(
     val id: String,
     val fullName: String,
-    val image: String,
+    val imageUrl: String,
     val isUIActive: Boolean,
     val isTradeActive: Boolean,
     val isStablecoin: Boolean,
@@ -546,7 +546,8 @@ data class UserLoginResponse(
 
 data class LoginData(
     val access_token: String,
-    val refresh_token: String
+    val refresh_token: String,
+    val type2FA: String
 )
 
 data class SetPhoneResponse(val data: DataNew)

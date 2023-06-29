@@ -57,10 +57,10 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>() {
                         .replace(R.id.flSplashActivity, DiscoveryFragment())
                         .commit()
 
-                    requireActivity().supportFragmentManager.beginTransaction()
+                    /*requireActivity().supportFragmentManager.beginTransaction()
                         .replace(R.id.flSplashActivity, SignUpFragment())
                         .addToBackStack(null)
-                        .commit()
+                        .commit()*/
                 }
 
             }
