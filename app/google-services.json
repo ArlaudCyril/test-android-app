@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "672116436946",
+    "project_id": "lyber-fe10d",
+    "storage_bucket": "lyber-fe10d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:672116436946:android:8f7cf7e192acb3469ca20b",
+        "android_client_info": {
+          "package_name": "com.au.liber"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "672116436946-8cmm6aostu86cshf4v10n1ru4v54cees.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAY-akLZ8Ew5C6dPg-gyU_wYgbL9tze0Ls"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "672116436946-8cmm6aostu86cshf4v10n1ru4v54cees.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
