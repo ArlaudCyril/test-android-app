@@ -72,7 +72,7 @@
                 android:background="@drawable/curved_button"
                 android:backgroundTint="@color/purple_gray_50"
                 android:padding="4dp"
-                android:visibility="invisible">
+                android:visibility="visible">
 
                 <com.google.android.material.tabs.TabLayout
                     android:id="@+id/tabLayout"

@@ -12,7 +12,7 @@ task clean(type: Delete) {
 }
 ext {
     coroutine_version = "1.6.0"
-    glide_version = "4.13.0"
+    glide_version = "4.15.1"
     lifecycleVersion = '2.4.1'
     activityVersion = '1.4.0'
     retrofit_version = "2.9.0"

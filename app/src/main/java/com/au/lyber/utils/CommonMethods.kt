@@ -11,8 +11,10 @@ import android.content.res.Resources.getSystem
 import android.graphics.*
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
+import android.graphics.drawable.PictureDrawable
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.net.Uri
 import android.os.Environment
 import android.os.Looper
 import android.provider.Settings
@@ -57,6 +59,7 @@ import com.au.lyber.utils.App.Companion.prefsManager
 import com.au.lyber.utils.Constants.CAP_RANGE
 import com.au.lyber.utils.Constants.SMALL_RANGE
 import com.bumptech.glide.Glide
+import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.github.mikephil.charting.data.Entry
@@ -212,9 +215,11 @@ class CommonMethods {
         }
 
         fun ImageView.loadCircleCrop(any: Any, placeHolderRes: Int? = -1) {
-
             var res = any
-
+           val  requestBuilder : RequestBuilder<PictureDrawable> =Glide.with(this).`as`(PictureDrawable::class.java)
+                        .placeholder(R.drawable.ic_sol)
+                        .error(R.drawable.ic_sol)
+                        .listener(SvgSoftwareLayerSetter())
             when (any) {
                 is String -> {
                     if (!any.contains("http"))
@@ -229,12 +234,16 @@ class CommonMethods {
                             .diskCacheStrategy(
                                 DiskCacheStrategy.RESOURCE
                             ).into(this)
-                    else Glide.with(this).load(any).apply(RequestOptions.circleCropTransform())
+                    else requestBuilder.load(any).into(this)
+                /*Glide.with(this)
+                        .`as`(PictureDrawable::class.java)
+                        .load(any).apply(RequestOptions.circleCropTransform())
                         .diskCacheStrategy(
                             DiskCacheStrategy.RESOURCE
                         )
-                        .placeholder(placeHolderRes)
-                        .into(this)
+                        .placeholder(R.drawable.ic_sol)
+                        .dontAnimate().into(this)*/
+
 
 
                 }
