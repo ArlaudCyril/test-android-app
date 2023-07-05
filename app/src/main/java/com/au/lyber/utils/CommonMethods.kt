@@ -217,8 +217,8 @@ class CommonMethods {
         fun ImageView.loadCircleCrop(any: Any, placeHolderRes: Int? = -1) {
             var res = any
            val  requestBuilder : RequestBuilder<PictureDrawable> =Glide.with(this).`as`(PictureDrawable::class.java)
-                        .placeholder(R.drawable.ic_sol)
-                        .error(R.drawable.ic_sol)
+                        .placeholder(placeHolderRes!!)
+                        .error(placeHolderRes)
                         .listener(SvgSoftwareLayerSetter())
             when (any) {
                 is String -> {
@@ -229,7 +229,7 @@ class CommonMethods {
 
                     if (placeHolderRes != -1)
                         Glide.with(this).load(any)
-                            .placeholder(placeHolderRes!!)
+                            .placeholder(placeHolderRes)
                             .apply(RequestOptions.circleCropTransform())
                             .diskCacheStrategy(
                                 DiskCacheStrategy.RESOURCE

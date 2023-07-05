@@ -30,11 +30,47 @@
             android:id="@+id/action_portfolioFragment_to_allAssetFragment"
             app:destination="@id/allAssetFragment" />
         <action
+            android:id="@+id/action_portfolioFragment_to_profileFragment"
+            app:destination="@id/profileFragment" />
+        <action
             android:id="@+id/action_portfolioFragment_to_portfolioDetailFragment"
             app:destination="@id/portfolioDetailFragment" />
         <action
             android:id="@+id/action_portfolioHomeFragment_to_portfolioThreeDots"
             app:destination="@id/portfolioThreeDots" />
+        <action
+            android:id="@+id/action_portfolioHomeFragment_to_addAmountFragment"
+            app:destination="@id/addAmountFragment" />
+        <action
+            android:id="@+id/action_portfolioHomeFragment_to_pickYourStrategyFragment"
+            app:destination="@id/pickYourStrategyFragment"
+            app:enterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down"/>
+        <action
+            android:id="@+id/action_portfolioHomeFragment_to_selectAnAssetFragment"
+            app:destination="@id/selectAnAssetFragment"
+            app:enterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down"/>
+        <action
+            android:id="@+id/action_portfolioHomeFragment_to_swapWithdrawFromFragment"
+            app:destination="@id/swapWithdrawFromFragment"
+            app:enterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down"/>
+        <action
+            android:id="@+id/action_portfolioHomeFragment_to_chooseAssetForDepositFragment"
+            app:destination="@id/chooseAssetForDepositFragment"
+            app:enterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down"/>
+        <action
+            android:id="@+id/action_portfolioHomeFragment_to_depositFiatWalletFragment"
+            app:destination="@id/depositFiatWalletFragment"
+            app:enterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down"/>
+        <action
+            android:id="@+id/action_portfolioHomeFragment_to_investmentDetailFragment"
+            app:destination="@id/investmentDetailFragment"
+            app:enterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down"/>
     </fragment>
     <fragment
         android:id="@+id/allAssetFragment"
@@ -59,6 +95,54 @@
         android:id="@+id/discoveryFragment"
         android:name="com.au.lyber.ui.fragments.DiscoveryFragment"
         android:label="DiscoveryFragment" />
+    <fragment
+        android:id="@+id/profileFragment"
+        android:name="com.au.lyber.ui.fragments.ProfileFragment"
+        android:label="ProfileFragment" >
+
+    </fragment>
+    <fragment
+        android:id="@+id/addAmountFragment"
+        android:name="com.au.lyber.ui.fragments.AddAmountFragment"
+        android:label="AddAmountFragment" >
+
+    </fragment>
+    <fragment
+        android:id="@+id/pickYourStrategyFragment"
+        android:name="com.au.lyber.ui.fragments.PickYourStrategyFragment"
+        android:label="PickYourStrategyFragment" >
+
+    </fragment>
+    <fragment
+        android:id="@+id/selectAnAssetFragment"
+        android:name="com.au.lyber.ui.fragments.SelectAnAssetFragment"
+        android:label="SelectAnAssetFragment" >
+
+    </fragment>
+    <fragment
+        android:id="@+id/swapWithdrawFromFragment"
+        android:name="com.au.lyber.ui.fragments.SwapWithdrawFromFragment"
+        android:label="SwapWithdrawFromFragment" >
+
+    </fragment>
+    <fragment
+        android:id="@+id/chooseAssetForDepositFragment"
+        android:name="com.au.lyber.ui.fragments.ChooseAssetForDepositFragment"
+        android:label="ChooseAssetForDepositFragment" >
+
+    </fragment>
+    <fragment
+        android:id="@+id/depositFiatWalletFragment"
+        android:name="com.au.lyber.ui.fragments.DepositFiatWalletFragment"
+        android:label="DepositFiatWalletFragment" >
+
+    </fragment>
+    <fragment
+        android:id="@+id/investmentDetailFragment"
+        android:name="com.au.lyber.ui.fragments.InvestmentDetailFragment"
+        android:label="InvestmentDetailFragment" >
+
+    </fragment>
     <dialog
         android:id="@+id/portfolioThreeDots"
         android:name="com.au.lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDots"

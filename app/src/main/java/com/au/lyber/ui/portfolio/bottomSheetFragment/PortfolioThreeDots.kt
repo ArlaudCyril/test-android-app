@@ -64,6 +64,13 @@ class PortfolioThreeDots(private val listenItemClicked: (String, String) -> Unit
         return dialog
     }
 
+    override fun onDestroyView() {
+        super.onDestroyView()
+        val view = PortfolioHomeFragment.fragmentPortfolio.binding.screenContent
+        val viewToDelete = view.getChildAt(view.childCount-1)
+        view.removeView(viewToDelete)
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setStyle(STYLE_NORMAL, R.style.MyDialogStyle)
