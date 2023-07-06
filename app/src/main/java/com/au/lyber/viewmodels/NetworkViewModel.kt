@@ -689,6 +689,7 @@ open class NetworkViewModel : ViewModel() {
     }
 
 
+
     fun refreshToken() {
         viewModelScope.launch(exceptionHandler) {
             val hashMap = hashMapOf<String, Any>()
@@ -714,7 +715,7 @@ open class NetworkViewModel : ViewModel() {
     fun verifyPhone(code: String) {
         viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get(Constants.NEW_BASE_URL)
-                .verifyPhone(hashMapOf("code" to code.toInt()))
+                .verifyPhone(hashMapOf("code" to code.toString()))
             if (res.isSuccessful)
                 _verifyPhoneResponse.postValue(res.body())
             else listener?.onRetrofitError(res.errorBody())
@@ -739,7 +740,9 @@ open class NetworkViewModel : ViewModel() {
             hashMap["birthDate"] = birthDate
             hashMap["birthCountry"] = birthCountry
             hashMap["nationality"] = nationality
+            hashMap["language"] = "EN"
             hashMap["isUSCitizen"] = isUSCitizen
+
 
             val res = RestClient.get(Constants.NEW_BASE_URL).setUserInfo(hashMap)
             if (res.isSuccessful)

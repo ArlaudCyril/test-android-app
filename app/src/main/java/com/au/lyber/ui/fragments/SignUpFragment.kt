@@ -97,7 +97,31 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
                 App.accessToken = it.data.token
                 dismissProgressDialog()
                 mPosition = 1
-                replace(R.id.frameLayoutSignUp, fragments[mPosition])
+                val transparentView = View(context)
+                transparentView.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.semi_transparent_dark
+                    )
+                )
+
+                // Set layout parameters for the transparent view
+                val viewParams = RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT
+                )
+
+                val vc  = VerificationBottomSheet()
+
+                vc.viewToDelete = transparentView
+                vc.mainView = getView()?.rootView as ViewGroup
+                vc.viewModel = viewModel
+                vc.show(childFragmentManager, "")
+
+                // Add the transparent view to the RelativeLayout
+                val mainView = getView()?.rootView as ViewGroup
+                mainView.addView(transparentView, viewParams)
+            //replace(R.id.frameLayoutSignUp, fragments[mPosition])
             }
         }
 

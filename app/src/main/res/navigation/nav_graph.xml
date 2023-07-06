@@ -94,7 +94,13 @@
     <fragment
         android:id="@+id/discoveryFragment"
         android:name="com.au.lyber.ui.fragments.DiscoveryFragment"
-        android:label="DiscoveryFragment" />
+        android:label="DiscoveryFragment" >
+        <action
+            android:id="@+id/action_discoveryFragment_to_signupFragment"
+            app:destination="@id/signUpFragment"
+            app:enterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down"/>
+    </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.au.lyber.ui.fragments.ProfileFragment"
@@ -138,11 +144,56 @@
 
     </fragment>
     <fragment
+        android:id="@+id/signUpFragment"
+        android:name="com.au.lyber.ui.fragments.SignUpFragment"
+        android:label="SignUpFragment" />
+    <fragment
         android:id="@+id/investmentDetailFragment"
         android:name="com.au.lyber.ui.fragments.InvestmentDetailFragment"
         android:label="InvestmentDetailFragment" >
 
     </fragment>
+    <fragment
+        android:id="@+id/enableNotificationFragment"
+        android:name="com.au.lyber.ui.fragments.EnableNotificationFragment"
+        android:label="EnableNotificationFragment" >
+        <action
+            android:id="@+id/action_discoveryFragment_to_signupFragment"
+            app:destination="@id/signUpFragment"
+            app:popUpToInclusive="false"/>
+    </fragment>
+    <fragment
+        android:id="@+id/completePortfolioFragment"
+        android:name="com.au.lyber.ui.fragments.CompletePortfolioFragment"
+        android:label="CompletePortfolioFragment" >
+        <action
+            android:id="@+id/action_discoveryFragment_to_educationStrategyHolderFragment"
+            app:destination="@id/educationStrategyHolderFragment"
+            app:enterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down"/>
+        <action
+            android:id="@+id/action_discoveryFragment_to_fillDetailFragment"
+            app:destination="@id/fillDetailFragment"
+            app:enterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down"/>
+        <action
+            android:id="@+id/action_discoveryFragment_to_verifyYourIdentityFragment"
+            app:destination="@id/verifyYourIdentityFragment"
+            app:enterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down"/>
+    </fragment>
+    <fragment
+        android:id="@+id/educationStrategyHolderFragment"
+        android:name="com.au.lyber.ui.fragments.EducationStrategyHolderFragment"
+        android:label="EducationStrategyHolderFragment" />
+    <fragment
+        android:id="@+id/fillDetailFragment"
+        android:name="com.au.lyber.ui.fragments.FillDetailFragment"
+        android:label="FillDetailFragment" />
+    <fragment
+        android:id="@+id/verifyYourIdentityFragment"
+        android:name="com.au.lyber.ui.fragments.VerifyYourIdentityFragment"
+        android:label="VerifyYourIdentityFragment" />
     <dialog
         android:id="@+id/portfolioThreeDots"
         android:name="com.au.lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDots"

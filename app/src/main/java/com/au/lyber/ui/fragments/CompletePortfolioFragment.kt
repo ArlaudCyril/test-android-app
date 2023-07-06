@@ -5,13 +5,15 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentCompletePortfolioBinding
 import com.au.lyber.ui.fragments.bottomsheetfragments.BottomSheetDialog
 import com.au.lyber.utils.App
 import com.au.lyber.utils.CommonMethods.Companion.getViewModel
 import com.au.lyber.utils.CommonMethods.Companion.gone
-import com.au.lyber.utils.CommonMethods.Companion.replaceFragment
 import com.au.lyber.utils.CommonMethods.Companion.strikeText
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
@@ -23,7 +25,7 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
     private val TAG = "CompletePortfolioFragme"
 
     private lateinit var portfolioViewModel: PortfolioViewModel
-
+    private lateinit var navController : NavController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         App.prefsManager.savedScreen = javaClass.name
@@ -33,7 +35,8 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        val navHostFragment =  requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.findNavController()
         portfolioViewModel = getViewModel(requireActivity())
 
         binding.btnInvestMoney.setOnClickListener(this)
@@ -230,32 +233,16 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
 
                     if (App.prefsManager.portfolioCompletionStep == Constants.KYC_COMPLETED) {
 //                        requireActivity().clearBackStack()
-                        requireActivity().replaceFragment(
-                            R.id.flSplashActivity,
-                            EducationStrategyHolderFragment(),
-                            topBottom = true
-                        )
+                        navController.navigate(R.id.educationStrategyHolderFragment)
                     }
                 }
 
 //                tvEditPersonalData,
-                tvFillPersonalData -> requireActivity().replaceFragment(
-                    R.id.flSplashActivity,
-                    FillDetailFragment(),
-                    topBottom = true
-                )
+                tvFillPersonalData -> navController.navigate(R.id.fillDetailFragment)
 
-                tvVerifyYourIdentity -> requireActivity().replaceFragment(
-                    R.id.flSplashActivity,
-                    VerifyYourIdentityFragment(),
-                    topBottom = true
-                )
+                tvVerifyYourIdentity -> navController.navigate(R.id.verifyYourIdentityFragment)
 
-                /*requireActivity().replaceFragment(
-                    R.id.flSplashActivity,
-                    VerifyIdentityFragment(),
-                    topBottom = true
-                )*/
+
             }
         }
     }

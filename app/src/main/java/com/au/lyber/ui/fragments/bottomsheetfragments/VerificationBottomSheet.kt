@@ -163,7 +163,11 @@ class VerificationBottomSheet() :
                     binding.etCodeSix -> {
                         if (getCode().length == 6) {
                             dismiss()
-                            viewModel.verify2FA(code = getCode())
+                            if (viewModel.forLogin) {
+                                viewModel.verify2FA(code = getCode())
+                            }else{
+                                viewModel.verifyPhone(getCode())
+                            }
                         }
                     }
                 }
