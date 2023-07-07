@@ -26,7 +26,7 @@ class EnableNotificationFragment : BaseFragment<FragmentEnableNotificationsBindi
         val navHostFragment =  requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
         App.prefsManager.savedScreen = javaClass.name
-        (requireParentFragment() as SignUpFragment).setIndicators(4)
+       // (requireParentFragment() as SignUpFragment).setIndicators(4)
 
         onBoardingViewModel = getViewModel(requireParentFragment())
         onBoardingViewModel.listener = this

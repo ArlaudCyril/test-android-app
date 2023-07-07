@@ -41,7 +41,6 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (requireParentFragment() as SignUpFragment).setIndicators(0)
         App.prefsManager.accessToken = ""
 
         viewModel = getViewModel(requireParentFragment())

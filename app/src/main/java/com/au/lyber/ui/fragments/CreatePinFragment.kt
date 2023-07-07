@@ -33,7 +33,7 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
         super.onViewCreated(view, savedInstanceState)
 
 
-        (requireParentFragment() as SignUpFragment).setIndicators(2)
+        //(requireParentFragment() as SignUpFragment).setIndicators(2)
 
         App.prefsManager.savedScreen = javaClass.name
 

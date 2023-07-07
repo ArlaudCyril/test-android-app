@@ -62,7 +62,7 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
 
         viewModel = getViewModel(this)
         SplashActivity.activityCallbacks = this
-        val navHostFragment =  requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment = childFragmentManager.findFragmentById(R.id.nav_host_fragmentchild) as NavHostFragment
         navController = navHostFragment.findNavController()
         mPosition = when (prefsManager.savedScreen) {
             CreatePinFragment::class.java.name -> 2
@@ -288,18 +288,23 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
         EnableNotificationFragment()*/
         when(mPosition){
             0->{
+                setIndicators(0)
+                //findNavController().navigate(R.id.createAccountFragment)
                 navController.navigate(R.id.createAccountFragment)
-                navController.popBackStack(R.id.createAccountFragment,isBackStack)
+                //navController.popBackStack(R.id.createAccountFragment,isBackStack)
             }
             2->{
+                setIndicators(2)
                 navController.navigate(R.id.createPinFragment)
                 navController.popBackStack(R.id.createPinFragment,isBackStack)
             }
             3->{
+                setIndicators(3)
                 navController.navigate(R.id.confirmPinFragment)
                 navController.popBackStack(R.id.confirmPinFragment,isBackStack)
             }
             4->{
+                setIndicators(4)
                 navController.navigate(R.id.enableNotificationFragment)
                 navController.popBackStack(R.id.enableNotificationFragment,isBackStack)
             }
@@ -404,7 +409,7 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
         binding.ivTopAction.setImageResource(res)
     }
 
-    internal fun setIndicators(position: Int) {
+     private fun setIndicators(position: Int) {
         binding.llIndicators.let {
             for (i in 0 until it.childCount) {
                 val imageView = it.getChildAt(i) as ImageView

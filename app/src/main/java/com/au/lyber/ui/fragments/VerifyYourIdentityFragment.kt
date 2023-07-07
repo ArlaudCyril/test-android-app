@@ -21,6 +21,9 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.content.FileProvider
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.au.lyber.BuildConfig
 import com.au.lyber.R
 import com.au.lyber.databinding.CustomDialogLayoutBinding
@@ -46,7 +49,7 @@ import java.util.*
 
 class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBinding>(),
     View.OnClickListener {
-
+    private lateinit var navController : NavController
     private lateinit var verifyIdentityViewModel: VerifyIdentityViewModel
     private lateinit var portfolioViewModel: PortfolioViewModel
 
@@ -56,7 +59,8 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        val navHostFragment =  requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.findNavController()
         //optional
         binding.btnOpenSend.setOnClickListener(this)
         binding.ivTopAction.setOnClickListener(this)
@@ -360,8 +364,7 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
                     if (btnOpenSend.text == "Next") {
                         App.prefsManager.portfolioCompletionStep = Constants.PROFILE_COMPLETED
                         requireActivity().clearBackStack()
-                        requireActivity().supportFragmentManager.beginTransaction()
-                            .replace(R.id.flSplashActivity, PortfolioHomeFragment()).commit()
+                        navController.navigate(R.id.portfolioHomeFragment)
                     } else
                         dialogVerify(
                             "Verify identity",
@@ -369,10 +372,7 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
                         )
 
 
-//                    App.prefsManager.portfolioCompletionStep = Constants.PROFILE_COMPLETED
-//                    requireActivity().clearBackStack()
-//                    requireActivity().supportFragmentManager.beginTransaction()
-//                        .replace(R.id.flSplashActivity, PortfolioHomeFragment()).commit()
+
 
 //                    if (verifyIdentityViewModel.imageCaptured != TWO) {
 //                        if (!requireActivity().checkPermission(CAMERA) || !requireActivity().checkPermission(

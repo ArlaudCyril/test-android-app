@@ -24,8 +24,7 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (requireParentFragment() as SignUpFragment).mPosition = 3
-        (requireParentFragment() as SignUpFragment).setIndicators(3)
+        //(requireParentFragment() as SignUpFragment).mPosition = 3
 
         viewModel = getViewModel(requireParentFragment())
         viewModel.listener = this

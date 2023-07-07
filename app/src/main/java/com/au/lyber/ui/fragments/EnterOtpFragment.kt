@@ -40,7 +40,7 @@ class EnterOtpFragment : BaseFragment<FragmentEnterOtpBinding>() {
         binding.etCodeOne.requestFocus()
         binding.etCodeOne.requestKeyboard()
 
-        (requireParentFragment() as SignUpFragment).setIndicators(1)
+       // (requireParentFragment() as SignUpFragment).setIndicators(1)
         startTimer(15000)
 
         viewModel = getViewModel(requireParentFragment())
