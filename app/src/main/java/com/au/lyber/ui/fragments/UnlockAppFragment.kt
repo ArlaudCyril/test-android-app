@@ -11,11 +11,12 @@ import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.transition.Fade
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentUnlockAppBinding
-import com.au.lyber.ui.portfolio.fragment.PortfolioHomeFragment
 import com.au.lyber.utils.App
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.dismissProgressDialog
@@ -35,7 +36,7 @@ import okhttp3.ResponseBody
 class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClickListener {
 
     private val pin get() = binding.etPin.text.trim().toString()
-
+    private lateinit var navController : NavController
     private lateinit var viewModel: NetworkViewModel
 
     override fun bind() = FragmentUnlockAppBinding.inflate(layoutInflater)
@@ -52,16 +53,14 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
 
         viewModel = getViewModel(this)
         viewModel.listener = this
-
+        val navHostFragment =  requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.findNavController()
         viewModel.userLoginResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
                 App.prefsManager.accessToken = it.data.access_token
                 App.prefsManager.refreshToken = it.data.refresh_token
 
-                val navHostFragment =
-                    requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-                val navController = navHostFragment.navController
                 navController.navigate(R.id.portfolioHomeFragment)
 
             }
@@ -122,13 +121,10 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
 
                     }
 
-                    CompletePortfolioFragment::class.java.name ->
-                        requireActivity().replaceFragment(
-                            R.id.flSplashActivity,
-                            CompletePortfolioFragment(),
-                            false
-                        )
-
+                    CompletePortfolioFragment::class.java.name -> {
+                    navController.navigate(R.id.completePortfolioFragment)
+                        navController.popBackStack (R.id.completePortfolioFragment, false)
+                }
 
                     else -> requireActivity().replaceFragment(
                         R.id.flSplashActivity,

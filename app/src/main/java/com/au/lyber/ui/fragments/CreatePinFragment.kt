@@ -4,6 +4,9 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentCreatePinBinding
 import com.au.lyber.utils.App
@@ -14,7 +17,7 @@ import com.au.lyber.utils.OnTextChange
 import com.au.lyber.viewmodels.SignUpViewModel
 
 class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
-
+    private lateinit var navController : NavController
     override fun bind() = FragmentCreatePinBinding.inflate(layoutInflater)
 
     private val pin get() = binding.etCreatePin.text.trim().toString()
@@ -36,6 +39,8 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
 
         viewModel = getViewModel(requireParentFragment())
         binding.etCreatePin.addTextChangedListener(onTextChange)
+        val navHostFragment =  requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.findNavController()
 //        binding.etCreatePin.setOnEditorActionListener(onEditorActionListener)
 
         /* preparing ui */
@@ -76,10 +81,7 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
             if (pinCount == 4) {
                 Handler(Looper.getMainLooper()).postDelayed({
                     viewModel.createPin = pin
-                    (requireParentFragment() as SignUpFragment).replace(
-                        R.id.frameLayoutSignUp,
-                        (requireParentFragment() as SignUpFragment).fragments[3]
-                    )
+                   navController.navigate(R.id.confirmPinFragment)
 
                     /*App.prefsManager.user?.let {
                     if (it.login_pin_set) {

@@ -21,6 +21,9 @@
         <action
             android:id="@+id/action_unlockAppFragment2_to_portfolioFragment"
             app:destination="@id/portfolioHomeFragment" />
+        <action
+            android:id="@+id/action_unlockAppFragment2_to_completePortfolioFragment"
+            app:destination="@id/completePortfolioFragment" />
     </fragment>
     <fragment
         android:id="@+id/portfolioHomeFragment"
@@ -146,7 +149,32 @@
     <fragment
         android:id="@+id/signUpFragment"
         android:name="com.au.lyber.ui.fragments.SignUpFragment"
-        android:label="SignUpFragment" />
+        android:label="SignUpFragment" >
+        <action
+            android:id="@+id/action_portfolioDetailFragment_to_createAccountFragment"
+            app:destination="@id/createAccountFragment" />
+        <action
+            android:id="@+id/action_portfolioDetailFragment_to_createPinFragment"
+            app:destination="@id/createPinFragment" />
+        <action
+            android:id="@+id/action_portfolioDetailFragment_to_confirmPinFragment"
+            app:destination="@id/confirmPinFragment" />
+        <action
+            android:id="@+id/action_portfolioDetailFragment_to_enableNotificationFragment"
+            app:destination="@id/enableNotificationFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/createPinFragment"
+        android:name="com.au.lyber.ui.fragments.CreatePinFragment"
+        android:label="CreatePinFragment" />
+    <fragment
+        android:id="@+id/confirmPinFragment"
+        android:name="com.au.lyber.ui.fragments.ConfirmPinFragment"
+        android:label="ConfirmPinFragment" />
+    <fragment
+        android:id="@+id/createAccountFragment"
+        android:name="com.au.lyber.ui.fragments.CreateAccountFragment"
+        android:label="CreateAccountFragment" />
     <fragment
         android:id="@+id/investmentDetailFragment"
         android:name="com.au.lyber.ui.fragments.InvestmentDetailFragment"

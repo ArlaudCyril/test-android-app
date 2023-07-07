@@ -8,33 +8,26 @@ import android.view.Window
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
 import com.au.lyber.databinding.CustomDialogLayoutBinding
 import com.au.lyber.databinding.FragmentTestSignUpBinding
 import com.au.lyber.ui.activities.SplashActivity
-import com.au.lyber.ui.fragments.bottomsheetfragments.InvestBottomSheet
 import com.au.lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet
-import com.au.lyber.ui.portfolio.fragment.PortfolioHomeFragment
 import com.au.lyber.utils.ActivityCallbacks
 import com.au.lyber.utils.App
 import com.au.lyber.utils.App.Companion.prefsManager
-import com.au.lyber.utils.CommonMethods.Companion.addFragment
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
-import com.au.lyber.utils.CommonMethods.Companion.clearBackStack
 import com.au.lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.getViewModel
 import com.au.lyber.utils.CommonMethods.Companion.gone
 import com.au.lyber.utils.CommonMethods.Companion.replace
 import com.au.lyber.utils.CommonMethods.Companion.visible
-import com.au.lyber.utils.Constants
 import com.au.lyber.viewmodels.SignUpViewModel
-import com.chrynan.krypt.srp.Client
-import com.chrynan.krypt.srp.Group
-import com.chrynan.krypt.srp.N2048
-import com.chrynan.krypt.srp.SrpHashFunction
 import com.nimbusds.srp6.SRP6ClientSession
 import com.nimbusds.srp6.SRP6CryptoParams
 import com.nimbusds.srp6.SRP6VerifierGenerator
@@ -42,7 +35,7 @@ import com.nimbusds.srp6.XRoutineWithUserIdentity
 
 class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallbacks {
 
-
+    private lateinit var navController : NavController
     var mPosition: Int = 0
     private lateinit var viewModel: SignUpViewModel
 
@@ -50,19 +43,11 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
     lateinit var generator: SRP6VerifierGenerator
     lateinit var client: SRP6ClientSession
 
-    val fragments: MutableList<Fragment> = mutableListOf(
-        CreateAccountFragment(),
-        EnterOtpFragment(),
-        CreatePinFragment(),
-        ConfirmPinFragment(),
-        EnableNotificationFragment()
-    )
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         config = SRP6CryptoParams.getInstance(2048, "SHA-512")
-//        config = SRP6CryptoParams.getInstance(512,"SHA-1")
         generator = SRP6VerifierGenerator(config)
         generator.xRoutine = XRoutineWithUserIdentity()
 
@@ -77,14 +62,14 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
 
         viewModel = getViewModel(this)
         SplashActivity.activityCallbacks = this
-
+        val navHostFragment =  requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.findNavController()
         mPosition = when (prefsManager.savedScreen) {
             CreatePinFragment::class.java.name -> 2
             EnableNotificationFragment::class.java.name -> 4
             else -> 0
         }
-
-        replace(R.id.frameLayoutSignUp, fragments[mPosition], false)
+        changeFragment(mPosition,false)
 
         viewModel.forLogin = arguments?.getString("forLogin")?.isNotEmpty() == true
 
@@ -121,7 +106,6 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
                 // Add the transparent view to the RelativeLayout
                 val mainView = getView()?.rootView as ViewGroup
                 mainView.addView(transparentView, viewParams)
-            //replace(R.id.frameLayoutSignUp, fragments[mPosition])
             }
         }
 
@@ -130,7 +114,7 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
                 prefsManager.setPhone(viewModel.mobileNumber)
                 dismissProgressDialog()
                 mPosition = 2
-                replace(R.id.frameLayoutSignUp, fragments[mPosition])
+                changeFragment(mPosition,true)
             }
         }
 
@@ -166,7 +150,7 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
                     )
 
                     mPosition = 2
-                    replace(R.id.frameLayoutSignUp, fragments[mPosition], false)
+                    changeFragment(mPosition,false)
                 }else{
                     // Create a transparent color view
                     val transparentView = View(context)
@@ -213,11 +197,11 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
                 if (viewModel.forLogin) {
                     if (viewModel.email.isEmpty()) {
                         mPosition = 1
-                        replace(R.id.frameLayoutSignUp, fragments[mPosition])
+                        changeFragment(mPosition,true)
                     } else replace(R.id.frameLayoutSignUp, VerifyEmailLoginFragment())
                 } else {
                     mPosition = 1
-                    replace(R.id.frameLayoutSignUp, fragments[mPosition])
+                    changeFragment(mPosition,true)
                 }
             }
         }
@@ -230,7 +214,7 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
             }
             childFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
             mPosition = 2
-            replace(R.id.frameLayoutSignUp, fragments[mPosition])
+            changeFragment(mPosition,true)
 
         }
 
@@ -239,48 +223,9 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
 
             viewModel.enterPhoneResponse.value?.let {
 
-//                App.prefsManager.user = it.user
-
                 if (viewModel.forLogin) {
                     when {
-//
-//                        it.user.step == Constants.PROFILE_COMPLETED -> {
-//                            requireActivity().clearBackStack()
-//                            requireActivity().addFragment(
-//                                R.id.flSplashActivity,
-//                                PortfolioHomeFragment()
-//                            )
-//                        }
 
-                        // haven't set login pin yet
-//                        !it.user.login_pin_set -> {
-//                            childFragmentManager.popBackStack(
-//                                null,
-//                                FragmentManager.POP_BACK_STACK_INCLUSIVE
-//                            )
-//                            mPosition = 2
-//                            replace(R.id.frameLayoutSignUp, fragments[mPosition], false)
-//                        }
-
-                        // haven't enabled push notification
-//                        it.user.is_push_enabled == 0 -> {
-//                            childFragmentManager.popBackStack(
-//                                null,
-//                                FragmentManager.POP_BACK_STACK_INCLUSIVE
-//                            )
-//                            mPosition = 4
-//                            replace(R.id.frameLayoutSignUp, fragments[mPosition], false)
-//                        }
-
-                        // haven't filled personal info yet
-//                        it.user.first_name.isNullOrEmpty() ||
-//                                it.user.profile_verification_status == "Pending" -> {
-//                            requireActivity().clearBackStack()
-//                            requireActivity().addFragment(
-//                                R.id.flSplashActivity,
-//                                CompletePortfolioFragment()
-//                            )
-//                        }
                     }
                 } else {
 
@@ -290,7 +235,7 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
                     )
 
                     mPosition = 2
-                    replace(R.id.frameLayoutSignUp, fragments[mPosition], false)
+                   changeFragment(mPosition,false)
                 }
 
             }
@@ -304,7 +249,7 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
             }
             childFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
             mPosition = 2
-            replace(R.id.frameLayoutSignUp, fragments[mPosition])
+            changeFragment(mPosition,true)
 
         }
 
@@ -318,7 +263,8 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
             dismissProgressDialog()
             childFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
             mPosition = 4
-            replace(R.id.frameLayoutSignUp, fragments[mPosition], false)
+            changeFragment(mPosition,false)
+
         }
 
         viewModel.logoutResponse.observe(viewLifecycleOwner) {
@@ -331,17 +277,33 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
         binding.ivTopAction.setOnClickListener { requireActivity().onBackPressed() }
         binding.tvTopAction.setOnClickListener { showLogoutDialog() }
 
-        /*prefsManager.user?.let {
-            if (!it.login_pin_set) {
-                mPosition = 2
-                replace(R.id.frameLayoutSignUp, fragments[mPosition], false)
-            } else {
-                mPosition = 4
-                replace(R.id.frameLayoutSignUp, fragments[mPosition], false)
-            }
-            setIndicators(mPosition)
-        }*/
 
+    }
+
+    private fun changeFragment(mPosition: Int, isBackStack: Boolean) {
+        /*        CreateAccountFragment(),
+        EnterOtpFragment(),
+        CreatePinFragment(),
+        ConfirmPinFragment(),
+        EnableNotificationFragment()*/
+        when(mPosition){
+            0->{
+                navController.navigate(R.id.createAccountFragment)
+                navController.popBackStack(R.id.createAccountFragment,isBackStack)
+            }
+            2->{
+                navController.navigate(R.id.createPinFragment)
+                navController.popBackStack(R.id.createPinFragment,isBackStack)
+            }
+            3->{
+                navController.navigate(R.id.confirmPinFragment)
+                navController.popBackStack(R.id.confirmPinFragment,isBackStack)
+            }
+            4->{
+                navController.navigate(R.id.enableNotificationFragment)
+                navController.popBackStack(R.id.enableNotificationFragment,isBackStack)
+            }
+        }
     }
 
     private fun showLogoutDialog() {
@@ -394,7 +356,7 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
                 it.tvPositiveButton.text = getString(R.string.activate)
                 it.tvNegativeButton.setOnClickListener {
                     dismiss()
-                    replace(R.id.frameLayoutSignUp, fragments[4])
+                    changeFragment(4,true)
 //                    CommonMethods.showProgressDialog(requireContext())
 //                    viewModel.setFaceId(
 //                        CommonMethods.getDeviceId(requireActivity().contentResolver),
@@ -403,7 +365,7 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
                 }
                 it.tvPositiveButton.setOnClickListener {
                     dismiss()
-                    replace(R.id.frameLayoutSignUp, fragments[4])
+                    changeFragment(4,true)
 //                    CommonMethods.showProgressDialog(requireContext())
 //                    viewModel.setFaceId(
 //                        CommonMethods.getDeviceId(requireActivity().contentResolver),
