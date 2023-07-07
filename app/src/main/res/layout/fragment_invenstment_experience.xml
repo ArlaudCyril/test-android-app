@@ -93,10 +93,12 @@
 
         <TextView
             style="@style/SubTitleText"
+            android:visibility="gone"
             android:layout_marginTop="16dp"
             android:text="@string/hint_personal_assets" />
 
         <EditText
+            android:visibility="gone"
             android:id="@+id/etPersonalAssets"
             style="@style/EditTextTheme"
             android:layout_marginTop="4dp"

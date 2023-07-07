@@ -9,9 +9,10 @@ import android.view.ViewGroup
 import android.widget.EditText
 import com.au.lyber.databinding.BottomSheetVerificationBinding
 import com.au.lyber.utils.CommonMethods.Companion.requestKeyboard
+import com.au.lyber.viewmodels.PersonalDataViewModel
 import com.au.lyber.viewmodels.SignUpViewModel
 
-class VerificationBottomSheet() :
+class EmailVerificationBottomSheet () :
     BaseBottomSheet<BottomSheetVerificationBinding>(){
 
     private val codeOne get() = binding.etCodeOne.text.trim().toString()
@@ -24,7 +25,7 @@ class VerificationBottomSheet() :
     lateinit var typeVerification: String
     lateinit var viewToDelete: View
     lateinit var mainView: ViewGroup
-    lateinit var viewModel: SignUpViewModel
+    lateinit var viewModel: PersonalDataViewModel
 
     override fun bind() = BottomSheetVerificationBinding.inflate(layoutInflater)
 
@@ -40,11 +41,7 @@ class VerificationBottomSheet() :
         binding.apply {
 
             title.text = "Verification"
-            if (viewModel.forLogin) {
-                subtitle.text = "Enter the code displayed on your email"
-            }else{
-                subtitle.text = "Enter the code displayed on your sms"
-            }
+            subtitle.text = "Enter the code displayed on your email"
             fieldToVerify.text = ""
             btnCancel.text = "Cancel"
 
@@ -152,11 +149,7 @@ class VerificationBottomSheet() :
                     binding.etCodeSix -> {
                         if (getCode().length == 6) {
                             dismiss()
-                            if (viewModel.forLogin) {
-                                viewModel.verify2FA(code = getCode())
-                            }else{
-                                viewModel.verifyPhone(getCode())
-                            }
+                                viewModel.verifyEmail(getCode())
                         }
                     }
                 }
@@ -164,7 +157,7 @@ class VerificationBottomSheet() :
 
         }
 
-        private fun  nextEditText(modifiedEditText: EditText) : EditText{
+        private fun  nextEditText(modifiedEditText: EditText) : EditText {
             when (modifiedEditText) {
                 binding.etCodeOne -> return binding.etCodeTwo
                 binding.etCodeTwo -> return binding.etCodeThree

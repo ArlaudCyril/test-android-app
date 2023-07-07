@@ -99,12 +99,12 @@ class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceB
                 requireContext()
             )
             annualIncome.isEmpty() -> "Please tell us your annual income".showToast(requireContext())
-            personalAssets.isEmpty() -> {
+           /* personalAssets.isEmpty() -> {
                 binding.scrollView.scrollTo(0, binding.root.bottom)
                 "Please tell us how many assets you have".showToast(
                     requireContext()
                 )
-            }
+            }*/
             else -> {
 
                 viewModel.let {

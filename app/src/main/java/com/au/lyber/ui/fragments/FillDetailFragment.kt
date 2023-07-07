@@ -2,13 +2,17 @@ package com.au.lyber.ui.fragments
 
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.RelativeLayout
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentTestFillDetailBinding
 import com.au.lyber.models.JWTPayload
 import com.au.lyber.ui.activities.SplashActivity
+import com.au.lyber.ui.fragments.bottomsheetfragments.EmailVerificationBottomSheet
 import com.au.lyber.utils.ActivityCallbacks
 import com.au.lyber.utils.App.Companion.prefsManager
 import com.au.lyber.utils.CommonMethods.Companion.add
@@ -133,46 +137,7 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
         }
 
 
-        /* old Apis */
 
-        /*viewModel.addPersonalInfoResponse.observe(viewLifecycleOwner) {
-            dismissProgressDialog()
-            viewModel.hashMap.clear()
-            moveToNext()
-            position++
-        }
-
-        viewModel.sendEmailResponse.observe(viewLifecycleOwner) {
-            dismissProgressDialog()
-//            it.message.showToast(requireContext())
-            moveToNext()
-        }
-
-        viewModel.emailVerificationResponse.observe(viewLifecycleOwner) {
-            dismissProgressDialog()
-            moveToNext()
-        }
-
-        viewModel.fillPersonalDataResponse.observe(viewLifecycleOwner) {
-            dismissProgressDialog()
-            App.prefsManager.setCompletionSteps(PreferenceManager.PERSONAL_DATA_FILLED)
-            requireActivity().onBackPressed()
-        }
-
-        viewModel.updatePersonalData.observe(viewLifecycleOwner) {
-            dismissProgressDialog()
-            it.message.showToast(requireContext())
-            requireActivity().supportFragmentManager.popBackStack()
-        }
-
-        viewModel.treezorCreateUser.observe(viewLifecycleOwner) {
-            dismissProgressDialog()
-            childFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-            App.prefsManager.setUser(it)
-            App.prefsManager.setProfileInfoSteps(Constants.INVESTMENT_EXP)
-            App.prefsManager.setCompletionSteps(PreferenceManager.PERSONAL_DATA_FILLED)
-            requireActivity().onBackPressed()
-        }*/
 
         binding.ivTopAction.setOnClickListener(this)
         binding.btnCommon.setOnClickListener(this)
@@ -191,36 +156,6 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
         add(R.id.flFillPersonalData, fragmentList[position])
 
 
-        /*if (toEdit.isNotEmpty()) {
-            checkInternet(requireContext()) {
-                showProgressDialog(requireContext())
-                viewModel.getPersonalData()
-            }
-            position = 0
-            setUpViews(position)
-            add(R.id.flFillPersonalData, fragmentList[position])
-
-        } else {
-            // in case of normal enter
-            when (App.prefsManager.user?.personal_info_step) {
-                Constants.PERSONAL_DATA, Constants.EMAIL_ADDRESS -> {
-                    position = 1
-                    replace(R.id.flFillPersonalData, fragmentList[position], false)
-                }
-                Constants.EMAIL_VERIFIED -> {
-                    position = 3
-                    replace(R.id.flFillPersonalData, fragmentList[position], false)
-                }
-                Constants.ADDRESS -> {
-                    position = 4
-                    replace(R.id.flFillPersonalData, fragmentList[position], false)
-                }
-                0 -> {
-                    position = 0
-                    replace(R.id.flFillPersonalData, fragmentList[position], false)
-                }
-            }
-        }*/
 
     }
 
@@ -294,8 +229,31 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
 
                 position++
 //                prefsManager.setProfileInfoSteps(Constants.EMAIL_ADDRESS)
-                replace(R.id.flFillPersonalData, fragmentList[position])
+               // replace(R.id.flFillPersonalData, fragmentList[position])
+                val transparentView = View(context)
+                transparentView.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.semi_transparent_dark
+                    )
+                )
 
+                // Set layout parameters for the transparent view
+                val viewParams = RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT
+                )
+
+                val vc  = EmailVerificationBottomSheet()
+
+                vc.viewToDelete = transparentView
+                vc.mainView = getView()?.rootView as ViewGroup
+                vc.viewModel = viewModel
+                vc.show(childFragmentManager, "")
+
+                // Add the transparent view to the RelativeLayout
+                val mainView = getView()?.rootView as ViewGroup
+                mainView.addView(transparentView, viewParams)
             }
 
             2 -> {
@@ -409,7 +367,7 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
                 }
             }
 
-            2 -> (fragment as VerificationEmailAddressFragment).let {
+            2 -> (fragment as EmailVerificationBottomSheet).let {
                 showProgressDialog(requireContext())
 
                 val jwtParser = JWTParser.parse(prefsManager.accessToken)
@@ -420,7 +378,7 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
 
 //                JWTParser.parse(prefsManager.getAccessToken()).jwtClaimsSet.jwtid
 //                val jwt = JWT.decodeT<JWSES256Algorithm>(prefsManager.getAccessToken(), JWSES256Algorithm)
-                viewModel.verifyEmail(jwtPayload.uuid, "1234")
+                viewModel.verifyEmail(/*jwtPayload.uuid,*/ "1234")
             }
 
             3 -> (fragment as AddressFragment).let {

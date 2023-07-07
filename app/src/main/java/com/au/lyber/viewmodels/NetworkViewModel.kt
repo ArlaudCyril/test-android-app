@@ -774,14 +774,14 @@ open class NetworkViewModel : ViewModel() {
     }
 
 
-    fun verifyEmail(uuid: String, code: String) {
+    fun verifyEmail(/*uuid: String,*/ code: String) {
         viewModelScope.launch(exceptionHandler) {
 
-//            val hash = hashMapOf<String, Any>()
+            val hash = hashMapOf<String, Any>()
 //            hash["uuid"] = uuid
-//            hash["code"] = code
+            hash["code"] = code
             try {
-                val res = RestClient.get(Constants.NEW_BASE_URL).verifyEmail(code, uuid)
+                val res = RestClient.get(Constants.NEW_BASE_URL).verifyEmail(hash)
                 if (res.isSuccessful)
                     _verifyEmailResponse.postValue(res.body())
                 else listener?.onRetrofitError(res.errorBody())
@@ -803,11 +803,11 @@ open class NetworkViewModel : ViewModel() {
     ) {
         viewModelScope.launch(exceptionHandler) {
             val hash = hashMapOf<String, Any>()
-            hash["streetNumber"] = streetNumber.toInt()
-            hash["street"] = street
+            hash["streetNumber"] = streetNumber
+            hash["street"] = street.toString()
             hash["city"] = city
             hash["stateOrProvince"] = stateOrProvince
-            hash["zipCode"] = zipCode.toLong()
+            hash["zipCode"] = zipCode
             hash["country"] = country
 
             val res = RestClient.get(Constants.NEW_BASE_URL).setUserAddress(hash)
@@ -839,7 +839,7 @@ open class NetworkViewModel : ViewModel() {
             hash["incomeSource"] = incomeSource
             hash["occupation"] = "Agriculture"
             hash["incomeRange"] = incomeRange
-            hash["personalAssets"] = personalAssets
+            //hash["personalAssets"] = personalAssets
             val res = RestClient.get(Constants.NEW_BASE_URL).setInvestmentExp(hash)
             if (res.isSuccessful)
                 _setInvestmentExpResponse.postValue(res.body())

@@ -236,8 +236,8 @@ interface Api {
     @POST("user-service/set-email-and-password")
     suspend fun setEmail(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
 
-    @GET("user-service/verify-email")
-    suspend fun verifyEmail(@Query("code") code: String, @Query("uuid") uuid: String): Response<Any>
+    @POST("user-service/verify-email")
+    suspend fun verifyEmail(@Body hashMap: HashMap<String, Any>/*, @Query("uuid") uuid: String*/): Response<Any>
 
 
     @GET("user-service/user")
