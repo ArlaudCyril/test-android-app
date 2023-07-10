@@ -46,9 +46,10 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         viewModel = getViewModel(requireParentFragment())
         viewModel.listener = this
         binding.tvCountryCode.text = viewModel.countryCode
-
+        Log.d("clickSignupFinalQ1",viewModel.forLogin.toString())
 
         if (viewModel.forLogin) {
+
             binding.tvTitle.text = getString(R.string.happy_to_see_you_back)
             binding.tvSubTitle.text =
                 getString(R.string.phone_login_helper_text)
