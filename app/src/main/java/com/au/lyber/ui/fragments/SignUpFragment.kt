@@ -65,18 +65,15 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
         SplashActivity.activityCallbacks = this
         val navHostFragment = childFragmentManager.findFragmentById(R.id.nav_host_fragmentchild) as NavHostFragment
         navController = navHostFragment.findNavController()
-        navController.graph.setStartDestination(R.id.signUpFragment)
         mPosition = when (prefsManager.savedScreen) {
             CreatePinFragment::class.java.name -> 2
             EnableNotificationFragment::class.java.name -> 4
             else -> 0
         }
-        changeFragment(mPosition,false)
 
-        Log.d("clickSignupFinal",arguments!!.getString("forLogin").toString())
         viewModel.forLogin = arguments?.getString("forLogin")?.isNotEmpty() == true
-        Log.d("clickSignupFinalQ",viewModel.forLogin.toString())
-
+        Log.d("clickSignup",viewModel.forLogin.toString())
+        changeFragment(mPosition,false)
         /* new Apis */
 
         viewModel.setPhoneResponse.observe(viewLifecycleOwner) {

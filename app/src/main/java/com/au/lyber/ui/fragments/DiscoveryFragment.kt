@@ -18,10 +18,6 @@ class DiscoveryFragment : BaseFragment<FragmentDiscoveryBinding>() {
         super.onViewCreated(view, savedInstanceState)
         val navHostFragment =  requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
-        val navOptions =  NavOptions.Builder()
-            .setPopUpTo(R.id.discoveryFragment, true)
-            .build()
-        navController.graph.setStartDestination(R.id.signUpFragment)
         binding.btnSignUp.setOnClickListener {
             Log.d("clickSignup","Signup")
             navController.navigate(R.id.signUpFragment)
