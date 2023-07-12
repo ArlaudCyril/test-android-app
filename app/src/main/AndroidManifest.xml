@@ -40,6 +40,8 @@
         <activity
             android:name=".ui.activities.SplashActivity"
             android:exported="true"
+
+
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateVisible"
             tools:ignore="LockedOrientationActivity">

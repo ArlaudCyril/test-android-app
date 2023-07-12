@@ -64,7 +64,14 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
         viewModel = getViewModel(this)
         SplashActivity.activityCallbacks = this
         val navHostFragment = childFragmentManager.findFragmentById(R.id.nav_host_fragmentchild) as NavHostFragment
-        navController = navHostFragment.findNavController()
+        val inflater = navHostFragment.navController.navInflater
+        val graph = inflater.inflate(R.navigation.nav_graph)
+
+        graph.setStartDestination(R.id.signUpFragment)
+
+
+         navController = navHostFragment.navController
+        navController.setGraph(graph,null)
         mPosition = when (prefsManager.savedScreen) {
             CreatePinFragment::class.java.name -> 2
             EnableNotificationFragment::class.java.name -> 4
@@ -73,6 +80,7 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
 
         viewModel.forLogin = arguments?.getString("forLogin")?.isNotEmpty() == true
         Log.d("clickSignup",viewModel.forLogin.toString())
+
         changeFragment(mPosition,false)
         /* new Apis */
 
@@ -286,11 +294,14 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
         CreatePinFragment(),
         ConfirmPinFragment(),
         EnableNotificationFragment()*/
+        val bundle = Bundle().apply {
+            putBoolean("forLogin", viewModel.forLogin)
+        }
         when(mPosition){
             0->{
                 setIndicators(0)
                 //findNavController().navigate(R.id.createAccountFragment)
-                navController.navigate(R.id.createAccountFragment)
+                navController.navigate(R.id.createAccountFragment,bundle)
                 //navController.popBackStack(R.id.createAccountFragment,isBackStack)
             }
             2->{

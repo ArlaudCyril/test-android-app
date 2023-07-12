@@ -44,6 +44,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         App.prefsManager.accessToken = ""
 
         viewModel = getViewModel(requireParentFragment())
+        viewModel.forLogin = requireArguments().getBoolean("forLogin",false)
         viewModel.listener = this
         binding.tvCountryCode.text = viewModel.countryCode
         Log.d("clickSignupFinalQ1",viewModel.forLogin.toString())
@@ -75,10 +76,10 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
 
     private val focusChange = View.OnFocusChangeListener { v, hasFocus ->
         if (hasFocus) {
-            (requireParentFragment() as SignUpFragment).view?.findViewById<ScrollView>(R.id.scrollView)
+   /*         (requireParentFragment() as SignUpFragment).view?.findViewById<ScrollView>(R.id.scrollView)
                 ?.let {
                     it.smoothScrollTo(0, it.height)
-                }
+                }*/
         }
     }
 

@@ -2,21 +2,14 @@ package com.au.lyber.ui.activities
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.os.PersistableBundle
 import android.util.Log
-import android.window.OnBackInvokedDispatcher
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.fragment.app.FragmentManager
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
-import androidx.navigation.ui.NavigationUI
 import com.au.lyber.R
 import com.au.lyber.databinding.ActivitySplashBinding
-import com.au.lyber.ui.fragments.DiscoveryFragment
-import com.au.lyber.ui.fragments.SplashFragment
 import com.au.lyber.utils.ActivityCallbacks
-import com.au.lyber.utils.CommonMethods.Companion.addFragment
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : BaseActivity<ActivitySplashBinding>() {
@@ -32,7 +25,14 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
         super.onCreate(savedInstanceState)
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.findNavController()
+        val inflater = navHostFragment.navController.navInflater
+        val graph = inflater.inflate(R.navigation.nav_graph)
+
+        graph.setStartDestination(R.id.splashFragment)
+
+
+        val navController = navHostFragment.navController
+        navController.setGraph(graph,null)
         onBackPressedDispatcher.addCallback(
             this /* lifecycle owner */,
             object : OnBackPressedCallback(true) {
@@ -44,7 +44,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
 
         //graph.startDestination = R.id.DetailsFragment
 
-
+        Log.d("Discoo=ver","SpacshActivity")
         if ((intent?.extras?.getString("fromLogout", "") ?: "").isNotEmpty())
             navController.navigate(R.id.discoveryFragment)            //addFragment(R.id.flSplashActivity, DiscoveryFragment())
         else navController.navigate(R.id.splashFragment)//addFragment(R.id.flSplashActivity, SplashFragment())
