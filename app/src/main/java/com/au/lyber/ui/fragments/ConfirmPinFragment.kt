@@ -27,6 +27,7 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
         //(requireParentFragment() as SignUpFragment).mPosition = 3
 
         viewModel = getViewModel(requireParentFragment())
+        viewModel.forLogin = requireArguments().getBoolean("forLogin",false)
         viewModel.listener = this
 
 //        binding.etConfirmPin.setOnEditorActionListener(onEditorActionListener)

@@ -1,6 +1,10 @@
 package com.au.lyber.ui.fragments
 
 import android.app.Dialog
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -9,6 +13,7 @@ import android.view.Window
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.registerReceiver
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
@@ -54,10 +59,18 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
 
         client = SRP6ClientSession()
         client.xRoutine = XRoutineWithUserIdentity()
+        val filter = IntentFilter()
+        filter.addAction("SignupLoginBroadcast")
+        requireActivity().registerReceiver(mBroadcastReceiver, filter)
     }
 
     override fun bind() = FragmentTestSignUpBinding.inflate(layoutInflater, null, false)
-
+    private val mBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            mPosition = intent!!.getIntExtra("pos",0)
+            changeFragment(mPosition,false)
+        }
+        }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

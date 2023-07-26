@@ -38,6 +38,7 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
         App.prefsManager.savedScreen = javaClass.name
 
         viewModel = getViewModel(requireParentFragment())
+        viewModel.forLogin = requireArguments().getBoolean("forLogin",false)
         binding.etCreatePin.addTextChangedListener(onTextChange)
         val navHostFragment =  requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
@@ -79,9 +80,12 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
                         imageView.setBackgroundResource(R.drawable.circle_dot_unselected)
                 }
             if (pinCount == 4) {
+                val bundle = Bundle().apply {
+                    putBoolean("forLogin", viewModel.forLogin)
+                }
                 Handler(Looper.getMainLooper()).postDelayed({
                     viewModel.createPin = pin
-                   navController.navigate(R.id.confirmPinFragment)
+                   navController.navigate(R.id.confirmPinFragment,bundle)
 
                     /*App.prefsManager.user?.let {
                     if (it.login_pin_set) {

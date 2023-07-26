@@ -1,17 +1,26 @@
 package com.au.lyber.ui.fragments
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.widget.RelativeLayout
 import android.widget.ScrollView
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import com.au.countrycodepicker.CountryPicker
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentCreateAccountBinding
+import com.au.lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet
 import com.au.lyber.utils.App
+import com.au.lyber.utils.CommonMethods
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.fadeIn
 import com.au.lyber.utils.CommonMethods.Companion.fadeOut
@@ -54,8 +63,8 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         super.onViewCreated(view, savedInstanceState)
 
         App.prefsManager.accessToken = ""
-
-        viewModel = getViewModel(requireParentFragment())
+        val fragment = findNavController().getBackStackEntry(R.id.signUpFragment)
+        viewModel = getViewModel(fragment)
         viewModel.forLogin = requireArguments().getBoolean("forLogin",false)
         viewModel.listener = this
         binding.tvCountryCode.text = viewModel.countryCode
@@ -83,7 +92,77 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         binding.root.viewTreeObserver?.addOnGlobalLayoutListener(
             keyboardLayoutListener
         )
+    setobservers()
 
+    }
+
+    private fun setobservers() {
+        viewModel.userChallengeResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+
+                App.prefsManager.accessToken = it.data.token
+                App.accessToken = it.data.token
+
+                val creds =
+                    client.step2(config, it.data.salt.toBigInteger(), it.data.B.toBigInteger())
+
+
+                checkInternet(requireContext()) {
+                    viewModel.authenticateUser(creds.A.toString(), creds.M1.toString())
+                }
+
+            }
+        }
+        viewModel.userLoginResponse.observe(viewLifecycleOwner) {
+
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                CommonMethods.dismissProgressDialog()
+                if(it.data.access_token != null){
+
+                    App.prefsManager.accessToken = it.data.access_token
+                    App.accessToken = it.data.access_token
+                    App.prefsManager.refreshToken = it.data.refresh_token
+
+                    childFragmentManager.popBackStack(
+                        null, FragmentManager.POP_BACK_STACK_INCLUSIVE
+                    )
+                    val bundle = Bundle().apply {
+                        putBoolean("forLogin", viewModel.forLogin)
+                    }
+                    findNavController().navigate(R.id.createPinFragment,bundle)
+                }else{
+                    // Create a transparent color view
+                    val transparentView = View(context)
+                    transparentView.setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.semi_transparent_dark
+                        )
+                    )
+
+                    // Set layout parameters for the transparent view
+                    val viewParams = RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.MATCH_PARENT
+                    )
+
+                    val vc  = VerificationBottomSheet()
+                    vc.typeVerification = it.data.type2FA
+                    vc.viewToDelete = transparentView
+                    vc.mainView = getView()?.rootView as ViewGroup
+                    vc.viewModel = viewModel
+                    vc.show(childFragmentManager, "")
+
+                    // Add the transparent view to the RelativeLayout
+                    val mainView = getView()?.rootView as ViewGroup
+                    mainView.addView(transparentView, viewParams)
+
+                }
+
+
+            }
+
+        }
     }
 
     private val focusChange = View.OnFocusChangeListener { v, hasFocus ->
