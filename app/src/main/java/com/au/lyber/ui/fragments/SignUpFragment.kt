@@ -63,15 +63,15 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
 
         viewModel = getViewModel(this)
         SplashActivity.activityCallbacks = this
-        val navHostFragment = childFragmentManager.findFragmentById(R.id.nav_host_fragmentchild) as NavHostFragment
+        val navHostFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         val inflater = navHostFragment.navController.navInflater
         val graph = inflater.inflate(R.navigation.nav_graph)
 
-        graph.setStartDestination(R.id.signUpFragment)
+      //  graph.setStartDestination(R.id.signUpFragment)
 
 
          navController = navHostFragment.navController
-        navController.setGraph(graph,null)
+   //     navController.setGraph(graph,null)
         mPosition = when (prefsManager.savedScreen) {
             CreatePinFragment::class.java.name -> 2
             EnableNotificationFragment::class.java.name -> 4
@@ -302,7 +302,7 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
                 setIndicators(0)
                 //findNavController().navigate(R.id.createAccountFragment)
                 navController.navigate(R.id.createAccountFragment,bundle)
-                //navController.popBackStack(R.id.createAccountFragment,isBackStack)
+                navController.popBackStack(R.id.createAccountFragment,isBackStack)
             }
             2->{
                 setIndicators(2)
@@ -439,9 +439,9 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
         return if (mPosition == 2 || mPosition == 4) {
             showLogoutDialog()
             false
-        } else if (childFragmentManager.backStackEntryCount != 0) {
+        } else if (requireActivity().supportFragmentManager.backStackEntryCount != 0) {
             mPosition--
-            childFragmentManager.popBackStack()
+            requireActivity().supportFragmentManager.popBackStack()
             false
         } else true
 

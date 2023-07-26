@@ -1,132 +1,234 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fillViewport="true"
-    android:fitsSystemWindows="true"
-    android:orientation="vertical"
-    android:paddingVertical="20dp">
+    android:background="@drawable/splash_background"
+    android:fitsSystemWindows="true">
 
+
+    <!--android:background="@drawable/curved_button"-->
+    <ImageView
+        android:id="@+id/ivTopAction"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="12dp"
+        android:backgroundTint="@color/purple_gray_00"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="12dp"
+        android:src="@drawable/ic_close"
+        app:layout_constraintBottom_toTopOf="@id/topGuide"
+        app:layout_constraintStart_toStartOf="parent"
+        app:tint="@color/black" />
 
     <TextView
-        android:id="@+id/tvTitle"
-        style="@style/TitleText"
-        android:text="@string/your_phone_number" />
-
-    <TextView
-        android:id="@+id/tvSubTitle"
-        style="@style/SubTitleText"
-        android:layout_below="@id/tvTitle"
-        android:layout_marginTop="4dp"
-        android:lineSpacingExtra="4dp"
-        android:text="@string/for_security_phone" />
-
-    <RelativeLayout
-        android:id="@+id/rlPhoneNumber"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_marginTop="24dp"
-        android:visibility="visible">
-
-        <TextView
-            android:id="@+id/tvCountryCode"
-            style="@style/EditTextTheme"
-            android:layout_width="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:background="@drawable/curved_button"
-            android:backgroundTint="@color/purple_gray_50"
-            android:gravity="center"
-            android:paddingHorizontal="20dp"
-            android:text="+33"
-            app:drawableEndCompat="@drawable/ic_drop_down" />
-
-        <EditText
-            android:id="@+id/etPhone"
-            style="@style/EditTextTheme"
-            android:layout_width="match_parent"
-            android:layout_marginStart="4dp"
-            android:digits="1234567890"
-            android:layout_toEndOf="@id/tvCountryCode"
-            android:background="@drawable/edit_text_background"
-            android:hint="@string/hint_enter_phone_number"
-            android:inputType="phone"
-            android:maxLength="15"
-            android:paddingHorizontal="12dp" />
-
-        <EditText
-            android:id="@+id/etEmail"
-            style="@style/EditTextTheme"
-            android:layout_width="match_parent"
-            android:background="@drawable/edit_text_background"
-            android:hint="@string/hint_enter_email_address"
-            android:inputType="textEmailAddress"
-            android:paddingHorizontal="12dp"
-            android:visibility="gone" />
-
-    </RelativeLayout>
-
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/tilPassword"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
+        android:id="@+id/tvTopAction"
+        style="@style/SubheadMabry"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="12dp"
+        android:backgroundTint="@color/purple_gray_00"
+        android:padding="12dp"
+        android:src="@drawable/ic_close"
+        android:text="@string/logout"
+        android:textColor="@color/purple_500"
         android:visibility="gone"
-        app:hintAnimationEnabled="false"
-        app:hintEnabled="false"
-        app:passwordToggleEnabled="true">
+        app:layout_constraintBottom_toTopOf="@id/topGuide"
+        app:layout_constraintStart_toStartOf="parent"
+        app:tint="@color/black" />
 
-
-        <EditText
-            android:id="@+id/etPassword"
-            style="@style/EditTextTheme"
-            android:layout_width="match_parent"
-            android:layout_marginStart="4dp"
-            android:layout_toEndOf="@id/tvCountryCode"
-            android:background="@drawable/edit_text_background"
-            android:hint="@string/hint_enter_password"
-            android:inputType="textPassword"
-            android:maxLength="15"
-            android:paddingHorizontal="12dp" />
-
-
-    </com.google.android.material.textfield.TextInputLayout>
-
-
-    <TextView
-        android:id="@+id/tvLoginViaPhone"
-        style="@style/SubheadMabry"
-        android:layout_marginTop="16dp"
-        android:paddingVertical="8dp"
-        android:text="@string/login_by_phone"
-        android:textColor="@color/purple_500"
-        android:visibility="gone" />
-
-    <TextView
-        android:id="@+id/tvLoginViaEmail"
-        style="@style/SubheadMabry"
-        android:layout_marginTop="16dp"
-        android:paddingVertical="8dp"
-        android:text="@string/login_by_email"
-        android:textColor="@color/purple_500"
-        android:visibility="gone" />
-
-    <View
-        android:id="@+id/view"
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1" />
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@id/topGuide">
 
-    <Button
-        android:id="@+id/btnNext"
-        style="@style/ButtonStyle"
-        android:layout_gravity="bottom"
-        android:background="@drawable/curved_button"
-        android:backgroundTint="@color/purple_500"
-        android:text="@string/next"
-        android:textAllCaps="false"
-        android:textColor="@color/white" />
+        <FrameLayout
+            android:id="@+id/frameLayoutSignUp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/top_curved_layout"
+            android:backgroundTint="@color/white"
+            android:elevation="2dp"
+            android:paddingHorizontal="24dp"
+            android:paddingBottom="24dp">
 
-</LinearLayout>
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:fillViewport="true"
+                android:fitsSystemWindows="true"
+                android:orientation="vertical"
+                android:paddingVertical="20dp">
+
+
+                <TextView
+                    android:id="@+id/tvTitle"
+                    style="@style/TitleText"
+                    android:text="@string/your_phone_number" />
+
+                <TextView
+                    android:id="@+id/tvSubTitle"
+                    style="@style/SubTitleText"
+                    android:layout_below="@id/tvTitle"
+                    android:layout_marginTop="4dp"
+                    android:lineSpacingExtra="4dp"
+                    android:text="@string/for_security_phone" />
+
+                <RelativeLayout
+                    android:id="@+id/rlPhoneNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:layout_marginTop="24dp"
+                    android:visibility="visible">
+
+                    <TextView
+                        android:id="@+id/tvCountryCode"
+                        style="@style/EditTextTheme"
+                        android:layout_width="wrap_content"
+                        android:layout_marginEnd="4dp"
+                        android:background="@drawable/curved_button"
+                        android:backgroundTint="@color/purple_gray_50"
+                        android:gravity="center"
+                        android:paddingHorizontal="20dp"
+                        android:text="+33"
+                        app:drawableEndCompat="@drawable/ic_drop_down" />
+
+                    <EditText
+                        android:id="@+id/etPhone"
+                        style="@style/EditTextTheme"
+                        android:layout_width="match_parent"
+                        android:layout_marginStart="4dp"
+                        android:layout_toEndOf="@id/tvCountryCode"
+                        android:background="@drawable/edit_text_background"
+                        android:digits="1234567890"
+                        android:hint="@string/hint_enter_phone_number"
+                        android:inputType="phone"
+                        android:maxLength="15"
+                        android:paddingHorizontal="12dp" />
+
+                    <EditText
+                        android:id="@+id/etEmail"
+                        style="@style/EditTextTheme"
+                        android:layout_width="match_parent"
+                        android:background="@drawable/edit_text_background"
+                        android:hint="@string/hint_enter_email_address"
+                        android:inputType="textEmailAddress"
+                        android:paddingHorizontal="12dp"
+                        android:visibility="gone" />
+
+                </RelativeLayout>
+
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:id="@+id/tilPassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:visibility="gone"
+                    app:hintAnimationEnabled="false"
+                    app:hintEnabled="false"
+                    app:passwordToggleEnabled="true">
+
+
+                    <EditText
+                        android:id="@+id/etPassword"
+                        style="@style/EditTextTheme"
+                        android:layout_width="match_parent"
+                        android:layout_marginStart="4dp"
+                        android:layout_toEndOf="@id/tvCountryCode"
+                        android:background="@drawable/edit_text_background"
+                        android:hint="@string/hint_enter_password"
+                        android:inputType="textPassword"
+                        android:maxLength="15"
+                        android:paddingHorizontal="12dp" />
+
+
+                </com.google.android.material.textfield.TextInputLayout>
+
+
+                <TextView
+                    android:id="@+id/tvLoginViaPhone"
+                    style="@style/SubheadMabry"
+                    android:layout_marginTop="16dp"
+                    android:paddingVertical="8dp"
+                    android:text="@string/login_by_phone"
+                    android:textColor="@color/purple_500"
+                    android:visibility="gone" />
+
+                <TextView
+                    android:id="@+id/tvLoginViaEmail"
+                    style="@style/SubheadMabry"
+                    android:layout_marginTop="16dp"
+                    android:paddingVertical="8dp"
+                    android:text="@string/login_by_email"
+                    android:textColor="@color/purple_500"
+                    android:visibility="gone" />
+
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <Button
+                    android:id="@+id/btnNext"
+                    style="@style/ButtonStyle"
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/curved_button"
+                    android:backgroundTint="@color/purple_500"
+                    android:text="@string/next"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white" />
+
+            </LinearLayout>
+        </FrameLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/llIndicators"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:elevation="2dp"
+        android:orientation="horizontal"
+        android:padding="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/topGuide"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="91dp" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

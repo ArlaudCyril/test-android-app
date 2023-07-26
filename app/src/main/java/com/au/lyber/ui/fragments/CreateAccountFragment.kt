@@ -24,6 +24,8 @@ import com.au.lyber.utils.CommonMethods.Companion.showToast
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.viewmodels.SignUpViewModel
 import com.nimbusds.srp6.SRP6ClientSession
+import com.nimbusds.srp6.SRP6CryptoParams
+import com.nimbusds.srp6.SRP6VerifierGenerator
 import com.nimbusds.srp6.XRoutineWithUserIdentity
 
 class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View.OnClickListener {
@@ -34,9 +36,19 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
     private val countryCode get() = binding.tvCountryCode.text.trim().toString()
     private val email get() = binding.etEmail.text.trim().toString()
     private val password get() = binding.etPassword.text.trim().toString()
-
+    private lateinit var config: SRP6CryptoParams
+    lateinit var generator: SRP6VerifierGenerator
+    lateinit var client: SRP6ClientSession
     override fun bind() = FragmentCreateAccountBinding.inflate(layoutInflater)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        config = SRP6CryptoParams.getInstance(2048, "SHA-512")
+        generator = SRP6VerifierGenerator(config)
+        generator.xRoutine = XRoutineWithUserIdentity()
 
+        client = SRP6ClientSession()
+        client.xRoutine = XRoutineWithUserIdentity()
+    }
     @SuppressLint("FragmentLiveDataObserve")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -145,9 +157,9 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                     // login case
                     if (viewModel.forLogin) {
 
-                        (requireParentFragment() as SignUpFragment).client =
+                        client =
                             SRP6ClientSession()
-                        (requireParentFragment() as SignUpFragment).client.xRoutine =
+                        client.xRoutine =
                             XRoutineWithUserIdentity()
 
 
@@ -163,7 +175,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                                         viewModel.countryCode = countryCode
                                         viewModel.password = password
 
-                                        (requireParentFragment() as SignUpFragment).client.step1(
+                                        client.step1(
                                             mobile,
                                             password
                                         )
@@ -181,7 +193,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                                         showProgressDialog(requireContext())
                                         viewModel.email = email
                                         viewModel.password = password
-                                        (requireParentFragment() as SignUpFragment).client.step1(
+                                        client.step1(
                                             email,
                                             password
                                         )
@@ -286,9 +298,9 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                     Log.d("ViewTreeObserver", "closed")
                 } else {
                     Log.d("ViewTreeObserver", "opened")
-                    (requireParentFragment() as SignUpFragment).binding.apply {
+                    /*(requireParentFragment() as SignUpFragment).binding.apply {
                         scrollView.smoothScrollTo(0, scrollView.height)
-                    }
+                    }*/
                 }
 
                 mLastContentHeight = currentContentHeight
@@ -305,10 +317,10 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
 
             Configuration.HARDKEYBOARDHIDDEN_YES -> {
                 "opened".showToast(requireContext())
-                (requireParentFragment() as SignUpFragment).view?.findViewById<ScrollView>(R.id.scrollView)
+               /* (requireParentFragment() as SignUpFragment).view?.findViewById<ScrollView>(R.id.scrollView)
                     ?.let {
                         it.smoothScrollTo(0, it.height)
-                    }
+                    }*/
             }
             else -> {
 
