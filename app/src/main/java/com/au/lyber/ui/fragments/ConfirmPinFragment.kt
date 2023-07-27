@@ -2,6 +2,7 @@ package com.au.lyber.ui.fragments
 
 import android.os.Bundle
 import android.view.View
+import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentConfirmPinBinding
 import com.au.lyber.ui.portfolio.fragment.PortfolioHomeFragment
@@ -92,10 +93,11 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
                     if (viewModel.forLogin) {
 
                         requireActivity().clearBackStack()
-                        requireActivity().replaceFragment(
+                        findNavController().navigate(R.id.portfolioHomeFragment)
+                       /* requireActivity().replaceFragment(
                             R.id.flSplashActivity,
                             PortfolioHomeFragment()
-                        )
+                        )*/
                     } else (requireParentFragment() as SignUpFragment).showDialog()
 
                     /*checkInternet(requireContext()) {
