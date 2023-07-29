@@ -67,6 +67,11 @@
             app:enterAnim="@anim/slide_up"
             app:popExitAnim="@anim/slide_down"/>
         <action
+            android:id="@+id/action_portfolioHomeFragment_to_selectAssestForDepositFragment"
+            app:destination="@id/selectAssestForDepositFragment"
+            app:enterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down"/>
+        <action
             android:id="@+id/action_portfolioHomeFragment_to_depositFiatWalletFragment"
             app:destination="@id/depositFiatWalletFragment"
             app:enterAnim="@anim/slide_up"
@@ -141,6 +146,16 @@
         android:name="com.au.lyber.ui.fragments.ChooseAssetForDepositFragment"
         android:label="ChooseAssetForDepositFragment" >
 
+    </fragment>
+    <fragment
+        android:id="@+id/selectAssestForDepositFragment"
+        android:name="com.au.lyber.ui.fragments.SelectAssestForDepositFragment"
+        android:label="SelectAssestForDepositFragment" >
+        <action
+            android:id="@+id/action_discoveryFragment_to_chooseAssetForDepositFragment"
+            app:destination="@id/chooseAssetForDepositFragment"
+            app:enterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down"/>
     </fragment>
     <fragment
         android:id="@+id/depositFiatWalletFragment"

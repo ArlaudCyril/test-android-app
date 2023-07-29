@@ -55,7 +55,9 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                     assetAdapter.removeProgress()
                     assetAdapter.setData(it)
                     assetPopup.show()
-                } else assetAdapter.setData(it)
+                } else {
+                    assetAdapter.setData(it)
+                }
 
             }
         }
