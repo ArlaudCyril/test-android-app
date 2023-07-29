@@ -203,6 +203,9 @@ interface Api {
     @GET("asset-service/asset")
     suspend fun getAssetDetail(@Query("id") id: String): Response<AssetDetailBaseDataResponse>
 
+    @GET("asset-service/asset")
+    suspend fun getAssetDetail(@Query("id") id: String,@Query("include_networks") include_networks: String): Response<AssetDetailBaseDataResponse>
+
     @GET("user/investment")
     suspend fun getRecurringInvestmentDetail(@Query("id") id: String): Response<RecurringInvestmentDetailResponse>
 

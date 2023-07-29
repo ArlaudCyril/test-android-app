@@ -65,7 +65,14 @@
             </intent-filter>
 
         </activity>
+        <activity
+            android:name=".ui.activities.BarCodeActivity"
+            android:exported="true"
 
+
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateVisible"
+            tools:ignore="LockedOrientationActivity"/>
 
 
         <provider

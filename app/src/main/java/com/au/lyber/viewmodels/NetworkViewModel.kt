@@ -611,6 +611,13 @@ open class NetworkViewModel : ViewModel() {
             else listener?.onRetrofitError(res.errorBody())
         }
     }
+    fun getAssetDetailIncludeNetworks(assetId: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().getAssetDetail(assetId,"true")
+            if (res.isSuccessful) _getAssetDetail.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
 
     fun getRecurringInvestmentDetail(investmentId: String) {
         viewModelScope.launch(exceptionHandler) {

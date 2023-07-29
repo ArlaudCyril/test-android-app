@@ -36,6 +36,7 @@ class SelectAssestForDepositFragment : BaseFragment<FragmentSelectAssestForDepos
         binding.rvRefresh.setOnRefreshListener {
             viewModel.getAllAssets()
         }
+        binding.ivTopAction.setOnClickListener { requireActivity().onBackPressed() }
         viewModel.getAllAssets()
         viewModel.allAssets.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
