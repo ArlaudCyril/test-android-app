@@ -19,7 +19,6 @@ import com.au.lyber.utils.CommonMethods.Companion.getViewModel
 import com.au.lyber.utils.CommonMethods.Companion.replaceFragment
 import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.au.lyber.utils.Constants
-import com.au.lyber.utils.PreferenceManager
 import com.au.lyber.viewmodels.NetworkViewModel
 
 class EducationStrategyHolderFragment : BaseFragment<FragmentEducationStrategyHolderBinding>(),

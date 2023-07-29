@@ -2,6 +2,7 @@ package com.au.lyber.utils
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.au.lyber.models.AssetBaseDataResponse
 import com.au.lyber.models.User
 import com.google.gson.Gson
 
@@ -45,6 +46,15 @@ class PreferenceManager(context: Context) {
             } else null
         set(value) {
             mEditor.putString("user", Gson().toJson(value).toString())
+            mEditor.apply()
+        }
+    var assetBaseDataResponse: AssetBaseDataResponse?
+        get() =
+            if ((mSharedPreferences.getString("AssetBaseDataResponse", "") ?: "").isNotEmpty()) {
+                Gson().fromJson((mSharedPreferences.getString("AssetBaseDataResponse", "") ?: ""), AssetBaseDataResponse::class.java)
+            } else null
+        set(value) {
+            mEditor.putString("AssetBaseDataResponse", Gson().toJson(value).toString())
             mEditor.apply()
         }
 

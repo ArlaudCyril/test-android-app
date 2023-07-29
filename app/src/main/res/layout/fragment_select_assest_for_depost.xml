@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/top_curved_layout"
-    android:backgroundTint="@color/purple_gray_00"
+    android:backgroundTint="@color/white"
     android:fitsSystemWindows="true"
     android:minHeight="360dp">
 

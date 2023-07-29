@@ -13,6 +13,7 @@ import com.au.lyber.R
 import com.au.lyber.databinding.AppItemLayoutBinding
 import com.au.lyber.databinding.FragmentChooseAssetDepositBinding
 import com.au.lyber.databinding.LoaderViewBinding
+import com.au.lyber.models.AssetBaseData
 import com.au.lyber.models.GetAssetsResponseItem
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.fadeIn
@@ -22,12 +23,13 @@ import com.au.lyber.utils.CommonMethods.Companion.replaceFragment
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
 import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
+import com.au.lyber.utils.App
 import java.util.*
 
 class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBinding>() {
 
 
-    private var network: GetAssetsResponseItem? = null
+    private var network: AssetBaseData? = null
     private lateinit var assetAdapter: AssetPopupAdapter
     private lateinit var assetPopup: ListPopupWindow
 
@@ -47,25 +49,35 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
             requireActivity().replaceFragment(R.id.flSplashActivity, AddAmountFragment())
         }
 
-        viewModel.assetsToChoose.observe(viewLifecycleOwner) {
 
-            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-
-                if (assetPopup.isShowing) {
-                    assetAdapter.removeProgress()
-                    assetAdapter.setData(it)
-                    assetPopup.show()
-                } else {
-                    assetAdapter.setData(it)
-                }
-
-            }
-        }
 
         assetAdapter = AssetPopupAdapter()
         assetPopup = ListPopupWindow(requireContext())
         assetPopup.anchorView = binding.llNetwork
         assetPopup.setAdapter(assetAdapter)
+        App.prefsManager.assetBaseDataResponse.let {
+            if (assetPopup.isShowing) {
+                assetAdapter.removeProgress()
+                assetAdapter.setData(it!!.data)
+                assetPopup.show()
+            } else {
+                assetAdapter.setData(it!!.data)
+            }
+            for (sa in it.data) {
+                if (sa.id == requireArguments().getString("dataSelected")) {
+                    network = sa
+
+                    binding.tvTitle.fadeIn()
+                    binding.ivNetwork.visible()
+                    binding.etAssets.updatePadding(0)
+
+                    binding.etAssets.setText("${sa.fullName.capitalize(Locale.ROOT)} (${sa.id.uppercase()})")
+
+                    binding.ivNetwork.loadCircleCrop(sa.imageUrl)
+                    break
+                }
+            }
+        }
 
 
         assetPopup.setOnItemClickListener { _, _, position, _ ->
@@ -78,9 +90,9 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                 binding.ivNetwork.visible()
                 binding.etAssets.updatePadding(0)
 
-                binding.etAssets.setText("${it.asset_name.capitalize(Locale.ROOT)} (${it.asset_id.uppercase()})")
+                binding.etAssets.setText("${it.fullName.capitalize(Locale.ROOT)} (${it.id.uppercase()})")
 
-                binding.ivNetwork.loadCircleCrop(it.image)
+                binding.ivNetwork.loadCircleCrop(it.imageUrl)
 
                 assetPopup.dismiss()
             }
@@ -98,18 +110,16 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
             binding.btnAddUseAddress.text = "Buy ${it.fullName.capitalize()} on Lyber"
         }
 
-        checkInternet(requireContext()) {
-            viewModel.assetsToChoose()
-        }
+
 
     }
 
 
     class AssetPopupAdapter : android.widget.BaseAdapter() {
 
-        private val list = mutableListOf<GetAssetsResponseItem?>()
+        private val list = mutableListOf<AssetBaseData?>()
 
-        fun getItemAt(position: Int): GetAssetsResponseItem? {
+        fun getItemAt(position: Int): AssetBaseData? {
             return list[position]
         }
 
@@ -129,7 +139,7 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
             }
         }
 
-        fun setData(items: List<GetAssetsResponseItem?>) {
+        fun setData(items: List<AssetBaseData?>) {
             list.clear()
             list.addAll(items)
             notifyDataSetChanged()
@@ -163,10 +173,10 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                         list[position]?.let { data ->
 
 
-                                it.ivItem.loadCircleCrop(data.image)
+                                it.ivItem.loadCircleCrop(data.imageUrl)
 
                             it.tvStartTitleCenter.text =
-                                "${data.asset_name.capitalize()} (${data.asset_id.uppercase()})"
+                                "${data.fullName.capitalize()} (${data.id.uppercase()})"
 
                             return it.root
                         }

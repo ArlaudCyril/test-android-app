@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:fitsSystemWindows="true"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <ImageView
@@ -15,6 +16,7 @@
         android:layout_marginStart="4dp"
         android:layout_marginTop="12dp"
         android:padding="12dp"
+        android:background="@color/purple_gray_50"
         android:src="@drawable/ic_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -121,19 +123,40 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/etNetwork" />
 
-            <EditText
-                android:id="@+id/etAddress"
-                style="@style/EditTextTheme"
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="4dp"
                 android:background="@drawable/edit_text_background"
-                android:drawableEnd="@drawable/ic_code_scanner"
-                android:drawablePadding="12dp"
-                android:hint="1123djsgiuieijb3iuhiduhiuhaisuclkjlvl"
-                android:paddingHorizontal="16dp"
-                android:singleLine="true"
-                app:layout_constraintTop_toBottomOf="@id/tvTitleDepositAddress" />
+                app:layout_constraintTop_toBottomOf="@id/tvTitleDepositAddress"
+                android:id="@+id/llAddress">
+                <EditText
+                    android:id="@+id/etAddress"
+                    style="@style/EditTextTheme"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:background="@android:color/transparent"
+                    android:hint="1123djsgiuieijb3iuhiduhiuhaisuclkjlvl"
+                    android:paddingHorizontal="16dp"
+                    android:singleLine="true"
+                    />
+                <ImageView
+                    android:id="@+id/ivScan"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="start|center_vertical"
+                    android:paddingVertical="12dp"
+                    android:src="@drawable/ic_code_scanner" />
+                <ImageView
+                    android:id="@+id/ivCopy"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="start|center_vertical"
+                    android:paddingVertical="12dp"
+                    android:src="@drawable/copy" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
 
             <TextView
                 android:id="@+id/tvNote"
@@ -149,7 +172,7 @@
                 android:text="@string/note_crypto_asset"
                 android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                 android:textColor="@color/purple_gray_800"
-                app:layout_constraintTop_toBottomOf="@id/etAddress" />
+                app:layout_constraintTop_toBottomOf="@id/llAddress" />
 
             <View
                 android:id="@+id/viewLeft"
@@ -190,7 +213,7 @@
                 android:layout_width="match_parent"
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="24dp"
-                android:background="@drawable/curved_button"
+                android:background="@drawable/gray_purple_50"
                 android:backgroundTint="@color/purple_gray_50"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
