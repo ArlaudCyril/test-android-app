@@ -15,6 +15,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginStart="8dp"
+        android:background="@drawable/gray_purple_50"
         android:layout_marginTop="18dp"
         android:backgroundTint="@color/purple_gray_50"
         android:padding="12dp"
@@ -27,7 +28,7 @@
         android:id="@+id/tvTitle"
         style="@style/DialogTitle"
         android:gravity="center"
-        android:text="Add an asset"
+        android:text="Asset Deposit"
         android:textColor="#423D33"
         app:layout_constraintBottom_toBottomOf="@id/ivTopAction"
         app:layout_constraintEnd_toEndOf="parent"
@@ -35,31 +36,25 @@
         app:layout_constraintTop_toTopOf="@id/ivTopAction" />
 
 
-    <com.google.android.material.tabs.TabLayout
-        android:id="@+id/tabLayout"
+    <include layout="@layout/item_all_assest"
+        android:layout_marginStart="24dp"
         android:layout_width="match_parent"
-        android:layout_height="32dp"
-        android:visibility="gone"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="20dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="24dp"
+        android:id="@+id/llAssest"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivTopAction"
-        app:tabBackground="@drawable/tab__indcator"
-        app:tabIndicator="@null"
-        app:tabMode="auto"
-        app:tabSelectedTextColor="@color/purple_500"
-        app:tabTextAppearance="@style/tab_text"
-        app:tabTextColor="@color/purple_gray_500" />
+        app:layout_constraintTop_toBottomOf="@id/ivTopAction"/>
     <TextView
         android:id="@+id/tvHeading"
-        style="@style/DialogTitle"
+        style="@style/SubTitleText"
         android:gravity="start"
+        android:textStyle="bold"
         android:text="Crypto"
-        android:layout_marginStart="24dp"
+        android:layout_marginStart="28dp"
         android:layout_marginEnd="24dp"
         android:textColor="#423D33"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivTopAction"
+        app:layout_constraintTop_toBottomOf="@id/llAssest"
 
         />
     <ImageView
@@ -74,7 +69,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tabLayout" />
+        app:layout_constraintTop_toBottomOf="@id/tvHeading" />
 
 
     <androidx.appcompat.widget.AppCompatEditText
@@ -100,6 +95,7 @@
         android:id="@+id/rvRefresh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:layout_marginTop="8dp"
         android:layout_marginHorizontal="24dp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"

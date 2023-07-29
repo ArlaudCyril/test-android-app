@@ -22,13 +22,13 @@
 
     <ImageView
         android:id="@+id/ivAsset"
-        android:layout_width="38dp"
-        android:layout_height="38dp"
+        android:layout_width="34dp"
+        android:layout_height="34dp"
         android:layout_marginVertical="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:src="@drawable/ic_bitcoin" />
+        android:src="@drawable/ic_euro" />
 
     <TextView
         android:id="@+id/tvAssetName"
@@ -43,7 +43,7 @@
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@id/ivAsset"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Bitcoin" />
+        android:text="Euro" />
 
 
 
@@ -59,7 +59,7 @@
         app:layout_constraintStart_toEndOf="@id/ivAsset"
         app:layout_constraintTop_toBottomOf="@+id/tvAssetName"
         app:layout_constraintVertical_bias="0.0"
-        tools:text="BTC" />
+        android:text="By credit card or Bank transfer" />
 
 
 
