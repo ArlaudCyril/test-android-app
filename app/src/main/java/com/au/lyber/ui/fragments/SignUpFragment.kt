@@ -1,10 +1,6 @@
 package com.au.lyber.ui.fragments
 
 import android.app.Dialog
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
-import android.content.IntentFilter
 import android.os.Bundle
 import android.util.Log
 import android.view.View
@@ -13,7 +9,6 @@ import android.view.Window
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.registerReceiver
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
@@ -22,9 +17,7 @@ import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
 import com.au.lyber.databinding.CustomDialogLayoutBinding
 import com.au.lyber.databinding.FragmentTestSignUpBinding
-import com.au.lyber.ui.activities.SplashActivity
 import com.au.lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet
-import com.au.lyber.utils.ActivityCallbacks
 import com.au.lyber.utils.App
 import com.au.lyber.utils.App.Companion.prefsManager
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
@@ -39,16 +32,14 @@ import com.nimbusds.srp6.SRP6CryptoParams
 import com.nimbusds.srp6.SRP6VerifierGenerator
 import com.nimbusds.srp6.XRoutineWithUserIdentity
 
-class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallbacks {
+class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>() {
 
-    private lateinit var navController : NavController
     var mPosition: Int = 0
     private lateinit var viewModel: SignUpViewModel
 
     private lateinit var config: SRP6CryptoParams
     lateinit var generator: SRP6VerifierGenerator
     lateinit var client: SRP6ClientSession
-
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -59,32 +50,15 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
 
         client = SRP6ClientSession()
         client.xRoutine = XRoutineWithUserIdentity()
-        val filter = IntentFilter()
-        filter.addAction("SignupLoginBroadcast")
-        requireActivity().registerReceiver(mBroadcastReceiver, filter)
+
     }
 
-    override fun bind() = FragmentTestSignUpBinding.inflate(layoutInflater, null, false)
-    private val mBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
-        override fun onReceive(context: Context?, intent: Intent?) {
-            mPosition = intent!!.getIntExtra("pos",0)
-            changeFragment(mPosition,false)
-        }
-        }
+    override fun bind() = FragmentTestSignUpBinding.inflate(layoutInflater)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = getViewModel(this)
-        SplashActivity.activityCallbacks = this
-        val navHostFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val inflater = navHostFragment.navController.navInflater
-        val graph = inflater.inflate(R.navigation.nav_graph)
 
-      //  graph.setStartDestination(R.id.signUpFragment)
-
-
-         navController = navHostFragment.navController
-   //     navController.setGraph(graph,null)
         mPosition = when (prefsManager.savedScreen) {
             CreatePinFragment::class.java.name -> 2
             EnableNotificationFragment::class.java.name -> 4
@@ -313,24 +287,19 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
         when(mPosition){
             0->{
                 setIndicators(0)
-                //findNavController().navigate(R.id.createAccountFragment)
-                navController.navigate(R.id.createAccountFragment,bundle)
-                navController.popBackStack(R.id.createAccountFragment,isBackStack)
+                findNavController().navigate(R.id.createAccountFragment,bundle)
             }
             2->{
                 setIndicators(2)
-                navController.navigate(R.id.createPinFragment)
-                navController.popBackStack(R.id.createPinFragment,isBackStack)
+                findNavController().navigate(R.id.createPinFragment)
             }
             3->{
                 setIndicators(3)
-                navController.navigate(R.id.confirmPinFragment)
-                navController.popBackStack(R.id.confirmPinFragment,isBackStack)
+                findNavController().navigate(R.id.confirmPinFragment)
             }
             4->{
                 setIndicators(4)
-                navController.navigate(R.id.enableNotificationFragment)
-                navController.popBackStack(R.id.enableNotificationFragment,isBackStack)
+                findNavController().navigate(R.id.enableNotificationFragment)
             }
         }
     }
@@ -448,7 +417,7 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
     }
 
     /* Host Activity's onBackPressed */
-    override fun onBackPressed(): Boolean {
+  /*  override fun onBackPressed(): Boolean {
         return if (mPosition == 2 || mPosition == 4) {
             showLogoutDialog()
             false
@@ -458,12 +427,9 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>(), ActivityCallba
             false
         } else true
 
-    }
+    }*/
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        SplashActivity.activityCallbacks = null
-    }
+
 
 
 }

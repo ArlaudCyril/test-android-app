@@ -14,7 +14,7 @@
         android:layout_height="48dp"
         android:layout_marginStart="8dp"
         android:layout_marginBottom="12dp"
-        android:backgroundTint="@color/purple_gray_00"
+        android:background="@drawable/white_back"
         android:paddingHorizontal="12dp"
         android:paddingVertical="12dp"
         android:src="@drawable/ic_close"

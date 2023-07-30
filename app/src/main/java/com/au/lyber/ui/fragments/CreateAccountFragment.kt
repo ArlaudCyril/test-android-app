@@ -63,13 +63,14 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         super.onViewCreated(view, savedInstanceState)
 
         App.prefsManager.accessToken = ""
-        val fragment = findNavController().getBackStackEntry(R.id.signUpFragment)
-        viewModel = getViewModel(fragment)
+        viewModel = getViewModel(this)
         viewModel.forLogin = requireArguments().getBoolean("forLogin",false)
         viewModel.listener = this
         binding.tvCountryCode.text = viewModel.countryCode
         Log.d("clickSignupFinalQ1",viewModel.forLogin.toString())
-
+        binding.ivTopAction.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
         if (viewModel.forLogin) {
 
             binding.tvTitle.text = getString(R.string.happy_to_see_you_back)

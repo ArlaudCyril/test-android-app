@@ -10,10 +10,14 @@
         <action
             android:id="@+id/action_splashFragment_to_unlockAppFragment2"
             app:destination="@id/unlockAppFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true"
             />
         <action
             android:id="@+id/action_splashFragment_to_discoveryFragment"
             app:destination="@id/discoveryFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true"
             />
     </fragment>
     <fragment
@@ -107,7 +111,7 @@
         android:label="DiscoveryFragment" >
         <action
             android:id="@+id/action_discoveryFragment_to_signupFragment"
-            app:destination="@id/signUpFragment"
+            app:destination="@id/createAccountFragment"
             app:enterAnim="@anim/slide_up"
             app:popExitAnim="@anim/slide_down"/>
     </fragment>
@@ -206,7 +210,7 @@
         <action
             android:id="@+id/action_enableNotificationFragment_to_completePortfolioFragment"
             app:destination="@id/completePortfolioFragment"
-            app:popUpToInclusive="false"/>
+           />
     </fragment>
     <fragment
         android:id="@+id/completePortfolioFragment"

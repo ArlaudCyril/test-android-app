@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
 import com.au.lyber.databinding.ActivitySplashBinding
 import com.au.lyber.utils.ActivityCallbacks
+import com.au.lyber.utils.App
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : BaseActivity<ActivitySplashBinding>() {
@@ -25,20 +26,23 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
         super.onCreate(savedInstanceState)
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val inflater = navHostFragment.navController.navInflater
-        val graph = inflater.inflate(R.navigation.nav_graph)
-
-        graph.setStartDestination(R.id.splashFragment)
-
-
         val navController = navHostFragment.navController
-        navController.setGraph(graph,null)
         onBackPressedDispatcher.addCallback(
             this /* lifecycle owner */,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
                     // Back is pressed... Finishing the activit
-                    navController.popBackStack()
+                    if (navHostFragment.childFragmentManager.backStackEntryCount>2) {
+//                        if (App.prefsManager.userPin.isEmpty()) {
+//                            navController.clearBackStack(R.id.splashFragment)
+//                            navController.navigate(R.id.discoveryFragment)
+//                        }else{
+//
+//                        }
+                        navController.popBackStack()
+                    }else{
+                        finishAffinity()
+                    }
                 }
             })
 

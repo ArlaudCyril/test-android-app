@@ -1,13 +1,16 @@
 package com.au.lyber.ui.fragments
 
+import android.app.Dialog
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import android.view.Window
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
+import com.au.lyber.databinding.CustomDialogLayoutBinding
 import com.au.lyber.databinding.FragmentCreatePinBinding
 import com.au.lyber.utils.App
 import com.au.lyber.utils.CommonMethods.Companion.getViewModel
@@ -42,6 +45,12 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
         binding.etCreatePin.addTextChangedListener(onTextChange)
         val navHostFragment =  requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
+        binding.ivTopAction.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
+        binding.tvTopAction.setOnClickListener {
+            showLogoutDialog()
+        }
 //        binding.etCreatePin.setOnEditorActionListener(onEditorActionListener)
 
         /* preparing ui */
@@ -50,6 +59,42 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
             binding.tvSubTitle.text = "The code you’ve created during the signup."
         }*/
 
+    }
+    private fun showLogoutDialog() {
+
+        Dialog(requireActivity(), R.style.DialogTheme).apply {
+
+            CustomDialogLayoutBinding.inflate(layoutInflater).let {
+
+                requestWindowFeature(Window.FEATURE_NO_TITLE)
+                setCancelable(false)
+                setCanceledOnTouchOutside(false)
+                setContentView(it.root)
+
+                it.tvTitle.text = getString(R.string.log_out)
+                it.tvMessage.text = getString(R.string.logout_message)
+                it.tvNegativeButton.text = getString(R.string.no)
+                it.tvPositiveButton.text = getString(R.string.yes)
+
+                it.tvNegativeButton.setOnClickListener { dismiss() }
+
+                it.tvPositiveButton.setOnClickListener {
+                    dismiss()
+                    App.prefsManager.logout()
+                    requireActivity().onBackPressed()
+
+                    /*                    CommonMethods.checkInternet(requireContext()) {
+                                            dismiss()
+                                            CommonMethods.showProgressDialog(requireContext())
+                                            viewModel.logout(CommonMethods.getDeviceId(requireActivity().contentResolver))
+                                        }*/
+
+                }
+
+                show()
+
+            }
+        }
     }
 
     /* On Text Change */
