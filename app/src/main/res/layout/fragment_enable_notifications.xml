@@ -1,59 +1,163 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingVertical="20dp">
+    android:background="@drawable/splash_background"
+    android:fitsSystemWindows="true">
 
+
+    <!--android:background="@drawable/curved_button"-->
+    <ImageView
+        android:id="@+id/ivTopAction"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/white_back"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="12dp"
+        android:src="@drawable/ic_close"
+        app:layout_constraintBottom_toTopOf="@id/topGuide"
+        app:layout_constraintStart_toStartOf="parent"
+        app:tint="@color/black" />
 
     <TextView
-        android:id="@+id/tvTitle"
-        style="@style/TitleText"
-        android:text="@string/enable_notifications" />
+        android:id="@+id/tvTopAction"
+        style="@style/SubheadMabry"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="12dp"
+        android:backgroundTint="@color/purple_gray_00"
+        android:padding="12dp"
+        android:src="@drawable/ic_close"
+        android:text="@string/logout"
+        android:textColor="@color/purple_500"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/topGuide"
+        app:layout_constraintStart_toStartOf="parent"
+        app:tint="@color/black" />
 
-    <TextView
-        android:id="@+id/tvSubTitle"
-        style="@style/SubTitleText"
-        android:layout_below="@id/tvTitle"
-        android:layout_marginTop="4dp"
-        android:text="@string/enable_notifications_so_you_don_t_miss_any_updates_from_lyber" />
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@id/topGuide">
+
+        <FrameLayout
+            android:id="@+id/frameLayoutSignUp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/top_curved_layout"
+            android:backgroundTint="@color/white"
+            android:elevation="2dp"
+            android:paddingHorizontal="24dp"
+            android:paddingBottom="24dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingVertical="20dp">
+
+
+                <TextView
+                    android:id="@+id/tvTitle"
+                    style="@style/TitleText"
+                    android:text="@string/enable_notifications" />
+
+                <TextView
+                    android:id="@+id/tvSubTitle"
+                    style="@style/SubTitleText"
+                    android:layout_below="@id/tvTitle"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/enable_notifications_so_you_don_t_miss_any_updates_from_lyber" />
+
+                <LinearLayout
+                    android:id="@+id/rlPhoneNumber"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:layout_above="@id/btnEnableNotifications"
+                    android:layout_below="@id/tvSubTitle"
+                    android:layout_marginTop="24dp"
+                    android:gravity="center"
+                    android:orientation="vertical"
+                    android:visibility="visible">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/enable_notifications" />
+                </LinearLayout>
+
+
+                <Button
+                    android:id="@+id/btnEnableNotifications"
+                    style="@style/ButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_above="@id/tvNotNow"
+                    android:layout_marginBottom="16dp"
+                    android:backgroundTint="@color/purple_500"
+                    android:text="@string/activate"
+                    android:textColor="@color/white" />
+
+                <TextView
+                    android:id="@+id/tvNotNow"
+                    style="@style/ButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_alignParentBottom="true"
+                    android:backgroundTint="@color/purple_gray_50"
+                    android:gravity="center"
+                    android:text="@string/ask_me_later"
+                    android:textColor="@color/purple_gray_800" />
+
+            </RelativeLayout>
+        </FrameLayout>
+    </ScrollView>
 
     <LinearLayout
-        android:id="@+id/rlPhoneNumber"
-        android:layout_width="match_parent"
-        android:layout_height="?attr/actionBarSize"
-        android:layout_above="@id/btnEnableNotifications"
-        android:layout_below="@id/tvSubTitle"
-        android:layout_marginTop="24dp"
-        android:gravity="center"
-        android:orientation="vertical"
-        android:visibility="visible">
+        android:id="@+id/llIndicators"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:elevation="2dp"
+        android:orientation="horizontal"
+        android:padding="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:src="@drawable/enable_notifications" />
+            android:layout_marginStart="4dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
     </LinearLayout>
 
-
-    <Button
-        android:id="@+id/btnEnableNotifications"
-        style="@style/ButtonStyle"
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/topGuide"
         android:layout_width="match_parent"
-        android:layout_above="@id/tvNotNow"
-        android:layout_marginBottom="16dp"
-        android:backgroundTint="@color/purple_500"
-        android:text="@string/activate"
-        android:textColor="@color/white" />
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="91dp" />
 
-    <TextView
-        android:id="@+id/tvNotNow"
-        style="@style/ButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_alignParentBottom="true"
-        android:backgroundTint="@color/purple_gray_50"
-        android:gravity="center"
-        android:text="@string/ask_me_later"
-        android:textColor="@color/purple_gray_800" />
-
-</RelativeLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

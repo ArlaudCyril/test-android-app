@@ -1,9 +1,12 @@
 package com.au.lyber.ui.fragments
 
+import android.app.Dialog
 import android.os.Bundle
 import android.view.View
+import android.view.Window
 import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
+import com.au.lyber.databinding.CustomDialogLayoutBinding
 import com.au.lyber.databinding.FragmentConfirmPinBinding
 import com.au.lyber.ui.portfolio.fragment.PortfolioHomeFragment
 import com.au.lyber.utils.App
@@ -30,6 +33,9 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
         viewModel = getViewModel(requireParentFragment())
         viewModel.forLogin = requireArguments().getBoolean("forLogin",false)
         viewModel.listener = this
+        binding.ivTopAction.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
 
 //        binding.etConfirmPin.setOnEditorActionListener(onEditorActionListener)
         binding.etConfirmPin.addTextChangedListener(onTextChange)
@@ -92,13 +98,12 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
 
                     if (viewModel.forLogin) {
 
-                        requireActivity().clearBackStack()
                         findNavController().navigate(R.id.portfolioHomeFragment)
                        /* requireActivity().replaceFragment(
                             R.id.flSplashActivity,
                             PortfolioHomeFragment()
                         )*/
-                    } else (requireParentFragment() as SignUpFragment).showDialog()
+                    } else showDialog()
 
                     /*checkInternet(requireContext()) {
                         viewModel.confirmPin = pinConfirm
@@ -115,5 +120,37 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
             }
         }
     }
-
+    fun showDialog() {
+        Dialog(requireActivity(), R.style.DialogTheme).apply {
+            CustomDialogLayoutBinding.inflate(layoutInflater).let {
+                requestWindowFeature(Window.FEATURE_NO_TITLE)
+                setCancelable(false)
+                setCanceledOnTouchOutside(false)
+                setContentView(it.root)
+                it.tvTitle.text = getString(R.string.activate_face_id)
+                it.tvMessage.text = getString(R.string.activate_face_message)
+                it.tvNegativeButton.text = getString(R.string.decline)
+                it.tvPositiveButton.text = getString(R.string.activate)
+                it.tvNegativeButton.setOnClickListener {
+                    dismiss()
+                    findNavController().navigate(R.id.enableNotificationFragment)
+//                    CommonMethods.showProgressDialog(requireContext())
+//                    viewModel.setFaceId(
+//                        CommonMethods.getDeviceId(requireActivity().contentResolver),
+//                        false
+//                    )
+                }
+                it.tvPositiveButton.setOnClickListener {
+                    dismiss()
+                    findNavController().navigate(R.id.enableNotificationFragment)
+//                    CommonMethods.showProgressDialog(requireContext())
+//                    viewModel.setFaceId(
+//                        CommonMethods.getDeviceId(requireActivity().contentResolver),
+//                        true
+//                    )
+                }
+                show()
+            }
+        }
+    }
 }

@@ -164,6 +164,48 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
             }
 
         }
+        viewModel.setPhoneResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                App.prefsManager.accessToken = it.data.token
+                App.accessToken = it.data.token
+                CommonMethods.dismissProgressDialog()
+                val transparentView = View(context)
+                transparentView.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.semi_transparent_dark
+                    )
+                )
+
+                // Set layout parameters for the transparent view
+                val viewParams = RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT
+                )
+
+                val vc  = VerificationBottomSheet()
+
+                vc.viewToDelete = transparentView
+                vc.mainView = getView()?.rootView as ViewGroup
+                vc.viewModel = viewModel
+                vc.show(childFragmentManager, "")
+
+                // Add the transparent view to the RelativeLayout
+                val mainView = getView()?.rootView as ViewGroup
+                mainView.addView(transparentView, viewParams)
+            }
+        }
+        viewModel.verifyPhoneResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                App.prefsManager.setPhone(viewModel.mobileNumber)
+                CommonMethods.dismissProgressDialog()
+
+                val bundle = Bundle().apply {
+                    putBoolean("forLogin", false)
+                }
+                findNavController().navigate(R.id.createPinFragment,bundle)
+            }
+        }
     }
 
     private val focusChange = View.OnFocusChangeListener { v, hasFocus ->
