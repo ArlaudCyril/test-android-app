@@ -72,12 +72,7 @@ class EducationStrategyHolderFragment : BaseFragment<FragmentEducationStrategyHo
                 topBottom = true
             )
 
-            /*requireActivity().replaceFragment(
-                R.id.flSplashActivity,
-                PickYourStrategyFragment(),
-                isBackStack = true,
-                topBottom = true
-            )*/
+
         }
     }
 

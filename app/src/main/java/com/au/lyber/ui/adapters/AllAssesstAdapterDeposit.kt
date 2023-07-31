@@ -1,18 +1,18 @@
 package com.au.lyber.ui.adapters
 
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.au.lyber.R
 import com.au.lyber.databinding.ItemAllAssestBinding
-import com.au.lyber.databinding.ItemAssetAvailableBinding
-import com.au.lyber.databinding.ItemAssetBinding
 import com.au.lyber.models.AssetBaseData
 import com.au.lyber.ui.activities.BaseActivity
 import com.au.lyber.utils.CommonMethods.Companion.loadCircleCrop
 
 class AllAssesstAdapterDeposit (
-    private val clickListener: (AssetBaseData) -> Unit = { _ -> }) :
+    private val clickListener: (AssetBaseData) -> Unit = { _ -> },private val context: Context) :
     BaseAdapter<AssetBaseData>() {
 
     override fun onCreateViewHolder(
@@ -43,7 +43,7 @@ class AllAssesstAdapterDeposit (
                         tvAssetNameCode.visibility = View.GONE
                     }else{
                         tvAssetNameCode.visibility = View.VISIBLE
-                        tvAssetNameCode.text = "Deactivated"
+                        tvAssetNameCode.text = context.getString(R.string.deactivated)
                     }
                 }
             }

@@ -7,6 +7,7 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import com.au.lyber.R
 import com.au.lyber.databinding.BottomSheetVerificationBinding
 import com.au.lyber.utils.CommonMethods.Companion.requestKeyboard
 import com.au.lyber.viewmodels.SignUpViewModel
@@ -39,14 +40,14 @@ class VerificationBottomSheet() :
     private fun setUpView(){
         binding.apply {
 
-            title.text = "Verification"
+            title.text = getString(R.string.verification)
             if (viewModel.forLogin) {
-                subtitle.text = "Enter the code displayed on your email"
+                subtitle.text = getString(R.string.enter_the_code_displayed_on_your_email)
             }else{
-                subtitle.text = "Enter the code displayed on your sms"
+                subtitle.text = getString(R.string.enter_the_code_displayed_on_your_sms)
             }
             fieldToVerify.text = ""
-            btnCancel.text = "Cancel"
+            btnCancel.text =getString(R.string.cancel)
 
             // Usage example
             val editTextArray : List<EditText> = listOf(etCodeOne, etCodeTwo, etCodeThree,

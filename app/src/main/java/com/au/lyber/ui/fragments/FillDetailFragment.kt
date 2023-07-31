@@ -189,8 +189,8 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
 
         /* button text view */
         binding.btnCommon.text = when (position) {
-            4 -> "Send to Lyber"
-            2 -> "Email Verified"
+            4 -> getString(R.string.send_to_lyber)
+            2 -> getString(R.string.email_verified)
             else -> getString(R.string.next)
         }
 //        binding.btnCommon.text = if (position == 4) "Send to Lyber"

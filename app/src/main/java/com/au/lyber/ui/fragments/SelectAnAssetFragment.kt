@@ -129,10 +129,10 @@ class SelectAnAssetFragment : BaseFragment<FragmentSelectAnAssetBinding>() {
         binding.tabLayout.let {
             for (i in 0 until 4) {
                 val tab = when (i) {
-                    0 -> it.newTab().apply { text = "Trending" }
-                    1 -> it.newTab().apply { text = "Top gainers" }
-                    2 -> it.newTab().apply { text = "Top loosers" }
-                    else -> it.newTab().apply { text = "Stable" }
+                    0 -> it.newTab().apply { text = getString(R.string.trending) }
+                    1 -> it.newTab().apply { text = getString(R.string.top_gainers) }
+                    2 -> it.newTab().apply { text = getString(R.string.top_losers) }
+                    else -> it.newTab().apply { text = getString(R.string.stable) }
                 }
                 it.addTab(tab)
             }
@@ -158,7 +158,7 @@ class SelectAnAssetFragment : BaseFragment<FragmentSelectAnAssetBinding>() {
 //            })
         }
 
-        binding.tvTitle.text = "Choose an asset"
+        binding.tvTitle.text = getString(R.string.choose_an_asset)
         binding.ivTopAction.setImageResource(R.drawable.ic_back)
         binding.ivTopAction.setOnClickListener { requireActivity().onBackPressed() }
 

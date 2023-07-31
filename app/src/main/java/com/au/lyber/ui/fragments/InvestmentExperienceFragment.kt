@@ -2,6 +2,7 @@ package com.au.lyber.ui.fragments
 
 import android.os.Bundle
 import android.view.View
+import com.au.lyber.R
 import com.au.lyber.databinding.FragmentInvenstmentExperienceBinding
 import com.au.lyber.ui.fragments.bottomsheetfragments.BottomSheetDialog
 import com.au.lyber.utils.CommonMethods
@@ -89,16 +90,16 @@ class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceB
     fun checkData(): Boolean {
 
         when {
-            cryptoExp.isEmpty() -> "Please tell us your investment experience with crypto".showToast(
+            cryptoExp.isEmpty() -> getString(R.string.please_tell_us_your_investment_experience_with_crypto).showToast(
                 requireContext()
             )
-            sourceIncome.isEmpty() -> "Please tell us your source of income".showToast(
+            sourceIncome.isEmpty() -> getString(R.string.please_tell_us_your_source_of_income).showToast(
                 requireContext()
             )
-            workIndustry.isEmpty() -> "Please tell us which work industry your are working".showToast(
+            workIndustry.isEmpty() -> getString(R.string.please_tell_us_which_work_industry_your_are_working).showToast(
                 requireContext()
             )
-            annualIncome.isEmpty() -> "Please tell us your annual income".showToast(requireContext())
+            annualIncome.isEmpty() -> getString(R.string.please_tell_us_your_annual_income).showToast(requireContext())
            /* personalAssets.isEmpty() -> {
                 binding.scrollView.scrollTo(0, binding.root.bottom)
                 "Please tell us how many assets you have".showToast(

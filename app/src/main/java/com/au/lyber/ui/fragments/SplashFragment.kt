@@ -41,19 +41,14 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>() {
             if (!isScreen) {
                 isScreen = true
                 if (App.prefsManager.tokenSavedAt.is30DaysOld()) {
-                    Log.d("Discoo=ver", "SplashFragment")
                     App.prefsManager.logout()
                     findNavController().navigate(R.id.discoveryFragment)
-//                requireActivity().supportFragmentManager.beginTransaction()
-//                    .replace(R.id.flSplashActivity, DiscoveryFragment()).commit()
-
                 } else {
 
                     if (App.prefsManager.userPin.isNotEmpty()) {
 
                         findNavController().navigate(R.id.unlockAppFragment)
                     } else {
-                        Log.d("Discoo=ver", "SplashAfrgem")
                         findNavController().navigate(R.id.discoveryFragment)
 
                     }

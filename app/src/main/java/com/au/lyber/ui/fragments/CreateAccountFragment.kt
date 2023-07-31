@@ -87,9 +87,9 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         binding.btnNext.setOnClickListener(this)
 
         binding.tvCountryCode.setOnClickListener(this)
-        binding.etPassword.onFocusChangeListener = focusChange
-        binding.etPhone.onFocusChangeListener = focusChange
-        binding.etEmail.onFocusChangeListener = focusChange
+//        binding.etPassword.onFocusChangeListener = focusChange
+//        binding.etPhone.onFocusChangeListener = focusChange
+//        binding.etEmail.onFocusChangeListener = focusChange
 
         binding.root.viewTreeObserver?.addOnGlobalLayoutListener(
             keyboardLayoutListener
@@ -209,14 +209,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         }
     }
 
-    private val focusChange = View.OnFocusChangeListener { v, hasFocus ->
-        if (hasFocus) {
-   /*         (requireParentFragment() as SignUpFragment).view?.findViewById<ScrollView>(R.id.scrollView)
-                ?.let {
-                    it.smoothScrollTo(0, it.height)
-                }*/
-        }
-    }
+
 
     override fun onClick(v: View?) {
 
@@ -354,12 +347,12 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         return when {
             mobile.isEmpty() -> {
                 binding.etPhone.requestKeyboard()
-                "Please enter Phone number.".showToast(requireContext())
+                getString(R.string.please_enter_phone_number).showToast(requireContext())
                 false
             }
 
             mobile.length !in 7..15 -> {
-                "Please enter valid Phone number.".showToast(requireContext())
+                getString(R.string.please_enter_valid_phone_number).showToast(requireContext())
                 false
             }
             else -> true
@@ -370,12 +363,12 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         return when {
             email.isEmpty() -> {
                 binding.etEmail.requestKeyboard()
-                "Please enter email address.".showToast(requireContext())
+                getString(R.string.please_enter_email_address).showToast(requireContext())
                 false
             }
 
             !isValidEmail(email) -> {
-                "Please enter valid email.".showToast(requireContext())
+                getString(R.string.please_enter_valid_email).showToast(requireContext())
                 binding.etEmail.requestKeyboard()
                 false
             }
@@ -386,7 +379,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
     private fun verifyPassword(): Boolean {
         return when {
             password.isEmpty() -> {
-                "Please enter password.".showToast(requireContext())
+                getString(R.string.please_enter_password).showToast(requireContext())
                 binding.etPassword.requestFocus()
                 false
             }

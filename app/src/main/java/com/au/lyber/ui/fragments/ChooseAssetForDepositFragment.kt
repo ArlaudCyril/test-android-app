@@ -27,6 +27,7 @@ import com.au.lyber.utils.CommonMethods.Companion.fadeIn
 import com.au.lyber.utils.CommonMethods.Companion.getViewModel
 import com.au.lyber.utils.CommonMethods.Companion.loadCircleCrop
 import com.au.lyber.utils.CommonMethods.Companion.visible
+import com.au.lyber.utils.Constants
 import java.util.*
 
 class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBinding>() {
@@ -59,9 +60,10 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                 val clipboard =
                     requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                 val clip =
-                    ClipData.newPlainText("Deposit Adress", binding.etAddress.text.toString())
+                    ClipData.newPlainText(getString(R.string.deposit_adress), binding.etAddress.text.toString())
                 clipboard.setPrimaryClip(clip)
-                Toast.makeText(requireActivity(), "Adress copied", Toast.LENGTH_SHORT).show()
+                Toast.makeText(requireActivity(),
+                    getString(R.string.adress_copied), Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -84,7 +86,7 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                 assetAdapter.setData(it!!.data)
             }
             for (sa in it.data) {
-                if (sa.id == requireArguments().getString("dataSelected")) {
+                if (sa.id == requireArguments().getString(Constants.DATA_SELECTED)) {
                     network = sa
 
                     binding.tvTitle.fadeIn()

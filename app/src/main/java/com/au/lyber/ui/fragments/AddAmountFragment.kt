@@ -398,7 +398,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
                             Constants.USING_STRATEGY -> {
                                 if (selectedFrequency.isEmpty()) {
-                                    "Please select frequency".showToast(requireContext())
+                                    getString(R.string.please_select_frequency).showToast(requireContext())
                                     return
                                 } else viewModel.selectedFrequency = selectedFrequency
                             }

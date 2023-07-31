@@ -108,20 +108,20 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding>(), View.O
         when {
             firstName.isEmpty() -> {
                 binding.etFirstName.requestKeyboard()
-                "Please enter your First Name".showToast(requireContext())
+                getString(com.au.lyber.R.string.please_enter_your_first_name).showToast(requireContext())
             }
             lastName.isEmpty() -> {
                 binding.etLastName.requestKeyboard()
-                "Please enter your Last Name".showToast(requireContext())
+                getString(com.au.lyber.R.string.please_enter_your_last_name).showToast(requireContext())
             }
-            birthDate.isEmpty() -> "Please enter your birth date".showToast(requireContext())
+            birthDate.isEmpty() -> getString(com.au.lyber.R.string.please_enter_your_birth_date).showToast(requireContext())
             birthPlace.isEmpty() -> {
                 binding.etBirthPlace.requestKeyboard()
-                "Please enter your birth place".showToast(requireContext())
+                getString(com.au.lyber.R.string.please_enter_your_birth_place).showToast(requireContext())
             }
-            birthCountry.isEmpty() -> "Please select your birth country".showToast(requireContext())
-            nationality.isEmpty() -> "Please enter your Nationality".showToast(requireContext())
-            specifiedUsPerson.isEmpty() -> "Please tell us that you have US citizenship or not".showToast(
+            birthCountry.isEmpty() -> getString(com.au.lyber.R.string.please_select_your_birth_country).showToast(requireContext())
+            nationality.isEmpty() -> getString(com.au.lyber.R.string.please_enter_your_nationality).showToast(requireContext())
+            specifiedUsPerson.isEmpty() -> getString(com.au.lyber.R.string.please_tell_us_that_you_have_us_citizenship_or_not).showToast(
                 requireContext()
             )
 

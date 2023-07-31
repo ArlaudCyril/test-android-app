@@ -82,17 +82,17 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
     private fun prepareUi() {
         if (viewModel.selectedOption == Constants.USING_EXCHANGE) {
             binding.rlAllPortfolio.gone()
-            binding.tvTitle.text = "Exchange → From"
+            binding.tvTitle.text = getString(R.string.exchange_from)
             binding.includedAsset.root.gone()
         } else {
-            binding.tvLyberPortfolio.text = "A precise asset"
-            binding.tvTitle.text = "I want to withdraw"
+            binding.tvLyberPortfolio.text = getString(R.string.a_precise_asset)
+            binding.tvTitle.text = getString(R.string.i_want_to_withdraw)
             binding.rlAllPortfolio.visible()
             binding.includedAsset.root.visible()
             binding.includedAsset.llFiatWallet.visible()
             binding.includedAsset.ivAssetIcon.setImageResource(R.drawable.ic_euro)
             binding.includedAsset.ivDropIcon.setImageResource(R.drawable.ic_right_arrow_grey)
-            binding.includedAsset.tvAssetName.text = "Euro"
+            binding.includedAsset.tvAssetName.text = getString(R.string.euro)
 //            binding.includedAsset.tvAssetAmountCenter.text =
 //                "${App.prefsManager.getBalance()}${Constants.EURO}"
             binding.tvAmountAllPortfolio.text =

@@ -104,15 +104,6 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
                 when (App.prefsManager.savedScreen) {
 
                     EnableNotificationFragment::class.java.name -> {
-                        Log.d("Discoo=ver","Unlock")
-                       /* requireActivity().supportFragmentManager.beginTransaction()
-                            .replace(R.id.flSplashActivity, DiscoveryFragment()).commit()
-
-                        requireActivity().replaceFragment(
-                            R.id.flSplashActivity,
-                            SignUpFragment(),
-                            topBottom = true
-                        )*/
                         findNavController().navigate(R.id.enableNotificationFragment)
 
                     }

@@ -1,9 +1,11 @@
 package com.au.lyber.ui.adapters
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.au.lyber.R
 import com.au.lyber.databinding.ItemBottomSheetRecyclerViewBinding
 import com.au.lyber.models.DataBottomSheet
 import com.au.lyber.ui.fragments.bottomsheetfragments.BottomSheetDialog
@@ -11,7 +13,7 @@ import com.au.lyber.ui.fragments.bottomsheetfragments.BottomSheetDialog
 class BottomSheetAdapter(
     private val listener: ItemListener,
     private val sheetType: BottomSheetDialog.SheetType
-) :
+,private val context:Context) :
     RecyclerView.Adapter<BottomSheetAdapter.ViewHolder>() {
 
     interface ItemListener {
@@ -47,14 +49,14 @@ class BottomSheetAdapter(
                     BottomSheetDialog.SheetType.PERSONAL_ASSETS -> {
                         try {
                             val value = it.title.split("-")
-                            text.text = "${value[0]} - ${value[1]} assets"
+                            text.text = context.getString(R.string.assets, value[0], value[1])
                         } catch (e: Exception) {
-                            text.text = it.title + " assets"
+                            text.text = it.title + context.getString(R.string.assets)
                         }
                     }
                     BottomSheetDialog.SheetType.ANNUAL_INCOME -> {
                         val value = it.title.split("-")
-                        text.text = "${value[0]} - ${value[1]}k€/month"
+                        text.text = context.getString(R.string.k_month, value[0], value[1])
                     }
                     else -> text.text = it.title
                 }

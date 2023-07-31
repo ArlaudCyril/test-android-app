@@ -29,7 +29,6 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        //(requireParentFragment() as SignUpFragment).mPosition = 3
 
         viewModel = getViewModel(requireParentFragment())
         viewModel.forLogin = requireArguments().getBoolean(Constants.FOR_LOGIN,false)
@@ -38,29 +37,10 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
             requireActivity().onBackPressed()
         }
 
-//        binding.etConfirmPin.setOnEditorActionListener(onEditorActionListener)
         binding.etConfirmPin.addTextChangedListener(onTextChange)
         binding.etConfirmPin.requestKeyboard()
     }
 
-    /*private val onEditorActionListener =
-        TextView.OnEditorActionListener { v, actionId, event ->
-            val isDonePressed = actionId == EditorInfo.IME_ACTION_DONE
-            if (isDonePressed) {
-                if (pinConfirm.count() == 4) {
-                    if (viewModel.createPin == pinConfirm) {
-                        checkInternet(requireContext()) {
-                            viewModel.confirmPin = pinConfirm
-                            clearField()
-                            showProgressDialog(requireContext())
-                            viewModel.setPin()
-                        }
-                    } else "Pin doesn't matches".showToast(requireContext())
-                    return@OnEditorActionListener true
-                } else return@OnEditorActionListener false
-            }
-            false
-        }*/
 
 
     /* On Text Change */
@@ -100,10 +80,6 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
                     if (viewModel.forLogin) {
 
                         findNavController().navigate(R.id.portfolioHomeFragment)
-                       /* requireActivity().replaceFragment(
-                            R.id.flSplashActivity,
-                            PortfolioHomeFragment()
-                        )*/
                     } else showDialog()
 
                     /*checkInternet(requireContext()) {
@@ -115,7 +91,7 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
 
                 } else {
                     clearField()
-                    "Please enter the correct pin.".showToast(requireContext())
+                    getString(R.string.please_enter_the_correct_pin).showToast(requireContext())
                 }
 
             }

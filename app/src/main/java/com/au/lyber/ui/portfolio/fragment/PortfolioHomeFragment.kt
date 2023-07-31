@@ -84,7 +84,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
         adapterBalance = BalanceAdapter(::assetClicked)
         adapterAllAsset = AvailableAssetAdapter(::availableAssetClicked)
-        adapterRecurring = RecurringInvestmentAdapter(::recurringInvestmentClicked)
+        adapterRecurring = RecurringInvestmentAdapter(::recurringInvestmentClicked,requireActivity())
         resourcesAdapter = ResourcesAdapter()
         assetBreakdownAdapter = BalanceAdapter(isAssetBreakdown = true)
 

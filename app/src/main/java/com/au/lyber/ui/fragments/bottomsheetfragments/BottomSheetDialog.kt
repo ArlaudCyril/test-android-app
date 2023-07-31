@@ -69,20 +69,20 @@ class BottomSheetDialog(
             }
             else -> {
                 bottomSheetAdapter = when (tag) {
-                    SheetType.CRYPTO_EXP.title -> BottomSheetAdapter(this, SheetType.CRYPTO_EXP)
+                    SheetType.CRYPTO_EXP.title -> BottomSheetAdapter(this, SheetType.CRYPTO_EXP ,requireActivity())
                     SheetType.SOURCE_OF_INCOME.title -> BottomSheetAdapter(
                         this,
                         SheetType.SOURCE_OF_INCOME
-                    )
+                    ,requireActivity())
                     SheetType.WORK_INDUSTRY.title -> BottomSheetAdapter(
                         this,
                         SheetType.WORK_INDUSTRY
-                    )
+                        ,requireActivity())
                     SheetType.ANNUAL_INCOME.title -> BottomSheetAdapter(
                         this,
                         SheetType.ANNUAL_INCOME
-                    )
-                    else -> BottomSheetAdapter(this, SheetType.PERSONAL_ASSETS)
+                        ,requireActivity())
+                    else -> BottomSheetAdapter(this, SheetType.PERSONAL_ASSETS ,requireActivity())
                 }
 
                 _recyclerBinding = BottomSheetRecyclerViewBinding.inflate(layoutInflater)
@@ -224,7 +224,6 @@ class BottomSheetDialog(
     }
 
     enum class SheetType {
-
         COMPLETE_ACCOUNT {
             override fun getData() = emptyList<DataBottomSheet>()
             override val title: String

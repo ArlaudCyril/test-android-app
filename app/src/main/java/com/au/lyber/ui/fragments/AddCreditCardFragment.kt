@@ -2,6 +2,7 @@ package com.au.lyber.ui.fragments
 
 import android.os.Bundle
 import android.view.View
+import com.au.lyber.R
 import com.au.lyber.databinding.FragmentAddCreditCardBinding
 import com.au.lyber.utils.CommonMethods.Companion.requestKeyboard
 import com.au.lyber.utils.CommonMethods.Companion.showToast
@@ -28,30 +29,32 @@ class AddCreditCardFragment : BaseFragment<FragmentAddCreditCardBinding>(), View
     private fun checkData(): Boolean {
         return when {
             name.isEmpty() -> {
-                "Please enter your name".showToast(requireContext())
+                getString(R.string.please_enter_your_name).showToast(requireContext())
                 binding.etName.requestKeyboard()
                 false
             }
             cardNumber.isEmpty() -> {
-                "Please enter your card number".showToast(requireContext())
+                getString(R.string.please_enter_your_card_number).showToast(requireContext())
                 binding.etCardNumber.requestKeyboard()
                 false
             }
             cvv.isEmpty() -> {
-                "Please enter your cvv".showToast(requireContext())
+                getString(R.string.please_enter_your_cvv).showToast(requireContext())
                 binding.etCVV.requestKeyboard()
                 false
             }
             zipCode.isEmpty() -> {
-                "Please enter zip code".showToast(requireContext())
+                getString(R.string.please_enter_zip_code).showToast(requireContext())
                 binding.etZipCode.requestKeyboard()
                 false
             }
             expiry.isEmpty() -> {
-                "Please provide cards expiry date".showToast(requireContext())
+                getString(R.string.please_provide_cards_expiry_date).showToast(requireContext())
                 false
             }
-            else -> true
+            else -> {
+                true
+            }
         }
     }
 
@@ -60,7 +63,7 @@ class AddCreditCardFragment : BaseFragment<FragmentAddCreditCardBinding>(), View
             when (v!!) {
                 btnAdd -> {
                     if (checkData()) {
-                        "Credit card added".showToast(requireContext())
+                        getString(R.string.credit_card_added).showToast(requireContext())
                         requireActivity().onBackPressed()
                     }
                 }

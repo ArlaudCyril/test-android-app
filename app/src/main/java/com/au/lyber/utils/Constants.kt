@@ -1,6 +1,7 @@
 package com.au.lyber.utils
 
 import com.au.lyber.R
+import okhttp3.internal.connection.Exchange
 
 object Constants {
 
@@ -29,13 +30,21 @@ object Constants {
     const val PICTURE_DIRECTORY = "Lyber/Images"
 
     const val FOR_LOGIN ="for_login"
+    const val ADDRESS_ID = "address_id"
+    const val INVESTMENT_ID = "investmentId"
+    const val TYPE = "type"
+    const val  DATA_SELECTED= "dataSelected"
+    const val NETWORK = "network"
     /* screen navigation for specific uses */
     const val USING_STRATEGY = "using_strategy"
     const val USING_SINGULAR_ASSET = "using_singular_asset"
     const val USING_DEPOSIT = "using_deposit"
     const val USING_WITHDRAW = "using_withdraw"
+    const val SINGULAR = "SINGULAR"
+    const val TO_EDIT = "toEdit"
     const val USING_EXCHANGE = "using_exchange"
     const val USING_SELL = "using_sell"
+    const val NAME = "name"
     const val USING_ALL_PORTFOLIO = "using_all_portfolio"
     const val USING_WITHDRAW_FIAT = "using_withdraw_fiat"
 
@@ -58,6 +67,10 @@ object Constants {
 
     const val JPEG_FILE_PREFIX: String = "IMG_"
     const val JPEG_FILE_SUFFIX: String = ".jpg"
+    const val ADDRESS_STR = "address"
+    const val ORIGIN = "origin"
+    const val Exchange = "exchange"
+    const val LOGO = "logo"
 
     const val BASE_IMAGE_URL_ORIGINAL: String = "https://lyberblob.blob.core.windows.net/original/"
     const val BASE_IMAGE_URL_SMALL: String = "https://lyberblob.blob.core.windows.net/small/"

@@ -94,19 +94,19 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        infoBottomSheet = AddAddressInfoBottomSheet(false, ::infoBottomSheetCallback)
+        infoBottomSheet = AddAddressInfoBottomSheet(false,requireActivity(), ::infoBottomSheetCallback)
         viewModel = getViewModel(requireActivity())
         viewModel.listener = this
 
 
         /*  changing ui according to view cases */
         if (fromWithdraw) {
-            binding.btnAddUseAddress.text = "Add and use this address"
+            binding.btnAddUseAddress.text = getString(R.string.add_and_use_this_address)
             binding.etNetwork.updatePadding(0)
         } else {
-            binding.tvTitle.text = "Add a Crypto address"
+            binding.tvTitle.text = getString(R.string.add_a_crypto_address)
             binding.ivNetwork.gone()
-            binding.etNetwork.hint = "Choose network"
+            binding.etNetwork.hint = getString(R.string.choose_network)
         }
 
 
@@ -175,7 +175,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                 binding.tvTitle.fadeIn()
                 binding.ivNetwork.visible()
                 binding.etNetwork.updatePadding(0)
-                binding.tvTitle.text = "Add a ${it.name.uppercase()} address"
+                binding.tvTitle.text = getString(R.string.add_a_address, it.name.uppercase())
                 binding.etNetwork.setText("${it.name} (${it.asset_id.uppercase()})")
 
                 binding.ivNetwork.loadCircleCrop(it.logo)
@@ -441,22 +441,22 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                         toEdit -> {
 
                             val hashMap = hashMapOf<String, Any>()
-                            hashMap["name"] = addressName
-                            hashMap["network"] = viewModel.whitelistAddress?.network?: ""
-                            hashMap["address"] = address
-                            hashMap["origin"] = if (originSelectedPosition == 0) {
-                                hashMap["exchange"] = viewModel.whitelistAddress?.exchange ?: ""
-                                "EXCHANGE"
+                            hashMap[Constants.NAME] = addressName
+                            hashMap[Constants.NETWORK] = viewModel.whitelistAddress?.network?: ""
+                            hashMap[Constants.ADDRESS_STR] = address
+                            hashMap[Constants.ORIGIN] = if (originSelectedPosition == 0) {
+                                hashMap[Constants.Exchange] = viewModel.whitelistAddress?.exchange ?: ""
+                                getString(R.string.exchange)
                             } else {
-                                "WALLET"
+                                getString(R.string.wallet)
                             }
-                            hashMap["logo"] = viewModel.whitelistAddress?.logo ?: ""
+                            hashMap[Constants.LOGO] = viewModel.whitelistAddress?.logo ?: ""
 
-                            hashMap["address_id"] = viewModel.whitelistAddress?._id ?: ""
+                            hashMap[Constants.ADDRESS_ID] = viewModel.whitelistAddress?._id ?: ""
 
                             network?.let {
-                                hashMap["logo"] = network?.logo ?: ""
-                                hashMap["network"] = network?.name ?: ""
+                                hashMap[Constants.LOGO] = network?.logo ?: ""
+                                hashMap[Constants.NETWORK] = network?.name ?: ""
                             }
 
                             checkInternet(requireContext()) {
@@ -467,37 +467,36 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
 
                         addressName.isEmpty() -> {
                             binding.etAddressName.requestKeyboard()
-                            "Please enter address name".showToast(requireContext())
+                            getString(R.string.please_enter_address_name).showToast(requireContext())
                         }
 
                         network == null -> {
                             binding.etNetwork.requestFocus()
-                            "Please select a network".showToast(requireContext())
+                            getString(R.string.please_select_a_network).showToast(requireContext())
                         }
 
                         address.isEmpty() -> {
                             binding.etAddress.requestKeyboard()
-                            binding.ttlAddress.helperText =
-                                "Please enter ${network?.name ?: ""} address"
-                            "Please enter address".showToast(requireContext())
+                            binding.ttlAddress.helperText = getString(R.string.please_enter_address, network?.name ?: "")
+                            getString(R.string.please_enter_address_).showToast(requireContext())
                         }
 
                         !address.checkFormat(network?.asset_id?.uppercase() ?: "") -> {
                             binding.etAddress.requestKeyboard()
-                            binding.ttlAddress.helperText = "Please enter valid address"
-                            "Please enter valid address".showToast(requireContext())
+                            binding.ttlAddress.helperText = getString(R.string.please_enter_valid_address)
+                            getString(R.string.please_enter_valid_address).showToast(requireContext())
                         }
 
                         exchange == null -> {
 
-                            if (originSelectedPosition == 0)
-                                "Please select a exchange".showToast(requireContext())
-                            else {
+                            if (originSelectedPosition == 0) {
+                                getString(R.string.please_select_a_exchange).showToast(requireContext())
+                            } else {
                                 val whilelist = Whitelistings(
                                     address = address,
                                     name = addressName,
                                     network = network?.name ?: "",
-                                    origin = if (originSelectedPosition == 0) "EXCHANGE" else "WALLET",
+                                    origin = if (originSelectedPosition == 0) getString(R.string.exchange) else getString(R.string.wallet),
                                     exchange = exchange?.name ?: "",
                                     logo = network?.logo ?: ""
                                 )
@@ -511,7 +510,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                                 address = address,
                                 name = addressName,
                                 network = network?.name ?: "",
-                                origin = if (originSelectedPosition == 0) "EXCHANGE" else "WALLET",
+                                origin = if (originSelectedPosition == 0) getString(R.string.exchange) else getString(R.string.wallet),
                                 exchange = exchange?.name ?: "",
                                 logo = network?.logo ?: ""
                             )
@@ -557,9 +556,9 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                     when {
                         address.isEmpty() ->
                             binding.ttlAddress.helperText =
-                                "Please enter ${it.network.uppercase()} address"
+                                getString(R.string.please_enter_address, it.network.uppercase() ?: "")
                         !address.checkFormat(it.network.uppercase()) ->
-                            binding.ttlAddress.helperText = "Please enter valid address"
+                            binding.ttlAddress.helperText =getString(R.string.please_enter_valid_address)
                         else -> binding.ttlAddress.helperText = ""
                     }
                 }
@@ -568,9 +567,9 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                 network?.let {
                     when {
                         address.isEmpty() ->
-                            binding.ttlAddress.helperText = "Please enter ${it.name} address"
+                            binding.ttlAddress.helperText =  getString(R.string.please_enter_address, it.name ?: "")
                         !address.checkFormat(it.asset_id.uppercase()) ->
-                            binding.ttlAddress.helperText = "Please enter valid address"
+                            binding.ttlAddress.helperText =getString(R.string.please_enter_valid_address)
                         else -> binding.ttlAddress.helperText = ""
                     }
                 }

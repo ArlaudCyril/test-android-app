@@ -84,11 +84,6 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
                     App.prefsManager.logout()
                     requireActivity().onBackPressed()
 
-                    /*                    CommonMethods.checkInternet(requireContext()) {
-                                            dismiss()
-                                            CommonMethods.showProgressDialog(requireContext())
-                                            viewModel.logout(CommonMethods.getDeviceId(requireActivity().contentResolver))
-                                        }*/
 
                 }
 
@@ -139,12 +134,6 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
                             showProgressDialog(requireContext())
                             viewModel.verifyPin(pin)
                         }
-                    } else {
-                        viewModel.createPin = pin
-                        (requireParentFragment() as SignUpFragment).replace(
-                            R.id.frameLayoutSignUp,
-                            (requireParentFragment() as SignUpFragment).fragments[3]
-                        )
                     }
                 }*/
 

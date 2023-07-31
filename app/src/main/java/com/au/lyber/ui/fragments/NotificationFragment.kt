@@ -74,7 +74,7 @@ class NotificationFragment : BaseFragment<FragmentNotificationBinding>() {
                                     R.color.purple_gray_50
                                 )
                             )
-                            tvNotification.text = "TODAY"
+                            tvNotification.text = getString(R.string.today)
                             viewDivider.gone()
                         }
                         5 -> {
@@ -84,7 +84,7 @@ class NotificationFragment : BaseFragment<FragmentNotificationBinding>() {
                                     R.color.purple_gray_50
                                 )
                             )
-                            tvNotification.text = "YESTERDAY"
+                            tvNotification.text = getString(R.string.yesterday)
                             viewDivider.gone()
                         }
                         else -> {

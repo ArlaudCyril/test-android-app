@@ -6,11 +6,9 @@ import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.navigation.fragment.NavHostFragment
-import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
 import com.au.lyber.databinding.ActivitySplashBinding
 import com.au.lyber.utils.ActivityCallbacks
-import com.au.lyber.utils.App
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : BaseActivity<ActivitySplashBinding>() {
@@ -31,14 +29,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
             this /* lifecycle owner */,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    // Back is pressed... Finishing the activit
                     if (navHostFragment.childFragmentManager.backStackEntryCount>2) {
-//                        if (App.prefsManager.userPin.isEmpty()) {
-//                            navController.clearBackStack(R.id.splashFragment)
-//                            navController.navigate(R.id.discoveryFragment)
-//                        }else{
-//
-//                        }
                         navController.popBackStack()
                     }else{
                         finishAffinity()
@@ -46,12 +37,9 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
                 }
             })
 
-        //graph.startDestination = R.id.DetailsFragment
-
-        Log.d("Discoo=ver","SpacshActivity")
         if ((intent?.extras?.getString("fromLogout", "") ?: "").isNotEmpty())
-            navController.navigate(R.id.discoveryFragment)            //addFragment(R.id.flSplashActivity, DiscoveryFragment())
-        else navController.navigate(R.id.splashFragment)//addFragment(R.id.flSplashActivity, SplashFragment())
+            navController.navigate(R.id.discoveryFragment)
+        else navController.navigate(R.id.splashFragment)
     }
 
 

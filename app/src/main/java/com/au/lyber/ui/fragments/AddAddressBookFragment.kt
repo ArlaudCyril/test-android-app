@@ -122,19 +122,19 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
 //    }
 
     private fun showInfo(data: Whitelistings) {
-        AddAddressInfoBottomSheet(true) {
+        AddAddressInfoBottomSheet(true,requireActivity()) {
             if (it == 1) {
                 // delete
                 checkInternet(requireContext()) {
                     showProgressDialog(requireContext())
-                    viewModel.deleteWhiteList(hashMapOf("address_id" to data._id))
+                    viewModel.deleteWhiteList(hashMapOf(Constants.ADDRESS_ID to data._id))
                 }
             } else {
                 //edit
                 viewModel.whitelistAddress = data
                 requireActivity().replaceFragment(R.id.flSplashActivity, AddCryptoAddress().apply {
                     arguments = Bundle().apply {
-                        putBoolean("toEdit", true)
+                        putBoolean(Constants.TO_EDIT, true)
                     }
                 })
             }

@@ -15,6 +15,7 @@ import com.au.lyber.ui.portfolio.action.AssestFragmentAction
 import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.App
 import com.au.lyber.utils.CommonMethods
+import com.au.lyber.utils.Constants
 
 class SelectAnAssestDepositFragment : BaseFragment<FragmentSelectAssestForDepostBinding>()
 ,AssestFragmentAction{
@@ -29,7 +30,7 @@ class SelectAnAssestDepositFragment : BaseFragment<FragmentSelectAssestForDepost
         viewModel = CommonMethods.getViewModel(requireActivity())
         layoutManager = LinearLayoutManager(requireActivity())
         binding.rvAddAsset.layoutManager = layoutManager
-        adapterAllAsset = AllAssesstAdapterDeposit(::assetClicked)
+        adapterAllAsset = AllAssesstAdapterDeposit(::assetClicked,requireActivity())
         binding.rvAddAsset.adapter = adapterAllAsset
         binding.rvRefresh.setOnRefreshListener {
             viewModel.getAllAssets()
@@ -79,7 +80,7 @@ class SelectAnAssestDepositFragment : BaseFragment<FragmentSelectAssestForDepost
 
     override fun assetClicked(balance: AssetBaseData) {
         val bundle = Bundle().apply {
-            putString("dataSelected",balance.id)
+            putString(Constants.DATA_SELECTED,balance.id)
         }
         findNavController().navigate(R.id.chooseAssetForDepositFragment,bundle)
     }

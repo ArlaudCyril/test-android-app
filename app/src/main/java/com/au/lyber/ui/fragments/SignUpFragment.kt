@@ -1,3 +1,4 @@
+/*
 package com.au.lyber.ui.fragments
 
 import android.app.Dialog
@@ -69,7 +70,9 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>() {
         Log.d("clickSignup",viewModel.forLogin.toString())
 
         changeFragment(mPosition,false)
-        /* new Apis */
+        */
+/* new Apis *//*
+
 
         viewModel.setPhoneResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
@@ -181,7 +184,9 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>() {
         }
 
 
-        /* old Apis */
+        */
+/* old Apis *//*
+
 
         viewModel.enterPhoneResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
@@ -276,11 +281,13 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>() {
     }
 
     private fun changeFragment(mPosition: Int, isBackStack: Boolean) {
-        /*        CreateAccountFragment(),
+        */
+/*        CreateAccountFragment(),
         EnterOtpFragment(),
         CreatePinFragment(),
         ConfirmPinFragment(),
-        EnableNotificationFragment()*/
+        EnableNotificationFragment()*//*
+
         val bundle = Bundle().apply {
             putBoolean("forLogin", viewModel.forLogin)
         }
@@ -327,11 +334,13 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>() {
                     prefsManager.logout()
                     requireActivity().supportFragmentManager.popBackStack()
 
+*/
 /*                    CommonMethods.checkInternet(requireContext()) {
                         dismiss()
                         CommonMethods.showProgressDialog(requireContext())
                         viewModel.logout(CommonMethods.getDeviceId(requireActivity().contentResolver))
-                    }*/
+                    }*//*
+
 
                 }
 
@@ -375,7 +384,9 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>() {
         }
     }
 
-    /* top Left Action Image icon handling */
+    */
+/* top Left Action Image icon handling *//*
+
     private fun setImage(position: Int) {
         val res = when (position) {
             0 -> {
@@ -416,8 +427,11 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>() {
         setImage(position)
     }
 
-    /* Host Activity's onBackPressed */
-  /*  override fun onBackPressed(): Boolean {
+    */
+/* Host Activity's onBackPressed *//*
+
+  */
+/*  override fun onBackPressed(): Boolean {
         return if (mPosition == 2 || mPosition == 4) {
             showLogoutDialog()
             false
@@ -427,9 +441,10 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>() {
             false
         } else true
 
-    }*/
+    }*//*
 
 
 
 
-}
+
+}*/

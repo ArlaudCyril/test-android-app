@@ -85,7 +85,7 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
                     } else
                         progressSteps.progress = 60
 
-                tvStepsCompleted.text = "2/3 steps completed"
+                tvStepsCompleted.text = getString(R.string._2_3_steps_completed)
 
                 tvNumFillPersonalData.gone()
                 tvFillPersonalData.setOnClickListener(null)
@@ -165,7 +165,7 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
                 } else
                     progressSteps.progress = 90
 
-            tvStepsCompleted.text = "3/3 steps completed"
+            tvStepsCompleted.text = getString(R.string._3_3_steps_completed)
 
             tvNumVerifyYourIdentity.text = ""
             ivVerifyYourIdentity.setImageResource(R.drawable.drawable_circle_checked)
