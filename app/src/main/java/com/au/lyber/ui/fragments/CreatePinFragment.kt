@@ -16,6 +16,7 @@ import com.au.lyber.utils.App
 import com.au.lyber.utils.CommonMethods.Companion.getViewModel
 import com.au.lyber.utils.CommonMethods.Companion.replace
 import com.au.lyber.utils.CommonMethods.Companion.requestKeyboard
+import com.au.lyber.utils.Constants
 import com.au.lyber.utils.OnTextChange
 import com.au.lyber.viewmodels.SignUpViewModel
 
@@ -41,7 +42,7 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
         App.prefsManager.savedScreen = javaClass.name
 
         viewModel = getViewModel(requireParentFragment())
-        viewModel.forLogin = requireArguments().getBoolean("forLogin",false)
+        viewModel.forLogin = requireArguments().getBoolean(Constants.FOR_LOGIN,false)
         binding.etCreatePin.addTextChangedListener(onTextChange)
         val navHostFragment =  requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
@@ -126,7 +127,7 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
                 }
             if (pinCount == 4) {
                 val bundle = Bundle().apply {
-                    putBoolean("forLogin", viewModel.forLogin)
+                    putBoolean(Constants.FOR_LOGIN, viewModel.forLogin)
                 }
                 Handler(Looper.getMainLooper()).postDelayed({
                     viewModel.createPin = pin

@@ -28,7 +28,7 @@ object Constants {
     const val SOCKET_BASE_URL = "ws://ws.lyber.com:80/websocket/"
     const val PICTURE_DIRECTORY = "Lyber/Images"
 
-
+    const val FOR_LOGIN ="for_login"
     /* screen navigation for specific uses */
     const val USING_STRATEGY = "using_strategy"
     const val USING_SINGULAR_ASSET = "using_singular_asset"

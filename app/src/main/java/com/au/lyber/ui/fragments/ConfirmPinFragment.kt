@@ -15,6 +15,7 @@ import com.au.lyber.utils.CommonMethods.Companion.getViewModel
 import com.au.lyber.utils.CommonMethods.Companion.replaceFragment
 import com.au.lyber.utils.CommonMethods.Companion.requestKeyboard
 import com.au.lyber.utils.CommonMethods.Companion.showToast
+import com.au.lyber.utils.Constants
 import com.au.lyber.utils.OnTextChange
 import com.au.lyber.viewmodels.SignUpViewModel
 
@@ -31,7 +32,7 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
         //(requireParentFragment() as SignUpFragment).mPosition = 3
 
         viewModel = getViewModel(requireParentFragment())
-        viewModel.forLogin = requireArguments().getBoolean("forLogin",false)
+        viewModel.forLogin = requireArguments().getBoolean(Constants.FOR_LOGIN,false)
         viewModel.listener = this
         binding.ivTopAction.setOnClickListener {
             requireActivity().onBackPressed()

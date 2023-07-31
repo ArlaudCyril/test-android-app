@@ -9,6 +9,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentDiscoveryBinding
+import com.au.lyber.utils.Constants
 
 class DiscoveryFragment : BaseFragment<FragmentDiscoveryBinding>() {
     override fun bind() = FragmentDiscoveryBinding.inflate(layoutInflater)
@@ -17,14 +18,14 @@ class DiscoveryFragment : BaseFragment<FragmentDiscoveryBinding>() {
         super.onViewCreated(view, savedInstanceState)
         binding.btnSignUp.setOnClickListener {
             val bundle = Bundle().apply {
-                putBoolean("forLogin",false)
+                putBoolean(Constants.FOR_LOGIN,false)
             }
             findNavController().navigate(R.id.createAccountFragment,bundle)
         }
 
         binding.tvLogin.setOnClickListener {
             val bundle = Bundle().apply {
-                putBoolean("forLogin",true)
+                putBoolean(Constants.FOR_LOGIN,true)
             }
             findNavController().navigate(R.id.createAccountFragment,bundle)
         }

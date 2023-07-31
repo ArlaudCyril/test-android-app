@@ -10,15 +10,13 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentSelectAssestForDepostBinding
 import com.au.lyber.models.AssetBaseData
-import com.au.lyber.models.Balance
 import com.au.lyber.ui.adapters.AllAssesstAdapterDeposit
 import com.au.lyber.ui.portfolio.action.AssestFragmentAction
 import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.App
 import com.au.lyber.utils.CommonMethods
-import com.au.lyber.utils.PreferenceManager
 
-class SelectAssestForDepositFragment : BaseFragment<FragmentSelectAssestForDepostBinding>()
+class SelectAnAssestDepositFragment : BaseFragment<FragmentSelectAssestForDepostBinding>()
 ,AssestFragmentAction{
     private lateinit var viewModel: PortfolioViewModel
     private lateinit var adapterAllAsset: AllAssesstAdapterDeposit

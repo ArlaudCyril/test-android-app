@@ -31,6 +31,7 @@ import com.au.lyber.utils.CommonMethods.Companion.requestKeyboard
 import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.showToast
 import com.au.lyber.utils.CommonMethods.Companion.visible
+import com.au.lyber.utils.Constants
 import com.au.lyber.viewmodels.SignUpViewModel
 import com.nimbusds.srp6.SRP6ClientSession
 import com.nimbusds.srp6.SRP6CryptoParams
@@ -64,7 +65,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
 
         App.prefsManager.accessToken = ""
         viewModel = getViewModel(this)
-        viewModel.forLogin = requireArguments().getBoolean("forLogin",false)
+        viewModel.forLogin = requireArguments().getBoolean(Constants.FOR_LOGIN,false)
         viewModel.listener = this
         binding.tvCountryCode.text = viewModel.countryCode
         Log.d("clickSignupFinalQ1",viewModel.forLogin.toString())
@@ -128,7 +129,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                         null, FragmentManager.POP_BACK_STACK_INCLUSIVE
                     )
                     val bundle = Bundle().apply {
-                        putBoolean("forLogin", viewModel.forLogin)
+                        putBoolean(Constants.FOR_LOGIN, viewModel.forLogin)
                     }
                     findNavController().navigate(R.id.createPinFragment,bundle)
                 }else{
@@ -201,7 +202,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                 CommonMethods.dismissProgressDialog()
 
                 val bundle = Bundle().apply {
-                    putBoolean("forLogin", false)
+                    putBoolean(Constants.FOR_LOGIN, false)
                 }
                 findNavController().navigate(R.id.createPinFragment,bundle)
             }
