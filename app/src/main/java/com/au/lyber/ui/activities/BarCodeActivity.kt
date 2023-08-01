@@ -4,6 +4,9 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
 import com.au.lyber.R
 import com.au.lyber.databinding.ActivityBarcodingBinding
+import com.au.lyber.utils.Constants
+import com.google.zxing.BarcodeFormat
+import com.journeyapps.barcodescanner.BarcodeEncoder
 
 class BarCodeActivity : BaseActivity<ActivityBarcodingBinding>() {
     override fun bind() = ActivityBarcodingBinding.inflate(layoutInflater)
@@ -14,6 +17,17 @@ class BarCodeActivity : BaseActivity<ActivityBarcodingBinding>() {
         super.onCreate(savedInstanceState)
         binding.ivTopAction.setOnClickListener {
             onBackPressed()
+        }
+        setBarcode()
+    }
+
+    private fun setBarcode() {
+        try {
+            val barcodeEncoder =  BarcodeEncoder()
+            val bitmap = barcodeEncoder.encodeBitmap(intent.getStringExtra(Constants.DATA_SELECTED), BarcodeFormat.QR_CODE, 400, 400)
+            binding.ivBarcode.setImageBitmap(bitmap);
+        } catch(e:Exception) {
+            e.printStackTrace()
         }
     }
 }

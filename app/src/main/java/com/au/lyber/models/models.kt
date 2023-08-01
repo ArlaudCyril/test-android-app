@@ -560,7 +560,9 @@ data class ChallengeResponse(
 data class UserLoginResponse(
     val data: LoginData
 )
+data class GetAddress(val data: Address)
 
+data class Address(val address:String)
 data class LoginData(
     val access_token: String,
     val refresh_token: String,

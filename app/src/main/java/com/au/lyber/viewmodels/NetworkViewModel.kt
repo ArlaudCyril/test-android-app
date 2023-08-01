@@ -144,6 +144,8 @@ open class NetworkViewModel : ViewModel() {
     val allAssets get() = _allAssets
 
     private val _getAssetDetail = MutableLiveData<AssetDetailBaseDataResponse>()
+    private val _getAddress = MutableLiveData<GetAddress>()
+    val getAddress get() = _getAddress
     val getAssetDetail get() = _getAssetDetail
 
     private val _recurringInvestmentDetail =
@@ -615,6 +617,13 @@ open class NetworkViewModel : ViewModel() {
         viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().getAssetDetail(assetId,"true")
             if (res.isSuccessful) _getAssetDetail.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+    fun getAddress(network: String,assetId: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().getAddress(network,assetId)
+            if (res.isSuccessful) _getAddress.postValue(res.body())
             else listener?.onRetrofitError(res.errorBody())
         }
     }

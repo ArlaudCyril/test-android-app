@@ -23,6 +23,7 @@ import com.au.lyber.models.NetworkDeposit
 import com.au.lyber.ui.activities.BarCodeActivity
 import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.App
+import com.au.lyber.utils.CommonMethods
 import com.au.lyber.utils.CommonMethods.Companion.fadeIn
 import com.au.lyber.utils.CommonMethods.Companion.getViewModel
 import com.au.lyber.utils.CommonMethods.Companion.loadCircleCrop
@@ -48,7 +49,8 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
         viewModel = getViewModel(requireActivity())
         binding.ivScan.setOnClickListener {
             if (binding.etAddress.text.toString().isNotEmpty())
-                startActivity(Intent(requireActivity(),BarCodeActivity::class.java)) }
+                startActivity(Intent(requireActivity(),BarCodeActivity::class.java)
+                    .putExtra(Constants.DATA_SELECTED,binding.etAddress.text.toString())) }
         binding.ivTopAction.setOnClickListener { requireActivity().onBackPressed() }
 
         binding.btnAddUseAddress.setOnClickListener {
@@ -105,6 +107,12 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                 }
             }
         }
+        viewModel.getAddress.observe(viewLifecycleOwner){
+            if (lifecycle.currentState == Lifecycle.State.RESUMED){
+                CommonMethods.dismissProgressDialog()
+                binding.etAddress.text = it.data.address
+            }
+        }
         viewModel.getAssetDetail.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 viewModel.selectedAssetDetail = it.data
@@ -112,13 +120,20 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                 for (networkq in it.data.networks) {
                     if (networkq.isDepositActive) {
                         binding.etNetwork.text =networkq.fullName
-                        binding.etAddress.text = networkq.addressRegex
-                        binding.tvNote.text = "Send only ${network!!.fullName} (${network!!.id}) to this address, using the native ${networkq.fullName} protocol."
+                        CommonMethods.showProgressDialog(requireActivity())
+                        viewModel.getAddress(networkq.id,network!!.id)
+                        binding.tvNote.text = getString(
+                            R.string.send_only_to_this_address_using_the_protocol,
+                            network!!.fullName,
+                            network!!.id,
+                            networkq.fullName
+                        )
                         break
                     }else{
                         binding.etNetwork.text =""
                         binding.etAddress.text = ""
-                        binding.tvNote.text = "All networks for this asset are currently deactivated for deposit."
+                        binding.tvNote.text =
+                            getString(R.string.all_networks_for_this_asset_are_currently_deactivated_for_deposit)
 
                     }
                 }
@@ -146,8 +161,14 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
         assetPopupNetwork.setOnItemClickListener { _, _, position, _ ->
             assetAdapterNetwork.getItemAt(position)?.let {
                 binding.etNetwork.text = it.fullName
-                binding.etAddress.text = it.addressRegex
-                binding.tvNote.text = "Send only ${network!!.fullName} (${network!!.id}) to this address, using the native ${it.fullName} protocol."
+                CommonMethods.showProgressDialog(requireActivity())
+                viewModel.getAddress(it.id,network!!.id)
+                binding.tvNote.text = getString(
+                    R.string.send_only_to_this_address_using_the_protocol,
+                    network!!.fullName,
+                    network!!.id,
+                    it.fullName
+                )
 
                 assetPopupNetwork.dismiss()
             }
