@@ -102,6 +102,7 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                     }} (${sa.id.uppercase()})")
                     binding.ivNetwork.loadCircleCrop(sa.imageUrl)
                     binding.btnAddUseAddress.text = "Buy ${sa.fullName.capitalize()} on Lyber"
+                    CommonMethods.showProgressDialog(requireActivity())
                     viewModel.getAssetDetailIncludeNetworks(sa.id)
                     break
                 }
@@ -115,6 +116,7 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
         }
         viewModel.getAssetDetail.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                CommonMethods.dismissProgressDialog()
                 viewModel.selectedAssetDetail = it.data
                 assetAdapterNetwork.setData(it.data.networks)
                 for (networkq in it.data.networks) {
@@ -155,6 +157,7 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                 binding.ivNetwork.loadCircleCrop(it.imageUrl)
                 binding.btnAddUseAddress.text = "Buy ${it.fullName.capitalize()} on Lyber"
                 viewModel.getAssetDetailIncludeNetworks(it.id)
+                CommonMethods.showProgressDialog(requireActivity())
                 assetPopup.dismiss()
             }
         }

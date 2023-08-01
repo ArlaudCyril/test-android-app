@@ -24,7 +24,7 @@ class BarCodeActivity : BaseActivity<ActivityBarcodingBinding>() {
     private fun setBarcode() {
         try {
             val barcodeEncoder =  BarcodeEncoder()
-            val bitmap = barcodeEncoder.encodeBitmap(intent.getStringExtra(Constants.DATA_SELECTED), BarcodeFormat.QR_CODE, 400, 400)
+            val bitmap = barcodeEncoder.encodeBitmap(intent.getStringExtra(Constants.DATA_SELECTED), BarcodeFormat.QR_CODE, 500, 500)
             binding.ivBarcode.setImageBitmap(bitmap);
         } catch(e:Exception) {
             e.printStackTrace()
