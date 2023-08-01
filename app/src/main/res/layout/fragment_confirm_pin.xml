@@ -17,7 +17,7 @@
         android:backgroundTint="@color/purple_gray_00"
         android:paddingHorizontal="12dp"
         android:paddingVertical="12dp"
-        android:src="@drawable/ic_close"
+        android:src="@drawable/ic_back"
         app:layout_constraintBottom_toTopOf="@id/topGuide"
         app:layout_constraintStart_toStartOf="parent"
         app:tint="@color/black" />
@@ -117,7 +117,7 @@
             android:id="@+id/ivCodeFour"
             android:layout_width="16dp"
             android:layout_height="16dp"
-            android:background="@drawable/page_selected_indicator" />
+            android:background="@drawable/circle_dot_unselected" />
 
     </LinearLayout>
 

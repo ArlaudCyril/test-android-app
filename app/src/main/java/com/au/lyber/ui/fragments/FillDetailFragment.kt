@@ -1,5 +1,6 @@
 package com.au.lyber.ui.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -290,7 +291,15 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
         binding.apply {
             when (v!!) {
                 btnCommon -> buttonClicked(position)
-                ivTopAction -> requireActivity().onBackPressed()
+                ivTopAction -> {
+                    if (position ==0){
+                        requireActivity().finishAffinity()
+                        startActivity(Intent(requireActivity(),SplashActivity::class.java)
+                            .putExtra(Constants.FOR_LOGOUT,Constants.FOR_LOGOUT))
+                    }else{
+                        requireActivity().onBackPressed()
+                    }
+                }
             }
         }
     }

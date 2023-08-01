@@ -167,24 +167,24 @@
         android:label="DepositFiatWalletFragment" >
 
     </fragment>
-    <fragment
-        android:id="@+id/signUpFragment"
-        android:name="com.au.lyber.ui.fragments.SignUpFragment"
-        android:label="SignUpFragment"
-        >
-        <action
-            android:id="@+id/action_signUpFragment_to_createAccountFragment"
-            app:destination="@id/createAccountFragment" />
-        <action
-            android:id="@+id/action_signUpFragment_to_createPinFragment"
-            app:destination="@id/createPinFragment" />
-        <action
-            android:id="@+id/action_signUpFragment_to_confirmPinFragment"
-            app:destination="@id/confirmPinFragment" />
-        <action
-            android:id="@+id/action_signUpFragment_to_enableNotificationFragment"
-            app:destination="@id/enableNotificationFragment" />
-    </fragment>
+<!--    <fragment-->
+<!--        android:id="@+id/signUpFragment"-->
+<!--        android:name="com.au.lyber.ui.fragments.SignUpFragment"-->
+<!--        android:label="SignUpFragment"-->
+<!--        >-->
+<!--        <action-->
+<!--            android:id="@+id/action_signUpFragment_to_createAccountFragment"-->
+<!--            app:destination="@id/createAccountFragment" />-->
+<!--        <action-->
+<!--            android:id="@+id/action_signUpFragment_to_createPinFragment"-->
+<!--            app:destination="@id/createPinFragment" />-->
+<!--        <action-->
+<!--            android:id="@+id/action_signUpFragment_to_confirmPinFragment"-->
+<!--            app:destination="@id/confirmPinFragment" />-->
+<!--        <action-->
+<!--            android:id="@+id/action_signUpFragment_to_enableNotificationFragment"-->
+<!--            app:destination="@id/enableNotificationFragment" />-->
+<!--    </fragment>-->
     <fragment
         android:id="@+id/createPinFragment"
         android:name="com.au.lyber.ui.fragments.CreatePinFragment"

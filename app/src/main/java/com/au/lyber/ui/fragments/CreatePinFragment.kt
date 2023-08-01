@@ -1,6 +1,7 @@
 package com.au.lyber.ui.fragments
 
 import android.app.Dialog
+import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -12,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
 import com.au.lyber.databinding.CustomDialogLayoutBinding
 import com.au.lyber.databinding.FragmentCreatePinBinding
+import com.au.lyber.ui.activities.SplashActivity
 import com.au.lyber.utils.App
 import com.au.lyber.utils.CommonMethods.Companion.getViewModel
 import com.au.lyber.utils.CommonMethods.Companion.replace
@@ -21,7 +23,6 @@ import com.au.lyber.utils.OnTextChange
 import com.au.lyber.viewmodels.SignUpViewModel
 
 class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
-    private lateinit var navController : NavController
     override fun bind() = FragmentCreatePinBinding.inflate(layoutInflater)
 
     private val pin get() = binding.etCreatePin.text.trim().toString()
@@ -35,30 +36,16 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-
-        //(requireParentFragment() as SignUpFragment).setIndicators(2)
-
         App.prefsManager.savedScreen = javaClass.name
-
         viewModel = getViewModel(requireParentFragment())
         viewModel.forLogin = requireArguments().getBoolean(Constants.FOR_LOGIN,false)
         binding.etCreatePin.addTextChangedListener(onTextChange)
-        val navHostFragment =  requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        navController = navHostFragment.findNavController()
         binding.ivTopAction.setOnClickListener {
             requireActivity().onBackPressed()
         }
         binding.tvTopAction.setOnClickListener {
             showLogoutDialog()
         }
-//        binding.etCreatePin.setOnEditorActionListener(onEditorActionListener)
-
-        /* preparing ui */
-        /*if (viewModel.forLogin) {
-            binding.tvTitle.text = "Enter PIN"
-            binding.tvSubTitle.text = "The code you’ve created during the signup."
-        }*/
 
     }
     private fun showLogoutDialog() {
@@ -82,9 +69,9 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
                 it.tvPositiveButton.setOnClickListener {
                     dismiss()
                     App.prefsManager.logout()
-                    requireActivity().onBackPressed()
-
-
+                    requireActivity().finishAffinity()
+                    startActivity(Intent(requireActivity(),SplashActivity::class.java)
+                        .putExtra(Constants.FOR_LOGOUT,Constants.FOR_LOGOUT))
                 }
 
                 show()
@@ -126,7 +113,7 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
                 }
                 Handler(Looper.getMainLooper()).postDelayed({
                     viewModel.createPin = pin
-                   navController.navigate(R.id.confirmPinFragment,bundle)
+                    findNavController().navigate(R.id.confirmPinFragment,bundle)
 
                     /*App.prefsManager.user?.let {
                     if (it.login_pin_set) {

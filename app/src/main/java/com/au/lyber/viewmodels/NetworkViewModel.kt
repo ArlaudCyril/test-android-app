@@ -853,9 +853,9 @@ open class NetworkViewModel : ViewModel() {
             val hash = hashMapOf<String, Any>()
             hash["investmentExperience"] = investmentExperience
             hash["incomeSource"] = incomeSource
-            hash["occupation"] = "Agriculture"
+            hash["occupation"] = occupation
             hash["incomeRange"] = incomeRange
-            //hash["personalAssets"] = personalAssets
+            hash["mainUse"] = personalAssets
             val res = RestClient.get(Constants.NEW_BASE_URL).setInvestmentExp(hash)
             if (res.isSuccessful)
                 _setInvestmentExpResponse.postValue(res.body())

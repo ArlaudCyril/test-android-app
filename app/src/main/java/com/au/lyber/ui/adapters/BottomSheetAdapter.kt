@@ -56,7 +56,11 @@ class BottomSheetAdapter(
                     }
                     BottomSheetDialog.SheetType.ANNUAL_INCOME -> {
                         val value = it.title.split("-")
-                        text.text = context.getString(R.string.k_month, value[0], value[1])
+                        if (value.size > 1) {
+                            text.text = context.getString(R.string.k_month, value[0], value[1])
+                        }else{
+                            text.text = it.title+"€/month"
+                        }
                     }
                     else -> text.text = it.title
                 }

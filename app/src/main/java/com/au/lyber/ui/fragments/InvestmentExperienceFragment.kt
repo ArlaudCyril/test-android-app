@@ -41,14 +41,14 @@ class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceB
             etChooseIndustry.setOnClickListener(this@InvestmentExperienceFragment)
             etCryptoExp.setOnClickListener(this@InvestmentExperienceFragment)
             etSourceIncome.setOnClickListener(this@InvestmentExperienceFragment)
-            etPersonalAssets.setOnClickListener(this@InvestmentExperienceFragment)
+            etYourActivity.setOnClickListener(this@InvestmentExperienceFragment)
         }
 
         binding.etCryptoExp.text.clear()
         binding.etChooseIndustry.text.clear()
         binding.etAnnualIncome.text.clear()
         binding.etSourceIncome.text.clear()
-        binding.etPersonalAssets.text.clear()
+        binding.etYourActivity.text.clear()
 
         /*personalDataViewModel.personalData?.let {
 
@@ -81,7 +81,7 @@ class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceB
             }
             else -> {
                 personalAssets = itemSelected
-                binding.etPersonalAssets.setText("$itemSelected assets")
+                binding.etYourActivity.setText("$itemSelected")
             }
         }
     }
@@ -100,12 +100,12 @@ class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceB
                 requireContext()
             )
             annualIncome.isEmpty() -> getString(R.string.please_tell_us_your_annual_income).showToast(requireContext())
-           /* personalAssets.isEmpty() -> {
+           personalAssets.isEmpty() -> {
                 binding.scrollView.scrollTo(0, binding.root.bottom)
-                "Please tell us how many assets you have".showToast(
+               getString(R.string.please_tell_us_what_do_you_plan_to_mainly_do).showToast(
                     requireContext()
                 )
-            }*/
+            }
             else -> {
 
                 viewModel.let {
@@ -148,10 +148,10 @@ class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceB
                         BottomSheetDialog.SheetType.SOURCE_OF_INCOME.title
                     )
                 }
-                etPersonalAssets -> {
+                etYourActivity -> {
                     BottomSheetDialog(::handleClickEvent).show(
                         requireActivity().supportFragmentManager,
-                        BottomSheetDialog.SheetType.PERSONAL_ASSETS.title
+                        BottomSheetDialog.SheetType.YOUR_ACTIVITY_ON_LYBER.title
                     )
                 }
             }

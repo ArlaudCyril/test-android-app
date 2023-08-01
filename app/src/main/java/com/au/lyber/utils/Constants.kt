@@ -30,6 +30,7 @@ object Constants {
     const val PICTURE_DIRECTORY = "Lyber/Images"
 
     const val FOR_LOGIN ="for_login"
+    const val FOR_LOGOUT ="fromLogout"
     const val ADDRESS_ID = "address_id"
     const val INVESTMENT_ID = "investmentId"
     const val TYPE = "type"

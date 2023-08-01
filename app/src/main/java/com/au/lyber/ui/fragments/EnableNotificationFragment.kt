@@ -39,6 +39,9 @@ class EnableNotificationFragment : BaseFragment<FragmentEnableNotificationsBindi
             navController.navigate(R.id.completePortfolioFragment)
 
         }
+        binding.ivTopAction.setOnClickListener {
+
+        }
 
         binding.btnEnableNotifications.setOnClickListener {
 

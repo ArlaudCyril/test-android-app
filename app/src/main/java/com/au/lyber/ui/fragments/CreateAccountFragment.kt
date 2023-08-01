@@ -87,10 +87,6 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         binding.btnNext.setOnClickListener(this)
 
         binding.tvCountryCode.setOnClickListener(this)
-//        binding.etPassword.onFocusChangeListener = focusChange
-//        binding.etPhone.onFocusChangeListener = focusChange
-//        binding.etEmail.onFocusChangeListener = focusChange
-
         binding.root.viewTreeObserver?.addOnGlobalLayoutListener(
             keyboardLayoutListener
         )
@@ -104,11 +100,8 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
 
                 App.prefsManager.accessToken = it.data.token
                 App.accessToken = it.data.token
-
                 val creds =
                     client.step2(config, it.data.salt.toBigInteger(), it.data.B.toBigInteger())
-
-
                 checkInternet(requireContext()) {
                     viewModel.authenticateUser(creds.A.toString(), creds.M1.toString())
                 }
@@ -119,47 +112,13 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
 
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 CommonMethods.dismissProgressDialog()
-                if(it.data.access_token != null){
-
-                    App.prefsManager.accessToken = it.data.access_token
-                    App.accessToken = it.data.access_token
-                    App.prefsManager.refreshToken = it.data.refresh_token
-
-                    childFragmentManager.popBackStack(
-                        null, FragmentManager.POP_BACK_STACK_INCLUSIVE
-                    )
-                    val bundle = Bundle().apply {
-                        putBoolean(Constants.FOR_LOGIN, viewModel.forLogin)
-                    }
-                    findNavController().navigate(R.id.createPinFragment,bundle)
-                }else{
-                    // Create a transparent color view
-                    val transparentView = View(context)
-                    transparentView.setBackgroundColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.semi_transparent_dark
-                        )
-                    )
-
-                    // Set layout parameters for the transparent view
-                    val viewParams = RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.MATCH_PARENT,
-                        RelativeLayout.LayoutParams.MATCH_PARENT
-                    )
-
-                    val vc  = VerificationBottomSheet()
-                    vc.typeVerification = it.data.type2FA
-                    vc.viewToDelete = transparentView
-                    vc.mainView = getView()?.rootView as ViewGroup
-                    vc.viewModel = viewModel
-                    vc.show(childFragmentManager, "")
-
-                    // Add the transparent view to the RelativeLayout
-                    val mainView = getView()?.rootView as ViewGroup
-                    mainView.addView(transparentView, viewParams)
-
+                App.prefsManager.accessToken = it.data.access_token
+                App.accessToken = it.data.access_token
+                App.prefsManager.refreshToken = it.data.refresh_token
+                val bundle = Bundle().apply {
+                    putBoolean(Constants.FOR_LOGIN, viewModel.forLogin)
                 }
+                findNavController().navigate(R.id.createPinFragment,bundle)
 
 
             }

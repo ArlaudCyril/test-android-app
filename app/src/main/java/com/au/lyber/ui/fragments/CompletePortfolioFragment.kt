@@ -25,7 +25,6 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
     private val TAG = "CompletePortfolioFragme"
 
     private lateinit var portfolioViewModel: PortfolioViewModel
-    private lateinit var navController : NavController
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         App.prefsManager.savedScreen = javaClass.name
@@ -35,8 +34,6 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val navHostFragment =  requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        navController = navHostFragment.findNavController()
         portfolioViewModel = getViewModel(requireActivity())
 
         binding.btnInvestMoney.setOnClickListener(this)
@@ -233,14 +230,14 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
 
                     if (App.prefsManager.portfolioCompletionStep == Constants.KYC_COMPLETED) {
 //                        requireActivity().clearBackStack()
-                        navController.navigate(R.id.educationStrategyHolderFragment)
+                        findNavController().navigate(R.id.educationStrategyHolderFragment)
                     }
                 }
 
 //                tvEditPersonalData,
-                tvFillPersonalData -> navController.navigate(R.id.fillDetailFragment)
+                tvFillPersonalData -> findNavController().navigate(R.id.fillDetailFragment)
 
-                tvVerifyYourIdentity -> navController.navigate(R.id.verifyYourIdentityFragment)
+                tvVerifyYourIdentity -> findNavController().navigate(R.id.verifyYourIdentityFragment)
 
 
             }

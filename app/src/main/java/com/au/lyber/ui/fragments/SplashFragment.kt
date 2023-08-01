@@ -46,8 +46,8 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>() {
                 } else {
 
                     if (App.prefsManager.userPin.isNotEmpty()) {
-
-                        findNavController().navigate(R.id.unlockAppFragment)
+                        findNavController().navigate(R.id.discoveryFragment)
+                       // findNavController().navigate(R.id.unlockAppFragment)
                     } else {
                         findNavController().navigate(R.id.discoveryFragment)
 

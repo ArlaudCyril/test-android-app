@@ -9,6 +9,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.au.lyber.R
 import com.au.lyber.databinding.ActivitySplashBinding
 import com.au.lyber.utils.ActivityCallbacks
+import com.au.lyber.utils.Constants
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : BaseActivity<ActivitySplashBinding>() {
@@ -37,7 +38,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
                 }
             })
 
-        if ((intent?.extras?.getString("fromLogout", "") ?: "").isNotEmpty())
+        if ((intent?.extras?.getString(Constants.FOR_LOGOUT, "") ?: "").isNotEmpty())
             navController.navigate(R.id.discoveryFragment)
         else navController.navigate(R.id.splashFragment)
     }

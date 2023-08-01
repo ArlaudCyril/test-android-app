@@ -260,7 +260,7 @@
     <string name="back_button">back button</string>
     <string name="deactivated">Deactivated</string>
     <string name="assets">%1$s - %2$s assets</string>
-    <string name="k_month">%1$s - %2$sk€/month</string>
+    <string name="k_month">%1$s - %2$s€/month</string>
     <string name="upcoming_payment_august_27">Upcoming Payment August 27</string>
     <string name="delete">Delete</string>
     <string name="confirm">Confirm</string>
@@ -526,4 +526,6 @@
     <string name="risk">Risk:</string>
     <string name="all_networks_for_this_asset_are_currently_deactivated_for_deposit">All networks for this asset are currently deactivated for deposit.</string>
     <string name="send_only_to_this_address_using_the_protocol">Send only %1$s (%2$s) to this address, using the %3$s protocol.</string>
+    <string name="your_activity_on_lyber">Your activity on Lyber</string>
+    <string name="please_tell_us_what_do_you_plan_to_mainly_do">Please tell us  What do you plan to mainly do?</string>
 </resources>
