@@ -33,7 +33,7 @@
             android:layout_gravity="center"
             android:layout_marginHorizontal="12dp"
             android:gravity="center"
-            android:text="FIAT Wallet"
+            android:text="@string/fiat_wallet"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             android:textColor="@color/purple_gray_400"
             android:visibility="visible" />

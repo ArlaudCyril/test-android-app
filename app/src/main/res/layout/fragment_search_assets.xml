@@ -22,7 +22,7 @@
         <TextView
             style="@style/TitleText"
             android:layout_centerInParent="true"
-            android:text="Choose an asset"
+            android:text="@string/choose_an_asset"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
     </RelativeLayout>
@@ -37,7 +37,7 @@
         android:background="@drawable/edit_text_background"
         android:drawableStart="@drawable/search"
         android:drawablePadding="8dp"
-        android:hint="Asset name"
+        android:hint="@string/asset_name"
         android:padding="12dp" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout

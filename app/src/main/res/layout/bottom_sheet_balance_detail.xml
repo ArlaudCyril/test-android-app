@@ -51,7 +51,7 @@
                     android:id="@+id/tvTitleBalance"
                     style="@style/SubheadMabry"
                     android:layout_gravity="center"
-                    android:text="Balance"
+                    android:text="@string/balance"
                     android:textColor="#423D33"
                     android:textStyle="bold" />
 
@@ -59,7 +59,7 @@
                     android:id="@+id/tvSubTitle"
                     style="@style/BodyMabry"
                     android:layout_gravity="center"
-                    android:text="Bitcoin (BTC)"
+                    android:text="@string/bitcoin_btc"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                     android:textColor="@color/purple_gray_500" />
             </LinearLayout>
@@ -77,13 +77,13 @@
                 android:id="@+id/tvAssetValueCrypto"
                 style="@style/SubheadMabry"
                 android:layout_marginTop="20dp"
-                android:text="0.001234 BTC"
+                android:text="@string/_0_001234_btc"
                 android:textColor="@color/purple_gray_500" />
 
             <TextView
                 android:id="@+id/tvValueAmount"
                 style="@style/HeadingStyle"
-                android:text="133,2€"
+                android:text="@string/_133_2"
                 android:textColor="@color/purple_gray_900"
                 android:textSize="40sp" />
 
@@ -101,7 +101,7 @@
                 android:id="@+id/tvHistory"
                 style="@style/TitleText"
                 android:layout_marginTop="32dp"
-                android:text="History"
+                android:text="@string/history"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 android:textColor="@color/purple_gray_900" />
 

@@ -22,7 +22,7 @@
     <TextView
         android:id="@+id/tvTitle"
         style="@style/SubheadMabry"
-        android:text="Change Profile Picture"
+        android:text="@string/change_profile_picture"
         app:layout_constraintBottom_toBottomOf="@id/ivTopAction"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -45,7 +45,7 @@
             <TextView
                 style="@style/BodyMabry"
                 android:layout_centerVertical="true"
-                android:text="Camera" />
+                android:text="@string/camera" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -65,7 +65,7 @@
             <TextView
                 style="@style/BodyMabry"
                 android:layout_centerVertical="true"
-                android:text="Select from gallery" />
+                android:text="@string/select_from_gallery" />
 
             <ImageView
                 android:layout_width="wrap_content"
@@ -85,7 +85,7 @@
             <TextView
                 style="@style/BodyMabry"
                 android:layout_centerVertical="true"
-                android:text="Set default pictures" />
+                android:text="@string/set_default_pictures" />
 
             <ImageView
                 android:layout_width="wrap_content"

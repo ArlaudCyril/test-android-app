@@ -29,13 +29,13 @@
             <TextView
                 style="@style/HeadingStyle"
                 android:layout_marginTop="8dp"
-                android:text="Strong authentification" />
+                android:text="@string/strong_authentification" />
 
             <TextView
                 style="@style/SubheadMabry"
                 android:layout_marginTop="4dp"
                 android:lineSpacingExtra="6dp"
-                android:text="For added security on your Lyber account, enable strong authentication. "
+                android:text="@string/for_added_security_on_your_lyber_account_enable_strong_authentication"
                 android:textColor="@color/purple_gray_500" />
 
             <RelativeLayout
@@ -56,7 +56,7 @@
 
                     <TextView
                         style="@style/SubheadMabry"
-                        android:text="By SMS" />
+                        android:text="@string/by_sms" />
 
                     <TextView
                         android:id="@+id/tvNumber"
@@ -92,7 +92,7 @@
                 <TextView
                     android:id="@+id/tvManageAuthentication"
                     style="@style/SubheadMabry"
-                    android:text="Manage the application cases of SMS authentication"
+                    android:text="@string/manage_the_application_cases_of_sms_authentication"
                     android:textColor="@color/purple_gray_500" />
 
                 <TextView
@@ -104,7 +104,7 @@
                     android:layout_marginEnd="16dp"
                     android:layout_toStartOf="@+id/switchValidateWithdraw"
                     android:gravity="center|start"
-                    android:text="Validate a withdraw" />
+                    android:text="@string/validate_a_withdraw" />
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/switchValidateWithdraw"
@@ -128,7 +128,7 @@
                     android:layout_marginEnd="16dp"
                     android:layout_toStartOf="@+id/switchWhitelisting"
                     android:gravity="center|start"
-                    android:text="Enable/Disable whitelisting" />
+                    android:text="@string/enable_disable_whitelisting" />
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/switchWhitelisting"
@@ -153,7 +153,7 @@
                     android:layout_marginEnd="16dp"
                     android:layout_toStartOf="@+id/switchEditAccount"
                     android:gravity="center|start"
-                    android:text="Edit account" />
+                    android:text="@string/edit_account" />
 
                 <androidx.appcompat.widget.SwitchCompat
                     android:id="@+id/switchEditAccount"

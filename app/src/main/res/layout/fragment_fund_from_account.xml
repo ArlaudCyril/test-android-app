@@ -37,12 +37,12 @@
             <TextView
                 style="@style/HeadingStyle"
                 android:layout_marginTop="32dp"
-                android:text="Fund your account from your bank account" />
+                android:text="@string/fund_your_account_from_your_bank_account" />
 
             <TextView
                 style="@style/SubheadMabry"
                 android:layout_marginTop="4dp"
-                android:text="Make sure the name of the bank account is the same as your name on Lyber (Frida Kahlo)."
+                android:text="@string/make_sure_the_name_of_the_bank_account_is_the_same_as_your_name_on_lyber_frida_kahlo"
                 android:textColor="@color/purple_gray_600" />
 
             <TextView
@@ -65,7 +65,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Reference number"
+                android:text="@string/reference_number"
                 android:textColor="@color/purple_gray_600" />
 
             <TextView
@@ -80,7 +80,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="SWIFT/BIC"
+                android:text="@string/swift_bic"
                 android:textColor="@color/purple_gray_600" />
 
             <TextView
@@ -95,7 +95,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Recipient name"
+                android:text="@string/recipient_name"
                 android:textColor="@color/purple_gray_600" />
 
             <TextView
@@ -111,7 +111,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Recipient adress"
+                android:text="@string/recipient_adress"
                 android:textColor="@color/purple_gray_600" />
 
             <TextView
@@ -128,7 +128,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="24dp"
-                android:text="Bank name"
+                android:text="@string/bank_name"
                 android:textColor="@color/purple_gray_600" />
 
             <TextView
@@ -152,7 +152,7 @@
                     style="@style/BodyMabry"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:text="Transfer timming"
+                    android:text="@string/transfer_timming"
                     android:textColor="@color/purple_gray_600" />
 
                 <TextView
@@ -160,8 +160,7 @@
                     android:layout_width="match_parent"
                     android:layout_marginTop="8dp"
                     android:lineSpacingExtra="6dp"
-                    android:text="SEPA transfers take 1-3 business days to be\nreceived by Lyber.
-                \nIf you do it today, it should be registered by\nFriday, April 22, 2022."
+                    android:text="@string/sepa_transfers_take_1_3_business_days_to_be_nreceived_by_lyber_nif_you_do_it_today_it_should_be_registered_by_nfriday_april_22_2022"
                     android:textColor="@color/purple_gray_700" />
 
 

@@ -37,7 +37,7 @@
                 style="@style/TitleText"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="20dp"
-                android:text="Crypto asset deposit"
+                android:text="@string/crypto_asset_deposit"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -46,7 +46,7 @@
                 style="@style/BodyMabry"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
-                android:text="Asset"
+                android:text="@string/asset"
                 android:textColor="@color/purple_gray_500"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvTitle" />
@@ -91,7 +91,7 @@
                 style="@style/BodyMabry"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
-                android:text="Network"
+                android:text="@string/network"
                 android:textColor="@color/purple_gray_500"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/llNetwork" />
@@ -112,14 +112,13 @@
                 android:drawablePadding="12dp"
                 android:focusable="false"
                 android:focusableInTouchMode="false"
-                android:hint="Network"
                 tools:ignore="RtlSymmetry" />
             <TextView
                 android:id="@+id/tvTitleDepositAddress"
                 style="@style/BodyMabry"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
-                android:text="Deposit adress"
+                android:text="@string/deposit_adress"
                 android:textColor="@color/purple_gray_500"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/etNetwork" />

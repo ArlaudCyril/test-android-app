@@ -22,7 +22,7 @@
         android:layout_gravity="center"
         android:layout_marginTop="32dp"
         android:gravity="center"
-        android:text="Confirmation"
+        android:text="@string/confirmation"
         android:textColor="@color/purple_gray_00" />
 
 
@@ -45,7 +45,7 @@
             android:layout_gravity="center_horizontal"
             android:layout_marginTop="16dp"
             android:gravity="center"
-            android:text="Your deposit has been taken into account"
+            android:text="@string/your_deposit_has_been_taken_into_account"
             android:textColor="@color/purple_gray_00" />
 
         <TextView
@@ -56,7 +56,7 @@
             android:layout_marginTop="4dp"
             android:alpha="0.8"
             android:gravity="center"
-            android:text="You can now see its effect on your portfolio."
+            android:text="@string/you_can_now_see_its_effect_on_your_portfolio"
             android:textColor="@color/purple_gray_00" />
 
     </LinearLayout>
@@ -68,7 +68,7 @@
         android:layout_marginTop="60dp"
         android:background="@drawable/curved_button"
         android:backgroundTint="@color/purple_gray_00"
-        android:text="Thanks"
+        android:text="@string/thanks"
         android:textColor="@color/purple_gray_700" />
 
 

@@ -20,7 +20,7 @@
     <TextView
         android:id="@+id/tvTitle"
         style="@style/SubheadMabry"
-        android:text="Withdraw from BTC"
+        android:text="@string/withdraw_from_btc"
         app:layout_constraintBottom_toBottomOf="@id/ivTopAction"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -40,7 +40,7 @@
             style="@style/TitleText"
             android:layout_marginStart="16dp"
             android:layout_marginTop="20dp"
-            android:text="Enter wallet address"
+            android:text="@string/enter_wallet_address"
             android:textAppearance="@style/TextAppearance.AppCompat.Title"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/ivTopAction" />
@@ -52,7 +52,7 @@
             android:layout_marginHorizontal="24dp"
             android:layout_marginTop="24dp"
             android:background="@drawable/edit_text_background"
-            android:hint="Enter address"
+            android:hint="@string/enter_address"
             android:paddingHorizontal="12dp"
             app:layout_constraintTop_toBottomOf="@id/tvEnterWalletAddress" />
 
@@ -63,7 +63,7 @@
             android:layout_marginHorizontal="24dp"
             android:layout_marginTop="24dp"
             android:background="@drawable/button_purple_500"
-            android:text="Withdraw"
+            android:text="@string/withdraw"
             android:textColor="@color/white"
             app:layout_constraintTop_toBottomOf="@id/etWalletAddress" />
 

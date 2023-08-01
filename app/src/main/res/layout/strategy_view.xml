@@ -52,7 +52,7 @@
         android:layout_marginStart="12dp"
         android:layout_marginTop="16dp"
         android:layout_toEndOf="@id/ivYield"
-        android:text="Yield:"
+        android:text="@string/yield"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <TextView
@@ -96,7 +96,7 @@
         android:layout_marginStart="12dp"
         android:layout_marginTop="14dp"
         android:layout_toEndOf="@id/ivRisk"
-        android:text="Risk:"
+        android:text="@string/risk"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <TextView

@@ -72,7 +72,7 @@
                 <TextView
                     style="@style/DialogTitle"
                     android:layout_marginStart="4dp"
-                    android:text="Add an asset" />
+                    android:text="@string/add_an_asset" />
 
 
             </LinearLayout>

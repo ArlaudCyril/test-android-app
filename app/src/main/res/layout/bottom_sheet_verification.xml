@@ -16,7 +16,7 @@
         android:layout_marginTop="24dp"
         android:fontFamily="@font/atypdisplay_semibold"
         android:gravity="center"
-        android:text="Verification"
+        android:text="@string/verification"
         android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
     <TextView
@@ -25,7 +25,7 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="4dp"
-        android:text="Enter the code displayed on your email" />
+        android:text="@string/enter_the_code_displayed_on_your_email_" />
 
     <TextView
         android:id="@+id/fieldToVerify"
