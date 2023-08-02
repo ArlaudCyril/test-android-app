@@ -400,7 +400,7 @@ open class NetworkViewModel : ViewModel() {
         viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().getAssets()
             if (res.isSuccessful)
-                getAssetResponse.postValue(res.body())
+                _getAssetsResponse.postValue(res.body())
             else listener?.onRetrofitError(res.errorBody())
         }
     }
