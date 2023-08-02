@@ -3,13 +3,9 @@ package com.au.lyber.ui.fragments
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
-import androidx.transition.Fade
 import android.view.View
-import android.widget.MediaController
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
+import androidx.transition.Fade
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentSplashBinding
 import com.au.lyber.utils.App
@@ -46,9 +42,11 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>() {
                 } else {
 
                     if (App.prefsManager.userPin.isNotEmpty()) {
-                        findNavController().navigate(R.id.discoveryFragment)
-                       // findNavController().navigate(R.id.unlockAppFragment)
-                    } else {
+                        if ( App.prefsManager.refreshToken.isEmpty()) {
+                            findNavController().navigate(R.id.discoveryFragment)
+                        }else {
+                             findNavController().navigate(R.id.unlockAppFragment)
+                        } } else {
                         findNavController().navigate(R.id.discoveryFragment)
 
                     }
