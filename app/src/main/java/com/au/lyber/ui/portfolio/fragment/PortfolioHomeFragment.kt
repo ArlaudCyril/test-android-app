@@ -226,6 +226,8 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
         viewModel.priceServiceResumes.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                BaseActivity.balanceResume.clear()
+                BaseActivity.balanceResume.addAll(it)
                 adapterAllAsset.setList(it.subList(0, 6))
             }
         }

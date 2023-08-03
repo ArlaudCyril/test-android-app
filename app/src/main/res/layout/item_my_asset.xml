@@ -92,7 +92,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@id/ivDropIcon"
         app:layout_constraintTop_toBottomOf="@id/llFiatWallet"
-        android:text="966,8€" />
+        android:text="0€" />
 
     <TextView
         android:id="@+id/tvAssetAmountInCrypto"
@@ -102,7 +102,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/ivDropIcon"
         app:layout_constraintTop_toBottomOf="@id/tvAssetAmount"
-        android:text="0.001234 ETH" />
+        android:text="0.0" />
 
     <ImageView
         android:id="@+id/ivDropIcon"
