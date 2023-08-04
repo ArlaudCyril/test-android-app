@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentAllAssetsBinding
@@ -25,15 +26,9 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
 
     private lateinit var adapter: AllAssetAdapter
     private lateinit var layoutManager: LinearLayoutManager
-
     private lateinit var viewModel: PortfolioViewModel
-
     private var type: String = ""
-
-    private var shouldLoad: Boolean = true
     private var page: Int = 1
-    private var limit: Int = 10
-
     private var assets = mutableListOf<PriceServiceResume>()
     private var trendings = mutableListOf<PriceServiceResume>()
     private var topGainers = mutableListOf<PriceServiceResume>()
@@ -62,15 +57,21 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
 
         viewModel.priceServiceResumes.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-
                 assets.clear()
                 trendings.clear()
                 topLosers.clear()
                 topGainers.clear()
                 stables.clear()
 
-
                 assets.addAll(it)
+                if (type == Constants.Exchange){
+                    for (asset in it){
+                        if (asset.id == viewModel.exchangeAssetFrom!!.id){
+                            assets.remove(asset)
+                        }
+                    }
+                }
+
                 trendings.addAll(assets)
                 topLosers.addAll(assets.topLosers())
                 topGainers.addAll(topLosers.reversed())
@@ -104,13 +105,16 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
             it.tabLayout.addTab(it.tabLayout.newTab().apply { text = getString(R.string.stable) })
             it.tabLayout.addOnTabSelectedListener(tabSelectedListener)
 
-            adapter = AllAssetAdapter(::assetClicked)
+            adapter = AllAssetAdapter(::assetClicked,type == Constants.Exchange)
             layoutManager = LinearLayoutManager(requireContext())
 
             it.rvAddAsset.adapter = adapter
             it.rvAddAsset.layoutManager = layoutManager
             it.rvAddAsset.itemAnimator = null
             it.tvTitle.text = getString(R.string.all_assets)
+            if (type == Constants.Exchange){
+                it.tvTitle.text = getString(R.string.exchange_to)
+            }
             it.ivTopAction.setImageResource(R.drawable.ic_back)
             it.ivTopAction.setOnClickListener(this)
             it.etSearch.setOnClickListener(this)
@@ -191,65 +195,25 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
     private fun assetClicked(asset: PriceServiceResume) {
 
         getViewModel<PortfolioViewModel>(requireActivity()).let {
-            //it.selectedAsset = asset
+            it.selectedAssetPriceResume = asset
             it.chosenAssets = asset
             it.screenCount = 1
             viewModel.selectedAsset = it.selectedAsset
-            requireActivity().onBackPressed()
-        }
-
-        /*if (type.isNotEmpty()) {
-            viewModel.exchangeAssetTo = asset.extractAsset()
-            requireActivity().onBackPressed()
-        } else {
-            getViewModel<PortfolioViewModel>(requireActivity()).let {
-                it.selectedAsset = asset.extractAsset()
-                it.screenCount = 1
-                viewModel.selectedAsset = it.selectedAsset
+            if (type == Constants.Exchange) {
+                findNavController().navigate(R.id.exchangeFromFragment)
+            } else {
                 requireActivity().onBackPressed()
             }
-        }*/
+        }
+
     }
 
-//    private fun optionSelected(option: String, asset: Data) {
-//        when (option) {
-//            "deposit" -> {
-//
-//            }
-//            "withdraw" -> {
-//                viewModel.selectedOption = Constants.USING_WITHDRAW
-//                requireActivity().replaceFragment(
-//                    R.id.flSplashActivity,
-//                    AddAmountFragment(),
-//                    topBottom = true
-//                )
-//            }
-//            "exchange" -> {
-//                viewModel.selectedOption = Constants.USING_EXCHANGE
-//                requireActivity().replaceFragment(
-//                    R.id.flSplashActivity,
-//                    SwapWithdrawFromFragment()
-//                )
-//            }
-//            "buy" -> {
-//                viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
-////                viewModel.selectedAsset = asset.extractAsset()
-//                requireActivity().replaceFragment(
-//                    R.id.flSplashActivity,
-//                    AddAmountFragment()
-//                )
-//            }
-//            "sell" -> {
-//
-//            }
-//        }
-//    }
+
 
     override fun onClick(v: View?) {
         binding.apply {
             when (v!!) {
                 ivTopAction -> requireActivity().onBackPressed()
-//                includedMyAsset.root -> requireActivity().onBackPressed()
             }
         }
     }

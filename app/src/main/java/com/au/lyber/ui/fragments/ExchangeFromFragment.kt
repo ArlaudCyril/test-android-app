@@ -1,33 +1,22 @@
 package com.au.lyber.ui.fragments
 
-import android.annotation.SuppressLint
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentSwapFromBinding
-import com.au.lyber.databinding.ItemMyAssetBinding
-import com.au.lyber.models.AssetBaseData
 import com.au.lyber.models.Balance
 import com.au.lyber.ui.activities.BaseActivity
 import com.au.lyber.ui.adapters.BalanceAdapter
-import com.au.lyber.ui.adapters.BaseAdapter
 import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.CommonMethods
 import com.au.lyber.utils.CommonMethods.Companion.commaFormatted
-import com.au.lyber.utils.CommonMethods.Companion.currencyFormatted
-import com.au.lyber.utils.CommonMethods.Companion.formattedAsset
 import com.au.lyber.utils.CommonMethods.Companion.gone
-import com.au.lyber.utils.CommonMethods.Companion.loadCircleCrop
 import com.au.lyber.utils.CommonMethods.Companion.replaceFragment
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
-import java.math.RoundingMode
 
 class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnClickListener {
 
@@ -107,77 +96,13 @@ class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnCli
 
     private fun itemClicked(myAsset: Balance) {
         viewModel.exchangeAssetFrom = myAsset
-        findNavController().navigate(R.id.allAssetFragment)
+        val bundle = Bundle()
+            bundle.putString(Constants.TYPE,Constants.Exchange)
+
+        findNavController().navigate(R.id.allAssetFragment,bundle)
     }
 
-    class SwapFromAdapter(
-        private val itemClicked: (AssetBaseData, Int) -> Unit = { _, _ -> },
-        private val toExchange: Boolean = false
-    ) :
-        BaseAdapter<AssetBaseData>() {
 
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SwapViewHolder {
-            return SwapViewHolder(
-                ItemMyAssetBinding.inflate(
-                    LayoutInflater.from(parent.context),
-                    parent,
-                    false
-                )
-            )
-        }
-
-        @SuppressLint("SetTextI18n")
-        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-            (holder as SwapViewHolder).binding.apply {
-                itemList[position]?.let { it ->
-
-                    if (!it.imageUrl.isNullOrEmpty())
-                        ivAssetIcon.loadCircleCrop(it.imageUrl)
-                    tvAssetName.text = it.fullName
-                    if (it.isTradeActive) {
-                        tvAssetNameCode.gone()
-                    } else {
-                        tvAssetNameCode.visible()
-                    }
-                    for (balance in BaseActivity.balances) {
-                        if (balance.id == it.id) {
-                            val priceCoin = balance.balanceData.euroBalance.toDouble()
-                                .div(balance.balanceData.balance.toDouble())
-                            tvAssetAmount.text =
-                                balance.balanceData.euroBalance.commaFormatted.currencyFormatted
-                            tvAssetAmountInCrypto.text = balance.balanceData.balance.formattedAsset(
-                                price = priceCoin,
-                                rounding = RoundingMode.DOWN
-                            )
-                        }
-                    }
-
-                }
-
-            }
-        }
-
-
-        inner class SwapViewHolder(val binding: ItemMyAssetBinding) :
-            RecyclerView.ViewHolder(binding.root) {
-
-            init {
-                binding.apply {
-                    // view preparation
-                    ivDropIcon.setImageResource(R.drawable.ic_right_arrow_grey)
-
-                    root.setOnClickListener {
-                        itemList[adapterPosition]?.let {
-                            itemClicked(it, adapterPosition)
-                        }
-
-                    }
-                }
-            }
-
-        }
-    }
 
     override fun onClick(v: View?) {
         binding.apply {

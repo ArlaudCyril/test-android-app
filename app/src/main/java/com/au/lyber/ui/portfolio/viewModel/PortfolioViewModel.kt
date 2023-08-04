@@ -12,6 +12,12 @@ class PortfolioViewModel : NetworkViewModel() {
         set(value) {
             _selectedAsset = value
         }
+    private var _selectedAssetPriceResume: PriceServiceResume? = null
+    var selectedAssetPriceResume
+        get() = _selectedAssetPriceResume
+        set(value) {
+            _selectedAssetPriceResume = value
+        }
 
     private var _selectedAssetDetail: AssetDetailBaseData? = null
     var selectedAssetDetail

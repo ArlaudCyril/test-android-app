@@ -429,7 +429,7 @@
     <string name="crypto_asset_deposit">Crypto asset deposit</string>
     <string name="asset">Asset</string>
     <string name="_1_3_step_completed">⅓ step completed</string>
-    <string name="exchange_to">Exchange To</string>
+    <string name="exchange_to">Exchange → To</string>
     <string name="frequency">Frequency</string>
     <string name="payment">Payment</string>
     <string name="lyber_fees">Lyber fees</string>
