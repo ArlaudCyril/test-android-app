@@ -361,7 +361,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
             "exchange" -> {
                 viewModel.selectedOption = Constants.USING_EXCHANGE
-                navController.navigate(R.id.swapWithdrawFromFragment)
+                navController.navigate(R.id.exchangeFromFragment)
             }
 
             "sell" -> {

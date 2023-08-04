@@ -13,29 +13,26 @@ import com.au.lyber.R
 import com.au.lyber.databinding.FragmentSwapFromBinding
 import com.au.lyber.databinding.ItemMyAssetBinding
 import com.au.lyber.models.AssetBaseData
+import com.au.lyber.models.Balance
 import com.au.lyber.ui.activities.BaseActivity
+import com.au.lyber.ui.adapters.BalanceAdapter
 import com.au.lyber.ui.adapters.BaseAdapter
 import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.CommonMethods
-import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.commaFormatted
 import com.au.lyber.utils.CommonMethods.Companion.currencyFormatted
-import com.au.lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.formattedAsset
 import com.au.lyber.utils.CommonMethods.Companion.gone
 import com.au.lyber.utils.CommonMethods.Companion.loadCircleCrop
 import com.au.lyber.utils.CommonMethods.Companion.replaceFragment
-import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
 import java.math.RoundingMode
-import java.util.*
 
-class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnClickListener {
+class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnClickListener {
 
-    private lateinit var adapter: SwapFromAdapter
+    private lateinit var adapter: BalanceAdapter
     private lateinit var layoutManager: LinearLayoutManager
-
     private lateinit var viewModel: PortfolioViewModel
 
     override fun bind() = FragmentSwapFromBinding.inflate(layoutInflater)
@@ -49,20 +46,32 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
         viewModel.allMyPortfolio = ""
         viewModel.listener = this
 
-        viewModel.allAssets.observe(viewLifecycleOwner) {
+ /*       viewModel.allAssets.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                dismissProgressDialog()
+                CommonMethods.dismissProgressDialog()
                 if (it.data.isNotEmpty()) {
                     viewModel.exchangeAssetTo = it.data[0]
                 }
                 adapter.addList(it.data)
             }
+        }*/
+        viewModel.balanceResponse.observe(viewLifecycleOwner){
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                CommonMethods.dismissProgressDialog()
+                val balanceDataDict = it.data
+                val balances = ArrayList<Balance>()
+                balanceDataDict.forEach { it1 ->
+                    val balance = Balance(id = it1.key, balanceData = it1.value)
+                    balances.add(balance)
+                }
+                BaseActivity.balances = balances
+                adapter.setList(balances)
+            }
         }
 
 
         /* recycler view */
-        adapter =
-            SwapFromAdapter(::itemClicked)
+        adapter = BalanceAdapter(::itemClicked)
         layoutManager = LinearLayoutManager(requireContext())
         binding.rvRecyclerView.let {
             it.adapter = adapter
@@ -77,47 +86,27 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
     }
 
     private fun getData() {
-        checkInternet(requireContext()) {
-            showProgressDialog(requireContext())
+        CommonMethods.checkInternet(requireContext()) {
+            CommonMethods.showProgressDialog(requireContext())
             viewModel.getBalance()
         }
     }
 
     private fun prepareUi() {
-        if (viewModel.selectedOption == Constants.USING_EXCHANGE) {
-            binding.rlAllPortfolio.gone()
-            binding.tvTitle.text = getString(R.string.exchange_from)
-            binding.rlAllPortfolio.gone()
-            binding.includedAsset.root.visible()
-            binding.includedAsset.llFiatWallet.visible()
-            binding.includedAsset.ivAssetIcon.setImageResource(R.drawable.ic_euro)
-            binding.includedAsset.ivDropIcon.setImageResource(R.drawable.ic_right_arrow_grey)
-            binding.includedAsset.tvAssetName.text = getString(R.string.euro)
-            binding.tvAmountAllPortfolio.text =
-                "${viewModel.totalPortfolio.commaFormatted}${Constants.EURO}"
-        } else {
-            binding.tvLyberPortfolio.text = getString(R.string.a_precise_asset)
-            binding.tvTitle.text = getString(R.string.i_want_to_withdraw)
-            binding.rlAllPortfolio.visible()
-            binding.includedAsset.root.visible()
-            binding.includedAsset.llFiatWallet.visible()
-            binding.includedAsset.ivAssetIcon.setImageResource(R.drawable.ic_euro)
-            binding.includedAsset.ivDropIcon.setImageResource(R.drawable.ic_right_arrow_grey)
-            binding.includedAsset.tvAssetName.text = getString(R.string.euro)
-//            binding.includedAsset.tvAssetAmountCenter.text =
-//                "${App.prefsManager.getBalance()}${Constants.EURO}"
-            binding.tvAmountAllPortfolio.text =
-                "${viewModel.totalPortfolio.commaFormatted}${Constants.EURO}"
-        }
+
+        binding.rlAllPortfolio.gone()
+        binding.tvTitle.text = getString(R.string.exchange_from)
+        binding.rlAllPortfolio.gone()
+        binding.includedAsset.root.visible()
+        binding.includedAsset.llFiatWallet.visible()
+        binding.includedAsset.ivAssetIcon.setImageResource(R.drawable.ic_euro)
+        binding.includedAsset.ivDropIcon.setImageResource(R.drawable.ic_right_arrow_grey)
+        binding.includedAsset.tvAssetName.text = getString(R.string.euro)
+        "${viewModel.totalPortfolio.commaFormatted}${Constants.EURO}".also { binding.tvAmountAllPortfolio.text = it }
     }
 
-    private fun itemClicked(myAsset: AssetBaseData, position: Int) {
-
-/*        if (viewModel.selectedOption == Constants.USING_EXCHANGE)
-            viewModel.exchangeAssetFrom = myAsset
-        else*/
-            viewModel.withdrawAsset = myAsset
-
+    private fun itemClicked(myAsset: Balance) {
+        viewModel.exchangeAssetFrom = myAsset
         findNavController().navigate(R.id.allAssetFragment)
     }
 
@@ -146,17 +135,18 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
                     if (!it.imageUrl.isNullOrEmpty())
                         ivAssetIcon.loadCircleCrop(it.imageUrl)
                     tvAssetName.text = it.fullName
-                    if (it.isTradeActive){
+                    if (it.isTradeActive) {
                         tvAssetNameCode.gone()
-                    }else{
+                    } else {
                         tvAssetNameCode.visible()
                     }
-                    for (balance in BaseActivity.balances){
-                        if (balance.id == it.id){
+                    for (balance in BaseActivity.balances) {
+                        if (balance.id == it.id) {
                             val priceCoin = balance.balanceData.euroBalance.toDouble()
-                                .div(balance.balanceData.balance.toDouble() ?: 1.0)
-                            tvAssetAmount.text= balance.balanceData.euroBalance.commaFormatted.currencyFormatted
-                            tvAssetAmountInCrypto.text =balance.balanceData.balance.formattedAsset(
+                                .div(balance.balanceData.balance.toDouble())
+                            tvAssetAmount.text =
+                                balance.balanceData.euroBalance.commaFormatted.currencyFormatted
+                            tvAssetAmountInCrypto.text = balance.balanceData.balance.formattedAsset(
                                 price = priceCoin,
                                 rounding = RoundingMode.DOWN
                             )

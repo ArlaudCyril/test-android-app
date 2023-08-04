@@ -195,7 +195,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                             it.total_balance.toString().roundFloat().commaFormatted
                         } ${it.id.uppercase()} Available"TODO*/
 
-                         ivAssetSwapFrom.loadCircleCrop(it.imageUrl?:"")
+                       //  ivAssetSwapFrom.loadCircleCrop(it.imageUrl?:"")
 
                         tvSwapAssetFrom.text = it.id.uppercase()
 
@@ -736,7 +736,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
                     binding.tvSwapAssetFrom.text = to.id.uppercase()
 
-                    binding.ivAssetSwapTo.loadCircleCrop(from.imageUrl ?: "")
+                   // binding.ivAssetSwapTo.loadCircleCrop(from.imageUrl ?: "")
 
                     binding.tvSwapAssetTo.text = from.id.uppercase()
 
@@ -777,7 +777,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
 //                    maxValue = from.total_balance
 
-                     binding.ivAssetSwapFrom.loadCircleCrop(from.imageUrl ?: "")
+                     //binding.ivAssetSwapFrom.loadCircleCrop(from.imageUrl ?: "")
 
                     binding.tvSwapAssetFrom.text = from.id.uppercase()
 

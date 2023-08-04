@@ -148,7 +148,7 @@ class PortfolioViewModel : NetworkViewModel() {
             _exchangeToAmount = value
         }
 
-    private var _exchangeAssetFrom: AssetBaseData? = null
+    private var _exchangeAssetFrom: Balance? = null
     var exchangeAssetFrom
         get() = _exchangeAssetFrom
         set(value) {

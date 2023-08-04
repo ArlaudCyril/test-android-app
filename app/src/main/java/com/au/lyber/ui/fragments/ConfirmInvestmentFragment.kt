@@ -266,8 +266,8 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                     tvAmount.text =
                         "${viewModel.assetAmount.commaFormatted} ${viewModel.exchangeAssetTo?.id?.uppercase()}"
 
-                    tvNestedAmount.text =
-                        "${viewModel.exchangeAssetFrom?.fullName?.capitalize()} Price"
+                 /*   tvNestedAmount.text =
+                        "${viewModel.exchangeAssetFrom?.fullName?.capitalize()} Price"*/
                     /*tvNestedAmountValue.text =
                         "${viewModel.exchangeAssetFrom?.euro_amount.commaFormatted} ${Constants.EURO}"
                     TODO */

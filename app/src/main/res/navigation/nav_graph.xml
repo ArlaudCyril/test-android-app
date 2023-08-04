@@ -66,6 +66,11 @@
             app:enterAnim="@anim/slide_up"
             app:popExitAnim="@anim/slide_down"/>
         <action
+            android:id="@+id/action_portfolioHomeFragment_to_ExchangeFromFragment"
+            app:destination="@id/exchangeFromFragment"
+            app:enterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down"/>
+        <action
             android:id="@+id/action_portfolioHomeFragment_to_chooseAssetForDepositFragment"
             app:destination="@id/chooseAssetForDepositFragment"
             app:enterAnim="@anim/slide_up"
@@ -142,9 +147,12 @@
     <fragment
         android:id="@+id/swapWithdrawFromFragment"
         android:name="com.au.lyber.ui.fragments.SwapWithdrawFromFragment"
-        android:label="SwapWithdrawFromFragment" >
+        android:label="SwapWithdrawFromFragment" />
+    <fragment
+        android:id="@+id/exchangeFromFragment"
+        android:name="com.au.lyber.ui.fragments.ExchangeFromFragment"
+        android:label="ExchangeFromFragment" />
 
-    </fragment>
     <fragment
         android:id="@+id/chooseAssetForDepositFragment"
         android:name="com.au.lyber.ui.fragments.ChooseAssetForDepositFragment"
