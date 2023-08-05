@@ -232,6 +232,14 @@
         android:name="com.au.lyber.ui.fragments.FillDetailFragment"
         android:label="FillDetailFragment" />
     <fragment
+        android:id="@+id/confirmInvestmentFragment"
+        android:name="com.au.lyber.ui.fragments.ConfirmInvestmentFragment"
+        android:label="ConfirmInvestmentFragment" />
+    <fragment
+        android:id="@+id/addAmountForExchangeFragment"
+        android:name="com.au.lyber.ui.fragments.AddAmountForExchangeFragment"
+        android:label="AddAmountForExchangeFragment" />
+    <fragment
         android:id="@+id/verifyYourIdentityFragment"
         android:name="com.au.lyber.ui.fragments.VerifyYourIdentityFragment"
         android:label="VerifyYourIdentityFragment" />

@@ -5,6 +5,8 @@ import okhttp3.internal.connection.Exchange
 
 object Constants {
 
+    const val FROM_SWAP: String ="from_swap"
+
     /* steps fill personal data */
     const val ACCOUNT_INITIALIZATION = 0
     const val PERSONAL_DATA = 1
@@ -18,6 +20,7 @@ object Constants {
     const val KYC_COMPLETED = 3
     const val PROFILE_COMPLETED = 4
     const val DONE_EDUCATION = 5
+
 
     const val IS_LOGOUT: String = "is_logout"
 

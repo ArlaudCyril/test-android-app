@@ -53,7 +53,7 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
                 if (it.data.isNotEmpty()) {
-                    viewModel.exchangeAssetTo = it.data[0]
+                  //  viewModel.exchangeAssetTo = it.data[0]
                 }
                 adapter.addList(it.data)
             }

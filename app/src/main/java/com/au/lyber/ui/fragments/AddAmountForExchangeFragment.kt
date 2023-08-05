@@ -8,34 +8,31 @@ import android.util.Log
 import android.view.View
 import android.view.Window
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getColor
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
 import com.au.lyber.databinding.ConfirmationDialogBinding
 import com.au.lyber.databinding.FragmentAddAmountBinding
 import com.au.lyber.models.Whitelistings
+import com.au.lyber.ui.activities.BaseActivity
 import com.au.lyber.ui.fragments.bottomsheetfragments.FrequencyModel
 import com.au.lyber.ui.fragments.bottomsheetfragments.PayWithModel
-import com.au.lyber.utils.CommonMethods.Companion.checkInternet
+import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
+import com.au.lyber.utils.CommonMethods
 import com.au.lyber.utils.CommonMethods.Companion.clearBackStack
 import com.au.lyber.utils.CommonMethods.Companion.commaFormatted
 import com.au.lyber.utils.CommonMethods.Companion.decimalPoint
-import com.au.lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.fadeIn
-import com.au.lyber.utils.CommonMethods.Companion.getViewModel
 import com.au.lyber.utils.CommonMethods.Companion.gone
 import com.au.lyber.utils.CommonMethods.Companion.loadCircleCrop
-import com.au.lyber.utils.CommonMethods.Companion.replaceFragment
 import com.au.lyber.utils.CommonMethods.Companion.roundFloat
 import com.au.lyber.utils.CommonMethods.Companion.setBackgroundTint
-import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
-import com.au.lyber.utils.CommonMethods.Companion.showToast
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
 import com.au.lyber.utils.OnTextChange
-import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 
-class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClickListener {
+class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
+    View.OnClickListener {
 
     /* display conversion */
     private val amount get() = binding.etAmount.text.trim().toString()
@@ -64,7 +61,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = getViewModel(requireActivity())
+        viewModel = CommonMethods.getViewModel(requireActivity())
         viewModel.listener = this
 
         binding.tvBackArrow.setOnClickListener(this)
@@ -88,9 +85,8 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
         binding.ivSwapBetween.setOnClickListener(this)
         binding.ivRepeat.setOnClickListener(this)
         binding.ivMax.setOnClickListener(this)
+        binding.rlBalance.gone()
 
-
-//        binding.etAmount.showSoftInputOnFocus = false
 
 
         payMethodBottomSheet =
@@ -98,7 +94,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
         viewModel.exchangeResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                dismissProgressDialog()
+                CommonMethods.dismissProgressDialog()
                 requireActivity().clearBackStack()
             }
         }
@@ -106,7 +102,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
         viewModel.withdrawFiatResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                dismissProgressDialog()
+                CommonMethods.dismissProgressDialog()
                 viewModel.allMyPortfolio = ""
                 requireActivity().clearBackStack()
             }
@@ -122,221 +118,49 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
     @SuppressLint("SetTextI18n")
     private fun prepareView() {
-
         binding.apply {
 
-//            tvBalance.text = "${App.prefsManager.getBalance()}${Constants.EURO}"
-
-            when (viewModel.selectedOption) {
-
-                Constants.USING_DEPOSIT -> {
-                    btnAddFrequency.gone()
-                    tvAssetConversion.gone()
-                    tvSubTitle.gone()
-                    tvTitle.text = "Euro Deposit"
-//                    maxValue = App.prefsManager.getBalance().toDouble()
-                }
-
-                Constants.USING_STRATEGY -> {
-
-                    btnAddFrequency.visible()
-                    tvAssetConversion.gone()
-                    tvSubTitle.visible()
-                    tvTitle.text = "Invest in my strat.."
-                    mCurrency = Constants.EURO
-                    mConversionCurrency = Constants.EURO
-                    valueConversion = 1.0
-//                    maxValue = App.prefsManager.getBalance().toDouble()
-                }
-
-                Constants.USING_SINGULAR_ASSET -> {
-
-
-                    btnAddFrequency.visible()
-                    tvAssetConversion.visible()
-                    tvSubTitle.gone()
-                    ivMax.visible()
-                    rlCardInfo.gone()
-                    ivRepeat.visible()
-
-                    tvAddFrequency.text = "Add a frequency (Optional)"
-
-                    mCurrency = Constants.EURO
-                    mConversionCurrency = viewModel.selectedAsset?.id?.uppercase() ?: ""
-                    //valueConversion = viewModel.selectedAsset?.euro_amount.toString().toDouble() TODO
-
-//                    maxValue = App.prefsManager.getBalance().toDouble()
-
-                    tvTitle.text = "Invest in " + viewModel.selectedAsset?.id?.uppercase()
-                    tvAssetConversion.text =
-                        "0.00 ${viewModel.selectedAsset?.id?.uppercase()}"
-
-
-                }
-
-                Constants.USING_EXCHANGE -> {
-
-
-                    rlBalance.visible()
-                    btnAddFrequency.gone()
-                    ivMax.visible()
-                    tvAssetConversion.visible()
-                    rlCardInfo.gone()
-
-                    btnPreviewInvestment.text = "Preview exchange"
-                    llSwapLayout.visible()
-
-                    viewModel.exchangeAssetFrom?.let {
-
-                        mCurrency = it.id.uppercase()
-                        tvTitle.text = "Exchange ${it.id.uppercase()}"
-
-                       /* tvSubTitle.text = "${
-                            it.total_balance.toString().roundFloat().commaFormatted
-                        } ${it.id.uppercase()} Available"TODO*/
-
-                       //  ivAssetSwapFrom.loadCircleCrop(it.imageUrl?:"")
-
-                        tvSwapAssetFrom.text = it.id.uppercase()
-
-                        //maxValue = it.total_balance TODO
-                    }
-
-                    viewModel.exchangeAssetTo?.let {
-
-                        /*tvAssetConversion.text =
-                            it.euro_amount.toString().roundFloat().commaFormatted TODO*/
-                        mConversionCurrency = it.id.uppercase()
-
-                        // ivAssetSwapTo.loadCircleCrop(it.imageUrl?:"")
-                        tvSwapAssetTo.text = it.id.uppercase()
-                    }
-
-                    /*valueConversion = viewModel.exchangeAssetTo?.euro_amount.toString()
-                        .toDouble() / viewModel.exchangeAssetFrom?.euro_amount.toString().toDouble()
-
-                    maxValue = viewModel.exchangeAssetFrom?.total_balance ?: 1.0* TODO*/
-
-                    binding.etAmount.setText("${0.commaFormatted}$mCurrency")
-
-                }
-
-                Constants.USING_WITHDRAW -> {
-
-                    checkInternet(requireContext()) {
-                        viewModel.getWhiteListings()
-                    }
-
-                    btnAddFrequency.gone()
-                    ivMax.visible()
-                    ivRepeat.visible()
-                    tvAssetConversion.visible()
-
-                    mCurrency = Constants.EURO
-
-                    rlCardInfo.visible()
-
-                    btnPreviewInvestment.text = "Next"
-
-                    if (viewModel.allMyPortfolio.isNotEmpty()) {
-
-                        tvAssetConversion.gone()
-                        tvTitle.text = "Withdraw all my portfolio"
-                        etAmount.setTextColor(getColor(requireContext(), R.color.purple_300))
-                        ivMax.gone()
-                        ivRepeat.gone()
-                        rlBalance.gone()
-                        groupWithdrawAllPortfolio.gone()
-                        etAmount.setText(viewModel.totalPortfolio.commaFormatted + Constants.EURO)
-                        btnPreviewInvestment.text = "Preview withdraw"
-
-                        payMethodBottomSheet = PayWithModel.getToWithdraw(
-                            viewModel.withdrawAsset, ::payMethodSelected, true, true
-                        )
-
-                        maxValue = viewModel.totalPortfolio
-
-                        mConversionCurrency = Constants.EURO
-                        valueConversion = 1.0
-                        activateButton(true)
-                        canPreview = true
-
-                    } else {
-
-                        rlBalance.gone()
-
-                        mConversionCurrency = viewModel.withdrawAsset?.id?.uppercase() ?: ""
-
-                        //valueConversion = (viewModel.withdrawAsset?.euro_amount ?: 1).toDouble() TODO
-
-                       /* maxValue =
-                            (viewModel.withdrawAsset?.total_balance!!) * (viewModel.withdrawAsset?.euro_amount!!)
-                        TODO */
-                        tvTitle.text =
-                            "Withdraw from ${viewModel.withdrawAsset?.id?.uppercase()}"
-                        /*tvSubTitle.text = "${
-                            viewModel.withdrawAsset?.total_balance.toString().commaFormatted
-                        } " + "${viewModel.withdrawAsset?.id?.uppercase()} Available"
-                            TODO*/
-                        tvAssetConversion.text =
-                            "0.00${viewModel.withdrawAsset?.id?.uppercase()}"
-
-                    }
-
-                }
-
-                Constants.USING_WITHDRAW_FIAT -> {
-
-
-                    checkInternet(requireContext()) {
-                        viewModel.getWhiteListings()
-                    }
-
-                    btnAddFrequency.gone()
-                    ivMax.visible()
-                    tvAssetConversion.gone()
-
-                    mCurrency = Constants.EURO
-                    rlCardInfo.gone()
-                    btnPreviewInvestment.text = "Next"
-                    mConversionCurrency = Constants.EURO
-                    valueConversion = 1.0
-//                    maxValue = App.prefsManager.getBalance().toDouble()
-                    tvTitle.text = "Withdraw from Fiat"
-//                    tvSubTitle.text = "${App.prefsManager.getBalance().commaFormatted} Available"
-
-                    tvAssetConversion.text = "0.00${Constants.EURO}"
-
-
-                }
-
-                Constants.USING_SELL -> {
-
-                    binding.rlCardInfo.gone()
-                    binding.btnAddFrequency.gone()
-                    binding.ivMax.visible()
-
-                    mCurrency = Constants.EURO
-
-                    mConversionCurrency = viewModel.selectedAsset?.id?.uppercase() ?: ""
-
-                   // valueConversion = (viewModel.selectedAsset?.euro_amount ?: 1).toDouble() TODO
-
-                   /* maxValue =
-                        (viewModel.selectedAsset?.total_balance!!) * (viewModel.selectedAsset?.euro_amount!!)
-                    */ //TODO
-                    tvAssetConversion.text = "0.00${viewModel.selectedAsset?.id?.uppercase()}"
-
-                    btnPreviewInvestment.text =
-                        "Sell ${viewModel.selectedAsset?.id?.uppercase()}"
-                    binding.tvTitle.text =
-                        "Sell ${viewModel.selectedAsset?.fullName?.uppercase()}"
-                    /*binding.tvSubTitle.text =
-                        "${viewModel.selectedAsset?.total_balance.commaFormatted} ${viewModel.selectedAsset?.asset_id?.uppercase()}"
-                    binding.tvAssetConversion.visible() TODO*/
-                }
-
+            btnAddFrequency.gone()
+            ivMax.visible()
+            tvAssetConversion.visible()
+            rlCardInfo.gone()
+
+            btnPreviewInvestment.text = "Preview exchange"
+            llSwapLayout.visible()
+
+            viewModel.exchangeAssetFrom?.let { it ->
+
+                mCurrency = it.id.uppercase()
+                tvTitle.text = "Exchange ${it.id.uppercase()}"
+
+                tvSubTitle.text = "${
+                    it.balanceData.balance.roundFloat().commaFormatted
+                } ${it.id.uppercase()} Available"
+                val currency = BaseActivity.assets.find { it1 -> it1.id == it.id }
+                ivAssetSwapFrom.loadCircleCrop(currency!!.imageUrl ?: "")
+                tvSwapAssetFrom.text = it.id.uppercase()
+                maxValue = it.balanceData.balance.toDouble()
             }
+
+            viewModel.exchangeAssetTo?.let {
+                val currency = BaseActivity.assets.find { it1 -> it1.id == it.id }
+                /*tvAssetConversion.text =
+                    it.euro_amount.toString().roundFloat().commaFormatted TODO*/
+                mConversionCurrency = it.id.uppercase()
+
+                ivAssetSwapTo.loadCircleCrop(currency!!.imageUrl ?: "")
+                tvSwapAssetTo.text = it.id.uppercase()
+            }
+
+            /*    valueConversion = viewModel.exchangeAssetTo?.euro_amount.toString()
+                    .toDouble() / viewModel.exchangeAssetFrom?.euro_amount.toString().toDouble()TODO*/
+
+            maxValue = (viewModel.exchangeAssetFrom?.balanceData!!.balance.toDouble() ?: 1.0)
+            binding.etAmount.setText("${0.commaFormatted}$mCurrency")
+
+
+
+
 
             focusedData.currency = mCurrency
             unfocusedData.currency = mConversionCurrency
@@ -384,94 +208,31 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 //                                amount.split(mConversionCurrency)[0].pointFormat
                             assetConversion.split(mCurrency)[0].pointFormat
                         }
-
-
-
-                        when (viewModel.selectedOption) {
-
-                            Constants.USING_SINGULAR_ASSET -> {
-                                /*if (selectedFrequency.isEmpty()) {
-                                    "Please select frequency".showToast(requireContext())
-                                    return
-                                } else*/ viewModel.selectedFrequency = selectedFrequency
-                            }
-
-                            Constants.USING_STRATEGY -> {
-                                if (selectedFrequency.isEmpty()) {
-                                    getString(R.string.please_select_frequency).showToast(requireContext())
-                                    return
-                                } else viewModel.selectedFrequency = selectedFrequency
-                            }
-
-                            Constants.USING_EXCHANGE -> {
-                                viewModel.amount = if (mCurrency == focusedData.currency) {
-                                    viewModel.exchangeFromAmount =
-                                        amount.split(focusedData.currency)[0].pointFormat
-                                    viewModel.exchangeToAmount =
-                                        assetConversion.split(mConversionCurrency)[0].pointFormat
-                                    amount.split(focusedData.currency)[0].pointFormat
-                                } else {
-                                    viewModel.exchangeFromAmount =
-                                        assetConversion.split(mCurrency)[0].pointFormat
-                                    viewModel.exchangeToAmount =
-                                        amount.split(mConversionCurrency)[0].pointFormat
-                                    assetConversion.split(mCurrency)[0].pointFormat
-                                }
-                            }
-
-                            Constants.USING_WITHDRAW -> {
-
-                                if (viewModel.allMyPortfolio.isNotEmpty()) {
-                                    checkInternet(requireContext()) {
-                                        showProgressDialog(requireContext())
-                                        viewModel.withdrawFiat(viewModel.amount)
-                                    }
-                                } else {
-                                    requireActivity().replaceFragment(
-                                        R.id.flSplashActivity, EnterWalletAddressFragment()
-//                                    DepositAssetFragment()
-                                    )
-                                }
-                                return
-
-                            }
-
-                            Constants.USING_WITHDRAW_FIAT -> {
-                                checkInternet(requireContext()) {
-                                    showProgressDialog(requireContext())
-                                    viewModel.withdrawFiat(viewModel.amount)
-                                }
-                                return
-                            }
-
-                            Constants.USING_SELL -> {
-
-                                /*viewModel.selectedAsset?.let {
-                                    showDialog(
-                                        it.image ?: "",
-                                        it.euro_amount.toString(),
-                                        it.id.uppercase()
-                                    )
-                                }TODO*/
-                                return
-                            }
-
+                        viewModel.amount = if (mCurrency == focusedData.currency) {
+                            viewModel.exchangeFromAmount =
+                                amount.split(focusedData.currency)[0].pointFormat
+                            viewModel.exchangeToAmount =
+                                assetConversion.split(mConversionCurrency)[0].pointFormat
+                            amount.split(focusedData.currency)[0].pointFormat
+                        } else {
+                            viewModel.exchangeFromAmount =
+                                assetConversion.split(mCurrency)[0].pointFormat
+                            viewModel.exchangeToAmount =
+                                amount.split(mConversionCurrency)[0].pointFormat
+                            assetConversion.split(mCurrency)[0].pointFormat
                         }
-
-                        requireActivity().replaceFragment(
-                            R.id.flSplashActivity, ConfirmInvestmentFragment()
-                        )
+                        findNavController().navigate(R.id.confirmInvestmentFragment)
 
                     }
                 }
 
-                rlSwapFrom -> requireActivity().onBackPressed()
+                rlSwapFrom -> {
+                    val bundle = Bundle()
+                    bundle.putString(Constants.TYPE, Constants.FROM_SWAP)
+                    findNavController().navigate(R.id.exchangeFromFragment, bundle)
+                }
 
-                rlSwapTo -> requireActivity().replaceFragment(
-                    R.id.flSplashActivity,
-                    AllAssetFragment().apply {
-                        arguments = Bundle().apply { putString("type", "SwapTo") }
-                    })
+                rlSwapTo -> requireActivity().onBackPressed()
 
                 ivSwapBetween, ivRepeat -> swapConversion()
 
@@ -499,7 +260,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                 R.drawable.ic_calendar_black, 0, R.drawable.ic_drop_down, 0
             )
             tvAddFrequency.setTextColor(
-                getColor(
+                ContextCompat.getColor(
                     requireContext(), R.color.purple_gray_800
                 )
             )
@@ -703,18 +464,10 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
             valueOne = amount.split(mCurrency)[0].pointFormat.decimalPoint()
             valueTwo = assetConversion.split(mConversionCurrency)[0].pointFormat.decimalPoint()
 
-            when (viewModel.selectedOption) {
+            valueOne = 0.00.toString()
+            valueTwo = 0.00.toString()
+            // maxValue = viewModel.exchangeAssetTo?.total_balance ?: 1.0 TODO
 
-                Constants.USING_SINGULAR_ASSET -> {}
-                Constants.USING_WITHDRAW -> {}
-                Constants.USING_EXCHANGE -> {
-                    valueOne = 0.00.toString()
-                    valueTwo = 0.00.toString()
-                   // maxValue = viewModel.exchangeAssetTo?.total_balance ?: 1.0 TODO
-                }
-                Constants.USING_SELL -> {}
-
-            }
 
 //            viewModel.selectedAsset?.let {
 //                maxValue = it.total_balance * it.euro_amount
@@ -732,11 +485,11 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
 //                    maxValue = to.total_balance
 
-                  // binding.ivAssetSwapFrom.loadCircleCrop(to.imageUrl ?: "")
+                    //binding.ivAssetSwapFrom.loadCircleCrop(to.imageUrl ?: "")
 
                     binding.tvSwapAssetFrom.text = to.id.uppercase()
 
-                   // binding.ivAssetSwapTo.loadCircleCrop(from.imageUrl ?: "")
+                    // binding.ivAssetSwapTo.loadCircleCrop(from.imageUrl ?: "")
 
                     binding.tvSwapAssetTo.text = from.id.uppercase()
 
@@ -753,18 +506,10 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 //            viewModel.selectedAsset?.let {
 //                maxValue = App.prefsManager.getBalance().toDouble()
 //            }
+            valueOne = 0.00.toString()
+            valueTwo = 0.00.toString()
+            //maxValue = viewModel.exchangeAssetFrom?.total_balance!! TODO
 
-
-            when (viewModel.selectedOption) {
-                Constants.USING_SINGULAR_ASSET -> {}
-                Constants.USING_WITHDRAW -> {}
-                Constants.USING_EXCHANGE -> {
-                    valueOne = 0.00.toString()
-                    valueTwo = 0.00.toString()
-                    //maxValue = viewModel.exchangeAssetFrom?.total_balance!! TODO
-                }
-                Constants.USING_SELL -> {}
-            }
 
             focusedData.currency = mCurrency
             unfocusedData.currency = mConversionCurrency
@@ -777,11 +522,11 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
 //                    maxValue = from.total_balance
 
-                     //binding.ivAssetSwapFrom.loadCircleCrop(from.imageUrl ?: "")
+                    //binding.ivAssetSwapFrom.loadCircleCrop(from.imageUrl ?: "")
 
                     binding.tvSwapAssetFrom.text = from.id.uppercase()
 
-                     //binding.ivAssetSwapTo.loadCircleCrop(to.imageUrl ?: "")
+                    //binding.ivAssetSwapTo.loadCircleCrop(to.imageUrl ?: "")
 
                     binding.tvSwapAssetTo.text = to.id.uppercase()
 
@@ -795,53 +540,16 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
     @SuppressLint("SetTextI18n")
     private fun setMaxValue() {
-        when (viewModel.selectedOption) {
 
-            Constants.USING_WITHDRAW -> binding.etAmount.setText("${maxValue.commaFormatted}${Constants.EURO}")
-
-            Constants.USING_EXCHANGE -> {
-
-                if(amount.contains(focusedData.currency)){
-                    binding.etAmount.setText("${maxValue.commaFormatted}${focusedData.currency}")
-                }else{
-                    binding.etAmount.setText("${maxValue.commaFormatted}${unfocusedData.currency}")
-                }
+        if (amount.contains(focusedData.currency)) {
+            binding.etAmount.setText("${maxValue.commaFormatted}${focusedData.currency}")
+        } else {
+            binding.etAmount.setText("${maxValue.commaFormatted}${unfocusedData.currency}")
+        }
 //                if (focusedData.currency == mCurrency) binding.etAmount.setText("${maxValue.commaFormatted}$mCurrency")
 //                else binding.etAmount.setText("${maxValue.commaFormatted}$mConversionCurrency")
-            }
-
-            Constants.USING_SELL -> {
-                if(amount.contains(focusedData.currency)){
-                    binding.etAmount.setText("${maxValue.commaFormatted}${focusedData.currency}")
-                }else{
-                    binding.etAmount.setText("${maxValue.commaFormatted}${unfocusedData.currency}")
-                }
-//                binding.etAmount.setText("${maxValue.commaFormatted}${Constants.EURO}")
-            }
-
-            Constants.USING_STRATEGY -> {
-//                binding.etAmount.setText("${App.prefsManager.getBalance().commaFormatted}${Constants.EURO}")
-            }
-
-            Constants.USING_WITHDRAW_FIAT -> {
-                if (viewModel.allMyPortfolio.isEmpty()) {
-//                    binding.etAmount.setText("${App.prefsManager.getBalance().commaFormatted}${Constants.EURO}")
-                }
-            }
-
-            Constants.USING_SINGULAR_ASSET -> {
-
-                if(amount.contains(focusedData.currency)){
-                    binding.etAmount.setText("${maxValue.commaFormatted}${focusedData.currency}")
-                }else{
-                    binding.etAmount.setText("${maxValue.commaFormatted}${unfocusedData.currency}")
-                }
-
-//                binding.etAmount.setText("${maxValue.commaFormatted}${Constants.EURO}")
-            }
 
 
-        }
     }
 
     private val String.pointFormat
@@ -882,7 +590,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
     data class DataHolder(var focusedData: ValueHolder, var unfocusedData: ValueHolder)
 
     companion object {
-        private const val TAG = "AddAmountFragment"
+        private const val TAG = "AddAmountForExchangeFragment"
     }
 
 }

@@ -200,7 +200,8 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
             it.screenCount = 1
             viewModel.selectedAsset = it.selectedAsset
             if (type == Constants.Exchange) {
-                findNavController().navigate(R.id.exchangeFromFragment)
+                viewModel.exchangeAssetTo = asset
+                findNavController().navigate(R.id.addAmountForExchangeFragment)
             } else {
                 requireActivity().onBackPressed()
             }

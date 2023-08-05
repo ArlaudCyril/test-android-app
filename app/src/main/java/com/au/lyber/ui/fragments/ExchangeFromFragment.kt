@@ -34,16 +34,6 @@ class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnCli
         viewModel = CommonMethods.getViewModel(requireActivity())
         viewModel.allMyPortfolio = ""
         viewModel.listener = this
-
- /*       viewModel.allAssets.observe(viewLifecycleOwner) {
-            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                CommonMethods.dismissProgressDialog()
-                if (it.data.isNotEmpty()) {
-                    viewModel.exchangeAssetTo = it.data[0]
-                }
-                adapter.addList(it.data)
-            }
-        }*/
         viewModel.balanceResponse.observe(viewLifecycleOwner){
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 CommonMethods.dismissProgressDialog()
@@ -96,10 +86,15 @@ class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnCli
 
     private fun itemClicked(myAsset: Balance) {
         viewModel.exchangeAssetFrom = myAsset
-        val bundle = Bundle()
-            bundle.putString(Constants.TYPE,Constants.Exchange)
-
-        findNavController().navigate(R.id.allAssetFragment,bundle)
+        if (arguments!=null&& requireArguments().containsKey(Constants.TYPE)
+            && requireArguments().getString(Constants.TYPE) == Constants.FROM_SWAP
+        ) {
+            requireActivity().onBackPressed()
+        } else {
+            val bundle = Bundle()
+            bundle.putString(Constants.TYPE, Constants.Exchange)
+            findNavController().navigate(R.id.allAssetFragment, bundle)
+        }
     }
 
 
