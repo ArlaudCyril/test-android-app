@@ -240,6 +240,10 @@
         android:name="com.au.lyber.ui.fragments.AddAmountForExchangeFragment"
         android:label="AddAmountForExchangeFragment" />
     <fragment
+        android:id="@+id/confirmExchangeFragment"
+        android:name="com.au.lyber.ui.fragments.ConfirmExchangeFragment"
+        android:label="ConfirmExchangeFragment" />
+    <fragment
         android:id="@+id/verifyYourIdentityFragment"
         android:name="com.au.lyber.ui.fragments.VerifyYourIdentityFragment"
         android:label="VerifyYourIdentityFragment" />

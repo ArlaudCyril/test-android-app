@@ -221,7 +221,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                                 amount.split(mConversionCurrency)[0].pointFormat
                             assetConversion.split(mCurrency)[0].pointFormat
                         }
-                        findNavController().navigate(R.id.confirmInvestmentFragment)
+                        findNavController().navigate(R.id.confirmExchangeFragment)
 
                     }
                 }
@@ -546,9 +546,6 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
         } else {
             binding.etAmount.setText("${maxValue.commaFormatted}${unfocusedData.currency}")
         }
-//                if (focusedData.currency == mCurrency) binding.etAmount.setText("${maxValue.commaFormatted}$mCurrency")
-//                else binding.etAmount.setText("${maxValue.commaFormatted}$mConversionCurrency")
-
 
     }
 

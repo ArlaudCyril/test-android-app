@@ -68,6 +68,9 @@ open class NetworkViewModel : ViewModel() {
     private var _exchangeResponse = MutableLiveData<MessageResponse>()
     val exchangeResponse get() = _exchangeResponse
 
+    private var _getQuoteResponse = MutableLiveData<GetQuoteResponse>()
+    val getQuoteResponse get() = _getQuoteResponse
+
     private var _logoutResponse = MutableLiveData<MessageResponse>()
     val logoutResponse get() = _logoutResponse
 
@@ -328,6 +331,16 @@ open class NetworkViewModel : ViewModel() {
             else listener?.onRetrofitError(res.errorBody())
         }
     }
+    fun confirmOrder(order: String){
+        viewModelScope.launch(exceptionHandler) {
+            val hashMap = hashMapOf<String, Any>()
+            hashMap["orderId"] = order
+            val res = RestClient.get().acceptQuote(hashMap)
+            if (res.isSuccessful)
+                exchangeResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
 
     fun exchange(
         assetIdFrom: String,
@@ -344,6 +357,22 @@ open class NetworkViewModel : ViewModel() {
             val res = RestClient.get().swapCrypto(hashMap)
             if (res.isSuccessful)
                 exchangeResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+    fun getQuote(
+        assetIdFrom: String,
+        assetIdTo: String,
+        exchangeFromAmount: String
+    ) {
+        viewModelScope.launch(exceptionHandler) {
+            val hashMap = hashMapOf<String, Any>()
+            hashMap["fromAsset"] = assetIdFrom.lowercase()
+            hashMap["toAsset"] = assetIdTo.lowercase()
+            hashMap["fromAmount"] = exchangeFromAmount
+            val res = RestClient.get().getQuote(hashMap)
+            if (res.isSuccessful)
+                getQuoteResponse.postValue(res.body())
             else listener?.onRetrofitError(res.errorBody())
         }
     }

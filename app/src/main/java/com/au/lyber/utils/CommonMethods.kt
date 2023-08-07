@@ -154,7 +154,7 @@ class CommonMethods {
         }
 
         fun String.decimalPoint(): String {
-            return DecimalFormat("#.##").format(toDouble())
+            return DecimalFormat("#.######").format(toDouble())
         }
 
         fun String.decimalPoints(points: Int): String {
@@ -732,7 +732,7 @@ class CommonMethods {
         val <T> T.commaFormatted: String
             get() = when (this) {
                 is Number -> this.commaFormatted
-                is String -> toFloat().commaFormatted
+                is String -> toDoubleOrNull().commaFormatted
                 is Char -> this.toString()
                 else -> "0"
             }
