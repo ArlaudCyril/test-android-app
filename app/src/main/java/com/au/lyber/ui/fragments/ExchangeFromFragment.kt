@@ -14,7 +14,6 @@ import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.CommonMethods
 import com.au.lyber.utils.CommonMethods.Companion.commaFormatted
 import com.au.lyber.utils.CommonMethods.Companion.gone
-import com.au.lyber.utils.CommonMethods.Companion.replaceFragment
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
 
@@ -58,8 +57,6 @@ class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnCli
         }
 
         binding.ivTopAction.setOnClickListener(this)
-        binding.rlAllPortfolio.setOnClickListener(this)
-        binding.includedAsset.root.setOnClickListener(this)
         prepareUi()
         getData()
     }
@@ -102,19 +99,7 @@ class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnCli
     override fun onClick(v: View?) {
         binding.apply {
             when (v!!) {
-
-                rlAllPortfolio -> {
-                    viewModel.allMyPortfolio = "${viewModel.totalPortfolio}"
-                    requireActivity().replaceFragment(R.id.flSplashActivity, AddAmountFragment())
-                }
-
                 ivTopAction -> requireActivity().onBackPressed()
-
-                includedAsset.root -> {
-                    viewModel.selectedOption = Constants.USING_WITHDRAW_FIAT
-                    requireActivity().replaceFragment(R.id.flSplashActivity, AddAmountFragment())
-                }
-
             }
         }
     }

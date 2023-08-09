@@ -1,17 +1,14 @@
 package com.au.lyber.ui.fragments
 
 import android.annotation.SuppressLint
-import android.app.Dialog
 import android.os.Bundle
 import android.text.Editable
 import android.util.Log
 import android.view.View
-import android.view.Window
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
-import com.au.lyber.databinding.ConfirmationDialogBinding
 import com.au.lyber.databinding.FragmentAddAmountBinding
 import com.au.lyber.models.Whitelistings
 import com.au.lyber.ui.activities.BaseActivity
@@ -27,6 +24,7 @@ import com.au.lyber.utils.CommonMethods.Companion.gone
 import com.au.lyber.utils.CommonMethods.Companion.loadCircleCrop
 import com.au.lyber.utils.CommonMethods.Companion.roundFloat
 import com.au.lyber.utils.CommonMethods.Companion.setBackgroundTint
+import com.au.lyber.utils.CommonMethods.Companion.showToast
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
 import com.au.lyber.utils.OnTextChange
@@ -41,6 +39,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
     private var selectedFrequency: String = ""
     private var canPreview: Boolean = false
 
+    private var minAmount :Double=0.0
     private var mCurrency: String = ""
     private var mConversionCurrency: String = ""
 
@@ -125,7 +124,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
             tvAssetConversion.visible()
             rlCardInfo.gone()
 
-            btnPreviewInvestment.text = "Preview exchange"
+            btnPreviewInvestment.text = getString(R.string.preview_exchange)
             llSwapLayout.visible()
 
             viewModel.exchangeAssetFrom?.let { it ->
@@ -139,6 +138,11 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                 val currency = BaseActivity.assets.find { it1 -> it1.id == it.id }
                 ivAssetSwapFrom.loadCircleCrop(currency!!.imageUrl ?: "")
                 tvSwapAssetFrom.text = it.id.uppercase()
+                minAmount = (it.balanceData.balance.toDouble()/it.balanceData.euroBalance.toDouble())
+                tvMinAmount.text = getString(
+                    R.string.the_minimum_amount_to_be_exchanged_1,
+                    minAmount.toString().decimalPoint()
+                ,it.id.uppercase())
                 maxValue = it.balanceData.balance.toDouble()
             }
 
@@ -234,7 +238,13 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
 
                 rlSwapTo -> requireActivity().onBackPressed()
 
-                ivSwapBetween, ivRepeat -> swapConversion()
+                ivSwapBetween, ivRepeat ->{
+                    if (CommonMethods.getBalance(viewModel.exchangeAssetTo!!.id)!=null) {
+                        swapConversion()
+                    }else{
+                        getString(R.string.you_don_t_have_balance_to_exchange).showToast(requireActivity())
+                    }
+                }
 
                 rlCardInfo -> payMethodBottomSheet.show(childFragmentManager, "")
 
@@ -367,6 +377,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
     }
 
     fun activateButton(activate: Boolean) {
+        if (activate) binding.tvMinAmount.gone() else binding.tvMinAmount.visible()
         binding.btnPreviewInvestment.background = ContextCompat.getDrawable(
             requireContext(),
             if (activate) R.drawable.button_purple_500 else R.drawable.button_purple_400
@@ -394,11 +405,12 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                 if (amount.contains(focusedData.currency)) amount.split(focusedData.currency)[0].pointFormat.toDouble()
                 else amount.split(unfocusedData.currency)[0].pointFormat.toDouble()
 
+            if (valueAmount>minAmount){
+                activateButton(true)
+            }
             when {
 
                 valueAmount > 0 -> {
-
-                    activateButton(true)
 
                     when (focusedData.currency) {
 
@@ -552,35 +564,6 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
     private val String.pointFormat
         get() = replace(",", "", true)
 
-    private fun showDialog(logo: String, amount: String, assetSymbol: String) {
-        Dialog(requireActivity(), R.style.DialogTheme).apply {
-            ConfirmationDialogBinding.inflate(layoutInflater).let {
-
-                requestWindowFeature(Window.FEATURE_NO_TITLE)
-                setCancelable(false)
-                setCanceledOnTouchOutside(true)
-                setContentView(it.root)
-
-                it.ivAsset.loadCircleCrop(logo)
-
-                it.tvTitle.text = "Successfully sold"
-                it.tvAssetAmount.text = amount.commaFormatted
-
-                it.tvMessage.text =
-                    "You just sold ${assetSymbol.uppercase()} ${amount.commaFormatted}"
-
-                it.root.setOnClickListener {
-                    dismiss()
-                }
-
-                setOnDismissListener {
-                    requireActivity().clearBackStack()
-                }
-
-                show()
-            }
-        }
-    }
 
     data class ValueHolder(var value: Double = 0.0, var currency: String = Constants.EURO)
 

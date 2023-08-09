@@ -10,6 +10,7 @@ import android.view.animation.AnimationUtils
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentPortfolioDetailBinding
@@ -19,8 +20,6 @@ import com.au.lyber.ui.adapters.BalanceAdapter
 import com.au.lyber.ui.adapters.ResourcesAdapter
 import com.au.lyber.ui.fragments.AddAmountFragment
 import com.au.lyber.ui.fragments.BaseFragment
-import com.au.lyber.ui.fragments.ChooseAssetForDepositFragment
-import com.au.lyber.ui.fragments.DepositFiatWalletFragment
 import com.au.lyber.ui.fragments.PickYourStrategyFragment
 import com.au.lyber.ui.fragments.SearchAssetsFragment
 import com.au.lyber.ui.fragments.SelectAnAssetFragment
@@ -289,12 +288,14 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
             "deposit" -> {
 
-                if (viewModel.screenCount > 0) requireActivity().replaceFragment(
-                    R.id.flSplashActivity, ChooseAssetForDepositFragment(), topBottom = true
-                )
-                else requireActivity().replaceFragment(
-                    R.id.flSplashActivity, DepositFiatWalletFragment(), topBottom = true
-                )
+               // if (viewModel.screenCount > 0) {
+                    val bundle = Bundle().apply {
+                        putString(Constants.DATA_SELECTED,viewModel.selectedAsset!!.id)
+                    }
+                    findNavController().navigate(R.id.chooseAssetForDepositFragment,bundle)
+              /*  }
+                else findNavController().navigate(R.id.selectAssestForDepositFragment)
+*/
             }
 
             "exchange" -> {

@@ -329,9 +329,9 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
     override fun availableAssetClicked(priceResume: PriceServiceResume) {
         checkInternet(requireContext()) {
-            navController.navigate(R.id.portfolioDetailFragment)
             viewModel.selectedAsset = CommonMethods.getAsset(priceResume.id)
             viewModel.selectedBalance = CommonMethods.getBalance(priceResume.id)
+            navController.navigate(R.id.portfolioDetailFragment)
         }
 
     }

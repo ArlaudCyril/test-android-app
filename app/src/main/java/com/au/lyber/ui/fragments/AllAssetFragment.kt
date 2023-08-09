@@ -20,6 +20,8 @@ import com.au.lyber.utils.Constants
 import com.au.lyber.utils.OnTextChange
 import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.CommonMethods
+import com.au.lyber.utils.CommonMethods.Companion.gone
+import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.google.android.material.tabs.TabLayout
 
 class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickListener {
@@ -114,6 +116,8 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
             it.tvTitle.text = getString(R.string.all_assets)
             if (type == Constants.Exchange){
                 it.tvTitle.text = getString(R.string.exchange_to)
+                it.includedAsset.root.visible()
+                it.includedAsset.ivDropIcon.gone()
             }
             it.ivTopAction.setImageResource(R.drawable.ic_back)
             it.ivTopAction.setOnClickListener(this)

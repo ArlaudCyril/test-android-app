@@ -12,7 +12,7 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginTop="12dp"
-        android:backgroundTint="@color/purple_gray_50"
+        android:background="@drawable/gray_purple_50"
         android:padding="12dp"
         android:src="@drawable/ic_back"
         app:layout_constraintStart_toStartOf="parent"
@@ -468,7 +468,7 @@
         android:layout_marginBottom="16dp"
         android:gravity="center"
         android:text="."
-        app:layout_constraintBottom_toTopOf="@id/btnPreviewInvestment"
+        app:layout_constraintBottom_toTopOf="@id/llBottom"
         app:layout_constraintEnd_toStartOf="@id/tvZero"
         app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="parent" />
@@ -481,7 +481,7 @@
         android:layout_marginBottom="16dp"
         android:gravity="center"
         android:text="0"
-        app:layout_constraintBottom_toTopOf="@id/btnPreviewInvestment"
+        app:layout_constraintBottom_toTopOf="@id/llBottom"
         app:layout_constraintEnd_toStartOf="@id/tvBackArrow"
         app:layout_constraintStart_toEndOf="@id/tvDot" />
 
@@ -495,7 +495,7 @@
         android:layout_marginBottom="16dp"
         android:gravity="center"
         android:src="@drawable/ic_back"
-        app:layout_constraintBottom_toTopOf="@id/btnPreviewInvestment"
+        app:layout_constraintBottom_toTopOf="@id/llBottom"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/tvZero" />
 
@@ -512,16 +512,36 @@
         android:layout_height="wrap_content"
         app:constraint_referenced_ids="tvOne,tvTwo,tvThree,tvFour,tvFive,tvSix,tvSeven,tvEight,tvNine,tvZero,tvDot,tvBackArrow" />
 
-    <TextView
-        android:id="@+id/btnPreviewInvestment"
-        style="@style/ButtonStyle"
-        android:layout_width="match_parent"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginBottom="16dp"
-        android:background="@drawable/button_purple_400"
-        android:gravity="center"
-        android:text="@string/preview_my_investment"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-        app:layout_constraintBottom_toBottomOf="parent" />
+ <androidx.appcompat.widget.LinearLayoutCompat
+     android:layout_width="match_parent"
+     android:id="@+id/llBottom"
+     android:layout_height="wrap_content"
+     app:layout_constraintBottom_toBottomOf="parent"
+     android:orientation="vertical">
+     <TextView
+         android:id="@+id/btnPreviewInvestment"
+         style="@style/ButtonStyle"
+         android:layout_width="match_parent"
+         android:layout_marginHorizontal="24dp"
+         android:layout_marginBottom="16dp"
+         android:background="@drawable/button_purple_400"
+         android:gravity="center"
+         android:text="@string/preview_my_investment"
+         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+
+         />
+     <TextView
+         android:id="@+id/tvMinAmount"
+         style="@style/BodyMabry"
+         android:layout_width="wrap_content"
+         android:layout_height="wrap_content"
+         android:gravity="center"
+         android:layout_gravity="center"
+         app:layout_constraintBottom_toBottomOf="parent"
+         android:lineSpacingExtra="6dp"
+         android:text="@string/the_minimum_amount_to_be_exchanged"
+         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+         android:textColor="@color/red_500" />
+ </androidx.appcompat.widget.LinearLayoutCompat>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

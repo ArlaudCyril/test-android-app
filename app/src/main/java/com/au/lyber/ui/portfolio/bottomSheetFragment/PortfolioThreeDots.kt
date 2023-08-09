@@ -9,7 +9,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.view.marginTop
 import androidx.core.view.updatePadding
 import androidx.fragment.app.DialogFragment
 import com.au.lyber.R
@@ -18,7 +17,6 @@ import com.au.lyber.ui.portfolio.fragment.PortfolioHomeFragment
 import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.CommonMethods.Companion.getViewModel
 import com.au.lyber.utils.CommonMethods.Companion.gone
-import com.au.lyber.utils.Constants
 
 class PortfolioThreeDots(private val listenItemClicked: (String, String) -> Unit = { _, _ -> }) :
     View.OnClickListener, DialogFragment() {
@@ -26,7 +24,7 @@ class PortfolioThreeDots(private val listenItemClicked: (String, String) -> Unit
     private lateinit var viewModel: PortfolioViewModel
     private lateinit var binding: PortfolioThreeDotsBinding
     var dismissListener: PortfolioThreeDotsDismissListener? = null
-    var typePopUp : String = ""
+    var typePopUp: String = ""
 
 
     override fun onCreateView(
@@ -66,9 +64,12 @@ class PortfolioThreeDots(private val listenItemClicked: (String, String) -> Unit
 
     override fun onDestroyView() {
         super.onDestroyView()
-        val view = PortfolioHomeFragment.fragmentPortfolio.binding.screenContent
-        val viewToDelete = view.getChildAt(view.childCount-1)
-        view.removeView(viewToDelete)
+        if (tag != "PortfolioThreeDots") {
+            val view = PortfolioHomeFragment.fragmentPortfolio.binding.screenContent
+            val viewToDelete = view.getChildAt(view.childCount - 1)
+            view.removeView(viewToDelete)
+        }
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -102,12 +103,12 @@ class PortfolioThreeDots(private val listenItemClicked: (String, String) -> Unit
             it.root.updatePadding(left = 0, right = 0)
             it.ivItem.setImageResource(R.drawable.ic_deposit)
             it.ivEndIcon.setImageResource(R.drawable.ic_right_arrow_grey)
-         //   if (this.typePopUp == "AssetPopUp") {
-                it.tvStartTitle.text = "Deposit"
-                it.tvStartSubTitle.text = "Add ${viewModel.selectedAsset?.id?.uppercase()} on Lyber"
-           // } else {
-             //   it.tvStartTitle.text = "Deposit"
-               // it.tvStartSubTitle.text = "Add money on Lyber"
+            //   if (this.typePopUp == "AssetPopUp") {
+            it.tvStartTitle.text = "Deposit"
+            it.tvStartSubTitle.text = "Add ${viewModel.selectedAsset?.id?.uppercase()} on Lyber"
+            // } else {
+            //   it.tvStartTitle.text = "Deposit"
+            // it.tvStartSubTitle.text = "Add money on Lyber"
             //}
         }
 
@@ -132,18 +133,22 @@ class PortfolioThreeDots(private val listenItemClicked: (String, String) -> Unit
                     listenItemClicked(tag ?: "PortfolioThreeDots", "withdraw")
                     dismiss()
                 }
+
                 llExchange.root -> {
                     listenItemClicked(tag ?: "PortfolioThreeDots", "exchange")
                     dismiss()
                 }
+
                 llDepositFiat.root -> {
                     listenItemClicked(tag ?: "PortfolioThreeDots", "deposit")
                     dismiss()
                 }
+
                 llSell.root -> {
                     listenItemClicked(tag ?: "PortfolioThreeDots", "sell")
                     dismiss()
                 }
+
                 ivTopAction -> dismiss()
             }
         }
@@ -156,6 +161,7 @@ class PortfolioThreeDots(private val listenItemClicked: (String, String) -> Unit
 
 
 }
+
 interface PortfolioThreeDotsDismissListener {
     fun onPortfolioThreeDotsDismissed()
 }

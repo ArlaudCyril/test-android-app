@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
@@ -88,6 +89,7 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
                 btnConfirmInvestment -> {
                     CommonMethods.checkInternet(requireContext()) {
                         CommonMethods.showProgressDialog(requireContext())
+                        timer =0
                         viewModel.confirmOrder(
                             orderId
                         )
@@ -131,11 +133,21 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
         Handler(Looper.getMainLooper()).postDelayed({
                if (timer ==0){
                    binding.btnConfirmInvestment.isEnabled = true
-                   binding.btnConfirmInvestment.text = getString(R.string.confirm_exchange)
+                   binding.btnConfirmInvestment.text =getString(R.string._25_sec, getString(R.string.confirm_exchange)
+                       ,timer.toString())
+                   binding.btnConfirmInvestment.isEnabled = false
+                   binding.btnConfirmInvestment.background = ContextCompat.getDrawable(
+                       requireContext(),
+                       R.drawable.button_purple_400
+                   )
                }else{
                    timer -=1
                    binding.btnConfirmInvestment.text = getString(R.string._25_sec, getString(R.string.confirm_exchange)
                    ,timer.toString())
+                   binding.btnConfirmInvestment.background = ContextCompat.getDrawable(
+                       requireContext(),
+                       R.drawable.button_purple_500
+                   )
                    startTimer()
                }
         },1000)

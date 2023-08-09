@@ -530,4 +530,8 @@
     <string name="please_tell_us_what_do_you_plan_to_mainly_do">Please tell us  What do you plan to mainly do?</string>
     <string name="ratio">Ratio</string>
     <string name="_25_sec">%1$s (%2$s sec)</string>
+    <string name="you_don_t_have_balance_to_exchange">you don`t have balance to exchange</string>
+    <string name="preview_exchange">Preview exchange</string>
+    <string name="the_minimum_amount_to_be_exchanged">The minimum Amount to be exchanged</string>
+    <string name="the_minimum_amount_to_be_exchanged_1">The minimum amount to be exchanged %1$s %2$s</string>
 </resources>

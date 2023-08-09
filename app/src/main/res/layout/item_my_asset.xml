@@ -56,7 +56,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/llFiatWallet"
-        tools:src="@drawable/ic_ether" />
+        android:src="@drawable/ic_euro" />
 
 
     <TextView
@@ -70,7 +70,7 @@
         app:layout_constraintStart_toEndOf="@+id/ivAssetIcon"
         app:layout_constraintTop_toBottomOf="@+id/llFiatWallet"
         app:layout_constraintVertical_bias="0.0"
-        tools:text="Ether" />
+        android:text="Euro" />
 
     <TextView
         android:id="@+id/tvAssetNameCode"
