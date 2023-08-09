@@ -35,6 +35,7 @@ import com.au.lyber.utils.CommonMethods.Companion.formattedAsset
 import com.au.lyber.utils.CommonMethods.Companion.loadCircleCrop
 import com.au.lyber.utils.CommonMethods.Companion.replaceFragment
 import com.au.lyber.utils.CommonMethods.Companion.setBackgroundTint
+import com.au.lyber.utils.CommonMethods.Companion.showToast
 import com.au.lyber.utils.CommonMethods.Companion.toMilli
 import com.au.lyber.utils.Constants
 import com.au.lyber.utils.ItemOffsetDecoration
@@ -299,10 +300,15 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             }
 
             "exchange" -> {
-                viewModel.selectedOption = Constants.USING_EXCHANGE
-                requireActivity().replaceFragment(
-                    R.id.flSplashActivity, SwapWithdrawFromFragment(), topBottom = true
-                )
+                if (CommonMethods.getBalance(viewModel.selectedAsset!!.id) != null) {
+                    viewModel.selectedOption = Constants.USING_EXCHANGE
+                    val bundle = Bundle()
+                    viewModel.exchangeAssetFrom = viewModel.selectedBalance
+                    bundle.putString(Constants.TYPE, Constants.Exchange)
+                    findNavController().navigate(R.id.allAssetFragment, bundle)
+                }else{
+                    getString(R.string.you_don_t_have_balance_to_exchange).showToast(requireActivity())
+                }
             }
 
             "sell" -> {
