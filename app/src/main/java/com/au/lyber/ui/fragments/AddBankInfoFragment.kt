@@ -3,6 +3,7 @@ package com.au.lyber.ui.fragments
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Lifecycle
+import com.au.lyber.R
 import com.au.lyber.databinding.FragmentAddBankBinding
 import com.au.lyber.utils.App
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
@@ -43,12 +44,12 @@ class AddBankInfoFragment : BaseFragment<FragmentAddBankBinding>() {
             when {
 
                 iban.isEmpty() -> {
-                    "Please enter IBAN number".showToast(requireContext())
+                    getString(R.string.please_enter_iban_number).showToast(requireContext())
                     binding.etIBan.requestFocus()
                 }
 
                 bic.isEmpty() -> {
-                    "Please enter BIC number".showToast(requireContext())
+                    getString(R.string.please_enter_bic_number).showToast(requireContext())
                     binding.etBicNumber.requestFocus()
                 }
 

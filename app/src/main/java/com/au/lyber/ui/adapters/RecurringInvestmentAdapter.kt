@@ -1,5 +1,6 @@
 package com.au.lyber.ui.adapters
 
+import android.content.Context
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,7 +11,7 @@ import com.au.lyber.models.Investment
 import com.au.lyber.utils.CommonMethods.Companion.loadCircleCrop
 import com.au.lyber.utils.Constants
 
-class RecurringInvestmentAdapter(private val clickListener: (Investment) -> Unit = { _ -> }) :
+class RecurringInvestmentAdapter(private val clickListener: (Investment) -> Unit = { _ -> },private val context:Context) :
     BaseAdapter<Investment>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -30,7 +31,7 @@ class RecurringInvestmentAdapter(private val clickListener: (Investment) -> Unit
 
                 itemList[position]?.let {
 
-                    tvInvestmentTitle.text = if (it.type == "SINGULAR") it.asset_id.toString()
+                    tvInvestmentTitle.text = if (it.type == Constants.SINGULAR) it.asset_id.toString()
                         .uppercase() else it.user_investment_strategy_id?.strategy_name ?: ""
 
                     if (it.type == "SINGULAR") {
@@ -41,7 +42,8 @@ class RecurringInvestmentAdapter(private val clickListener: (Investment) -> Unit
 
                     tvInvestmentAmount.text = "${it.amount}${Constants.EURO}"
                     tvInvestmentFrequency.text = it.frequency
-                    tvInvestmentUpcomingPayment.text = "Upcoming Payment August 27"
+                    tvInvestmentUpcomingPayment.text =
+                        context.getString(R.string.upcoming_payment_august_27)
 
                 }
             }

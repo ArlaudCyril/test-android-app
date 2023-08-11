@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.viewbinding.ViewBinding
+import com.au.lyber.R
 import com.au.lyber.network.RestClient
 import com.au.lyber.utils.CommonMethods
 import com.au.lyber.utils.CommonMethods.Companion.dismissProgressDialog
@@ -43,7 +44,7 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
 
     override fun onError() {
         dismissProgressDialog()
-        "Unable to connect to the server".showToast(requireContext())
+        getString(R.string.unable_to_connect_to_the_server).showToast(requireContext())
     }
 
 }

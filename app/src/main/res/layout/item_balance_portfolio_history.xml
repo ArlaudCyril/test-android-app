@@ -9,7 +9,7 @@
     <TextView
         android:id="@+id/tvTitle"
         style="@style/SubheadMabry"
-        android:text="Bought BTC"
+        android:text="@string/bought_btc"
         android:textColor="@color/purple_gray_700"
         android:textStyle="bold" />
 

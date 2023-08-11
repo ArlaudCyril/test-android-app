@@ -37,7 +37,7 @@
         <TextView
             style="@style/HeadingStyle"
             android:layout_marginTop="32dp"
-            android:text="Add payment method or fund your Lyber account" />
+            android:text="@string/add_payment_method_or_fund_your_lyber_account" />
 
         <RelativeLayout
             android:id="@+id/rlFundAccount"
@@ -60,7 +60,7 @@
                 android:layout_marginHorizontal="12dp"
                 android:layout_toStartOf="@+id/ivRightArrowFund"
                 android:layout_toEndOf="@id/ivBankAccount"
-                android:text="Fund account"
+                android:text="@string/fund_account"
                 android:textStyle="bold" />
 
             <TextView
@@ -70,7 +70,7 @@
                 android:layout_marginHorizontal="12dp"
                 android:layout_toStartOf="@+id/ivRightArrowFund"
                 android:layout_toEndOf="@id/ivBankAccount"
-                android:text="From your bank account"
+                android:text="@string/from_your_bank_account"
                 android:textColor="@color/purple_gray_600" />
 
             <ImageView
@@ -104,7 +104,7 @@
                 android:layout_marginHorizontal="12dp"
                 android:layout_toStartOf="@+id/ivRightArrowAddCard"
                 android:layout_toEndOf="@id/ivCreditCard"
-                android:text="Add a credit/debit card"
+                android:text="@string/add_a_credit_debit_card"
                 android:textStyle="bold" />
 
             <ImageView

@@ -34,13 +34,15 @@ class AddPaymentMethodFragment : BaseFragment<FragmentAddPaymentMethodBinding>()
                     it.ivEndIcon.setImageResource(R.drawable.ic_right_arrow_grey)
                     when (i) {
                         0 -> {
-                            it.tvStartTitle.text = "Add a bank account"
-                            it.tvStartSubTitle.text = "Limited to 25 000€ per week"
+                            it.tvStartTitle.text = getString(R.string
+                                .add_a_bank_account)
+                            it.tvStartSubTitle.text =
+                                getString(R.string.limited_to_25_000_per_week)
                             it.ivItem.setImageResource(R.drawable.ic_bank_outline)
                         }
                         1 -> {
-                            it.tvStartTitle.text = "Add a credit card"
-                            it.tvStartSubTitle.text = "Limited to 1000€ per week"
+                            it.tvStartTitle.text = getString(R.string.add_a_credit_card)
+                            it.tvStartSubTitle.text = getString(R.string.limited_to_1000_per_week)
                             it.ivItem.setImageIcon(
                                 Icon.createWithResource(
                                     requireContext(),

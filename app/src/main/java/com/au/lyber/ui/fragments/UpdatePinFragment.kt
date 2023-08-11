@@ -43,7 +43,6 @@ class UpdatePinFragment : BaseFragment<FragmentUpdatePinBinding>(), ActivityCall
         viewModel.updatePinResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
-//                childFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
                 childFragmentManager.popBackStack()
                 childFragmentManager.popBackStackImmediate()
                 requireActivity().onBackPressed()

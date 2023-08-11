@@ -117,9 +117,12 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                     binding.tvAllocationInfo.visible()
                     binding.tvNumberAssets.setTextColor(redColor)
                     binding.tvAllocationInfo.setTextColor(redColor)
-                    binding.tvNumberAssets.text = "${count()} AssetBaseData"
+                    binding.tvNumberAssets.text = getString(R.string.assetbasedata, count())
                     binding.tvAllocationInfo.text =
-                        "Your allocations is greater than 100%, remove ${(count - 100).toInt()}%"
+                        getString(
+                            R.string.your_allocations_is_greater_than_100_remove,
+                            (count - 100).toInt()
+                        )
                     binding.btnSaveMyStrategy.background =
                         ContextCompat.getDrawable(requireContext(), R.drawable.button_purple_400)
                 }
@@ -130,9 +133,8 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                     binding.tvAllocationInfo.visible()
                     binding.tvNumberAssets.setTextColor(redColor)
                     binding.tvAllocationInfo.setTextColor(redColor)
-                    binding.tvNumberAssets.text = "${count()} AssetBaseData"
-                    binding.tvAllocationInfo.text =
-                        "Your allocations is less than 100%, add ${(100 - count).toInt()}%"
+                    binding.tvNumberAssets.text = getString(R.string.assetbasedata, count())
+                    binding.tvAllocationInfo.text = getString(R.string.your_allocations_is_less_than_100_add, (100 - count).toInt())
                     binding.btnSaveMyStrategy.background =
                         ContextCompat.getDrawable(requireContext(), R.drawable.button_purple_400)
                 }
@@ -144,9 +146,9 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                     binding.tvAllocationInfo.visible()
                     binding.tvNumberAssets.setTextColor(one)
                     binding.tvAllocationInfo.setTextColor(two)
-                    binding.tvNumberAssets.text = "${count()} AssetBaseData"
+                    binding.tvNumberAssets.text = getString(R.string.assetbasedata, count())
                     binding.tvAllocationInfo.text =
-                        "Your strategy is ready to be saved."
+                        getString(R.string.your_strategy_is_ready_to_be_saved)
                     binding.btnSaveMyStrategy.setBackgroundResource(R.drawable.button_purple_500)
 //                        ContextCompat.getDrawable(requireContext(), R.drawable.button_purple_500)
                     canBuildStrategy = true

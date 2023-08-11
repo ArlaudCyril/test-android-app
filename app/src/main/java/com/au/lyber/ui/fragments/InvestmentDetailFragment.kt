@@ -8,6 +8,7 @@ import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.au.lyber.R
 import com.au.lyber.databinding.AppItemLayoutBinding
 import com.au.lyber.databinding.FragmentInvestmentDetailBinding
 import com.au.lyber.databinding.LoaderViewBinding
@@ -36,7 +37,7 @@ class InvestmentDetailFragment : BaseFragment<FragmentInvestmentDetailBinding>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            investmentId = it.getString("investmentId", "") ?: ""
+            investmentId = it.getString(Constants.INVESTMENT_ID, "") ?: ""
         }
     }
 
@@ -56,7 +57,7 @@ class InvestmentDetailFragment : BaseFragment<FragmentInvestmentDetailBinding>()
                 binding.tvHistory.visible()
                 adapter.addList(it.history)
 
-                if (it.type == "SINGULAR") {
+                if (it.type == Constants.SINGULAR) {
 
                     binding.tvTitle.text = "${it.asset_id}"
                     binding.rlAssetDetail.visible()
@@ -66,8 +67,8 @@ class InvestmentDetailFragment : BaseFragment<FragmentInvestmentDetailBinding>()
                 } else {
 
                     binding.strategyView.visible()
-                    binding.strategyView.yeild = "~5% ROI"
-                    binding.strategyView.risk = "Medium"
+                    binding.strategyView.yeild = getString(R.string._5_roi)
+                    binding.strategyView.risk = getString(R.string.medium)
                     binding.strategyView.topText = it.strategy_name
                     binding.strategyView.strategyPrice = "${it.amount} ${Constants.EURO}"
                     binding.strategyView.binding.tvPriceStrategy.visible()
@@ -222,7 +223,7 @@ class InvestmentDetailFragment : BaseFragment<FragmentInvestmentDetailBinding>()
         fun get(investmentId: String): InvestmentDetailFragment {
             return InvestmentDetailFragment().apply {
                 arguments = Bundle().apply {
-                    putString("investmentId", investmentId)
+                    putString(Constants.INVESTMENT_ID, investmentId)
                 }
             }
         }

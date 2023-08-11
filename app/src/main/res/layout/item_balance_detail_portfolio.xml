@@ -11,7 +11,7 @@
         style="@style/BodyMabry"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:text="Total earnings"
+        android:text="@string/total_earnings"
         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
         android:textColor="@color/purple_gray_500" />
 

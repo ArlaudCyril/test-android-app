@@ -94,7 +94,7 @@
             android:layout_marginHorizontal="20dp"
             android:padding="2dp"
             android:gravity="center"
-            android:text="Enter your strategy name" />
+            android:text="@string/enter_your_strategy_name" />
 
         <EditText
             android:id="@+id/etInput"
@@ -105,7 +105,7 @@
             android:layout_marginHorizontal="20dp"
             android:layout_marginTop="16dp"
             android:background="@drawable/edit_text_background"
-            android:hint="Enter your strategy name"
+            android:hint="@string/enter_your_strategy_name"
             android:paddingHorizontal="12dp"
             android:paddingVertical="12dp" />
 
@@ -131,7 +131,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:paddingVertical="12dp"
-                android:text="Cancel" />
+                android:text="@string/cancel" />
 
             <TextView
                 android:id="@+id/tvSave"
@@ -141,7 +141,7 @@
                 android:layout_weight="1"
                 android:gravity="center"
                 android:paddingVertical="12dp"
-                android:text="Save" />
+                android:text="@string/save" />
 
         </LinearLayout>
 

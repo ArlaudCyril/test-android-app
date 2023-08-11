@@ -15,14 +15,14 @@
         android:layout_marginTop="24dp"
         android:fontFamily="@font/atypdisplay_semibold"
         android:gravity="center"
-        android:text="Enter code"
+        android:text="@string/enter_code"
         android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
     <TextView
         style="@style/SubheadMabry"
         android:layout_gravity="center"
         android:layout_marginTop="4dp"
-        android:text="We've sent you a confimation code." />
+        android:text="@string/we_ve_sent_you_a_confimation_code" />
 
     <TextView
         android:id="@+id/tvPhoneNumber"

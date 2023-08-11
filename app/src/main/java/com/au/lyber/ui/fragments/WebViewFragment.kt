@@ -106,7 +106,7 @@ class WebViewFragment : BaseFragment<FragmentWebViewBinding>(), ActivityCallback
 
                 !isCamera -> if (!requireActivity().shouldShowPermission(Manifest.permission.CAMERA)) {
                     permissionDeniedDialog(
-                        "Permissions Required",
+                        getString(R.string.permission_required),
                         getString(R.string.openSettings)
                     )
                 } else requestPermission()
@@ -116,7 +116,7 @@ class WebViewFragment : BaseFragment<FragmentWebViewBinding>(), ActivityCallback
                         && !requireActivity().shouldShowPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
                     ) {
                         permissionDeniedDialog(
-                            "Permissions Required",
+                            getString(R.string.permission_required),
                             getString(R.string.openSettings)
                         )
                     } else requestPermission()

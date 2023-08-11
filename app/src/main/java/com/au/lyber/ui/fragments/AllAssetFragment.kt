@@ -46,7 +46,7 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            type = it.getString("type", "")
+            type = it.getString(Constants.TYPE, "")
         }
     }
 
@@ -98,10 +98,10 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
         binding.let {
 
             /* tab layout */
-            it.tabLayout.addTab(it.tabLayout.newTab().apply { text = "Trending" })
-            it.tabLayout.addTab(it.tabLayout.newTab().apply { text = "Top gainers" })
-            it.tabLayout.addTab(it.tabLayout.newTab().apply { text = "Top loosers" })
-            it.tabLayout.addTab(it.tabLayout.newTab().apply { text = "Stable" })
+            it.tabLayout.addTab(it.tabLayout.newTab().apply { text = getString(R.string.trending) })
+            it.tabLayout.addTab(it.tabLayout.newTab().apply { text = getString(R.string.top_gainers) })
+            it.tabLayout.addTab(it.tabLayout.newTab().apply { text = getString(R.string.top_losers) })
+            it.tabLayout.addTab(it.tabLayout.newTab().apply { text = getString(R.string.stable) })
             it.tabLayout.addOnTabSelectedListener(tabSelectedListener)
 
             adapter = AllAssetAdapter(::assetClicked)
@@ -110,7 +110,7 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
             it.rvAddAsset.adapter = adapter
             it.rvAddAsset.layoutManager = layoutManager
             it.rvAddAsset.itemAnimator = null
-            it.tvTitle.text = "All assets"
+            it.tvTitle.text = getString(R.string.all_assets)
             it.ivTopAction.setImageResource(R.drawable.ic_back)
             it.ivTopAction.setOnClickListener(this)
             it.etSearch.setOnClickListener(this)
@@ -211,39 +211,39 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
         }*/
     }
 
-    private fun optionSelected(option: String, asset: Data) {
-        when (option) {
-            "deposit" -> {
-
-            }
-            "withdraw" -> {
-                viewModel.selectedOption = Constants.USING_WITHDRAW
-                requireActivity().replaceFragment(
-                    R.id.flSplashActivity,
-                    AddAmountFragment(),
-                    topBottom = true
-                )
-            }
-            "exchange" -> {
-                viewModel.selectedOption = Constants.USING_EXCHANGE
-                requireActivity().replaceFragment(
-                    R.id.flSplashActivity,
-                    SwapWithdrawFromFragment()
-                )
-            }
-            "buy" -> {
-                viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
-//                viewModel.selectedAsset = asset.extractAsset()
-                requireActivity().replaceFragment(
-                    R.id.flSplashActivity,
-                    AddAmountFragment()
-                )
-            }
-            "sell" -> {
-
-            }
-        }
-    }
+//    private fun optionSelected(option: String, asset: Data) {
+//        when (option) {
+//            "deposit" -> {
+//
+//            }
+//            "withdraw" -> {
+//                viewModel.selectedOption = Constants.USING_WITHDRAW
+//                requireActivity().replaceFragment(
+//                    R.id.flSplashActivity,
+//                    AddAmountFragment(),
+//                    topBottom = true
+//                )
+//            }
+//            "exchange" -> {
+//                viewModel.selectedOption = Constants.USING_EXCHANGE
+//                requireActivity().replaceFragment(
+//                    R.id.flSplashActivity,
+//                    SwapWithdrawFromFragment()
+//                )
+//            }
+//            "buy" -> {
+//                viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
+////                viewModel.selectedAsset = asset.extractAsset()
+//                requireActivity().replaceFragment(
+//                    R.id.flSplashActivity,
+//                    AddAmountFragment()
+//                )
+//            }
+//            "sell" -> {
+//
+//            }
+//        }
+//    }
 
     override fun onClick(v: View?) {
         binding.apply {

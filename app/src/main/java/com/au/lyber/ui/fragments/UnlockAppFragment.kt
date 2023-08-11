@@ -11,8 +11,6 @@ import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
 import androidx.lifecycle.Lifecycle
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.transition.Fade
 import com.au.lyber.R
@@ -36,7 +34,6 @@ import okhttp3.ResponseBody
 class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClickListener {
 
     private val pin get() = binding.etPin.text.trim().toString()
-    private lateinit var navController : NavController
     private lateinit var viewModel: NetworkViewModel
 
     override fun bind() = FragmentUnlockAppBinding.inflate(layoutInflater)
@@ -53,15 +50,13 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
 
         viewModel = getViewModel(this)
         viewModel.listener = this
-        val navHostFragment =  requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        navController = navHostFragment.findNavController()
         viewModel.userLoginResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
                 App.prefsManager.accessToken = it.data.access_token
                 App.prefsManager.refreshToken = it.data.refresh_token
 
-                navController.navigate(R.id.portfolioHomeFragment)
+                findNavController().navigate(R.id.portfolioHomeFragment)
 
             }
         }
@@ -109,28 +104,15 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
                 when (App.prefsManager.savedScreen) {
 
                     EnableNotificationFragment::class.java.name -> {
-                        Log.d("Discoo=ver","Unlock")
-                        requireActivity().supportFragmentManager.beginTransaction()
-                            .replace(R.id.flSplashActivity, DiscoveryFragment()).commit()
-
-                        requireActivity().replaceFragment(
-                            R.id.flSplashActivity,
-                            SignUpFragment(),
-                            topBottom = true
-                        )
+                        findNavController().navigate(R.id.enableNotificationFragment)
 
                     }
 
                     CompletePortfolioFragment::class.java.name -> {
-                    navController.navigate(R.id.completePortfolioFragment)
-                        navController.popBackStack (R.id.completePortfolioFragment, false)
+                    findNavController().navigate(R.id.completePortfolioFragment)
                 }
 
-                    else -> requireActivity().replaceFragment(
-                        R.id.flSplashActivity,
-                        DiscoveryFragment(),
-                        false
-                    )
+                    else -> findNavController().navigate(R.id.enableNotificationFragment)
 
                 }
             }
@@ -143,10 +125,7 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
             }
 
             else -> {
-                val navHostFragment =
-                    requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-                val navController = navHostFragment.navController
-                navController.navigate(R.id.portfolioHomeFragment)
+                findNavController().navigate(R.id.portfolioHomeFragment)
             }
 
         }

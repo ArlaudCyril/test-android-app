@@ -3,20 +3,15 @@ package com.au.lyber.ui.fragments
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
-import androidx.transition.Fade
 import android.view.View
-import android.widget.MediaController
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
+import androidx.transition.Fade
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentSplashBinding
 import com.au.lyber.utils.App
 import com.au.lyber.utils.CommonMethods.Companion.is30DaysOld
 
 class SplashFragment : BaseFragment<FragmentSplashBinding>() {
-    private lateinit var navController : NavController
-    private lateinit var mediaController: MediaController
     private lateinit var handler : Handler
     private lateinit var runnable : Runnable
     private var isScreen = false
@@ -32,8 +27,6 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val navHostFragment = requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-       navController = navHostFragment.navController
         handler =  Handler(Looper.getMainLooper())
            runnable= Runnable {
 
@@ -44,20 +37,17 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>() {
             if (!isScreen) {
                 isScreen = true
                 if (App.prefsManager.tokenSavedAt.is30DaysOld()) {
-                    Log.d("Discoo=ver", "SplashFragment")
                     App.prefsManager.logout()
-                    navController.navigate(R.id.discoveryFragment)
-//                requireActivity().supportFragmentManager.beginTransaction()
-//                    .replace(R.id.flSplashActivity, DiscoveryFragment()).commit()
-
+                    findNavController().navigate(R.id.discoveryFragment)
                 } else {
 
                     if (App.prefsManager.userPin.isNotEmpty()) {
-
-                        navController.navigate(R.id.unlockAppFragment)
-                    } else {
-                        Log.d("Discoo=ver", "SplashAfrgem")
-                        navController.navigate(R.id.discoveryFragment)
+                        if ( App.prefsManager.refreshToken.isEmpty()) {
+                            findNavController().navigate(R.id.discoveryFragment)
+                        }else {
+                             findNavController().navigate(R.id.unlockAppFragment)
+                        } } else {
+                        findNavController().navigate(R.id.discoveryFragment)
 
                     }
 

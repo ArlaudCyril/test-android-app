@@ -22,7 +22,7 @@
     <TextView
         android:id="@+id/tvTitle"
         style="@style/SubheadMabry"
-        android:text="Invest in my strat."
+        android:text="@string/invest_in_my_strat"
         android:textColor="#423D33"
         android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/tvSubTitle"
@@ -67,7 +67,7 @@
             <TextView
                 android:id="@+id/tvTitleBalance"
                 style="@style/SubheadMabry"
-                android:text="Balance:"
+                android:text="@string/balance"
                 android:textStyle="bold" />
 
             <TextView
@@ -112,7 +112,7 @@
                 android:layout_marginStart="12dp"
                 android:layout_toStartOf="@+id/tvLimit"
                 android:layout_toEndOf="@id/ivCard"
-                android:text="select credit card"
+                android:text="@string/select_credit_card"
                 android:textStyle="bold" />
 
             <TextView
@@ -181,7 +181,7 @@
                     android:layout_alignParentTop="true"
                     android:layout_marginStart="12dp"
                     android:layout_toEndOf="@id/ivAssetSwapFrom"
-                    android:text="From"
+                    android:text="@string/from"
                     android:textColor="@color/purple_gray_500" />
 
                 <TextView

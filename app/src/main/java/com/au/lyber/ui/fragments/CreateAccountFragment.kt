@@ -31,6 +31,7 @@ import com.au.lyber.utils.CommonMethods.Companion.requestKeyboard
 import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.showToast
 import com.au.lyber.utils.CommonMethods.Companion.visible
+import com.au.lyber.utils.Constants
 import com.au.lyber.viewmodels.SignUpViewModel
 import com.nimbusds.srp6.SRP6ClientSession
 import com.nimbusds.srp6.SRP6CryptoParams
@@ -63,13 +64,14 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         super.onViewCreated(view, savedInstanceState)
 
         App.prefsManager.accessToken = ""
-        val fragment = findNavController().getBackStackEntry(R.id.signUpFragment)
-        viewModel = getViewModel(fragment)
-        viewModel.forLogin = requireArguments().getBoolean("forLogin",false)
+        viewModel = getViewModel(this)
+        viewModel.forLogin = requireArguments().getBoolean(Constants.FOR_LOGIN,false)
         viewModel.listener = this
         binding.tvCountryCode.text = viewModel.countryCode
         Log.d("clickSignupFinalQ1",viewModel.forLogin.toString())
-
+        binding.ivTopAction.setOnClickListener {
+            requireActivity().onBackPressed()
+        }
         if (viewModel.forLogin) {
 
             binding.tvTitle.text = getString(R.string.happy_to_see_you_back)
@@ -85,10 +87,6 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         binding.btnNext.setOnClickListener(this)
 
         binding.tvCountryCode.setOnClickListener(this)
-        binding.etPassword.onFocusChangeListener = focusChange
-        binding.etPhone.onFocusChangeListener = focusChange
-        binding.etEmail.onFocusChangeListener = focusChange
-
         binding.root.viewTreeObserver?.addOnGlobalLayoutListener(
             keyboardLayoutListener
         )
@@ -127,7 +125,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                         null, FragmentManager.POP_BACK_STACK_INCLUSIVE
                     )
                     val bundle = Bundle().apply {
-                        putBoolean("forLogin", viewModel.forLogin)
+                        putBoolean(Constants.FOR_LOGIN, viewModel.forLogin)
                     }
                     findNavController().navigate(R.id.createPinFragment,bundle)
                 }else{
@@ -163,16 +161,51 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
             }
 
         }
-    }
+        viewModel.setPhoneResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                App.prefsManager.accessToken = it.data.token
+                App.accessToken = it.data.token
+                CommonMethods.dismissProgressDialog()
+                val transparentView = View(context)
+                transparentView.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.semi_transparent_dark
+                    )
+                )
 
-    private val focusChange = View.OnFocusChangeListener { v, hasFocus ->
-        if (hasFocus) {
-   /*         (requireParentFragment() as SignUpFragment).view?.findViewById<ScrollView>(R.id.scrollView)
-                ?.let {
-                    it.smoothScrollTo(0, it.height)
-                }*/
+                // Set layout parameters for the transparent view
+                val viewParams = RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT
+                )
+
+                val vc  = VerificationBottomSheet()
+
+                vc.viewToDelete = transparentView
+                vc.mainView = getView()?.rootView as ViewGroup
+                vc.viewModel = viewModel
+                vc.show(childFragmentManager, "")
+
+                // Add the transparent view to the RelativeLayout
+                val mainView = getView()?.rootView as ViewGroup
+                mainView.addView(transparentView, viewParams)
+            }
+        }
+        viewModel.verifyPhoneResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                App.prefsManager.setPhone(viewModel.mobileNumber)
+                CommonMethods.dismissProgressDialog()
+
+                val bundle = Bundle().apply {
+                    putBoolean(Constants.FOR_LOGIN, false)
+                }
+                findNavController().navigate(R.id.createPinFragment,bundle)
+            }
         }
     }
+
+
 
     override fun onClick(v: View?) {
 
@@ -310,12 +343,12 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         return when {
             mobile.isEmpty() -> {
                 binding.etPhone.requestKeyboard()
-                "Please enter Phone number.".showToast(requireContext())
+                getString(R.string.please_enter_phone_number).showToast(requireContext())
                 false
             }
 
             mobile.length !in 7..15 -> {
-                "Please enter valid Phone number.".showToast(requireContext())
+                getString(R.string.please_enter_valid_phone_number).showToast(requireContext())
                 false
             }
             else -> true
@@ -326,12 +359,12 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         return when {
             email.isEmpty() -> {
                 binding.etEmail.requestKeyboard()
-                "Please enter email address.".showToast(requireContext())
+                getString(R.string.please_enter_email_address).showToast(requireContext())
                 false
             }
 
             !isValidEmail(email) -> {
-                "Please enter valid email.".showToast(requireContext())
+                getString(R.string.please_enter_valid_email).showToast(requireContext())
                 binding.etEmail.requestKeyboard()
                 false
             }
@@ -342,7 +375,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
     private fun verifyPassword(): Boolean {
         return when {
             password.isEmpty() -> {
-                "Please enter password.".showToast(requireContext())
+                getString(R.string.please_enter_password).showToast(requireContext())
                 binding.etPassword.requestFocus()
                 false
             }

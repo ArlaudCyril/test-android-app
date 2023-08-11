@@ -24,7 +24,7 @@
         android:id="@+id/tvTitle"
         style="@style/SubheadMabry"
         android:layout_marginStart="24dp"
-        android:text="Exchange → From"
+        android:text="@string/exchange_from"
         android:textColor="#423D33"
         app:layout_constraintBottom_toBottomOf="@id/ivTopAction"
         app:layout_constraintEnd_toEndOf="parent"
@@ -72,7 +72,7 @@
                     android:layout_centerVertical="true"
                     android:layout_marginStart="12dp"
                     android:layout_toEndOf="@id/ivWallet"
-                    android:text="All my portfolio"
+                    android:text="@string/all_my_portfolio"
                     android:textColor="@color/purple_gray_700"
                     android:textStyle="bold" />
 
@@ -102,7 +102,7 @@
                 style="@style/TitleText"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="20dp"
-                android:text="Lyber portfolio"
+                android:text="@string/lyber_portfolio"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 android:textColor="@color/purple_gray_900" />
 

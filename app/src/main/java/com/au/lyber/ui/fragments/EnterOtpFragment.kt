@@ -1,3 +1,4 @@
+/*
 package com.au.lyber.ui.fragments
 
 import android.annotation.SuppressLint
@@ -9,6 +10,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.View
+import com.au.lyber.R
 import com.au.lyber.databinding.FragmentEnterOtpBinding
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.dismissProgressDialog
@@ -78,7 +80,7 @@ class EnterOtpFragment : BaseFragment<FragmentEnterOtpBinding>() {
                 showProgressDialog(requireContext())
                 Handler(Looper.getMainLooper()).postDelayed({
                     dismissProgressDialog()
-                    "Otp sent successfully.".showToast(requireContext())
+                    getString(R.string.otp_sent_successfully).showToast(requireContext())
                     startTimer(15000)
                 }, 2000)
             }
@@ -182,4 +184,4 @@ class EnterOtpFragment : BaseFragment<FragmentEnterOtpBinding>() {
     }
 
 
-}
+}*/

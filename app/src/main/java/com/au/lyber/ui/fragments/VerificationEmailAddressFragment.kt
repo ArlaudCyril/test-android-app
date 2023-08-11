@@ -8,6 +8,7 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Html
 import android.view.View
+import com.au.lyber.R
 import com.au.lyber.databinding.FragmentVerificationEmailBinding
 import com.au.lyber.utils.CommonMethods
 import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
@@ -57,8 +58,9 @@ class VerificationEmailAddressFragment : BaseFragment<FragmentVerificationEmailB
                 startActivity(Intent.createChooser(intent, "Email"))
                 canCheck = true
             } catch (e: ActivityNotFoundException) {
-                "Application Not Found".showToast(requireContext())
+                getString(R.string.application_not_found).showToast(requireContext())
             } catch (e: Exception) {
+                e.printStackTrace()
             }
         }
 
@@ -66,7 +68,7 @@ class VerificationEmailAddressFragment : BaseFragment<FragmentVerificationEmailB
             showProgressDialog(requireContext())
             Handler(Looper.getMainLooper()).postDelayed({
                 CommonMethods.dismissProgressDialog()
-                "Email sent successfully.".showToast(requireContext())
+                getString(R.string.email_sent_successfully).showToast(requireContext())
             }, 2000)
 
 //            CommonMethods.checkInternet(requireContext()) {
@@ -87,7 +89,10 @@ class VerificationEmailAddressFragment : BaseFragment<FragmentVerificationEmailB
     override fun onResume() {
         super.onResume()
         val string =
-            "We have sent an email to <b>${viewModel.email}</b> Check your mailbox and click on the confirmation link to continue."
+            getString(
+                R.string.we_have_sent_an_email_to_b_b_check_your_mailbox_and_click_on_the_confirmation_link_to_continue,
+                viewModel.email
+            )
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
             binding.tvSubTitle.text = Html.fromHtml(string, 0)
         } else binding.tvSubTitle.text = Html.fromHtml(string)

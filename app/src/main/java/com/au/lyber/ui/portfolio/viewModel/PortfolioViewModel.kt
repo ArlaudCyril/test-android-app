@@ -86,11 +86,7 @@ class PortfolioViewModel : NetworkViewModel() {
         }
 
     /* to check whether the live data instance contains data or not */
-    fun notHaveData(): Boolean {
-        return getAssetResponse.value == null
-                || trendingCoinResponse.value == null
-                || recurringInvestmentResponse.value == null
-    }
+
 
 
     private var _totalPortfolio: Double = 100.0

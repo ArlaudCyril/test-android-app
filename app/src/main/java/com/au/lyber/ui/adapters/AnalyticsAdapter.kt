@@ -1,3 +1,4 @@
+/*
 package com.au.lyber.ui.adapters
 
 import android.view.LayoutInflater
@@ -48,4 +49,4 @@ class AnalyticsAdapter(private val clickListener: (AnalyticsData) -> Unit) :
             }
         }
     }
-}
+}*/

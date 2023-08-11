@@ -84,7 +84,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
         adapterBalance = BalanceAdapter(::assetClicked)
         adapterAllAsset = AvailableAssetAdapter(::availableAssetClicked)
-        adapterRecurring = RecurringInvestmentAdapter(::recurringInvestmentClicked)
+        adapterRecurring = RecurringInvestmentAdapter(::recurringInvestmentClicked,requireActivity())
         resourcesAdapter = ResourcesAdapter()
         assetBreakdownAdapter = BalanceAdapter(isAssetBreakdown = true)
 
@@ -353,7 +353,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             "deposit" -> {
 
                 //if (viewModel.screenCount > 0)
-            navController.navigate(R.id.chooseAssetForDepositFragment)
+            navController.navigate(R.id.selectAssestForDepositFragment)
               //  else navController.navigate(R.id.depositFiatWalletFragment)
             }
 

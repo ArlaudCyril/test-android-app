@@ -46,19 +46,19 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
     fun checkData(): Boolean {
         when {
             email.isEmpty() -> {
-                "Please enter your email.".showToast(requireContext())
+                getString(R.string.please_enter_your_email).showToast(requireContext())
                 binding.etEmail.requestKeyboard()
             }
             !CommonMethods.isValidEmail(email) -> {
-                "Please enter a valid email address.".showToast(requireContext())
+                getString(R.string.please_enter_a_valid_email_address).showToast(requireContext())
                 binding.etEmail.requestKeyboard()
             }
             password.isEmpty() -> {
-                "Please enter password.".showToast(requireContext())
+                getString(R.string.please_enter_password).showToast(requireContext())
                 binding.etPassword.requestKeyboard()
             }
             password.length < 8 -> {
-                "Password should be of minimum 8 characters.".showToast(requireContext())
+                getString(R.string.password_should_be_of_minimum_8_characters).showToast(requireContext())
                 binding.etPassword.requestKeyboard()
             }
             else -> {

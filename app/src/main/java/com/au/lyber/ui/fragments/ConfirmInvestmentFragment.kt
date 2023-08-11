@@ -279,8 +279,8 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
 
                     tvValueTotal.text = "${viewModel.assetAmount.commaFormatted} ${viewModel.exchangeAssetTo?.id?.uppercase()}"
 
-                    btnConfirmInvestment.text = "Confirm exchange"
-                    title.text = "Confirm exchange"
+                    btnConfirmInvestment.text = getString(R.string.confirm_exchange)
+                    title.text = getString(R.string.confirm_exchange)
 
                 }
 
@@ -303,7 +303,7 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                 it.tvAssetAmount.text = amount.commaFormatted
 
                 it.tvMessage.text =
-                    "You now own ${assetSymbol.uppercase()} ${amount.commaFormatted}"
+                    getString(R.string.you_now_own, assetSymbol.uppercase(), amount.commaFormatted)
 
                 it.root.setOnClickListener {
                     dismiss()

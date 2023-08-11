@@ -69,20 +69,20 @@ class BottomSheetDialog(
             }
             else -> {
                 bottomSheetAdapter = when (tag) {
-                    SheetType.CRYPTO_EXP.title -> BottomSheetAdapter(this, SheetType.CRYPTO_EXP)
+                    SheetType.CRYPTO_EXP.title -> BottomSheetAdapter(this, SheetType.CRYPTO_EXP ,requireActivity())
                     SheetType.SOURCE_OF_INCOME.title -> BottomSheetAdapter(
                         this,
                         SheetType.SOURCE_OF_INCOME
-                    )
+                    ,requireActivity())
                     SheetType.WORK_INDUSTRY.title -> BottomSheetAdapter(
                         this,
                         SheetType.WORK_INDUSTRY
-                    )
+                        ,requireActivity())
                     SheetType.ANNUAL_INCOME.title -> BottomSheetAdapter(
                         this,
                         SheetType.ANNUAL_INCOME
-                    )
-                    else -> BottomSheetAdapter(this, SheetType.PERSONAL_ASSETS)
+                        ,requireActivity())
+                    else -> BottomSheetAdapter(this, SheetType.YOUR_ACTIVITY_ON_LYBER ,requireActivity())
                 }
 
                 _recyclerBinding = BottomSheetRecyclerViewBinding.inflate(layoutInflater)
@@ -207,7 +207,8 @@ class BottomSheetDialog(
 
             }
 
-            SheetType.PERSONAL_ASSETS.title -> bottomSheetAdapter.setList(SheetType.PERSONAL_ASSETS.getData())
+            SheetType.YOUR_ACTIVITY_ON_LYBER.title -> bottomSheetAdapter.setList(SheetType.YOUR_ACTIVITY_ON_LYBER.getData())
+
         }
     }
 
@@ -224,7 +225,6 @@ class BottomSheetDialog(
     }
 
     enum class SheetType {
-
         COMPLETE_ACCOUNT {
             override fun getData() = emptyList<DataBottomSheet>()
             override val title: String
@@ -257,16 +257,17 @@ class BottomSheetDialog(
         },
         WORK_INDUSTRY {
             override fun getData() = mutableListOf<DataBottomSheet>().apply {
-                add(DataBottomSheet("Agriculture"))
-                add(DataBottomSheet("Arts & Media"))
-                add(DataBottomSheet("Casinos & games"))
-                add(DataBottomSheet("Building"))
-                add(DataBottomSheet("Defense"))
-                add(DataBottomSheet("Entertainment"))
-                add(DataBottomSheet("Education"))
-                add(DataBottomSheet("Energy"))
-                add(DataBottomSheet("Media & TV"))
-                add(DataBottomSheet("New technologies"))
+                add(DataBottomSheet("Agriculture, Agribusiness & Natural Resources"))
+                add(DataBottomSheet("Art, Entertainment & Media"))
+                add(DataBottomSheet("Banking, Finance & Insurance"))
+                add(DataBottomSheet("Business Services & Consulting"))
+                add(DataBottomSheet("Construction, Engineering & Public Works"))
+                add(DataBottomSheet("Education, Training & Research"))
+                add(DataBottomSheet("Energy & Environment"))
+                add(DataBottomSheet("Government, Public Administration & Social Services"))
+                add(DataBottomSheet("Health, Medical & Pharmaceutical"))
+                add(DataBottomSheet("Hospitality, Tourism & Catering"))
+                add(DataBottomSheet("IT"))
             }
 
             override val title: String
@@ -274,12 +275,12 @@ class BottomSheetDialog(
         },
         ANNUAL_INCOME {
             override fun getData() = mutableListOf<DataBottomSheet>().apply {
-                add(DataBottomSheet("0-18"))
-                add(DataBottomSheet("19-23"))
-                add(DataBottomSheet("24-27"))
-                add(DataBottomSheet("28-35"))
-                add(DataBottomSheet("36-56"))
-                add(DataBottomSheet("57-*"))
+                add(DataBottomSheet("Less than 500"))
+                add(DataBottomSheet("500 - 1000"))
+                add(DataBottomSheet("1001-1500"))
+                add(DataBottomSheet("1501-2000"))
+                add(DataBottomSheet("2001-3000"))
+                add(DataBottomSheet("Over3001"))
             }
 
             override val title: String
@@ -305,6 +306,16 @@ class BottomSheetDialog(
 
             override val title: String
                 get() = "How many personal asset you have ?"
+        },
+        YOUR_ACTIVITY_ON_LYBER {
+            override fun getData(): List<DataBottomSheet> = mutableListOf<DataBottomSheet>().apply {
+                add(DataBottomSheet("Buy and Sell digital assets"))
+                add(DataBottomSheet("Save money"))
+                add(DataBottomSheet("Store my digital assets"))
+            }
+
+            override val title: String
+            get() = "What do you plan to mainly do?"
         };
 
         abstract fun getData(): List<DataBottomSheet>

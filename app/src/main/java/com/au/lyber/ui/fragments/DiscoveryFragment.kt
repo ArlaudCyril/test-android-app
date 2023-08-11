@@ -9,26 +9,30 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentDiscoveryBinding
+import com.au.lyber.utils.App
+import com.au.lyber.utils.Constants
 
 class DiscoveryFragment : BaseFragment<FragmentDiscoveryBinding>() {
-    private lateinit var navController : NavController
     override fun bind() = FragmentDiscoveryBinding.inflate(layoutInflater)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val navHostFragment =  requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        navController = navHostFragment.findNavController()
         binding.btnSignUp.setOnClickListener {
-            Log.d("clickSignup","Signup")
-            navController.navigate(R.id.signUpFragment)
+            val bundle = Bundle().apply {
+                putBoolean(Constants.FOR_LOGIN, false)
+            }
+            if (App.prefsManager.userPin.isNotEmpty() && App.prefsManager.refreshToken.isEmpty()) {
+                findNavController().navigate(R.id.completePortfolioFragment)
+            } else {
+                findNavController().navigate(R.id.createAccountFragment, bundle)
+            }
         }
 
         binding.tvLogin.setOnClickListener {
             val bundle = Bundle().apply {
-                putString("forLogin", "forLogin")
+                putBoolean(Constants.FOR_LOGIN,true)
             }
-            Log.d("clickSignup","Login ${bundle.toString()}")
-            navController.navigate(R.id.signUpFragment,bundle)
+            findNavController().navigate(R.id.createAccountFragment,bundle)
         }
     }
 

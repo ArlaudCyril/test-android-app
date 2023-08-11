@@ -117,7 +117,7 @@
                     android:layout_below="@id/tvNestedAmount"
                     android:layout_marginTop="32dp"
                     android:layout_marginBottom="16dp"
-                    android:text="Exchange From"
+                    android:text="@string/exchange_from"
                     android:textColor="@color/purple_gray_500"
                     android:visibility="gone" />
 
@@ -139,7 +139,7 @@
                     style="@style/SubheadMabry"
                     android:layout_below="@id/tvExchangeFrom"
                     android:layout_marginTop="16dp"
-                    android:text="Exchange To"
+                    android:text="@string/exchange_to"
                     android:textColor="@color/purple_gray_500"
                     android:visibility="gone" />
 
@@ -160,7 +160,7 @@
                     style="@style/SubheadMabry"
                     android:layout_below="@id/tvExchangeTo"
                     android:layout_marginTop="32dp"
-                    android:text="Frequency"
+                    android:text="@string/frequency"
                     android:textColor="@color/purple_gray_500"
                     android:visibility="visible" />
 
@@ -181,7 +181,7 @@
                     style="@style/SubheadMabry"
                     android:layout_below="@id/tvFrequency"
                     android:layout_marginTop="32dp"
-                    android:text="Payment"
+                    android:text="@string/payment"
                     android:textColor="@color/purple_gray_500"
                     android:visibility="gone" />
 
@@ -202,7 +202,7 @@
                     style="@style/SubheadMabry"
                     android:layout_below="@id/tvPayment"
                     android:layout_marginTop="32dp"
-                    android:text="Buy"
+                    android:text="@string/buy"
                     android:textColor="@color/purple_gray_500"
                     android:visibility="gone" />
 
@@ -222,7 +222,7 @@
                     style="@style/SubheadMabry"
                     android:layout_below="@id/tvBuy"
                     android:layout_marginTop="32dp"
-                    android:text="Lyber fees"
+                    android:text="@string/lyber_fees"
                     android:textColor="@color/purple_gray_500" />
 
                 <TextView
@@ -243,7 +243,7 @@
                     style="@style/SubheadMabry"
                     android:layout_below="@id/tvLyberFee"
                     android:layout_marginTop="32dp"
-                    android:text="Deposit"
+                    android:text="@string/deposit"
                     android:textColor="@color/purple_gray_500" />
 
                 <TextView
@@ -261,7 +261,7 @@
                     style="@style/SubheadMabry"
                     android:layout_below="@id/tvDeposit"
                     android:layout_marginTop="32dp"
-                    android:text="Deposit fees"
+                    android:text="@string/deposit_fees"
                     android:textColor="@color/purple_gray_500" />
 
                 <TextView
@@ -280,7 +280,7 @@
                     style="@style/SubheadMabry"
                     android:layout_below="@id/tvDepositFee"
                     android:layout_marginVertical="32dp"
-                    android:text="Total"
+                    android:text="@string/total"
                     android:textColor="@color/purple_gray_700" />
 
                 <TextView
@@ -297,7 +297,7 @@
                     android:id="@+id/tvAllocation"
                     style="@style/SubheadMabry"
                     android:layout_below="@id/tvTotal"
-                    android:text="Allocation"
+                    android:text="@string/allocation"
                     android:textColor="@color/purple_gray_700"
                     android:textStyle="bold" />
 
@@ -317,7 +317,7 @@
     <TextView
         android:id="@+id/title"
         style="@style/SubheadMabry"
-        android:text="Confirm investment"
+        android:text="@string/confirm_investment"
         app:layout_constraintBottom_toBottomOf="@+id/ivTopAction"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -339,7 +339,7 @@
             style="@style/ButtonStyle"
             android:background="@drawable/button_purple_500"
             android:gravity="center"
-            android:text="Confirm Investment" />
+            android:text="@string/confirm_investment" />
 
         <TextView
             style="@style/BodyMabry"
@@ -348,7 +348,7 @@
             android:layout_marginTop="12dp"
             android:gravity="center"
             android:lineSpacingExtra="6dp"
-            android:text="The price of cryptocurrencies is volatile. The value of your investment can go up, down or to zero."
+            android:text="@string/the_price_of_cryptocurrencies_is_volatile_the_value_of_your_investment_can_go_up_down_or_to_zero"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             android:textColor="@color/purple_gray_500" />
 

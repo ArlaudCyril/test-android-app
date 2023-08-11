@@ -438,15 +438,16 @@ data class GetAssetsResponseItem(
 
 class PriceServiceResumeResponse(
     val data: Map<String, PriceServiceResumeData>
-    )
+)
 
-data class PriceServiceResumeData (
+data class PriceServiceResumeData(
     val lastPrice: String,
     val change: String,
     val squiggleURL: String,
     val isAuto: Boolean,
 )
-data class PriceServiceResume (
+
+data class PriceServiceResume(
     val id: String,
     val priceServiceResumeData: PriceServiceResumeData
 )
@@ -454,6 +455,7 @@ data class PriceServiceResume (
 class AssetBaseDataResponse(
     val data: List<AssetBaseData>
 )
+
 data class AssetBaseData(
     val id: String,
     val fullName: String,
@@ -468,6 +470,7 @@ data class AssetBaseData(
 class AssetDetailBaseDataResponse(
     val data: AssetDetailBaseData
 )
+
 data class AssetDetailBaseData(
     val id: String,
     val fullName: String,
@@ -479,6 +482,20 @@ data class AssetDetailBaseData(
     val isStablecoin: Boolean,
     val isDepositActive: Boolean,
     val isWithdrawalActive: Boolean,
+    val networks:MutableList<NetworkDeposit>
+)
+
+data class NetworkDeposit(
+    val id: String,
+    val fullName: String,
+    val addressRegex: String,
+    val imageUrl: String,
+    val isUIActive: Boolean,
+    val binanceId: String,
+    val withdrawMin: Float,
+    val withdrawFee: Float,
+    val isDepositActive: Boolean,
+    val isWithdrawalActive: Boolean
 )
 
 data class Description(
@@ -543,7 +560,9 @@ data class ChallengeResponse(
 data class UserLoginResponse(
     val data: LoginData
 )
+data class GetAddress(val data: Address)
 
+data class Address(val address:String)
 data class LoginData(
     val access_token: String,
     val refresh_token: String,
