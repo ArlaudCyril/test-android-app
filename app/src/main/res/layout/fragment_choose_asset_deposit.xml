@@ -6,6 +6,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     android:fitsSystemWindows="true"
+    android:background="@color/white"
     android:orientation="vertical">
 
     <ImageView
@@ -15,6 +16,7 @@
         android:layout_marginStart="4dp"
         android:layout_marginTop="12dp"
         android:padding="12dp"
+        android:background="@color/purple_gray_50"
         android:src="@drawable/ic_back"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -35,7 +37,7 @@
                 style="@style/TitleText"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="20dp"
-                android:text="Crypto asset deposit"
+                android:text="@string/crypto_asset_deposit"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
@@ -44,7 +46,7 @@
                 style="@style/BodyMabry"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
-                android:text="Asset"
+                android:text="@string/asset"
                 android:textColor="@color/purple_gray_500"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tvTitle" />
@@ -63,6 +65,7 @@
                     android:id="@+id/ivNetwork"
                     android:layout_width="48dp"
                     android:layout_height="48dp"
+                    android:layout_marginStart="4dp"
                     android:layout_gravity="start|center_vertical"
                     android:paddingVertical="12dp"
                     android:src="@drawable/ic_bitcoin" />
@@ -83,30 +86,77 @@
                     tools:ignore="RtlSymmetry" />
 
             </LinearLayout>
+            <TextView
+                android:id="@+id/tvTitleNetwork"
+                style="@style/BodyMabry"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/network"
+                android:textColor="@color/purple_gray_500"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/llNetwork" />
 
+            <TextView
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="4dp"
+                android:background="@drawable/round_stroke_gray_100"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tvTitleNetwork"
+                android:id="@+id/etNetwork"
+                style="@style/EditTextTheme"
+                android:layout_width="match_parent"
+                android:paddingEnd="12dp"
+                android:gravity="center_vertical"
+                android:paddingStart="12dp"
+                android:drawableEnd="@drawable/ic_drop_down"
+                android:drawablePadding="12dp"
+                android:focusable="false"
+                android:focusableInTouchMode="false"
+                tools:ignore="RtlSymmetry" />
             <TextView
                 android:id="@+id/tvTitleDepositAddress"
                 style="@style/BodyMabry"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
-                android:text="Deposit adress"
+                android:text="@string/deposit_adress"
                 android:textColor="@color/purple_gray_500"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/llNetwork" />
+                app:layout_constraintTop_toBottomOf="@id/etNetwork" />
 
-            <EditText
-                android:id="@+id/etAddress"
-                style="@style/EditTextTheme"
+            <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="4dp"
                 android:background="@drawable/edit_text_background"
-                android:drawableEnd="@drawable/ic_code_scanner"
-                android:drawablePadding="12dp"
-                android:hint="1123djsgiuieijb3iuhiduhiuhaisuclkjlvl"
-                android:paddingHorizontal="16dp"
-                android:singleLine="true"
-                app:layout_constraintTop_toBottomOf="@id/tvTitleDepositAddress" />
+                app:layout_constraintTop_toBottomOf="@id/tvTitleDepositAddress"
+                android:id="@+id/llAddress">
+                <TextView
+                    android:id="@+id/etAddress"
+                    style="@style/EditTextTheme"
+                    android:layout_width="0dp"
+                    android:layout_weight="1"
+                    android:gravity="center_vertical"
+                    android:background="@android:color/transparent"
+                    android:paddingHorizontal="16dp"
+                    android:singleLine="true"
+                    />
+                <ImageView
+                    android:id="@+id/ivScan"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="start|center_vertical"
+                    android:paddingVertical="12dp"
+                    android:src="@drawable/ic_code_scanner" />
+                <ImageView
+                    android:id="@+id/ivCopy"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_gravity="start|center_vertical"
+                    android:paddingVertical="12dp"
+                    android:src="@drawable/copy" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
 
             <TextView
                 android:id="@+id/tvNote"
@@ -122,7 +172,7 @@
                 android:text="@string/note_crypto_asset"
                 android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                 android:textColor="@color/purple_gray_800"
-                app:layout_constraintTop_toBottomOf="@id/etAddress" />
+                app:layout_constraintTop_toBottomOf="@id/llAddress" />
 
             <View
                 android:id="@+id/viewLeft"
@@ -163,7 +213,7 @@
                 android:layout_width="match_parent"
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="24dp"
-                android:background="@drawable/curved_button"
+                android:background="@drawable/gray_purple_50"
                 android:backgroundTint="@color/purple_gray_50"
                 android:gravity="center"
                 android:textAppearance="@style/TextAppearance.AppCompat.Subhead"

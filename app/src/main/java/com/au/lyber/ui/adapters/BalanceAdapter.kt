@@ -43,21 +43,19 @@ class BalanceAdapter(
             (holder as AssetViewHolder).binding.apply {
                 itemList[position]?.let {
                     val balanceId = it.id
-                    val currency = BaseActivity.assets.find { it.id == balanceId}
-                    ivAssetIcon.loadCircleCrop(currency?.imageUrl?:"")
-
-                    Log.d("currenyImage",currency?.imageUrl!!)
-
-                   // if (isAssetBreakdown) {
-                        tvAssetName.visible()
-                        tvAssetName.text = currency?.fullName
-                    //}
+                    val currency = BaseActivity.assets.find { it.id == balanceId }
+                    ivAssetIcon.loadCircleCrop(currency?.imageUrl ?: "")
+                    tvAssetName.visible()
+                    tvAssetName.text = currency?.fullName
                     val balance = it.balanceData
                     val priceCoin = balance.euroBalance.toDouble()
                         .div(balance.balance.toDouble() ?: 1.0)
                     tvAssetAmount.text = balance.euroBalance.commaFormatted.currencyFormatted
                     tvAssetAmountInCrypto.text =
-                        balance.balance.formattedAsset(price = priceCoin, rounding = RoundingMode.DOWN)
+                        balance.balance.formattedAsset(
+                            price = priceCoin,
+                            rounding = RoundingMode.DOWN
+                        )
 
                 }
             }

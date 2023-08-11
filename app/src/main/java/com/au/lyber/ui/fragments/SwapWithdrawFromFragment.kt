@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.au.lyber.R
@@ -13,18 +14,17 @@ import com.au.lyber.databinding.FragmentSwapFromBinding
 import com.au.lyber.databinding.ItemMyAssetBinding
 import com.au.lyber.models.AssetBaseData
 import com.au.lyber.ui.adapters.BaseAdapter
+import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
+import com.au.lyber.utils.CommonMethods
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.commaFormatted
 import com.au.lyber.utils.CommonMethods.Companion.dismissProgressDialog
-import com.au.lyber.utils.CommonMethods.Companion.getViewModel
 import com.au.lyber.utils.CommonMethods.Companion.gone
 import com.au.lyber.utils.CommonMethods.Companion.loadCircleCrop
 import com.au.lyber.utils.CommonMethods.Companion.replaceFragment
-import com.au.lyber.utils.CommonMethods.Companion.roundFloat
 import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
-import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import java.util.*
 
 class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnClickListener {
@@ -41,24 +41,24 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
 
         /* view model */
 
-        viewModel = getViewModel(requireActivity())
+        viewModel = CommonMethods.getViewModel(requireActivity())
         viewModel.allMyPortfolio = ""
         viewModel.listener = this
 
-        viewModel.getAssetResponse.observe(viewLifecycleOwner) {
+        viewModel.allAssets.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
-                if (it.assets.isNotEmpty()) {
-                    viewModel.exchangeAssetTo = it.assets[0]
+                if (it.data.isNotEmpty()) {
+                    viewModel.exchangeAssetTo = it.data[0]
                 }
-                adapter.addList(it.assets)
+                adapter.addList(it.data)
             }
         }
 
 
         /* recycler view */
         adapter =
-            SwapFromAdapter(::itemClicked, viewModel.selectedOption == Constants.USING_EXCHANGE)
+            SwapFromAdapter(::itemClicked)
         layoutManager = LinearLayoutManager(requireContext())
         binding.rvRecyclerView.let {
             it.adapter = adapter
@@ -75,24 +75,31 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
     private fun getData() {
         checkInternet(requireContext()) {
             showProgressDialog(requireContext())
-            viewModel.getAssets()
+            viewModel.getAllAssets()
         }
     }
 
     private fun prepareUi() {
         if (viewModel.selectedOption == Constants.USING_EXCHANGE) {
             binding.rlAllPortfolio.gone()
-            binding.tvTitle.text = "Exchange → From"
-            binding.includedAsset.root.gone()
+            binding.tvTitle.text = getString(R.string.exchange_from)
+            binding.rlAllPortfolio.gone()
+            binding.includedAsset.root.visible()
+            binding.includedAsset.llFiatWallet.visible()
+            binding.includedAsset.ivAssetIcon.setImageResource(R.drawable.ic_euro)
+            binding.includedAsset.ivDropIcon.setImageResource(R.drawable.ic_right_arrow_grey)
+            binding.includedAsset.tvAssetName.text = getString(R.string.euro)
+            binding.tvAmountAllPortfolio.text =
+                "${viewModel.totalPortfolio.commaFormatted}${Constants.EURO}"
         } else {
-            binding.tvLyberPortfolio.text = "A precise asset"
-            binding.tvTitle.text = "I want to withdraw"
+            binding.tvLyberPortfolio.text = getString(R.string.a_precise_asset)
+            binding.tvTitle.text = getString(R.string.i_want_to_withdraw)
             binding.rlAllPortfolio.visible()
             binding.includedAsset.root.visible()
             binding.includedAsset.llFiatWallet.visible()
             binding.includedAsset.ivAssetIcon.setImageResource(R.drawable.ic_euro)
             binding.includedAsset.ivDropIcon.setImageResource(R.drawable.ic_right_arrow_grey)
-            binding.includedAsset.tvAssetName.text = "Euro"
+            binding.includedAsset.tvAssetName.text = getString(R.string.euro)
 //            binding.includedAsset.tvAssetAmountCenter.text =
 //                "${App.prefsManager.getBalance()}${Constants.EURO}"
             binding.tvAmountAllPortfolio.text =
@@ -107,7 +114,7 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
         else
             viewModel.withdrawAsset = myAsset
 
-        requireActivity().replaceFragment(R.id.flSplashActivity, AddAmountFragment())
+        findNavController().navigate(R.id.allAssetFragment)
     }
 
     class SwapFromAdapter(
@@ -132,7 +139,16 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
             (holder as SwapViewHolder).binding.apply {
                 itemList[position]?.let { it ->
 
-                    //val value = it.total_balance * it.euro_amount TODO
+                    if (!it.imageUrl.isNullOrEmpty())
+                        ivAssetIcon.loadCircleCrop(it.imageUrl)
+                    tvAssetName.text = it.fullName
+                    if (it.isTradeActive){
+                        tvAssetNameCode.gone()
+                    }else{
+                        tvAssetNameCode.visible()
+                    }
+
+               /*     //val value = it.total_balance * it.euro_amount TODO
                     val value = 0 // TODO : Remove this line
                     if (toExchange) {
 
@@ -141,9 +157,9 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
 
 
                         tvAssetAmount.text = "${value.commaFormatted}${Constants.EURO}"
-                       /* tvAssetAmountInCrypto.text = "${
+                       *//* tvAssetAmountInCrypto.text = "${
                             it.total_balance.toString().commaFormatted
-                        }${it.id.uppercase()}" TODO*/
+                        }${it.id.uppercase()}" TODO*//*
 
                     } else {
 //                            if (position == itemList.count() - 1) {
@@ -177,11 +193,11 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
                         tvAssetAmount.text =
                             "${value.toString().roundFloat()}${Constants.EURO}"
 
-                        /*tvAssetAmountInCrypto.text = "${
+                        *//*tvAssetAmountInCrypto.text = "${
                             it.total_balance.toString().roundFloat()
-                        }${it.id.uppercase()}" TODO*/
+                        }${it.id.uppercase()}" TODO*//*
 
-                    }
+                    }*/
                 }
 
             }
@@ -194,7 +210,6 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
             init {
                 binding.apply {
                     // view preparation
-                    tvAssetName.gone()
                     ivDropIcon.setImageResource(R.drawable.ic_right_arrow_grey)
 
                     root.setOnClickListener {

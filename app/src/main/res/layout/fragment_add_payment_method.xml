@@ -23,7 +23,7 @@
         style="@style/HeadingStyle"
         android:layout_marginStart="24dp"
         android:layout_marginTop="20dp"
-        android:text="Add a payment method"
+        android:text="@string/add_a_payment_method"
         android:textSize="24sp"
 
         app:layout_constraintStart_toStartOf="parent"

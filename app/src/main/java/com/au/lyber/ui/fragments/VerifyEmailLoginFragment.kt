@@ -1,3 +1,4 @@
+/*
 package com.au.lyber.ui.fragments
 
 import android.content.ActivityNotFoundException
@@ -63,7 +64,7 @@ class VerifyEmailLoginFragment : BaseFragment<FragmentVerificationEmailBinding>(
         Button(requireContext(), null, 0, R.style.ButtonStyle).let {
             it.background = getDrawable(requireContext(), R.drawable.button_purple_500)
             it.setTextColor(Color.WHITE)
-            it.text = "Email Verified"
+            it.text = getString(R.string.email_verified)
             it.gravity = Gravity.CENTER
             it.height = 44.px
             it.setOnClickListener {
@@ -89,4 +90,4 @@ class VerifyEmailLoginFragment : BaseFragment<FragmentVerificationEmailBinding>(
         super.onDestroyView()
     }
 
-}
+}*/

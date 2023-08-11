@@ -250,9 +250,9 @@ class PersonalDataViewModel : NetworkViewModel() {
             _personalAssets = value
             if (personalData != null) {
 //                if (value != personalData!!.personalAssets)
-                    hashMap["personalAssets"] = value
+                    hashMap["mainUse"] = value
             } else
-                hashMap["personalAssets"] = value
+                hashMap["mainUse"] = value
         }
 
     /* api */

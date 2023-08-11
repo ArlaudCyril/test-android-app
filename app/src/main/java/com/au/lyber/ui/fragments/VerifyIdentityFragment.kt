@@ -38,7 +38,7 @@ class VerifyIdentityFragment : BaseFragment<FragmentVerifyIdentityBinding>() {
         verifyIdentityViewModel.listener = this
         portfolioViewModel = getViewModel(requireActivity())
 
-        binding.btnStart.text = "Verify"
+        binding.btnStart.text = getString(R.string.verify)
 
         verifyIdentityViewModel.kycInitiateResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
@@ -59,7 +59,7 @@ class VerifyIdentityFragment : BaseFragment<FragmentVerifyIdentityBinding>() {
 
                     // undefined yet
                     2 -> {
-                        binding.tvSubTitle.text = "Your KYC is completed!"
+                        binding.tvSubTitle.text = getString(R.string.your_kyc_is_completed)
                         binding.btnStart.gone()
                         binding.btnVerificationInProcess.gone()
                         binding.btnEditPersonalInfo.gone()
@@ -69,11 +69,12 @@ class VerifyIdentityFragment : BaseFragment<FragmentVerifyIdentityBinding>() {
                     3 -> {
                         if (it.kyc_level in 1..3) {
                             binding.tvSubTitle.text =
-                                "OOPS! verification failed.\nReason: ${it.comment}"
+                                getString(R.string.oops_verification_failed_reason, it.comment)
                             binding.btnEditPersonalInfo.visible()
                             binding.btnStart.visible()
                             binding.btnVerificationInProcess.gone()
-                        } else binding.tvSubTitle.text = "Sorry,but your KYC is rejected."
+                        } else binding.tvSubTitle.text =
+                            getString(R.string.sorry_but_your_kyc_is_rejected)
                     }
 
                     // kyc review is not successful
@@ -82,7 +83,7 @@ class VerifyIdentityFragment : BaseFragment<FragmentVerifyIdentityBinding>() {
                         //payment done waiting for response
                         if (it.is_payin_done) {
                             binding.tvSubTitle.text =
-                                "Please wait your verification is under progress"
+                                getString(R.string.please_wait_your_verification_is_under_progress)
                             binding.btnStart.gone()
                             binding.btnEditPersonalInfo.gone()
                             binding.btnVerificationInProcess.visible()
@@ -91,7 +92,10 @@ class VerifyIdentityFragment : BaseFragment<FragmentVerifyIdentityBinding>() {
 
                                 it.kyc_status == "processed" && it.score == 1 -> {
                                     binding.tvSubTitle.text =
-                                        "Please add €1 to your wallet to complete the KYC process\nInternational bank Account Number\n ${it.iban}"
+                                        getString(
+                                            R.string.please_add_1_to_your_wallet_to_complete_the_kyc_process_international_bank_account_number,
+                                            it.iban
+                                        )
                                     binding.btnStart.gone()
                                     binding.btnEditPersonalInfo.gone()
                                     binding.btnVerificationInProcess.visible()
@@ -99,8 +103,8 @@ class VerifyIdentityFragment : BaseFragment<FragmentVerifyIdentityBinding>() {
 
                                 it.kyc_status == "processed" && it.score == -1 -> {
                                     binding.tvSubTitle.text =
-                                        "OOPS! verification failed.\nReason : ${it.comment}"
-                                    binding.btnStart.text = "Start again"
+                                        getString(R.string.oops_verification_failed_reason, it.comment)
+                                    binding.btnStart.text = getString(R.string.start_again)
                                     binding.btnEditPersonalInfo.visible()
                                     binding.btnStart.visible()
                                     binding.btnVerificationInProcess.gone()
@@ -108,8 +112,8 @@ class VerifyIdentityFragment : BaseFragment<FragmentVerifyIdentityBinding>() {
 
                                 it.kyc_status == "processed" && it.score == 0 -> {
                                     binding.tvSubTitle.text =
-                                        "OOPS! verification failed.\nReason : ${it.comment}"
-                                    binding.btnStart.text = "Start again"
+                                        getString(R.string.oops_verification_failed_reason, it.comment)
+                                    binding.btnStart.text =  getString(R.string.start_again)
                                     binding.btnStart.visible()
                                     binding.btnVerificationInProcess.gone()
                                     binding.btnEditPersonalInfo.visible()
@@ -117,8 +121,8 @@ class VerifyIdentityFragment : BaseFragment<FragmentVerifyIdentityBinding>() {
 
                                 it.score == -1 || it.score == 0 -> {
                                     binding.tvSubTitle.text =
-                                        "OOPS! verification failed.\nReason : ${it.comment}"
-                                    binding.btnStart.text = "Start again"
+                                        getString(R.string.oops_verification_failed_reason, it.comment)
+                                    binding.btnStart.text = getString(R.string.start_again)
                                     binding.btnStart.visible()
                                     binding.btnVerificationInProcess.gone()
                                     binding.btnEditPersonalInfo.visible()
@@ -131,8 +135,8 @@ class VerifyIdentityFragment : BaseFragment<FragmentVerifyIdentityBinding>() {
                 }
             } else {
                 binding.tvSubTitle.text =
-                    "OOPS! verification failed.\nReason : ${it.comment}"
-                binding.btnStart.text = "Start again"
+                    getString(R.string.oops_verification_failed_reason, it.comment)
+                binding.btnStart.text = getString(R.string.start_again)
                 binding.btnEditPersonalInfo.visible()
                 binding.btnStart.visible()
                 binding.btnVerificationInProcess.gone()
@@ -141,7 +145,8 @@ class VerifyIdentityFragment : BaseFragment<FragmentVerifyIdentityBinding>() {
 
         binding.btnStart.setOnClickListener {
 
-            dialogVerify("Verify identity", "It will open Ubble link to verify your identity.")
+            dialogVerify("Verify identity",
+                getString(R.string.it_will_open_ubble_link_to_verify_your_identity))
             /*checkInternet(requireContext()) {
                 startClicked = true
                 showProgressDialog(requireContext())
@@ -151,7 +156,7 @@ class VerifyIdentityFragment : BaseFragment<FragmentVerifyIdentityBinding>() {
 
         binding.btnEditPersonalInfo.setOnClickListener {
             val bundle = Bundle()
-            bundle.putString("toEdit", "toEdit")
+            bundle.putString(Constants.TO_EDIT, Constants.TO_EDIT)
             requireActivity().replaceFragment(
                 R.id.flSplashActivity,
                 FillDetailFragment().apply {
@@ -178,7 +183,7 @@ class VerifyIdentityFragment : BaseFragment<FragmentVerifyIdentityBinding>() {
                 it.tvMessage.text = message
                 it.tvNegativeButton.setTextColor(requireContext().getColor(R.color.red_500))
                 it.tvNegativeButton.text = getString(R.string.cancel)
-                it.tvPositiveButton.text = "Ok"
+                it.tvPositiveButton.text = getString(R.string.ok)
                 it.tvNegativeButton.setOnClickListener { dismiss() }
                 it.tvPositiveButton.setOnClickListener {
                     dismiss()

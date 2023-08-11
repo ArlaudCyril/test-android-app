@@ -3,6 +3,7 @@ package com.au.lyber.ui.fragments.bottomsheetfragments
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
+import com.au.lyber.R
 import com.au.lyber.databinding.FragmentConfirmationBinding
 import com.au.lyber.utils.CommonMethods.Companion.clearBackStack
 import com.au.lyber.utils.CommonMethods.Companion.getViewModel
@@ -28,8 +29,8 @@ class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
         }
 
         when(viewModel.selectedOption){
-            Constants.USING_WITHDRAW-> binding.tvInfoOne.text = "Your withdrawal has been taken into account."
-            else -> binding.tvInfoOne.text = "Your investment has been taken into account."
+            Constants.USING_WITHDRAW-> binding.tvInfoOne.text = getString(R.string.your_withdrawal_has_been_taken_into_account)
+            else -> binding.tvInfoOne.text = getString(R.string.your_investment_has_been_taken_into_account)
         }
 
 

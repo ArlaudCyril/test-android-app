@@ -68,7 +68,7 @@
                 <TextView
                     android:id="@+id/tvPortfolioAssetPrice"
                     style="@style/SubheadMabry"
-                    android:text="Price"
+                    android:text="@string/price"
                     android:textColor="@color/purple_gray_500" />
 
                 <TextView
@@ -151,7 +151,7 @@
                         android:id="@+id/tvTitleMyBalance"
                         style="@style/TitleText"
                         android:layout_marginTop="30dp"
-                        android:text="My balance"
+                        android:text="@string/my_balance"
                         android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
                     <include
@@ -181,7 +181,7 @@
                         <TextView
                             android:id="@+id/tvMarketCap"
                             style="@style/SubheadMabry"
-                            android:text="Market cap"
+                            android:text="@string/market_cap"
                             android:textColor="@color/purple_gray_500" />
 
                         <TextView
@@ -198,7 +198,7 @@
                             style="@style/SubheadMabry"
                             android:layout_below="@id/tvMarketCap"
                             android:layout_marginTop="32dp"
-                            android:text="Volume"
+                            android:text="@string/volume"
                             android:textColor="@color/purple_gray_500" />
 
                         <TextView
@@ -217,7 +217,7 @@
                             style="@style/SubheadMabry"
                             android:layout_below="@id/tvVolume"
                             android:layout_marginTop="32dp"
-                            android:text="Trading activity"
+                            android:text="@string/trading_activity"
                             android:textColor="@color/purple_gray_500"
                             android:visibility="visible" />
 
@@ -238,7 +238,7 @@
                             style="@style/SubheadMabry"
                             android:layout_below="@id/tvTradingActivity"
                             android:layout_marginTop="32dp"
-                            android:text="Circulating supply"
+                            android:text="@string/circulating_supply"
                             android:textColor="@color/purple_gray_500" />
 
                         <TextView
@@ -257,7 +257,7 @@
                             style="@style/SubheadMabry"
                             android:layout_below="@id/tvCirculatingSupply"
                             android:layout_marginTop="32dp"
-                            android:text="Share of crypto market"
+                            android:text="@string/share_of_crypto_market"
                             android:textColor="@color/purple_gray_500"
                             android:visibility="visible" />
 
@@ -278,7 +278,7 @@
                             style="@style/SubheadMabry"
                             android:layout_below="@id/tvShareOfCrypto"
                             android:layout_marginTop="32dp"
-                            android:text="Popularity"
+                            android:text="@string/popularity"
                             android:textColor="@color/purple_gray_500" />
 
                         <TextView
@@ -298,7 +298,7 @@
                         android:id="@+id/tvAbout"
                         style="@style/TitleText"
                         android:layout_marginTop="32dp"
-                        android:text="About"
+                        android:text="@string/about"
                         android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
                     <com.au.lyber.utils.ExpandableTextView
@@ -318,7 +318,7 @@
                     <TextView
                         style="@style/TitleText"
                         android:layout_marginTop="32dp"
-                        android:text="Resources"
+                        android:text="@string/resources"
                         android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -361,7 +361,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:drawablePadding="12dp"
-            android:text="Invest Money"
+            android:text="@string/invest_money"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/purple_gray_00"
             app:drawableStartCompat="@drawable/ic_invest_money_white" />

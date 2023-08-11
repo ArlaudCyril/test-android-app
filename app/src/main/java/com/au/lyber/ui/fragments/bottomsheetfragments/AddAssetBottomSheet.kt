@@ -64,16 +64,7 @@ class AddAssetBottomSheet(private val clickListener: (Data) -> Unit = { _ -> }) 
 
 
                 binding.rvAddAsset.visible()
-
-//                if (page > 1 && !searching)
-//                    adapter.removeProgress()
-
-
                 it.data?.let { data ->
-
-                    /*    if (searching) {
-                            adapter.setList(data)
-                        } else*/
                         when (binding.tabLayout.selectedTabPosition) {
 
                             0 -> {
@@ -116,7 +107,6 @@ class AddAssetBottomSheet(private val clickListener: (Data) -> Unit = { _ -> }) 
                             }
                         } else adapter.setList(data)
                     } else adapter.setList(data)
-//                    } else adapter.addList(data)
 
                     Handler(Looper.getMainLooper()).postDelayed({
                         if (lifecycle.currentState == Lifecycle.State.RESUMED) {
@@ -126,11 +116,6 @@ class AddAssetBottomSheet(private val clickListener: (Data) -> Unit = { _ -> }) 
                     }, 3000)
 
                     binding.rvRefresh.isRefreshing = false
-
-                    /*if (page == 1) {
-                        adapter.setList(data)
-                        binding.rvAddAsset.startLayoutAnimation()
-                    } else adapter.addList(data)*/
 
                 }
 
@@ -143,10 +128,10 @@ class AddAssetBottomSheet(private val clickListener: (Data) -> Unit = { _ -> }) 
             tabLayout.let {
                 for (i in 0 until 4) {
                     val tab = when (i) {
-                        0 -> it.newTab().apply { text = "Trending" }
-                        1 -> it.newTab().apply { text = "Top gainers" }
-                        2 -> it.newTab().apply { text = "Top loosers" }
-                        else -> it.newTab().apply { text = "Stable" }
+                        0 -> it.newTab().apply { text = getString(R.string.trending) }
+                        1 -> it.newTab().apply { text = getString(R.string.top_gainers) }
+                        2 -> it.newTab().apply { text = getString(R.string.top_losers) }
+                        else -> it.newTab().apply { text = getString(R.string.stable) }
                     }
                     it.addTab(tab)
                 }
@@ -162,17 +147,6 @@ class AddAssetBottomSheet(private val clickListener: (Data) -> Unit = { _ -> }) 
                 it.layoutManager = layoutManager
                 it.isNestedScrollingEnabled = false
 
-                /* it.addOnScrollListener(object : ScrollListener(layoutManager) {
-                     override fun shouldLoad() = shouldLoad
-                     override fun loadMore() {
-                         if (!binding.rvRefresh.isRefreshing) {
-                             shouldLoad = false
-                             page++
-                             adapter.addProgress()
-                             getCoins()
-                         }
-                     }
-                 })*/
 
             }
 
@@ -182,7 +156,6 @@ class AddAssetBottomSheet(private val clickListener: (Data) -> Unit = { _ -> }) 
         binding.rvRefresh.setOnRefreshListener {
             viewModel.cancelJob()
             page = 1
-//            adapter.removeProgress()
             when (binding.tabLayout.selectedTabPosition) {
                 0 -> getCoins()
                 1 -> getCoins(Constants.HOURS_24_DESC)
@@ -198,7 +171,6 @@ class AddAssetBottomSheet(private val clickListener: (Data) -> Unit = { _ -> }) 
                     searching = false
                     binding.rvRefresh.isRefreshing = true
                     getCoins()
-//                    adapter.setResults()
                 } else
                     checkInternet(requireContext()) {
                         searching = true
@@ -247,8 +219,6 @@ class AddAssetBottomSheet(private val clickListener: (Data) -> Unit = { _ -> }) 
                     getCoins(Constants.STABLE_COINS)
                 }
             }
-//            binding.rvRefresh.isRefreshing = true
-//            binding.rvAddAsset.startLayoutAnimation()
 
         }
 
@@ -295,15 +265,6 @@ class AddAssetBottomSheet(private val clickListener: (Data) -> Unit = { _ -> }) 
         }
     }
 
-    /*private fun showProgress() {
-        binding.ivProgress.animation = AnimationUtils.loadAnimation(context, R.anim.rotate_drawable)
-        binding.ivProgress.visible()
-    }
-
-    private fun hideProgress() {
-        binding.ivProgress.clearAnimation()
-        binding.ivProgress.gone()
-    }*/
 
     class AddAssetAdapter(
         private val clickListener: (Data) -> Unit = { _ -> },

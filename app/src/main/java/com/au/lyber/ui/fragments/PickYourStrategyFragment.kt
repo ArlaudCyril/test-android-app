@@ -188,7 +188,7 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
                             showProgressDialog(requireContext())
                             viewModel.chooseStrategy()
                         }
-                    } else "Please selected an strategy".showToast(requireContext())
+                    } else getString(R.string.please_selected_an_strategy).showToast(requireContext())
                 }
             }
         }

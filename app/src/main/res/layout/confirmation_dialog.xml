@@ -12,7 +12,7 @@
         style="@style/SubheadMabry"
         android:layout_gravity="center"
         android:fontFamily="@font/mabry_pro_bold"
-        android:text="Successfully bought"
+        android:text="@string/successfully_bought"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textStyle="bold" />
 
@@ -54,6 +54,6 @@
         style="@style/SubheadMabry"
         android:layout_gravity="center"
         android:layout_marginTop="32dp"
-        android:text="Tap anywhere to dismiss" />
+        android:text="@string/tap_anywhere_to_dismiss" />
 
 </LinearLayout>

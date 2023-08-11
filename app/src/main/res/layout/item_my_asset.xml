@@ -33,7 +33,7 @@
             android:layout_gravity="center"
             android:layout_marginHorizontal="12dp"
             android:gravity="center"
-            android:text="FIAT Wallet"
+            android:text="@string/fiat_wallet"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption"
             android:textColor="@color/purple_gray_400"
             android:visibility="visible" />
@@ -62,16 +62,27 @@
     <TextView
         android:id="@+id/tvAssetName"
         style="@style/SubheadMabry"
-        android:layout_marginStart="16dp"
-        android:gravity="center_vertical"
+        android:layout_marginStart="12dp"
         android:layout_marginTop="13dp"
+        android:gravity="center_vertical"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/ivAssetIcon"
         app:layout_constraintTop_toBottomOf="@+id/llFiatWallet"
-        app:layout_constraintVertical_bias="0.622"
+        app:layout_constraintVertical_bias="0.0"
         tools:text="Ether" />
 
+    <TextView
+        android:id="@+id/tvAssetNameCode"
+        style="@style/BodyMabry"
+        android:layout_below="@id/tvAssetName"
+        android:layout_marginStart="12dp"
+        android:visibility="gone"
+        android:layout_toEndOf="@id/ivAssetIcon"
+        android:textColor="@color/purple_gray_500"
+        app:layout_constraintStart_toEndOf="@id/ivAssetIcon"
+        app:layout_constraintTop_toBottomOf="@+id/tvAssetName"
+        android:text="@string/deactivated" />
     <TextView
         android:id="@+id/tvAssetAmount"
         style="@style/SubheadMabry"
@@ -81,7 +92,7 @@
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@id/ivDropIcon"
         app:layout_constraintTop_toBottomOf="@id/llFiatWallet"
-        tools:text="966,8€" />
+        android:text="966,8€" />
 
     <TextView
         android:id="@+id/tvAssetAmountInCrypto"
@@ -91,7 +102,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/ivDropIcon"
         app:layout_constraintTop_toBottomOf="@id/tvAssetAmount"
-        tools:text="0.001234 ETH" />
+        android:text="0.001234 ETH" />
 
     <ImageView
         android:id="@+id/ivDropIcon"

@@ -69,7 +69,7 @@ class ConfirmNewPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
                     viewModel.updatePin(confirmPin)
                     clearField()
                 }
-            } else "Pin doesn't matches".showToast(requireContext())
+            } else getString(R.string.pin_doesn_t_matches).showToast(requireContext())
         }
     }
 

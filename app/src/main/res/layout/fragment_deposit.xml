@@ -20,7 +20,7 @@
     <TextView
         android:id="@+id/tvTitle"
         style="@style/SubheadMabry"
-        android:text="Deposit Funds"
+        android:text="@string/deposit_funds"
         app:layout_constraintBottom_toBottomOf="@id/ivTopAction"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,7 +31,7 @@
         style="@style/HeadingStyle"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="Bank account details"
+        android:text="@string/bank_account_details"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ivTopAction" />
 
@@ -42,7 +42,7 @@
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="8dp"
         android:lineSpacingExtra="6dp"
-        android:text="Please deposit money in the below mentioned account detail"
+        android:text="@string/please_deposit_money_in_the_below_mentioned_account_detail"
         android:textColor="@color/purple_gray_600"
         app:layout_constraintTop_toBottomOf="@id/tvHeading" />
 
@@ -103,7 +103,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="16dp"
         android:lineSpacingExtra="6dp"
-        android:text="Your amount will be reflected in the wallet in 30 minutes."
+        android:text="@string/your_amount_will_be_reflected_in_the_wallet_in_30_minutes"
         android:textColor="@color/purple_gray_600"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/ivInfo"

@@ -98,7 +98,7 @@
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginVertical="12dp"
                 android:gravity="start"
-                android:text="History"
+                android:text="@string/history"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:visibility="gone" />
 

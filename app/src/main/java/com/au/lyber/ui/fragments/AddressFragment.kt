@@ -73,26 +73,26 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
     fun checkData(): Boolean {
         when {
             streetHouseNumber.isEmpty() -> {
-                "Please enter street number".showToast(requireContext())
+                getString(R.string.please_enter_street_number).showToast(requireContext())
                 binding.etStreetNumber.requestKeyboard()
             }
             buildingFloor.isEmpty() -> {
-                "Please enter building name or floor name".showToast(requireContext())
+                getString(R.string.please_enter_building_name_or_floor_name).showToast(requireContext())
                 binding.etBuildingNumberFloor.requestKeyboard()
             }
             city.isEmpty() -> {
-                "Please enter city name".showToast(requireContext())
+                getString(R.string.please_enter_city_name).showToast(requireContext())
                 binding.etCity.requestKeyboard()
             }
             state.isEmpty() -> {
-                "Please enter state".showToast(requireContext())
+                getString(R.string.please_enter_state).showToast(requireContext())
                 binding.etState.requestKeyboard()
             }
             zipCode.isEmpty() -> {
-                "Please Enter zip code".showToast(requireContext())
+                getString(R.string.please_enter_zip_code).showToast(requireContext())
                 binding.etZipCode.requestKeyboard()
             }
-            country.isEmpty() -> "Please enter country name".showToast(requireContext())
+            country.isEmpty() -> getString(R.string.please_enter_country_name).showToast(requireContext())
             else -> {
                 personalDataViewModel.let {
                     it.streetNumber = streetHouseNumber

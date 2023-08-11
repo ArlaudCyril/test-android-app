@@ -3,6 +3,7 @@ package com.au.lyber.ui.fragments
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Lifecycle
+import com.au.lyber.R
 import com.au.lyber.databinding.FragmentEnterWalletAddressBinding
 import com.au.lyber.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
@@ -45,7 +46,7 @@ class EnterWalletAddressFragment : BaseFragment<FragmentEnterWalletAddressBindin
         binding.ivTopAction.setOnClickListener { requireActivity().onBackPressed() }
 
         binding.btnWithdraw.setOnClickListener {
-            if (address.isNotEmpty())
+            if (address.isNotEmpty()) {
                 checkInternet(requireContext()) {
                     showProgressDialog(requireContext())
                     if (viewModel.allMyPortfolio.isNotEmpty())
@@ -56,8 +57,8 @@ class EnterWalletAddressFragment : BaseFragment<FragmentEnterWalletAddressBindin
                         }
                     }
                 }
-            else {
-                "Please enter wallet address".showToast(requireContext())
+            } else {
+                getString(R.string.please_enter_wallet_address).showToast(requireContext())
                 binding.etWalletAddress.requestKeyboard()
             }
         }

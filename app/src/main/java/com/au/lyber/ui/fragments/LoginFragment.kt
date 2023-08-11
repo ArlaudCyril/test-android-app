@@ -1,3 +1,4 @@
+/*
 package com.au.lyber.ui.fragments
 
 import android.os.Bundle
@@ -13,4 +14,4 @@ class LoginFragment : BaseFragment<FragmentLoginBinding>() {
         super.onViewCreated(view, savedInstanceState)
 
     }
-}
+}*/

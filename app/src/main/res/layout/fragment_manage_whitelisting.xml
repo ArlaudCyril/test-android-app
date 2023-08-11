@@ -37,7 +37,7 @@
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="4dp"
                 android:lineSpacingExtra="6dp"
-                android:text="Whitelisting is a feature that limits your withdrawals and deposits to addresses in your Lyber address book."
+                android:text="@string/whitelisting_is_a_feature_that_limits_your_withdrawals_and_deposits_to_addresses_in_your_lyber_address_book"
                 android:textColor="@color/purple_gray_600" />
 
 
@@ -45,7 +45,7 @@
                 style="@style/TitleText"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="24dp"
-                android:text="Extra security"
+                android:text="@string/extra_security"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
             <androidx.recyclerview.widget.RecyclerView
@@ -84,7 +84,7 @@
                     android:layout_toEndOf="@id/ivInfo"
                     android:gravity="top"
                     android:lineSpacingExtra="6dp"
-                    android:text="Allows you to block the addition of new addresses during a given period (effective 4H after its activation)." />
+                    android:text="@string/allows_you_to_block_the_addition_of_new_addresses_during_a_given_period_effective_4h_after_its_activation" />
 
 
             </RelativeLayout>
@@ -97,7 +97,7 @@
                 android:layout_marginTop="32dp"
                 android:background="@drawable/curved_button"
                 android:backgroundTint="@color/purple_500"
-                android:text="Enable whitelisting"
+                android:text="@string/enable_whitelisting"
                 android:textColor="@color/white" />
 
         </LinearLayout>

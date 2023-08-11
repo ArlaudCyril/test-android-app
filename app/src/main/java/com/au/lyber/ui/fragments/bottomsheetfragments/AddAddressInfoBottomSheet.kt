@@ -1,5 +1,6 @@
 package com.au.lyber.ui.fragments.bottomsheetfragments
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 import com.au.lyber.R
@@ -9,9 +10,8 @@ import com.au.lyber.utils.CommonMethods.Companion.gone
 import com.au.lyber.utils.CommonMethods.Companion.toDateFormat
 
 class AddAddressInfoBottomSheet(
-    private val toDelete: Boolean,
-    private val clickListener: (Int) -> Unit = { _ -> }
-) :
+    private val toDelete: Boolean,private val context: Context,
+    private val clickListener: (Int) -> Unit = { _ -> }) :
     BaseBottomSheet<BottomSheetAddressBookBinding>(), View.OnClickListener {
 
     override fun bind() = BottomSheetAddressBookBinding.inflate(layoutInflater)
@@ -21,7 +21,7 @@ class AddAddressInfoBottomSheet(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        binding.tvDelete.text = if (toDelete) "Delete" else "Confirm"
+        binding.tvDelete.text = if (toDelete) context.getString(R.string.delete) else context.getString(R.string.confirm)
         binding.tvDelete.setCompoundDrawablesRelativeWithIntrinsicBounds(
             if (toDelete) R.drawable.ic_delete else 0,
             0,

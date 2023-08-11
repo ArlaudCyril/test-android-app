@@ -112,7 +112,7 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
 
     private fun stateTwo() {
 
-        binding.btnOpenSend.text = "Next"
+        binding.btnOpenSend.text = getString(R.string.next)
         binding.tvTitlePapers.strikeText()
         binding.tvSubTitlePapers.strikeText()
         binding.tvTakeSelfie.strikeText()
@@ -208,7 +208,7 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
 
                 !isCamera -> if (!requireActivity().shouldShowPermission(CAMERA)) {
                     permissionDeniedDialog(
-                        "Permissions Required",
+                        getString(R.string.permissions_required),
                         getString(R.string.openSettings)
                     )
                 }
@@ -218,7 +218,7 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
                         && !requireActivity().shouldShowPermission(READ_EXTERNAL_STORAGE)
                     ) {
                         permissionDeniedDialog(
-                            "Permissions Required",
+                            getString(R.string.permissions_required),
                             getString(R.string.openSettings)
                         )
                     }
@@ -345,7 +345,7 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
                 it.tvMessage.text = message
                 it.tvNegativeButton.setTextColor(requireContext().getColor(R.color.red_500))
                 it.tvNegativeButton.text = getString(R.string.cancel)
-                it.tvPositiveButton.text = "Ok"
+                it.tvPositiveButton.text = getString(R.string.ok)
                 it.tvNegativeButton.setOnClickListener { dismiss() }
                 it.tvPositiveButton.setOnClickListener {
                     stateTwo()
@@ -367,8 +367,8 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
                         navController.navigate(R.id.portfolioHomeFragment)
                     } else
                         dialogVerify(
-                            "Verify identity",
-                            "It will open Ubble link to verify your identity."
+                            getString(R.string.verify_identity),
+                            "It will open Unable link to verify your identity."
                         )
 
 

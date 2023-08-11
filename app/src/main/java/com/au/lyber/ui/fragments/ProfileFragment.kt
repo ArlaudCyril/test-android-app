@@ -4,6 +4,7 @@ import android.Manifest
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.Dialog
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
@@ -97,7 +98,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
             }
         }
 
-        adapter = TransactionAdapter()
+        adapter = TransactionAdapter(requireActivity())
 
         binding.rvTransactions.let {
             it.adapter = adapter
@@ -311,7 +312,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         }
     }
 
-    class TransactionAdapter : BaseAdapter<Transaction>() {
+    class TransactionAdapter(private val context: Context) : BaseAdapter<Transaction>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             return TransactionViewHolder(
@@ -346,7 +347,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                         }
                         3 -> { // withdraw
                             ivAssetIcon.setImageResource(R.drawable.ic_withdraw)
-                            tvAssetName.text = "Withdrawal"
+                            tvAssetName.text = context.getString(R.string.withdrawal)
                             tvAssetAmount.text = "-${it.amount}${Constants.EURO}"
                             tvAssetAmountInCrypto.text =
                                 "${
@@ -430,9 +431,9 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                                 }
 
                             } catch (e: IllegalArgumentException) {
-                                "file not found".showToast(requireContext())
+                                getString(R.string.file_not_found).showToast(requireContext())
                             } catch (e: Exception) {
-                                "error occurred".showToast(requireContext())
+                                getString(R.string.error_occurred).showToast(requireContext())
                             }
                         }
                     }

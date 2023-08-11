@@ -30,7 +30,7 @@
         android:layout_marginBottom="12dp"
         android:drawablePadding="8dp"
         android:padding="12dp"
-        android:text="Use Biometric"
+        android:text="@string/use_biometric"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@color/purple_500"
         app:drawableStartCompat="@drawable/ic_biometric"
@@ -53,7 +53,7 @@
         style="@style/TitleText"
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="40dp"
-        android:text="Enter your pin"
+        android:text="@string/enter_your_pin"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ivLyber" />

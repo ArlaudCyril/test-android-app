@@ -51,7 +51,7 @@
         android:layout_marginHorizontal="24dp"
         android:layout_marginBottom="16dp"
         android:backgroundTint="@color/purple_500"
-        android:text="Edit personal info"
+        android:text="@string/edit_personal_info"
         android:textColor="@color/white"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/btnStart" />
@@ -64,7 +64,7 @@
         android:layout_marginHorizontal="24dp"
         android:layout_marginBottom="24dp"
         android:backgroundTint="@color/purple_500"
-        android:text="Start"
+        android:text="@string/start"
         android:textColor="@color/white"
         app:layout_constraintBottom_toTopOf="@id/btnVerificationInProcess" />
 
@@ -76,7 +76,7 @@
         android:layout_marginBottom="24dp"
         android:drawablePadding="12dp"
         android:gravity="center"
-        android:text="Verification is in process"
+        android:text="@string/verification_is_in_process"
         android:textColor="@color/purple_gray_700"
         android:visibility="gone"
         app:drawableStartCompat="@drawable/ic_verification_icon"

@@ -54,35 +54,35 @@ class FrequencyModel(private val handle: (String) -> Unit = { _ -> }) :
             when (v!!) {
                 ivTopAction -> dismiss()
                 tvTitleDaily -> {
-                    handle("Daily")
+                    handle(getString(R.string.daily))
                     dismiss()
                 }
                 tvSubTitleDaily -> {
-                    handle("Daily")
+                    handle(getString(R.string.daily))
                     dismiss()
                 }
                 tvTitleOnce -> {
-                    handle("Once")
+                    handle(getString(R.string.once))
                     dismiss()
                 }
                 tvSubTitleOnce -> {
-                    handle("Once")
+                    handle(getString(R.string.once))
                     dismiss()
                 }
                 tvTitleWeekly -> {
-                    handle("Weekly")
+                    handle(getString(R.string.weekly))
                     dismiss()
                 }
                 tvSubTitleWeekly -> {
-                    handle("Weekly")
+                    handle(getString(R.string.weekly))
                     dismiss()
                 }
                 tvTitleMonthly -> {
-                    handle("Monthly")
+                    handle(getString(R.string.monthly))
                     dismiss()
                 }
                 tvSubTitleMonthly -> {
-                    handle("Monthly")
+                    handle(getString(R.string.monthly))
                     dismiss()
                 }
             }

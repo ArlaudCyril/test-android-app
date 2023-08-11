@@ -11,7 +11,7 @@
         android:layout_height="40dp"
         android:layout_marginVertical="20dp"
         android:adjustViewBounds="false"
-        android:contentDescription="graph of currency"
+        android:contentDescription="@string/graph_of_currency"
         android:cropToPadding="false"
         android:scaleType="centerInside"
         app:layout_constraintBottom_toBottomOf="parent"

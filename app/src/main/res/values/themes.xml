@@ -29,7 +29,7 @@
     <style name="CountryPickerStyle" parent="Theme.AppCompat.Dialog">
         <item name="windowMinWidthMajor">80pt</item>
         <item name="windowMinWidthMinor">80pt</item>
-        <item name="android:minWidth">320dp</item>
+        <item name="android:minWidth">400dp</item>
         <item name="colorAccent">@color/purple_500</item>
     </style>
 

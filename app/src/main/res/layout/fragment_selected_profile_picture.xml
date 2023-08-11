@@ -23,7 +23,7 @@
     <TextView
         android:id="@+id/tvTitle"
         style="@style/SubheadMabry"
-        android:text="Selected Profile Picture"
+        android:text="@string/selected_profile_picture"
         android:textColor="#423D33"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/ivTopAction"
@@ -60,7 +60,7 @@
         android:layout_marginHorizontal="24dp"
         android:layout_marginBottom="24dp"
         android:background="@drawable/button_purple_500"
-        android:text="Save"
+        android:text="@string/save"
         android:textColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent" />
 

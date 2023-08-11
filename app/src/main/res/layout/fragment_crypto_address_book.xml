@@ -70,7 +70,7 @@
                         <TextView
                             style="@style/SubheadMabry"
                             android:gravity="center_vertical"
-                            android:text="Whitelisting" />
+                            android:text="@string/whitelisting" />
 
                         <LinearLayout
                             android:id="@+id/llDurationInfo"
@@ -81,7 +81,7 @@
                             <TextView
                                 style="@style/BodyMabry"
                                 android:gravity="center_vertical"
-                                android:text="Security:"
+                                android:text="@string/security"
                                 android:textColor="@color/purple_gray_600" />
 
                             <TextView
@@ -121,7 +121,7 @@
                 android:background="@drawable/edit_text_background"
                 android:drawableStart="@drawable/search"
                 android:drawablePadding="12dp"
-                android:hint="Search"
+                android:hint="@string/search"
                 android:paddingHorizontal="16dp"
                 android:paddingVertical="12dp" />
 
@@ -172,7 +172,7 @@
             <TextView
                 style="@style/SubheadMabry"
                 android:layout_marginStart="4dp"
-                android:text="Add a new address" />
+                android:text="@string/add_a_new_address" />
 
         </LinearLayout>
 

@@ -31,7 +31,7 @@
                 <TextView
                     android:id="@+id/tvPortfolioAssetPrice"
                     style="@style/SubheadMabry"
-                    android:text="Portfolio"
+                    android:text="@string/portfolio"
                     android:textColor="@color/purple_gray_500" />
 
                 <TextView
@@ -175,7 +175,7 @@
                         style="@style/TitleText"
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="40dp"
-                        android:text="All assets available"
+                        android:text="@string/all_assets_available"
                         android:textAppearance="@style/TextAppearance.AppCompat.Title"
                         android:textColor="#423D33" />
 
@@ -230,7 +230,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:drawablePadding="12dp"
-            android:text="Invest Money"
+            android:text="@string/invest_money"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             android:textColor="@color/purple_gray_00"
             app:drawableStartCompat="@drawable/ic_invest_money_white" />

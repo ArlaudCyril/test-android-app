@@ -10,10 +10,14 @@
         <action
             android:id="@+id/action_splashFragment_to_unlockAppFragment2"
             app:destination="@id/unlockAppFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true"
             />
         <action
             android:id="@+id/action_splashFragment_to_discoveryFragment"
             app:destination="@id/discoveryFragment"
+            app:popUpTo="@id/splashFragment"
+            app:popUpToInclusive="true"
             />
     </fragment>
     <fragment
@@ -67,6 +71,11 @@
             app:enterAnim="@anim/slide_up"
             app:popExitAnim="@anim/slide_down"/>
         <action
+            android:id="@+id/action_portfolioHomeFragment_to_selectAssestForDepositFragment"
+            app:destination="@id/selectAssestForDepositFragment"
+            app:enterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down"/>
+        <action
             android:id="@+id/action_portfolioHomeFragment_to_depositFiatWalletFragment"
             app:destination="@id/depositFiatWalletFragment"
             app:enterAnim="@anim/slide_up"
@@ -102,7 +111,7 @@
         android:label="DiscoveryFragment" >
         <action
             android:id="@+id/action_discoveryFragment_to_signupFragment"
-            app:destination="@id/signUpFragment"
+            app:destination="@id/createAccountFragment"
             app:enterAnim="@anim/slide_up"
             app:popExitAnim="@anim/slide_down"/>
     </fragment>
@@ -143,29 +152,39 @@
 
     </fragment>
     <fragment
+        android:id="@+id/selectAssestForDepositFragment"
+        android:name="com.au.lyber.ui.fragments.SelectAnAssestDepositFragment"
+        android:label="SelectAssestForDepositFragment" >
+        <action
+            android:id="@+id/action_discoveryFragment_to_chooseAssetForDepositFragment"
+            app:destination="@id/chooseAssetForDepositFragment"
+            app:enterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down"/>
+    </fragment>
+    <fragment
         android:id="@+id/depositFiatWalletFragment"
         android:name="com.au.lyber.ui.fragments.DepositFiatWalletFragment"
         android:label="DepositFiatWalletFragment" >
 
     </fragment>
-    <fragment
-        android:id="@+id/signUpFragment"
-        android:name="com.au.lyber.ui.fragments.SignUpFragment"
-        android:label="SignUpFragment"
-        >
-        <action
-            android:id="@+id/action_signUpFragment_to_createAccountFragment"
-            app:destination="@id/createAccountFragment" />
-        <action
-            android:id="@+id/action_signUpFragment_to_createPinFragment"
-            app:destination="@id/createPinFragment" />
-        <action
-            android:id="@+id/action_signUpFragment_to_confirmPinFragment"
-            app:destination="@id/confirmPinFragment" />
-        <action
-            android:id="@+id/action_signUpFragment_to_enableNotificationFragment"
-            app:destination="@id/enableNotificationFragment" />
-    </fragment>
+<!--    <fragment-->
+<!--        android:id="@+id/signUpFragment"-->
+<!--        android:name="com.au.lyber.ui.fragments.SignUpFragment"-->
+<!--        android:label="SignUpFragment"-->
+<!--        >-->
+<!--        <action-->
+<!--            android:id="@+id/action_signUpFragment_to_createAccountFragment"-->
+<!--            app:destination="@id/createAccountFragment" />-->
+<!--        <action-->
+<!--            android:id="@+id/action_signUpFragment_to_createPinFragment"-->
+<!--            app:destination="@id/createPinFragment" />-->
+<!--        <action-->
+<!--            android:id="@+id/action_signUpFragment_to_confirmPinFragment"-->
+<!--            app:destination="@id/confirmPinFragment" />-->
+<!--        <action-->
+<!--            android:id="@+id/action_signUpFragment_to_enableNotificationFragment"-->
+<!--            app:destination="@id/enableNotificationFragment" />-->
+<!--    </fragment>-->
     <fragment
         android:id="@+id/createPinFragment"
         android:name="com.au.lyber.ui.fragments.CreatePinFragment"
@@ -191,7 +210,7 @@
         <action
             android:id="@+id/action_enableNotificationFragment_to_completePortfolioFragment"
             app:destination="@id/completePortfolioFragment"
-            app:popUpToInclusive="false"/>
+           />
     </fragment>
     <fragment
         android:id="@+id/completePortfolioFragment"

@@ -20,7 +20,7 @@
     <TextView
         android:id="@+id/tvTitle"
         style="@style/SubheadMabry"
-        android:text="Deposit"
+        android:text="@string/deposit"
         app:layout_constraintBottom_toBottomOf="@id/ivTopAction"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,7 +31,7 @@
         style="@style/HeadingStyle"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="My wallet address"
+        android:text="@string/my_wallet_address"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/ivTopAction" />
 
@@ -42,7 +42,7 @@
         android:layout_marginHorizontal="16dp"
         android:layout_marginTop="8dp"
         android:lineSpacingExtra="6dp"
-        android:text="Please deposit eth in the below mentioned wallet address"
+        android:text="@string/please_deposit_eth_in_the_below_mentioned_wallet_address"
         android:textColor="@color/purple_gray_600"
         app:layout_constraintTop_toBottomOf="@id/tvHeading" />
 
@@ -61,7 +61,7 @@
 
         <TextView
             style="@style/TitleText"
-            android:text="Wallet address"
+            android:text="@string/wallet_address"
             android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvSubHeading" />
@@ -91,7 +91,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginEnd="16dp"
         android:lineSpacingExtra="6dp"
-        android:text="Your amount will be reflected in the wallet in 30 minutes."
+        android:text="@string/your_amount_will_be_reflected_in_the_wallet_in_30_minutes"
         android:textColor="@color/purple_gray_600"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@id/ivInfo"

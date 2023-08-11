@@ -21,7 +21,7 @@
     <TextView
         android:id="@+id/tvTitle"
         style="@style/SubheadMabry"
-        android:text="BTC victor"
+        android:text="@string/btc_victor"
         app:layout_constraintBottom_toBottomOf="@id/ivTopAction"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -57,7 +57,7 @@
             android:layout_alignBottom="@id/tvAddress"
             android:layout_alignParentEnd="true"
             android:gravity="center"
-            android:text="Copy"
+            android:text="@string/copy"
             android:textColor="@color/purple_500"
             android:visibility="gone" />
 
@@ -67,7 +67,7 @@
             style="@style/SubheadMabry"
             android:layout_below="@id/tvAddress"
             android:layout_marginTop="4dp"
-            android:text="Network"
+            android:text="@string/network"
             android:textColor="@color/purple_gray_500" />
 
         <TextView
@@ -83,7 +83,7 @@
             style="@style/SubheadMabry"
             android:layout_below="@id/tvNetwork"
             android:layout_marginTop="32dp"
-            android:text="Address Origin"
+            android:text="@string/address_origin"
             android:textColor="@color/purple_gray_500" />
 
         <TextView
@@ -99,7 +99,7 @@
             style="@style/SubheadMabry"
             android:layout_below="@id/tvAddressOrigin"
             android:layout_marginTop="32dp"
-            android:text="Date Added"
+            android:text="@string/date_added"
             android:textColor="@color/purple_gray_500" />
 
         <TextView
@@ -162,7 +162,7 @@
             style="@style/SubheadMabry"
             android:drawablePadding="12dp"
             android:gravity="center"
-            android:text="Confirm" />
+            android:text="@string/confirm" />
 
     </LinearLayout>
 
@@ -187,7 +187,7 @@
             android:drawableStart="@drawable/ic_editor"
             android:drawablePadding="12dp"
             android:gravity="center"
-            android:text="Edit" />
+            android:text="@string/edit" />
 
     </LinearLayout>
 
