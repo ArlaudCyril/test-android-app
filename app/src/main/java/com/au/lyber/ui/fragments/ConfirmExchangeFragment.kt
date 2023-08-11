@@ -15,8 +15,10 @@ import com.au.lyber.ui.activities.BaseActivity
 import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.CommonMethods
 import com.au.lyber.utils.CommonMethods.Companion.decimalPoint
+import com.au.lyber.utils.CommonMethods.Companion.formattedAsset
 import com.au.lyber.utils.CommonMethods.Companion.gone
 import com.au.lyber.utils.CommonMethods.Companion.visible
+import java.math.RoundingMode
 
 class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>(),
     View.OnClickListener {
@@ -104,19 +106,33 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
         binding.apply {
             tvNestedAmount.text = getString(R.string.ratio)
             tvNestedAmountValue.text = data!!.ratio
+            val priceCoin = viewModel.exchangeAssetFrom!!.balanceData.euroBalance.toDouble()
+                .div(viewModel.exchangeAssetFrom!!.balanceData.balance.toDouble() ?: 1.0)
             tvValueLyberFee.text =
-                data.fees.decimalPoint() + data.fromAsset.uppercase()
+                data.fees.formattedAsset(
+                    price = priceCoin,
+                    rounding = RoundingMode.DOWN
+                ) + data.fromAsset.uppercase()
             tvAmount.text =
-                "${data.toAmount.decimalPoint()} ${data.toAsset.uppercase()}"
+                "${data.toAmount.formattedAsset(
+                    price = priceCoin,
+                    rounding = RoundingMode.DOWN
+                ) } ${data.toAsset.uppercase()}"
             orderId = data.orderId
             tvExchangeFromValue.text =
                 "${data.fromAmount} ${data.fromAsset.uppercase()}"
             tvExchangeToValue.text =
-                "${data.toAmount.decimalPoint()} ${data.toAsset.uppercase()}"
+                "${data.toAmount.formattedAsset(
+                    price = priceCoin,
+                    rounding = RoundingMode.DOWN
+                )} ${data.toAsset.uppercase()}"
 
             val valueTotal = data.fees.toDouble()+data.fromAmount.toDouble()
             tvValueTotal.text =
-                "${valueTotal.toString().decimalPoint()} ${data.fromAsset.uppercase()}"
+                "${valueTotal.toString().formattedAsset(
+                    price = priceCoin,
+                    rounding = RoundingMode.DOWN
+                ) } ${data.fromAsset.uppercase()}"
             btnConfirmInvestment.isEnabled = true
             startTimer()
             btnConfirmInvestment.text = getString(R.string._25_sec, getString(R.string.confirm_exchange),"25")

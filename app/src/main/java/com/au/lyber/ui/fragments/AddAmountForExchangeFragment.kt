@@ -20,6 +20,7 @@ import com.au.lyber.utils.CommonMethods.Companion.clearBackStack
 import com.au.lyber.utils.CommonMethods.Companion.commaFormatted
 import com.au.lyber.utils.CommonMethods.Companion.decimalPoint
 import com.au.lyber.utils.CommonMethods.Companion.fadeIn
+import com.au.lyber.utils.CommonMethods.Companion.formattedAsset
 import com.au.lyber.utils.CommonMethods.Companion.gone
 import com.au.lyber.utils.CommonMethods.Companion.loadCircleCrop
 import com.au.lyber.utils.CommonMethods.Companion.roundFloat
@@ -28,6 +29,7 @@ import com.au.lyber.utils.CommonMethods.Companion.showToast
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
 import com.au.lyber.utils.OnTextChange
+import java.math.RoundingMode
 
 class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
     View.OnClickListener {
@@ -139,9 +141,10 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                 ivAssetSwapFrom.loadCircleCrop(currency!!.imageUrl ?: "")
                 tvSwapAssetFrom.text = it.id.uppercase()
                 minAmount = (it.balanceData.balance.toDouble()/it.balanceData.euroBalance.toDouble())
+                val priceCoin = (it.balanceData.euroBalance.toDouble()/it.balanceData.balance.toDouble())
                 tvMinAmount.text = getString(
                     R.string.the_minimum_amount_to_be_exchanged_1,
-                    minAmount.toString().decimalPoint()
+                    minAmount.toString().formattedAsset(priceCoin,RoundingMode.DOWN)
                 ,it.id.uppercase())
                 maxValue = it.balanceData.balance.toDouble()
             }
@@ -473,8 +476,8 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
 
         if (focusedData.currency == mCurrency) {
 
-            valueOne = amount.split(mCurrency)[0].pointFormat.decimalPoint()
-            valueTwo = assetConversion.split(mConversionCurrency)[0].pointFormat.decimalPoint()
+            //valueOne = amount.split(mCurrency)[0].pointFormat
+           // valueTwo = assetConversion.split(mConversionCurrency)[0].pointFormat
 
             valueOne = 0.00.toString()
             valueTwo = 0.00.toString()
@@ -512,8 +515,8 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
 
         } else {
 
-            valueOne = amount.split(mConversionCurrency)[0].pointFormat.decimalPoint()
-            valueTwo = assetConversion.split(mCurrency)[0].pointFormat.decimalPoint()
+           // valueOne = amount.split(mConversionCurrency)[0].pointFormat
+           // valueTwo = assetConversion.split(mCurrency)[0].pointFormat
 
 //            viewModel.selectedAsset?.let {
 //                maxValue = App.prefsManager.getBalance().toDouble()
