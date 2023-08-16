@@ -14,7 +14,6 @@ import com.au.lyber.models.DataQuote
 import com.au.lyber.ui.activities.BaseActivity
 import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.CommonMethods
-import com.au.lyber.utils.CommonMethods.Companion.decimalPoint
 import com.au.lyber.utils.CommonMethods.Companion.formattedAsset
 import com.au.lyber.utils.CommonMethods.Companion.gone
 import com.au.lyber.utils.CommonMethods.Companion.visible
