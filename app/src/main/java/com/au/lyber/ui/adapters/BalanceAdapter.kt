@@ -21,7 +21,7 @@ import com.bumptech.glide.Glide
 import java.math.RoundingMode
 
 class BalanceAdapter(
-    private val listener: (Balance) -> Unit = { _ ->
+    private val isFromWithdraw:Boolean = false,private val listener: (Balance) -> Unit = { _ ->
     },
     private val isAssetBreakdown: Boolean = false
 ) :
@@ -50,10 +50,18 @@ class BalanceAdapter(
                     val balance = it.balanceData
                     val priceCoin = balance.euroBalance.toDouble()
                         .div(balance.balance.toDouble() ?: 1.0)
-                    if (currency!!.isTradeActive){
-                        tvAssetNameCode.gone()
-                    }else{
-                        tvAssetNameCode.visible()
+                    if (isFromWithdraw){
+                        if (currency!!.isWithdrawalActive) {
+                            tvAssetNameCode.gone()
+                        } else {
+                            tvAssetNameCode.visible()
+                        }
+                    }else {
+                        if (currency!!.isTradeActive) {
+                            tvAssetNameCode.gone()
+                        } else {
+                            tvAssetNameCode.visible()
+                        }
                     }
                     tvAssetAmount.text = balance.euroBalance.commaFormatted.currencyFormatted
                     tvAssetAmountInCrypto.text =

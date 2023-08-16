@@ -82,7 +82,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
         /* initializing adapters for recycler views */
 
-        adapterBalance = BalanceAdapter(::assetClicked)
+        adapterBalance = BalanceAdapter(false,::assetClicked)
         adapterAllAsset = AvailableAssetAdapter(::availableAssetClicked)
         adapterRecurring = RecurringInvestmentAdapter(::recurringInvestmentClicked,requireActivity())
         resourcesAdapter = ResourcesAdapter()
@@ -344,12 +344,13 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
             "withdraw" -> {
                 viewModel.selectedOption = Constants.USING_WITHDRAW
-                if (viewModel.screenCount == 0) {
-                   navController.navigate(R.id.swapWithdrawFromFragment)
+                navController.navigate(R.id.swapWithdrawFromFragment)
+            /* if (viewModel.screenCount == 0) {
+
                 } else {
                     viewModel.withdrawAsset = viewModel.selectedAsset
                     navController.navigate(R.id.addAmountFragment)
-                }
+                }*/
             }
 
             "deposit" -> {
