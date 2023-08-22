@@ -127,7 +127,7 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                         binding.tvNote.text = getString(
                             R.string.send_only_to_this_address_using_the_protocol,
                             network!!.fullName,
-                            network!!.id,
+                            network!!.id.uppercase(),
                             networkq.fullName
                         )
                         break
@@ -169,7 +169,7 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                 binding.tvNote.text = getString(
                     R.string.send_only_to_this_address_using_the_protocol,
                     network!!.fullName,
-                    network!!.id,
+                    network!!.id.uppercase(),
                     it.fullName
                 )
 

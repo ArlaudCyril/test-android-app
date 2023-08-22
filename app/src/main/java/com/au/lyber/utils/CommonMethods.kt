@@ -215,27 +215,31 @@ class CommonMethods {
         }
 
         fun ImageView.loadCircleCrop(any: Any, placeHolderRes: Int? = -1) {
-            var res = any
-           val  requestBuilder : RequestBuilder<PictureDrawable> =Glide.with(this).`as`(PictureDrawable::class.java)
+            if (any.toString().contains("btc")){
+                this.setImageResource(R.drawable.ic_bitcoin)
+            }else {
+                var res = any
+                val requestBuilder: RequestBuilder<PictureDrawable> =
+                    Glide.with(this).`as`(PictureDrawable::class.java)
                         .placeholder(placeHolderRes!!)
                         .error(placeHolderRes)
                         .listener(SvgSoftwareLayerSetter())
-            when (any) {
-                is String -> {
-                    if (!any.contains("http"))
-                        res = Constants.BASE_URL + any
+                when (any) {
+                    is String -> {
+                        if (!any.contains("http"))
+                            res = Constants.BASE_URL + any
 
 
 
-                    if (placeHolderRes != -1)
-                        Glide.with(this).load(any)
-                            .placeholder(placeHolderRes)
-                            .apply(RequestOptions.circleCropTransform())
-                            .diskCacheStrategy(
-                                DiskCacheStrategy.RESOURCE
-                            ).into(this)
-                    else requestBuilder.load(any).into(this)
-                /*Glide.with(this)
+                        if (placeHolderRes != -1)
+                            Glide.with(this).load(any)
+                                .placeholder(placeHolderRes)
+                                .apply(RequestOptions.circleCropTransform())
+                                .diskCacheStrategy(
+                                    DiskCacheStrategy.RESOURCE
+                                ).into(this)
+                        else requestBuilder.load(any).into(this)
+                        /*Glide.with(this)
                         .`as`(PictureDrawable::class.java)
                         .load(any).apply(RequestOptions.circleCropTransform())
                         .diskCacheStrategy(
@@ -245,23 +249,23 @@ class CommonMethods {
                         .dontAnimate().into(this)*/
 
 
+                    }
 
-                }
-                else -> {
-                    if (placeHolderRes != -1)
-                        Glide.with(this).load(any).apply(RequestOptions.circleCropTransform())
+                    else -> {
+                        if (placeHolderRes != -1)
+                            Glide.with(this).load(any).apply(RequestOptions.circleCropTransform())
+                                .diskCacheStrategy(
+                                    DiskCacheStrategy.RESOURCE
+                                ).into(this)
+                        else Glide.with(this).load(any).apply(RequestOptions.circleCropTransform())
                             .diskCacheStrategy(
                                 DiskCacheStrategy.RESOURCE
-                            ).into(this)
-                    else Glide.with(this).load(any).apply(RequestOptions.circleCropTransform())
-                        .diskCacheStrategy(
-                            DiskCacheStrategy.RESOURCE
-                        )
-                        .placeholder(placeHolderRes)
-                        .into(this)
+                            )
+                            .placeholder(placeHolderRes)
+                            .into(this)
+                    }
                 }
             }
-
 
         }
 

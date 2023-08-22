@@ -539,6 +539,7 @@
          android:layout_gravity="center"
          app:layout_constraintBottom_toBottomOf="parent"
          android:lineSpacingExtra="6dp"
+         android:layout_marginBottom="16dp"
          android:text="@string/the_minimum_amount_to_be_exchanged"
          android:textAppearance="@style/TextAppearance.AppCompat.Caption"
          android:textColor="@color/red_500" />

@@ -103,9 +103,13 @@ class PortfolioThreeDots(private val listenItemClicked: (String, String) -> Unit
             it.root.updatePadding(left = 0, right = 0)
             it.ivItem.setImageResource(R.drawable.ic_deposit)
             it.ivEndIcon.setImageResource(R.drawable.ic_right_arrow_grey)
-            //   if (this.typePopUp == "AssetPopUp") {
+            //    {
             it.tvStartTitle.text = "Deposit"
-            it.tvStartSubTitle.text = "Add ${viewModel.selectedAsset?.id?.uppercase()} on Lyber"
+            if (this.typePopUp == "AssetPopUp") {
+                it.tvStartSubTitle.text = "Add ${viewModel.selectedAsset?.id?.uppercase()} on Lyber"
+            }else{
+                it.tvStartSubTitle.text = "Add money on Lyber"
+            }
             // } else {
             //   it.tvStartTitle.text = "Deposit"
             // it.tvStartSubTitle.text = "Add money on Lyber"

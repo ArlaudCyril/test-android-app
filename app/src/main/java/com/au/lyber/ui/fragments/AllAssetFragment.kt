@@ -118,6 +118,7 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
                 it.tvTitle.text = getString(R.string.exchange_to)
                 it.includedAsset.root.visible()
                 it.includedAsset.ivDropIcon.gone()
+                it.tvTitleSec.visible()
             }
             it.ivTopAction.setImageResource(R.drawable.ic_back)
             it.ivTopAction.setOnClickListener(this)
