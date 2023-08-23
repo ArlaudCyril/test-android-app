@@ -15,7 +15,6 @@ import com.au.lyber.ui.activities.BaseActivity
 import com.au.lyber.ui.fragments.bottomsheetfragments.FrequencyModel
 import com.au.lyber.ui.fragments.bottomsheetfragments.PayWithModel
 import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
-import com.au.lyber.utils.App
 import com.au.lyber.utils.CommonMethods
 import com.au.lyber.utils.CommonMethods.Companion.clearBackStack
 import com.au.lyber.utils.CommonMethods.Companion.commaFormatted
@@ -149,20 +148,18 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                 ,it.id.uppercase())
                 maxValue = it.balanceData.balance.toDouble()
             }
-            val balanceTo=BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetTo!!.id }!!
             viewModel.exchangeAssetTo?.let {
-                val currency = BaseActivity.assets.find { it1 -> it1.id == it.id }
-                tvAssetConversion.text =
-                    balanceTo.balanceData.euroBalance.roundFloat().commaFormatted
+                tvAssetConversion.text = viewModel.exchangeAssetTo!!.priceServiceResumeData
+                    .lastPrice.roundFloat().commaFormatted
                 mConversionCurrency = it.id.uppercase()
-
-                ivAssetSwapTo.loadCircleCrop(currency!!.imageUrl ?: "")
+                val data = BaseActivity.assets.firstNotNullOfOrNull{ item -> item.takeIf {item.id == viewModel.exchangeAssetTo!!.id}}
+                ivAssetSwapTo.loadCircleCrop(data!!.imageUrl ?: "")
                 tvSwapAssetTo.text = it.id.uppercase()
             }
 
 
-               valueConversion = balanceTo.balanceData.euroBalance
-                    .toDouble() / viewModel.exchangeAssetFrom?.balanceData!!.euroBalance.toDouble()
+               valueConversion = viewModel.exchangeAssetTo!!.priceServiceResumeData
+                   .lastPrice.toDouble() / viewModel.exchangeAssetFrom?.balanceData!!.balance.toDouble()
 
             maxValue = (viewModel.exchangeAssetFrom?.balanceData!!.balance.toDouble() ?: 1.0)
             binding.etAmount.setText("${0.commaFormatted}$mCurrency")
@@ -483,8 +480,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
 
             valueOne = 0.00.toString()
             valueTwo = 0.00.toString()
-            val data = BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetTo!!.id }!!
-             maxValue =data.balanceData.balance.toDouble() ?: 1.0
+             maxValue =viewModel.exchangeAssetTo!!.priceServiceResumeData.lastPrice.toDouble() ?: 1.0
 
 
             viewModel.selectedAsset?.let {
@@ -503,10 +499,10 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                 viewModel.exchangeAssetTo?.let { to ->
 
 
-                    val currency = BaseActivity.assets.find { it1 -> it1.id == to.id }
-                    maxValue = BaseActivity.balances.find { it1 -> it1.id == to.id }!!.balanceData.balance
-                        .toDouble()
-                    binding.ivAssetSwapFrom.loadCircleCrop(currency!!.imageUrl ?: "")
+                    maxValue = to.priceServiceResumeData.lastPrice.toDouble()
+                    val data1 = BaseActivity.assets.firstNotNullOfOrNull{ item -> item.takeIf {item.id == viewModel.exchangeAssetTo!!.id}}
+
+                    binding.ivAssetSwapFrom.loadCircleCrop(data1!!.imageUrl ?: "")
 
                     binding.tvSwapAssetFrom.text = to.id.uppercase()
                     val currencyFrom = BaseActivity.assets.find { it1 -> it1.id == from.id }
@@ -527,8 +523,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
 
             valueOne = 0.00.toString()
             valueTwo = 0.00.toString()
-            maxValue = BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetFrom!!.id }!!.balanceData.balance
-                .toDouble()
+            maxValue =viewModel.exchangeAssetFrom!!.balanceData.balance.toDouble()
 
 
             focusedData.currency = mCurrency
@@ -540,14 +535,13 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
             viewModel.exchangeAssetFrom?.let { from ->
                 viewModel.exchangeAssetTo?.let { to ->
                     val currencyFrom = BaseActivity.assets.find { it1 -> it1.id == from.id }
-                    val currency = BaseActivity.assets.find { it1 -> it1.id == to.id }
-                    maxValue = BaseActivity.balances.find { it1 -> it1.id == to.id }!!.balanceData.balance
-                        .toDouble()
+                    maxValue = to.priceServiceResumeData.lastPrice.toDouble()
                     binding.ivAssetSwapFrom.loadCircleCrop(currencyFrom!!.imageUrl ?: "")
 
                     binding.tvSwapAssetFrom.text = from.id.uppercase()
+                    val data = BaseActivity.assets.firstNotNullOfOrNull{ item -> item.takeIf {item.id == viewModel.exchangeAssetTo!!.id}}
 
-                    binding.ivAssetSwapTo.loadCircleCrop(currency!!.imageUrl ?: "")
+                    binding.ivAssetSwapTo.loadCircleCrop(data!!.imageUrl ?: "")
 
                     binding.tvSwapAssetTo.text = to.id.uppercase()
 
