@@ -47,7 +47,9 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import com.airbnb.lottie.LottieAnimationView
 import com.au.lyber.R
+import com.au.lyber.databinding.LottieViewBinding
 import com.au.lyber.databinding.ProgressBarBinding
 import com.au.lyber.models.AssetBaseData
 import com.au.lyber.models.Balance
@@ -117,10 +119,38 @@ class CommonMethods {
             }
 
         }
+        fun showLottieProgressDialog(context: Context) {
 
+            if (dialog == null) {
+                dialog = Dialog(context)
+                dialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                dialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                dialog!!.window!!.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+                dialog!!.window!!.setDimAmount(0.2F)
+                dialog!!.setCancelable(false)
+                dialog!!.setContentView(LottieViewBinding.inflate(LayoutInflater.from(context)).root)
+            }
+            try {
+                dialog?.findViewById<LottieAnimationView>(R.id.animationView)?.
+                    setMinAndMaxProgress(0f,0.5f)
+                dialog!!.show()
+            } catch (e: WindowManager.BadTokenException) {
+                Log.d("Exception", "showProgressDialog: ${e.message}")
+                dialog?.dismiss()
+                dialog = null
+                showProgressDialog(context)
+            } catch (e: Exception) {
+                Log.d("Exception", "showProgressDialog: ${e.message}")
+            }
+
+        }
         fun dismissProgressDialog() {
             dialog?.let {
-                it.findViewById<ImageView>(R.id.progressImage).clearAnimation()
+                try {
+                    it.findViewById<ImageView>(R.id.progressImage).clearAnimation()
+                }catch (e:Exception){
+                    e.printStackTrace()
+                }
                 it.dismiss()
             }
         }
