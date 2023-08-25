@@ -11,6 +11,7 @@
         android:id="@+id/ivTopAction"
         android:layout_width="48dp"
         android:layout_height="48dp"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="12dp"
         android:background="@drawable/gray_purple_50"
         android:padding="12dp"
@@ -262,6 +263,7 @@
         android:background="@android:color/transparent"
         android:cursorVisible="true"
         android:gravity="center"
+        android:fontFamily="@font/mabry_pro_bold"
         android:text="0€"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline3"
         android:textColor="@color/purple_500"
@@ -277,6 +279,7 @@
     <TextView
         android:id="@+id/tvAssetConversion"
         style="@style/SubheadMabry"
+        android:layout_marginTop="8dp"
         android:text="0.0BTC"
         android:textColor="@color/purple_gray_500"
         android:visibility="gone"

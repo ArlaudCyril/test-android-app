@@ -51,7 +51,6 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
 
     private val focusedData: ValueHolder = ValueHolder()
     private val unfocusedData: ValueHolder = ValueHolder()
-    private val dataHolder: DataHolder = DataHolder(focusedData, unfocusedData)
 
     private lateinit var payMethodBottomSheet: PayWithModel
     private lateinit var viewModel: PortfolioViewModel
@@ -134,26 +133,26 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                 mCurrency = it.id.uppercase()
                 tvTitle.text = "Exchange ${it.id.uppercase()}"
                 val priceCoin = it.balanceData.euroBalance.toDouble()
-                    .div(it.balanceData.balance.toDouble() ?: 1.0)
+                    .div(it.balanceData.balance.toDouble())
                 tvSubTitle.text = "${
                     it.balanceData.balance.roundFloat().formattedAsset(priceCoin, RoundingMode.DOWN)
                 } ${it.id.uppercase()} Available"
                 val currency = BaseActivity.assets.find { it1 -> it1.id == it.id }
-                ivAssetSwapFrom.loadCircleCrop(currency!!.imageUrl ?: "")
+                ivAssetSwapFrom.loadCircleCrop(currency!!.imageUrl)
                 tvSwapAssetFrom.text = it.id.uppercase()
                 minAmount = (it.balanceData.balance.toDouble()/it.balanceData.euroBalance.toDouble())
                 tvMinAmount.text = getString(
                     R.string.the_minimum_amount_to_be_exchanged_1,
                     minAmount.toString().decimalPoint()
                 ,it.id.uppercase())
-                maxValue = it.balanceData.balance.toDouble()
+
             }
             viewModel.exchangeAssetTo?.let {
                 tvAssetConversion.text = viewModel.exchangeAssetTo!!.priceServiceResumeData
                     .lastPrice.roundFloat().commaFormatted
                 mConversionCurrency = it.id.uppercase()
                 val data = BaseActivity.assets.firstNotNullOfOrNull{ item -> item.takeIf {item.id == viewModel.exchangeAssetTo!!.id}}
-                ivAssetSwapTo.loadCircleCrop(data!!.imageUrl ?: "")
+                ivAssetSwapTo.loadCircleCrop(data!!.imageUrl)
                 tvSwapAssetTo.text = it.id.uppercase()
             }
 
@@ -161,7 +160,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                valueConversion = viewModel.exchangeAssetTo!!.priceServiceResumeData
                    .lastPrice.toDouble() / viewModel.exchangeAssetFrom?.balanceData!!.balance.toDouble()
 
-            maxValue = (viewModel.exchangeAssetFrom?.balanceData!!.balance.toDouble() ?: 1.0)
+            maxValue = viewModel.exchangeAssetFrom?.balanceData!!.balance.toDouble()
             binding.etAmount.setText("${0.commaFormatted}$mCurrency")
 
 
@@ -474,18 +473,19 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
         binding.rlSwapTo.fadeIn()
 
         if (focusedData.currency == mCurrency) {
-
-            valueOne = amount.split(mCurrency)[0].pointFormat.decimalPoint()
-            valueTwo = assetConversion.split(mConversionCurrency)[0].pointFormat.decimalPoint()
-
             valueOne = 0.00.toString()
             valueTwo = 0.00.toString()
-             maxValue =viewModel.exchangeAssetTo!!.priceServiceResumeData.lastPrice.toDouble() ?: 1.0
 
 
-            viewModel.selectedAsset?.let {
-                val balance = BaseActivity.balances.find { it1 -> it1.id == viewModel.selectedAsset!!.id }!!
-                maxValue = balance.balanceData.balance.toDouble() * balance.balanceData.euroBalance.toDouble()
+
+            viewModel.exchangeAssetTo?.let {
+                val balance = BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetTo!!.id }!!
+                maxValue = balance.balanceData.balance.toDouble()
+                minAmount = (balance.balanceData.balance.toDouble()/balance.balanceData.euroBalance.toDouble())
+                binding.tvMinAmount.text = getString(
+                    R.string.the_minimum_amount_to_be_exchanged_1,
+                    minAmount.toString().decimalPoint()
+                    ,it.id.uppercase())
             }
 
 
@@ -498,10 +498,14 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
             viewModel.exchangeAssetFrom?.let { from ->
                 viewModel.exchangeAssetTo?.let { to ->
 
+                    val balance = BaseActivity.balances.firstNotNullOfOrNull { item->item.takeIf { item.id == to.id } }
 
-                    maxValue = to.priceServiceResumeData.lastPrice.toDouble()
                     val data1 = BaseActivity.assets.firstNotNullOfOrNull{ item -> item.takeIf {item.id == viewModel.exchangeAssetTo!!.id}}
-
+                    val priceCoin = balance!!.balanceData.euroBalance.toDouble()
+                        .div(balance.balanceData.balance.toDouble())
+                    binding.tvSubTitle.text = "${
+                        balance.balanceData.balance.roundFloat().formattedAsset(priceCoin, RoundingMode.DOWN)
+                    } ${balance.id.uppercase()} Available"
                     binding.ivAssetSwapFrom.loadCircleCrop(data1!!.imageUrl ?: "")
 
                     binding.tvSwapAssetFrom.text = to.id.uppercase()
@@ -516,26 +520,28 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
 
 
         } else {
-
-            valueOne = amount.split(mConversionCurrency)[0].pointFormat.decimalPoint()
-            valueTwo = assetConversion.split(mCurrency)[0].pointFormat.decimalPoint()
-
-
             valueOne = 0.00.toString()
             valueTwo = 0.00.toString()
             maxValue =viewModel.exchangeAssetFrom!!.balanceData.balance.toDouble()
-
+            val priceCoin = viewModel.exchangeAssetFrom!!.balanceData.euroBalance.toDouble()
+                .div(viewModel.exchangeAssetFrom!!.balanceData.balance.toDouble())
+            binding.tvSubTitle.text = "${
+                viewModel.exchangeAssetFrom!!.balanceData.balance.roundFloat().formattedAsset(priceCoin, RoundingMode.DOWN)
+            } ${viewModel.exchangeAssetFrom!!.id.uppercase()} Available"
 
             focusedData.currency = mCurrency
             unfocusedData.currency = mConversionCurrency
-
+            minAmount = (viewModel.exchangeAssetFrom!!.balanceData.balance.toDouble()/viewModel.exchangeAssetFrom!!.balanceData.euroBalance.toDouble())
+            binding.tvMinAmount.text = getString(
+                R.string.the_minimum_amount_to_be_exchanged_1,
+                minAmount.toString().decimalPoint()
+                ,viewModel.exchangeAssetFrom!!.id.uppercase())
             binding.etAmount.setText(("${valueTwo.commaFormatted}$mCurrency"))
             binding.tvAssetConversion.text = ("${valueOne.commaFormatted}$mConversionCurrency")
 
             viewModel.exchangeAssetFrom?.let { from ->
                 viewModel.exchangeAssetTo?.let { to ->
                     val currencyFrom = BaseActivity.assets.find { it1 -> it1.id == from.id }
-                    maxValue = to.priceServiceResumeData.lastPrice.toDouble()
                     binding.ivAssetSwapFrom.loadCircleCrop(currencyFrom!!.imageUrl ?: "")
 
                     binding.tvSwapAssetFrom.text = from.id.uppercase()
@@ -555,11 +561,15 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
 
     @SuppressLint("SetTextI18n")
     private fun setMaxValue() {
-        val priceCoin = viewModel.exchangeAssetFrom!!.balanceData.euroBalance.toDouble()
-            .div(viewModel.exchangeAssetFrom!!.balanceData.balance.toDouble() ?: 1.0)
+
         if (amount.contains(focusedData.currency)) {
+            val priceCoin = viewModel.exchangeAssetFrom!!.balanceData.euroBalance.toDouble()
+                .div(viewModel.exchangeAssetFrom!!.balanceData.balance.toDouble() ?: 1.0)
             binding.etAmount.setText("${maxValue.toString().formattedAsset(priceCoin, RoundingMode.DOWN)}${focusedData.currency}")
         } else {
+            val balance = BaseActivity.balances.firstNotNullOfOrNull { item-> item.takeIf { item.id == viewModel.exchangeAssetTo!!.id} }
+            val priceCoin = balance!!.balanceData.euroBalance.toDouble()
+                .div(balance.balanceData.balance.toDouble() ?: 1.0)
             binding.etAmount.setText("${maxValue.toString().formattedAsset(priceCoin, RoundingMode.DOWN)}${unfocusedData.currency}")
         }
 
