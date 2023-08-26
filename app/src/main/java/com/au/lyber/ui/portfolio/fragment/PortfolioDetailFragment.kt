@@ -221,11 +221,12 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
         viewModel.getAssetDetail.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                viewModel.selectedAsset?.imageUrl?.let { it1 -> binding.includedMyAsset.ivAssetIcon.loadCircleCrop(it1) }
                 viewModel.selectedAssetDetail = it.data
                 binding.includedMyAsset.tvAssetName.text = viewModel.selectedAssetDetail?.fullName
                 binding.tvValueAbout.text = viewModel.selectedAssetDetail?.about?.en
-                viewModel.selectedAssetDetail?.image?.let { it1 -> binding.includedMyAsset.ivAssetIcon.loadCircleCrop(it1) }
-            }
+                //
+               }
         }
 
     }
