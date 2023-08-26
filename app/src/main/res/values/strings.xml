@@ -351,6 +351,7 @@
     <string name="error_occurred">error occurred</string>
     <string name="choose_an_asset">Choose an asset</string>
     <string name="exchange_from">Exchange → From</string>
+    <string name="exchange_from_">Exchange From</string>
     <string name="a_precise_asset">A precise asset</string>
     <string name="i_want_to_withdraw">I want to withdraw</string>
     <string name="euro">Euro</string>
@@ -430,6 +431,7 @@
     <string name="asset">Asset</string>
     <string name="_1_3_step_completed">⅓ step completed</string>
     <string name="exchange_to">Exchange → To</string>
+    <string name="exchange_to_">Exchange To</string>
     <string name="frequency">Frequency</string>
     <string name="payment">Payment</string>
     <string name="lyber_fees">Lyber fees</string>
@@ -534,4 +536,5 @@
     <string name="preview_exchange">Preview exchange</string>
     <string name="the_minimum_amount_to_be_exchanged">The minimum Amount to be exchanged</string>
     <string name="the_minimum_amount_to_be_exchanged_1">The minimum amount to be exchanged %1$s %2$s</string>
+    <string name="availiable_fiat">Available FIAT</string>
 </resources>

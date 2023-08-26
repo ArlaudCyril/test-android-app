@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/root"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
@@ -115,7 +116,7 @@
                     android:layout_below="@id/tvNestedAmount"
                     android:layout_marginTop="32dp"
                     android:layout_marginBottom="16dp"
-                    android:text="@string/exchange_from"
+                    android:text="@string/exchange_from_"
                     android:textColor="@color/purple_gray_500"
                     android:visibility="gone" />
 
@@ -137,7 +138,7 @@
                     style="@style/SubheadMabry"
                     android:layout_below="@id/tvExchangeFrom"
                     android:layout_marginTop="16dp"
-                    android:text="@string/exchange_to"
+                    android:text="@string/exchange_to_"
                     android:textColor="@color/purple_gray_500"
                     android:visibility="gone" />
 

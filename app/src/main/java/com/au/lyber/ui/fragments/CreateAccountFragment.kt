@@ -288,7 +288,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                                         viewModel.password = password
 
                                         client.step1(
-                                            mobile,
+                                            countryCode.removeRange(0,1)+mobile,
                                             password
                                         )
                                         viewModel.userChallenge(phone = "${countryCode}$mobile")
