@@ -23,7 +23,6 @@ import com.au.lyber.utils.CommonMethods.Companion.fadeIn
 import com.au.lyber.utils.CommonMethods.Companion.formattedAsset
 import com.au.lyber.utils.CommonMethods.Companion.gone
 import com.au.lyber.utils.CommonMethods.Companion.loadCircleCrop
-import com.au.lyber.utils.CommonMethods.Companion.roundFloat
 import com.au.lyber.utils.CommonMethods.Companion.setBackgroundTint
 import com.au.lyber.utils.CommonMethods.Companion.showToast
 import com.au.lyber.utils.CommonMethods.Companion.visible
@@ -135,7 +134,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                 val priceCoin = it.balanceData.euroBalance.toDouble()
                     .div(it.balanceData.balance.toDouble())
                 tvSubTitle.text = "${
-                    it.balanceData.balance.roundFloat().formattedAsset(priceCoin, RoundingMode.DOWN)
+                    it.balanceData.balance.formattedAsset(priceCoin, RoundingMode.DOWN)
                 } ${it.id.uppercase()} Available"
                 val currency = BaseActivity.assets.find { it1 -> it1.id == it.id }
                 ivAssetSwapFrom.loadCircleCrop(currency!!.imageUrl)
@@ -149,7 +148,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
             }
             viewModel.exchangeAssetTo?.let {
                 tvAssetConversion.text = viewModel.exchangeAssetTo!!.priceServiceResumeData
-                    .lastPrice.roundFloat().commaFormatted
+                    .lastPrice.commaFormatted
                 mConversionCurrency = it.id.uppercase()
                 val data = BaseActivity.assets.firstNotNullOfOrNull{ item -> item.takeIf {item.id == viewModel.exchangeAssetTo!!.id}}
                 ivAssetSwapTo.loadCircleCrop(data!!.imageUrl)
@@ -504,7 +503,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                     val priceCoin = balance!!.balanceData.euroBalance.toDouble()
                         .div(balance.balanceData.balance.toDouble())
                     binding.tvSubTitle.text = "${
-                        balance.balanceData.balance.roundFloat().formattedAsset(priceCoin, RoundingMode.DOWN)
+                        balance.balanceData.balance.formattedAsset(priceCoin, RoundingMode.DOWN)
                     } ${balance.id.uppercase()} Available"
                     binding.ivAssetSwapFrom.loadCircleCrop(data1!!.imageUrl ?: "")
 
@@ -526,7 +525,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
             val priceCoin = viewModel.exchangeAssetFrom!!.balanceData.euroBalance.toDouble()
                 .div(viewModel.exchangeAssetFrom!!.balanceData.balance.toDouble())
             binding.tvSubTitle.text = "${
-                viewModel.exchangeAssetFrom!!.balanceData.balance.roundFloat().formattedAsset(priceCoin, RoundingMode.DOWN)
+                viewModel.exchangeAssetFrom!!.balanceData.balance.formattedAsset(priceCoin, RoundingMode.DOWN)
             } ${viewModel.exchangeAssetFrom!!.id.uppercase()} Available"
 
             focusedData.currency = mCurrency

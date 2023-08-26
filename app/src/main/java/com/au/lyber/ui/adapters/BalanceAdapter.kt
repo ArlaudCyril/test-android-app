@@ -23,7 +23,6 @@ import java.math.RoundingMode
 class BalanceAdapter(
     private val isFromWithdraw:Boolean = false,private val listener: (Balance) -> Unit = { _ ->
     },
-    private val isAssetBreakdown: Boolean = false
 ) :
     BaseAdapter<Balance>() {
 

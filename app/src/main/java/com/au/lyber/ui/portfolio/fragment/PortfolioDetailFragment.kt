@@ -93,7 +93,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         /* initializing adapters for recycler views */
         adapterBalance = BalanceAdapter()
         resourcesAdapter = ResourcesAdapter()
-        assetBreakdownAdapter = BalanceAdapter(isAssetBreakdown = true)
+        assetBreakdownAdapter = BalanceAdapter()
 
         binding.apply {
 

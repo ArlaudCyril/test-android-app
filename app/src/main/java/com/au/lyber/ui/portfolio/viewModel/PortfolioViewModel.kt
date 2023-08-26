@@ -25,6 +25,12 @@ class PortfolioViewModel : NetworkViewModel() {
         set(value) {
             _selectedAssetDetail = value
         }
+    private var _selectedNetworkDeposit: NetworkDeposit? = null
+    var selectedNetworkDeposit
+        get() = _selectedNetworkDeposit
+        set(value) {
+            _selectedNetworkDeposit= value
+        }
 
     var selectedBalance : Balance? = null
 

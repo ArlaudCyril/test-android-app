@@ -149,6 +149,14 @@
         android:name="com.au.lyber.ui.fragments.SwapWithdrawFromFragment"
         android:label="SwapWithdrawFromFragment" />
     <fragment
+        android:id="@+id/withdrawAmountFragment"
+        android:name="com.au.lyber.ui.fragments.WithdrawAmountFragment"
+        android:label="WithdrawAmountFragment" />
+    <fragment
+        android:id="@+id/withdrawlNetworksFragment"
+        android:name="com.au.lyber.ui.fragments.WithdrawlNetworksFragment"
+        android:label="WithdrawlNetworksFragment" />
+    <fragment
         android:id="@+id/exchangeFromFragment"
         android:name="com.au.lyber.ui.fragments.ExchangeFromFragment"
         android:label="ExchangeFromFragment" />

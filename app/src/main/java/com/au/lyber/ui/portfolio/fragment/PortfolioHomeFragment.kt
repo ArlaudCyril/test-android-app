@@ -86,7 +86,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         adapterAllAsset = AvailableAssetAdapter(::availableAssetClicked)
         adapterRecurring = RecurringInvestmentAdapter(::recurringInvestmentClicked,requireActivity())
         resourcesAdapter = ResourcesAdapter()
-        assetBreakdownAdapter = BalanceAdapter(isAssetBreakdown = true)
+        assetBreakdownAdapter = BalanceAdapter()
 
         /* setting up recycler views */
         binding.apply {

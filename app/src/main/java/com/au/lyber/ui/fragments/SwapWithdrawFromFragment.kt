@@ -14,7 +14,9 @@ import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.CommonMethods
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.commaFormatted
+import com.au.lyber.utils.CommonMethods.Companion.currencyFormatted
 import com.au.lyber.utils.CommonMethods.Companion.dismissProgressDialog
+import com.au.lyber.utils.CommonMethods.Companion.formattedAsset
 import com.au.lyber.utils.CommonMethods.Companion.replaceFragment
 import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.visible
@@ -78,21 +80,22 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
         binding.includedAsset.ivAssetIcon.setImageResource(R.drawable.ic_euro)
         binding.includedAsset.ivDropIcon.setImageResource(R.drawable.ic_right_arrow_grey)
         binding.includedAsset.tvAssetName.text = getString(R.string.euro)
+        val balances = BaseActivity.balances
+        var totalPrice = 0.0
+        for (balance in balances){
+            totalPrice += balance.balanceData.euroBalance.toDouble()
+        }
         binding.tvAmountAllPortfolio.text =
-            "${viewModel.totalPortfolio.commaFormatted}${Constants.EURO}"
+            "${totalPrice.commaFormatted.currencyFormatted}${Constants.EURO}"
 
     }
 
     private fun itemClicked(myAsset: Balance) {
-        viewModel.exchangeAssetFrom = myAsset
-        if (arguments!=null&& requireArguments().containsKey(Constants.TYPE)
-            && requireArguments().getString(Constants.TYPE) == Constants.FROM_SWAP
-        ) {
-            requireActivity().onBackPressed()
-        } else {
+        val currency = BaseActivity.assets.find { it.id == myAsset.id }
+        if (currency!!.isWithdrawalActive){
             val bundle = Bundle()
-            bundle.putString(Constants.TYPE, Constants.Exchange)
-            findNavController().navigate(R.id.allAssetFragment, bundle)
+            bundle.putString(Constants.ID, myAsset.id)
+            findNavController().navigate(R.id.withdrawlNetworksFragment, bundle)
         }
     }
 
