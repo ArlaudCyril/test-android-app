@@ -539,4 +539,5 @@
     <string name="availiable_fiat">Available FIAT</string>
     <string name="withdraw_on">Withdraw on</string>
     <string name="fees">Fees:</string>
+    <string name="minimum_withdrawl">Minimum withdrawal</string>
 </resources>
