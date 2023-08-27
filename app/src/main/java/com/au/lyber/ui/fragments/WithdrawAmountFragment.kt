@@ -48,6 +48,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
         binding.tvNine.setOnClickListener(this)
         binding.ivTopAction.setOnClickListener(this)
         binding.ivRepeat.setOnClickListener(this)
+        binding.btnAddFrequency.setOnClickListener(this)
         binding.ivMax.setOnClickListener(this)
         prepareView()
         binding.etAmount.addTextChangedListener(textOnTextChange)
@@ -132,7 +133,10 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                 ivMax,
                 ivRepeat
             ).visible()
-
+            includedAsset.ivAssetIcon.setImageResource(R.drawable.ic_add_btc_address)
+            includedAsset.tvAssetName.text = getString(R.string.add_an_address)
+            includedAsset.tvAssetNameCode.text = getString(R.string.unlimited_withdrawl)
+            includedAsset.tvAssetNameCode.visible()
             viewModel.selectedAssetDetail.let {
                 mCurrency = Constants.EURO
                 mConversionCurrency = it!!.id.uppercase()
@@ -186,8 +190,13 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                 tvZero -> type('0')
                 ivMax -> setMaxValue()
                 ivRepeat -> swapConversion()
+                btnAddFrequency->openAddressSheet()
             }
         }
+    }
+
+    private fun openAddressSheet() {
+
     }
 
     private fun setMaxValue() = if (amount.contains(focusedData.currency)) {
