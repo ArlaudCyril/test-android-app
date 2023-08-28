@@ -22,6 +22,7 @@ import com.au.lyber.utils.CommonMethods.Companion.decimalPoint
 import com.au.lyber.utils.CommonMethods.Companion.fadeIn
 import com.au.lyber.utils.CommonMethods.Companion.formattedAsset
 import com.au.lyber.utils.CommonMethods.Companion.gone
+import com.au.lyber.utils.CommonMethods.Companion.invisible
 import com.au.lyber.utils.CommonMethods.Companion.loadCircleCrop
 import com.au.lyber.utils.CommonMethods.Companion.setBackgroundTint
 import com.au.lyber.utils.CommonMethods.Companion.showToast
@@ -225,8 +226,11 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                                 amount.split(mConversionCurrency)[0].pointFormat
                             assetConversion.split(mCurrency)[0].pointFormat
                         }
-                        findNavController().navigate(R.id.confirmExchangeFragment)
-
+                        if (maxValue >= viewModel.amount.toDouble()) {
+                            findNavController().navigate(R.id.confirmExchangeFragment)
+                        }else{
+                            getString(R.string.insufficient_balance).showToast(requireActivity())
+                        }
                     }
                 }
 
@@ -345,31 +349,32 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                 if (amount.contains(focusedData.currency)) amount.split(focusedData.currency)[0].pointFormat
                 else amount.split(unfocusedData.currency)[0].pointFormat
 
+            builder.append(value.dropLast(1).toDouble())
 
-            when {
+            if (amount.contains(focusedData.currency)) builder.append(focusedData.currency)
+            else builder.append(unfocusedData.currency)
 
-                value.toDouble() > 9 -> {
-
-//                    if (selection > 0)
-//                        builder.append(value.toString().dropAt(selection).commaFormatted)
-//                    else
-//                    if (value.length > 4)
-//                        builder.append(value.dropLast(4).commaFormatted)
-                    builder.append(value.dropLast(1).commaFormatted)
-
-                    if (amount.contains(focusedData.currency)) builder.append(focusedData.currency)
-                    else builder.append(unfocusedData.currency)
-
-                    binding.etAmount.setText(builder.toString())
-
-                    return
-                }
-
-                else -> {
-                    if (amount.contains(focusedData.currency)) binding.etAmount.setText("0${focusedData.currency}")
-                    else binding.etAmount.setText("0${unfocusedData.currency}")
-                }
-            }
+            binding.etAmount.setText(builder.toString())
+//
+//
+//            when {
+//
+//                value.toDouble() > 9 -> {
+//
+////                    if (selection > 0)
+////                        builder.append(value.toString().dropAt(selection).commaFormatted)
+////                    else
+////                    if (value.length > 4)
+////                        builder.append(value.dropLast(4).commaFormatted)
+//
+//                    return
+//                }
+//
+//                else -> {
+//                    if (amount.contains(focusedData.currency)) binding.etAmount.setText("0${focusedData.currency}")
+//                    else binding.etAmount.setText("0${unfocusedData.currency}")
+//                }
+            //}
 
         } catch (e: Exception) {
             Log.d(TAG, "backspace: ${e.message}\n${e.localizedMessage}")
@@ -377,7 +382,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
     }
 
     fun activateButton(activate: Boolean) {
-        if (activate) binding.tvMinAmount.gone() else binding.tvMinAmount.visible()
+        if (activate) binding.tvMinAmount.invisible() else binding.tvMinAmount.visible()
         binding.btnPreviewInvestment.background = ContextCompat.getDrawable(
             requireContext(),
             if (activate) R.drawable.button_purple_500 else R.drawable.button_purple_400
