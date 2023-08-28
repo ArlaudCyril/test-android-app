@@ -275,6 +275,8 @@ interface Api {
     @GET("wallet-service/balance")
     suspend fun getBalance(): Response<BalanceResponse>
 
+    @GET("wallet-service/withdrawal-address")
+    suspend fun getWithdrawalAddress():Response<WithdrawalAddress>
     @POST("user-service/verify-2FA")
     suspend fun verify2FA(@Body hashMap: HashMap<String, Any>): Response<UserLoginResponse>
 }

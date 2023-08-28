@@ -62,7 +62,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
     private lateinit var viewModel: PortfolioViewModel
     private var apiStarted = false
-    private lateinit var navController : NavController
+    private lateinit var navController: NavController
     override fun bind() = FragmentPortfolioHomeBinding.inflate(layoutInflater)
 
     @SuppressLint("SetTextI18n")
@@ -75,16 +75,18 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         SplashActivity.activityCallbacks = this
         App.prefsManager.savedScreen = javaClass.name
 
-        val navHostFragment =  requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment =
+            requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
         requireActivity().window.statusBarColor =
             getColor(requireContext(), android.R.color.transparent)
 
         /* initializing adapters for recycler views */
 
-        adapterBalance = BalanceAdapter(false,::assetClicked)
+        adapterBalance = BalanceAdapter(false, ::assetClicked)
         adapterAllAsset = AvailableAssetAdapter(::availableAssetClicked)
-        adapterRecurring = RecurringInvestmentAdapter(::recurringInvestmentClicked,requireActivity())
+        adapterRecurring =
+            RecurringInvestmentAdapter(::recurringInvestmentClicked, requireActivity())
         resourcesAdapter = ResourcesAdapter()
         assetBreakdownAdapter = BalanceAdapter()
 
@@ -159,7 +161,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             height = 420.px
             setOnItemClickListener { _, _, position, _ ->
                 assetPopupAdapter.getItemAt(position)?.let {
-                   // binding.tvAssetName.text = "${it.asset_name} (${it.symbol.uppercase()})"
+                    // binding.tvAssetName.text = "${it.asset_name} (${it.symbol.uppercase()})"
                     dismiss()
                     /*checkInternet(requireContext()) {
                         showProgressDialog(requireContext())
@@ -206,7 +208,6 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         }
 
 
-
     }
 
     private fun addObservers() {
@@ -232,7 +233,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             }
         }
 
-        viewModel.balanceResponse.observe(viewLifecycleOwner){
+        viewModel.balanceResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 val balanceDataDict = it.data
                 val balances = ArrayList<Balance>()
@@ -296,7 +297,10 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
     }
 
-    private fun getLineData(value: Double, straightLine: Boolean = false): MutableList<List<Double>> {
+    private fun getLineData(
+        value: Double,
+        straightLine: Boolean = false
+    ): MutableList<List<Double>> {
         val list = mutableListOf<List<Double>>()
         if (!straightLine) list.add(listOf(System.currentTimeMillis().toDouble(), 0.0))
         for (i in 0..8) list.add(listOf(System.currentTimeMillis().toDouble(), value))
@@ -345,19 +349,11 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             "withdraw" -> {
                 viewModel.selectedOption = Constants.USING_WITHDRAW
                 navController.navigate(R.id.swapWithdrawFromFragment)
-            /* if (viewModel.screenCount == 0) {
-
-                } else {
-                    viewModel.withdrawAsset = viewModel.selectedAsset
-                    navController.navigate(R.id.addAmountFragment)
-                }*/
             }
 
             "deposit" -> {
 
-                //if (viewModel.screenCount > 0)
-            navController.navigate(R.id.selectAssestForDepositFragment)
-              //  else navController.navigate(R.id.depositFiatWalletFragment)
+                navController.navigate(R.id.selectAssestForDepositFragment)
             }
 
             "exchange" -> {
@@ -367,7 +363,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
             "sell" -> {
                 viewModel.selectedOption = Constants.USING_SELL
-               navController.navigate(R.id.addAmountFragment)
+                navController.navigate(R.id.addAmountFragment)
             }
         }
     }
@@ -385,14 +381,15 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
             tvInvestMoney.text = "Invest Money"
             tvPortfolioAssetPrice.text = "Portfolio"
-            "${viewModel.totalPortfolio.commaFormatted} ${Constants.EURO}".also { tvValuePortfolioAndAssetPrice.text = it }
+            "${viewModel.totalPortfolio.commaFormatted} ${Constants.EURO}".also {
+                tvValuePortfolioAndAssetPrice.text = it
+            }
 
             zoomIn(llThreeDot)
             zoomIn(btnPlaceOrder)
 
         }
     }
-
 
 
     //Analytics data
@@ -405,7 +402,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
     override fun onBackPressed(): Boolean {
         apiStarted = false
-       return false
+        return false
     }
 
     override fun onDestroyView() {
@@ -427,9 +424,10 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
                             viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
                             viewModel.selectedAsset
-                           navController.navigate(R.id.addAmountFragment)
+                            navController.navigate(R.id.addAmountFragment)
 
                         }
+
                         else -> {
                             InvestBottomSheet(
                                 ::investMoneyClicked
@@ -437,7 +435,12 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                             // Create a transparent color view
                             _fragmentPortfolio = this@PortfolioHomeFragment
                             val transparentView = View(context)
-                            transparentView.setBackgroundColor(getColor(requireContext(), R.color.semi_transparent_dark))
+                            transparentView.setBackgroundColor(
+                                getColor(
+                                    requireContext(),
+                                    R.color.semi_transparent_dark
+                                )
+                            )
 
                             // Set layout parameters for the transparent view
                             val viewParams = RelativeLayout.LayoutParams(
@@ -465,7 +468,12 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                     // Create a transparent color view
                     _fragmentPortfolio = this@PortfolioHomeFragment
                     val transparentView = View(context)
-                    transparentView.setBackgroundColor(getColor(requireContext(), R.color.semi_transparent_dark))
+                    transparentView.setBackgroundColor(
+                        getColor(
+                            requireContext(),
+                            R.color.semi_transparent_dark
+                        )
+                    )
 
                     // Set layout parameters for the transparent view
                     val viewParams = RelativeLayout.LayoutParams(
@@ -477,7 +485,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                     screenContent.addView(transparentView, viewParams)
                 }
 
-                tvViewAll ->  navController.navigate(R.id.allAssetFragment)
+                tvViewAll -> navController.navigate(R.id.allAssetFragment)
 
                 rvMyAssets -> {
                     requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
@@ -561,6 +569,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
         }
     }
+
     companion object {
         private const val TAG = "PortfolioHomeFragment"
 

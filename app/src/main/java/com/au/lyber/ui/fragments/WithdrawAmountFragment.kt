@@ -5,15 +5,19 @@ import android.os.Bundle
 import android.text.Editable
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentWithdrawAmountBinding
+import com.au.lyber.models.WithdrawAddress
 import com.au.lyber.ui.activities.BaseActivity
+import com.au.lyber.ui.fragments.bottomsheetfragments.WithdrawalAddressBottomSheet
 import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.CommonMethods
 import com.au.lyber.utils.CommonMethods.Companion.commaFormatted
 import com.au.lyber.utils.CommonMethods.Companion.decimalPoint
 import com.au.lyber.utils.CommonMethods.Companion.formattedAsset
 import com.au.lyber.utils.CommonMethods.Companion.gone
+import com.au.lyber.utils.CommonMethods.Companion.load
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
 import com.au.lyber.utils.OnTextChange
@@ -50,6 +54,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
         binding.ivRepeat.setOnClickListener(this)
         binding.btnAddFrequency.setOnClickListener(this)
         binding.ivMax.setOnClickListener(this)
+        binding.btnPreviewInvestment.setOnClickListener(this)
         prepareView()
         binding.etAmount.addTextChangedListener(textOnTextChange)
     }
@@ -191,12 +196,34 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                 ivMax -> setMaxValue()
                 ivRepeat -> swapConversion()
                 btnAddFrequency->openAddressSheet()
+                btnPreviewInvestment->{
+                   val amountFinal = if (focusedData.currency == mCurrency){
+                        assetConversion
+                    }else{
+                        amount
+                    }
+                    val bundle = Bundle().apply {
+                        putString(Constants.EURO,amountFinal)
+                    }
+                    findNavController().navigate(R.id.confirmWithdrawalFragment
+                    ,bundle)
+                }
             }
         }
     }
 
     private fun openAddressSheet() {
+        WithdrawalAddressBottomSheet(::handle).show(childFragmentManager, "")
+    }
 
+    private fun handle(withdrawAddress: WithdrawAddress?, s: String?) {
+        binding.includedAsset.apply {
+            viewModel.withdrawAddress = withdrawAddress
+            tvAssetName.text = withdrawAddress!!.name
+            tvAssetNameCode.text = withdrawAddress.address
+            val assest = BaseActivity.assets.firstNotNullOfOrNull{ item -> item.takeIf {item.id == withdrawAddress.network}}
+            ivAssetIcon.load(assest!!.imageUrl)
+        }
     }
 
     private fun setMaxValue() = if (amount.contains(focusedData.currency)) {

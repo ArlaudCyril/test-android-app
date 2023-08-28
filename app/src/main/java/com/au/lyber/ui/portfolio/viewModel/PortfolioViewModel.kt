@@ -12,6 +12,12 @@ class PortfolioViewModel : NetworkViewModel() {
         set(value) {
             _selectedAsset = value
         }
+    private var _withdrawAddress: WithdrawAddress?=null
+    var withdrawAddress
+        get() = _withdrawAddress
+        set(value){
+            _withdrawAddress = value
+        }
     private var _selectedAssetPriceResume: PriceServiceResume? = null
     var selectedAssetPriceResume
         get() = _selectedAssetPriceResume

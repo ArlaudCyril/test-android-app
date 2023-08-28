@@ -145,6 +145,8 @@ open class NetworkViewModel : ViewModel() {
 
     private val _allAssets = MutableLiveData<AssetBaseDataResponse>()
     val allAssets get() = _allAssets
+    private val _withdrawalAddresses = MutableLiveData<WithdrawalAddress>()
+    val withdrawalAddresses get() = _withdrawalAddresses
 
     private val _getAssetDetail = MutableLiveData<AssetDetailBaseDataResponse>()
     private val _getAddress = MutableLiveData<GetAddress>()
@@ -631,6 +633,13 @@ open class NetworkViewModel : ViewModel() {
         viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().getAllAssets()
             if (res.isSuccessful) _allAssets.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+    fun getWithdrawalAddresses() {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().getWithdrawalAddress()
+            if (res.isSuccessful) _withdrawalAddresses.postValue(res.body())
             else listener?.onRetrofitError(res.errorBody())
         }
     }

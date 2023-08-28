@@ -542,4 +542,6 @@
     <string name="fees">Fees:</string>
     <string name="minimum_withdrawl">Minimum withdrawal</string>
     <string name="unlimited_withdrawl">Unlimited withdrawal</string>
+    <string name="withdraw_to">withdraw → To</string>
+    <string name="confirm_withdrawal">Confirm Withdrawal</string>
 </resources>

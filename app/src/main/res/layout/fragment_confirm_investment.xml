@@ -336,6 +336,7 @@
             android:text="@string/confirm_investment" />
 
         <TextView
+            android:id="@+id/tvInfo"
             style="@style/BodyMabry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
