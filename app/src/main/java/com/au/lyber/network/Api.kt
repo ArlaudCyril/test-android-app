@@ -262,6 +262,8 @@ interface Api {
 
     @POST("user-service/finish-registration")
     suspend fun finishRegistration(): Response<UserLoginResponse>
+    @GET("user-service/2fa-otp")
+    suspend fun getOtpForWithdraw(@QueryMap hashMap: HashMap<String, Any>): Response<CommonResponse>
 
     @GET("news-service/news")
     suspend fun getNews(@Query("id") id: String): Response<NewsResponse>
@@ -279,4 +281,6 @@ interface Api {
     suspend fun getWithdrawalAddress():Response<WithdrawalAddress>
     @POST("user-service/verify-2FA")
     suspend fun verify2FA(@Body hashMap: HashMap<String, Any>): Response<UserLoginResponse>
+    @POST("wallet-service/withdraw")
+    suspend fun createWithdrawalRequest(@Body hashMap: HashMap<String, Any>): Response<CommonResponse>
 }

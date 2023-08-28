@@ -13,7 +13,7 @@ data class ErrorResponse(
     val type: String
 )
 
-data class CommonResponse(val success: String, val message: String)
+data class CommonResponse(val success: String, val message: String,val withdrawalId:String)
 
 data class MessageResponse(
     val message: String,
@@ -601,7 +601,8 @@ data class User(
     val profilePic: String,
     val profilePicType: String,
     val strongAuthentification: Boolean,
-    val uuid: String
+    val uuid: String,
+    val scope2FA : MutableList<String>
 )
 
 data class JWTPayload(

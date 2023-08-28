@@ -86,7 +86,7 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
             totalPrice += balance.balanceData.euroBalance.toDouble()
         }
         binding.tvAmountAllPortfolio.text =
-            "${totalPrice.commaFormatted.currencyFormatted}${Constants.EURO}"
+            "${totalPrice.commaFormatted.currencyFormatted}"
 
     }
 

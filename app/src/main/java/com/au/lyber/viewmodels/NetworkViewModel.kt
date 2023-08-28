@@ -9,6 +9,7 @@ import com.au.lyber.network.RestClient
 import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.App
 import com.au.lyber.utils.Constants
+import com.google.android.datatransport.runtime.Destination
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -24,6 +25,9 @@ open class NetworkViewModel : ViewModel() {
         set(value) {
             _listener = value
         }
+
+    private var _commonResponse = MutableLiveData<CommonResponse>()
+    val commonResponse get() = _commonResponse
 
 
     private val exceptionHandler = CoroutineExceptionHandler { coroutineContext, exception ->
@@ -929,6 +933,34 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
+    fun createWithdrawalRequest(assetId: String,amount: String,destination: String,network: String){
+        viewModelScope.launch(exceptionHandler){
+            val map = HashMap<String,Any>()
+            map["asset"] = assetId
+            map["amount"] = amount
+            map["destination"] = destination
+            map["network"] = network
+            val res = RestClient.get(Constants.NEW_BASE_URL).createWithdrawalRequest(map)
+            if (res.isSuccessful){
+                _commonResponse.postValue(res.body())
+            }else{
+                listener!!.onRetrofitError(res.errorBody())
+            }
+        }
+    }
+    fun getOtpForWithdraw(action: String,details: String){
+        viewModelScope.launch(exceptionHandler){
+            val map = HashMap<String,Any>()
+            map["action"] = action
+            map["details"] = details
+            val res = RestClient.get(Constants.NEW_BASE_URL).getOtpForWithdraw(map)
+            if (res.isSuccessful){
+                _commonResponse.postValue(res.body())
+            }else{
+                listener!!.onRetrofitError(res.errorBody())
+            }
+        }
+    }
     fun getBalanceApi(){
         viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get(Constants.NEW_BASE_URL).getBalance()

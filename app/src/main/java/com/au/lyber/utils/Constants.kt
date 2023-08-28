@@ -48,6 +48,7 @@ object Constants {
     const val USING_SINGULAR_ASSET = "using_singular_asset"
     const val USING_DEPOSIT = "using_deposit"
     const val USING_WITHDRAW = "using_withdraw"
+    const val ACTION_WITHDRAW = "withdraw"
     const val SINGULAR = "SINGULAR"
     const val TO_EDIT = "toEdit"
     const val USING_EXCHANGE = "using_exchange"
