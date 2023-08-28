@@ -600,6 +600,9 @@ class CommonMethods {
         fun View.visible() {
             visibility = View.VISIBLE
         }
+        fun View.invisible() {
+            visibility = View.INVISIBLE
+        }
 
         fun TextView.strikeText() {
             paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
