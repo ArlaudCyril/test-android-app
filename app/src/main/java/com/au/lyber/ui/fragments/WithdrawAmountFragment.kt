@@ -18,6 +18,7 @@ import com.au.lyber.utils.CommonMethods.Companion.decimalPoint
 import com.au.lyber.utils.CommonMethods.Companion.formattedAsset
 import com.au.lyber.utils.CommonMethods.Companion.gone
 import com.au.lyber.utils.CommonMethods.Companion.load
+import com.au.lyber.utils.CommonMethods.Companion.showToast
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
 import com.au.lyber.utils.OnTextChange
@@ -202,11 +203,16 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                     }else{
                         amount
                     }
-                    val bundle = Bundle().apply {
-                        putString(Constants.EURO,amountFinal)
+                    if (maxValue >= amountFinal.toDouble()) {
+                        val bundle = Bundle().apply {
+                            putString(Constants.EURO, amountFinal)
+                        }
+                        findNavController().navigate(
+                            R.id.confirmWithdrawalFragment, bundle
+                        )
+                    }else{
+                        getString(R.string.insufficient_balance).showToast(requireActivity())
                     }
-                    findNavController().navigate(R.id.confirmWithdrawalFragment
-                    ,bundle)
                 }
             }
         }
@@ -255,17 +261,17 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
             val value =
                 if (amount.contains(focusedData.currency)) amount.split(focusedData.currency)[0].pointFormat
                 else amount.split(unfocusedData.currency)[0].pointFormat
+            builder.append(value.dropLast(1))
 
+            if (amount.contains(focusedData.currency)) builder.append(focusedData.currency)
+            else builder.append(unfocusedData.currency)
 
+            binding.etAmount.setText(builder.toString())
+
+/*
             when {
 
                 value.toDouble() > 9 -> {
-                    builder.append(value.dropLast(1).commaFormatted)
-
-                    if (amount.contains(focusedData.currency)) builder.append(focusedData.currency)
-                    else builder.append(unfocusedData.currency)
-
-                    binding.etAmount.setText(builder.toString())
 
                     return
                 }
@@ -274,7 +280,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                     if (amount.contains(focusedData.currency)) binding.etAmount.setText("0${focusedData.currency}")
                     else binding.etAmount.setText("0${unfocusedData.currency}")
                 }
-            }
+            }*/
 
         } catch (e: Exception) {
             e.printStackTrace()
