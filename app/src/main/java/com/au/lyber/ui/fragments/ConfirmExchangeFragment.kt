@@ -139,9 +139,9 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
     private fun prepareView(data: DataQuote?) {
         binding.apply {
             tvNestedAmount.text = getString(R.string.ratio)
-            tvNestedAmountValue.text = data!!.ratio
             val priceCoin = viewModel.exchangeAssetFrom!!.balanceData.euroBalance.toDouble()
                 .div(viewModel.exchangeAssetFrom!!.balanceData.balance.toDouble() ?: 1.0)
+            tvNestedAmountValue.text = "1:"+data!!.ratio
             tvValueLyberFee.text =
                 data.fees.formattedAsset(
                     price = priceCoin,
