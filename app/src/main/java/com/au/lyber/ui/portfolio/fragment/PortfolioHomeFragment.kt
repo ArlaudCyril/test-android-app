@@ -186,6 +186,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 viewModel.getPrice(viewModel.chosenAssets?.id ?: "btc")
                 viewModel.getNews(viewModel.chosenAssets?.id ?: "btc")
             }
+            CommonMethods.showProgressDialog(requireActivity())
             viewModel.getUser()
             viewModel.getAllAssets()
 
@@ -221,12 +222,14 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
         viewModel.allAssets.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                dismissProgressDialog()
                 BaseActivity.assets = it.data as ArrayList<AssetBaseData>
             }
         }
 
         viewModel.priceServiceResumes.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                dismissProgressDialog()
                 BaseActivity.balanceResume.clear()
                 BaseActivity.balanceResume.addAll(it)
                 adapterAllAsset.setList(it.subList(0, 6))
@@ -235,6 +238,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
         viewModel.balanceResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                dismissProgressDialog()
                 val balanceDataDict = it.data
                 val balances = ArrayList<Balance>()
                 balanceDataDict?.forEach {
