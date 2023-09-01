@@ -256,6 +256,10 @@
         android:name="com.au.lyber.ui.fragments.ConfirmWithdrawalFragment"
         android:label="ConfirmWithdrawalFragment" />
     <fragment
+        android:id="@+id/addAddressBookFragment"
+        android:name="com.au.lyber.ui.fragments.AddAddressBookFragment"
+        android:label="AddAddressBookFragment" />
+    <fragment
         android:id="@+id/verifyYourIdentityFragment"
         android:name="com.au.lyber.ui.fragments.VerifyYourIdentityFragment"
         android:label="VerifyYourIdentityFragment" />

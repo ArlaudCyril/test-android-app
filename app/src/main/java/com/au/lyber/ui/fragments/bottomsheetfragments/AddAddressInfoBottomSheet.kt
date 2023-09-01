@@ -6,6 +6,7 @@ import android.view.View
 import com.au.lyber.R
 import com.au.lyber.databinding.BottomSheetAddressBookBinding
 import com.au.lyber.models.Whitelistings
+import com.au.lyber.models.WithdrawAddress
 import com.au.lyber.utils.CommonMethods.Companion.gone
 import com.au.lyber.utils.CommonMethods.Companion.toDateFormat
 
@@ -16,7 +17,7 @@ class AddAddressInfoBottomSheet(
 
     override fun bind() = BottomSheetAddressBookBinding.inflate(layoutInflater)
 
-    private var whitelisting: Whitelistings? = null
+    private var whitelisting: WithdrawAddress? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -38,7 +39,7 @@ class AddAddressInfoBottomSheet(
     }
 
 
-    fun setWhiteListing(whitelistings: Whitelistings): AddAddressInfoBottomSheet {
+    fun setWhiteListing(whitelistings: WithdrawAddress): AddAddressInfoBottomSheet {
         whitelisting = whitelistings
         return this
     }
@@ -50,13 +51,13 @@ class AddAddressInfoBottomSheet(
             binding.tvTitle.text = it.name
             binding.tvAddress.text = it.name
             binding.tvValueNetwork.text = it.network
-            if (!it.exchange.isNullOrEmpty())
+           /* if (!it.exchange.isNullOrEmpty())
                 binding.tvValueAddressOrigin.text = it.exchange
-            else{
+            else{*/
                 binding.tvAddressOrigin.gone()
                 binding.tvValueAddressOrigin.gone()
-            }
-            binding.tvValueDateAdded.text = it.created_at.toLong().toDateFormat()
+                    // }
+            binding.tvValueDateAdded.text = it.creationDate.toLong().toDateFormat()
         }
     }
 

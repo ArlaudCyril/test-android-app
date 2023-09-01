@@ -20,6 +20,7 @@ import com.au.lyber.databinding.FragmentCryptoAddressBookBinding
 import com.au.lyber.databinding.ItemAddressesBinding
 import com.au.lyber.databinding.LoaderViewBinding
 import com.au.lyber.models.Whitelistings
+import com.au.lyber.models.WithdrawAddress
 import com.au.lyber.ui.adapters.BaseAdapter
 import com.au.lyber.ui.fragments.bottomsheetfragments.AddAddressInfoBottomSheet
 import com.au.lyber.utils.App
@@ -62,11 +63,11 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
         viewModel = getViewModel(requireActivity())
         viewModel.listener = this
 
-        viewModel.getWhiteListing.observe(viewLifecycleOwner) {
+        viewModel.withdrawalAddresses.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
                 adapter.removeProgress()
-                adapter.setList(it.addresses)
+                adapter.setList(it.data)
                 binding.rvAddresses.startLayoutAnimation()
             }
         }
@@ -79,13 +80,13 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
             }
         }
 
-        viewModel.searchWhitelisting.observe(viewLifecycleOwner) {
+      /*  viewModel.searchWhitelisting.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 adapter.removeProgress()
                 adapter.setList(it.addresses)
                 binding.rvAddresses.startLayoutAnimation()
             }
-        }
+        }*/
 
         binding.rvAddresses.let {
             it.adapter = adapter
@@ -108,7 +109,7 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
         binding.etSearch.addTextChangedListener(onTextChange)
 
         checkInternet(requireContext()) {
-            viewModel.getWhiteListings()
+            viewModel.getWithdrawalAddresses()
         }
 
 
@@ -121,13 +122,13 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
 //        else binding.appBar.setExpanded(true,true)
 //    }
 
-    private fun showInfo(data: Whitelistings) {
+    private fun showInfo(data: WithdrawAddress) {
         AddAddressInfoBottomSheet(true,requireActivity()) {
             if (it == 1) {
                 // delete
                 checkInternet(requireContext()) {
                   //  showProgressDialog(requireContext())
-                    viewModel.deleteWhiteList(hashMapOf(Constants.ADDRESS_ID to data._id))
+                    viewModel.deleteWhiteList(hashMapOf(Constants.ADDRESS_ID to data.network))
                 }
             } else {
                 //edit
@@ -200,8 +201,8 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
         }
     }
 
-    class AddressesAdapter(private val clickListener: (Whitelistings) -> Unit = { _ -> }) :
-        BaseAdapter<Whitelistings>() {
+    class AddressesAdapter(private val clickListener: (WithdrawAddress) -> Unit = { _ -> }) :
+        BaseAdapter<WithdrawAddress>() {
 
         inner class AddressViewHolder(val binding: ItemAddressesBinding) :
             RecyclerView.ViewHolder(binding.root) {
@@ -239,7 +240,7 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
                 (holder as AddressViewHolder).binding.apply {
                     itemList[position]?.let {
 
-                        ivItem.loadCircleCrop(it.logo)
+                        //ivItem.loadCircleCrop(it.logo)
 
                         tvStartTitle.text = it.name
                         tvStartSubTitle.text = it.address

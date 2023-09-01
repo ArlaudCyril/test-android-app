@@ -1,6 +1,7 @@
 package com.au.lyber.viewmodels
 
 import com.au.lyber.models.Whitelistings
+import com.au.lyber.models.WithdrawAddress
 
 
 class ProfileViewModel : NetworkViewModel() {
@@ -13,7 +14,7 @@ class ProfileViewModel : NetworkViewModel() {
         }
 
 
-    private var _selectedAddress: Whitelistings? = null
+    private var _selectedAddress: WithdrawAddress? = null
     var whitelistAddress
         get() = _selectedAddress
         set(value) {

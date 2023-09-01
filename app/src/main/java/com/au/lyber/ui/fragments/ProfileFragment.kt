@@ -18,6 +18,7 @@ import android.view.Window
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.au.lyber.BuildConfig
@@ -273,10 +274,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 
                 ivProfile -> ProfileBottomSheet(::optionSelected).show(childFragmentManager, "")
 
-                rlAddressBook -> requireActivity().replaceFragment(
-                    R.id.flSplashActivity,
-                    AddAddressBookFragment()
-                )
+                rlAddressBook -> findNavController().navigate(R.id.addAddressBookFragment)
 
                 llStrongAuthentication -> requireActivity().replaceFragment(
                     R.id.flSplashActivity,

@@ -209,14 +209,14 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
 
 
                 binding.ivNetwork.visible()
-                binding.ivNetwork.loadCircleCrop(it.logo)
+              /*  binding.ivNetwork.loadCircleCrop(it.logo)
 
                 if (it.exchange.isNullOrEmpty()) {
                     originSelectedPosition = 1
                 } else {
                     binding.etExchange.setText("${it.exchange}")
                     originSelectedPosition = 0
-                }
+                }*/
 
                 setOrigin(originSelectedPosition)
             }
@@ -444,7 +444,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                             hashMap[Constants.NAME] = addressName
                             hashMap[Constants.NETWORK] = viewModel.whitelistAddress?.network?: ""
                             hashMap[Constants.ADDRESS_STR] = address
-                            hashMap[Constants.ORIGIN] = if (originSelectedPosition == 0) {
+                         /*   hashMap[Constants.ORIGIN] = if (originSelectedPosition == 0) {
                                 hashMap[Constants.Exchange] = viewModel.whitelistAddress?.exchange ?: ""
                                 getString(R.string.exchange)
                             } else {
@@ -453,7 +453,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                             hashMap[Constants.LOGO] = viewModel.whitelistAddress?.logo ?: ""
 
                             hashMap[Constants.ADDRESS_ID] = viewModel.whitelistAddress?._id ?: ""
-
+*/
                             network?.let {
                                 hashMap[Constants.LOGO] = network?.logo ?: ""
                                 hashMap[Constants.NETWORK] = network?.name ?: ""
@@ -500,7 +500,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                                     exchange = exchange?.name ?: "",
                                     logo = network?.logo ?: ""
                                 )
-                                infoBottomSheet.setWhiteListing(whilelist)
+                              //  infoBottomSheet.setWhiteListing(whilelist)
                                 infoBottomSheet.show(childFragmentManager, "")
                             }
                         }
@@ -514,7 +514,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                                 exchange = exchange?.name ?: "",
                                 logo = network?.logo ?: ""
                             )
-                            infoBottomSheet.setWhiteListing(whilelist)
+                           // infoBottomSheet.setWhiteListing(whilelist)
                             infoBottomSheet.show(childFragmentManager, "")
                         }
                     }
