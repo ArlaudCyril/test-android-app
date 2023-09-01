@@ -174,7 +174,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 //        binding.tvAddPaymentMethod.setOnClickListener(this)
         binding.tvLogout.setOnClickListener(this)
 //        binding.llStrongAuthentication.setOnClickListener(this)
-//        binding.rlAddressBook.setOnClickListener(this)
+       binding.rlAddressBook.setOnClickListener(this)
         binding.ivProfile.setOnClickListener(this)
 //        binding.llNotification.setOnClickListener(this)
 

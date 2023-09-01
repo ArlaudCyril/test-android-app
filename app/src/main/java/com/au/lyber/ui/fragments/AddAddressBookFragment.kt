@@ -126,7 +126,7 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
             if (it == 1) {
                 // delete
                 checkInternet(requireContext()) {
-                    showProgressDialog(requireContext())
+                  //  showProgressDialog(requireContext())
                     viewModel.deleteWhiteList(hashMapOf(Constants.ADDRESS_ID to data._id))
                 }
             } else {
@@ -188,14 +188,13 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
 
                 ivTopAction -> requireActivity().onBackPressed()
                 llAddAddress -> {
-//                    if (App.prefsManager.user?.is_address_whitelisting_enabled == true)
-//                        requireActivity().replaceFragment(
-//                            R.id.flSplashActivity,
-//                            AddCryptoAddress()
-//                        ) else "Please enable whitelisting to add addresses".showToast(
-//                        requireContext()
-//                    )
-                }
+                    //if (App.prefsManager.user?.is_address_whitelisting_enabled == true)
+                        requireActivity().replaceFragment(
+                            R.id.flSplashActivity,
+                            AddCryptoAddress()
+                        )/* else "Please enable whitelisting to add addresses".showToast(
+                        requireContext() )
+                */}
 
             }
         }
