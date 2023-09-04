@@ -69,6 +69,7 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
                 if (type == Constants.Exchange){
                     for (asset in it){
                         if (asset.id == viewModel.exchangeAssetFrom!!.id){
+                            viewModel.exchangeAssetFromResume = asset
                             assets.remove(asset)
                         }
                     }

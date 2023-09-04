@@ -168,6 +168,14 @@ class PortfolioViewModel : NetworkViewModel() {
             _exchangeAssetTo = value
         }
 
+
+    private var _exchangeAssetFromResume: PriceServiceResume? = null
+    var exchangeAssetFromResume
+        get() = _exchangeAssetFromResume
+        set(value) {
+            _exchangeAssetFromResume = value
+        }
+
     var allMyPortfolio: String = ""
 
     private var _withdrawAsset: AssetBaseData? = null
