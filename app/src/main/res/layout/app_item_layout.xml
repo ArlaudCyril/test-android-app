@@ -40,9 +40,9 @@
         style="@style/BodyMabry"
         android:layout_width="match_parent"
         android:layout_marginEnd="100dp"
-        android:layout_marginStart="12dp"
-        android:textColor="@color/purple_gray_500"
+        android:layout_marginStart="44dp"
         app:layout_constraintStart_toEndOf="@id/ivItem"
+        android:textColor="@color/purple_gray_500"
         app:layout_constraintTop_toBottomOf="@id/tvStartTitle"
         tools:text="fri****@gmail.com" />
 

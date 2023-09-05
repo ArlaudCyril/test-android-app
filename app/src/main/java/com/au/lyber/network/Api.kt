@@ -169,7 +169,7 @@ interface Api {
     @GET("aplo/venues")
     suspend fun getExchangeListing(): Response<ExchangeListingResponse>
 
-    @GET("user/networks")
+    @GET("network-service/networks")
     suspend fun getNetworks(): Response<NetworksResponse>
 
     @GET("user/whitelisted-addresses")
@@ -181,10 +181,10 @@ interface Api {
     @GET("user/whitelisted-addresses")
     suspend fun getWhitelistedAddress(@Query("keyword") keyword: String): Response<WhitelistingResponse>
 
-    @POST("user/whitelist-address")
+    @POST("wallet-service/withdrawal-address")
     suspend fun addWhitelistingAddress(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
 
-    @HTTP(method = "DELETE", path = "user/whitelist-address", hasBody = true)
+    @HTTP(method = "DELETE", path = "wallet-service/withdrawal-address", hasBody = true)
     suspend fun deleteWhiteListing(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
 
     @PUT("user/whitelist-address")

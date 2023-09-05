@@ -77,7 +77,7 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
 
         binding.btnEnableWhitelisting.setOnClickListener {
 
-           /* checkInternet(requireContext()) {
+            checkInternet(requireContext()) {
                 showProgressDialog(requireContext())
                 viewModel.enableWhitelisting(
                     !App.prefsManager.isWhitelisting(),
@@ -87,7 +87,7 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
                         else -> Constants.NO_EXTRA_SECURITY
                     }
                 )
-            }*/
+            }
         }
     }
 

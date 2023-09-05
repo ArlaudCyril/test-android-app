@@ -238,7 +238,7 @@
     <string name="yes">Yes</string>
     <string name="logout"><u>Logout</u></string>
     <string name="note_add_bitcoin_address"><b>Important note:</b> Your note goes here and goes on a big amount of line</string>
-    <string name="subtitle_crypto_book">View and add your favorite crypto addresses here, you can also enable Whitelisting for these addresses.</string>
+    <string name="subtitle_crypto_book">The address book allows cryptocurrency withdrawals to be made only at addresses already designated in your address book. You can also activate your address book for these addresses.</string>
     <string name="login_by_email"><u>Login by email</u></string>
     <string name="login_by_phone"><u>Login by phone</u></string>
     <string name="note_crypto_asset">Send only Bitcoin (BTC) to this address, using the native Bitcoin protocol.</string>

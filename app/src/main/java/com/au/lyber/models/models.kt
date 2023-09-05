@@ -419,17 +419,17 @@ data class Whitelistings(
 )
 
 data class NetworksResponse(
-    val networks: List<Network>
+    val data: List<Network>
 )
 
 data class Network(
     val __v: Int = 1100,
-    val _id: String = "",
-    val asset_id: String,
-    val createdAt: Long = System.currentTimeMillis(),
-    val is_deleted: Boolean = false,
-    val logo: String,
-    val name: String
+    val id: String = "",
+    val addressRegex: String,
+    val depositStatus: Boolean = false,
+    val withdrawalStatus: Boolean = false,
+    val imageUrl: String,
+    val fullName: String
 )
 
 data class ExchangeListingResponse(

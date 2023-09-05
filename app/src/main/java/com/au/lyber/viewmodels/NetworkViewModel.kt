@@ -541,7 +541,6 @@ open class NetworkViewModel : ViewModel() {
             hashMap["origin"] = origin
             if (exchange.isNotEmpty())
                 hashMap["exchange"] = exchange
-            hashMap["logo"] = logo
             val res = RestClient.get().addWhitelistingAddress(hashMap)
             if (res.isSuccessful)
                 _addWhitelistResponse.postValue(res.body())
@@ -583,9 +582,12 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun deleteWhiteList(hashMap: HashMap<String, Any>) {
+    fun deleteWhiteList(address: String,network: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().deleteWhiteListing(hashMap)
+            val map = HashMap<String,Any>()
+            map["network"] = network
+            map["address"] = address
+            val res = RestClient.get().deleteWhiteListing(map)
             if (res.isSuccessful) _deleteWhiteListResponse.postValue(res.body())
             else listener?.onRetrofitError(res.errorBody())
         }

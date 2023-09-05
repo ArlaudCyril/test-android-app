@@ -1,14 +1,18 @@
 package com.au.lyber.ui.fragments.bottomsheetfragments
 
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import com.au.lyber.R
 import com.au.lyber.databinding.BottomSheetAddressBookBinding
 import com.au.lyber.models.Whitelistings
 import com.au.lyber.models.WithdrawAddress
 import com.au.lyber.utils.CommonMethods.Companion.gone
 import com.au.lyber.utils.CommonMethods.Companion.toDateFormat
+import com.au.lyber.utils.CommonMethods.Companion.toFormat
 
 class AddAddressInfoBottomSheet(
     private val toDelete: Boolean,private val context: Context,
@@ -49,7 +53,7 @@ class AddAddressInfoBottomSheet(
 
         whitelisting?.let {
             binding.tvTitle.text = it.name
-            binding.tvAddress.text = it.name
+            binding.tvAddress.text = it.address
             binding.tvValueNetwork.text = it.network
            /* if (!it.exchange.isNullOrEmpty())
                 binding.tvValueAddressOrigin.text = it.exchange
@@ -57,7 +61,7 @@ class AddAddressInfoBottomSheet(
                 binding.tvAddressOrigin.gone()
                 binding.tvValueAddressOrigin.gone()
                     // }
-            binding.tvValueDateAdded.text = it.creationDate.toLong().toDateFormat()
+            binding.tvValueDateAdded.text = it.creationDate.toFormat("yyyy-MM-dd'T'hh:mm:ss","dd MMM yyyy")/*2023-09-05T11:04:31.348Z*/
         }
     }
 
@@ -66,7 +70,15 @@ class AddAddressInfoBottomSheet(
         binding.apply {
             when (v!!) {
                 ivTopAction -> dismiss()
-                tvCopy -> {}
+                tvCopy -> {
+                    val clipboard =
+                        requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                    val clip =
+                        ClipData.newPlainText(getString(R.string.deposit_adress), binding.tvAddress.text.toString())
+                    clipboard.setPrimaryClip(clip)
+                    Toast.makeText(requireActivity(),
+                        getString(R.string.adress_copied), Toast.LENGTH_SHORT).show()
+                }
                 llDelete -> {
                     clickListener(1)
                     dismiss()

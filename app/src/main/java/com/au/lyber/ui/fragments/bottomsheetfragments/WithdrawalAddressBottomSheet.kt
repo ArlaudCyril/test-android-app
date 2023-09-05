@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.au.lyber.R
@@ -53,6 +54,9 @@ class WithdrawalAddressBottomSheet (private val handle: (WithdrawAddress?, Strin
             it.ivItem.setImageResource(R.drawable.ic_add_btc_address)
             it.tvStartTitle.text = getString(R.string.add_an_address)
             it.tvStartSubTitle.text = getString(R.string.unlimited_withdrawl)
+        }
+        binding.includeAddCryptoAddress.root.setOnClickListener {
+            findNavController().navigate(R.id.addCryptoAddress)
         }
     }
 

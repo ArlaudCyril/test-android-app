@@ -5,7 +5,6 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -19,14 +18,13 @@ import androidx.core.content.ContextCompat.getColor
 import androidx.core.content.ContextCompat.getDrawable
 import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
 import com.au.lyber.databinding.AppItemLayoutBinding
 import com.au.lyber.databinding.FragmentAddBitcoinAddressBinding
 import com.au.lyber.databinding.LoaderViewBinding
-import com.au.lyber.models.ExchangeAsset
 import com.au.lyber.models.Network
-import com.au.lyber.models.Whitelistings
-import com.au.lyber.ui.fragments.bottomsheetfragments.AddAddressInfoBottomSheet
+import com.au.lyber.ui.activities.BaseActivity
 import com.au.lyber.utils.CommonMethods.Companion.checkFormat
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.dismissProgressDialog
@@ -34,9 +32,8 @@ import com.au.lyber.utils.CommonMethods.Companion.fadeIn
 import com.au.lyber.utils.CommonMethods.Companion.fadeOut
 import com.au.lyber.utils.CommonMethods.Companion.getViewModel
 import com.au.lyber.utils.CommonMethods.Companion.gone
+import com.au.lyber.utils.CommonMethods.Companion.load
 import com.au.lyber.utils.CommonMethods.Companion.loadCircleCrop
-import com.au.lyber.utils.CommonMethods.Companion.postDelay
-import com.au.lyber.utils.CommonMethods.Companion.replaceFragment
 import com.au.lyber.utils.CommonMethods.Companion.requestKeyboard
 import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.showToast
@@ -59,18 +56,13 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
     private lateinit var networkAdapter: NetworkPopupAdapter
     private lateinit var networkPopup: ListPopupWindow
 
-    /* coinbase popup */
-    private var exchange: ExchangeAsset? = null
-    private lateinit var coinbaseAdapter: CoinbasePopupAdapter
-    private lateinit var coinbasePopup: ListPopupWindow
-
     private val origin get() = if (originSelectedPosition == 0) "EXCHANGE" else "WALLET"
 
     private val addressName: String get() = binding.etAddressName.text.trim().toString()
     private val address: String
         get() = binding.etAddress.text?.trim().toString()
 
-    private lateinit var infoBottomSheet: AddAddressInfoBottomSheet
+    //private lateinit var infoBottomSheet: AddAddressInfoBottomSheet
 
     override fun bind() = FragmentAddBitcoinAddressBinding.inflate(layoutInflater)
 
@@ -94,7 +86,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        infoBottomSheet = AddAddressInfoBottomSheet(false,requireActivity(), ::infoBottomSheetCallback)
+        //infoBottomSheet = AddAddressInfoBottomSheet(false,requireActivity(), ::infoBottomSheetCallback)
         viewModel = getViewModel(requireActivity())
         viewModel.listener = this
 
@@ -117,35 +109,26 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                 dismissProgressDialog()
                 if (networkPopup.isShowing) {
                     networkAdapter.removeProgress()
-                    networkAdapter.setData(it.networks)
+                    networkAdapter.setData(it.data)
                     networkPopup.show()
-                } else networkAdapter.setData(it.networks)
+                } else networkAdapter.setData(it.data)
             }
         }
 
-        viewModel.exchangeListingResponse.observe(viewLifecycleOwner) {
-            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                dismissProgressDialog()
-                if (coinbasePopup.isShowing) {
-                    coinbaseAdapter.removeProgress()
-                    coinbaseAdapter.setData(it.assets)
-                    coinbasePopup.show()
-                } else coinbaseAdapter.setData(it.assets)
-            }
-        }
+
 
         viewModel.addWhitelistResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
-                requireActivity().onBackPressed()
-                infoBottomSheet.dismiss()
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+                //infoBottomSheet.dismiss()
             }
         }
 
         viewModel.updateWhiteList.observe(viewLifecycleOwner) {
             if (Lifecycle.State.RESUMED == lifecycle.currentState) {
                 dismissProgressDialog()
-                requireActivity().onBackPressed()
+                requireActivity().onBackPressedDispatcher.onBackPressed()
             }
         }
 
@@ -175,10 +158,10 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                 binding.tvTitle.fadeIn()
                 binding.ivNetwork.visible()
                 binding.etNetwork.updatePadding(0)
-                binding.tvTitle.text = getString(R.string.add_a_address, it.name.uppercase())
-                binding.etNetwork.setText("${it.name} (${it.asset_id.uppercase()})")
+                binding.tvTitle.text = getString(R.string.add_a_address, it.fullName.uppercase())
+                binding.etNetwork.setText(it.fullName + " (" + it.id.uppercase() + ")")
 
-                binding.ivNetwork.loadCircleCrop(it.logo)
+                binding.ivNetwork.loadCircleCrop(it.imageUrl)
 
                 networkPopup.dismiss()
             }
@@ -186,17 +169,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
 
 
         /* exchange pop up */
-        coinbaseAdapter = CoinbasePopupAdapter()
-        coinbasePopup = ListPopupWindow(requireContext())
-        coinbasePopup.anchorView = binding.etExchange
-        coinbasePopup.setAdapter(coinbaseAdapter)
-        coinbasePopup.setOnItemClickListener { parent, view, position, id ->
-            coinbaseAdapter.getItemAt(position)?.let {
-                exchange = it
-                binding.etExchange.setText(it.name)
-                coinbasePopup.dismiss()
-            }
-        }
+
 
         setOrigin(originSelectedPosition)
 
@@ -206,7 +179,12 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                 binding.etAddress.setText("${it.address}")
                 binding.etAddressName.setText(it.name)
                 binding.etNetwork.setText(it.network)
+                val id = it.network
+                BaseActivity.assets.firstNotNullOfOrNull{ item -> item.takeIf {item.id == id}}
+                    ?.let {
+                            it1 -> binding.ivNetwork.loadCircleCrop(it1.imageUrl);
 
+                    }
 
                 binding.ivNetwork.visible()
               /*  binding.ivNetwork.loadCircleCrop(it.logo)
@@ -223,10 +201,11 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
         }
 
         checkInternet(requireContext()) {
-            if (toEdit)
+            if (toEdit) {
                 showProgressDialog(requireContext())
+            }
             viewModel.getNetworks()
-            viewModel.getExchangeListing()
+           // viewModel.getExchangeListing()
         }
 
     }
@@ -238,15 +217,15 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                 showProgressDialog(requireContext())
                 viewModel.addAddress(
                     addressName,
-                    network?.asset_id ?: "",
+                    network?.id ?: "",
                     address,
                     origin,
-                    exchange?.name ?: "",
-                    network?.logo ?: ""
+                    binding.etExchange.text.toString() ?: "",
+                    network?.imageUrl ?: ""
                 )
             }
         else {
-            infoBottomSheet.dismiss()
+            //infoBottomSheet.dismiss()
         }
     }
 
@@ -325,8 +304,9 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
         }
 
         override fun getItemId(position: Int): Long {
-            return list[position]?.createdAt ?: 0
+            return 0
         }
+
 
         @SuppressLint("ViewHolder")
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
@@ -344,10 +324,10 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                         list[position]?.let { data ->
 
 
-                                it.ivItem.loadCircleCrop(data.logo)
+                                it.ivItem.loadCircleCrop(data.imageUrl)
 
                             it.tvStartTitleCenter.text =
-                                "${data.name} (${data.asset_id.uppercase()})"
+                                "${data.fullName} (${data.id.uppercase()})"
 
                             return it.root
                         }
@@ -359,76 +339,11 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
 
     }
 
-    class CoinbasePopupAdapter : android.widget.BaseAdapter() {
 
-        private val list = mutableListOf<ExchangeAsset?>()
-
-        fun getItemAt(position: Int): ExchangeAsset? {
-            return list[position]
-        }
-
-        fun hasNoData(): Boolean {
-            return list.isEmpty()
-        }
-
-        fun addProgress() {
-            list.add(null)
-            notifyDataSetChanged()
-        }
-
-        fun removeProgress() {
-            list.last()?.let {
-                list.remove(it)
-                notifyDataSetChanged()
-            }
-        }
-
-        fun setData(items: List<ExchangeAsset?>) {
-            list.clear()
-            list.addAll(items)
-            notifyDataSetChanged()
-        }
-
-        override fun getCount(): Int {
-            return list.count()
-        }
-
-        override fun getItem(position: Int): Any? {
-            return list[position]
-        }
-
-        override fun getItemId(position: Int): Long {
-            return System.currentTimeMillis()
-        }
-
-        @SuppressLint("ViewHolder")
-        override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
-
-            if (list[position] == null)
-
-                LoaderViewBinding.inflate(LayoutInflater.from(parent?.context), parent, false).let {
-                    it.ivLoader.animation =
-                        AnimationUtils.loadAnimation(it.ivLoader.context, R.anim.rotate_drawable)
-                    return it.root
-                }
-            else
-                AppItemLayoutBinding.inflate(LayoutInflater.from(parent?.context), parent, false)
-                    .let {
-                        it.ivEndIcon.gone()
-                        list[position]?.let { data ->
-                            it.tvStartTitleCenter.text = data.name
-                        }
-                        return it.root
-                    }
-        }
-
-    }
 
     override fun onDestroyView() {
         if (networkPopup.isShowing)
             networkPopup.dismiss()
-        if (coinbasePopup.isShowing)
-            coinbasePopup.dismiss()
         super.onDestroyView()
     }
 
@@ -455,8 +370,8 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                             hashMap[Constants.ADDRESS_ID] = viewModel.whitelistAddress?._id ?: ""
 */
                             network?.let {
-                                hashMap[Constants.LOGO] = network?.logo ?: ""
-                                hashMap[Constants.NETWORK] = network?.name ?: ""
+                                hashMap[Constants.LOGO] = network?.imageUrl ?: ""
+                                hashMap[Constants.NETWORK] = network?.fullName ?: ""
                             }
 
                             checkInternet(requireContext()) {
@@ -477,49 +392,49 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
 
                         address.isEmpty() -> {
                             binding.etAddress.requestKeyboard()
-                            binding.ttlAddress.helperText = getString(R.string.please_enter_address, network?.name ?: "")
+                            binding.ttlAddress.helperText = getString(R.string.please_enter_address, network?.fullName ?: "")
                             getString(R.string.please_enter_address_).showToast(requireContext())
                         }
 
-                        !address.checkFormat(network?.asset_id?.uppercase() ?: "") -> {
+                       /* !address.checkFormat(network?.id?.uppercase() ?: "") -> {
                             binding.etAddress.requestKeyboard()
                             binding.ttlAddress.helperText = getString(R.string.please_enter_valid_address)
                             getString(R.string.please_enter_valid_address).showToast(requireContext())
-                        }
+                        }*/
 
-                        exchange == null -> {
+                        binding.etExchange.text.toString().isEmpty()  -> {
 
                             if (originSelectedPosition == 0) {
                                 getString(R.string.please_select_a_exchange).showToast(requireContext())
                             } else {
-                                val whilelist = Whitelistings(
-                                    address = address,
-                                    name = addressName,
-                                    network = network?.name ?: "",
-                                    origin = if (originSelectedPosition == 0) getString(R.string.exchange) else getString(R.string.wallet),
-                                    exchange = exchange?.name ?: "",
-                                    logo = network?.logo ?: ""
+                                viewModel.addAddress(
+                                    addressName,
+                                    network?.id ?: "",
+                                    address,
+                                    origin,
+                                    binding.etExchange.text.toString() ?: "",
+                                    network?.imageUrl ?: ""
                                 )
                               //  infoBottomSheet.setWhiteListing(whilelist)
-                                infoBottomSheet.show(childFragmentManager, "")
+                               // infoBottomSheet.show(childFragmentManager, "")
                             }
                         }
 
                         else -> {
-                            val whilelist = Whitelistings(
-                                address = address,
-                                name = addressName,
-                                network = network?.name ?: "",
-                                origin = if (originSelectedPosition == 0) getString(R.string.exchange) else getString(R.string.wallet),
-                                exchange = exchange?.name ?: "",
-                                logo = network?.logo ?: ""
+                            viewModel.addAddress(
+                                addressName,
+                                network?.id ?: "",
+                                address,
+                                origin,
+                                binding.etExchange.text.toString() ?: "",
+                                network?.imageUrl ?: ""
                             )
                            // infoBottomSheet.setWhiteListing(whilelist)
-                            infoBottomSheet.show(childFragmentManager, "")
+                           // infoBottomSheet.show(childFragmentManager, "")
                         }
                     }
                 }
-                ivTopAction -> requireActivity().onBackPressed()
+                ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
 
                 llOriginExchange -> {
                     originSelectedPosition = 0
@@ -532,18 +447,15 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                 }
 
                 etNetwork -> {
-                    if (networkAdapter.hasNoData()) {
-                        networkAdapter.addProgress()
+                    if (!toEdit) {
+                        if (networkAdapter.hasNoData()) {
+                            networkAdapter.addProgress()
+                        }
+                        networkPopup.show()
                     }
-                    networkPopup.show()
                 }
 
-                etExchange -> {
-                    if (coinbaseAdapter.hasNoData()) {
-                        coinbaseAdapter.addProgress()
-                    }
-                    coinbasePopup.show()
-                }
+
 
             }
         }
@@ -567,8 +479,8 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                 network?.let {
                     when {
                         address.isEmpty() ->
-                            binding.ttlAddress.helperText =  getString(R.string.please_enter_address, it.name ?: "")
-                        !address.checkFormat(it.asset_id.uppercase()) ->
+                            binding.ttlAddress.helperText =  getString(R.string.please_enter_address, it.fullName ?: "")
+                        !address.checkFormat(it.id.uppercase()) ->
                             binding.ttlAddress.helperText =getString(R.string.please_enter_valid_address)
                         else -> binding.ttlAddress.helperText = ""
                     }
@@ -587,11 +499,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
         override fun onTouch(v: View?, event: MotionEvent?): Boolean {
             if (event?.action == MotionEvent.ACTION_UP) {
                 if (event.rawX >= (binding.etAddress.right - binding.etAddress.compoundDrawables[DRAWABLE_RIGHT].bounds.width())) {
-                    requireActivity().replaceFragment(
-                        R.id.flSplashActivity,
-                        CodeScannerFragment(),
-                        topBottom = true
-                    )
+                   findNavController().navigate(R.id.codeScannerFragment)
                     return true
                 }
             }
@@ -608,10 +516,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
 
     companion object {
 
-        private const val DRAWABLE_LEFT = 0
-        private const val DRAWABLE_TOP = 1
         private const val DRAWABLE_RIGHT = 2
-        private const val DRAWABLE_BOTTOM = 3
 
         private const val FROM_WITHDRAW = "fromWithdraw"
         private const val TO_EDIT = "toEdit"

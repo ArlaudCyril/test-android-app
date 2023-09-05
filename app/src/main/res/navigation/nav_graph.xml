@@ -260,9 +260,21 @@
         android:name="com.au.lyber.ui.fragments.AddAddressBookFragment"
         android:label="AddAddressBookFragment" />
     <fragment
+        android:id="@+id/addCryptoAddress"
+        android:name="com.au.lyber.ui.fragments.AddCryptoAddress"
+        android:label="AddCryptoAddress" />
+    <fragment
         android:id="@+id/verifyYourIdentityFragment"
         android:name="com.au.lyber.ui.fragments.VerifyYourIdentityFragment"
         android:label="VerifyYourIdentityFragment" />
+    <fragment
+        android:id="@+id/codeScannerFragment"
+        android:name="com.au.lyber.ui.fragments.CodeScannerFragment"
+        android:label="CodeScannerFragment" />
+    <fragment
+        android:id="@+id/enableWhiteListingFragment"
+        android:name="com.au.lyber.ui.fragments.EnableWhiteListingFragment"
+        android:label="EnableWhiteListingFragment" />
     <dialog
         android:id="@+id/portfolioThreeDots"
         android:name="com.au.lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDots"
