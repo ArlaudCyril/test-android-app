@@ -129,7 +129,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
 
             viewModel.exchangeAssetFrom?.let { it ->
 
-                mCurrency = it.id.uppercase()
+                mCurrency = " "+it.id.uppercase()
                 tvTitle.text = "Exchange ${it.id.uppercase()}"
                 val priceCoin = it.balanceData.euroBalance.toDouble()
                     .div(it.balanceData.balance.toDouble())
@@ -150,7 +150,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
             viewModel.exchangeAssetTo?.let {
                 tvAssetConversion.text = viewModel.exchangeAssetTo!!.priceServiceResumeData
                     .lastPrice.commaFormatted
-                mConversionCurrency = it.id.uppercase()
+                mConversionCurrency =" "+it.id.uppercase()
                 val data =
                     BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.exchangeAssetTo!!.id } }
                 ivAssetSwapTo.loadCircleCrop(data!!.imageUrl)
@@ -264,21 +264,18 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
         val valueAmount =
             if (amount.contains(focusedData.currency)) amount.split(focusedData.currency)[0].pointFormat.toDouble()
             else amount.split(unfocusedData.currency)[0].pointFormat.toDouble()
-        val balanceFromPrice =
-            BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetFrom!!.id }!!.balanceData.euroBalance
-        val balanceToPrice = if (CommonMethods.getBalance(viewModel.exchangeAssetTo!!.id)!=null)
-            BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetTo!!.id }!!.balanceData.euroBalance
-        else{
+        val balanceFromPrice =  viewModel.exchangeAssetFromResume!!.priceServiceResumeData.lastPrice
+        val balanceToPrice =
             viewModel.exchangeAssetTo!!.priceServiceResumeData.lastPrice
-        }
-
         val valueInEurosFromAsset =
             (if (focusedData.currency == mCurrency) balanceFromPrice else balanceToPrice).toDouble()
         val valuesInEurosToAsset =
             (if (focusedData.currency == mCurrency) balanceToPrice else balanceFromPrice).toDouble()
 
         val numberToAssets = (valueAmount * valueInEurosFromAsset) / (valuesInEurosToAsset)
-        return numberToAssets.toString()
+        val priceCoin = valuesInEurosToAsset
+            .div(numberToAssets)
+        return numberToAssets.toString().formattedAsset(priceCoin,RoundingMode.DOWN)
 
     }
 
@@ -450,7 +447,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                             viewModel.assetAmount = assetAmount
 
                             binding.tvAssetConversion.text =
-                                "${assetAmount.decimalPoint().commaFormatted}$mConversionCurrency"
+                                "${assetAmount}$mConversionCurrency"
 
 
                         }
@@ -459,7 +456,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
 
                             val convertedValue = conversionFormula()
                             binding.tvAssetConversion.text = "${
-                                convertedValue.toString().decimalPoint().commaFormatted
+                                convertedValue.toString()
                             }$mCurrency"
                         }
 
