@@ -185,7 +185,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         addObservers()
 
         CommonMethods.checkInternet(requireContext()) {
-
+            CommonMethods.showProgressDialog(requireActivity())
             viewModel.getPrice(viewModel.selectedAsset?.id ?: "btc")
             viewModel.getNews(viewModel.selectedAsset?.id ?: "btc")
         }
