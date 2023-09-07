@@ -191,7 +191,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
 
         }
-        if (viewModel.screenCount == 0) {
+       // if (viewModel.screenCount == 0) {
             //My assets Part (waiting API)
             viewModel.getBalance()
 
@@ -205,7 +205,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             viewModel.getAllPriceResume()
 
 
-        }
+        //}
 
 
     }
