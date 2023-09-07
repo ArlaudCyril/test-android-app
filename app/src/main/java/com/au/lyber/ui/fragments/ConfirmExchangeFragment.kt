@@ -36,7 +36,7 @@ import okhttp3.ResponseBody
 
 
 class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>(),
-    View.OnClickListener,RestClient.OnRetrofitError {
+    View.OnClickListener, RestClient.OnRetrofitError {
     private var timer = 25
     private var dialog: Dialog? = null
     private var orderId: String = ""
@@ -61,14 +61,14 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
         viewModel.exchangeResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 loadAnimation()
-                showLottieProgressDialog(requireActivity(),Constants.LOADING_SUCCESS)
+                showLottieProgressDialog(requireActivity(), Constants.LOADING_SUCCESS)
                 Handler().postDelayed({
                     dismissProgressDialog()
                     viewModel.selectedAsset = CommonMethods.getAsset(viewModel.exchangeAssetTo!!.id)
                     viewModel.selectedBalance =
                         BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetTo!!.id }
-                    findNavController().navigate(R.id.portfolioDetailFragment)
-                }, 4000)
+                    findNavController().navigate(R.id.action_confirmExchangeFragment_to_deatil_fragment)
+                }, 2000)
 
             }
         }
@@ -82,8 +82,10 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
         array[1] = R.color.white_transparent
         val confetti = CommonConfetti.rainingConfetti(binding.root, array)
             .infinite()
-        confetti.setEmissionRate(200f)
-            .animate();
+        confetti.setAccelerationY(500f)
+        confetti.setEmissionRate(500f)
+        confetti.setVelocityY(500f)
+            .animate()
     }
 
     private fun getData() {
@@ -139,6 +141,7 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
     private fun prepareView(data: DataQuote?) {
         binding.apply {
             tvNestedAmount.text = getString(R.string.ratio)
+            tvNestedAmountValue.text = "1 : " + data!!.ratio
             val priceCoin = viewModel.exchangeAssetFrom!!.balanceData.euroBalance.toDouble()
                 .div(viewModel.exchangeAssetFrom!!.balanceData.balance.toDouble() ?: 1.0)
             tvNestedAmountValue.text = "1:"+data!!.ratio
@@ -213,21 +216,27 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
             dialog!!.window!!.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
             dialog!!.window!!.setDimAmount(0.2F)
             dialog!!.setCancelable(false)
+            val height =resources.getDimension(R.dimen.px_200)
+            val width =resources.getDimension(R.dimen.px_300)
             dialog!!.setContentView(LottieViewBinding.inflate(LayoutInflater.from(context)).root)
+            dialog!!.getWindow()!!.setLayout(width.toInt(), height.toInt());
         }
         try {
             val viewImage = dialog?.findViewById<LottieAnimationView>(R.id.animationView)
+            val imageView = dialog?.findViewById<ImageView>(R.id.ivCorrect)!!
             when (typeOfLoader) {
                 Constants.LOADING -> {
                     viewImage!!.setMinAndMaxProgress(0f, .32f)
                 }
 
                 Constants.LOADING_SUCCESS -> {
-                    viewImage!!.setMinAndMaxProgress(.32f, .84f)
+                    imageView.visible()
+                    imageView.setImageResource(R.drawable.baseline_done_24)
                 }
 
                 Constants.LOADING_FAILURE -> {
-                    viewImage!!.setMinAndMaxProgress(.84f, 1f)
+                    imageView.visible()
+                    imageView.setImageResource(R.drawable.baseline_clear_24)
                 }
             }
 
@@ -263,8 +272,8 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
 
     override fun onRetrofitError(responseBody: ResponseBody?) {
         super.onRetrofitError(responseBody)
-        if (dialog!=null){
-            showLottieProgressDialog(requireActivity(),Constants.LOADING_FAILURE)
+        if (dialog != null) {
+            showLottieProgressDialog(requireActivity(), Constants.LOADING_FAILURE)
             Handler().postDelayed({
                 dismissProgressDialog()
             }, 1000)
