@@ -200,8 +200,10 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
             dialog!!.window!!.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
             dialog!!.window!!.setDimAmount(0.2F)
             dialog!!.setCancelable(false)
-            dialog!!.getWindow()!!.setLayout(500, 500);
+            val height =resources.getDimension(R.dimen.px_200)
+            val width =resources.getDimension(R.dimen.px_300)
             dialog!!.setContentView(LottieViewBinding.inflate(LayoutInflater.from(context)).root)
+            dialog!!.getWindow()!!.setLayout(width.toInt(), height.toInt());
         }
         try {
             val viewImage = dialog?.findViewById<LottieAnimationView>(R.id.animationView)
