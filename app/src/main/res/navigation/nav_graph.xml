@@ -242,7 +242,14 @@
     <fragment
         android:id="@+id/confirmExchangeFragment"
         android:name="com.au.lyber.ui.fragments.ConfirmExchangeFragment"
-        android:label="ConfirmExchangeFragment" />
+        android:label="ConfirmExchangeFragment" >
+        <action
+            android:id="@+id/action_confirmExchangeFragment_to_deatil_fragment"
+            app:destination="@id/portfolioDetailFragment"
+            app:popUpTo="@id/portfolioHomeFragment"
+            app:popUpToInclusive="true"
+            />
+    </fragment>
     <fragment
         android:id="@+id/verifyYourIdentityFragment"
         android:name="com.au.lyber.ui.fragments.VerifyYourIdentityFragment"

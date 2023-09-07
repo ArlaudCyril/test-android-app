@@ -377,26 +377,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
             else builder.append(unfocusedData.currency)
 
             binding.etAmount.setText(builder.toString())
-//
-//
-//            when {
-//
-//                value.toDouble() > 9 -> {
-//
-////                    if (selection > 0)
-////                        builder.append(value.toString().dropAt(selection).commaFormatted)
-////                    else
-////                    if (value.length > 4)
-////                        builder.append(value.dropLast(4).commaFormatted)
-//
-//                    return
-//                }
-//
-//                else -> {
-//                    if (amount.contains(focusedData.currency)) binding.etAmount.setText("0${focusedData.currency}")
-//                    else binding.etAmount.setText("0${unfocusedData.currency}")
-//                }
-            //}
+
 
         } catch (e: Exception) {
             Log.d(TAG, "backspace: ${e.message}\n${e.localizedMessage}")
@@ -426,11 +407,13 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
 
         @SuppressLint("SetTextI18n")
         override fun onTextChange() {
-
-
             val valueAmount =
-                if (amount.contains(focusedData.currency)) amount.split(focusedData.currency)[0].pointFormat.toDouble()
-                else amount.split(unfocusedData.currency)[0].pointFormat.toDouble()
+                try {
+                    if (amount.contains(focusedData.currency)) amount.split(focusedData.currency)[0].pointFormat.toDouble()
+                    else amount.split(unfocusedData.currency)[0].pointFormat.toDouble()
+                }catch (e:Exception){
+                    0.0
+                }
 
             if (valueAmount > minAmount) {
                 activateButton(true)
