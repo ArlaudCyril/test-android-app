@@ -79,14 +79,14 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
 
             checkInternet(requireContext()) {
                 showProgressDialog(requireContext())
-                viewModel.enableWhitelisting(
+            /*    viewModel.enableWhitelisting(
                     !App.prefsManager.isWhitelisting(),
                     when (selectedPosition) {
                         0 -> Constants.HOURS_72
                         1 -> Constants.HOURS_24
                         else -> Constants.NO_EXTRA_SECURITY
                     }
-                )
+                )*/
             }
         }
     }
