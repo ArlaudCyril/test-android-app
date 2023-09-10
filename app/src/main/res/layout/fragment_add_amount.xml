@@ -125,8 +125,8 @@
                 android:layout_toEndOf="@id/ivCard"
                 android:ellipsize="middle"
                 android:maxLines="1"
-                android:visibility="gone"
-                android:textColor="@color/purple_gray_500" />
+                android:textColor="@color/purple_gray_500"
+                android:visibility="gone" />
 
             <TextView
                 android:id="@+id/tvLimit"
@@ -134,8 +134,8 @@
                 android:layout_centerVertical="true"
                 android:layout_marginEnd="12dp"
                 android:layout_toStartOf="@id/ivDropDown"
-                android:visibility="gone"
-                android:textColor="@color/purple_gray_500" />
+                android:textColor="@color/purple_gray_500"
+                android:visibility="gone" />
 
             <ImageView
                 android:id="@+id/ivDropDown"
@@ -256,32 +256,25 @@
 
     <!--android:textCursorDrawable="@drawable/cursor_drawable"-->
 
-    <EditText
-        android:id="@+id/etAmount"
-        android:autoSizeTextType="uniform"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:background="@android:color/transparent"
-        android:cursorVisible="true"
-        android:gravity="center"
-        android:autoSizeMinTextSize="12sp"
-        android:autoSizeMaxTextSize="38sp"
-        android:autoSizeStepGranularity="2sp"
-        android:fontFamily="@font/mabry_pro_bold"
-        android:text="0€"
-        android:textSize="38dp"
-        android:maxLines="1"
-        android:singleLine="true"
-        android:textColor="@color/purple_500"
-        android:clickable="false"
-        android:focusable="false"
-        android:focusedByDefault="false"
-        android:focusableInTouchMode="false"
-        android:textStyle="bold"
+
+
+    <TextView
         app:layout_constraintBottom_toTopOf="@id/tvAssetConversion"
         app:layout_constraintTop_toBottomOf="@id/ivTopAction"
-        app:layout_constraintVertical_chainStyle="packed" />
-
+        app:layout_constraintVertical_chainStyle="packed"
+        android:id="@+id/etAmount"
+        android:textStyle="bold"
+        android:textColor="@color/purple_500"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:fontFamily="@font/mabry_pro_bold"
+        android:layout_height="60dp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeMaxTextSize="60sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        android:maxLines="1"
+        />
     <TextView
         android:id="@+id/tvAssetConversion"
         style="@style/SubheadMabry"
@@ -307,7 +300,7 @@
         android:gravity="center"
         android:src="@drawable/ic_max"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/etAmount"
+        app:layout_constraintBottom_toBottomOf="@+id/tvAssetConversion"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
@@ -521,49 +514,52 @@
         android:layout_height="wrap_content"
         app:constraint_referenced_ids="tvOne,tvTwo,tvThree,tvFour,tvFive,tvSix,tvSeven,tvEight,tvNine,tvZero,tvDot,tvBackArrow" />
 
- <androidx.appcompat.widget.LinearLayoutCompat
-     android:layout_width="match_parent"
-     android:id="@+id/llBottom"
-     android:layout_height="wrap_content"
-     app:layout_constraintBottom_toBottomOf="parent"
-     android:orientation="vertical">
-    <RelativeLayout
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/llBottom"
         android:layout_width="match_parent"
-        android:layout_height="44dp"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginBottom="16dp">
-        <TextView
-            android:id="@+id/btnPreviewInvestment"
-            style="@style/ButtonStyle"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:background="@drawable/button_purple_400"
+            android:layout_height="44dp"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView
+                android:id="@+id/btnPreviewInvestment"
+                style="@style/ButtonStyle"
+                android:layout_width="match_parent"
+                android:background="@drawable/button_purple_400"
+                android:gravity="center"
+                android:text="@string/preview_my_investment"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+            <ImageView
+                android:id="@+id/progress"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_centerInParent="true"
+                android:elevation="12dp"
+                android:scaleType="centerCrop"
+                android:src="@drawable/ic_progress_small"
+                android:visibility="gone" />
+        </RelativeLayout>
+
+        <TextView
+            android:id="@+id/tvMinAmount"
+            style="@style/BodyMabry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginBottom="16dp"
             android:gravity="center"
-            android:text="@string/preview_my_investment"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-            />
-        <ImageView
-            android:id="@+id/progress"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:visibility="gone"
-            android:layout_centerInParent="true"
-            android:scaleType="centerCrop"
-            android:elevation="12dp"
-            android:src="@drawable/ic_progress_small" />
-    </RelativeLayout>
-     <TextView
-         android:id="@+id/tvMinAmount"
-         style="@style/BodyMabry"
-         android:layout_width="wrap_content"
-         android:layout_height="wrap_content"
-         android:gravity="center"
-         android:layout_gravity="center"
-         app:layout_constraintBottom_toBottomOf="parent"
-         android:lineSpacingExtra="6dp"
-         android:layout_marginBottom="16dp"
-         android:text="@string/the_minimum_amount_to_be_exchanged"
-         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-         android:textColor="@color/red_500" />
- </androidx.appcompat.widget.LinearLayoutCompat>
+            android:lineSpacingExtra="6dp"
+            android:text="@string/the_minimum_amount_to_be_exchanged"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            android:textColor="@color/red_500"
+            app:layout_constraintBottom_toBottomOf="parent" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

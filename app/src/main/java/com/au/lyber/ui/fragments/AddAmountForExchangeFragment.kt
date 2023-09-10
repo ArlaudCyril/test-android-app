@@ -499,17 +499,13 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                         else "${"0".commaFormatted}$mCurrency"
                 }
             }
-            if (amount.length>5){
-                binding.etAmount.textSize = resources.getDimension(R.dimen.sp_18)
-            }
+
 
         }
 
         override fun afterTextChanged(s: Editable?) {
-
             /*if (valueAmount > maxValue) {
                 binding.etAmount.removeTextChangedListener(this)
-                binding.etAmount.setText("${maxValue.commaFormatted}$mCurrency")
                binding.etAmount.addTextChangedListener(this)
             }*/
 
