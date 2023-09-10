@@ -35,7 +35,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
     View.OnClickListener {
 
     /* display conversion */
-    private val amount get() = binding.etAmount.text.trim().toString()
+    private val amount get() = binding.etAmount.text!!.trim().toString()
     private val assetConversion get() = binding.tvAssetConversion.text.trim().toString()
 
     private var selectedFrequency: String = ""
@@ -109,10 +109,15 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
 
         if (viewModel.selectedFrequency.isNotEmpty()) frequencySelected(viewModel.selectedFrequency)
 
-        prepareView()
+
 
         binding.etAmount.addTextChangedListener(textOnTextChange)
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        prepareView()
     }
 
     @SuppressLint("SetTextI18n")
@@ -264,7 +269,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
         val valueAmount =
             if (amount.contains(focusedData.currency)) amount.split(focusedData.currency)[0].pointFormat.toDouble()
             else amount.split(unfocusedData.currency)[0].pointFormat.toDouble()
-        val balanceFromPrice =  viewModel.exchangeAssetFromResume!!.priceServiceResumeData.lastPrice
+        val balanceFromPrice =  viewModel.exchangeAssetFromResume!!
         val balanceToPrice =
             viewModel.exchangeAssetTo!!.priceServiceResumeData.lastPrice
         val valueInEurosFromAsset =
@@ -457,6 +462,9 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                         if (focusedData.currency == mCurrency) "${"0".commaFormatted}$mConversionCurrency"
                         else "${"0".commaFormatted}$mCurrency"
                 }
+            }
+            if (amount.length>5){
+                binding.etAmount.textSize = resources.getDimension(R.dimen.sp_18)
             }
 
         }

@@ -169,7 +169,7 @@ class PortfolioViewModel : NetworkViewModel() {
         }
 
 
-    private var _exchangeAssetFromResume: PriceServiceResume? = null
+    private var _exchangeAssetFromResume: String? = null
     var exchangeAssetFromResume
         get() = _exchangeAssetFromResume
         set(value) {
