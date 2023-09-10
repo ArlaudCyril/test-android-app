@@ -233,12 +233,12 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                             assetConversion.split(mCurrency)[0].pointFormat
 
                         }
-                        hitAPi()
-                        /*if (maxValue >= viewModel.amount.toDouble()) {
 
+                        if (maxValue >= viewModel.amount.toDouble()) {
+                            hitAPi()
                         } else {
                             getString(R.string.insufficient_balance).showToast(requireActivity())
-                        }*/
+                        }
                     }
                 }
 
@@ -286,6 +286,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
         )
         viewModel.getQuoteResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                binding.progress.clearAnimation()
                 binding.progress.gone()
                 val bundle = Bundle().apply {
                     putString(Constants.DATA_SELECTED,Gson().toJson(it.data))
