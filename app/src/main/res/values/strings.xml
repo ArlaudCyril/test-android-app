@@ -288,7 +288,7 @@
     <string name="please_provide_cards_expiry_date">Please provide cards expiry date</string>
     <string name="credit_card_added">Credit card added</string>
     <string name="add_and_use_this_address">Add and use this address</string>
-    <string name="add_a_crypto_address">Add a Crypto address</string>
+    <string name="add_a_crypto_address">Add address</string>
     <string name="choose_network">Choose network</string>
     <string name="add_a_address">Add a %1$s address</string>
     <string name="add_an_address">Add address</string>

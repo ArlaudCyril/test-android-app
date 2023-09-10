@@ -422,6 +422,10 @@ data class NetworksResponse(
     val data: List<Network>
 )
 
+data class NetworkResponse(
+    val data: Network
+)
+
 data class Network(
     val __v: Int = 1100,
     val id: String = "",

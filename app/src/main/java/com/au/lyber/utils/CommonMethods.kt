@@ -1173,7 +1173,9 @@ class CommonMethods {
 
             return true
         }
-
+       fun String.addressMatched(format :String):Boolean{
+            return this.matches(format.toRegex())
+        }
         fun String.checkFormat(type: String): Boolean {
 
             return when (type) {

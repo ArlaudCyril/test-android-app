@@ -25,6 +25,8 @@ import com.au.lyber.databinding.FragmentAddBitcoinAddressBinding
 import com.au.lyber.databinding.LoaderViewBinding
 import com.au.lyber.models.Network
 import com.au.lyber.ui.activities.BaseActivity
+import com.au.lyber.utils.CommonMethods
+import com.au.lyber.utils.CommonMethods.Companion.addressMatched
 import com.au.lyber.utils.CommonMethods.Companion.checkFormat
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.dismissProgressDialog
@@ -103,6 +105,27 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
 
 
         /* observers */
+        viewModel.singleNetworkResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED){
+                val format=address.addressMatched(it.data.addressRegex)
+                if (format){
+                    viewModel.addAddress(
+                        addressName,
+                        network?.id ?: "",
+                        address,
+                        origin,
+                        binding.etExchange.text.toString() ?: "",
+                        network?.imageUrl ?: ""
+                    )
+                }else{
+                    CommonMethods.dismissProgressDialog()
+                    binding.etAddress.requestKeyboard()
+                    binding.ttlAddress.helperText = getString(R.string.please_enter_valid_address)
+                    getString(R.string.please_enter_valid_address).showToast(requireContext())
+
+                }
+            }
+        }
 
         viewModel.networkResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
@@ -140,7 +163,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
         binding.llOriginWallet.setOnClickListener(this)
         binding.etNetwork.setOnClickListener(this)
         binding.etExchange.setOnClickListener(this)
-        binding.etAddress.addTextChangedListener(onTextChange)
+       // binding.etAddress.addTextChangedListener(onTextChange)
         binding.etAddress.setOnTouchListener(onDrawableClickListener)
 
         /* network pop up */
@@ -158,7 +181,6 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                 binding.tvTitle.fadeIn()
                 binding.ivNetwork.visible()
                 binding.etNetwork.updatePadding(0)
-                binding.tvTitle.text = getString(R.string.add_a_address, it.fullName.uppercase())
                 binding.etNetwork.setText(it.fullName + " (" + it.id.uppercase() + ")")
 
                 binding.ivNetwork.loadCircleCrop(it.imageUrl)
@@ -180,21 +202,21 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                 binding.etAddressName.setText(it.name)
                 binding.etNetwork.setText(it.network)
                 val id = it.network
-                BaseActivity.assets.firstNotNullOfOrNull{ item -> item.takeIf {item.id == id}}
-                    ?.let {
-                            it1 -> binding.ivNetwork.loadCircleCrop(it1.imageUrl);
+                BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == id } }
+                    ?.let { it1 ->
+                        binding.ivNetwork.loadCircleCrop(it1.imageUrl)
 
                     }
 
                 binding.ivNetwork.visible()
-              /*  binding.ivNetwork.loadCircleCrop(it.logo)
+                /*  binding.ivNetwork.loadCircleCrop(it.logo)
 
-                if (it.exchange.isNullOrEmpty()) {
-                    originSelectedPosition = 1
-                } else {
-                    binding.etExchange.setText("${it.exchange}")
-                    originSelectedPosition = 0
-                }*/
+                  if (it.exchange.isNullOrEmpty()) {
+                      originSelectedPosition = 1
+                  } else {
+                      binding.etExchange.setText("${it.exchange}")
+                      originSelectedPosition = 0
+                  }*/
 
                 setOrigin(originSelectedPosition)
             }
@@ -205,7 +227,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                 showProgressDialog(requireContext())
             }
             viewModel.getNetworks()
-           // viewModel.getExchangeListing()
+            // viewModel.getExchangeListing()
         }
 
     }
@@ -220,7 +242,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                     network?.id ?: "",
                     address,
                     origin,
-                    binding.etExchange.text.toString() ?: "",
+                    binding.etExchange.text.toString(),
                     network?.imageUrl ?: ""
                 )
             }
@@ -246,6 +268,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                 binding.etExchange.fadeIn()
                 binding.tvTitleSelectExchange.fadeIn()
             }
+
             else -> {
 
                 binding.llOriginWallet.background =
@@ -324,7 +347,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                         list[position]?.let { data ->
 
 
-                                it.ivItem.loadCircleCrop(data.imageUrl)
+                            it.ivItem.loadCircleCrop(data.imageUrl)
 
                             it.tvStartTitleCenter.text =
                                 "${data.fullName} (${data.id.uppercase()})"
@@ -338,7 +361,6 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
 
 
     }
-
 
 
     override fun onDestroyView() {
@@ -357,18 +379,18 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
 
                             val hashMap = hashMapOf<String, Any>()
                             hashMap[Constants.NAME] = addressName
-                            hashMap[Constants.NETWORK] = viewModel.whitelistAddress?.network?: ""
+                            hashMap[Constants.NETWORK] = viewModel.whitelistAddress?.network ?: ""
                             hashMap[Constants.ADDRESS_STR] = address
-                         /*   hashMap[Constants.ORIGIN] = if (originSelectedPosition == 0) {
-                                hashMap[Constants.Exchange] = viewModel.whitelistAddress?.exchange ?: ""
-                                getString(R.string.exchange)
-                            } else {
-                                getString(R.string.wallet)
-                            }
-                            hashMap[Constants.LOGO] = viewModel.whitelistAddress?.logo ?: ""
+                            /*   hashMap[Constants.ORIGIN] = if (originSelectedPosition == 0) {
+                                   hashMap[Constants.Exchange] = viewModel.whitelistAddress?.exchange ?: ""
+                                   getString(R.string.exchange)
+                               } else {
+                                   getString(R.string.wallet)
+                               }
+                               hashMap[Constants.LOGO] = viewModel.whitelistAddress?.logo ?: ""
 
-                            hashMap[Constants.ADDRESS_ID] = viewModel.whitelistAddress?._id ?: ""
-*/
+                               hashMap[Constants.ADDRESS_ID] = viewModel.whitelistAddress?._id ?: ""
+   */
                             network?.let {
                                 hashMap[Constants.LOGO] = network?.imageUrl ?: ""
                                 hashMap[Constants.NETWORK] = network?.fullName ?: ""
@@ -392,48 +414,39 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
 
                         address.isEmpty() -> {
                             binding.etAddress.requestKeyboard()
-                            binding.ttlAddress.helperText = getString(R.string.please_enter_address, network?.fullName ?: "")
+                            binding.ttlAddress.helperText =
+                                getString(R.string.please_enter_address, network?.fullName ?: "")
                             getString(R.string.please_enter_address_).showToast(requireContext())
                         }
 
-                       /* !address.checkFormat(network?.id?.uppercase() ?: "") -> {
-                            binding.etAddress.requestKeyboard()
-                            binding.ttlAddress.helperText = getString(R.string.please_enter_valid_address)
-                            getString(R.string.please_enter_valid_address).showToast(requireContext())
-                        }*/
+                        /* !address.checkFormat(network?.id?.uppercase() ?: "") -> {
+                             binding.etAddress.requestKeyboard()
+                             binding.ttlAddress.helperText = getString(R.string.please_enter_valid_address)
+                             getString(R.string.please_enter_valid_address).showToast(requireContext())
+                         }*/
 
-                        binding.etExchange.text.toString().isEmpty()  -> {
+                        binding.etExchange.text.toString().isEmpty() -> {
 
                             if (originSelectedPosition == 0) {
-                                getString(R.string.please_select_a_exchange).showToast(requireContext())
-                            } else {
-                                viewModel.addAddress(
-                                    addressName,
-                                    network?.id ?: "",
-                                    address,
-                                    origin,
-                                    binding.etExchange.text.toString() ?: "",
-                                    network?.imageUrl ?: ""
+                                getString(R.string.please_select_a_exchange).showToast(
+                                    requireContext()
                                 )
-                              //  infoBottomSheet.setWhiteListing(whilelist)
-                               // infoBottomSheet.show(childFragmentManager, "")
+                            } else {
+                                addAddress()
+                                /**/
+                                //  infoBottomSheet.setWhiteListing(whilelist)
+                                // infoBottomSheet.show(childFragmentManager, "")
                             }
                         }
 
                         else -> {
-                            viewModel.addAddress(
-                                addressName,
-                                network?.id ?: "",
-                                address,
-                                origin,
-                                binding.etExchange.text.toString() ?: "",
-                                network?.imageUrl ?: ""
-                            )
-                           // infoBottomSheet.setWhiteListing(whilelist)
-                           // infoBottomSheet.show(childFragmentManager, "")
+                            addAddress()
+                            // infoBottomSheet.setWhiteListing(whilelist)
+                            // infoBottomSheet.show(childFragmentManager, "")
                         }
                     }
                 }
+
                 ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
 
                 llOriginExchange -> {
@@ -456,8 +469,14 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                 }
 
 
-
             }
+        }
+    }
+
+    private fun addAddress() {
+        checkInternet(requireActivity()) {
+            showProgressDialog(requireActivity())
+            viewModel.getNetwork(network!!.id)
         }
     }
 
@@ -468,9 +487,12 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                     when {
                         address.isEmpty() ->
                             binding.ttlAddress.helperText =
-                                getString(R.string.please_enter_address, it.network.uppercase() ?: "")
+                                getString(R.string.please_enter_address, it.network.uppercase())
+
                         !address.checkFormat(it.network.uppercase()) ->
-                            binding.ttlAddress.helperText =getString(R.string.please_enter_valid_address)
+                            binding.ttlAddress.helperText =
+                                getString(R.string.please_enter_valid_address)
+
                         else -> binding.ttlAddress.helperText = ""
                     }
                 }
@@ -479,9 +501,15 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                 network?.let {
                     when {
                         address.isEmpty() ->
-                            binding.ttlAddress.helperText =  getString(R.string.please_enter_address, it.fullName ?: "")
+                            binding.ttlAddress.helperText = getString(
+                                R.string.please_enter_address,
+                                it.fullName
+                            )
+
                         !address.checkFormat(it.id.uppercase()) ->
-                            binding.ttlAddress.helperText =getString(R.string.please_enter_valid_address)
+                            binding.ttlAddress.helperText =
+                                getString(R.string.please_enter_valid_address)
+
                         else -> binding.ttlAddress.helperText = ""
                     }
                 }
@@ -499,7 +527,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
         override fun onTouch(v: View?, event: MotionEvent?): Boolean {
             if (event?.action == MotionEvent.ACTION_UP) {
                 if (event.rawX >= (binding.etAddress.right - binding.etAddress.compoundDrawables[DRAWABLE_RIGHT].bounds.width())) {
-                   findNavController().navigate(R.id.codeScannerFragment)
+                    findNavController().navigate(R.id.codeScannerFragment)
                     return true
                 }
             }

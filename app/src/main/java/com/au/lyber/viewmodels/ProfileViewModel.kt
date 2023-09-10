@@ -14,6 +14,7 @@ class ProfileViewModel : NetworkViewModel() {
         }
 
 
+
     private var _selectedAddress: WithdrawAddress? = null
     var whitelistAddress
         get() = _selectedAddress

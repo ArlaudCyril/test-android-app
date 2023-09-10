@@ -51,14 +51,14 @@ open class NetworkViewModel : ViewModel() {
     private var _trendingCoinResponse = MutableLiveData<CoinsResponse>()
     val trendingCoinResponse get() = _trendingCoinResponse
 
-/*    private var _topGainerResponse = MutableLiveData<CoinsResponse>()
-    val topGainerResponse get() = _topGainerResponse
+    /*    private var _topGainerResponse = MutableLiveData<CoinsResponse>()
+        val topGainerResponse get() = _topGainerResponse
 
-    private var _topLooserResponse = MutableLiveData<CoinsResponse>()
-    val topLooserResponse get() = _topLooserResponse
+        private var _topLooserResponse = MutableLiveData<CoinsResponse>()
+        val topLooserResponse get() = _topLooserResponse
 
-    private var _stableResponse = MutableLiveData<CoinsResponse>()
-    val stableResponse get() = _stableResponse*/
+        private var _stableResponse = MutableLiveData<CoinsResponse>()
+        val stableResponse get() = _stableResponse*/
 
     private var _investSingleAssetResponse = MutableLiveData<MessageResponse>()
     val investSingleAssetResponse get() = _investSingleAssetResponse
@@ -113,6 +113,9 @@ open class NetworkViewModel : ViewModel() {
 
     private var _networksResponse = MutableLiveData<NetworksResponse>()
     val networkResponse get() = _networksResponse
+
+    private var _networksResponseSingle = MutableLiveData<NetworkResponse>()
+    val singleNetworkResponse get() = _networksResponseSingle
 
     private var _exchangeListingResponse = MutableLiveData<ExchangeListingResponse>()
     val exchangeListingResponse get() = _exchangeListingResponse
@@ -291,7 +294,12 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun investSingleAsset(coinDetail: AssetBaseData?, amount: Int, assetAmount: Float, frequency: String) {
+    fun investSingleAsset(
+        coinDetail: AssetBaseData?,
+        amount: Int,
+        assetAmount: Float,
+        frequency: String
+    ) {
         coinDetail?.let {
             val hashMap: HashMap<String, Any> = hashMapOf()
             hashMap["asset_id"] = it.id
@@ -337,7 +345,8 @@ open class NetworkViewModel : ViewModel() {
             else listener?.onRetrofitError(res.errorBody())
         }
     }
-    fun confirmOrder(order: String){
+
+    fun confirmOrder(order: String) {
         viewModelScope.launch(exceptionHandler) {
             val hashMap = hashMapOf<String, Any>()
             hashMap["orderId"] = order
@@ -366,6 +375,7 @@ open class NetworkViewModel : ViewModel() {
             else listener?.onRetrofitError(res.errorBody())
         }
     }
+
     fun getQuote(
         assetIdFrom: String,
         assetIdTo: String,
@@ -507,6 +517,15 @@ open class NetworkViewModel : ViewModel() {
     }
 
 
+    fun getNetwork(id: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().getNetworkById(id)
+            if (res.isSuccessful)
+                _networksResponseSingle.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
     fun getNetworks() {
         viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().getNetworks()
@@ -538,7 +557,7 @@ open class NetworkViewModel : ViewModel() {
             hashMap["name"] = name
             hashMap["network"] = network
             hashMap["address"] = address
-            hashMap["origin"] = origin
+            hashMap["origin"] = origin.lowercase()
             if (exchange.isNotEmpty())
                 hashMap["exchange"] = exchange
             val res = RestClient.get().addWhitelistingAddress(hashMap)
@@ -582,9 +601,9 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun deleteWhiteList(address: String,network: String) {
+    fun deleteWhiteList(address: String, network: String) {
         viewModelScope.launch(exceptionHandler) {
-            val map = HashMap<String,Any>()
+            val map = HashMap<String, Any>()
             map["network"] = network
             map["address"] = address
             val res = RestClient.get().deleteWhiteListing(map)
@@ -623,18 +642,19 @@ open class NetworkViewModel : ViewModel() {
     fun getAllPriceResume() {
         viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().getAllPriceResume()
-            if (res.isSuccessful){
+            if (res.isSuccessful) {
                 val priceServiceResumeDict = res.body()?.data
                 val priceServiceResumeArray = ArrayList<PriceServiceResume>()
                 priceServiceResumeDict?.forEach {
-                    val priceServiceResume = PriceServiceResume(id = it.key, priceServiceResumeData = it.value)
+                    val priceServiceResume =
+                        PriceServiceResume(id = it.key, priceServiceResumeData = it.value)
                     priceServiceResumeArray.add(priceServiceResume)
                 }
                 _priceServiceResumes.postValue(priceServiceResumeArray)
-            }
-            else listener?.onRetrofitError(res.errorBody())
+            } else listener?.onRetrofitError(res.errorBody())
         }
     }
+
     fun getAllAssets() {
         viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().getAllAssets()
@@ -642,6 +662,7 @@ open class NetworkViewModel : ViewModel() {
             else listener?.onRetrofitError(res.errorBody())
         }
     }
+
     fun getWithdrawalAddresses() {
         viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().getWithdrawalAddress()
@@ -657,16 +678,18 @@ open class NetworkViewModel : ViewModel() {
             else listener?.onRetrofitError(res.errorBody())
         }
     }
+
     fun getAssetDetailIncludeNetworks(assetId: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().getAssetDetail(assetId,"true")
+            val res = RestClient.get().getAssetDetail(assetId, "true")
             if (res.isSuccessful) _getAssetDetail.postValue(res.body())
             else listener?.onRetrofitError(res.errorBody())
         }
     }
-    fun getAddress(network: String,assetId: String) {
+
+    fun getAddress(network: String, assetId: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().getAddress(network,assetId)
+            val res = RestClient.get().getAddress(network, assetId)
             if (res.isSuccessful) _getAddress.postValue(res.body())
             else listener?.onRetrofitError(res.errorBody())
         }
@@ -710,7 +733,7 @@ open class NetworkViewModel : ViewModel() {
     fun userChallenge(phone: String = "", email: String = "") {
         viewModelScope.launch(exceptionHandler) {
             var phoneNumber = ""
-            if(phone.isNotEmpty()) phoneNumber = phone.substring(1)//remove the "+"
+            if (phone.isNotEmpty()) phoneNumber = phone.substring(1)//remove the "+"
             val param = phoneNumber.ifEmpty { email }
             val key = if (phone.isEmpty()) "email" else "phoneNo"
             val res = RestClient.get(Constants.NEW_BASE_URL).userChallenge(hashMapOf(key to param))
@@ -736,18 +759,16 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun verify2FA(code: String){
+    fun verify2FA(code: String) {
         viewModelScope.launch(exceptionHandler) {
             val hash = hashMapOf<String, Any>()
             hash["code"] = code
             val res = RestClient.get(Constants.NEW_BASE_URL).verify2FA(hash)
             if (res.isSuccessful)
                 _userLoginResponse.postValue(res.body())
-
             else listener?.onRetrofitError(res.errorBody())
         }
     }
-
 
 
     fun refreshToken() {
@@ -935,40 +956,46 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun createWithdrawalRequest(assetId: String,amount: String,destination: String,network: String){
-        viewModelScope.launch(exceptionHandler){
-            val map = HashMap<String,Any>()
+    fun createWithdrawalRequest(
+        assetId: String,
+        amount: String,
+        destination: String,
+        network: String
+    ) {
+        viewModelScope.launch(exceptionHandler) {
+            val map = HashMap<String, Any>()
             map["asset"] = assetId
             map["amount"] = amount
             map["destination"] = destination
             map["network"] = network
             val res = RestClient.get(Constants.NEW_BASE_URL).createWithdrawalRequest(map)
-            if (res.isSuccessful){
+            if (res.isSuccessful) {
                 _commonResponse.postValue(res.body())
-            }else{
+            } else {
                 listener!!.onRetrofitError(res.errorBody())
             }
         }
     }
-    fun getOtpForWithdraw(action: String,details: String){
-        viewModelScope.launch(exceptionHandler){
-            val map = HashMap<String,Any>()
+
+    fun getOtpForWithdraw(action: String, details: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val map = HashMap<String, Any>()
             map["action"] = action
             map["details"] = details
             val res = RestClient.get(Constants.NEW_BASE_URL).getOtpForWithdraw(map)
-            if (res.isSuccessful){
+            if (res.isSuccessful) {
                 _commonResponse.postValue(res.body())
-            }else{
+            } else {
                 listener!!.onRetrofitError(res.errorBody())
             }
         }
     }
-    fun getBalanceApi(){
+
+    fun getBalanceApi() {
         viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get(Constants.NEW_BASE_URL).getBalance()
             if (res.isSuccessful)
                 _balanceResponse.postValue(res.body())
-
             else listener?.onRetrofitError(res.errorBody())
         }
     }
