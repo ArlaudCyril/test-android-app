@@ -5,12 +5,14 @@ import android.os.Bundle
 import android.text.Editable
 import android.util.Log
 import android.view.View
+import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentAddAmountBinding
 import com.au.lyber.models.Whitelistings
+import com.au.lyber.network.RestClient
 import com.au.lyber.ui.activities.BaseActivity
 import com.au.lyber.ui.fragments.bottomsheetfragments.FrequencyModel
 import com.au.lyber.ui.fragments.bottomsheetfragments.PayWithModel
@@ -29,13 +31,15 @@ import com.au.lyber.utils.CommonMethods.Companion.showToast
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
 import com.au.lyber.utils.OnTextChange
+import com.google.gson.Gson
+import okhttp3.ResponseBody
 import java.math.RoundingMode
 
 class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
-    View.OnClickListener {
+    View.OnClickListener,RestClient.OnRetrofitError {
 
     /* display conversion */
-    private val amount get() = binding.etAmount.text.trim().toString()
+    private val amount get() = binding.etAmount.text!!.trim().toString()
     private val assetConversion get() = binding.tvAssetConversion.text.trim().toString()
 
     private var selectedFrequency: String = ""
@@ -109,10 +113,15 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
 
         if (viewModel.selectedFrequency.isNotEmpty()) frequencySelected(viewModel.selectedFrequency)
 
-        prepareView()
+
 
         binding.etAmount.addTextChangedListener(textOnTextChange)
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        prepareView()
     }
 
     @SuppressLint("SetTextI18n")
@@ -222,9 +231,11 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                             viewModel.exchangeToAmount =
                                 amount.split(mConversionCurrency)[0].pointFormat
                             assetConversion.split(mCurrency)[0].pointFormat
+
                         }
+
                         if (maxValue >= viewModel.amount.toDouble()) {
-                            findNavController().navigate(R.id.confirmExchangeFragment)
+                            hitAPi()
                         } else {
                             getString(R.string.insufficient_balance).showToast(requireActivity())
                         }
@@ -257,6 +268,36 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
         }
     }
 
+    override fun onRetrofitError(responseBody: ResponseBody?) {
+        super.onRetrofitError(responseBody)
+        binding.progress.clearAnimation()
+        binding.progress.visibility = View.GONE
+        binding.btnPreviewInvestment.text = getString(R.string.preview_exchange)
+    }
+    private fun hitAPi() {
+        binding.progress.visible()
+        binding.progress.animation =
+            AnimationUtils.loadAnimation(requireActivity(), R.anim.rotate_drawable)
+        binding.btnPreviewInvestment.text = ""
+        viewModel.getQuote(
+            viewModel.exchangeAssetFrom?.id ?: "",
+            viewModel.exchangeAssetTo?.id ?: "",
+            viewModel.exchangeFromAmount
+        )
+        viewModel.getQuoteResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                binding.progress.clearAnimation()
+                binding.progress.gone()
+                val bundle = Bundle().apply {
+                    putString(Constants.DATA_SELECTED,Gson().toJson(it.data))
+                }
+                findNavController().navigate(R.id.confirmExchangeFragment,bundle)
+
+            }
+        }
+
+    }
+
     /* bottom sheet callbacks */
 
     private fun conversionFormula(): String {
@@ -264,7 +305,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
         val valueAmount =
             if (amount.contains(focusedData.currency)) amount.split(focusedData.currency)[0].pointFormat.toDouble()
             else amount.split(unfocusedData.currency)[0].pointFormat.toDouble()
-        val balanceFromPrice =  viewModel.exchangeAssetFromResume!!.priceServiceResumeData.lastPrice
+        val balanceFromPrice =  viewModel.exchangeAssetFromResume!!
         val balanceToPrice =
             viewModel.exchangeAssetTo!!.priceServiceResumeData.lastPrice
         val valueInEurosFromAsset =
@@ -459,13 +500,12 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                 }
             }
 
+
         }
 
         override fun afterTextChanged(s: Editable?) {
-
             /*if (valueAmount > maxValue) {
                 binding.etAmount.removeTextChangedListener(this)
-                binding.etAmount.setText("${maxValue.commaFormatted}$mCurrency")
                binding.etAmount.addTextChangedListener(this)
             }*/
 
