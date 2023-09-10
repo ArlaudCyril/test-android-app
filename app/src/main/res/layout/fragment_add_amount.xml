@@ -527,18 +527,30 @@
      android:layout_height="wrap_content"
      app:layout_constraintBottom_toBottomOf="parent"
      android:orientation="vertical">
-     <TextView
-         android:id="@+id/btnPreviewInvestment"
-         style="@style/ButtonStyle"
-         android:layout_width="match_parent"
-         android:layout_marginHorizontal="24dp"
-         android:layout_marginBottom="16dp"
-         android:background="@drawable/button_purple_400"
-         android:gravity="center"
-         android:text="@string/preview_my_investment"
-         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-
-         />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginBottom="16dp">
+        <TextView
+            android:id="@+id/btnPreviewInvestment"
+            style="@style/ButtonStyle"
+            android:layout_width="match_parent"
+            android:background="@drawable/button_purple_400"
+            android:gravity="center"
+            android:text="@string/preview_my_investment"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            />
+        <ImageView
+            android:id="@+id/progress"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:visibility="gone"
+            android:layout_centerInParent="true"
+            android:scaleType="centerCrop"
+            android:elevation="12dp"
+            android:src="@drawable/ic_progress_small" />
+    </RelativeLayout>
      <TextView
          android:id="@+id/tvMinAmount"
          style="@style/BodyMabry"

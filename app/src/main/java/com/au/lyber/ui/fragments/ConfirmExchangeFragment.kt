@@ -31,6 +31,7 @@ import com.au.lyber.utils.CommonMethods.Companion.gone
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
 import com.github.jinatonic.confetti.CommonConfetti
+import com.google.gson.Gson
 import okhttp3.ResponseBody
 
 
@@ -49,14 +50,7 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
         binding.allocationView.rvAllocation.isNestedScrollingEnabled = false
 
         getData()
-        viewModel.getQuoteResponse.observe(viewLifecycleOwner) {
-            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                CommonMethods.dismissProgressDialog()
-                prepareView(it.data)
 
-
-            }
-        }
         viewModel.exchangeResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 loadAnimation()
@@ -111,12 +105,11 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
             ).gone()
         }
 
-        CommonMethods.showProgressDialog(requireActivity())
-        viewModel.getQuote(
-            viewModel.exchangeAssetFrom?.id ?: "",
-            viewModel.exchangeAssetTo?.id ?: "",
-            viewModel.exchangeFromAmount
-        )
+        if (arguments!=null && requireArguments().containsKey(Constants.DATA_SELECTED)){
+            val data = Gson().fromJson(requireArguments().getString(Constants.DATA_SELECTED),DataQuote::class.java)
+            prepareView(data)
+        }
+
     }
 
     override fun onClick(v: View?) {
