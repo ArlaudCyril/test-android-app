@@ -1,20 +1,32 @@
 package com.au.lyber.ui.portfolio.fragment
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.ContentValues.TAG
+import android.content.Context
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.view.Window
+import android.view.WindowManager
 import android.view.animation.AnimationUtils
+import android.widget.ImageView
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.airbnb.lottie.LottieAnimationView
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentPortfolioDetailBinding
+import com.au.lyber.databinding.LottieViewBinding
 import com.au.lyber.models.Duration
+import com.au.lyber.ui.activities.BaseActivity
 import com.au.lyber.ui.activities.SplashActivity
 import com.au.lyber.ui.adapters.BalanceAdapter
 import com.au.lyber.ui.adapters.ResourcesAdapter
@@ -37,12 +49,15 @@ import com.au.lyber.utils.CommonMethods.Companion.replaceFragment
 import com.au.lyber.utils.CommonMethods.Companion.setBackgroundTint
 import com.au.lyber.utils.CommonMethods.Companion.showToast
 import com.au.lyber.utils.CommonMethods.Companion.toMilli
+import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
 import com.au.lyber.utils.ItemOffsetDecoration
+import com.github.jinatonic.confetti.CommonConfetti
 import com.google.android.material.tabs.TabLayout
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
+import okhttp3.ResponseBody
 import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import org.json.JSONObject
@@ -54,7 +69,7 @@ import java.util.TimerTask
 
 class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
     View.OnClickListener, PortfolioThreeDotsDismissListener {
-
+    private var dialog: Dialog? = null
     /* adapters */
     private lateinit var adapterBalance: BalanceAdapter
     private lateinit var resourcesAdapter: ResourcesAdapter
@@ -185,16 +200,42 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         addObservers()
 
         CommonMethods.checkInternet(requireContext()) {
-            CommonMethods.showProgressDialog(requireActivity())
+            if (arguments!=null && requireArguments().containsKey(Constants.ORDER_ID)){
+                showLottieProgressDialog(requireActivity(),Constants.LOADING)
+                viewModel.confirmOrder(requireArguments().getString(Constants.ORDER_ID,""))
+            }else {
+                CommonMethods.showProgressDialog(requireActivity())
+            }
+
             viewModel.getPrice(viewModel.selectedAsset?.id ?: "btc")
             viewModel.getNews(viewModel.selectedAsset?.id ?: "btc")
         }
 
     }
 
-
+    private fun loadAnimation() {
+        val array = IntArray(2)
+        array[0] = R.color.purple_400
+        array[1] = R.color.white_transparent
+        val confetti = CommonConfetti.rainingConfetti(binding.root, array)
+            .infinite()
+        confetti.setAccelerationY(500f)
+        confetti.setEmissionRate(500f)
+        confetti.setVelocityY(500f)
+            .animate()
+    }
     private fun addObservers() {
+        viewModel.exchangeResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                loadAnimation()
+                showLottieProgressDialog(requireActivity(), Constants.LOADING_SUCCESS)
+                Handler().postDelayed({
+                    dismissProgressDialog()
 
+                }, 2000)
+
+            }
+        }
         viewModel.newsResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 CommonMethods.dismissProgressDialog()
@@ -467,7 +508,76 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
     private fun stopTimer() {
         timer.cancel()
     }
+    private fun showLottieProgressDialog(context: Context, typeOfLoader: Int) {
 
+        if (dialog == null) {
+            dialog = Dialog(context)
+            dialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog!!.window!!.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+            dialog!!.window!!.setDimAmount(0.2F)
+            dialog!!.setCancelable(false)
+            val height =resources.getDimension(R.dimen.px_200)
+            val width =resources.getDimension(R.dimen.px_300)
+            dialog!!.setContentView(LottieViewBinding.inflate(LayoutInflater.from(context)).root)
+            dialog!!.getWindow()!!.setLayout(width.toInt(), height.toInt());
+        }
+        try {
+            val viewImage = dialog?.findViewById<LottieAnimationView>(R.id.animationView)
+            val imageView = dialog?.findViewById<ImageView>(R.id.ivCorrect)!!
+            when (typeOfLoader) {
+                Constants.LOADING -> {
+                    viewImage!!.setMinAndMaxProgress(0f, .32f)
+                }
+
+                Constants.LOADING_SUCCESS -> {
+                    imageView.visible()
+                    imageView.setImageResource(R.drawable.baseline_done_24)
+                }
+
+                Constants.LOADING_FAILURE -> {
+                    imageView.visible()
+                    imageView.setImageResource(R.drawable.baseline_clear_24)
+                }
+            }
+
+
+            /*(0f,.32f) for loader
+            * (0f,.84f) for success
+            * (0.84f,1f) for failure*/
+            viewImage!!.playAnimation()
+
+
+            dialog!!.show()
+        } catch (e: WindowManager.BadTokenException) {
+            Log.d("Exception", "showProgressDialog: ${e.message}")
+            dialog?.dismiss()
+            dialog = null
+        } catch (e: Exception) {
+            Log.d("Exception", "showProgressDialog: ${e.message}")
+        }
+
+    }
+    override fun onRetrofitError(responseBody: ResponseBody?) {
+        super.onRetrofitError(responseBody)
+        if (dialog != null) {
+            showLottieProgressDialog(requireActivity(), Constants.LOADING_FAILURE)
+            Handler().postDelayed({
+                dismissProgressDialog()
+            }, 1000)
+        }
+    }
+    fun dismissProgressDialog() {
+        dialog?.let {
+            try {
+                it.findViewById<ImageView>(R.id.progressImage).clearAnimation()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            it.dismiss()
+            dialog = null
+        }
+    }
     override fun onPortfolioThreeDotsDismissed() {
         // Code to remove the overlay view from the parent fragment's layout
         binding.screenContent.removeView(grayOverlay)

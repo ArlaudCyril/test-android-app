@@ -40,7 +40,15 @@ class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnCli
                 val balances = ArrayList<Balance>()
                 balanceDataDict.forEach { it1 ->
                     val balance = Balance(id = it1.key, balanceData = it1.value)
-                    balances.add(balance)
+                    if (arguments != null && requireArguments().getString(Constants.TYPE)
+                        == Constants.FROM_SWAP
+                    ) {
+                        if (viewModel.exchangeAssetTo!!.id != balance.id){
+                            balances.add(balance)
+                        }
+                    } else {
+                        balances.add(balance)
+                    }
                 }
                 BaseActivity.balances = balances
                 adapter.setList(balances)
@@ -82,6 +90,8 @@ class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnCli
     }
 
     private fun itemClicked(myAsset: Balance) {
+        viewModel.exchangeAssetFromResume = (myAsset.balanceData.euroBalance.toDouble()/myAsset.balanceData.balance
+            .toDouble()).toString()
         viewModel.exchangeAssetFrom = myAsset
         if (arguments!=null&& requireArguments().containsKey(Constants.TYPE)
             && requireArguments().getString(Constants.TYPE) == Constants.FROM_SWAP

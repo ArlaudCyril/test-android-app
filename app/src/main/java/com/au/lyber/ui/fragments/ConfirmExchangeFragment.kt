@@ -32,13 +32,14 @@ import com.au.lyber.utils.CommonMethods.Companion.visible
 import java.math.RoundingMode
 import com.au.lyber.utils.Constants
 import com.github.jinatonic.confetti.CommonConfetti
+import com.google.gson.Gson
 import okhttp3.ResponseBody
 
 
 class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>(),
     View.OnClickListener, RestClient.OnRetrofitError {
     private var timer = 25
-    private var dialog: Dialog? = null
+
     private var orderId: String = ""
     private lateinit var viewModel: PortfolioViewModel
     override fun bind() = FragmentConfirmInvestmentBinding.inflate(layoutInflater)
@@ -50,43 +51,13 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
         binding.allocationView.rvAllocation.isNestedScrollingEnabled = false
 
         getData()
-        viewModel.getQuoteResponse.observe(viewLifecycleOwner) {
-            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                CommonMethods.dismissProgressDialog()
-                prepareView(it.data)
 
 
-            }
-        }
-        viewModel.exchangeResponse.observe(viewLifecycleOwner) {
-            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                loadAnimation()
-                showLottieProgressDialog(requireActivity(), Constants.LOADING_SUCCESS)
-                Handler().postDelayed({
-                    dismissProgressDialog()
-                    viewModel.selectedAsset = CommonMethods.getAsset(viewModel.exchangeAssetTo!!.id)
-                    viewModel.selectedBalance =
-                        BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetTo!!.id }
-                    findNavController().navigate(R.id.action_confirmExchangeFragment_to_deatil_fragment)
-                }, 2000)
-
-            }
-        }
 
 
     }
 
-    private fun loadAnimation() {
-        val array = IntArray(2)
-        array[0] = R.color.purple_400
-        array[1] = R.color.white_transparent
-        val confetti = CommonConfetti.rainingConfetti(binding.root, array)
-            .infinite()
-        confetti.setAccelerationY(500f)
-        confetti.setEmissionRate(500f)
-        confetti.setVelocityY(500f)
-            .animate()
-    }
+
 
     private fun getData() {
         binding.apply {
@@ -112,12 +83,11 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
             ).gone()
         }
 
-        CommonMethods.showProgressDialog(requireActivity())
-        viewModel.getQuote(
-            viewModel.exchangeAssetFrom?.id ?: "",
-            viewModel.exchangeAssetTo?.id ?: "",
-            viewModel.exchangeFromAmount
-        )
+        if (arguments!=null && requireArguments().containsKey(Constants.DATA_SELECTED)){
+            val data = Gson().fromJson(requireArguments().getString(Constants.DATA_SELECTED),DataQuote::class.java)
+            prepareView(data)
+        }
+
     }
 
     override fun onClick(v: View?) {
@@ -125,13 +95,22 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
             when (v!!) {
                 ivTopAction -> requireActivity().onBackPressed()
                 btnConfirmInvestment -> {
-                    CommonMethods.checkInternet(requireContext()) {
+                    viewModel.selectedAsset = CommonMethods.getAsset(viewModel.exchangeAssetTo!!.id)
+                    viewModel.selectedBalance =
+                        BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetTo!!.id }
+                    val bundle = Bundle().apply {
+                        putString(Constants.ORDER_ID,orderId)
+                    }
+                    findNavController().navigate(R.id.action_confirmExchangeFragment_to_deatil_fragment
+                    ,bundle)
+
+                /* CommonMethods.checkInternet(requireContext()) {
                         showLottieProgressDialog(requireContext(), Constants.LOADING)
                         timer = 0
                         viewModel.confirmOrder(
                             orderId
                         )
-                    }
+                    }*/
                 }
             }
         }
@@ -207,77 +186,8 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
         }, 1000)
     }
 
-    private fun showLottieProgressDialog(context: Context, typeOfLoader: Int) {
-
-        if (dialog == null) {
-            dialog = Dialog(context)
-            dialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
-            dialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            dialog!!.window!!.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-            dialog!!.window!!.setDimAmount(0.2F)
-            dialog!!.setCancelable(false)
-            val height =resources.getDimension(R.dimen.px_200)
-            val width =resources.getDimension(R.dimen.px_300)
-            dialog!!.setContentView(LottieViewBinding.inflate(LayoutInflater.from(context)).root)
-            dialog!!.getWindow()!!.setLayout(width.toInt(), height.toInt());
-        }
-        try {
-            val viewImage = dialog?.findViewById<LottieAnimationView>(R.id.animationView)
-            val imageView = dialog?.findViewById<ImageView>(R.id.ivCorrect)!!
-            when (typeOfLoader) {
-                Constants.LOADING -> {
-                    viewImage!!.setMinAndMaxProgress(0f, .32f)
-                }
-
-                Constants.LOADING_SUCCESS -> {
-                    imageView.visible()
-                    imageView.setImageResource(R.drawable.baseline_done_24)
-                }
-
-                Constants.LOADING_FAILURE -> {
-                    imageView.visible()
-                    imageView.setImageResource(R.drawable.baseline_clear_24)
-                }
-            }
 
 
-            /*(0f,.32f) for loader
-            * (0f,.84f) for success
-            * (0.84f,1f) for failure*/
-            viewImage!!.playAnimation()
 
-
-            dialog!!.show()
-        } catch (e: WindowManager.BadTokenException) {
-            Log.d("Exception", "showProgressDialog: ${e.message}")
-            dialog?.dismiss()
-            dialog = null
-        } catch (e: Exception) {
-            Log.d("Exception", "showProgressDialog: ${e.message}")
-        }
-
-    }
-
-    fun dismissProgressDialog() {
-        dialog?.let {
-            try {
-                it.findViewById<ImageView>(R.id.progressImage).clearAnimation()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            it.dismiss()
-            dialog = null
-        }
-    }
-
-    override fun onRetrofitError(responseBody: ResponseBody?) {
-        super.onRetrofitError(responseBody)
-        if (dialog != null) {
-            showLottieProgressDialog(requireActivity(), Constants.LOADING_FAILURE)
-            Handler().postDelayed({
-                dismissProgressDialog()
-            }, 1000)
-        }
-    }
 
 }
