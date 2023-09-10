@@ -545,4 +545,6 @@
     <string name="unlimited_withdrawl">Unlimited withdrawal</string>
     <string name="withdraw_to">withdraw → To</string>
     <string name="confirm_withdrawal">Confirm Withdrawal</string>
+    <string name="save_settings">Save Settings</string>
+    <string name="security_of_your_notebook">Security of your notebook</string>
 </resources>

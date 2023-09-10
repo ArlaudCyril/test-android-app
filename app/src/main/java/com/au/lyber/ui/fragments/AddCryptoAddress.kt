@@ -135,6 +135,21 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                     networkAdapter.setData(it.data)
                     networkPopup.show()
                 } else networkAdapter.setData(it.data)
+
+                if (network!=null){
+                    for (data in it.data){
+                        if (data.id == network!!.id){
+                            network = data
+                            binding.tvTitle.fadeIn()
+                            binding.ivNetwork.visible()
+                            binding.etNetwork.updatePadding(0)
+                            binding.etNetwork.setText(data.fullName + " (" + data.id.uppercase() + ")")
+
+                            binding.ivNetwork.loadCircleCrop(data.imageUrl)
+                            break
+                        }
+                    }
+                }
             }
         }
 
@@ -197,16 +212,19 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
 
         if (toEdit) {
             viewModel.whitelistAddress?.let {
-
+                    binding.etAddress.isEnabled = false
                 binding.etAddress.setText("${it.address}")
                 binding.etAddressName.setText(it.name)
                 binding.etNetwork.setText(it.network)
                 val id = it.network
+                network = Network(id = it.network)
+                originSelectedPosition = if (it.origin == "exchange") 0 else 1
                 BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == id } }
                     ?.let { it1 ->
                         binding.ivNetwork.loadCircleCrop(it1.imageUrl)
 
                     }
+
 
                 binding.ivNetwork.visible()
                 /*  binding.ivNetwork.loadCircleCrop(it.logo)
@@ -375,32 +393,6 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                 btnAddUseAddress -> {
                     when {
 
-                        toEdit -> {
-
-                            val hashMap = hashMapOf<String, Any>()
-                            hashMap[Constants.NAME] = addressName
-                            hashMap[Constants.NETWORK] = viewModel.whitelistAddress?.network ?: ""
-                            hashMap[Constants.ADDRESS_STR] = address
-                            /*   hashMap[Constants.ORIGIN] = if (originSelectedPosition == 0) {
-                                   hashMap[Constants.Exchange] = viewModel.whitelistAddress?.exchange ?: ""
-                                   getString(R.string.exchange)
-                               } else {
-                                   getString(R.string.wallet)
-                               }
-                               hashMap[Constants.LOGO] = viewModel.whitelistAddress?.logo ?: ""
-
-                               hashMap[Constants.ADDRESS_ID] = viewModel.whitelistAddress?._id ?: ""
-   */
-                            network?.let {
-                                hashMap[Constants.LOGO] = network?.imageUrl ?: ""
-                                hashMap[Constants.NETWORK] = network?.fullName ?: ""
-                            }
-
-                            checkInternet(requireContext()) {
-                                showProgressDialog(requireContext())
-                                viewModel.updateWhiteList(hashMap)
-                            }
-                        }
 
                         addressName.isEmpty() -> {
                             binding.etAddressName.requestKeyboard()

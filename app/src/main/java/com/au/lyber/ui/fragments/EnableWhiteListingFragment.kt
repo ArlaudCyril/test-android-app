@@ -36,33 +36,27 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
         viewModel = getViewModel(this)
         viewModel.listener = this
 
-        viewModel.enableWhitelisting.observe(viewLifecycleOwner) {
+        viewModel.updateUserInfoResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
-//                App.prefsManager.setWhitelisting(!App.prefsManager.isWhitelisting())
+
                 val security: String = when (selectedPosition) {
                     0 -> Constants.HOURS_72
                     1 -> Constants.HOURS_24
                     else -> Constants.NO_EXTRA_SECURITY
                 }
-//                App.prefsManager.setExtraSecurity(security)
+               App.prefsManager.withdrawalLockSecurity = security
                 requireActivity().onBackPressed()
             }
         }
 
         /* if whitelisting is enabled */
-//        if (App.prefsManager.isWhitelisting()) {
-//            binding.btnEnableWhitelisting.setBackgroundTint(R.color.purple_500)
-//            binding.btnEnableWhitelisting.setTextColor(
-//                getColor(requireContext(), R.color.purple_gray_00)
-//            )
-//            binding.btnEnableWhitelisting.text = "Disable whitelisting"
-//            selectedPosition = when (App.prefsManager.getExtraSecurity()) {
-//                Constants.HOURS_72 -> 0
-//                Constants.HOURS_24 -> 1
-//                else -> 2
-//            }
-//        }
+
+        selectedPosition = when (App.prefsManager.withdrawalLockSecurity) {
+            Constants.HOURS_72 -> 0
+            Constants.HOURS_24 -> 1
+            else -> 2
+        }
 
 
         binding.rvExtraSecurity.let {
@@ -79,14 +73,13 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
 
             checkInternet(requireContext()) {
                 showProgressDialog(requireContext())
-            /*    viewModel.enableWhitelisting(
-                    !App.prefsManager.isWhitelisting(),
+                viewModel.updateWithdrawalLock(
                     when (selectedPosition) {
                         0 -> Constants.HOURS_72
                         1 -> Constants.HOURS_24
                         else -> Constants.NO_EXTRA_SECURITY
                     }
-                )*/
+                )
             }
         }
     }

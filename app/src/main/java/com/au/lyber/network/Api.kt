@@ -183,7 +183,8 @@ interface Api {
 
     @POST("wallet-service/withdrawal-address")
     suspend fun addWhitelistingAddress(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
-
+    @PATCH("user-service/user")
+    suspend fun updateUserInfo(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
     @HTTP(method = "DELETE", path = "wallet-service/withdrawal-address", hasBody = true)
     suspend fun deleteWhiteListing(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
 

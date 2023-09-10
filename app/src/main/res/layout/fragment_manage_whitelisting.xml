@@ -28,7 +28,7 @@
                 style="@style/TitleText"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="20dp"
-                android:text="Enable whitelisting" />
+                android:text="@string/security_of_your_notebook" />
 
 
             <TextView
@@ -97,7 +97,7 @@
                 android:layout_marginTop="32dp"
                 android:background="@drawable/curved_button"
                 android:backgroundTint="@color/purple_500"
-                android:text="@string/enable_whitelisting"
+                android:text="@string/save_settings"
                 android:textColor="@color/white" />
 
         </LinearLayout>

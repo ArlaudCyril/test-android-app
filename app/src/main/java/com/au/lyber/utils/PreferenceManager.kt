@@ -30,6 +30,12 @@ class PreferenceManager(context: Context) {
             mEditor.putString("refresh_token", value).apply()
             refreshTokenSavedAt = System.currentTimeMillis()
         }
+    var withdrawalLockSecurity: String
+        get() = mSharedPreferences.getString("withdrawalLockSecurity", "") ?: ""
+        set(value) {
+            mEditor.putString("withdrawalLockSecurity", value).apply()
+
+        }
 
     var accessToken: String
         get() = mSharedPreferences.getString("accessToken", "") ?: ""

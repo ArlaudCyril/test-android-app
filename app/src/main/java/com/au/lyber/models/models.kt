@@ -429,11 +429,11 @@ data class NetworkResponse(
 data class Network(
     val __v: Int = 1100,
     val id: String = "",
-    val addressRegex: String,
+    val addressRegex: String="",
     val depositStatus: Boolean = false,
     val withdrawalStatus: Boolean = false,
-    val imageUrl: String,
-    val fullName: String
+    val imageUrl: String="",
+    val fullName: String=""
 )
 
 data class ExchangeListingResponse(

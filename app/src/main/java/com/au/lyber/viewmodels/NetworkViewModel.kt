@@ -122,6 +122,8 @@ open class NetworkViewModel : ViewModel() {
 
     private var _addWhitelistResponse = MutableLiveData<MessageResponse>()
     val addWhitelistResponse get() = _addWhitelistResponse
+    private var _updateUserInfoResponse = MutableLiveData<MessageResponse>()
+    val updateUserInfoResponse get() = _updateUserInfoResponse
 
     private var _getWhiteListing = MutableLiveData<WhitelistingResponse>()
     val getWhiteListing get() = _getWhiteListing
@@ -563,6 +565,18 @@ open class NetworkViewModel : ViewModel() {
             val res = RestClient.get().addWhitelistingAddress(hashMap)
             if (res.isSuccessful)
                 _addWhitelistResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+    fun updateWithdrawalLock(
+        lock: String
+    ) {
+        viewModelScope.launch(exceptionHandler) {
+            val hashMap: HashMap<String, Any> = hashMapOf()
+            hashMap["withdrawalLock"] = lock
+            val res = RestClient.get().updateUserInfo(hashMap)
+            if (res.isSuccessful)
+                _updateUserInfoResponse.postValue(res.body())
             else listener?.onRetrofitError(res.errorBody())
         }
     }

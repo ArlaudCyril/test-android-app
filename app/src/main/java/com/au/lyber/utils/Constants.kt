@@ -71,9 +71,9 @@ object Constants {
     const val STABLE_COINS = "stable_coins"
 
     /*  whitelisting duartion  */
-    const val HOURS_72 = "72_HOURS"
-    const val HOURS_24 = "24_HOURS"
-    const val NO_EXTRA_SECURITY = "NO_EXTRA_SECURITY"
+    const val HOURS_72 = "3d"
+    const val HOURS_24 = "1d"
+    const val NO_EXTRA_SECURITY = "none"
 
     const val JPEG_FILE_PREFIX: String = "IMG_"
     const val JPEG_FILE_SUFFIX: String = ".jpg"

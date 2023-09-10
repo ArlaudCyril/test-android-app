@@ -82,13 +82,6 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
             }
         }
 
-      /*  viewModel.searchWhitelisting.observe(viewLifecycleOwner) {
-            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                adapter.removeProgress()
-                adapter.setList(it.addresses)
-                binding.rvAddresses.startLayoutAnimation()
-            }
-        }*/
 
         binding.rvAddresses.let {
             it.adapter = adapter
@@ -157,19 +150,12 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
     }
 
     override fun onResume() {
-//        with(App.prefsManager.isWhitelisting()) {
-//            binding.switchWhitelisting.isChecked = this
-//            if (this) {
-//                binding.llDurationInfo.visible()
-//                binding.tvDuration.text = when (App.prefsManager.getExtraSecurity()) {
-//                    Constants.HOURS_72 -> "72H"
-//                    Constants.HOURS_24 -> "24H"
-//                    else -> "No Security"
-//                }
-//            } else {
-//                binding.llDurationInfo.gone()
-//            }
-//        }
+        binding.llDurationInfo.visible()
+        binding.tvDuration.text = when (App.prefsManager.withdrawalLockSecurity) {
+            Constants.HOURS_72 -> "72H"
+            Constants.HOURS_24 -> "24H"
+            else -> "No Security"
+        }
 
         super.onResume()
     }
