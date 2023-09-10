@@ -38,7 +38,7 @@ import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClickListener {
 
     /* display conversion */
-    private val amount get() = binding.etAmount.text.trim().toString()
+    private val amount get() = binding.etAmount.text!!.trim().toString()
     private val assetConversion get() = binding.tvAssetConversion.text.trim().toString()
 
     private var selectedFrequency: String = ""
