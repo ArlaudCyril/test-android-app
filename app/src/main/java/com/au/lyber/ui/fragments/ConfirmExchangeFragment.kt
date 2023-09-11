@@ -48,12 +48,7 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
         binding.ivTopAction.setOnClickListener(this)
         binding.btnConfirmInvestment.setOnClickListener(this)
         binding.allocationView.rvAllocation.isNestedScrollingEnabled = false
-
         getData()
-
-
-
-
     }
 
 
@@ -102,14 +97,6 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
                     }
                     findNavController().navigate(R.id.action_confirmExchangeFragment_to_deatil_fragment
                     ,bundle)
-
-                /* CommonMethods.checkInternet(requireContext()) {
-                        showLottieProgressDialog(requireContext(), Constants.LOADING)
-                        timer = 0
-                        viewModel.confirmOrder(
-                            orderId
-                        )
-                    }*/
                 }
             }
         }
@@ -145,29 +132,34 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
 
 
     private fun startTimer() {
-        Handler(Looper.getMainLooper()).postDelayed({
-            if (timer == 0) {
-                binding.btnConfirmInvestment.isEnabled = true
-                binding.btnConfirmInvestment.text = getString(
-                    R.string._25_sec, getString(R.string.confirm_exchange), timer.toString()
-                )
-                binding.btnConfirmInvestment.isEnabled = false
-                binding.btnConfirmInvestment.background = ContextCompat.getDrawable(
-                    requireContext(),
-                    R.drawable.button_purple_400
-                )
-            } else {
-                timer -= 1
-                binding.btnConfirmInvestment.text = getString(
-                    R.string._25_sec, getString(R.string.confirm_exchange), timer.toString()
-                )
-                binding.btnConfirmInvestment.background = ContextCompat.getDrawable(
-                    requireContext(),
-                    R.drawable.button_purple_500
-                )
-                startTimer()
-            }
-        }, 1000)
+       try {
+           Handler(Looper.getMainLooper()).postDelayed({
+               if (lifecycle.currentState == Lifecycle.State.RESUMED)
+               if (timer == 0) {
+                   binding.btnConfirmInvestment.isEnabled = true
+                   binding.btnConfirmInvestment.text = getString(
+                       R.string._25_sec, getString(R.string.confirm_exchange), timer.toString()
+                   )
+                   binding.btnConfirmInvestment.isEnabled = false
+                   binding.btnConfirmInvestment.background = ContextCompat.getDrawable(
+                       requireContext(),
+                       R.drawable.button_purple_400
+                   )
+               } else {
+                   timer -= 1
+                   binding.btnConfirmInvestment.text = getString(
+                       R.string._25_sec, getString(R.string.confirm_exchange), timer.toString()
+                   )
+                   binding.btnConfirmInvestment.background = ContextCompat.getDrawable(
+                       requireContext(),
+                       R.drawable.button_purple_500
+                   )
+                   startTimer()
+               }
+           }, 1000)
+       }catch (e:Exception){
+           e.printStackTrace()
+       }
     }
 
 

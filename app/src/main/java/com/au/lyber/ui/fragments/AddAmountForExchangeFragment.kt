@@ -211,12 +211,8 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
 
 
                         viewModel.amount = if (mCurrency == focusedData.currency) {
-//                            viewModel.assetAmount =
-//                                assetConversion.split(mConversionCurrency)[0].pointFormat
                             amount.split(focusedData.currency)[0].pointFormat
                         } else {
-//                            viewModel.assetAmount =
-//                                amount.split(mConversionCurrency)[0].pointFormat
                             assetConversion.split(mCurrency)[0].pointFormat
                         }
                         viewModel.amount = if (mCurrency == focusedData.currency) {
