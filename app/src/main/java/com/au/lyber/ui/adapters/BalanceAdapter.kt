@@ -50,6 +50,11 @@ class BalanceAdapter(
                     val balance = it.balanceData
                     val priceCoin = balance.euroBalance.toDouble()
                         .div(balance.balance.toDouble() ?: 1.0)
+                    if (currency!!.isTradeActive){
+                        tvAssetNameCode.gone()
+                    }else{
+                        tvAssetNameCode.visible()
+                    }
                     tvAssetAmount.text = balance.euroBalance.commaFormatted.currencyFormatted
                     tvAssetAmountInCrypto.text =
                         balance.balance.formattedAsset(

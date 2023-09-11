@@ -5,6 +5,12 @@ import okhttp3.internal.connection.Exchange
 
 object Constants {
 
+    const val ORDER_ID: String = "order_id"
+    const val LOADING: Int = 0
+    const val LOADING_SUCCESS: Int = 1
+    const val LOADING_FAILURE: Int = 2
+    const val FROM_SWAP: String = "from_swap"
+
     /* steps fill personal data */
     const val ACCOUNT_INITIALIZATION = 0
     const val PERSONAL_DATA = 1
@@ -19,8 +25,8 @@ object Constants {
     const val PROFILE_COMPLETED = 4
     const val DONE_EDUCATION = 5
 
-    const val IS_LOGOUT: String = "is_logout"
 
+    const val IS_LOGOUT: String = "is_logout"
 
 
     //    const val BASE_URL = "http://104.211.21.101:3000/"
@@ -29,13 +35,14 @@ object Constants {
     const val SOCKET_BASE_URL = "ws://ws.lyber.com:80/websocket/"
     const val PICTURE_DIRECTORY = "Lyber/Images"
 
-    const val FOR_LOGIN ="for_login"
-    const val FOR_LOGOUT ="fromLogout"
+    const val FOR_LOGIN = "for_login"
+    const val FOR_LOGOUT = "fromLogout"
     const val ADDRESS_ID = "address_id"
     const val INVESTMENT_ID = "investmentId"
     const val TYPE = "type"
-    const val  DATA_SELECTED= "dataSelected"
+    const val DATA_SELECTED = "dataSelected"
     const val NETWORK = "network"
+
     /* screen navigation for specific uses */
     const val USING_STRATEGY = "using_strategy"
     const val USING_SINGULAR_ASSET = "using_singular_asset"

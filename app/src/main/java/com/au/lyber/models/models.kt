@@ -285,6 +285,23 @@ data class CoinsResponse(
     val message: String,
     val success: Boolean
 )
+data class GetQuoteResponse(
+    val code: Int,
+    val data: DataQuote?,
+    val message: String,
+    val success: Boolean
+)
+data class DataQuote(val quoteId:String,
+    val ratio:String,
+    val inverseRatio:String,
+    val validTimestamp:String,
+    val toAmount:String,
+    val fromAmount:String,
+    val fromAmountDeductedFees:String,
+    val fees :String,
+    val orderId:String,
+    val fromAsset:String,
+    val toAsset:String)
 
 data class Data(
     val ath: Double,

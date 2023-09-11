@@ -351,6 +351,7 @@
     <string name="error_occurred">error occurred</string>
     <string name="choose_an_asset">Choose an asset</string>
     <string name="exchange_from">Exchange → From</string>
+    <string name="exchange_from_">Exchange From</string>
     <string name="a_precise_asset">A precise asset</string>
     <string name="i_want_to_withdraw">I want to withdraw</string>
     <string name="euro">Euro</string>
@@ -429,7 +430,8 @@
     <string name="crypto_asset_deposit">Crypto asset deposit</string>
     <string name="asset">Asset</string>
     <string name="_1_3_step_completed">⅓ step completed</string>
-    <string name="exchange_to">Exchange To</string>
+    <string name="exchange_to">Exchange → To</string>
+    <string name="exchange_to_">Exchange To</string>
     <string name="frequency">Frequency</string>
     <string name="payment">Payment</string>
     <string name="lyber_fees">Lyber fees</string>
@@ -528,4 +530,12 @@
     <string name="send_only_to_this_address_using_the_protocol">Send only %1$s (%2$s) to this address, using the %3$s protocol.</string>
     <string name="your_activity_on_lyber">Your activity on Lyber</string>
     <string name="please_tell_us_what_do_you_plan_to_mainly_do">Please tell us  What do you plan to mainly do?</string>
+    <string name="ratio">Ratio</string>
+    <string name="_25_sec">%1$s (%2$s sec)</string>
+    <string name="you_don_t_have_balance_to_exchange">you don`t have balance to exchange</string>
+    <string name="preview_exchange">Preview exchange</string>
+    <string name="the_minimum_amount_to_be_exchanged">The minimum Amount to be exchanged</string>
+    <string name="the_minimum_amount_to_be_exchanged_1">The minimum amount to be exchanged %1$s %2$s</string>
+    <string name="availiable_fiat">Available FIAT</string>
+    <string name="insufficient_balance">Insufficient Balance</string>
 </resources>

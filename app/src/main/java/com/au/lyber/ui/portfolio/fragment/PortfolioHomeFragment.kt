@@ -189,7 +189,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
 
         }
-        if (viewModel.screenCount == 0) {
+       // if (viewModel.screenCount == 0) {
             //My assets Part (waiting API)
             viewModel.getBalance()
 
@@ -203,7 +203,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             viewModel.getAllPriceResume()
 
 
-        }
+        //}
 
 
 
@@ -226,6 +226,8 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
         viewModel.priceServiceResumes.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                BaseActivity.balanceResume.clear()
+                BaseActivity.balanceResume.addAll(it)
                 adapterAllAsset.setList(it.subList(0, 6))
             }
         }
@@ -327,9 +329,9 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
     override fun availableAssetClicked(priceResume: PriceServiceResume) {
         checkInternet(requireContext()) {
-            navController.navigate(R.id.portfolioDetailFragment)
             viewModel.selectedAsset = CommonMethods.getAsset(priceResume.id)
             viewModel.selectedBalance = CommonMethods.getBalance(priceResume.id)
+            navController.navigate(R.id.portfolioDetailFragment)
         }
 
     }
@@ -359,7 +361,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
             "exchange" -> {
                 viewModel.selectedOption = Constants.USING_EXCHANGE
-                navController.navigate(R.id.swapWithdrawFromFragment)
+                navController.navigate(R.id.exchangeFromFragment)
             }
 
             "sell" -> {

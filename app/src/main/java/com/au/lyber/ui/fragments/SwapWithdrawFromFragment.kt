@@ -13,18 +13,22 @@ import com.au.lyber.R
 import com.au.lyber.databinding.FragmentSwapFromBinding
 import com.au.lyber.databinding.ItemMyAssetBinding
 import com.au.lyber.models.AssetBaseData
+import com.au.lyber.ui.activities.BaseActivity
 import com.au.lyber.ui.adapters.BaseAdapter
 import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.CommonMethods
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.commaFormatted
+import com.au.lyber.utils.CommonMethods.Companion.currencyFormatted
 import com.au.lyber.utils.CommonMethods.Companion.dismissProgressDialog
+import com.au.lyber.utils.CommonMethods.Companion.formattedAsset
 import com.au.lyber.utils.CommonMethods.Companion.gone
 import com.au.lyber.utils.CommonMethods.Companion.loadCircleCrop
 import com.au.lyber.utils.CommonMethods.Companion.replaceFragment
 import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
+import java.math.RoundingMode
 import java.util.*
 
 class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnClickListener {
@@ -49,7 +53,7 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
                 if (it.data.isNotEmpty()) {
-                    viewModel.exchangeAssetTo = it.data[0]
+                  //  viewModel.exchangeAssetTo = it.data[0]
                 }
                 adapter.addList(it.data)
             }
@@ -75,7 +79,7 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
     private fun getData() {
         checkInternet(requireContext()) {
             showProgressDialog(requireContext())
-            viewModel.getAllAssets()
+            viewModel.getBalance()
         }
     }
 
@@ -109,9 +113,9 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
 
     private fun itemClicked(myAsset: AssetBaseData, position: Int) {
 
-        if (viewModel.selectedOption == Constants.USING_EXCHANGE)
+/*        if (viewModel.selectedOption == Constants.USING_EXCHANGE)
             viewModel.exchangeAssetFrom = myAsset
-        else
+        else*/
             viewModel.withdrawAsset = myAsset
 
         findNavController().navigate(R.id.allAssetFragment)
@@ -147,57 +151,18 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
                     }else{
                         tvAssetNameCode.visible()
                     }
+                    for (balance in BaseActivity.balances){
+                        if (balance.id == it.id){
+                            val priceCoin = balance.balanceData.euroBalance.toDouble()
+                                .div(balance.balanceData.balance.toDouble() ?: 1.0)
+                            tvAssetAmount.text= balance.balanceData.euroBalance.commaFormatted.currencyFormatted
+                            tvAssetAmountInCrypto.text =balance.balanceData.balance.formattedAsset(
+                                price = priceCoin,
+                                rounding = RoundingMode.DOWN
+                            )
+                        }
+                    }
 
-               /*     //val value = it.total_balance * it.euro_amount TODO
-                    val value = 0 // TODO : Remove this line
-                    if (toExchange) {
-
-                        if (!it.imageUrl.isNullOrEmpty())
-                             ivAssetIcon.loadCircleCrop(it.imageUrl)
-
-
-                        tvAssetAmount.text = "${value.commaFormatted}${Constants.EURO}"
-                       *//* tvAssetAmountInCrypto.text = "${
-                            it.total_balance.toString().commaFormatted
-                        }${it.id.uppercase()}" TODO*//*
-
-                    } else {
-//                            if (position == itemList.count() - 1) {
-//
-//                                llFiatWallet.visible()
-//                                tvAssetAmount.gone()
-//                                tvAssetAmountInCrypto.gone()
-//                                tvAssetAmountCenter.visible()
-//
-//                                tvAssetNameCenter.text = it.name
-//
-//                                if (it.symbol == Constants.EURO) {
-//                                    tvAssetAmountCenter.text =
-//                                        "${
-//                                            asset.total_balance.toString().roundFloat()
-//                                        }${Constants.EURO}"
-//                                    ivAssetIcon.setImageResource(R.drawable.ic_euro)
-//                                } else {
-//                                    if (it.image.endsWith("svg"))
-//                                        GlideToVectorYou.init().with(ivAssetIcon.context)
-//                                            .load(Uri.parse(it.image), ivAssetIcon)
-//                                    else ivAssetIcon.loadCircleCrop(it.image)
-//                                    tvAssetAmountCenter.text = value.toString().roundFloat()
-//                                }
-//
-//                            } else {
-
-                        if (!it.imageUrl.isNullOrEmpty())
-                            ivAssetIcon.loadCircleCrop(it.imageUrl)
-
-                        tvAssetAmount.text =
-                            "${value.toString().roundFloat()}${Constants.EURO}"
-
-                        *//*tvAssetAmountInCrypto.text = "${
-                            it.total_balance.toString().roundFloat()
-                        }${it.id.uppercase()}" TODO*//*
-
-                    }*/
                 }
 
             }

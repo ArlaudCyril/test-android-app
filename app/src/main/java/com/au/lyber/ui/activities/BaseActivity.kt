@@ -6,12 +6,14 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
 import com.au.lyber.models.AssetBaseData
 import com.au.lyber.models.Balance
+import com.au.lyber.models.PriceServiceResume
 
 abstract class BaseActivity<viewBinding : ViewBinding> : AppCompatActivity() {
     //Global variables
     companion object {
         var assets = ArrayList<AssetBaseData>()
         var balances = ArrayList<Balance>()
+        var balanceResume = ArrayList<PriceServiceResume>()
 
     }
 
