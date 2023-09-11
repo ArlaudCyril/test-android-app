@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
+    android:id="@+id/root"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true">
 
@@ -88,7 +89,6 @@
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
-                    android:text="472156€"
                     android:textColor="@color/purple_gray_700"
                     android:textStyle="bold" />
 
@@ -106,7 +106,6 @@
                     android:layout_below="@id/tvValueAssetPrice"
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="16dp"
-                    android:text="100€"
                     android:textColor="@color/purple_gray_700"
                     android:textStyle="bold" />
 
@@ -117,7 +116,7 @@
                     android:layout_below="@id/tvNestedAmount"
                     android:layout_marginTop="32dp"
                     android:layout_marginBottom="16dp"
-                    android:text="@string/exchange_from"
+                    android:text="@string/exchange_from_"
                     android:textColor="@color/purple_gray_500"
                     android:visibility="gone" />
 
@@ -139,7 +138,7 @@
                     style="@style/SubheadMabry"
                     android:layout_below="@id/tvExchangeFrom"
                     android:layout_marginTop="16dp"
-                    android:text="@string/exchange_to"
+                    android:text="@string/exchange_to_"
                     android:textColor="@color/purple_gray_500"
                     android:visibility="gone" />
 
@@ -212,7 +211,6 @@
                     android:layout_below="@id/tvValuePayment"
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="32dp"
-                    android:text="99,92€"
                     android:textColor="@color/purple_gray_700"
                     android:textStyle="bold"
                     android:visibility="gone" />
@@ -231,7 +229,6 @@
                     android:layout_below="@id/tvValueBuy"
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="32dp"
-                    android:text="0,08€"
                     android:textColor="@color/purple_gray_700"
                     android:textStyle="bold" />
 
@@ -252,7 +249,6 @@
                     android:layout_below="@id/tvValueLyberFee"
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="32dp"
-                    android:text="99,92€"
                     android:textColor="@color/purple_gray_700"
                     android:textStyle="bold" />
 
@@ -270,7 +266,6 @@
                     android:layout_below="@id/tvValueDeposit"
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="32dp"
-                    android:text="99,92€"
                     android:textColor="@color/purple_gray_700"
                     android:textStyle="bold" />
 
@@ -289,7 +284,6 @@
                     android:layout_below="@id/tvValueDepositFee"
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="32dp"
-                    android:text="100€"
                     android:textColor="@color/purple_gray_700"
                     android:textStyle="bold" />
 

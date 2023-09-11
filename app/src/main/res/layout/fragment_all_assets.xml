@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
     android:background="@drawable/top_curved_layout"
-    android:backgroundTint="@color/purple_gray_00"
+    android:backgroundTint="@color/white"
     android:fitsSystemWindows="true"
     android:minHeight="360dp">
 
@@ -17,7 +17,7 @@
         android:layout_height="48dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="18dp"
-        android:backgroundTint="@color/purple_gray_50"
+        android:background="@drawable/gray_purple_50"
         android:padding="12dp"
         android:src="@drawable/ic_close"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,6 +34,29 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/ivTopAction" />
+    <TextView
+        android:id="@+id/tvTitleSec"
+        android:padding="12dp"
+        android:visibility="gone"
+        android:text="@string/availiable_fiat"
+        app:layout_constraintTop_toBottomOf="@id/ivTopAction"
+        app:layout_constraintStart_toStartOf="parent"
+        style="@style/TitleText"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="20dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textColor="@color/purple_gray_900"
+       />
+    <include
+        android:id="@+id/includedAsset"
+        layout="@layout/item_my_asset"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTitleSec"
+        android:layout_marginHorizontal="24dp"
+        android:visibility="gone" />
+
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabLayout"
@@ -42,7 +65,7 @@
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="20dp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivTopAction"
+        app:layout_constraintTop_toBottomOf="@id/includedAsset"
         app:tabBackground="@drawable/tab__indcator"
         app:tabIndicator="@null"
         app:tabMode="auto"

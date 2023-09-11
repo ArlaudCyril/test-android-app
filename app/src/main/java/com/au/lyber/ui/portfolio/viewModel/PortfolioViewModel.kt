@@ -12,6 +12,12 @@ class PortfolioViewModel : NetworkViewModel() {
         set(value) {
             _selectedAsset = value
         }
+    private var _selectedAssetPriceResume: PriceServiceResume? = null
+    var selectedAssetPriceResume
+        get() = _selectedAssetPriceResume
+        set(value) {
+            _selectedAssetPriceResume = value
+        }
 
     private var _selectedAssetDetail: AssetDetailBaseData? = null
     var selectedAssetDetail
@@ -148,18 +154,26 @@ class PortfolioViewModel : NetworkViewModel() {
             _exchangeToAmount = value
         }
 
-    private var _exchangeAssetFrom: AssetBaseData? = null
+    private var _exchangeAssetFrom: Balance? = null
     var exchangeAssetFrom
         get() = _exchangeAssetFrom
         set(value) {
             _exchangeAssetFrom = value
         }
 
-    private var _exchangeAssetTo: AssetBaseData? = null
+    private var _exchangeAssetTo: PriceServiceResume? = null
     var exchangeAssetTo
         get() = _exchangeAssetTo
         set(value) {
             _exchangeAssetTo = value
+        }
+
+
+    private var _exchangeAssetFromResume: String? = null
+    var exchangeAssetFromResume
+        get() = _exchangeAssetFromResume
+        set(value) {
+            _exchangeAssetFromResume = value
         }
 
     var allMyPortfolio: String = ""

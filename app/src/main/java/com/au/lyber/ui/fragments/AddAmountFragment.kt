@@ -38,7 +38,7 @@ import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClickListener {
 
     /* display conversion */
-    private val amount get() = binding.etAmount.text.trim().toString()
+    private val amount get() = binding.etAmount.text!!.trim().toString()
     private val assetConversion get() = binding.tvAssetConversion.text.trim().toString()
 
     private var selectedFrequency: String = ""
@@ -195,7 +195,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                             it.total_balance.toString().roundFloat().commaFormatted
                         } ${it.id.uppercase()} Available"TODO*/
 
-                         ivAssetSwapFrom.loadCircleCrop(it.imageUrl?:"")
+                       //  ivAssetSwapFrom.loadCircleCrop(it.imageUrl?:"")
 
                         tvSwapAssetFrom.text = it.id.uppercase()
 
@@ -208,7 +208,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                             it.euro_amount.toString().roundFloat().commaFormatted TODO*/
                         mConversionCurrency = it.id.uppercase()
 
-                         ivAssetSwapTo.loadCircleCrop(it.imageUrl?:"")
+                        // ivAssetSwapTo.loadCircleCrop(it.imageUrl?:"")
                         tvSwapAssetTo.text = it.id.uppercase()
                     }
 
@@ -732,11 +732,11 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
 //                    maxValue = to.total_balance
 
-                   binding.ivAssetSwapFrom.loadCircleCrop(to.imageUrl ?: "")
+                  // binding.ivAssetSwapFrom.loadCircleCrop(to.imageUrl ?: "")
 
                     binding.tvSwapAssetFrom.text = to.id.uppercase()
 
-                    binding.ivAssetSwapTo.loadCircleCrop(from.imageUrl ?: "")
+                   // binding.ivAssetSwapTo.loadCircleCrop(from.imageUrl ?: "")
 
                     binding.tvSwapAssetTo.text = from.id.uppercase()
 
@@ -777,11 +777,11 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
 //                    maxValue = from.total_balance
 
-                     binding.ivAssetSwapFrom.loadCircleCrop(from.imageUrl ?: "")
+                     //binding.ivAssetSwapFrom.loadCircleCrop(from.imageUrl ?: "")
 
                     binding.tvSwapAssetFrom.text = from.id.uppercase()
 
-                     binding.ivAssetSwapTo.loadCircleCrop(to.imageUrl ?: "")
+                     //binding.ivAssetSwapTo.loadCircleCrop(to.imageUrl ?: "")
 
                     binding.tvSwapAssetTo.text = to.id.uppercase()
 

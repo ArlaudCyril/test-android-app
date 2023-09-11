@@ -88,6 +88,8 @@ interface Api {
 
     @POST("user/verify/pin")
     suspend fun verifyPin(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
+    @POST("order-service/quote")
+    suspend fun getQuote(@Body hashMap: HashMap<String, Any>): Response<GetQuoteResponse>
 
     @POST("user/logout")
     suspend fun logout(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
@@ -106,6 +108,9 @@ interface Api {
 
     @POST("user/swap-crypto")
     suspend fun swapCrypto(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
+
+    @POST("order-service/accept-quote")
+    suspend fun acceptQuote(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
 
     @POST("user/withdraw-crypto")
     suspend fun withdrawCryptos(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>

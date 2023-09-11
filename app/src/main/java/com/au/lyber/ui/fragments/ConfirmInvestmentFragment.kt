@@ -6,9 +6,11 @@ import android.os.Bundle
 import android.view.View
 import android.view.Window
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
 import com.au.lyber.databinding.ConfirmationDialogBinding
 import com.au.lyber.databinding.FragmentConfirmInvestmentBinding
+import com.au.lyber.ui.activities.BaseActivity
 import com.au.lyber.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
 import com.au.lyber.ui.portfolio.fragment.PortfolioHomeFragment
 import com.au.lyber.utils.CommonMethods.Companion.addFragment
@@ -25,6 +27,7 @@ import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
 import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
+import com.au.lyber.utils.CommonMethods
 import java.util.*
 
 class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>(),
@@ -65,7 +68,10 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         viewModel.exchangeResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
-                ConfirmationBottomSheet().show(childFragmentManager, "")
+                findNavController().navigate(R.id.portfolioDetailFragment)
+                viewModel.selectedAsset = CommonMethods.getAsset(viewModel.exchangeAssetTo!!.id)
+                viewModel.selectedBalance = BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetTo!!.id }
+            // ConfirmationBottomSheet().show(childFragmentManager, "")
             }
         }
 
@@ -266,8 +272,8 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                     tvAmount.text =
                         "${viewModel.assetAmount.commaFormatted} ${viewModel.exchangeAssetTo?.id?.uppercase()}"
 
-                    tvNestedAmount.text =
-                        "${viewModel.exchangeAssetFrom?.fullName?.capitalize()} Price"
+                 /*   tvNestedAmount.text =
+                        "${viewModel.exchangeAssetFrom?.fullName?.capitalize()} Price"*/
                     /*tvNestedAmountValue.text =
                         "${viewModel.exchangeAssetFrom?.euro_amount.commaFormatted} ${Constants.EURO}"
                     TODO */

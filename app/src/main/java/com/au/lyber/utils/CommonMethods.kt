@@ -47,7 +47,9 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import com.airbnb.lottie.LottieAnimationView
 import com.au.lyber.R
+import com.au.lyber.databinding.LottieViewBinding
 import com.au.lyber.databinding.ProgressBarBinding
 import com.au.lyber.models.AssetBaseData
 import com.au.lyber.models.Balance
@@ -117,10 +119,38 @@ class CommonMethods {
             }
 
         }
+        fun showLottieProgressDialog(context: Context) {
 
+            if (dialog == null) {
+                dialog = Dialog(context)
+                dialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                dialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                dialog!!.window!!.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+                dialog!!.window!!.setDimAmount(0.2F)
+                dialog!!.setCancelable(false)
+                dialog!!.setContentView(LottieViewBinding.inflate(LayoutInflater.from(context)).root)
+            }
+            try {
+                dialog?.findViewById<LottieAnimationView>(R.id.animationView)?.
+                    setMinAndMaxProgress(0f,0.5f)
+                dialog!!.show()
+            } catch (e: WindowManager.BadTokenException) {
+                Log.d("Exception", "showProgressDialog: ${e.message}")
+                dialog?.dismiss()
+                dialog = null
+                showProgressDialog(context)
+            } catch (e: Exception) {
+                Log.d("Exception", "showProgressDialog: ${e.message}")
+            }
+
+        }
         fun dismissProgressDialog() {
             dialog?.let {
-                it.findViewById<ImageView>(R.id.progressImage).clearAnimation()
+                try {
+                    it.findViewById<ImageView>(R.id.progressImage).clearAnimation()
+                }catch (e:Exception){
+                    e.printStackTrace()
+                }
                 it.dismiss()
             }
         }
@@ -154,7 +184,7 @@ class CommonMethods {
         }
 
         fun String.decimalPoint(): String {
-            return DecimalFormat("#.##").format(toDouble())
+            return DecimalFormat("#.######").format(toDouble())
         }
 
         fun String.decimalPoints(points: Int): String {
@@ -215,27 +245,31 @@ class CommonMethods {
         }
 
         fun ImageView.loadCircleCrop(any: Any, placeHolderRes: Int? = -1) {
-            var res = any
-           val  requestBuilder : RequestBuilder<PictureDrawable> =Glide.with(this).`as`(PictureDrawable::class.java)
+            if (any.toString().contains("btc")){
+                this.setImageResource(R.drawable.ic_bitcoin)
+            }else {
+                var res = any
+                val requestBuilder: RequestBuilder<PictureDrawable> =
+                    Glide.with(this).`as`(PictureDrawable::class.java)
                         .placeholder(placeHolderRes!!)
                         .error(placeHolderRes)
                         .listener(SvgSoftwareLayerSetter())
-            when (any) {
-                is String -> {
-                    if (!any.contains("http"))
-                        res = Constants.BASE_URL + any
+                when (any) {
+                    is String -> {
+                        if (!any.contains("http"))
+                            res = Constants.BASE_URL + any
 
 
 
-                    if (placeHolderRes != -1)
-                        Glide.with(this).load(any)
-                            .placeholder(placeHolderRes)
-                            .apply(RequestOptions.circleCropTransform())
-                            .diskCacheStrategy(
-                                DiskCacheStrategy.RESOURCE
-                            ).into(this)
-                    else requestBuilder.load(any).into(this)
-                /*Glide.with(this)
+                        if (placeHolderRes != -1)
+                            Glide.with(this).load(any)
+                                .placeholder(placeHolderRes)
+                                .apply(RequestOptions.circleCropTransform())
+                                .diskCacheStrategy(
+                                    DiskCacheStrategy.RESOURCE
+                                ).into(this)
+                        else requestBuilder.load(any).into(this)
+                        /*Glide.with(this)
                         .`as`(PictureDrawable::class.java)
                         .load(any).apply(RequestOptions.circleCropTransform())
                         .diskCacheStrategy(
@@ -245,23 +279,23 @@ class CommonMethods {
                         .dontAnimate().into(this)*/
 
 
+                    }
 
-                }
-                else -> {
-                    if (placeHolderRes != -1)
-                        Glide.with(this).load(any).apply(RequestOptions.circleCropTransform())
+                    else -> {
+                        if (placeHolderRes != -1)
+                            Glide.with(this).load(any).apply(RequestOptions.circleCropTransform())
+                                .diskCacheStrategy(
+                                    DiskCacheStrategy.RESOURCE
+                                ).into(this)
+                        else Glide.with(this).load(any).apply(RequestOptions.circleCropTransform())
                             .diskCacheStrategy(
                                 DiskCacheStrategy.RESOURCE
-                            ).into(this)
-                    else Glide.with(this).load(any).apply(RequestOptions.circleCropTransform())
-                        .diskCacheStrategy(
-                            DiskCacheStrategy.RESOURCE
-                        )
-                        .placeholder(placeHolderRes)
-                        .into(this)
+                            )
+                            .placeholder(placeHolderRes)
+                            .into(this)
+                    }
                 }
             }
-
 
         }
 
@@ -566,6 +600,9 @@ class CommonMethods {
         fun View.visible() {
             visibility = View.VISIBLE
         }
+        fun View.invisible() {
+            visibility = View.INVISIBLE
+        }
 
         fun TextView.strikeText() {
             paintFlags = paintFlags or Paint.STRIKE_THRU_TEXT_FLAG
@@ -732,7 +769,7 @@ class CommonMethods {
         val <T> T.commaFormatted: String
             get() = when (this) {
                 is Number -> this.commaFormatted
-                is String -> toFloat().commaFormatted
+                is String -> toDoubleOrNull().commaFormatted
                 is Char -> this.toString()
                 else -> "0"
             }
