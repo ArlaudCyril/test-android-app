@@ -547,4 +547,10 @@
     <string name="confirm_withdrawal">Confirm Withdrawal</string>
     <string name="save_settings">Save Settings</string>
     <string name="security_of_your_notebook">Security of your notebook</string>
+    <string name="active_during">Active during:</string>
+    <string name="the_address_book_limits_your_withdrawals_and_deposits_to_the_addresses_in_your_address_book">The address book limits your withdrawals and deposits to the addresses in your address book.</string>
+    <string name="you_can_immediately_withdraw_to_any_address_newly_added_to_your_address_book">You can immediately withdraw to any address newly added to your address book.</string>
+    <string name="a_delay_of_72_hours_will_be_required_before_you_can_withdraw_to_any_address_newly_added_to_your_address_book">A delay of 72 hours will be required before you can withdraw to any address newly added to your address book</string>
+    <string name="a_24h_delay_is_required_before_you_can_withdraw_to_any_address_newly_added_to_your_address_book">A 24h delay is required before you can withdraw to any address newly added to your address book.</string>
+    <string name="you_will_be_able_to_withdraw_immediately_to_any_address_newly_added_to_your_address_book_these_changes_will_take_effect_after_24_hours">You will be able to withdraw immediately to any address newly added to your address book. These changes will take effect after 24 hours.</string>
 </resources>

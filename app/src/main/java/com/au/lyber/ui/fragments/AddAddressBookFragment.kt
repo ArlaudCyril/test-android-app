@@ -20,6 +20,7 @@ import com.au.lyber.databinding.AppItemLayoutBinding
 import com.au.lyber.databinding.FragmentCryptoAddressBookBinding
 import com.au.lyber.databinding.ItemAddressesBinding
 import com.au.lyber.databinding.LoaderViewBinding
+import com.au.lyber.models.AssetBaseData
 import com.au.lyber.models.Whitelistings
 import com.au.lyber.models.WithdrawAddress
 import com.au.lyber.ui.activities.BaseActivity
@@ -45,7 +46,7 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
 
     private lateinit var viewModel: ProfileViewModel
     private lateinit var adapter: AddressesAdapter
-
+    private val completeList :MutableList<WithdrawAddress> = mutableListOf()
     private val keyword get() = binding.etSearch.text.trim().toString()
 
     override fun bind() = FragmentCryptoAddressBookBinding.inflate(layoutInflater)
@@ -69,6 +70,8 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
                 dismissProgressDialog()
                 adapter.removeProgress()
                 adapter.setList(it.data)
+                completeList.clear()
+                completeList.addAll(it.data)
                 binding.rvAddresses.startLayoutAnimation()
             }
         }
@@ -95,16 +98,38 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
             findNavController().navigate(R.id.enableWhiteListingFragment)
         }
 
-
-        binding.etSearch.addTextChangedListener(onTextChange)
-
         checkInternet(requireContext()) {
             viewModel.getWithdrawalAddresses()
         }
 
+        setSearchLogic()
+    }
+    private fun setSearchLogic() {
+        binding.etSearch.addTextChangedListener(object :TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                searchingInList(s.toString())
+            }
+
+        })
 
     }
-
+    private fun searchingInList(newText: String) {
+        val dummyList  :MutableList<WithdrawAddress> = mutableListOf()
+        for (ina in completeList){
+            if (ina.name.contains(newText,true) || ina.address.contains(newText,true)){
+                dummyList.add(ina)
+            }
+        }
+        adapter.setList(dummyList)
+    }
 
 
     private fun showInfo(data: WithdrawAddress) {
@@ -155,6 +180,11 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
             Constants.HOURS_72 -> "72H"
             Constants.HOURS_24 -> "24H"
             else -> "No Security"
+        }
+        binding.tvDurationText.text = when (App.prefsManager.withdrawalLockSecurity) {
+            Constants.HOURS_72 -> getString(R.string.active_during)
+            Constants.HOURS_24 -> getString(R.string.active_during)
+            else -> ""
         }
 
         super.onResume()

@@ -58,7 +58,7 @@
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="24dp"
                     android:background="@drawable/curved_button"
-                    android:backgroundTint="@color/purple_gray_100"
+                    android:backgroundTint="@color/purple_gray_50"
                     android:paddingHorizontal="12dp"
                     android:paddingVertical="16dp">
 
@@ -80,6 +80,7 @@
                             android:orientation="horizontal">
 
                             <TextView
+                                android:id="@+id/tvDurationText"
                                 style="@style/BodyMabry"
                                 android:gravity="center_vertical"
                                 android:text="@string/security"
@@ -157,7 +158,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/curved_button"
-            android:backgroundTint="@color/purple_gray_100"
+            android:backgroundTint="@color/purple_gray_50"
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingVertical="12dp">

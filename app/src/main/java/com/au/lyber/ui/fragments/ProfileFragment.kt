@@ -166,7 +166,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 //        binding.tvStatusStrongAuth.text =
 //            if (App.prefsManager.isStrongAuth()) "Enabled" else "Disabled"
 
-        binding.tvStatusAddressBook.visible()
+        binding.tvStatusAddressBook.gone()
         binding.tvStatusAddressBook.text = when (App.prefsManager.withdrawalLockSecurity) {
             Constants.HOURS_72 -> "72H"
             Constants.HOURS_24 -> "24H"
