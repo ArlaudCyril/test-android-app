@@ -225,7 +225,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
               Handler().postDelayed({
                   viewModel.getBalance()
-              },2000)
+              },4000)
 
             }
         }

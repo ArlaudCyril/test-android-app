@@ -109,29 +109,35 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
     private fun prepareView(data: DataQuote?) {
         binding.apply {
             tvNestedAmount.text = getString(R.string.ratio)
-            tvNestedAmountValue.text = "1 : " + data!!.ratio
-            val priceCoin = viewModel.exchangeAssetFrom!!.balanceData.euroBalance.toDouble()
+            var priceCoin = viewModel.exchangeAssetFrom!!.balanceData.euroBalance.toDouble()
                 .div(viewModel.exchangeAssetFrom!!.balanceData.balance.toDouble() ?: 1.0)
-            tvNestedAmountValue.text = "1:"+data!!.ratio
+            tvNestedAmountValue.text = "1 : "+data!!.ratio
             tvValueLyberFee.text =
                 data.fees.formattedAsset(
                     price = priceCoin,
                     rounding = RoundingMode.DOWN
                 ) + data.fromAsset.uppercase()
-            tvAmount.text =
-                "${data.toAmount.formattedAsset(
-                    price = priceCoin,
-                    rounding = RoundingMode.DOWN
-                ) } ${data.toAsset.uppercase()}"
+
             orderId = data.orderId
             tvExchangeFromValue.text =
                 "${data.fromAmount} ${data.fromAsset.uppercase()}"
+            val balanceFromPrice =  viewModel.exchangeAssetFromResume!!
+            val balanceToPrice =
+                viewModel.exchangeAssetTo!!.priceServiceResumeData.lastPrice
+            val valuesInEurosToAsset =
+                (if (data.fromAsset == viewModel.exchangeAssetTo!!.id) balanceToPrice else balanceFromPrice).toDouble()
+            priceCoin = valuesInEurosToAsset
+                .div(data.toAmount.toDouble())
             tvExchangeToValue.text =
                 "${data.toAmount.formattedAsset(
                     price = priceCoin,
                     rounding = RoundingMode.DOWN
                 )} ${data.toAsset.uppercase()}"
-
+            tvAmount.text =
+                "${data.toAmount.formattedAsset(
+                    price = priceCoin,
+                    rounding = RoundingMode.DOWN
+                ) } ${data.toAsset.uppercase()}"
             val valueTotal = data.fees.toDouble()+data.fromAmount.toDouble()
             tvValueTotal.text =
                 "${valueTotal.toString().formattedAsset(
