@@ -49,9 +49,13 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
         binding.ivTopAction.setOnClickListener(this)
         binding.btnConfirmInvestment.setOnClickListener(this)
         binding.allocationView.rvAllocation.isNestedScrollingEnabled = false
-        getData()
+
     }
 
+    override fun onResume() {
+        super.onResume()
+        getData()
+    }
 
 
     private fun getData() {
@@ -91,8 +95,6 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
                 ivTopAction -> requireActivity().onBackPressed()
                 btnConfirmInvestment -> {
                     viewModel.selectedAsset = CommonMethods.getAsset(viewModel.exchangeAssetTo!!.id)
-                    viewModel.selectedBalance =
-                        BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetTo!!.id }
                     val bundle = Bundle().apply {
                         putString(Constants.ORDER_ID,orderId)
                     }

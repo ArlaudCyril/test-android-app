@@ -367,8 +367,8 @@ open class NetworkViewModel : ViewModel() {
     ) {
         viewModelScope.launch(exceptionHandler) {
             val hashMap = hashMapOf<String, Any>()
-            hashMap["fromAsset"] = assetIdFrom.lowercase()
-            hashMap["toAsset"] = assetIdTo.lowercase()
+            hashMap["fromAsset"] = assetIdFrom.trim().lowercase()
+            hashMap["toAsset"] = assetIdTo.trim().lowercase()
             hashMap["fromAmount"] = exchangeFromAmount
             val res = RestClient.get().getQuote(hashMap)
             if (res.isSuccessful)

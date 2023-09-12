@@ -297,7 +297,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
     private fun setData() {
         binding.apply {
             includedMyAsset.let {
-                val balance = BaseActivity.balances.find { it1 -> it1.id == viewModel.selectedBalance!!.id }
+                val balance = BaseActivity.balances.find { it1 -> it1.id == viewModel.selectedAsset!!.id }
                 viewModel.selectedBalance = balance
                 val priceCoin =balance?.balanceData?.euroBalance?.toDouble()
                     ?.div(balance.balanceData.balance.toDouble() ?: 1.0)
