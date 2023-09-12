@@ -1,12 +1,17 @@
 package com.au.lyber.ui.fragments
 
 import android.annotation.SuppressLint
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
 import android.os.Bundle
 import android.text.Editable
 import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
+import androidx.core.content.ContextCompat.registerReceiver
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
@@ -63,7 +68,9 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        val filter = IntentFilter()
+        filter.addAction("AssestUpdateChanges")
+        requireActivity().registerReceiver(mBroadcastReceiver, filter)
         viewModel = CommonMethods.getViewModel(requireActivity())
         viewModel.listener = this
 
@@ -126,13 +133,16 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
 
 
         binding.etAmount.addTextChangedListener(textOnTextChange)
-
-    }
-
-    override fun onResume() {
-        super.onResume()
         prepareView()
+
     }
+    private val mBroadcastReceiver: BroadcastReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+            prepareView()
+
+        }
+    }
+
 
     @SuppressLint("SetTextI18n")
     private fun prepareView() {

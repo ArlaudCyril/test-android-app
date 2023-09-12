@@ -1,5 +1,6 @@
 package com.au.lyber.ui.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Lifecycle
@@ -96,7 +97,10 @@ class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnCli
         if (arguments!=null&& requireArguments().containsKey(Constants.TYPE)
             && requireArguments().getString(Constants.TYPE) == Constants.FROM_SWAP
         ) {
-            requireActivity().onBackPressed()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+            val intent1 =  Intent("AssestUpdateChanges")    //action: "msg"
+            requireActivity().sendBroadcast(intent1)
+
         } else {
             val bundle = Bundle()
             bundle.putString(Constants.TYPE, Constants.Exchange)

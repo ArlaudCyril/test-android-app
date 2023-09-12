@@ -209,7 +209,7 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
                 viewModel.exchangeAssetTo = asset
                 findNavController().navigate(R.id.addAmountForExchangeFragment)
             } else {
-                requireActivity().onBackPressed()
+                requireActivity().onBackPressedDispatcher.onBackPressed()
             }
         }
 
@@ -220,7 +220,7 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
     override fun onClick(v: View?) {
         binding.apply {
             when (v!!) {
-                ivTopAction -> requireActivity().onBackPressed()
+                ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
             }
         }
     }
