@@ -1,5 +1,6 @@
 package com.au.lyber.ui.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Lifecycle
@@ -38,19 +39,21 @@ class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnCli
                 CommonMethods.dismissProgressDialog()
                 val balanceDataDict = it.data
                 val balances = ArrayList<Balance>()
+                val balancesDummy = ArrayList<Balance>()
                 balanceDataDict.forEach { it1 ->
                     val balance = Balance(id = it1.key, balanceData = it1.value)
                     if (arguments != null && requireArguments().getString(Constants.TYPE)
                         == Constants.FROM_SWAP
                     ) {
-                        if (viewModel.exchangeAssetTo!!.id != balance.id){
+                        if (viewModel.exchangeAssetTo != balance.id){
                             balances.add(balance)
                         }
                     } else {
                         balances.add(balance)
                     }
+                    balancesDummy.add(balance)
                 }
-                BaseActivity.balances = balances
+                BaseActivity.balances = balancesDummy
                 adapter.setList(balances)
             }
         }
@@ -90,13 +93,11 @@ class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnCli
     }
 
     private fun itemClicked(myAsset: Balance) {
-        viewModel.exchangeAssetFromResume = (myAsset.balanceData.euroBalance.toDouble()/myAsset.balanceData.balance
-            .toDouble()).toString()
-        viewModel.exchangeAssetFrom = myAsset
+        viewModel.exchangeAssetFrom = myAsset.id
         if (arguments!=null&& requireArguments().containsKey(Constants.TYPE)
             && requireArguments().getString(Constants.TYPE) == Constants.FROM_SWAP
         ) {
-            requireActivity().onBackPressed()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         } else {
             val bundle = Bundle()
             bundle.putString(Constants.TYPE, Constants.Exchange)

@@ -53,10 +53,6 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                     .putExtra(Constants.DATA_SELECTED,binding.etAddress.text.toString())) }
         binding.ivTopAction.setOnClickListener { requireActivity().onBackPressed() }
 
-        binding.btnAddUseAddress.setOnClickListener {
-           // viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
-            //requireActivity().replaceFragment(R.id.flSplashActivity, AddAmountFragment())
-        }
         binding.ivCopy.setOnClickListener {
             if (binding.etAddress.text.toString().isNotEmpty()) {
                 val clipboard =
