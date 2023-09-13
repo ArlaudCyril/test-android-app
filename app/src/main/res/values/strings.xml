@@ -545,4 +545,12 @@
     <string name="unlimited_withdrawl">Unlimited withdrawal</string>
     <string name="withdraw_to">withdraw → To</string>
     <string name="confirm_withdrawal">Confirm Withdrawal</string>
+    <string name="assetpopup">AssetPopUp</string>
+    <string name="send_assets_to_your_bank_account">Send assets to your bank account</string>
+    <string name="trade_one_asset_for_another">Trade one asset for another</string>
+    <string name="deposit_">Deposit</string>
+    <string name="add_on_lyber">Add %1$s on Lyber</string>
+    <string name="add_money_on_lyber">Add money on Lyber</string>
+    <string name="sell_">Sell</string>
+    <string name="withdrawal_is_deactivated_on_this_asset">Withdrawal is deactivated on this asset</string>
 </resources>

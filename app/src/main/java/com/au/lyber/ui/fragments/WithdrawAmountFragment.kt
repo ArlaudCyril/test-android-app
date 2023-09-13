@@ -242,7 +242,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
         )
     } else {
         val balance =
-            BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.exchangeAssetTo!!.id } }
+            BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.exchangeAssetTo } }
         val priceCoin = balance!!.balanceData.euroBalance.toDouble()
             .div(balance.balanceData.balance.toDouble() ?: 1.0)
         binding.etAmount.setText(
