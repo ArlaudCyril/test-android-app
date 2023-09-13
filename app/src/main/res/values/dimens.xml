@@ -2,8 +2,8 @@
     <dimen name="app_bar_height">180dp</dimen>
     <dimen name="fab_margin">16dp</dimen>
     <dimen name="text_margin">16dp</dimen>
-    <dimen name="px_200">200dp</dimen>
-    <dimen name="px_300">300dp</dimen>
+    <dimen name="px_200">120dp</dimen>
+    <dimen name="px_300">120dp</dimen>
     <dimen name="sp_18">12sp</dimen>
     <array name="autosize_text">
         <item>38sp</item>

@@ -140,28 +140,16 @@ class PortfolioViewModel : NetworkViewModel() {
             _assetAmount = value
         }
 
-    private var _exchangeFromAmount: String = ""
-    var exchangeFromAmount
-        get() = _exchangeFromAmount
-        set(value) {
-            _exchangeFromAmount = value
-        }
 
-    private var _exchangeToAmount: String = ""
-    var exchangeToAmount
-        get() = _exchangeToAmount
-        set(value) {
-            _exchangeToAmount = value
-        }
 
-    private var _exchangeAssetFrom: Balance? = null
+    private var _exchangeAssetFrom: String? = null
     var exchangeAssetFrom
         get() = _exchangeAssetFrom
         set(value) {
             _exchangeAssetFrom = value
         }
 
-    private var _exchangeAssetTo: PriceServiceResume? = null
+    private var _exchangeAssetTo: String? = null
     var exchangeAssetTo
         get() = _exchangeAssetTo
         set(value) {
@@ -169,12 +157,6 @@ class PortfolioViewModel : NetworkViewModel() {
         }
 
 
-    private var _exchangeAssetFromResume: String? = null
-    var exchangeAssetFromResume
-        get() = _exchangeAssetFromResume
-        set(value) {
-            _exchangeAssetFromResume = value
-        }
 
     var allMyPortfolio: String = ""
 

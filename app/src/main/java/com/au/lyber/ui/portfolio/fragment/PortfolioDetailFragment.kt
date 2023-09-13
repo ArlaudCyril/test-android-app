@@ -25,6 +25,7 @@ import com.airbnb.lottie.LottieAnimationView
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentPortfolioDetailBinding
 import com.au.lyber.databinding.LottieViewBinding
+import com.au.lyber.models.Balance
 import com.au.lyber.models.Duration
 import com.au.lyber.ui.activities.BaseActivity
 import com.au.lyber.ui.activities.SplashActivity
@@ -53,6 +54,7 @@ import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
 import com.au.lyber.utils.ItemOffsetDecoration
 import com.github.jinatonic.confetti.CommonConfetti
+import com.github.jinatonic.confetti.ConfettiManager
 import com.google.android.material.tabs.TabLayout
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -69,7 +71,9 @@ import java.util.TimerTask
 
 class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
     View.OnClickListener, PortfolioThreeDotsDismissListener {
+    private var confetti: ConfettiManager?=null
     private var dialog: Dialog? = null
+
     /* adapters */
     private lateinit var adapterBalance: BalanceAdapter
     private lateinit var resourcesAdapter: ResourcesAdapter
@@ -120,14 +124,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 it.addItemDecoration(ItemOffsetDecoration(8))
             }
 
-            includedMyAsset.let {
-
-                val priceCoin = viewModel.selectedBalance?.balanceData?.euroBalance?.toDouble()
-                    ?.div(viewModel.selectedBalance?.balanceData?.balance?.toDouble() ?: 1.0)
-                it.tvAssetAmount.text = viewModel.selectedBalance?.balanceData?.euroBalance?.currencyFormatted
-                it.tvAssetAmountInCrypto.text =
-                    viewModel.selectedBalance?.balanceData?.balance?.formattedAsset(price = priceCoin, rounding = RoundingMode.DOWN)
-            }
+           setData()
 
             viewModel.selectedAsset?.id?.let { viewModel.getAssetDetail(it) }
 
@@ -143,15 +140,15 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             tvAssetName.text = "${viewModel.selectedAsset?.fullName}"
             tvAssetName.typeface = context?.resources?.getFont(R.font.mabry_pro_medium)
 
-            val request = Request.Builder().url(Constants.SOCKET_BASE_URL
-                    + "${viewModel.selectedAsset?.id}eur").build()
+            val request = Request.Builder().url(
+                Constants.SOCKET_BASE_URL
+                        + "${viewModel.selectedAsset?.id}eur"
+            ).build()
             webSocket = client.newWebSocket(request, PortfolioDetailWebSocketListener())
         }
 
         /* setting up tabs */
         binding.tabLayout.let {
-
-//            it.addTab(it.newTab().apply { text = "1H" })
 
             it.addTab(it.newTab().apply { text = "1H" })
             it.addTab(it.newTab().apply { text = "4H" })
@@ -159,7 +156,6 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             it.addTab(it.newTab().apply { text = "1W" })
             it.addTab(it.newTab().apply { text = "1M" })
             it.addTab(it.newTab().apply { text = "1Y" })
-//            it.addTab(it.newTab().apply { text = "All" })
 
             it.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
@@ -200,13 +196,12 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         addObservers()
 
         CommonMethods.checkInternet(requireContext()) {
-            if (arguments!=null && requireArguments().containsKey(Constants.ORDER_ID)){
-                showLottieProgressDialog(requireActivity(),Constants.LOADING)
-                viewModel.confirmOrder(requireArguments().getString(Constants.ORDER_ID,""))
-            }else {
+
+            if (arguments != null && requireArguments().containsKey(Constants.ORDER_ID)) {
+                showLottieProgressDialog(requireActivity(), Constants.LOADING)
+            } else {
                 CommonMethods.showProgressDialog(requireActivity())
             }
-
             viewModel.getPrice(viewModel.selectedAsset?.id ?: "btc")
             viewModel.getNews(viewModel.selectedAsset?.id ?: "btc")
         }
@@ -217,23 +212,41 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         val array = IntArray(2)
         array[0] = R.color.purple_400
         array[1] = R.color.white_transparent
-        val confetti = CommonConfetti.rainingConfetti(binding.root, array)
+        confetti = CommonConfetti.rainingConfetti(binding.root, array)
             .infinite()
-        confetti.setAccelerationY(500f)
-        confetti.setEmissionRate(500f)
-        confetti.setVelocityY(500f)
+        confetti!!.setAccelerationY(500f)
+        confetti!!.setEmissionRate(500f)
+        confetti!!.setVelocityY(500f)
             .animate()
     }
+
     private fun addObservers() {
         viewModel.exchangeResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+              Handler().postDelayed({
+                  viewModel.getBalance()
+              },4000)
+
+            }
+        }
+        viewModel.balanceResponse.observe(viewLifecycleOwner){
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                val balanceDataDict = it.data
+                val balances = ArrayList<Balance>()
+                balanceDataDict.forEach {
+                    val balance = Balance(id = it.key, balanceData = it.value)
+                    balances.add(balance)
+                }
+                BaseActivity.balances = balances
                 loadAnimation()
                 showLottieProgressDialog(requireActivity(), Constants.LOADING_SUCCESS)
                 Handler().postDelayed({
                     dismissProgressDialog()
-
+                    if (confetti!=null){
+                        confetti!!.terminate()
+                    }
+                        setData()
                 }, 2000)
-
             }
         }
         viewModel.newsResponse.observe(viewLifecycleOwner) {
@@ -254,22 +267,49 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 binding.lineChart.timeSeries =
                     it.data.prices.toTimeSeries(it.data.lastUpdate, timeFrame)
 
-                binding.tvValuePortfolioAndAssetPrice.text = "${it.data.prices.last().currencyFormatted}"
+                binding.tvValuePortfolioAndAssetPrice.text =
+                    "${it.data.prices.last().currencyFormatted}"
 
                 this.setTimer("1h")// le code ne s'exécute pas
+
+                if (arguments != null && requireArguments().containsKey(Constants.ORDER_ID)) {
+                    viewModel.confirmOrder(requireArguments().getString(Constants.ORDER_ID, ""))
+                }
             }
         }
 
         viewModel.getAssetDetail.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                viewModel.selectedAsset?.imageUrl?.let { it1 -> binding.includedMyAsset.ivAssetIcon.loadCircleCrop(it1) }
+                viewModel.selectedAsset?.imageUrl?.let { it1 ->
+                    binding.includedMyAsset.ivAssetIcon.loadCircleCrop(
+                        it1
+                    )
+                }
                 viewModel.selectedAssetDetail = it.data
                 binding.includedMyAsset.tvAssetName.text = viewModel.selectedAssetDetail?.fullName
                 binding.tvValueAbout.text = viewModel.selectedAssetDetail?.about?.en
                 //
-               }
+            }
         }
 
+    }
+
+    private fun setData() {
+        binding.apply {
+            includedMyAsset.let {
+                val balance = BaseActivity.balances.find { it1 -> it1.id == viewModel.selectedAsset!!.id }
+                viewModel.selectedBalance = balance
+                val priceCoin =balance?.balanceData?.euroBalance?.toDouble()
+                    ?.div(balance.balanceData.balance.toDouble() ?: 1.0)
+                it.tvAssetAmount.text =
+                    balance?.balanceData?.euroBalance?.currencyFormatted
+                it.tvAssetAmountInCrypto.text =
+                    balance?.balanceData?.balance?.formattedAsset(
+                        price = priceCoin,
+                        rounding = RoundingMode.DOWN
+                    )
+            }
+        }
     }
 
     private fun List<String>.toTimeSeries(
@@ -292,7 +332,10 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         return timeSeries
     }
 
-    private fun getLineData(value: Double, straightLine: Boolean = false): MutableList<List<Double>> {
+    private fun getLineData(
+        value: Double,
+        straightLine: Boolean = false
+    ): MutableList<List<Double>> {
         val list = mutableListOf<List<Double>>()
         if (!straightLine) list.add(listOf(System.currentTimeMillis().toDouble(), 0.0))
         for (i in 0..8) list.add(listOf(System.currentTimeMillis().toDouble(), value))
@@ -331,24 +374,20 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
             "deposit" -> {
 
-               // if (viewModel.screenCount > 0) {
-                    val bundle = Bundle().apply {
-                        putString(Constants.DATA_SELECTED,viewModel.selectedAsset!!.id)
-                    }
-                    findNavController().navigate(R.id.chooseAssetForDepositFragment,bundle)
-              /*  }
-                else findNavController().navigate(R.id.selectAssestForDepositFragment)
-*/
+                val bundle = Bundle().apply {
+                    putString(Constants.DATA_SELECTED, viewModel.selectedAsset!!.id)
+                }
+                findNavController().navigate(R.id.chooseAssetForDepositFragment, bundle)
             }
 
             "exchange" -> {
                 if (CommonMethods.getBalance(viewModel.selectedAsset!!.id) != null) {
                     viewModel.selectedOption = Constants.USING_EXCHANGE
                     val bundle = Bundle()
-                    viewModel.exchangeAssetFrom = viewModel.selectedBalance
+                    viewModel.exchangeAssetFrom = viewModel.selectedBalance!!.id
                     bundle.putString(Constants.TYPE, Constants.Exchange)
                     findNavController().navigate(R.id.allAssetFragment, bundle)
-                }else{
+                } else {
                     getString(R.string.you_don_t_have_balance_to_exchange).showToast(requireActivity())
                 }
             }
@@ -386,7 +425,12 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                         "PortfolioThreeDots"
                     )
                     grayOverlay = View(requireContext())
-                    grayOverlay?.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.semi_transparent_dark))
+                    grayOverlay?.setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.semi_transparent_dark
+                        )
+                    )
                     grayOverlay?.alpha = 1.0f
                     screenContent.addView(grayOverlay)
                 }
@@ -395,7 +439,8 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
                 tvAssetName -> {
                     requireActivity().replaceFragment(
-                        R.id.flSplashActivity, SearchAssetsFragment(), topBottom = true)
+                        R.id.flSplashActivity, SearchAssetsFragment(), topBottom = true
+                    )
 
 
                 }
@@ -413,17 +458,17 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
 
     //MARK:- Web Socket Listener
-    private inner class PortfolioDetailWebSocketListener: WebSocketListener() {
+    private inner class PortfolioDetailWebSocketListener : WebSocketListener() {
         override fun onOpen(webSocket: WebSocket, response: Response) {
             super.onOpen(webSocket, response)
             socketOpen = true
         }
 
         override fun onMessage(webSocket: WebSocket, text: String) {
-            if(!socketOpen) return
+            if (!socketOpen) return
             requireActivity().runOnUiThread {
                 val jsonObject = JSONObject(text)
-                if(lifecycle.currentState == Lifecycle.State.RESUMED) {
+                if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                     val price = jsonObject.getString("Price")
                     binding.tvValuePortfolioAndAssetPrice.text = price.currencyFormatted
                     binding.lineChart.updateValueLastPoint(price.toFloat())
@@ -436,6 +481,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             socketOpen = false
         }
     }
+
     //MARK: - Timer
     private fun setTimer(timeFrame: String) {
         var interval = 0.0
@@ -449,6 +495,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 }.time
                 interval = 60.0
             }
+
             "4h" -> {
                 // Every 5 minutes
                 date = Calendar.getInstance().apply {
@@ -457,6 +504,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 }.time
                 interval = 60.0 * 5.0
             }
+
             "1d" -> {
                 // Every 30 minutes
                 date = Calendar.getInstance().apply {
@@ -465,6 +513,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 }.time
                 interval = 60.0 * 30.0
             }
+
             "1w" -> {
                 // Every 4 hours
                 date = Calendar.getInstance().apply {
@@ -473,6 +522,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 }.time
                 interval = 60.0 * 60.0 * 4.0
             }
+
             "1m" -> {
                 // Every 12 hours
                 date = Calendar.getInstance().apply {
@@ -481,6 +531,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 }.time
                 interval = 60.0 * 60.0 * 12.0
             }
+
             "1y" -> {
                 // Every 7 days
                 date = Calendar.getInstance().apply {
@@ -489,6 +540,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 }.time
                 interval = 60.0 * 60.0 * 24.0 * 7.0
             }
+
             else -> {
                 println("timeFrame not recognized")
             }
@@ -497,9 +549,9 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         timer = Timer()
         timer.schedule(object : TimerTask() {
             override fun run() {
-               requireActivity().runOnUiThread() {
-                   binding.lineChart.addPoint()
-               }
+                requireActivity().runOnUiThread() {
+                    binding.lineChart.addPoint()
+                }
             }
         }, date, (interval * 1000).toLong())
 
@@ -508,6 +560,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
     private fun stopTimer() {
         timer.cancel()
     }
+
     private fun showLottieProgressDialog(context: Context, typeOfLoader: Int) {
 
         if (dialog == null) {
@@ -517,8 +570,8 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             dialog!!.window!!.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
             dialog!!.window!!.setDimAmount(0.2F)
             dialog!!.setCancelable(false)
-            val height =resources.getDimension(R.dimen.px_200)
-            val width =resources.getDimension(R.dimen.px_300)
+            val height = resources.getDimension(R.dimen.px_200)
+            val width = resources.getDimension(R.dimen.px_300)
             dialog!!.setContentView(LottieViewBinding.inflate(LayoutInflater.from(context)).root)
             dialog!!.getWindow()!!.setLayout(width.toInt(), height.toInt());
         }
@@ -558,6 +611,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         }
 
     }
+
     override fun onRetrofitError(responseBody: ResponseBody?) {
         super.onRetrofitError(responseBody)
         if (dialog != null) {
@@ -567,6 +621,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             }, 1000)
         }
     }
+
     fun dismissProgressDialog() {
         dialog?.let {
             try {
@@ -578,6 +633,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             dialog = null
         }
     }
+
     override fun onPortfolioThreeDotsDismissed() {
         // Code to remove the overlay view from the parent fragment's layout
         binding.screenContent.removeView(grayOverlay)
