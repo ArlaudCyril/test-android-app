@@ -39,6 +39,7 @@ class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnCli
                 CommonMethods.dismissProgressDialog()
                 val balanceDataDict = it.data
                 val balances = ArrayList<Balance>()
+                val balancesDummy = ArrayList<Balance>()
                 balanceDataDict.forEach { it1 ->
                     val balance = Balance(id = it1.key, balanceData = it1.value)
                     if (arguments != null && requireArguments().getString(Constants.TYPE)
@@ -50,8 +51,9 @@ class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnCli
                     } else {
                         balances.add(balance)
                     }
+                    balancesDummy.add(balance)
                 }
-                BaseActivity.balances = balances
+                BaseActivity.balances = balancesDummy
                 adapter.setList(balances)
             }
         }
