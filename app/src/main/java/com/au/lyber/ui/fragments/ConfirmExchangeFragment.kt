@@ -92,9 +92,9 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
     override fun onClick(v: View?) {
         binding.apply {
             when (v!!) {
-                ivTopAction -> requireActivity().onBackPressed()
+                ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
                 btnConfirmInvestment -> {
-                    viewModel.selectedAsset = CommonMethods.getAsset(viewModel.exchangeAssetTo!!.id)
+                    viewModel.selectedAsset = CommonMethods.getAsset(viewModel.exchangeAssetTo!!)
                     val bundle = Bundle().apply {
                         putString(Constants.ORDER_ID,orderId)
                     }
@@ -109,8 +109,9 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
     private fun prepareView(data: DataQuote?) {
         binding.apply {
             tvNestedAmount.text = getString(R.string.ratio)
-            var priceCoin = viewModel.exchangeAssetFrom!!.balanceData.euroBalance.toDouble()
-                .div(viewModel.exchangeAssetFrom!!.balanceData.balance.toDouble() ?: 1.0)
+            val balance =BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
+            var priceCoin =balance!!.balanceData.euroBalance.toDouble()
+                .div(balance.balanceData.balance.toDouble())
             tvNestedAmountValue.text = "1 : "+data!!.ratio
             tvValueLyberFee.text =
                 data.fees.formattedAsset(
@@ -121,11 +122,12 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
             orderId = data.orderId
             tvExchangeFromValue.text =
                 "${data.fromAmount} ${data.fromAsset.uppercase()}"
-            val balanceFromPrice =  viewModel.exchangeAssetFromResume!!
-            val balanceToPrice =
-                viewModel.exchangeAssetTo!!.priceServiceResumeData.lastPrice
+            val balanceFrom =BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetFrom}
+            val balanceTo =BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetTo}
+            val balanceFromPrice = balanceFrom!!.priceServiceResumeData.lastPrice
+            val balanceToPrice = balanceTo!!.priceServiceResumeData.lastPrice
             val valuesInEurosToAsset =
-                (if (data.fromAsset == viewModel.exchangeAssetTo!!.id) balanceToPrice else balanceFromPrice).toDouble()
+                (if (data.fromAsset == viewModel.exchangeAssetTo!!) balanceToPrice else balanceFromPrice).toDouble()
             priceCoin = valuesInEurosToAsset
                 .div(data.toAmount.toDouble())
             tvExchangeToValue.text =

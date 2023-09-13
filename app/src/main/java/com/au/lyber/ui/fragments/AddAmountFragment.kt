@@ -187,9 +187,11 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                     llSwapLayout.visible()
 
                     viewModel.exchangeAssetFrom?.let {
+/*
 
                         mCurrency = it.id.uppercase()
                         tvTitle.text = "Exchange ${it.id.uppercase()}"
+*/
 
                        /* tvSubTitle.text = "${
                             it.total_balance.toString().roundFloat().commaFormatted
@@ -197,7 +199,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
                        //  ivAssetSwapFrom.loadCircleCrop(it.imageUrl?:"")
 
-                        tvSwapAssetFrom.text = it.id.uppercase()
+                      //  tvSwapAssetFrom.text = it.id.uppercase()
 
                         //maxValue = it.total_balance TODO
                     }
@@ -206,10 +208,10 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
                         /*tvAssetConversion.text =
                             it.euro_amount.toString().roundFloat().commaFormatted TODO*/
-                        mConversionCurrency = it.id.uppercase()
+                     //   mConversionCurrency = it.id.uppercase()
 
                         // ivAssetSwapTo.loadCircleCrop(it.imageUrl?:"")
-                        tvSwapAssetTo.text = it.id.uppercase()
+                      //  tvSwapAssetTo.text = it.id.uppercase()
                     }
 
                     /*valueConversion = viewModel.exchangeAssetTo?.euro_amount.toString()
@@ -404,12 +406,12 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                             }
 
                             Constants.USING_EXCHANGE -> {
-                                viewModel.amount = if (mCurrency == focusedData.currency) {
-                                    viewModel.exchangeFromAmount =
+                                /*    viewModel.amount = if (mCurrency == focusedData.currency) {
+                                 *//*   viewModel.exchangeFromAmount =
                                         amount.split(focusedData.currency)[0].pointFormat
                                     viewModel.exchangeToAmount =
                                         assetConversion.split(mConversionCurrency)[0].pointFormat
-                                    amount.split(focusedData.currency)[0].pointFormat
+                                    amount.split(focusedData.currency)[0].pointFormat*//*
                                 } else {
                                     viewModel.exchangeFromAmount =
                                         assetConversion.split(mCurrency)[0].pointFormat
@@ -417,8 +419,8 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                                         amount.split(mConversionCurrency)[0].pointFormat
                                     assetConversion.split(mCurrency)[0].pointFormat
                                 }
+                            }*/
                             }
-
                             Constants.USING_WITHDRAW -> {
 
                                 if (viewModel.allMyPortfolio.isNotEmpty()) {
@@ -734,11 +736,11 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
                   // binding.ivAssetSwapFrom.loadCircleCrop(to.imageUrl ?: "")
 
-                    binding.tvSwapAssetFrom.text = to.id.uppercase()
+                    //binding.tvSwapAssetFrom.text = to.id.uppercase()
 
                    // binding.ivAssetSwapTo.loadCircleCrop(from.imageUrl ?: "")
 
-                    binding.tvSwapAssetTo.text = from.id.uppercase()
+                  //  binding.tvSwapAssetTo.text = from.id.uppercase()
 
 
                 }
@@ -779,11 +781,11 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
                      //binding.ivAssetSwapFrom.loadCircleCrop(from.imageUrl ?: "")
 
-                    binding.tvSwapAssetFrom.text = from.id.uppercase()
+                  //  binding.tvSwapAssetFrom.text = from.id.uppercase()
 
                      //binding.ivAssetSwapTo.loadCircleCrop(to.imageUrl ?: "")
 
-                    binding.tvSwapAssetTo.text = to.id.uppercase()
+                  //  binding.tvSwapAssetTo.text = to.id.uppercase()
 
                 }
             }

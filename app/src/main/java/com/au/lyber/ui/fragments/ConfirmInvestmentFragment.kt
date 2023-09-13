@@ -69,8 +69,8 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
                 findNavController().navigate(R.id.portfolioDetailFragment)
-                viewModel.selectedAsset = CommonMethods.getAsset(viewModel.exchangeAssetTo!!.id)
-                viewModel.selectedBalance = BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetTo!!.id }
+                //viewModel.selectedAsset = CommonMethods.getAsset(viewModel.exchangeAssetTo!!.id)
+               // viewModel.selectedBalance = BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetTo!!.id }
             // ConfirmationBottomSheet().show(childFragmentManager, "")
             }
         }
@@ -115,12 +115,12 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                         Constants.USING_EXCHANGE -> {
                             checkInternet(requireContext()) {
                                 showProgressDialog(requireContext())
-                                viewModel.exchange(
+                               /* viewModel.exchange(
                                     viewModel.exchangeAssetFrom?.id ?: "",
                                     viewModel.exchangeAssetTo?.id ?: "",
                                     viewModel.exchangeFromAmount,
                                     viewModel.exchangeToAmount
-                                )
+                                )*/
                             }
                         }
 
@@ -269,21 +269,21 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                         tvValueDepositFee
                     ).gone()
 
-                    tvAmount.text =
+                  /*  tvAmount.text =
                         "${viewModel.assetAmount.commaFormatted} ${viewModel.exchangeAssetTo?.id?.uppercase()}"
-
+*/
                  /*   tvNestedAmount.text =
                         "${viewModel.exchangeAssetFrom?.fullName?.capitalize()} Price"*/
                     /*tvNestedAmountValue.text =
                         "${viewModel.exchangeAssetFrom?.euro_amount.commaFormatted} ${Constants.EURO}"
                     TODO */
-                    tvExchangeFromValue.text =
+                   /* tvExchangeFromValue.text =
                         "${viewModel.amount.commaFormatted} ${viewModel.exchangeAssetFrom?.id?.uppercase()}"
                     tvExchangeToValue.text =
                         "${viewModel.assetAmount.commaFormatted} ${viewModel.exchangeAssetTo?.id?.uppercase()}"
 
-
-                    tvValueTotal.text = "${viewModel.assetAmount.commaFormatted} ${viewModel.exchangeAssetTo?.id?.uppercase()}"
+*/
+                  //  tvValueTotal.text = "${viewModel.assetAmount.commaFormatted} ${viewModel.exchangeAssetTo?.id?.uppercase()}"
 
                     btnConfirmInvestment.text = getString(R.string.confirm_exchange)
                     title.text = getString(R.string.confirm_exchange)

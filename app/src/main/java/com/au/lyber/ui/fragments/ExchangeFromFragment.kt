@@ -44,7 +44,7 @@ class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnCli
                     if (arguments != null && requireArguments().getString(Constants.TYPE)
                         == Constants.FROM_SWAP
                     ) {
-                        if (viewModel.exchangeAssetTo!!.id != balance.id){
+                        if (viewModel.exchangeAssetTo != balance.id){
                             balances.add(balance)
                         }
                     } else {
@@ -91,16 +91,11 @@ class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnCli
     }
 
     private fun itemClicked(myAsset: Balance) {
-        viewModel.exchangeAssetFromResume = (myAsset.balanceData.euroBalance.toDouble()/myAsset.balanceData.balance
-            .toDouble()).toString()
-        viewModel.exchangeAssetFrom = myAsset
+        viewModel.exchangeAssetFrom = myAsset.id
         if (arguments!=null&& requireArguments().containsKey(Constants.TYPE)
             && requireArguments().getString(Constants.TYPE) == Constants.FROM_SWAP
         ) {
             requireActivity().onBackPressedDispatcher.onBackPressed()
-            val intent1 =  Intent("AssestUpdateChanges")    //action: "msg"
-            requireActivity().sendBroadcast(intent1)
-
         } else {
             val bundle = Bundle()
             bundle.putString(Constants.TYPE, Constants.Exchange)

@@ -384,7 +384,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 if (CommonMethods.getBalance(viewModel.selectedAsset!!.id) != null) {
                     viewModel.selectedOption = Constants.USING_EXCHANGE
                     val bundle = Bundle()
-                    viewModel.exchangeAssetFrom = viewModel.selectedBalance
+                    viewModel.exchangeAssetFrom = viewModel.selectedBalance!!.id
                     bundle.putString(Constants.TYPE, Constants.Exchange)
                     findNavController().navigate(R.id.allAssetFragment, bundle)
                 } else {
