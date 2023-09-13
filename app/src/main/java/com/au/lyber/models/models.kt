@@ -509,8 +509,8 @@ data class NetworkDeposit(
     val imageUrl: String,
     val isUIActive: Boolean,
     val binanceId: String,
-    val withdrawMin: Float,
-    val withdrawFee: Float,
+    val withdrawMin: String,
+    val withdrawFee: String,
     val isDepositActive: Boolean,
     val isWithdrawalActive: Boolean
 )
