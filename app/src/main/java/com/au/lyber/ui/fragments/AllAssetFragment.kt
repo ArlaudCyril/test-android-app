@@ -10,6 +10,7 @@ import com.au.lyber.R
 import com.au.lyber.databinding.FragmentAllAssetsBinding
 import com.au.lyber.models.Data
 import com.au.lyber.models.PriceServiceResume
+import com.au.lyber.ui.activities.BaseActivity
 import com.au.lyber.ui.adapters.AllAssetAdapter
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.dismissProgressDialog
@@ -64,12 +65,12 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
                 topLosers.clear()
                 topGainers.clear()
                 stables.clear()
-
+                BaseActivity.balanceResume.clear()
+                BaseActivity.balanceResume.addAll(it)
                 assets.addAll(it)
                 if (type == Constants.Exchange){
                     for (asset in it){
-                        if (asset.id == viewModel.exchangeAssetFrom!!.id){
-                            viewModel.exchangeAssetFromResume = asset.priceServiceResumeData.lastPrice
+                        if (asset.id == viewModel.exchangeAssetFrom){
                             assets.remove(asset)
                         }
                     }
@@ -206,10 +207,10 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
             it.screenCount = 1
             viewModel.selectedAsset = it.selectedAsset
             if (type == Constants.Exchange) {
-                viewModel.exchangeAssetTo = asset
+                viewModel.exchangeAssetTo = asset.id
                 findNavController().navigate(R.id.addAmountForExchangeFragment)
             } else {
-                requireActivity().onBackPressed()
+                requireActivity().onBackPressedDispatcher.onBackPressed()
             }
         }
 
@@ -220,7 +221,7 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
     override fun onClick(v: View?) {
         binding.apply {
             when (v!!) {
-                ivTopAction -> requireActivity().onBackPressed()
+                ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
             }
         }
     }

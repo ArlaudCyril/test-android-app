@@ -246,7 +246,12 @@
     <fragment
         android:id="@+id/addAmountForExchangeFragment"
         android:name="com.au.lyber.ui.fragments.AddAmountForExchangeFragment"
-        android:label="AddAmountForExchangeFragment" />
+        android:label="AddAmountForExchangeFragment" >
+        <action
+            android:id="@+id/action_confirmExchangeFragment_to_confirm_fragment"
+            app:destination="@id/confirmExchangeFragment"
+            />
+    </fragment>
     <fragment
         android:id="@+id/confirmExchangeFragment"
         android:name="com.au.lyber.ui.fragments.ConfirmExchangeFragment"

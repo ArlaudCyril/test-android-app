@@ -352,8 +352,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             }
 
             "deposit" -> {
-
-                navController.navigate(R.id.selectAssestForDepositFragment)
+            navController.navigate(R.id.selectAssestForDepositFragment)
             }
 
             "exchange" -> {
