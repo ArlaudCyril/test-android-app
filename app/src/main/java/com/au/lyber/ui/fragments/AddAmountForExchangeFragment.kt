@@ -1,9 +1,6 @@
 package com.au.lyber.ui.fragments
 
 import android.annotation.SuppressLint
-import android.content.BroadcastReceiver
-import android.content.Context
-import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
 import android.text.Editable
@@ -321,8 +318,6 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
     @SuppressLint("SetTextI18n")
     private fun backspace() {
         try {
-
-//            val selection = binding.etAmount.selectionEnd - 1
             val builder = StringBuilder()
 
             val value =

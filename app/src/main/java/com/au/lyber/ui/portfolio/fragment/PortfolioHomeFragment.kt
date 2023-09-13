@@ -353,10 +353,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             }
 
             "deposit" -> {
-
-                //if (viewModel.screenCount > 0)
             navController.navigate(R.id.selectAssestForDepositFragment)
-              //  else navController.navigate(R.id.depositFiatWalletFragment)
             }
 
             "exchange" -> {

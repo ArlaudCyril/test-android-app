@@ -1,26 +1,15 @@
 package com.au.lyber.ui.fragments
 
 import android.annotation.SuppressLint
-import android.app.Dialog
-import android.content.Context
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
-import android.view.Window
-import android.view.WindowManager
-import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
-import com.airbnb.lottie.LottieAnimationView
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentConfirmInvestmentBinding
-import com.au.lyber.databinding.LottieViewBinding
 import com.au.lyber.models.DataQuote
 import com.au.lyber.network.RestClient
 import com.au.lyber.ui.activities.BaseActivity
@@ -29,11 +18,9 @@ import com.au.lyber.utils.CommonMethods
 import com.au.lyber.utils.CommonMethods.Companion.formattedAsset
 import com.au.lyber.utils.CommonMethods.Companion.gone
 import com.au.lyber.utils.CommonMethods.Companion.visible
-import java.math.RoundingMode
 import com.au.lyber.utils.Constants
-import com.github.jinatonic.confetti.CommonConfetti
 import com.google.gson.Gson
-import okhttp3.ResponseBody
+import java.math.RoundingMode
 
 
 class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>(),
