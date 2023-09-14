@@ -86,7 +86,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         CommonMethods.showProgressDialog(requireActivity())
         isOtpScreen = false
         viewModel.createWithdrawalRequest(viewModel.selectedAssetDetail!!.id
-            ,valueTotal.toString(),viewModel.withdrawAddress!!.address,viewModel.selectedNetworkDeposit!!.id)
+            ,valueTotal,viewModel.withdrawAddress!!.address,viewModel.selectedNetworkDeposit!!.id)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -96,7 +96,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
             CommonMethods.showProgressDialog(requireActivity())
             val map = HashMap<Any?,Any?>()
             map["asset"] = viewModel.selectedAssetDetail!!.id
-            map["amount"] = valueTotal.toString()
+            map["amount"] = valueTotal
             map["destination"] = viewModel.withdrawAddress!!.address
             map["network"] = viewModel.selectedNetworkDeposit!!.id
             val jso = JSONObject(map)
@@ -107,7 +107,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
             CommonMethods.showProgressDialog(requireActivity())
             isOtpScreen = false
             viewModel.createWithdrawalRequest(viewModel.selectedAssetDetail!!.id
-            ,valueTotal.toString(),viewModel.withdrawAddress!!.address,viewModel.selectedNetworkDeposit!!.id)
+            ,valueTotal,viewModel.withdrawAddress!!.address,viewModel.selectedNetworkDeposit!!.id)
         }
     }
 

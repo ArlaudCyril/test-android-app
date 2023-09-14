@@ -553,4 +553,5 @@
     <string name="add_money_on_lyber">Add money on Lyber</string>
     <string name="sell_">Sell</string>
     <string name="withdrawal_is_deactivated_on_this_asset">Withdrawal is deactivated on this asset</string>
+    <string name="select_address">Please select address</string>
 </resources>

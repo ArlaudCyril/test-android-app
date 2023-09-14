@@ -933,7 +933,7 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun createWithdrawalRequest(assetId: String,amount: String,destination: String,network: String){
+    fun createWithdrawalRequest(assetId: String,amount: Double,destination: String,network: String){
         viewModelScope.launch(exceptionHandler){
             val map = HashMap<String,Any>()
             map["asset"] = assetId
