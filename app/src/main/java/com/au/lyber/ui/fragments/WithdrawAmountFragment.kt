@@ -71,24 +71,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
             val valueAmount =
                 if (amount.contains(mCurrency)) amount.replace(mCurrency,"").pointFormat.toDouble()
                 else amount.replace(mConversionCurrency,"").pointFormat.toDouble()
-            if (focusedData.currency.contains(mCurrency)){
-                val valueAmountNew =
-                    if (assetConversion.contains(mCurrency)) assetConversion.replace(mCurrency,"")
-                        .replace("~","").pointFormat.toDouble()
-                    else assetConversion.replace(mConversionCurrency,"")
-                        .replace("~","").pointFormat.toDouble()
-                if (valueAmountNew > minAmount.toDouble()) {
-                    activateButton(true)
-                }else{
-                    activateButton(false)
-                }
-            }else{
-                if (valueAmount > minAmount.toDouble()) {
-                    activateButton(true)
-                }else{
-                    activateButton(false)
-                }
-            }
+
 
             when {
 
@@ -110,6 +93,24 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                     viewModel.assetAmount = "0"
 
                     setAssesstAmount("0")
+                }
+            }
+            if (focusedData.currency.contains(mCurrency)){
+                val valueAmountNew =
+                    if (assetConversion.contains(mCurrency)) assetConversion.replace(mCurrency,"")
+                        .replace("~","").pointFormat.toDouble()
+                    else assetConversion.replace(mConversionCurrency,"")
+                        .replace("~","").pointFormat.toDouble()
+                if (valueAmountNew >= minAmount.toDouble()) {
+                    activateButton(true)
+                }else{
+                    activateButton(false)
+                }
+            }else{
+                if (valueAmount >= minAmount.toDouble()) {
+                    activateButton(true)
+                }else{
+                    activateButton(false)
                 }
             }
 
@@ -187,11 +188,11 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                     BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
                 val priceCoin = balance!!.balanceData.euroBalance.toDouble()
                     .div(balance.balanceData.balance.toDouble())
-                "${getString(R.string.fees)} ${it!!.withdrawFee} ${it.id.uppercase()}".also {
+                "${getString(R.string.fees)} ${it!!.withdrawFee} ${balance.id.uppercase()}".also {
                     tvAssetFees.text = it
                 }
                 minAmount = it.withdrawMin.toString().formattedAsset(priceCoin, RoundingMode.DOWN)
-                (getString(R.string.minimum_withdrawl) + ": " + minAmount + " " + it.id.uppercase()).also {
+                (getString(R.string.minimum_withdrawl) + ": " + minAmount + " " + balance.id.uppercase()).also {
                     tvMinAmount.text = it
                 }
             }
@@ -341,23 +342,25 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
     @SuppressLint("SetTextI18n")
     private fun swapConversion() {
         if (focusedData.currency.contains(mCurrency)) {
+            val currency = focusedData.currency
+            focusedData.currency = unfocusedData.currency
+            unfocusedData.currency = currency
             val valueOne = amount.replace(mCurrency,"").pointFormat.decimalPoint()
             val valueTwo = assetConversion.replace(mConversionCurrency,"")
                 .replace("~","").pointFormat.decimalPoint()
             binding.etAmount.text = ("${valueTwo}$mConversionCurrency")
+
+            setAssesstAmount(valueOne.toString())
+        } else {
             val currency = focusedData.currency
             focusedData.currency = unfocusedData.currency
             unfocusedData.currency = currency
-            setAssesstAmount(valueOne.toString())
-        } else {
             val valueOne = amount.replace(mCurrency,"").pointFormat.decimalPoint()
             val valueTwo = assetConversion.replace(mConversionCurrency,"")
                 .replace("~","").pointFormat.decimalPoint()
 
             binding.etAmount.text = ("${valueTwo}$mCurrency")
-            val currency = focusedData.currency
-            focusedData.currency = unfocusedData.currency
-            unfocusedData.currency = currency
+
             setAssesstAmount(valueOne.toString())
         }
 
