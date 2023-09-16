@@ -553,4 +553,13 @@
     <string name="a_delay_of_72_hours_will_be_required_before_you_can_withdraw_to_any_address_newly_added_to_your_address_book">A delay of 72 hours will be required before you can withdraw to any address newly added to your address book</string>
     <string name="a_24h_delay_is_required_before_you_can_withdraw_to_any_address_newly_added_to_your_address_book">A 24h delay is required before you can withdraw to any address newly added to your address book.</string>
     <string name="you_will_be_able_to_withdraw_immediately_to_any_address_newly_added_to_your_address_book_these_changes_will_take_effect_after_24_hours">You will be able to withdraw immediately to any address newly added to your address book. These changes will take effect after 24 hours.</string>
+    <string name="assetpopup">AssetPopUp</string>
+    <string name="send_assets_to_your_bank_account">Send assets to your bank account</string>
+    <string name="trade_one_asset_for_another">Trade one asset for another</string>
+    <string name="deposit_">Deposit</string>
+    <string name="add_on_lyber">Add %1$s on Lyber</string>
+    <string name="add_money_on_lyber">Add money on Lyber</string>
+    <string name="sell_">Sell</string>
+    <string name="withdrawal_is_deactivated_on_this_asset">Withdrawal is deactivated on this asset</string>
+    <string name="select_address">Please select address</string>
 </resources>

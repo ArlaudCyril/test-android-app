@@ -51,7 +51,7 @@ class WithdrawalAddressBottomSheet (private val handle: (WithdrawAddress?, Strin
         }
         binding.includeAddCryptoAddress.let {
             it.ivEndIcon.setImageResource(R.drawable.ic_right_arrow_grey)
-            it.ivItem.setImageResource(R.drawable.ic_add_btc_address)
+            it.ivItem.setImageResource(R.drawable.addaddressicon)
             it.tvStartTitle.text = getString(R.string.add_an_address)
             it.tvStartSubTitle.text = getString(R.string.unlimited_withdrawl)
         }

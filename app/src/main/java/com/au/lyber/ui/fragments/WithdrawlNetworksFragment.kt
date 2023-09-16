@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentListingBinding
 import com.au.lyber.databinding.ItemMyAssetBinding
+import com.au.lyber.databinding.ItemNetworkBinding
 import com.au.lyber.models.NetworkDeposit
 import com.au.lyber.ui.adapters.BaseAdapter
 import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
@@ -37,6 +38,9 @@ class WithdrawlNetworksFragment : BaseFragment<FragmentListingBinding>() {
         binding.rvAddAsset.let {
             it.adapter = adapter
             it.layoutManager = layoutManager
+        }
+        binding.ivTopAction.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
         CommonMethods.checkInternet(requireActivity()) {
             CommonMethods.showProgressDialog(requireActivity())
@@ -70,7 +74,7 @@ class WithdrawlNetworksFragment : BaseFragment<FragmentListingBinding>() {
             return itemList.size
         }
 
-        inner class NetworkHolder(val binding: ItemMyAssetBinding) :
+        inner class NetworkHolder(val binding: ItemNetworkBinding) :
             RecyclerView.ViewHolder(binding.root) {
             init {
                 binding.root.setOnClickListener {
@@ -81,7 +85,7 @@ class WithdrawlNetworksFragment : BaseFragment<FragmentListingBinding>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             return NetworkHolder(
-                ItemMyAssetBinding.inflate(
+                ItemNetworkBinding.inflate(
                     LayoutInflater.from(parent.context), parent, false
                 )
             )
@@ -97,9 +101,6 @@ class WithdrawlNetworksFragment : BaseFragment<FragmentListingBinding>() {
                 }else{
                     tvAssetNameCode.visible()
                 }
-                ivDropIcon.rotation = -90f
-                tvAssetAmount.gone()
-                tvAssetAmountInCrypto.gone()
             }
         }
     }

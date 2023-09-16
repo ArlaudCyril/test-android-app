@@ -86,7 +86,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         CommonMethods.showProgressDialog(requireActivity())
         isOtpScreen = false
         viewModel.createWithdrawalRequest(viewModel.selectedAssetDetail!!.id
-            ,valueTotal.toString(),viewModel.withdrawAddress!!.address,viewModel.selectedNetworkDeposit!!.id)
+            ,valueTotal,viewModel.withdrawAddress!!.address,viewModel.selectedNetworkDeposit!!.id)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -96,7 +96,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
             CommonMethods.showProgressDialog(requireActivity())
             val map = HashMap<Any?,Any?>()
             map["asset"] = viewModel.selectedAssetDetail!!.id
-            map["amount"] = valueTotal.toString()
+            map["amount"] = valueTotal
             map["destination"] = viewModel.withdrawAddress!!.address
             map["network"] = viewModel.selectedNetworkDeposit!!.id
             val jso = JSONObject(map)
@@ -107,7 +107,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
             CommonMethods.showProgressDialog(requireActivity())
             isOtpScreen = false
             viewModel.createWithdrawalRequest(viewModel.selectedAssetDetail!!.id
-            ,valueTotal.toString(),viewModel.withdrawAddress!!.address,viewModel.selectedNetworkDeposit!!.id)
+            ,valueTotal,viewModel.withdrawAddress!!.address,viewModel.selectedNetworkDeposit!!.id)
         }
     }
 
@@ -141,17 +141,18 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         }
         binding.apply {
             tvNestedAmount.text = getString(R.string.amount)
-            tvNestedAmountValue.text = requireArguments().getString(Constants.EURO)
+
             viewModel.selectedAssetDetail.let {
                 val balance =
                     BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
                 val priceCoin = balance!!.balanceData.euroBalance.toDouble()
                     .div(balance.balanceData.balance.toDouble() ?: 1.0)
+                tvNestedAmountValue.text = requireArguments().getString(Constants.EURO)+" "+it!!.id.uppercase()
                 tvValueLyberFee.text =
                     viewModel.selectedNetworkDeposit!!.withdrawFee.toString().formattedAsset(
                         price = priceCoin,
                         rounding = RoundingMode.DOWN
-                    ) + it!!.id.uppercase()
+                    ) + " "+it!!.id.uppercase()
                 tvAmount.text =
                     "${balance.balanceData.balance.formattedAsset(
                         price = priceCoin,
@@ -159,10 +160,11 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                     ) } ${it.id.uppercase()}"
 
                 tvExchangeFrom.text = getString(R.string.address)
-                tvExchangeFromValue.text = viewModel.withdrawAddress!!.address.substring(0,5)+"...."+
-                        viewModel.withdrawAddress!!.address.last()
+                tvExchangeFromValue.text = viewModel.withdrawAddress!!.address.substring(0,7)+"...."+
+                        viewModel.withdrawAddress!!.address.substring(viewModel.withdrawAddress!!.address
+                            .length-4)
                 tvExchangeTo.text = getString(R.string.network)
-                tvExchangeToValue.text = viewModel.withdrawAddress!!.network.uppercase()
+                tvExchangeToValue.text = viewModel.selectedNetworkDeposit!!.fullName
                  valueTotal = viewModel.selectedNetworkDeposit!!.withdrawFee.toDouble()+
                         requireArguments().getString(Constants.EURO,"")
                             .replace(it.id.uppercase(),"").toDouble()

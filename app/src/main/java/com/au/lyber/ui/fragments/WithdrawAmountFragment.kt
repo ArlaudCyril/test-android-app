@@ -3,6 +3,7 @@ package com.au.lyber.ui.fragments
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.text.Editable
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
@@ -27,7 +28,7 @@ import java.math.RoundingMode
 class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), View.OnClickListener {
     override fun bind() = FragmentWithdrawAmountBinding.inflate(layoutInflater)
     private var valueConversion: Double = 1.0
-    private var minAmount: Double = 0.0
+    private var minAmount: String = "0.0"
     private val assetConversion get() = binding.tvAssetConversion.text.trim().toString()
     private var maxValue: Double = 0.0
     private lateinit var viewModel: PortfolioViewModel
@@ -68,39 +69,21 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
 
 
             val valueAmount =
-                if (amount.contains(focusedData.currency)) amount.split(focusedData.currency)[0].pointFormat.toDouble()
-                else amount.split(unfocusedData.currency)[0].pointFormat.toDouble()
+                if (amount.contains(mCurrency)) amount.replace(mCurrency,"").pointFormat.toDouble()
+                else amount.replace(mConversionCurrency,"").pointFormat.toDouble()
 
-            if (valueAmount > minAmount) {
-                activateButton(true)
-            }
+
             when {
 
                 valueAmount > 0 -> {
-
-                    when (focusedData.currency) {
-
-                        mCurrency -> {
-
-                            val assetAmount = (valueAmount * valueConversion).toString()
-                            viewModel.assetAmount = assetAmount
-
-                            binding.tvAssetConversion.text =
-                                "${assetAmount.decimalPoint().commaFormatted}$mConversionCurrency"
-
-
-                        }
-
-                        else -> {
-
-                            val convertedValue = valueAmount / valueConversion
-                            binding.tvAssetConversion.text = "${
-                                convertedValue.toString().decimalPoint().commaFormatted
-                            }$mCurrency"
-                        }
-
+                    if (focusedData.currency.contains(mCurrency)){
+                        val assetAmount = (valueAmount * valueConversion).toString()
+                        viewModel.assetAmount = assetAmount
+                        setAssesstAmount(assetAmount)
+                    }else{
+                        val convertedValue = valueAmount / valueConversion
+                        setAssesstAmount(convertedValue.toString())
                     }
-
                 }
 
                 else -> {
@@ -109,9 +92,25 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
 
                     viewModel.assetAmount = "0"
 
-                    binding.tvAssetConversion.text =
-                        if (focusedData.currency == mCurrency) "${"0".commaFormatted}$mConversionCurrency"
-                        else "${"0".commaFormatted}$mCurrency"
+                    setAssesstAmount("0")
+                }
+            }
+            if (focusedData.currency.contains(mCurrency)){
+                val valueAmountNew =
+                    if (assetConversion.contains(mCurrency)) assetConversion.replace(mCurrency,"")
+                        .replace("~","").pointFormat.toDouble()
+                    else assetConversion.replace(mConversionCurrency,"")
+                        .replace("~","").pointFormat.toDouble()
+                if (valueAmountNew >= minAmount.toDouble()) {
+                    activateButton(true)
+                }else{
+                    activateButton(false)
+                }
+            }else{
+                if (valueAmount >= minAmount.toDouble()) {
+                    activateButton(true)
+                }else{
+                    activateButton(false)
                 }
             }
 
@@ -122,6 +121,26 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
         }
     }
 
+    private fun setAssesstAmount(assetAmount: String) {
+        val valueAmount =
+            if (amount.contains(mCurrency)) amount.replace(mCurrency,"").pointFormat.toDouble()
+            else amount.replace(mConversionCurrency,"").pointFormat.toDouble()
+
+        if (focusedData.currency.contains(mCurrency)) {
+            val priceCoin = valueAmount.toDouble()
+                .div(assetAmount.toDouble())
+            binding.tvAssetConversion.text =
+                "~${assetAmount.formattedAsset(priceCoin,RoundingMode.DOWN)} $mConversionCurrency"
+        }else{
+            val priceCoin = assetAmount.toDouble()
+                .div(valueAmount.toDouble())
+            binding.tvAssetConversion.text =
+                "~${assetAmount.formattedAsset(priceCoin,RoundingMode.DOWN)} $mCurrency"
+        }
+
+
+    }
+
     fun activateButton(activate: Boolean) {
         binding.btnPreviewInvestment.background = ContextCompat.getDrawable(
             requireContext(),
@@ -130,6 +149,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
     }
 
     private fun prepareView() {
+        viewModel.withdrawAddress = null
         binding.apply {
             listOf(
                 tvTitle,
@@ -139,15 +159,16 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                 ivMax,
                 ivRepeat
             ).visible()
-            includedAsset.ivAssetIcon.setImageResource(R.drawable.ic_add_btc_address)
+            binding.etAmount.text = "0 €"
+            includedAsset.ivAssetIcon.setImageResource(R.drawable.addaddressicon)
             includedAsset.tvAssetName.text = getString(R.string.add_an_address)
             includedAsset.tvAssetNameCode.text = getString(R.string.unlimited_withdrawl)
             includedAsset.tvAssetNameCode.visible()
             viewModel.selectedAssetDetail.let {
                 mCurrency = Constants.EURO
                 mConversionCurrency = it!!.id.uppercase()
-                focusedData.currency = mCurrency
-                unfocusedData.currency = mConversionCurrency
+                focusedData.currency = " " + mCurrency
+                unfocusedData.currency = " " + mConversionCurrency
 
                 "${getString(R.string.withdraw)} ${it.id.uppercase()}".also { tvTitle.text = it }
                 val balance =
@@ -158,20 +179,20 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                 "${
                     balance.balanceData.balance.formattedAsset(priceCoin, RoundingMode.DOWN)
                 } ${it.id.uppercase()} Available".also { tvSubTitle.text = it }
-                valueConversion = (balance.balanceData.balance.toDouble() / balance.balanceData.euroBalance.toDouble())
-                ("0.0 " + it.id.uppercase()).also { tvAssetConversion.text = it }
+                valueConversion =
+                    (balance.balanceData.balance.toDouble() / balance.balanceData.euroBalance.toDouble())
+                setAssesstAmount("0.0")
             }
             viewModel.selectedNetworkDeposit.let {
                 val balance =
                     BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
                 val priceCoin = balance!!.balanceData.euroBalance.toDouble()
                     .div(balance.balanceData.balance.toDouble())
-                "${getString(R.string.fees)} ${it!!.withdrawFee} ${it.id.uppercase()}".also {
+                "${getString(R.string.fees)} ${it!!.withdrawFee} ${balance.id.uppercase()}".also {
                     tvAssetFees.text = it
                 }
                 minAmount = it.withdrawMin.toString().formattedAsset(priceCoin, RoundingMode.DOWN)
-                    .toDouble()
-                (getString(R.string.minimum_withdrawl) + ": " + minAmount + " " + it.id.uppercase()).also {
+                (getString(R.string.minimum_withdrawl) + ": " + minAmount + " " + balance.id.uppercase()).also {
                     tvMinAmount.text = it
                 }
             }
@@ -196,21 +217,25 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                 tvZero -> type('0')
                 ivMax -> setMaxValue()
                 ivRepeat -> swapConversion()
-                btnAddFrequency->openAddressSheet()
-                btnPreviewInvestment->{
-                   val amountFinal = if (focusedData.currency == mCurrency){
-                        assetConversion
-                    }else{
-                        amount
+                btnAddFrequency -> openAddressSheet()
+                btnPreviewInvestment -> {
+                    val amountFinal = if (focusedData.currency.contains(mCurrency)) {
+                        assetConversion.replace(mConversionCurrency,"").replace("~","")
+                    } else {
+                        amount.replace(mConversionCurrency,"")
                     }
                     if (maxValue >= amountFinal.toDouble()) {
-                        val bundle = Bundle().apply {
-                            putString(Constants.EURO, amountFinal)
+                        if (viewModel.withdrawAddress!=null) {
+                            val bundle = Bundle().apply {
+                                putString(Constants.EURO, amountFinal)
+                            }
+                            findNavController().navigate(
+                                R.id.confirmWithdrawalFragment, bundle
+                            )
+                        }else{
+                            getString(R.string.select_address).showToast(requireActivity())
                         }
-                        findNavController().navigate(
-                            R.id.confirmWithdrawalFragment, bundle
-                        )
-                    }else{
+                    } else {
                         getString(R.string.insufficient_balance).showToast(requireActivity())
                     }
                 }
@@ -227,63 +252,57 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
             viewModel.withdrawAddress = withdrawAddress
             tvAssetName.text = withdrawAddress!!.name
             tvAssetNameCode.text = withdrawAddress.address
-            val assest = BaseActivity.assets.firstNotNullOfOrNull{ item -> item.takeIf {item.id == withdrawAddress.network}}
+            val assest =
+                BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == withdrawAddress.network } }
             ivAssetIcon.load(assest!!.imageUrl)
         }
     }
 
-    private fun setMaxValue() = if (amount.contains(focusedData.currency)) {
+    private fun setMaxValue() {
         val balance =
             BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
-        val priceCoin = balance!!.balanceData.euroBalance.toDouble()
-            .div(balance.balanceData.balance.toDouble() ?: 1.0)
-        binding.etAmount.setText(
-            maxValue.toString().formattedAsset(priceCoin, RoundingMode.DOWN) + focusedData.currency
-        )
-    } else {
-        val balance =
-            BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.exchangeAssetTo!!.id } }
-        val priceCoin = balance!!.balanceData.euroBalance.toDouble()
-            .div(balance.balanceData.balance.toDouble() ?: 1.0)
-        binding.etAmount.setText(
-            "${
-                maxValue.toString().formattedAsset(priceCoin, RoundingMode.DOWN)
-            }${unfocusedData.currency}"
-        )
+
+        if (focusedData.currency.contains(mCurrency)) {
+            val maxinEuro = maxValue/valueConversion
+            val priceCoin = balance!!.balanceData.euroBalance.toDouble()
+                .div(maxinEuro)
+            binding.etAmount.setText(
+                maxinEuro.toString()
+                    .formattedAsset(priceCoin, RoundingMode.DOWN) + mCurrency
+            )
+        } else {
+            val priceCoin = balance!!.balanceData.euroBalance.toDouble()
+                .div(balance.balanceData.balance.toDouble())
+            binding.etAmount.setText(
+                "${
+                    maxValue.toString().formattedAsset(priceCoin, RoundingMode.DOWN)
+                }${mConversionCurrency}"
+            )
+        }
     }
 
     @SuppressLint("SetTextI18n")
     private fun backspace() {
         try {
-
             val builder = StringBuilder()
 
             val value =
-                if (amount.contains(focusedData.currency)) amount.split(focusedData.currency)[0].pointFormat
-                else amount.split(unfocusedData.currency)[0].pointFormat
+                if (amount.contains(mCurrency)) amount.replace(mCurrency,"").pointFormat
+                else amount.replace(mConversionCurrency,"").pointFormat
+
             builder.append(value.dropLast(1))
+            if (builder.toString().isEmpty()) {
+                builder.append("0")
+            }
 
-            if (amount.contains(focusedData.currency)) builder.append(focusedData.currency)
-            else builder.append(unfocusedData.currency)
+            if (amount.contains(mCurrency)) builder.append(mCurrency)
+            else builder.append(mConversionCurrency)
 
-            binding.etAmount.setText(builder.toString())
+            binding.etAmount.text = builder.toString()
 
-/*
-            when {
-
-                value.toDouble() > 9 -> {
-
-                    return
-                }
-
-                else -> {
-                    if (amount.contains(focusedData.currency)) binding.etAmount.setText("0${focusedData.currency}")
-                    else binding.etAmount.setText("0${unfocusedData.currency}")
-                }
-            }*/
 
         } catch (e: Exception) {
-            e.printStackTrace()
+            Log.d(TAG, "backspace: ${e.message}\n${e.localizedMessage}")
         }
     }
 
@@ -292,13 +311,11 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
 
 
         binding.apply {
-
             when {
-
                 amount.length == (focusedData.currency.length + 1) && amount[0] == '0' -> {
                     if (char == '.') {
-                        if (!amount.contains('.')) etAmount.setText(("0$char${focusedData.currency}"))
-                    } else etAmount.setText((char +""+ focusedData.currency))
+                        if (!amount.contains('.')) etAmount.text = ("0$char${focusedData.currency}")
+                    } else etAmount.text = (char + focusedData.currency)
                 }
 
                 else -> {
@@ -306,17 +323,13 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                     val string = amount.substring(0, amount.count() - focusedData.currency.length)
 
                     if (string.contains('.')) {
-                        if (char != '.') etAmount.setText("$string$char${focusedData.currency}")
+                        if (char != '.') etAmount.text = "$string$char${focusedData.currency}"
                     } else {
-                        if (char == '.') etAmount.setText(
-                            ("${
-                                string.pointFormat.toDouble().toInt().commaFormatted
-                            }.${focusedData.currency}")
-                        )
-                        else etAmount.setText(
-                            ((string.pointFormat.toDouble().toInt()
-                                .toString() + char).commaFormatted + ""+focusedData.currency)
-                        )
+                        if (char == '.') etAmount.text = ("${
+                            string.pointFormat.toDouble().toInt().commaFormatted
+                        }.${focusedData.currency}")
+                        else etAmount.text = ((string.pointFormat.toDouble().toInt()
+                            .toString() + char).commaFormatted + focusedData.currency)
                     }
                 }
 
@@ -328,23 +341,35 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
 
     @SuppressLint("SetTextI18n")
     private fun swapConversion() {
-        if (focusedData.currency == mCurrency){
-            val valueOne = amount.split(mCurrency)[0].pointFormat.decimalPoint()
-            val valueTwo = assetConversion.split(mConversionCurrency)[0].pointFormat.decimalPoint()
-            binding.etAmount.setText(("${valueTwo.commaFormatted}$mConversionCurrency"))
-            binding.tvAssetConversion.text = ("${valueOne.commaFormatted}$mCurrency")
-        }else{
-            val valueOne = amount.split(mConversionCurrency)[0].pointFormat.decimalPoint()
-            val valueTwo = assetConversion.split(mCurrency)[0].pointFormat.decimalPoint()
-            binding.etAmount.setText(("${valueTwo.commaFormatted}$mCurrency"))
-            binding.tvAssetConversion.text = ("${valueOne.commaFormatted}$mConversionCurrency")
+        if (focusedData.currency.contains(mCurrency)) {
+            val currency = focusedData.currency
+            focusedData.currency = unfocusedData.currency
+            unfocusedData.currency = currency
+            val valueOne = amount.replace(mCurrency,"").pointFormat.decimalPoint()
+            val valueTwo = assetConversion.replace(mConversionCurrency,"")
+                .replace("~","").pointFormat.decimalPoint()
+            binding.etAmount.text = ("${valueTwo}$mConversionCurrency")
+
+            setAssesstAmount(valueOne.toString())
+        } else {
+            val currency = focusedData.currency
+            focusedData.currency = unfocusedData.currency
+            unfocusedData.currency = currency
+            val valueOne = amount.replace(mCurrency,"").pointFormat.decimalPoint()
+            val valueTwo = assetConversion.replace(mConversionCurrency,"")
+                .replace("~","").pointFormat.decimalPoint()
+
+            binding.etAmount.text = ("${valueTwo}$mCurrency")
+
+            setAssesstAmount(valueOne.toString())
         }
-        val currency = focusedData.currency
-        focusedData.currency = unfocusedData.currency
-        unfocusedData.currency = currency
 
 
 
+    }
+
+    companion object {
+        private const val TAG = "WithdrawAmountFragment"
     }
 
     private val String.pointFormat

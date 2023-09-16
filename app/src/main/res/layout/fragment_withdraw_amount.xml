@@ -45,30 +45,29 @@
         tools:text="@string/btc_eth_sol_avax_5_other_assets" />
 
 
-    <EditText
-        android:id="@+id/etAmount"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@android:color/transparent"
-        android:clickable="false"
-        android:cursorVisible="true"
-        android:focusable="false"
-        android:focusableInTouchMode="false"
-        android:focusedByDefault="false"
-        android:fontFamily="@font/mabry_pro_bold"
-        android:gravity="center"
-        android:text="0€"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline3"
-        android:textColor="@color/purple_500"
-        android:textStyle="bold"
+    <TextView
         app:layout_constraintBottom_toTopOf="@id/tvAssetConversion"
         app:layout_constraintTop_toBottomOf="@id/ivTopAction"
-        app:layout_constraintVertical_chainStyle="packed" />
+        app:layout_constraintVertical_chainStyle="packed"
+        android:id="@+id/etAmount"
+        android:textStyle="bold"
+        android:textColor="@color/purple_500"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:fontFamily="@font/mabry_pro_bold"
+        android:layout_height="60dp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeMaxTextSize="60sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        android:maxLines="1"
+        />
 
     <TextView
         android:id="@+id/tvAssetConversion"
         style="@style/SubheadMabry"
         android:text="0.0BTC"
+        android:layout_marginTop="8dp"
         android:textColor="@color/purple_gray_500"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@id/tvAssetFees"
@@ -81,6 +80,7 @@
         android:id="@+id/tvAssetFees"
         style="@style/SubheadMabry"
         android:text="0.0BTC"
+        android:layout_marginTop="16dp"
         android:textColor="@color/purple_gray_500"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@id/btnAddFrequency"
@@ -91,9 +91,9 @@
     <TextView
         android:id="@+id/tvMinAmount"
         style="@style/SubheadMabry"
-        android:layout_marginHorizontal="36dp"
+        android:layout_marginHorizontal="28dp"
         android:text="0.0BTC"
-        android:layout_marginBottom="16dp"
+        android:layout_marginBottom="12dp"
         android:textColor="@color/purple_gray_500"
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@id/btnAddFrequency"
@@ -112,7 +112,7 @@
         android:gravity="center"
         android:src="@drawable/ic_max"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/etAmount"
+        app:layout_constraintBottom_toBottomOf="@+id/tvAssetConversion"
         app:layout_constraintStart_toStartOf="parent" />
 
     <ImageView
@@ -126,7 +126,7 @@
         android:padding="8dp"
         android:src="@drawable/ic_repeat"
         android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="@+id/etAmount"
+        app:layout_constraintBottom_toBottomOf="@+id/tvAssetConversion"
         app:layout_constraintEnd_toEndOf="parent" />
 
 
