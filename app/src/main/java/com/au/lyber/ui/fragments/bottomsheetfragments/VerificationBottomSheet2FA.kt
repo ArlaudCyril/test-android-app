@@ -49,7 +49,7 @@ class VerificationBottomSheet2FA (private val handle: () -> Unit = { }):
 
             title.text = getString(R.string.verification)
 
-            subtitle.text = getString(R.string.enter_the_code_displayed_on_your_sms)
+            subtitle.text = getString(R.string.enter_the_code_displayed_on_your_email)
 
             fieldToVerify.text = ""
             btnCancel.text = getString(R.string.cancel)

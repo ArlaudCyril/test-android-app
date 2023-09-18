@@ -2,8 +2,10 @@ package com.au.lyber.ui.fragments
 
 import android.os.Build
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.RelativeLayout
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
@@ -32,6 +34,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
     private lateinit var viewModel: PortfolioViewModel
     private  var valueTotal : Double =0.0
     private var isOtpScreen = false
+
     override fun bind() = FragmentConfirmInvestmentBinding.inflate(layoutInflater)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -91,7 +94,8 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun confirmButtonClick() {
-        val isScope2FA = App.prefsManager.user!!.scope2FA.contains("withdrawal")
+        //openOtpScreen()
+      val isScope2FA = App.prefsManager.user!!.scope2FA.contains("withdrawal")
         if (isScope2FA){
             CommonMethods.showProgressDialog(requireActivity())
             val map = HashMap<Any?,Any?>()
