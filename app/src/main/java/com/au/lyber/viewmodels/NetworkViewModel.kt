@@ -972,7 +972,7 @@ open class NetworkViewModel : ViewModel() {
 
     fun createWithdrawalRequest(
         assetId: String,
-        amount: String,
+        amount: Double,
         destination: String,
         network: String
     ) {
