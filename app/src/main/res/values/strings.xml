@@ -144,6 +144,7 @@
     <string name="withdraw">Withdraw</string>
     <string name="your_assets_to_your_bank_account">Your assets to your bank account</string>
     <string name="exchange">Exchange</string>
+    <string name="exchange_platform">Exchange Platform</string>
     <string name="trade_one_asset_against_another">Trade one asset against another</string>
     <string name="personal_data">Personal data</string>
     <string name="personal_data_subtitle">For legal reasons, we need you to answer some questions and provide us with personal information.</string>
@@ -292,7 +293,7 @@
     <string name="choose_network">Choose network</string>
     <string name="add_a_address">Add a %1$s address</string>
     <string name="add_an_address">Add address</string>
-    <string name="wallet">WALLET</string>
+    <string name="wallet">Wallet</string>
     <string name="please_enter_address_name">Please enter address name</string>
     <string name="please_select_a_network">Please select a network</string>
     <string name="please_enter_address">Please enter %1$s address</string>
@@ -562,4 +563,5 @@
     <string name="sell_">Sell</string>
     <string name="withdrawal_is_deactivated_on_this_asset">Withdrawal is deactivated on this asset</string>
     <string name="select_address">Please select address</string>
+    <string name="no_security">No Security</string>
 </resources>

@@ -179,12 +179,12 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
         binding.tvDuration.text = when (App.prefsManager.withdrawalLockSecurity) {
             Constants.HOURS_72 -> "72H"
             Constants.HOURS_24 -> "24H"
-            else -> "No Security"
+            else -> ""
         }
         binding.tvDurationText.text = when (App.prefsManager.withdrawalLockSecurity) {
             Constants.HOURS_72 -> getString(R.string.active_during)
             Constants.HOURS_24 -> getString(R.string.active_during)
-            else -> ""
+            else ->  getString(R.string.no_security)
         }
 
         super.onResume()

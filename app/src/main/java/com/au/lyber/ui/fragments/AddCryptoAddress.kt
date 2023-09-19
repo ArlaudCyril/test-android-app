@@ -46,25 +46,18 @@ import com.au.lyber.viewmodels.ProfileViewModel
 class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.OnClickListener {
 
     private lateinit var viewModel: ProfileViewModel
-
-    private var fromWithdraw: Boolean = false
     private var toEdit: Boolean = false
-
     private var originSelectedPosition = 0
-
-
+    private var networkId:String = ""
+    private var isFromWithdraw = false
     /* network popup */
     private var network: Network? = null
     private lateinit var networkAdapter: NetworkPopupAdapter
     private lateinit var networkPopup: ListPopupWindow
-
     private val origin get() = if (originSelectedPosition == 0) "EXCHANGE" else "WALLET"
-
     private val addressName: String get() = binding.etAddressName.text.trim().toString()
     private val address: String
         get() = binding.etAddress.text?.trim().toString()
-
-    //private lateinit var infoBottomSheet: AddAddressInfoBottomSheet
 
     override fun bind() = FragmentAddBitcoinAddressBinding.inflate(layoutInflater)
 
@@ -72,7 +65,6 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
         super.onCreate(savedInstanceState)
         requireActivity().registerReceiver(broadcastReceiver, IntentFilter(Constants.SCAN_COMPLETE))
         arguments?.let {
-            fromWithdraw = it.getBoolean(FROM_WITHDRAW, false)
             toEdit = it.getBoolean(TO_EDIT, false)
         }
     }
@@ -91,17 +83,21 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
         //infoBottomSheet = AddAddressInfoBottomSheet(false,requireActivity(), ::infoBottomSheetCallback)
         viewModel = getViewModel(requireActivity())
         viewModel.listener = this
-
+        if (arguments!=null){
+            arguments.let {
+                if (requireArguments().containsKey(Constants.ID)) {
+                    networkId = requireArguments().getString(Constants.ID)!!
+                    isFromWithdraw = requireArguments().getBoolean(Constants.ACTION_WITHDRAW)
+                }
+            }
+        }
 
         /*  changing ui according to view cases */
-        if (fromWithdraw) {
-            binding.btnAddUseAddress.text = getString(R.string.add_and_use_this_address)
-            binding.etNetwork.updatePadding(0)
-        } else {
+
             binding.tvTitle.text = getString(R.string.add_a_crypto_address)
             binding.ivNetwork.gone()
             binding.etNetwork.hint = getString(R.string.choose_network)
-        }
+
 
 
         /* observers */
@@ -136,9 +132,24 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                     networkPopup.show()
                 } else networkAdapter.setData(it.data)
 
+
                 if (network!=null){
                     for (data in it.data){
                         if (data.id == network!!.id){
+                            network = data
+                            binding.tvTitle.fadeIn()
+                            binding.ivNetwork.visible()
+                            binding.etNetwork.updatePadding(0)
+                            binding.etNetwork.setText(data.fullName + " (" + data.id.uppercase() + ")")
+
+                            binding.ivNetwork.loadCircleCrop(data.imageUrl)
+                            break
+                        }
+                    }
+                }
+                if (isFromWithdraw){
+                    for (data in it.data){
+                        if (data.id == networkId){
                             network = data
                             binding.tvTitle.fadeIn()
                             binding.ivNetwork.visible()
@@ -452,7 +463,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                 }
 
                 etNetwork -> {
-                    if (!toEdit) {
+                    if (!toEdit && !isFromWithdraw) {
                         if (networkAdapter.hasNoData()) {
                             networkAdapter.addProgress()
                         }

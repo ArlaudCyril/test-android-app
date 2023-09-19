@@ -5,6 +5,7 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.au.lyber.R
@@ -15,8 +16,9 @@ import com.au.lyber.models.WithdrawAddress
 import com.au.lyber.ui.activities.BaseActivity
 import com.au.lyber.ui.adapters.BaseAdapter
 import com.au.lyber.utils.CommonMethods.Companion.loadCircleCrop
+import com.au.lyber.utils.Constants
 
-class WithdrawalAddressBottomSheet (private val addresses: MutableList<WithdrawAddress>,private val handle: (WithdrawAddress?, String?) -> Unit = { _, _ -> }
+class WithdrawalAddressBottomSheet (private val addresses: MutableList<WithdrawAddress>,private val selectedNetwork:String,private val handle: (WithdrawAddress?, String?) -> Unit = { _, _ -> }
 ) : BaseBottomSheet<BottomsheetWithdrawalAddressesBinding>(), View.OnClickListener {
     private lateinit var adapter: PayAdapter
     override fun bind()= BottomsheetWithdrawalAddressesBinding.inflate(layoutInflater)
@@ -46,7 +48,11 @@ class WithdrawalAddressBottomSheet (private val addresses: MutableList<WithdrawA
             it.tvStartSubTitle.text = getString(R.string.unlimited_withdrawl)
         }
         binding.includeAddCryptoAddress.root.setOnClickListener {
-            findNavController().navigate(R.id.addCryptoAddress)
+            val bundle =Bundle().apply {
+                putBoolean(Constants.ACTION_WITHDRAW,true)
+                putString(Constants.ID,selectedNetwork)
+            }
+            findNavController().navigate(R.id.addCryptoAddress,bundle)
         }
     }
 

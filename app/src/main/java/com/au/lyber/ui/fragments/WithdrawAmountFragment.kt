@@ -275,7 +275,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
     }
 
     private fun openAddressSheet() {
-        WithdrawalAddressBottomSheet(addresses,::handle).show(childFragmentManager, "")
+        WithdrawalAddressBottomSheet(addresses,viewModel.selectedNetworkDeposit!!.id,::handle).show(childFragmentManager, "")
     }
 
     private fun handle(withdrawAddress: WithdrawAddress?, s: String?) {
