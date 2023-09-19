@@ -81,7 +81,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                     binding.includedAsset.apply {
                         val withdrawAddress = addresses[0]
                         viewModel.withdrawAddress = withdrawAddress
-                        tvAssetName.text = withdrawAddress!!.name
+                        tvAssetName.text = withdrawAddress.name
                         tvAssetNameCode.text = withdrawAddress.address
                         val assest =
                             BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == withdrawAddress.network } }
@@ -204,8 +204,9 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                 "${getString(R.string.withdraw)} ${it.id.uppercase()}".also { tvTitle.text = it }
                 val balance =
                     BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
-                maxValue = balance!!.balanceData.balance.toDouble()
-                val priceCoin = balance.balanceData.euroBalance.toDouble()
+
+
+                val priceCoin = balance!!.balanceData.euroBalance.toDouble()
                     .div(balance.balanceData.balance.toDouble())
                 "${
                     balance.balanceData.balance.formattedAsset(priceCoin, RoundingMode.DOWN)
@@ -221,6 +222,10 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                     .div(balance.balanceData.balance.toDouble())
                 "${getString(R.string.fees)} ${it!!.withdrawFee} ${balance.id.uppercase()}".also {
                     tvAssetFees.text = it
+                }
+                maxValue = balance.balanceData.balance.toDouble() - it.withdrawFee.toDouble()
+                if (maxValue<0){
+                    maxValue = 0.0
                 }
                 minAmount = it.withdrawMin.toString().formattedAsset(priceCoin, RoundingMode.DOWN)
                 (getString(R.string.minimum_withdrawl) + ": " + minAmount + " " + balance.id.uppercase()).also {
@@ -294,21 +299,27 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
             BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
 
         if (focusedData.currency.contains(mCurrency)) {
-            val maxinEuro = maxValue/valueConversion
-            val priceCoin = balance!!.balanceData.euroBalance.toDouble()
-                .div(maxinEuro)
-            binding.etAmount.setText(
-                maxinEuro.toString()
+            if (maxValue>0) {
+                val maxinEuro = maxValue / valueConversion
+                val priceCoin = balance!!.balanceData.euroBalance.toDouble()
+                    .div(maxinEuro)
+                binding.etAmount.text = maxinEuro.toString()
                     .formattedAsset(priceCoin, RoundingMode.DOWN) + mCurrency
-            )
+            }else{
+                binding.etAmount.text = "0" + mCurrency
+            }
         } else {
-            val priceCoin = balance!!.balanceData.euroBalance.toDouble()
-                .div(balance.balanceData.balance.toDouble())
-            binding.etAmount.setText(
-                "${
+            if (maxValue>0) {
+                val priceCoin = balance!!.balanceData.euroBalance.toDouble()
+                    .div(balance.balanceData.balance.toDouble())
+                binding.etAmount.text = "${
                     maxValue.toString().formattedAsset(priceCoin, RoundingMode.DOWN)
                 }${mConversionCurrency}"
-            )
+            }else{
+                binding.etAmount.text = "${
+                    0
+                }${mConversionCurrency}"
+            }
         }
     }
 
