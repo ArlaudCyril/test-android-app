@@ -28,7 +28,7 @@ class AddAddressInfoBottomSheet(
 
         binding.tvDelete.text = if (toDelete) context.getString(R.string.delete) else context.getString(R.string.confirm)
         binding.tvDelete.setCompoundDrawablesRelativeWithIntrinsicBounds(
-            if (toDelete) R.drawable.ic_delete else 0,
+            if (toDelete) R.drawable.delete_new else 0,
             0,
             0,
             0
@@ -54,7 +54,7 @@ class AddAddressInfoBottomSheet(
         whitelisting?.let {
             binding.tvTitle.text = it.name
             binding.tvAddress.text = it.address
-            binding.tvValueNetwork.text = it.network
+            binding.tvValueNetwork.text = it.network.uppercase()
            /* if (!it.exchange.isNullOrEmpty())
                 binding.tvValueAddressOrigin.text = it.exchange
             else{*/

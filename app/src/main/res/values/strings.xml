@@ -299,7 +299,7 @@
     <string name="please_enter_address">Please enter %1$s address</string>
     <string name="please_enter_address_">Please enter address</string>
     <string name="please_enter_valid_address">Please enter valid address</string>
-    <string name="please_select_a_exchange">Please select a exchange</string>
+    <string name="please_select_a_exchange">Please enter exchange</string>
     <string name="limited_to_25_000_per_week">Limited to 25 000€ per week</string>
     <string name="limited_to_1000_per_week">Limited to 1000€ per week</string>
     <string name="please_enter_street_number">Please enter street number</string>
@@ -414,7 +414,7 @@
     <string name="iban_number">IBAN number</string>
     <string name="by_adding_a_new_bank_account_you_accept_the_nterms_and_conditions">By adding a new bank account, you accept the\nterms and conditions.</string>
     <string name="address_name">Address name</string>
-    <string name="select_exchange">Select exchange</string>
+    <string name="select_exchange">Enter the name of your exchange platform</string>
     <string name="name">Name\n</string>
     <string name="card_number">Card number</string>
     <string name="expire">Expire</string>
@@ -564,4 +564,6 @@
     <string name="withdrawal_is_deactivated_on_this_asset">Withdrawal is deactivated on this asset</string>
     <string name="select_address">Please select address</string>
     <string name="no_security">No Security</string>
+    <string name="enter_the_exchange_name">Enter the exchange name</string>
+    <string name="edit_address">Edit Address</string>
 </resources>
