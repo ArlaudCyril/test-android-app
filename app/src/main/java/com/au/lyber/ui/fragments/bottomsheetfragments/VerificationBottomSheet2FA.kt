@@ -42,6 +42,9 @@ class VerificationBottomSheet2FA (private val handle: () -> Unit = { }):
                 handle
             }
         }
+        binding.btnCancel.setOnClickListener {
+            dismiss()
+        }
     }
 
     private fun setUpView() {

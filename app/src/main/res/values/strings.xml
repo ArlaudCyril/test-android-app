@@ -272,7 +272,7 @@
     <string name="your_withdrawal_has_been_taken_into_account">Your withdrawal has been taken into account.</string>
     <string name="your_investment_has_been_taken_into_account">Your investment has been taken into account.</string>
     <string name="verification">Verification</string>
-    <string name="enter_the_code_displayed_on_your_email">Enter the code displayed on your email</string>
+    <string name="enter_the_code_displayed_on_your_email">Enter the code received by email</string>
     <string name="please_select_frequency">Please select frequency</string>
     <string name="daily">Daily</string>
     <string name="once">Once</string>
