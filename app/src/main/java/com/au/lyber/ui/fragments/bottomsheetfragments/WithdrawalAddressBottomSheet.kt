@@ -5,8 +5,6 @@ import android.text.TextUtils
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.au.lyber.R
@@ -16,33 +14,25 @@ import com.au.lyber.databinding.LoaderViewBinding
 import com.au.lyber.models.WithdrawAddress
 import com.au.lyber.ui.activities.BaseActivity
 import com.au.lyber.ui.adapters.BaseAdapter
-import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
-import com.au.lyber.utils.CommonMethods
-import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.loadCircleCrop
 
-class WithdrawalAddressBottomSheet (private val handle: (WithdrawAddress?, String?) -> Unit = { _, _ -> }
+class WithdrawalAddressBottomSheet (private val addresses: MutableList<WithdrawAddress>,private val handle: (WithdrawAddress?, String?) -> Unit = { _, _ -> }
 ) : BaseBottomSheet<BottomsheetWithdrawalAddressesBinding>(), View.OnClickListener {
-    private lateinit var viewModel: PortfolioViewModel
     private lateinit var adapter: PayAdapter
     override fun bind()= BottomsheetWithdrawalAddressesBinding.inflate(layoutInflater)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        viewModel = CommonMethods.getViewModel(requireActivity())
         adapter = PayAdapter(this,handle)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        checkInternet(requireActivity()){
-            CommonMethods.showProgressDialog(requireActivity())
-            viewModel.getWithdrawalAddresses()
-        }
+
         binding.rvPayOptions.adapter = adapter
         binding.rvPayOptions.layoutManager = LinearLayoutManager(requireContext())
         prepareView()
-        setObservers()
+        adapter.setList(addresses)
         binding.ivTopAction.setOnClickListener(this)
     }
     private fun prepareView() {
@@ -60,14 +50,6 @@ class WithdrawalAddressBottomSheet (private val handle: (WithdrawAddress?, Strin
         }
     }
 
-    private fun setObservers() {
-        viewModel.withdrawalAddresses.observe(viewLifecycleOwner){
-            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                CommonMethods.dismissProgressDialog()
-                adapter.setList(it.data)
-            }
-        }
-    }
 
     override fun onClick(v: View?) {
       when(v){

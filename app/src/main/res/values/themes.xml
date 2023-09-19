@@ -56,6 +56,8 @@
 
     <style name="CustomDialogBottomSheet" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/CustomDialogTheme</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowSoftInputMode">adjustResize|stateHidden</item>
     </style>
 
     <style name="CustomDialogTheme" parent="Widget.Design.BottomSheet.Modal">

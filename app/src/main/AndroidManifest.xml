@@ -40,10 +40,8 @@
         <activity
             android:name=".ui.activities.SplashActivity"
             android:exported="true"
-
-
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateVisible"
+            android:windowSoftInputMode="adjustPan"
             tools:ignore="LockedOrientationActivity">
 
             <intent-filter>

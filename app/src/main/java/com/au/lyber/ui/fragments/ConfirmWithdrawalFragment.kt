@@ -2,8 +2,10 @@ package com.au.lyber.ui.fragments
 
 import android.os.Build
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.RelativeLayout
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
@@ -32,6 +34,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
     private lateinit var viewModel: PortfolioViewModel
     private  var valueTotal : Double =0.0
     private var isOtpScreen = false
+
     override fun bind() = FragmentConfirmInvestmentBinding.inflate(layoutInflater)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -91,8 +94,9 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun confirmButtonClick() {
-        val isScope2FA = App.prefsManager.user!!.scope2FA.contains("withdrawal")
-        if (isScope2FA){
+        //openOtpScreen()
+     /* val isScope2FA = App.prefsManager.user!!.scope2FA.contains("withdrawal")
+        if (isScope2FA){*/
             CommonMethods.showProgressDialog(requireActivity())
             val map = HashMap<Any?,Any?>()
             map["asset"] = viewModel.selectedAssetDetail!!.id
@@ -103,12 +107,12 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
             isOtpScreen = true
             val encoded = String(Base64.getEncoder().encode(jso.toString(4).toByteArray()))
             viewModel.getOtpForWithdraw(Constants.ACTION_WITHDRAW,encoded)
-        }else{
+        /*}else{
             CommonMethods.showProgressDialog(requireActivity())
             isOtpScreen = false
             viewModel.createWithdrawalRequest(viewModel.selectedAssetDetail!!.id
             ,valueTotal,viewModel.withdrawAddress!!.address,viewModel.selectedNetworkDeposit!!.id)
-        }
+        }*/
     }
 
 
@@ -154,7 +158,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                         rounding = RoundingMode.DOWN
                     ) + " "+it!!.id.uppercase()
                 tvAmount.text =
-                    "${balance.balanceData.balance.formattedAsset(
+                    "${requireArguments().getString(Constants.EURO)!!.formattedAsset(
                         price = priceCoin,
                         rounding = RoundingMode.DOWN
                     ) } ${it.id.uppercase()}"

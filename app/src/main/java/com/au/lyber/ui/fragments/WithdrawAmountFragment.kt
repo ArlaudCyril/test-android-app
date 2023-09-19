@@ -6,6 +6,7 @@ import android.text.Editable
 import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentWithdrawAmountBinding
@@ -36,6 +37,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
     private val unfocusedData: ValueHolder = ValueHolder()
     private var mCurrency: String = ""
     private var mConversionCurrency: String = ""
+    private val addresses : MutableList<WithdrawAddress> = mutableListOf()
     private val amount get() = binding.etAmount.text.trim().toString()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -58,7 +60,36 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
         binding.ivMax.setOnClickListener(this)
         binding.btnPreviewInvestment.setOnClickListener(this)
         prepareView()
+        setObservers()
         binding.etAmount.addTextChangedListener(textOnTextChange)
+        CommonMethods.checkInternet(requireActivity()) {
+            CommonMethods.showProgressDialog(requireActivity())
+            viewModel.getWithdrawalAddresses()
+        }
+    }
+    private fun setObservers() {
+        viewModel.withdrawalAddresses.observe(viewLifecycleOwner){
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                CommonMethods.dismissProgressDialog()
+                addresses.clear()
+                for (address in it.data) {
+                    if (address.network == viewModel.selectedNetworkDeposit!!.id) {
+                        addresses.add(address)
+                    }
+                }
+                if (addresses.size>0){
+                    binding.includedAsset.apply {
+                        val withdrawAddress = addresses[0]
+                        viewModel.withdrawAddress = withdrawAddress
+                        tvAssetName.text = withdrawAddress!!.name
+                        tvAssetNameCode.text = withdrawAddress.address
+                        val assest =
+                            BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == withdrawAddress.network } }
+                        ivAssetIcon.load(assest!!.imageUrl)
+                    }
+                }
+            }
+        }
     }
 
     private val textOnTextChange = object : OnTextChange {
@@ -165,10 +196,10 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
             includedAsset.tvAssetNameCode.text = getString(R.string.unlimited_withdrawl)
             includedAsset.tvAssetNameCode.visible()
             viewModel.selectedAssetDetail.let {
-                mCurrency = Constants.EURO
-                mConversionCurrency = it!!.id.uppercase()
-                focusedData.currency = " " + mCurrency
-                unfocusedData.currency = " " + mConversionCurrency
+                mCurrency = " "+Constants.EURO
+                mConversionCurrency = " "+it!!.id.uppercase()
+                focusedData.currency = mCurrency
+                unfocusedData.currency = mConversionCurrency
 
                 "${getString(R.string.withdraw)} ${it.id.uppercase()}".also { tvTitle.text = it }
                 val balance =
@@ -244,7 +275,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
     }
 
     private fun openAddressSheet() {
-        WithdrawalAddressBottomSheet(::handle).show(childFragmentManager, "")
+        WithdrawalAddressBottomSheet(addresses,::handle).show(childFragmentManager, "")
     }
 
     private fun handle(withdrawAddress: WithdrawAddress?, s: String?) {
@@ -311,25 +342,27 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
 
 
         binding.apply {
+            val currency = if (focusedData.currency.contains(mCurrency)) mCurrency else mConversionCurrency
             when {
-                amount.length == (focusedData.currency.length + 1) && amount[0] == '0' -> {
+
+                amount.length == (currency.length + 1) && amount[0] == '0' -> {
                     if (char == '.') {
-                        if (!amount.contains('.')) etAmount.text = ("0$char${focusedData.currency}")
-                    } else etAmount.text = (char + focusedData.currency)
+                        if (!amount.contains('.')) etAmount.text = ("0$char${currency}")
+                    } else etAmount.text = (char + currency)
                 }
 
                 else -> {
 
-                    val string = amount.substring(0, amount.count() - focusedData.currency.length)
+                    val string = amount.substring(0, amount.count() - currency.length)
 
                     if (string.contains('.')) {
-                        if (char != '.') etAmount.text = "$string$char${focusedData.currency}"
+                        if (char != '.') etAmount.text = "$string$char${currency}"
                     } else {
                         if (char == '.') etAmount.text = ("${
                             string.pointFormat.toDouble().toInt().commaFormatted
-                        }.${focusedData.currency}")
+                        }.${currency}")
                         else etAmount.text = ((string.pointFormat.toDouble().toInt()
-                            .toString() + char).commaFormatted + focusedData.currency)
+                            .toString() + char).commaFormatted + currency)
                     }
                 }
 
@@ -355,8 +388,8 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
             val currency = focusedData.currency
             focusedData.currency = unfocusedData.currency
             unfocusedData.currency = currency
-            val valueOne = amount.replace(mCurrency,"").pointFormat.decimalPoint()
-            val valueTwo = assetConversion.replace(mConversionCurrency,"")
+            val valueOne = amount.replace(mConversionCurrency,"").pointFormat.decimalPoint()
+            val valueTwo = assetConversion.replace(mCurrency,"")
                 .replace("~","").pointFormat.decimalPoint()
 
             binding.etAmount.text = ("${valueTwo}$mCurrency")
