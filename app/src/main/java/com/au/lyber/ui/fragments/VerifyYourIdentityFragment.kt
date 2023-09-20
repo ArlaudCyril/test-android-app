@@ -1,6 +1,8 @@
 package com.au.lyber.ui.fragments
 
-import android.Manifest.permission.*
+import android.Manifest.permission.CAMERA
+import android.Manifest.permission.READ_EXTERNAL_STORAGE
+import android.Manifest.permission.WRITE_EXTERNAL_STORAGE
 import android.app.Activity.RESULT_OK
 import android.app.Dialog
 import android.content.Intent
@@ -29,7 +31,7 @@ import com.au.lyber.R
 import com.au.lyber.databinding.CustomDialogLayoutBinding
 import com.au.lyber.databinding.DialogSettingBinding
 import com.au.lyber.databinding.FragmentVerifyYourIdentityBinding
-import com.au.lyber.ui.portfolio.fragment.PortfolioHomeFragment
+import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.App
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.clearBackStack
@@ -40,11 +42,11 @@ import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.strikeText
 import com.au.lyber.utils.Constants
 import com.au.lyber.utils.Constants.PICTURE_DIRECTORY
-import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.viewmodels.VerifyIdentityViewModel
 import java.io.File
 import java.text.SimpleDateFormat
-import java.util.*
+import java.util.Date
+import java.util.Locale
 
 
 class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBinding>(),
@@ -72,25 +74,7 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
         verifyIdentityViewModel.uploadResponse.observe(viewLifecycleOwner) {
             dismissProgressDialog()
         }
-
         stateOne()
-//        binding.tvTitlePapers.strikeText()
-//        binding.tvSubTitlePapers.strikeText()
-//        binding.tvTakeSelfie.strikeText()
-
-//        binding.tvTitlePapers.alpha = 0.5F
-//        binding.tvSubTitlePapers.alpha = 0.5F
-//        binding.tvTakeSelfie.alpha = 0.5F
-
-//        binding.tvTitlePapers.setTextColor(getColor(requireContext(), R.color.purple_gray_500))
-//        binding.tvTakeSelfie.setTextColor(getColor(requireContext(), R.color.purple_gray_500))
-
-//        binding.tvOne.background =
-//            ContextCompat.getDrawable(requireContext(), R.drawable.drawable_circle_checked)
-//        binding.tvTwo.background =
-//            ContextCompat.getDrawable(requireContext(), R.drawable.drawable_circle_checked)
-        // uncomment to retain functional flow
-//        setUpUI(verifyIdentityViewModel.imageCaptured)
     }
 
     private fun stateOne() {
