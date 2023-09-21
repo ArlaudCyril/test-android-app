@@ -2,7 +2,10 @@ package com.au.lyber.utils
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.au.lyber.models.AddressDataLocal
 import com.au.lyber.models.AssetBaseDataResponse
+import com.au.lyber.models.InvestmentExperienceLocal
+import com.au.lyber.models.PersonalDataLocal
 import com.au.lyber.models.User
 import com.google.gson.Gson
 
@@ -90,6 +93,35 @@ class PreferenceManager(context: Context) {
             mEditor.putLong("refreshTokenSavedAt", value).apply()
         }
 
+
+    var personalDataLocal : PersonalDataLocal?
+        get() =
+            if ((mSharedPreferences.getString("PersonalDataLocal", "") ?: "").isNotEmpty()) {
+                Gson().fromJson((mSharedPreferences.getString("PersonalDataLocal", "") ?: ""), PersonalDataLocal::class.java)
+            } else null
+        set(value) {
+            mEditor.putString("PersonalDataLocal", Gson().toJson(value).toString())
+            mEditor.apply()
+        }
+
+    var addressDataLocal : AddressDataLocal?
+        get() =
+            if ((mSharedPreferences.getString("AddressDataLocal", "") ?: "").isNotEmpty()) {
+                Gson().fromJson((mSharedPreferences.getString("AddressDataLocal", "") ?: ""), AddressDataLocal::class.java)
+            } else null
+        set(value) {
+            mEditor.putString("AddressDataLocal", Gson().toJson(value).toString())
+            mEditor.apply()
+        }
+    var investmentExperienceLocal : InvestmentExperienceLocal?
+        get() =
+            if ((mSharedPreferences.getString("InvestmentExperienceLocal", "") ?: "").isNotEmpty()) {
+                Gson().fromJson((mSharedPreferences.getString("InvestmentExperienceLocal", "") ?: ""), InvestmentExperienceLocal::class.java)
+            } else null
+        set(value) {
+            mEditor.putString("InvestmentExperienceLocal", Gson().toJson(value).toString())
+            mEditor.apply()
+        }
 
 
 

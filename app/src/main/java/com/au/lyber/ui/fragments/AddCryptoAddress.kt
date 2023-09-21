@@ -237,7 +237,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                 binding.etAddressName.setText(it.name)
                 binding.etNetwork.setText(it.network)
                 val id = it.network
-                network = Network(id = it.network)
+                network = Network(id = it.network!!)
                 originSelectedPosition = if (it.origin == "exchange") 0 else 1
                 BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == id } }
                     ?.let { it1 ->
@@ -461,9 +461,9 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                     when {
                         address.isEmpty() ->
                             binding.ttlAddress.helperText =
-                                getString(R.string.please_enter_address, it.network.uppercase())
+                                getString(R.string.please_enter_address, it.network!!.uppercase())
 
-                        !address.checkFormat(it.network.uppercase()) ->
+                        !address.checkFormat(it.network!!.uppercase()) ->
                             binding.ttlAddress.helperText =
                                 getString(R.string.please_enter_valid_address)
 

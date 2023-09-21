@@ -89,7 +89,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         CommonMethods.showProgressDialog(requireActivity())
         isOtpScreen = false
         viewModel.createWithdrawalRequest(viewModel.selectedAssetDetail!!.id
-            ,valueTotal,viewModel.withdrawAddress!!.address,viewModel.selectedNetworkDeposit!!.id)
+            ,valueTotal,viewModel.withdrawAddress!!.address!!,viewModel.selectedNetworkDeposit!!.id)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -164,9 +164,9 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                     ) } ${it.id.uppercase()}"
 
                 tvExchangeFrom.text = getString(R.string.address)
-                tvExchangeFromValue.text = viewModel.withdrawAddress!!.address.substring(0,7)+"...."+
-                        viewModel.withdrawAddress!!.address.substring(viewModel.withdrawAddress!!.address
-                            .length-4)
+                tvExchangeFromValue.text = viewModel.withdrawAddress!!.address!!.substring(0,7)+"...."+
+                        viewModel.withdrawAddress!!.address!!.substring(viewModel.withdrawAddress!!.address
+                            !!.length-4)
                 tvExchangeTo.text = getString(R.string.network)
                 tvExchangeToValue.text = viewModel.selectedNetworkDeposit!!.fullName
                  valueTotal = viewModel.selectedNetworkDeposit!!.withdrawFee.toDouble()+

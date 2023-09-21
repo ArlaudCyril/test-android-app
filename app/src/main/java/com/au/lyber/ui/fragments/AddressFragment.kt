@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.au.countrycodepicker.CountryPicker
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentAddressBinding
+import com.au.lyber.models.AddressDataLocal
 import com.au.lyber.utils.App
 import com.au.lyber.utils.CommonMethods
 import com.au.lyber.utils.CommonMethods.Companion.requestKeyboard
@@ -34,26 +35,29 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
 
         (requireParentFragment() as FillDetailFragment).position = 3
         (requireParentFragment() as FillDetailFragment).setUpViews(3)
-//        if (App.prefsManager.user?.personal_info_step == Constants.EMAIL_VERIFIED)
-            (requireParentFragment() as FillDetailFragment).binding.ivTopAction.setBackgroundResource(
-                R.drawable.ic_close
-            )
+        (requireParentFragment() as FillDetailFragment).binding.ivTopAction.setBackgroundResource(
+            R.drawable.ic_close
+        )
 
         personalDataViewModel = CommonMethods.getViewModel(requireParentFragment())
         binding.etCountry.setOnClickListener { openCountryPicker() }
 
         personalDataViewModel.personalData?.let {
-//            val data = it.address1.split(",")
-//            binding.etStreetNumber.setText(data[0].trim())
-//            binding.etBuildingNumberFloor.setText(data[1].trim())
-//            binding.etCity.setText(it.city)
-//            binding.etState.setText(it.state)
-//            binding.etZipCode.setText((it.zip_code).toString())
-
-//            val countrySelected = CountryPicker.getCountryName(it.country)
-//            country = countrySelected.code
 
             binding.etCountry.setText(country)
+        }
+        if (personalDataViewModel.isReview){
+            App.prefsManager.addressDataLocal.let {
+                binding.apply {
+                    etStreetNumber.setText(it!!.streetNumber)
+                    etBuildingNumberFloor.setText(it.buildingFloorName)
+                    etCity.setText(it.city)
+                    etState.setText(it.state)
+                    etZipCode.setText(it.zipCode)
+                    etCountry.setText(it.country)
+
+                }
+            }
         }
 
         binding.etCity.takesAlphabetOnly()
@@ -76,24 +80,37 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
                 getString(R.string.please_enter_street_number).showToast(requireContext())
                 binding.etStreetNumber.requestKeyboard()
             }
+
             buildingFloor.isEmpty() -> {
-                getString(R.string.please_enter_building_name_or_floor_name).showToast(requireContext())
+                getString(R.string.please_enter_building_name_or_floor_name).showToast(
+                    requireContext()
+                )
                 binding.etBuildingNumberFloor.requestKeyboard()
             }
+
             city.isEmpty() -> {
                 getString(R.string.please_enter_city_name).showToast(requireContext())
                 binding.etCity.requestKeyboard()
             }
+
             state.isEmpty() -> {
                 getString(R.string.please_enter_state).showToast(requireContext())
                 binding.etState.requestKeyboard()
             }
+
             zipCode.isEmpty() -> {
                 getString(R.string.please_enter_zip_code).showToast(requireContext())
                 binding.etZipCode.requestKeyboard()
             }
-            country.isEmpty() -> getString(R.string.please_enter_country_name).showToast(requireContext())
+
+            country.isEmpty() -> getString(R.string.please_enter_country_name).showToast(
+                requireContext()
+            )
+
             else -> {
+                val addressDataLocal = AddressDataLocal(streetNumber = streetHouseNumber, buildingFloorName =
+                buildingFloor, city = city,zipCode = zipCode,country= country,state = state)
+                App.prefsManager.addressDataLocal = addressDataLocal
                 personalDataViewModel.let {
                     it.streetNumber = streetHouseNumber
                     it.buildingFloorName = buildingFloor

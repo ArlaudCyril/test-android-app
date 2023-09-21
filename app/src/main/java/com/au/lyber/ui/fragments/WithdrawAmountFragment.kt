@@ -72,7 +72,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 CommonMethods.dismissProgressDialog()
                 addresses.clear()
-                for (address in it.data) {
+                for (address in it.data!!) {
                     if (address.network == viewModel.selectedNetworkDeposit!!.id) {
                         addresses.add(address)
                     }

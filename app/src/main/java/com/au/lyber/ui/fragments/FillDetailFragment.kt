@@ -82,7 +82,12 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
                 prefsManager.personalDataSteps = Constants.PERSONAL_DATA
-                replace(R.id.flFillPersonalData, fragmentList[1], true)
+                if (arguments != null && requireArguments().containsKey(Constants.IS_REVIEW)) {
+                    position = 2
+                    moveToNext()
+                } else {
+                    replace(R.id.flFillPersonalData, fragmentList[1], true)
+                }
             }
         }
 
@@ -151,7 +156,9 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
         if (arguments!=null && requireArguments().containsKey(Constants.IS_REVIEW)){
             position = 0
             viewModel.isReview = true
-        }else {
+        }else {/*
+            position = 0
+            viewModel.isReview = true*/
             position =
                 when (prefsManager.personalDataSteps) {
                     Constants.ACCOUNT_INITIALIZATION -> 0

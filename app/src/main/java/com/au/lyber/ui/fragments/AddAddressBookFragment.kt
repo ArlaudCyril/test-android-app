@@ -69,9 +69,9 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
                 adapter.removeProgress()
-                adapter.setList(it.data)
+                adapter.setList(it.data!!)
                 completeList.clear()
-                completeList.addAll(it.data)
+                completeList.addAll(it.data!!)
                 binding.rvAddresses.startLayoutAnimation()
             }
         }
@@ -124,7 +124,7 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
     private fun searchingInList(newText: String) {
         val dummyList  :MutableList<WithdrawAddress> = mutableListOf()
         for (ina in completeList){
-            if (ina.name.contains(newText,true) || ina.address.contains(newText,true)){
+            if (ina.name!!.contains(newText,true) || ina.address!!.contains(newText,true)){
                 dummyList.add(ina)
             }
         }
@@ -138,7 +138,7 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
                 // delete
                 checkInternet(requireContext()) {
                 showProgressDialog(requireContext())
-                    viewModel.deleteWhiteList(data.address,data.network)
+                    viewModel.deleteWhiteList(data.address!!,data.network!!)
                 }
             } else {
                 //edit

@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.View
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentInvenstmentExperienceBinding
+import com.au.lyber.models.InvestmentExperienceLocal
 import com.au.lyber.ui.fragments.bottomsheetfragments.BottomSheetDialog
+import com.au.lyber.utils.App
 import com.au.lyber.utils.CommonMethods
 import com.au.lyber.utils.CommonMethods.Companion.showToast
 import com.au.lyber.viewmodels.PersonalDataViewModel
@@ -38,6 +40,22 @@ class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceB
             etSourceIncome.setOnClickListener(this@InvestmentExperienceFragment)
             etYourActivity.setOnClickListener(this@InvestmentExperienceFragment)
         }
+        if (viewModel.isReview){
+            App.prefsManager.investmentExperienceLocal.let {
+                binding.apply {
+                    etCryptoExp.setText(it!!.investmentExperience)
+                    etSourceIncome.setText(it.sourceOfIncome)
+                    etChooseIndustry.setText(it.workIndustry)
+                    annualIncome = it.annualIncome
+                        if (annualIncome == "<500>")binding.etAnnualIncome.setText("Less then 500k€/month")
+                        else binding.etAnnualIncome.setText("${annualIncome}k€/month")
+                    personalAssets = it.activity
+                    etYourActivity.setText(it.activity)
+
+
+                }
+            }
+        }
 
         binding.etCryptoExp.text.clear()
         binding.etChooseIndustry.text.clear()
@@ -63,6 +81,7 @@ class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceB
                 annualIncome = if (itemSelected == "Less than 500") "<500" else itemSelected
                 binding.etAnnualIncome.setText("${itemSelected}k€/month")
             }
+
             else -> {
                 personalAssets = itemSelected
                 binding.etYourActivity.setText("$itemSelected")
@@ -77,21 +96,32 @@ class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceB
             cryptoExp.isEmpty() -> getString(R.string.please_tell_us_your_investment_experience_with_crypto).showToast(
                 requireContext()
             )
+
             sourceIncome.isEmpty() -> getString(R.string.please_tell_us_your_source_of_income).showToast(
                 requireContext()
             )
+
             workIndustry.isEmpty() -> getString(R.string.please_tell_us_which_work_industry_your_are_working).showToast(
                 requireContext()
             )
-            annualIncome.isEmpty() -> getString(R.string.please_tell_us_your_annual_income).showToast(requireContext())
-           personalAssets.isEmpty() -> {
+
+            annualIncome.isEmpty() -> getString(R.string.please_tell_us_your_annual_income).showToast(
+                requireContext()
+            )
+
+            personalAssets.isEmpty() -> {
                 binding.scrollView.scrollTo(0, binding.root.bottom)
-               getString(R.string.please_tell_us_what_do_you_plan_to_mainly_do).showToast(
+                getString(R.string.please_tell_us_what_do_you_plan_to_mainly_do).showToast(
                     requireContext()
                 )
             }
-            else -> {
 
+            else -> {
+                val investmentExperienceLocal = InvestmentExperienceLocal(
+                    investmentExperience = cryptoExp, sourceOfIncome = sourceIncome, workIndustry = workIndustry
+                    ,annualIncome = annualIncome,activity = personalAssets
+                )
+                App.prefsManager.investmentExperienceLocal = investmentExperienceLocal
                 viewModel.let {
                     it.cryptoExp = cryptoExp
                     it.sourceOfIncome = sourceIncome
@@ -114,24 +144,28 @@ class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceB
                         BottomSheetDialog.SheetType.ANNUAL_INCOME.title
                     )
                 }
+
                 etChooseIndustry -> {
                     BottomSheetDialog(::handleClickEvent).show(
                         requireActivity().supportFragmentManager,
                         BottomSheetDialog.SheetType.WORK_INDUSTRY.title
                     )
                 }
+
                 etCryptoExp -> {
                     BottomSheetDialog(::handleClickEvent).show(
                         requireActivity().supportFragmentManager,
                         BottomSheetDialog.SheetType.CRYPTO_EXP.title
                     )
                 }
+
                 etSourceIncome -> {
                     BottomSheetDialog(::handleClickEvent).show(
                         requireActivity().supportFragmentManager,
                         BottomSheetDialog.SheetType.SOURCE_OF_INCOME.title
                     )
                 }
+
                 etYourActivity -> {
                     BottomSheetDialog(::handleClickEvent).show(
                         requireActivity().supportFragmentManager,
