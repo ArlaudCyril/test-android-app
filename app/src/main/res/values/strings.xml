@@ -152,7 +152,7 @@
     <string name="hint_last_name">Last Name</string>
     <string name="hint_birth_date">Birth Date</string>
     <string name="hint_nationality">Nationality</string>
-    <string name="send_to_lyber">Send pictures to Lyber</string>
+    <string name="send_to_lyber">Send to Lyber</string>
     <string name="adresse_email">Address email</string>
     <string name="subtitle_email">This information will be used for security purposes and to confirm your transactions.</string>
     <string name="hint_email">Email</string>
@@ -566,4 +566,7 @@
     <string name="no_security">No Security</string>
     <string name="enter_the_exchange_name">Enter the exchange name</string>
     <string name="edit_address">Edit Address</string>
+    <string name="verification_text">To finalise your registration, we need to verify your identity. In the next step, you will need to provide an electronic signature and a photograph of an identity document.</string>
+    <string name="start_identity_verifications">Start Identity Verification</string>
+    <string name="review_my_informations">Review my informations</string>
 </resources>

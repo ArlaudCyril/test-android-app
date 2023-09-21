@@ -40,9 +40,6 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
         binding.tvFillPersonalData.setOnClickListener(this)
         binding.btnMenu.setOnClickListener(this)
 
-//        binding.tvEditPersonalData.setOnClickListener(this)
-//        binding.tvVerifyYourIdentity.setOnClickListener(this)
-
         Log.d(TAG, "onViewCreated: ")
         setUpUi(App.prefsManager.portfolioCompletionStep)
     }
@@ -131,28 +128,11 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
                 ),
                 null
             )
-//            tvEditPersonalData.visible()
             tvVerifyYourIdentity.visible()
             llVerificationOnGoing.gone()
         }
     }
 
-    /* private fun identityVerificationInitiated() {
-         binding.apply {
-             tvNumVerifyYourIdentity.text = ""
-             tvVerifyYourIdentity.setOnClickListener(null)
- //            tvEditPersonalData.visible()
-             tvVerifyYourIdentity.gone()
-             llVerificationOnGoing.visible()
-             ivVerifyYourIdentity.setImageResource(R.drawable.progress_drawable)
-             postDelay(2000) {
-                 identityVerified()
-                 makeYourFirstPayment()
-                 portfolioViewModel.identityVerified = true
-             }
-         }
-     }
- */
 
     private fun identityVerified(showProgress: Boolean = false) {
         binding.apply {
@@ -177,44 +157,7 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
         }
     }
 
-    /*@SuppressLint("UseCompatLoadingForDrawables", "ResourceAsColor")
-    private fun makeYourFirstPayment() {
-        binding.apply {
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                progressSteps.setProgress(75, true)
-            } else progressSteps.progress = 75
-
-            tvStepsCompleted.text = "3/4 steps completed"
-
-            ivMakeFirstInvestment.setImageResource(R.drawable.circle_drawable_purple_500)
-
-            btnInvestMoney.setOnClickListener(this@CompletePortfolioFragment)
-
-            tvInvestMoney.setTextColor(requireContext().getColor(R.color.white))
-            ivInvestMoney.background =
-                AppCompatResources.getDrawable(
-                    requireContext(),
-                    R.drawable.ic_invest_money_white
-                )
-
-            btnInvestMoney.setBackgroundTint(R.color.purple_500)
-
-            tvNumMakeFirstInvestment.setTextColor(requireContext().getColor(R.color.white))
-            tvNumMakeFirstInvestment.text = "4"
-
-
-            tvMakeFirstInvestment.setCompoundDrawablesWithIntrinsicBounds(
-                null, null, AppCompatResources.getDrawable(
-                    requireContext(),
-                    R.drawable.ic_right_arrow_purple
-                ), null
-            )
-            tvMakeFirstInvestment.setTextColor(requireContext().getColor(R.color.purple_500))
-            tvMakeFirstInvestment.setOnClickListener(this@CompletePortfolioFragment)
-
-        }
-    }*/
 
     override fun onClick(v: View?) {
         binding.apply {

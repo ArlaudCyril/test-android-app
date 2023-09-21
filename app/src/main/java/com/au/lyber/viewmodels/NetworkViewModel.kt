@@ -217,6 +217,8 @@ open class NetworkViewModel : ViewModel() {
 
     private val _balanceResponse = MutableLiveData<BalanceResponse>()
     val balanceResponse get() = _balanceResponse
+    private val _kycResponse = MutableLiveData<KYCResponse>()
+    val kycResponse get() = _kycResponse
 
     fun cancelJob() {
 
@@ -1005,6 +1007,16 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
+    fun startKYC(){
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).startKyc()
+            if (res.isSuccessful){
+                _kycResponse.postValue(res.body())
+            }else{
+                _listener?.onRetrofitError(res.errorBody())
+            }
+        }
+    }
     fun getBalanceApi() {
         viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get(Constants.NEW_BASE_URL).getBalance()

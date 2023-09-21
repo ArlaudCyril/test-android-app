@@ -197,6 +197,9 @@ class PortfolioViewModel : NetworkViewModel() {
             chooseStrategy(it)
         }
     }
+    fun startKyc(){
+        startKYC()
+    }
 
     fun buildOwnStrategy(strategyName: String) {
         buildOwnStrategy(strategyName, addedAsset)

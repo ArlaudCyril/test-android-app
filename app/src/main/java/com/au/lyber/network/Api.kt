@@ -45,6 +45,9 @@ interface Api {
     @GET("user/personal_info")
     suspend fun getPersonalInfo(): Response<User>
 
+    @POST("kyc-service/kyc")
+    suspend fun startKyc():Response<KYCResponse>
+
     @GET("treezor/kyc-liveness")
     suspend fun initiateKyc(): Response<InitiateKycResponse>
 

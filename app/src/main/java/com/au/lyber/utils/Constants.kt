@@ -5,6 +5,7 @@ import okhttp3.internal.connection.Exchange
 
 object Constants {
 
+    const val IS_REVIEW: String = "isReview"
     const val ORDER_ID: String = "order_id"
     const val ID: String ="ID"
     const val LOADING: Int = 0

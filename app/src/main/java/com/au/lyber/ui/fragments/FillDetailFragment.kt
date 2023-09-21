@@ -16,6 +16,7 @@ import com.au.lyber.ui.activities.SplashActivity
 import com.au.lyber.ui.fragments.bottomsheetfragments.EmailVerificationBottomSheet
 import com.au.lyber.utils.ActivityCallbacks
 import com.au.lyber.utils.App.Companion.prefsManager
+import com.au.lyber.utils.CommonMethods
 import com.au.lyber.utils.CommonMethods.Companion.add
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.dismissProgressDialog
@@ -109,7 +110,11 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
 
         viewModel.setInvestmentExpResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                viewModel.finishRegistration()
+                CommonMethods.dismissProgressDialog()
+                prefsManager.portfolioCompletionStep = Constants.PERSONAL_DATA_FILLED
+
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                //viewModel.finishRegistration()
             }
         }
 
@@ -143,17 +148,21 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
         binding.ivTopAction.setOnClickListener(this)
         binding.btnCommon.setOnClickListener(this)
 
-        position =
-            when (prefsManager.personalDataSteps) {
-                Constants.ACCOUNT_INITIALIZATION -> 0
-                Constants.PERSONAL_DATA -> 1
-                Constants.EMAIL_ADDRESS -> 1
-                Constants.EMAIL_VERIFIED -> 3
-                Constants.ADDRESS -> 4
-                Constants.INVESTMENT_EXP -> 4
-                else -> 0
-            }
-
+        if (arguments!=null && requireArguments().containsKey(Constants.IS_REVIEW)){
+            position = 0
+            viewModel.isReview = true
+        }else {
+            position =
+                when (prefsManager.personalDataSteps) {
+                    Constants.ACCOUNT_INITIALIZATION -> 0
+                    Constants.PERSONAL_DATA -> 1
+                    Constants.EMAIL_ADDRESS -> 1
+                    Constants.EMAIL_VERIFIED -> 3
+                    Constants.ADDRESS -> 4
+                    Constants.INVESTMENT_EXP -> 4
+                    else -> 0
+                }
+        }
         add(R.id.flFillPersonalData, fragmentList[position])
 
 
@@ -182,20 +191,13 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
             }
         }
 
-        /* button view */
-//        when (position) {
-//            2 -> binding.btnCommon.visibility = View.GONE
-//            else -> binding.btnCommon.visibility = View.VISIBLE
-//        }
-
         /* button text view */
         binding.btnCommon.text = when (position) {
             4 -> getString(R.string.send_to_lyber)
             2 -> getString(R.string.email_verified)
             else -> getString(R.string.next)
         }
-//        binding.btnCommon.text = if (position == 4) "Send to Lyber"
-//        else getString(R.string.next)
+
     }
 
     private fun moveToNext() {
@@ -406,12 +408,6 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
                         )
                     }
 
-//                        if (toEdit.isEmpty())
-//                            checkInternet(requireContext()) {
-//                                showProgressDialog(requireContext())
-//                                viewModel.addPersonalInfo(Constants.PERSONAL_DATA)
-//                            }
-//                        else moveToNext()
                 }
             }
 

@@ -595,6 +595,9 @@ data class SetPhoneResponse(val data: DataNew)
 data class DataNew(val token: String)
 
 data class GetUserResponse(val data: User)
+data class KYCResponse(val data : KYCData)
+
+data class KYCData(val url:String)
 
 data class User(
     val email: String,

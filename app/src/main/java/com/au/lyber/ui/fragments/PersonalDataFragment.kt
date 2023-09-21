@@ -81,6 +81,17 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding>(), View.O
             binding.etNationality.setText(national.name)
 
         }
+        if (viewModel.isReview){
+            binding.apply {
+                etFirstName.setText(viewModel.firstName)
+                etLastName.setText(viewModel.lastName)
+                etBirthPlace.setText(viewModel.birthPlace)
+                etBirthDate.setText(viewModel.birthDate)
+                etBirthCountry.setText(viewModel.birthCountry)
+                etNationality.setText(viewModel.nationality)
+                etSpecifiedUsPerson.setText(viewModel.specifiedUsPerson.toString())
+            }
+        }
 
 
         val calender = Calendar.getInstance(TimeZone.getDefault())

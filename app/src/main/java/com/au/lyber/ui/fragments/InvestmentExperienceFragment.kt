@@ -29,11 +29,6 @@ class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceB
         (requireParentFragment() as FillDetailFragment).position = 4
         (requireParentFragment() as FillDetailFragment).setUpViews(4)
 
-//        if (App.prefsManager.user?.personal_info_step == Constants.ADDRESS)
-//            (requireParentFragment() as FillDetailFragment).binding.ivTopAction.setBackgroundResource(
-//                R.drawable.ic_close
-//            )
-
         viewModel = CommonMethods.getViewModel(requireParentFragment())
 
         binding.apply {
@@ -50,17 +45,6 @@ class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceB
         binding.etSourceIncome.text.clear()
         binding.etYourActivity.text.clear()
 
-        /*personalDataViewModel.personalData?.let {
-
-            annualIncome = it.incomeRange
-            personalAssets = it.personalAssets
-
-//            binding.etCryptoExp.setText(it.investmentExp.cryptoExp)
-//            binding.etChooseIndustry.setText(it.investmentExp.workIndustry)
-            binding.etAnnualIncome.setText("${annualIncome}k€/month")
-//            binding.etSourceIncome.setText(it.investmentExp.sourceOfIncome)
-            binding.etPersonalAssets.setText("$personalAssets assets")
-        }*/
 
     }
 
@@ -76,7 +60,7 @@ class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceB
                 binding.etChooseIndustry.setText(itemSelected)
 
             BottomSheetDialog.SheetType.ANNUAL_INCOME.title -> {
-                annualIncome = itemSelected
+                annualIncome = if (itemSelected == "Less than 500") "<500" else itemSelected
                 binding.etAnnualIncome.setText("${itemSelected}k€/month")
             }
             else -> {
