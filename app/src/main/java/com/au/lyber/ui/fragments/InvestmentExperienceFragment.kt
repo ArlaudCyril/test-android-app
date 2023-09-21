@@ -40,15 +40,22 @@ class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceB
             etSourceIncome.setOnClickListener(this@InvestmentExperienceFragment)
             etYourActivity.setOnClickListener(this@InvestmentExperienceFragment)
         }
-        if (viewModel.isReview){
+
+
+        binding.etCryptoExp.text.clear()
+        binding.etChooseIndustry.text.clear()
+        binding.etAnnualIncome.text.clear()
+        binding.etSourceIncome.text.clear()
+        binding.etYourActivity.text.clear()
+        if (viewModel.isReview) {
             App.prefsManager.investmentExperienceLocal.let {
                 binding.apply {
                     etCryptoExp.setText(it!!.investmentExperience)
                     etSourceIncome.setText(it.sourceOfIncome)
                     etChooseIndustry.setText(it.workIndustry)
-                    annualIncome = it.annualIncome
-                        if (annualIncome == "<500>")binding.etAnnualIncome.setText("Less then 500k€/month")
-                        else binding.etAnnualIncome.setText("${annualIncome}k€/month")
+                    annualIncome = it.annualIncome!!
+                    if (annualIncome == "<500>") binding.etAnnualIncome.setText("Less then 500k€/month")
+                    else binding.etAnnualIncome.setText("${annualIncome}k€/month")
                     personalAssets = it.activity
                     etYourActivity.setText(it.activity)
 
@@ -56,13 +63,6 @@ class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceB
                 }
             }
         }
-
-        binding.etCryptoExp.text.clear()
-        binding.etChooseIndustry.text.clear()
-        binding.etAnnualIncome.text.clear()
-        binding.etSourceIncome.text.clear()
-        binding.etYourActivity.text.clear()
-
 
     }
 
@@ -118,8 +118,11 @@ class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceB
 
             else -> {
                 val investmentExperienceLocal = InvestmentExperienceLocal(
-                    investmentExperience = cryptoExp, sourceOfIncome = sourceIncome, workIndustry = workIndustry
-                    ,annualIncome = annualIncome,activity = personalAssets
+                    investmentExperience = cryptoExp,
+                    sourceOfIncome = sourceIncome,
+                    workIndustry = workIndustry,
+                    annualIncome = annualIncome,
+                    activity = personalAssets
                 )
                 App.prefsManager.investmentExperienceLocal = investmentExperienceLocal
                 viewModel.let {

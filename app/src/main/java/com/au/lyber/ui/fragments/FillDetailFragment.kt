@@ -9,6 +9,7 @@ import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentTestFillDetailBinding
 import com.au.lyber.models.JWTPayload
@@ -117,9 +118,7 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 CommonMethods.dismissProgressDialog()
                 prefsManager.portfolioCompletionStep = Constants.PERSONAL_DATA_FILLED
-
-                    requireActivity().onBackPressedDispatcher.onBackPressed()
-                //viewModel.finishRegistration()
+                findNavController().popBackStack()
             }
         }
 
