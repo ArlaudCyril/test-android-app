@@ -59,12 +59,10 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
             Constants.KYC_COMPLETED -> { // verified
                 personalDataFilled(true)
                 identityVerified()
-//                makeYourFirstPayment()
             }
             else -> {
                 personalDataFilled(true)
                 identityVerified()
-//                makeYourFirstPayment()
             }
         }
     }
@@ -152,7 +150,6 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
             tvVerifyYourIdentity.visibility = View.VISIBLE
             llVerificationOnGoing.visibility = View.GONE
             tvVerifyYourIdentity.strikeText()
-//            tvEditPersonalData.gone()
             tvVerifyYourIdentity.setTextColor(requireContext().getColor(R.color.purple_gray_600))
         }
     }
@@ -168,16 +165,13 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
                     BottomSheetDialog.SheetType.COMPLETE_ACCOUNT.title
                 )
 
-                /*tvMakeFirstInvestment*/
                 btnInvestMoney -> {
 
                     if (App.prefsManager.portfolioCompletionStep == Constants.KYC_COMPLETED) {
-//                        requireActivity().clearBackStack()
                         findNavController().navigate(R.id.educationStrategyHolderFragment)
                     }
                 }
 
-//                tvEditPersonalData,
                 tvFillPersonalData -> findNavController().navigate(R.id.fillDetailFragment)
 
                 tvVerifyYourIdentity -> findNavController().navigate(R.id.verifyYourIdentityFragment)

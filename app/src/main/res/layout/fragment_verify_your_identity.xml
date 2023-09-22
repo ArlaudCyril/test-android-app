@@ -45,13 +45,14 @@
         android:id="@+id/btnStartKyc"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginBottom="24dp"
         android:layout_alignParentBottom="true">
         <Button
             android:id="@+id/btnContinue"
             style="@style/ButtonStyle"
             android:layout_width="match_parent"
-            android:layout_marginHorizontal="24dp"
-            android:layout_marginBottom="24dp"
+
             android:backgroundTint="@color/purple_500"
             android:text="@string/start_identity_verifications"
             android:textColor="@color/white"

@@ -1,15 +1,21 @@
 package com.au.lyber.ui.fragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentVerifyYourIdentityBinding
 import com.au.lyber.network.RestClient
+import com.au.lyber.ui.activities.WebViewActivity
 import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
+import com.au.lyber.utils.App
+import com.au.lyber.utils.CommonMethods
+import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.getViewModel
 import com.au.lyber.utils.CommonMethods.Companion.visible
@@ -31,7 +37,7 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
         val navHostFragment =  requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
         //optional
-        binding.btnStartKyc.setOnClickListener(this)
+        binding.btnContinue.setOnClickListener(this)
         binding.btnReviewMyInformations.setOnClickListener(this)
         binding.ivTopAction.setOnClickListener(this)
 
@@ -46,7 +52,13 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
     }
 
     private fun setObserver() {
-
+        portfolioViewModel.kycResponse.observe(viewLifecycleOwner){
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+               dismissAnimation()
+                startActivity(Intent(requireActivity(),WebViewActivity::class.java)
+                    .putExtra(Constants.URL,it.data.url))
+            }
+        }
     }
 
     companion object {
@@ -58,7 +70,7 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
             binding.ivTopAction->{
                 requireActivity().onBackPressedDispatcher.onBackPressed()
             }
-            binding.btnStartKyc->{
+            binding.btnContinue->{
                 hitAcpi()
             }
             binding.btnReviewMyInformations->{
@@ -71,17 +83,23 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
     }
     override fun onRetrofitError(responseBody: ResponseBody?) {
         super.onRetrofitError(responseBody)
+        dismissAnimation()
+    }
+
+    private fun dismissAnimation() {
         binding.progress.clearAnimation()
         binding.progress.visibility = View.GONE
         binding.btnContinue.text = getString(R.string.start_identity_verifications)
     }
 
     private fun hitAcpi() {
-        binding.progress.visible()
-        binding.progress.animation =
-            AnimationUtils.loadAnimation(requireActivity(), R.anim.rotate_drawable)
-        binding.btnContinue.text = ""
-        portfolioViewModel.startKyc()
+        checkInternet(requireActivity()){
+            binding.progress.visible()
+            binding.progress.animation =
+                AnimationUtils.loadAnimation(requireActivity(), R.anim.rotate_drawable)
+            binding.btnContinue.text = ""
+            portfolioViewModel.startKyc()
+        }
 
     }
 }

@@ -116,7 +116,7 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
 
         viewModel.setInvestmentExpResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                CommonMethods.dismissProgressDialog()
+                dismissProgressDialog()
                 prefsManager.portfolioCompletionStep = Constants.PERSONAL_DATA_FILLED
                 findNavController().popBackStack()
             }
@@ -229,7 +229,6 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
             0 -> {
 
                 position++
-//                prefsManager.setProfileInfoSteps(Constants.PERSONAL_DATA)
                 replace(R.id.flFillPersonalData, fragmentList[position], false)
 
             }
@@ -237,8 +236,6 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
             1 -> {
 
                 position++
-//                prefsManager.setProfileInfoSteps(Constants.EMAIL_ADDRESS)
-               // replace(R.id.flFillPersonalData, fragmentList[position])
                 val transparentView = View(context)
                 transparentView.setBackgroundColor(
                     ContextCompat.getColor(
@@ -256,12 +253,12 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
                 val vc  = EmailVerificationBottomSheet()
 
                 vc.viewToDelete = transparentView
-                vc.mainView = getView()?.rootView as ViewGroup
+                vc.mainView = view?.rootView as ViewGroup
                 vc.viewModel = viewModel
                 vc.show(childFragmentManager, "")
 
                 // Add the transparent view to the RelativeLayout
-                val mainView = getView()?.rootView as ViewGroup
+                val mainView = view?.rootView as ViewGroup
                 mainView.addView(transparentView, viewParams)
             }
 
@@ -271,7 +268,6 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
                 childFragmentManager.popBackStack(
                     null, FragmentManager.POP_BACK_STACK_INCLUSIVE
                 )
-//                prefsManager.setProfileInfoSteps(Constants.EMAIL_VERIFIED)
                 replace(R.id.flFillPersonalData, fragmentList[position], false)
 
             }
@@ -279,8 +275,6 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
             3 -> {
 
                 position++
-//                childFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
-//                prefsManager.setProfileInfoSteps(Constants.ADDRESS)
                 replace(R.id.flFillPersonalData, fragmentList[position], true)
 
             }
@@ -322,9 +316,6 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
                 if (it.checkData()) {
                     if (toEdit.isEmpty()) {
                         checkInternet(requireContext()) {
-//                                showProgressDialog(requireContext())
-//                                viewModel.addPersonalInfo(Constants.PERSONAL_DATA)
-
                             showProgressDialog(requireContext())
                             viewModel.setUserInfo(
                                 viewModel.firstName,
@@ -393,8 +384,6 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
                     JWTPayload::class.java
                 )
 
-//                JWTParser.parse(prefsManager.getAccessToken()).jwtClaimsSet.jwtid
-//                val jwt = JWT.decodeT<JWSES256Algorithm>(prefsManager.getAccessToken(), JWSES256Algorithm)
                 viewModel.verifyEmail(/*jwtPayload.uuid,*/ "1234")
             }
 
@@ -428,9 +417,6 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
                             viewModel.annualIncome,
                             viewModel.personalAssets
                         )
-//                        viewModel.finishRegistration()
-//                        if (toEdit.isNotEmpty()) viewModel.updatePersonalInfo()
-//                        else viewModel.addPersonalInfo(Constants.INVESTMENT_EXP)
                     }
                 }
             }

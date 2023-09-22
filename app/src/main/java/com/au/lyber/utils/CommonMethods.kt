@@ -2,6 +2,7 @@ package com.au.lyber.utils
 
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Dialog
 import android.content.ContentResolver
 import android.content.Context
@@ -568,6 +569,13 @@ class CommonMethods {
         }
 
         fun FragmentActivity.checkPermission(permission: String): Boolean {
+            return ContextCompat.checkSelfPermission(
+                this,
+                permission
+            ) == PackageManager.PERMISSION_GRANTED
+        }
+
+        fun Activity.checkPermission(permission: String): Boolean {
             return ContextCompat.checkSelfPermission(
                 this,
                 permission
