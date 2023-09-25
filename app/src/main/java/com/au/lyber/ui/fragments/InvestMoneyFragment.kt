@@ -34,7 +34,7 @@ class InvestMoneyFragment : BaseFragment<FragmentInvestMoneyBinding>() {
 
                 topText = it.name ?: ""
                 yeild = it.expectedYield.toString()
-                risk = it.risk
+                risk = it.risk!!
                 allocationView.setAssetsList(it.bundle)
 
             }

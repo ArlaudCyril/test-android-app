@@ -139,8 +139,8 @@ data class Strategy(
     val ownerUuid: String,
     val publicType: String,
     val strategyType: String,
-    val risk: String,
-    val expectedYield: String
+    val risk: String?,
+    val expectedYield: String?
 )
 
 data class InvestmentStrategyAsset(

@@ -63,7 +63,7 @@ interface Api {
     @GET("strategy-service/strategies")
     suspend fun getStrategies(@QueryMap hashMap: HashMap<String, Any>): Response<StrategiesResponse>
 
-    @POST("user/investment-strategy")
+    @POST("strategy-service/strategy")
     suspend fun chooseStrategy(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
 
     @GET("coingecko/coins")

@@ -9,6 +9,7 @@ import com.au.lyber.databinding.LoaderViewBinding
 import com.au.lyber.models.Strategy
 import com.au.lyber.ui.fragments.StrategyView
 import com.au.lyber.utils.CommonMethods.Companion.gone
+import com.au.lyber.utils.CommonMethods.Companion.visible
 
 class PickStrategyFragmentAdapter(val itemClicked: (position: Int) -> Unit) :
     BaseAdapter<Strategy>() {
@@ -64,8 +65,30 @@ class PickStrategyFragmentAdapter(val itemClicked: (position: Int) -> Unit) :
                         }
                         radioButton.gone()
                         topText = it.name ?: ""
-                        risk = it.expectedYield.substring(0, 1).uppercase() + it.expectedYield.substring(1).lowercase()
-                        yeild = it.risk.substring(0, 1).uppercase() + it.risk.substring(1).lowercase()
+                        if (it.expectedYield !=null) {
+                            binding.ivRisk.visible()
+                            binding.tvRisk.visible()
+                            binding.tvValueRisk.visible()
+                            risk = it.expectedYield.substring(0, 1)
+                                .uppercase() + it.expectedYield.substring(1).lowercase()
+                        }else{
+                            binding.ivRisk.gone()
+                            binding.tvRisk.gone()
+                            binding.tvValueRisk.gone()
+                            risk = ""
+                        }
+                        if (it.risk!=null) {
+                            binding.ivYield.visible()
+                            binding.tvYield.visible()
+                            binding.tvValueYield.visible()
+                            yeild = it.risk.substring(0, 1).uppercase() + it.risk.substring(1)
+                                .lowercase()
+                        }else{
+                            binding.ivYield.gone()
+                            binding.tvYield.gone()
+                            binding.tvValueYield.gone()
+                            yeild = ""
+                        }
                         allocationView.setAssetsList(it.bundle)
                     }
                 }

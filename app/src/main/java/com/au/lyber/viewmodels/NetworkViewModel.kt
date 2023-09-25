@@ -270,9 +270,9 @@ open class NetworkViewModel : ViewModel() {
                 )
             )
         val hashMap = hashMapOf<String, Any>()
-        hashMap["assets"] = list
-        hashMap["is_own_strategy"] = 1
-        hashMap["strategy_name"] = strategyName
+        hashMap["bundle"] = list
+        hashMap["strategyType"] = "SingleAsset"
+        hashMap["strategyName"] = strategyName
 
         viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().chooseStrategy(hashMap)
