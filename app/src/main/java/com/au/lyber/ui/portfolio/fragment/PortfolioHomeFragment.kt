@@ -140,17 +140,11 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         }
 
         /* onclick listeners */
-//        binding.ivTopAction.setOnClickListener(this)
-//        binding.includedMyAsset.root.setOnClickListener(this)
         binding.tvViewAll.setOnClickListener(this)
         binding.llThreeDot.setOnClickListener(this)
         binding.btnPlaceOrder.setOnClickListener(this)
         binding.ivProfile.setOnClickListener(this)
         binding.screenContent.setOnClickListener(this)
-//        binding.includedEuro.root.setOnClickListener(this)
-//        binding.tvAssetName.setOnClickListener(this)
-
-        // to retain the state of this fragment
 
         /* pop up initialization */
         assetPopUpWindow = ListPopupWindow(requireContext()).apply {
