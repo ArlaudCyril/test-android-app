@@ -41,7 +41,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/tvTop"
         android:layout_marginTop="18.29dp"
-        android:src="@drawable/ic_yield_chart" />
+        android:src="@drawable/ic_risk" />
 
     <TextView
         android:id="@+id/tvYield"
@@ -49,10 +49,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tvTop"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_toEndOf="@id/ivYield"
-        android:text="@string/yield"
+        android:text="@string/risk"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <TextView
@@ -61,7 +61,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tvTop"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="16dp"
         android:layout_toEndOf="@id/tvYield"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
@@ -74,6 +74,7 @@
         android:layout_alignTop="@id/tvValueYield"
         android:layout_alignBottom="@id/tvValueYield"
         android:layout_marginStart="8dp"
+        android:visibility="gone"
         android:layout_toEndOf="@id/tvValueYield"
         android:src="@drawable/ic_info_medium" />
 
@@ -84,7 +85,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/ivYield"
         android:layout_marginTop="16.29dp"
-        android:src="@drawable/ic_risk" />
+        android:src="@drawable/ic_yield_chart" />
 
 
     <TextView
@@ -93,10 +94,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/ivYield"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="14dp"
         android:layout_toEndOf="@id/ivRisk"
-        android:text="@string/risk"
+        android:text="@string/yield"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
     <TextView
@@ -105,7 +106,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/ivYield"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="4dp"
         android:layout_marginTop="16dp"
         android:layout_toEndOf="@id/tvRisk"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"

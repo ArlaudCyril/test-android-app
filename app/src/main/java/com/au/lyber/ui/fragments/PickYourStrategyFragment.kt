@@ -6,22 +6,21 @@ import android.view.View
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentPickYourStrategyBinding
 import com.au.lyber.models.MessageResponse
 import com.au.lyber.models.StrategiesResponse
-import com.au.lyber.models.Strategy
 import com.au.lyber.ui.adapters.PickStrategyFragmentAdapter
+import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.App
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.getViewModel
 import com.au.lyber.utils.CommonMethods.Companion.replaceFragment
 import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
-import com.au.lyber.utils.CommonMethods.Companion.showToast
 import com.au.lyber.utils.ItemOffsetDecoration
-import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 
 class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>(),
     View.OnClickListener {
@@ -64,7 +63,6 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
                 it.addItemDecoration(ItemOffsetDecoration(12))
             }
             ivTopAction.setOnClickListener(this@PickYourStrategyFragment)
-            tvBuildYourStrategy.setOnClickListener(this@PickYourStrategyFragment)
             btnChooseStrategy.setOnClickListener(this@PickYourStrategyFragment)
         }
 
@@ -172,23 +170,9 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
         binding.apply {
             when (v!!) {
 
-                ivTopAction -> requireActivity().onBackPressed()
-
-                tvBuildYourStrategy -> {
-                    requireActivity().replaceFragment(
-                        R.id.flSplashActivity,
-                        BuildStrategyFragment(),
-                        topBottom = true
-                    )
-                }
+                ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
                 btnChooseStrategy -> {
-                    if (previousPosition != -1) {
-                        viewModel.selectedStrategy = adapter.getItem(previousPosition)
-                        checkInternet(requireContext()) {
-                            showProgressDialog(requireContext())
-                            viewModel.chooseStrategy()
-                        }
-                    } else getString(R.string.please_selected_an_strategy).showToast(requireContext())
+                    findNavController().navigate(R.id.buildStrategyFragment)
                 }
             }
         }

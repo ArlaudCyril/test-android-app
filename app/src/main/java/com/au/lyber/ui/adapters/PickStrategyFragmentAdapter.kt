@@ -8,6 +8,7 @@ import com.au.lyber.R
 import com.au.lyber.databinding.LoaderViewBinding
 import com.au.lyber.models.Strategy
 import com.au.lyber.ui.fragments.StrategyView
+import com.au.lyber.utils.CommonMethods.Companion.gone
 
 class PickStrategyFragmentAdapter(val itemClicked: (position: Int) -> Unit) :
     BaseAdapter<Strategy>() {
@@ -18,11 +19,11 @@ class PickStrategyFragmentAdapter(val itemClicked: (position: Int) -> Unit) :
         init {
 
             strategyView.setOnRadioButtonClickListener {
-                itemClicked(adapterPosition)
+               // itemClicked(adapterPosition)
             }
 
             strategyView.rootView.setOnClickListener {
-                itemClicked(adapterPosition)
+                //itemClicked(adapterPosition)
             }
 
         }
@@ -61,10 +62,10 @@ class PickStrategyFragmentAdapter(val itemClicked: (position: Int) -> Unit) :
                             radioButton.setImageResource(R.drawable.radio_unselect)
                             getDrawable(context, R.drawable.round_stroke_gray_100)
                         }
-
+                        radioButton.gone()
                         topText = it.name ?: ""
-                        yeild = "~${it.expectedYield}% ROI"
-                        risk = it.risk
+                        risk = it.expectedYield.substring(0, 1).uppercase() + it.expectedYield.substring(1).lowercase()
+                        yeild = it.risk.substring(0, 1).uppercase() + it.risk.substring(1).lowercase()
                         allocationView.setAssetsList(it.bundle)
                     }
                 }

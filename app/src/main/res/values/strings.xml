@@ -526,8 +526,8 @@
     <string name="camera">Camera</string>
     <string name="select_from_gallery">Select from gallery</string>
     <string name="set_default_pictures">Set default pictures</string>
-    <string name="yield">Yield:</string>
-    <string name="risk">Risk:</string>
+    <string name="yield">Yield :</string>
+    <string name="risk">Risk :</string>
     <string name="all_networks_for_this_asset_are_currently_deactivated_for_deposit">All networks for this asset are currently deactivated for deposit.</string>
     <string name="send_only_to_this_address_using_the_protocol">Send only %1$s (%2$s) to this address, using the %3$s protocol.</string>
     <string name="your_activity_on_lyber">Your activity on Lyber</string>
