@@ -149,7 +149,7 @@ data class InvestmentStrategyAsset(
 )
 
 
-data class AddedAsset(val addAsset: Data, var allocation: Float)
+data class AddedAsset(val addAsset: PriceServiceResume, var allocation: Float)
 
 data class AddAsset(
     val asset: Asset,

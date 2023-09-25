@@ -4,15 +4,19 @@ import android.app.Dialog
 import android.os.Build
 import android.os.Bundle
 import android.view.View
+import android.view.ViewGroup
 import android.view.Window
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.au.lyber.R
 import com.au.lyber.databinding.BottomSheetSpinnerBinding
 import com.au.lyber.databinding.CustomDialogLayoutBinding
 import com.au.lyber.databinding.FragmentBuildStrategyBinding
 import com.au.lyber.models.AddedAsset
 import com.au.lyber.models.Data
+import com.au.lyber.models.PriceServiceResume
+import com.au.lyber.ui.activities.BaseActivity
 import com.au.lyber.ui.adapters.BuildStrategyAdapter
 import com.au.lyber.ui.fragments.bottomsheetfragments.AddAssetBottomSheet
 import com.au.lyber.ui.fragments.bottomsheetfragments.BaseBottomSheet
@@ -26,6 +30,7 @@ import com.au.lyber.utils.CommonMethods.Companion.showToast
 import com.au.lyber.utils.CommonMethods.Companion.toPx
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
+import com.au.lyber.utils.CommonMethods.Companion.loadCircleCrop
 
 class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View.OnClickListener {
 
@@ -48,7 +53,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
         viewModel = getViewModel(requireActivity())
         viewModel.buildStrategyResponse.observe(viewLifecycleOwner) {
             dismissProgressDialog()
-            requireActivity().onBackPressed()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
         adapter = BuildStrategyAdapter(::clickListener)
@@ -62,7 +67,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
 
     }
 
-    private fun clickListen(asset: Data) {
+    private fun clickListen(asset: PriceServiceResume) {
         val item = AddedAsset(asset, 100F)
         viewModel.addedAsset.apply {
 
@@ -195,7 +200,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                     val name: String = bind.etInput.text.trim().toString()
                     when {
                         name.isEmpty() -> {
-                            "Please enter name for your strategy.".showToast(requireContext())
+                            getString(R.string.please_enter_name_for_your_strategy).showToast(requireContext())
                             bind.etInput.requestKeyboard()
                         }
                         else -> {
@@ -222,7 +227,8 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
     private fun clickListener(position: Int) {
         viewModel.addedAsset[position].let {
             val allocationValue = it.allocation.toInt()
-            val assetsName = it.addAsset.name + " (${it.addAsset.symbol})"
+            val assest = BaseActivity.assets.firstNotNullOfOrNull{ item -> item.takeIf {item.id ==viewModel.addedAsset[position].addAsset.id}}
+            val assetsName = assest!!.fullName+ " (${assest!!.imageUrl})"
             SpinnerBottomSheet(::manuallySelectedAllocation).apply {
                 arguments = Bundle().apply {
                     putString("assetsName", assetsName)
