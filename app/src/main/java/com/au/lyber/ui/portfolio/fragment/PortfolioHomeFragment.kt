@@ -410,39 +410,24 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
 
                 btnPlaceOrder -> {
-                    when (viewModel.screenCount) {
+                    InvestBottomSheet(
+                        ::investMoneyClicked
+                    ).show(childFragmentManager, "")
+                    // Create a transparent color view
+                    _fragmentPortfolio = this@PortfolioHomeFragment
+                    val transparentView = View(context)
+                    transparentView.setBackgroundColor(getColor(requireContext(), R.color.semi_transparent_dark))
 
-                        1 -> {
+                    // Set layout parameters for the transparent view
+                    val viewParams = RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.MATCH_PARENT
+                    )
 
-                            viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
-                            viewModel.selectedAsset
-                            navController.navigate(R.id.addAmountFragment)
-
-                        }
-
-                        else -> {
-                            InvestBottomSheet(
-                                ::investMoneyClicked
-                            ).show(childFragmentManager, "")
-                            // Create a transparent color view
-                            _fragmentPortfolio = this@PortfolioHomeFragment
-                            val transparentView = View(context)
-                            transparentView.setBackgroundColor(getColor(requireContext(), R.color.semi_transparent_dark))
-
-                            // Set layout parameters for the transparent view
-                            val viewParams = RelativeLayout.LayoutParams(
-                                RelativeLayout.LayoutParams.MATCH_PARENT,
-                                RelativeLayout.LayoutParams.MATCH_PARENT
-                            )
-
-                            // Add the transparent view to the RelativeLayout
-                            screenContent.addView(transparentView, viewParams)
+                    // Add the transparent view to the RelativeLayout
+                    screenContent.addView(transparentView, viewParams)
 
 
-                        }
-
-
-                    }
                 }
 
                 ivProfile -> navController.navigate(R.id.profileFragment)

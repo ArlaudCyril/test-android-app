@@ -47,8 +47,6 @@ class AddAssetBottomSheet(private val clickListener: (PriceServiceResume) -> Uni
     private var topLosers = mutableListOf<PriceServiceResume>()
     private var stables = mutableListOf<PriceServiceResume>()
     private val searchText get() = binding.etSearch.text.trim().toString()
-
-    private var recursiveItems = false
     override fun bind() = LayoutAddAnAssetBinding.inflate(layoutInflater)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -89,7 +87,6 @@ class AddAssetBottomSheet(private val clickListener: (PriceServiceResume) -> Uni
                 }
 
                 CommonMethods.dismissProgressDialog()
-                binding.rvRefresh.isRefreshing = false
             }
         }
 
@@ -156,9 +153,6 @@ class AddAssetBottomSheet(private val clickListener: (PriceServiceResume) -> Uni
             viewModel.getAllPriceResume()
         }
 
-        binding.rvRefresh.setOnRefreshListener {
-            viewModel.getAllPriceResume()
-        }
 
 
     }
