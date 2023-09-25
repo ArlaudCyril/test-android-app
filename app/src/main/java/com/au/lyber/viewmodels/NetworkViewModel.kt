@@ -235,7 +235,9 @@ open class NetworkViewModel : ViewModel() {
 
     fun getStrategies() {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().getStrategies()
+            val map = HashMap<String,Any>()
+            map.put("type","all")
+            val res = RestClient.get().getStrategies(map)
             if (res.isSuccessful)
                 _getStrategiesResponse.postValue(res.body())
             else listener?.onRetrofitError(res.errorBody())
@@ -247,7 +249,7 @@ open class NetworkViewModel : ViewModel() {
             val hashMap = hashMapOf<String, Any>()
 //            hashMap["assets"] = list
             hashMap["is_own_strategy"] = 0
-            hashMap["investment_strategy_id"] = it._id
+            hashMap["investment_strategy_id"] = it.ownerUuid
             viewModelScope.launch(exceptionHandler) {
                 val res = RestClient.get().chooseStrategy(hashMap)
                 if (res.isSuccessful)

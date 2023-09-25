@@ -104,7 +104,7 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                                 checkInternet(requireContext()) {
                                     showProgressDialog(requireContext())
                                     viewModel.investStrategy(
-                                        it._id,
+                                        it.ownerUuid,
                                         viewModel.selectedFrequency.uppercase(),
                                         viewModel.amount.toFloat().toInt()
                                     )
@@ -167,7 +167,7 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                         tvValueLyberFee
                     ).visible()
 
-                    viewModel.selectedStrategy?.investment_strategy_assets?.let {
+                    viewModel.selectedStrategy?.bundle?.let {
                         binding.allocationView.setAssetsList(it)
                     }
 

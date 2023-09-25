@@ -66,7 +66,7 @@ class AllocationView : LinearLayout {
                 0,
                 LayoutParams.WRAP_CONTENT
             ).apply {
-                weight = list[pos].allocation.toFloat()
+                weight = list[pos].share.toFloat()
             }
 
             when (pos) {
@@ -117,8 +117,8 @@ class AllocationView : LinearLayout {
             holder.binding.apply {
                 list[position].let {
                     ivColor.setBackgroundTint(colors[position])
-                    tvAssetsName.text = it.asset_id.uppercase()
-                    tvAssetPercent.text = "${it.allocation.roundToInt()}%"
+                    tvAssetsName.text = it.asset.uppercase()
+                    tvAssetPercent.text = "${it.share.roundToInt()}%"
                 }
             }
         }

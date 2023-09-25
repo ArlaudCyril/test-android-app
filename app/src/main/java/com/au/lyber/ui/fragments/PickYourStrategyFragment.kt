@@ -78,12 +78,12 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
     private val getStrategies = Observer<StrategiesResponse> {
         dismissProgressDialog()
 
-        adapter.setList(it.strategies)
+        adapter.setList(it.data)
 
-        val strategy: Strategy? = it.strategies.find { it.is_chosen == 1 }
-        val position = it.strategies.indexOf(strategy)
-        previousPosition = position
-        viewModel.strategyPositionSelected.postValue(position)
+      /*  val strategy: Strategy? = it.data.find { it.is_chosen == 1 }
+        val position = it.data.indexOf(strategy)
+        previousPosition = position*/
+       // viewModel.strategyPositionSelected.postValue(position)
 
         binding.recyclerViewStrategies.startLayoutAnimation()
     }
@@ -203,36 +203,5 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
         viewModelStore.clear()
     }
 
-
-    /* static data */
-//    private fun getStrategies(): List<Strategy> {
-//        val list = mutableListOf<Strategy>()
-//        list.add(Strategy("Safe", "~5% APY", "Low", assetsOne))
-//        list.add(Strategy("Intermediate", "~10% APY", "Medium", assetsTwo))
-//        list.add(Strategy("Bold", "~15% APY", "High", assetsThree))
-//        return list
-//    }
-
-/*    private val assetsOne = mutableListOf<AssetItems>().apply {
-        add(AssetItems("USDC", 50, R.color.purple_600))
-        add(AssetItems("USDT", 50, R.color.purple_400))
-    }
-
-    private val assetsTwo = mutableListOf<AssetItems>().apply {
-        add(AssetItems("USDC", 50, R.color.purple_600))
-        add(AssetItems("BTC", 25, R.color.purple_400))
-        add(AssetItems("ETH", 25, R.color.purple_200))
-    }
-
-    private val assetsThree = mutableListOf<AssetItems>().apply {
-        add(AssetItems("BTC", 20, R.color.purple_800))
-        add(AssetItems("ETH", 20, R.color.purple_700))
-        add(AssetItems("SOL", 10, R.color.purple_600))
-        add(AssetItems("AVAX", 10, R.color.purple_500))
-        add(AssetItems("AVA", 10, R.color.purple_400))
-        add(AssetItems("XRP", 10, R.color.purple_300))
-        add(AssetItems("FTT", 10, R.color.purple_100))
-        add(AssetItems("MATIC", 10, R.color.purple_00))
-    }*/
 
 }

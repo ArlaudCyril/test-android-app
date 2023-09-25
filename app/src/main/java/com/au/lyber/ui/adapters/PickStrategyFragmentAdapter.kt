@@ -52,7 +52,7 @@ class PickStrategyFragmentAdapter(val itemClicked: (position: Int) -> Unit) :
             ORDINARY_VIEW -> {
                 (holder as ViewHolder).strategyView.apply {
                     itemList[position]?.let {
-                        background = if (it.is_chosen == 1) {
+                        background = if (false) {
                             isStrategySelected = true
                             radioButton.setImageResource(R.drawable.radio_select)
                             getDrawable(context, R.drawable.round_stroke_purple_500)
@@ -62,10 +62,10 @@ class PickStrategyFragmentAdapter(val itemClicked: (position: Int) -> Unit) :
                             getDrawable(context, R.drawable.round_stroke_gray_100)
                         }
 
-                        topText = it.status ?: ""
-                        yeild = "~${it.yield}% ROI"
+                        topText = it.name ?: ""
+                        yeild = "~${it.expectedYield}% ROI"
                         risk = it.risk
-                        allocationView.setAssetsList(it.investment_strategy_assets)
+                        allocationView.setAssetsList(it.bundle)
                     }
                 }
             }

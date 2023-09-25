@@ -155,12 +155,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             height = 420.px
             setOnItemClickListener { _, _, position, _ ->
                 assetPopupAdapter.getItemAt(position)?.let {
-                    // binding.tvAssetName.text = "${it.asset_name} (${it.symbol.uppercase()})"
                     dismiss()
-                    /*checkInternet(requireContext()) {
-                        showProgressDialog(requireContext())
-                        viewModel.getAssetDetail(it.asset_id)
-                    }*/
                 }
             }
         }
@@ -477,13 +472,6 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 rvMyAssets -> {
                     requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
                 }
-//                    if (assetPopupAdapter.hasNoData()) {
-//                        assetPopupAdapter.addProgress()
-//                        assetPopUpWindow.show()
-//                    } else
-//                        if (assetPopUpWindow.isShowing)
-//                            assetPopUpWindow.dismiss()
-//                        else assetPopUpWindow.show()
             }
         }
     }

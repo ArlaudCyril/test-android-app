@@ -60,8 +60,8 @@ interface Api {
     @POST("user/invest/education")
     suspend fun educationStrategy(): Response<MessageResponse>
 
-    @GET("investment-strategies")
-    suspend fun getStrategies(): Response<StrategiesResponse>
+    @GET("strategy-service/strategies")
+    suspend fun getStrategies(@QueryMap hashMap: HashMap<String, Any>): Response<StrategiesResponse>
 
     @POST("user/investment-strategy")
     suspend fun chooseStrategy(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>

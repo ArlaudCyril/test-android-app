@@ -137,11 +137,11 @@ object Constants {
 
     val colors = mutableListOf<Int>().apply {
         add(R.color.purple_800)
-//        add(R.color.purple_700)
+       add(R.color.purple_700)
         add(R.color.purple_600)
-//        add(R.color.purple_500)
+        add(R.color.purple_500)
         add(R.color.purple_400)
-//        add(R.color.purple_300)
+       add(R.color.purple_300)
         add(R.color.purple_200)
         add(R.color.purple_100)
         add(R.color.purple_00)
