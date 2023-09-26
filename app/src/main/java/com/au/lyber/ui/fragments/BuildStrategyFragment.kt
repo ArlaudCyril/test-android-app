@@ -118,11 +118,8 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                 count > 100 -> {
                     canBuildStrategy = false
                     val redColor = ContextCompat.getColor(requireContext(), R.color.red_500)
-                    binding.tvNumberAssets.visible()
                     binding.tvAllocationInfo.visible()
-                    binding.tvNumberAssets.setTextColor(redColor)
                     binding.tvAllocationInfo.setTextColor(redColor)
-                    binding.tvNumberAssets.text = getString(R.string.assetbasedata, count())
                     binding.tvAllocationInfo.text =
                         getString(
                             R.string.your_allocations_is_greater_than_100_remove,
@@ -134,11 +131,8 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                 count < 100 -> {
                     canBuildStrategy = false
                     val redColor = ContextCompat.getColor(requireContext(), R.color.red_500)
-                    binding.tvNumberAssets.visible()
                     binding.tvAllocationInfo.visible()
-                    binding.tvNumberAssets.setTextColor(redColor)
                     binding.tvAllocationInfo.setTextColor(redColor)
-                    binding.tvNumberAssets.text = getString(R.string.assetbasedata, count())
                     binding.tvAllocationInfo.text = getString(R.string.your_allocations_is_less_than_100_add, (100 - count).toInt())
                     binding.btnSaveMyStrategy.background =
                         ContextCompat.getDrawable(requireContext(), R.drawable.button_purple_400)
@@ -146,12 +140,8 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                 else -> {
                     val one = ContextCompat.getColor(requireContext(), R.color.purple_gray_800)
                     val two = ContextCompat.getColor(requireContext(), R.color.purple_gray_600)
-
-                    binding.tvNumberAssets.visible()
                     binding.tvAllocationInfo.visible()
-                    binding.tvNumberAssets.setTextColor(one)
                     binding.tvAllocationInfo.setTextColor(two)
-                    binding.tvNumberAssets.text = getString(R.string.assetbasedata, count())
                     binding.tvAllocationInfo.text =
                         getString(R.string.your_strategy_is_ready_to_be_saved)
                     binding.btnSaveMyStrategy.setBackgroundResource(R.drawable.button_purple_500)

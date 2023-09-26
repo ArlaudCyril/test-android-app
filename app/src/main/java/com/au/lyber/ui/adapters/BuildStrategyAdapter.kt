@@ -43,10 +43,10 @@ class BuildStrategyAdapter(val handle: (position: Int) -> Unit = { _ -> }) :
             itemList[position]?.let {
                 if (it.addAsset.priceServiceResumeData.change.roundFloat().toFloat() > 0) {
                     tvAssetVariation.text = "+${it.addAsset.priceServiceResumeData.change.roundFloat().commaFormatted}%"
-                    tvAssetVariation.setTextColor(tvAssetVariation.context.getColor(R.color.green_500))
+                    //tvAssetVariation.setTextColor(tvAssetVariation.context.getColor(R.color.green_500))
                 } else {
                     tvAssetVariation.text = "${it.addAsset.priceServiceResumeData.change.roundFloat().commaFormatted}%"
-                    tvAssetVariation.setTextColor(tvAssetVariation.context.getColor(R.color.red_500))
+                    //tvAssetVariation.setTextColor(tvAssetVariation.context.getColor(R.color.red_500))
 
                 }
                 val urlLineChart = it.addAsset.priceServiceResumeData.squiggleURL
