@@ -16,6 +16,7 @@ import com.au.lyber.R
 import com.au.lyber.databinding.ItemAssetBinding
 import com.au.lyber.databinding.LayoutAddAnAssetBinding
 import com.au.lyber.databinding.LoaderViewBinding
+import com.au.lyber.models.AddedAsset
 import com.au.lyber.models.PriceServiceResume
 import com.au.lyber.ui.activities.BaseActivity
 import com.au.lyber.ui.adapters.BaseAdapter
@@ -33,7 +34,7 @@ import com.au.lyber.utils.OnTextChange
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.tabs.TabLayout
 
-class AddAssetBottomSheet(private val clickListener: (PriceServiceResume) -> Unit = { _ -> }) :
+class AddAssetBottomSheet(private val clickListener: (PriceServiceResume) -> Unit = { _ -> },private val addedAssets: MutableList<AddedAsset> ) :
     BaseBottomSheet<LayoutAddAnAssetBinding>(),View.OnClickListener {
 
     private lateinit var viewModel: PortfolioViewModel
@@ -67,7 +68,20 @@ class AddAssetBottomSheet(private val clickListener: (PriceServiceResume) -> Uni
                 stables.clear()
                 BaseActivity.balanceResume.clear()
                 BaseActivity.balanceResume.addAll(it)
-                assets.addAll(it)
+                val dummyList: MutableList<PriceServiceResume> = mutableListOf()
+                for (data in it){
+                    var isAdded = false
+                    for (added in addedAssets){
+                        if (added.addAsset.id == data.id){
+                            isAdded = true
+                            break
+                        }
+                    }
+                    if (!isAdded){
+                        dummyList.add(data)
+                    }
+                }
+                assets.addAll(dummyList)
                 trendings.addAll(assets)
                 topLosers.addAll(assets.topLosers())
                 topGainers.addAll(topLosers.reversed())
@@ -192,40 +206,6 @@ class AddAssetBottomSheet(private val clickListener: (PriceServiceResume) -> Uni
 
     }
 
-    private fun getCoins(category: String = Constants.VOLUME_DESC) {
-        checkInternet(requireContext()) {
-
-            /*if (page == 1)
-                binding.rvRefresh.isRefreshing = true*/
-            if (binding.etSearch.text.trim().isEmpty()) {
-                when (binding.tabLayout.selectedTabPosition) {
-                    0 -> viewModel.getCoins(order = Constants.VOLUME_DESC)
-                    1 -> viewModel.getCoins(order = Constants.HOURS_24_DESC)
-                    2 -> viewModel.getCoins(order = Constants.HOURS_24_ASC)
-                    else -> viewModel.getCoins(order = Constants.STABLE_COINS)
-                }
-            } else {
-                when (binding.tabLayout.selectedTabPosition) {
-                    0 -> viewModel.getCoins(
-                        order = Constants.VOLUME_DESC,
-                        keyword = binding.etSearch.text.trim().toString()
-                    )
-                    1 -> viewModel.getCoins(
-                        order = Constants.HOURS_24_DESC,
-                        keyword = binding.etSearch.text.trim().toString()
-                    )
-                    2 -> viewModel.getCoins(
-                        order = Constants.HOURS_24_ASC,
-                        keyword = binding.etSearch.text.trim().toString()
-                    )
-                    else -> viewModel.getCoins(
-                        order = Constants.STABLE_COINS,
-                        keyword = binding.etSearch.text.trim().toString()
-                    )
-                }
-            }
-        }
-    }
 
 
     class AddAssetAdapter(
@@ -273,7 +253,7 @@ class AddAssetBottomSheet(private val clickListener: (PriceServiceResume) -> Uni
                         BaseActivity.assets.firstNotNullOfOrNull{ item -> item.takeIf {item.id == id}}
                             ?.let {
                                     it1 -> ivAsset.loadCircleCrop(it1.imageUrl); tvAssetName.text = it1.fullName
-                            }
+                                    }
 
                         val context = ivAsset.context
                         tvAssetValue.typeface = context.resources.getFont(R.font.mabry_pro_medium)

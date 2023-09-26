@@ -89,6 +89,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                     add(item)
                     for (i in 0 until count()) {
                         get(i).allocation = 100F / count()
+                        get(i).isChangedManually = false
                         adapter.addItem(get(i))
                     }
 
@@ -120,11 +121,8 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                     val redColor = ContextCompat.getColor(requireContext(), R.color.red_500)
                     binding.tvAllocationInfo.visible()
                     binding.tvAllocationInfo.setTextColor(redColor)
-                    binding.tvAllocationInfo.text =
-                        getString(
-                            R.string.your_allocations_is_greater_than_100_remove,
-                            (count - 100).toInt()
-                        )
+                    binding.tvAllocationInfo.text = "${getString(
+                        R.string.your_allocations_is_greater_than_100_remove)} ${(count - 100).toInt()} %"
                     binding.btnSaveMyStrategy.background =
                         ContextCompat.getDrawable(requireContext(), R.drawable.button_purple_400)
                 }
@@ -133,7 +131,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                     val redColor = ContextCompat.getColor(requireContext(), R.color.red_500)
                     binding.tvAllocationInfo.visible()
                     binding.tvAllocationInfo.setTextColor(redColor)
-                    binding.tvAllocationInfo.text = getString(R.string.your_allocations_is_less_than_100_add, (100 - count).toInt())
+                    binding.tvAllocationInfo.text = "${getString(R.string.your_allocations_is_less_than_100_add)} ${ (100 - count).toInt()}%"
                     binding.btnSaveMyStrategy.background =
                         ContextCompat.getDrawable(requireContext(), R.drawable.button_purple_400)
                 }
@@ -158,7 +156,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
         binding.apply {
             when (v!!) {
                 btnAddAssets -> {
-                    AddAssetBottomSheet(::clickListen).show(
+                    AddAssetBottomSheet(::clickListen,viewModel.addedAsset).show(
                         requireActivity().supportFragmentManager,
                         ""
                     )
@@ -218,7 +216,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
         viewModel.addedAsset[position].let {
             val allocationValue = it.allocation.toInt()
             val assest = BaseActivity.assets.firstNotNullOfOrNull{ item -> item.takeIf {item.id ==viewModel.addedAsset[position].addAsset.id}}
-            val assetsName = assest!!.fullName+ " (${assest!!.imageUrl})"
+            val assetsName = assest!!.fullName+ " (${assest.id.uppercase()})"
             SpinnerBottomSheet(::manuallySelectedAllocation).apply {
                 arguments = Bundle().apply {
                     putString("assetsName", assetsName)
@@ -231,6 +229,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
 
     private fun manuallySelectedAllocation(value: Int, position: Int) {
         adapter.getItem(position)?.allocation = value.toFloat()
+        adapter.getItem(position)?.isChangedManually = true
         adapter.notifyItemChanged(position)
         calculateAllocations()
     }

@@ -56,8 +56,14 @@ class BuildStrategyAdapter(val handle: (position: Int) -> Unit = { _ -> }) :
 
                 ivAsset.loadCircleCrop(asset!!.imageUrl)
 
-                tvAllocationValue.text = "(${it.allocation.roundToInt().commaFormatted}%)"
-                tvAuto.text = "Auto"
+
+                if (it.isChangedManually) {
+                    tvAuto.text = ""
+                    tvAllocationValue.text = "${it.allocation.roundToInt().commaFormatted}%"
+                }else{
+                    tvAllocationValue.text = "(${it.allocation.roundToInt().commaFormatted}%)"
+                    tvAuto.text = tvAuto.context.getString(R.string.auto )
+                }
                 tvAssetValue.text = "${
                     it.addAsset.priceServiceResumeData.lastPrice.toString()
                         .roundFloat().commaFormatted

@@ -310,8 +310,8 @@
     <string name="all_assets">All assets</string>
     <string name="unable_to_connect_to_the_server">Unable to connect to the server</string>
     <string name="assetbasedata">%1$s AssetBaseData</string>
-    <string name="your_allocations_is_greater_than_100_remove">Your allocations is greater than 100%, remove %1$s%</string>
-    <string name="your_allocations_is_less_than_100_add">Your allocations is less than 100%, add %1$s%</string>
+    <string name="your_allocations_is_greater_than_100_remove">Your allocations is greater than 100%, remove </string>
+    <string name="your_allocations_is_less_than_100_add">Your allocations is less than 100%, add </string>
     <string name="your_strategy_is_ready_to_be_saved">Your strategy is ready to be saved.</string>
     <string name="deposit_adress">Deposit Address</string>
     <string name="adress_copied">Address copied</string>
