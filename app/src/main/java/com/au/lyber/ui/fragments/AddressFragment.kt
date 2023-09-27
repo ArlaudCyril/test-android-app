@@ -33,8 +33,8 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (requireParentFragment() as FillDetailFragment).position = 3
-        (requireParentFragment() as FillDetailFragment).setUpViews(3)
+        (requireParentFragment() as FillDetailFragment).position = 1
+        (requireParentFragment() as FillDetailFragment).setUpViews(1)
         (requireParentFragment() as FillDetailFragment).binding.ivTopAction.setBackgroundResource(
             R.drawable.ic_close
         )

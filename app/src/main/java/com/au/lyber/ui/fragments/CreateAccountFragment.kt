@@ -200,7 +200,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                 val bundle = Bundle().apply {
                     putBoolean(Constants.FOR_LOGIN, false)
                 }
-                findNavController().navigate(R.id.createPinFragment,bundle)
+                findNavController().navigate(R.id.emailAddressFragment,bundle)
             }
         }
     }

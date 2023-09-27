@@ -570,4 +570,5 @@
     <string name="start_identity_verifications">Start Identity Verification</string>
     <string name="review_my_informations">Review my information</string>
     <string name="change_my_informations">Change my information</string>
+    <string name="password_warning">The password must have atleast 10 characters, 1 special character, 1 lower case and 1 upper case</string>
 </resources>

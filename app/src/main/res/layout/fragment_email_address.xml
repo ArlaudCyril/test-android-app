@@ -1,53 +1,177 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical">
+    android:background="@drawable/splash_background"
+    android:fitsSystemWindows="true">
 
-    <TextView
-        style="@style/TitleText"
-        android:text="@string/adresse_email" />
 
-    <TextView
-        style="@style/SubTitleText"
-        android:layout_marginTop="4dp"
-        android:lineSpacingExtra="4dp"
-        android:text="@string/subtitle_email" />
-
-    <EditText
-        android:id="@+id/etEmail"
-        style="@style/EditTextTheme"
-        android:layout_marginTop="24dp"
-        android:background="@drawable/edit_text_background"
-        android:focusable="true"
-        android:hint="@string/hint_email"
-        android:inputType="textEmailAddress"
-        android:maxLines="1"
+    <!--android:background="@drawable/curved_button"-->
+    <ImageView
+        android:id="@+id/ivTopAction"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/white_back"
         android:paddingHorizontal="12dp"
-        android:paddingVertical="16dp" />
+        android:paddingVertical="12dp"
+        android:src="@drawable/ic_close"
+        app:layout_constraintBottom_toTopOf="@id/topGuide"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/black" />
 
-    <com.google.android.material.textfield.TextInputLayout
+    <TextView
+        android:id="@+id/tvTopAction"
+        style="@style/SubheadMabry"
+        android:layout_marginStart="12dp"
+        android:layout_marginBottom="12dp"
+        android:backgroundTint="@color/purple_gray_00"
+        android:padding="12dp"
+        android:src="@drawable/ic_close"
+        android:text="@string/logout"
+        android:textColor="@color/purple_500"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/topGuide"
+        app:layout_constraintStart_toStartOf="parent"
+        app:tint="@color/black" />
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="@id/topGuide">
+
+        <FrameLayout
+            android:id="@+id/frameLayoutSignUp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/top_curved_layout"
+            android:backgroundTint="@color/white"
+            android:elevation="2dp"
+            android:paddingTop="16dp"
+            android:paddingHorizontal="24dp"
+            android:paddingBottom="24dp">
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <TextView
+                    style="@style/TitleText"
+                    android:text="@string/adresse_email" />
+
+                <TextView
+                    style="@style/SubTitleText"
+                    android:layout_marginTop="4dp"
+                    android:lineSpacingExtra="4dp"
+                    android:text="@string/subtitle_email" />
+
+                <EditText
+                    android:id="@+id/etEmail"
+                    style="@style/EditTextTheme"
+                    android:layout_marginTop="24dp"
+                    android:background="@drawable/edit_text_background"
+                    android:focusable="true"
+                    android:hint="@string/hint_email"
+                    android:inputType="textEmailAddress"
+                    android:maxLines="1"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="16dp" />
+
+                <com.google.android.material.textfield.TextInputLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="24dp"
+                    android:background="@null"
+                    app:hintAnimationEnabled="false"
+                    app:hintEnabled="false"
+                    app:passwordToggleEnabled="true">
+
+                    <EditText
+                        android:id="@+id/etPassword"
+                        style="@style/EditTextTheme"
+                        android:layout_marginTop="24dp"
+                        android:background="@drawable/edit_text_background"
+                        android:focusable="true"
+                        android:hint="@string/password"
+                        android:inputType="textPassword"
+                        android:maxLines="1"
+                        android:paddingHorizontal="12dp"
+                        android:paddingVertical="16dp" />
+                </com.google.android.material.textfield.TextInputLayout>
+                <TextView
+                    style="@style/SubTitleText"
+                    android:layout_marginTop="16dp"
+                    android:lineSpacingExtra="4dp"
+                    android:textColor="@color/red_500"
+                    android:text="@string/password_warning" />
+
+                <View
+                    android:id="@+id/view"
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+                <Button
+                    android:id="@+id/btnNext"
+                    style="@style/ButtonStyle"
+                    android:layout_gravity="bottom"
+                    android:background="@drawable/curved_button"
+                    android:backgroundTint="@color/purple_500"
+                    android:text="@string/next"
+                    android:textAllCaps="false"
+                    android:textColor="@color/white" />
+            </LinearLayout>
+        </FrameLayout>
+    </ScrollView>
+
+    <LinearLayout
+        android:id="@+id/llIndicators"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:elevation="2dp"
+        android:orientation="horizontal"
+        android:padding="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+    </LinearLayout>
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/topGuide"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="24dp"
-        android:background="@null"
-        app:hintAnimationEnabled="false"
-        app:hintEnabled="false"
-        app:passwordToggleEnabled="true">
+        android:orientation="horizontal"
+        app:layout_constraintGuide_begin="91dp" />
 
-        <EditText
-            android:id="@+id/etPassword"
-            style="@style/EditTextTheme"
-            android:layout_marginTop="24dp"
-            android:background="@drawable/edit_text_background"
-            android:focusable="true"
-            android:hint="@string/password"
-            android:inputType="textPassword"
-            android:maxLines="1"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="16dp" />
-    </com.google.android.material.textfield.TextInputLayout>
-
-
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
