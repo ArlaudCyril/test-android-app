@@ -279,7 +279,7 @@
     <string name="once">Once</string>
     <string name="weekly">Weekly</string>
     <string name="monthly">Monthly</string>
-    <string name="enter_the_code_displayed_on_your_sms">Enter the code displayed on your sms</string>
+    <string name="enter_the_code_displayed_on_your_sms">Enter the code received by SMS</string>
     <string name="please_enter_iban_number">Please enter IBAN number</string>
     <string name="please_enter_bic_number">Please enter BIC number</string>
     <string name="please_enter_your_name">Please enter your name</string>
