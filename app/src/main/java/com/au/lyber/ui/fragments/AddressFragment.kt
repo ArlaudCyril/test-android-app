@@ -81,12 +81,12 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
                 binding.etStreetNumber.requestKeyboard()
             }
 
-            buildingFloor.isEmpty() -> {
+         /*   buildingFloor.isEmpty() -> {
                 getString(R.string.please_enter_building_name_or_floor_name).showToast(
                     requireContext()
                 )
                 binding.etBuildingNumberFloor.requestKeyboard()
-            }
+            }*/
 
             city.isEmpty() -> {
                 getString(R.string.please_enter_city_name).showToast(requireContext())
