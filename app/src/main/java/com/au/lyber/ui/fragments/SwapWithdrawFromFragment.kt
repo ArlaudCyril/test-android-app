@@ -58,8 +58,6 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
         }
 
         binding.ivTopAction.setOnClickListener(this)
-        binding.rlAllPortfolio.setOnClickListener(this)
-        binding.includedAsset.root.setOnClickListener(this)
         prepareUi()
         getData()
     }
