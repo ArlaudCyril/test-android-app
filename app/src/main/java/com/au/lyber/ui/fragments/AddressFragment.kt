@@ -33,8 +33,8 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (requireParentFragment() as FillDetailFragment).position = 3
-        (requireParentFragment() as FillDetailFragment).setUpViews(3)
+        (requireParentFragment() as FillDetailFragment).position = 1
+        (requireParentFragment() as FillDetailFragment).setUpViews(1)
         (requireParentFragment() as FillDetailFragment).binding.ivTopAction.setBackgroundResource(
             R.drawable.ic_close
         )
@@ -81,12 +81,12 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
                 binding.etStreetNumber.requestKeyboard()
             }
 
-            buildingFloor.isEmpty() -> {
+         /*   buildingFloor.isEmpty() -> {
                 getString(R.string.please_enter_building_name_or_floor_name).showToast(
                     requireContext()
                 )
                 binding.etBuildingNumberFloor.requestKeyboard()
-            }
+            }*/
 
             city.isEmpty() -> {
                 getString(R.string.please_enter_city_name).showToast(requireContext())

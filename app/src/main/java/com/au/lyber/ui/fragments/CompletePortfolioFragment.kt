@@ -5,19 +5,17 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentCompletePortfolioBinding
 import com.au.lyber.ui.fragments.bottomsheetfragments.BottomSheetDialog
+import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.App
 import com.au.lyber.utils.CommonMethods.Companion.getViewModel
 import com.au.lyber.utils.CommonMethods.Companion.gone
 import com.au.lyber.utils.CommonMethods.Companion.strikeText
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
-import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 
 class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>(),
     View.OnClickListener {
@@ -38,6 +36,7 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
 
         binding.btnInvestMoney.setOnClickListener(this)
         binding.tvFillPersonalData.setOnClickListener(this)
+        binding.tvCreateAnAccount.setOnClickListener(this)
         binding.btnMenu.setOnClickListener(this)
 
         Log.d(TAG, "onViewCreated: ")
@@ -49,20 +48,63 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
         Log.d(TAG, "setUpUi: $state")
 
         when (state) {
+            Constants.ACCOUNT_CREATING -> {
+                accountCreationFilled(false,true)
+              //  personalDataFilled(personalDataFilled = false, true)
+            }
             Constants.ACCOUNT_CREATED -> {
+                accountCreationFilled(true,false)
                 personalDataFilled(personalDataFilled = false, true)
             }
             Constants.PERSONAL_DATA_FILLED -> { // focussed verify identity
                 personalDataFilled(true)
+                accountCreationFilled(true,false)
                 verifyIdentityFocussed(true)
             }
-            Constants.KYC_COMPLETED -> { // verified
+            Constants.KYC_COMPLETED -> {
+                accountCreationFilled(true,false)// verified
                 personalDataFilled(true)
                 identityVerified()
             }
             else -> {
                 personalDataFilled(true)
+                accountCreationFilled(true,false)
                 identityVerified()
+            }
+        }
+    }
+
+    private fun accountCreationFilled(personalDataFilled: Boolean, showProgress: Boolean = false) {
+        binding.apply {
+            if (personalDataFilled) {
+
+                if (showProgress)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        progressSteps.setProgress(60, true)
+                    } else
+                        progressSteps.progress = 60
+
+                tvStepsCompleted.text = getString(R.string._1_3_steps_completed)
+
+                tvNumFillCreateAccount.gone()
+                tvNumFillCreateAccount.setOnClickListener(null)
+                ivCreateAccount.setImageResource(R.drawable.drawable_circle_checked)
+                tvCreateAnAccount.strikeText()
+                tvCreateAnAccount.setCompoundDrawables(null, null, null, null)
+                tvCreateAnAccount.setTextColor(requireContext().getColor(R.color.purple_gray_600))
+            } else {
+                if (showProgress)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        progressSteps.setProgress(0, true)
+                    } else
+                        progressSteps.progress = 0
+                tvNumFillCreateAccount.gone()
+                tvNumFillCreateAccount.visible()
+                tvCreateAnAccount.setOnClickListener(this@CompletePortfolioFragment)
+                ivCreateAccount.setBackgroundResource(R.drawable.circle_drawable_purple_500)
+                tvNumFillCreateAccount.text = "1"
+                tvNumFillCreateAccount.setTextColor(requireContext().getColor(R.color.white))
+                tvCreateAnAccount.setTextColor(requireContext().getColor(R.color.purple_500))
             }
         }
     }
@@ -91,7 +133,7 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
                         progressSteps.setProgress(30, true)
                     } else
                         progressSteps.progress = 30
-
+                tvNumFillCreateAccount.gone()
                 tvNumFillPersonalData.visible()
                 tvFillPersonalData.setOnClickListener(this@CompletePortfolioFragment)
                 ivFillPersonalData.setBackgroundResource(R.drawable.circle_drawable_purple_500)
@@ -171,11 +213,35 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
                         findNavController().navigate(R.id.educationStrategyHolderFragment)
                     }
                 }
-
+                tvCreateAnAccount->{
+                    clickCreateAccount()
+                }
                 tvFillPersonalData -> findNavController().navigate(R.id.fillDetailFragment)
 
                 tvVerifyYourIdentity -> findNavController().navigate(R.id.verifyYourIdentityFragment)
 
+
+            }
+        }
+    }
+
+    private fun clickCreateAccount() {
+        when(App.prefsManager.accountCreationSteps) {
+            Constants.Account_CREATION_STEP_PHONE -> {
+                val bundle = Bundle().apply {
+                    putBoolean(Constants.FOR_LOGIN, false)
+                }
+                findNavController().navigate(R.id.emailAddressFragment,bundle)
+            }
+
+            Constants.Account_CREATION_STEP_EMAIL -> {
+                val bundle = Bundle().apply {
+                    putBoolean(Constants.FOR_LOGIN, false)
+                }
+                App.prefsManager.accountCreationSteps= Constants.Account_CREATION_STEP_PHONE
+                findNavController().navigate(R.id.createPinFragment,bundle)
+            }
+            else->{
 
             }
         }

@@ -80,6 +80,12 @@ class PreferenceManager(context: Context) {
         set(value) {
             mEditor.putInt("personalDataSteps", value).apply()
         }
+    var accountCreationSteps: Int
+        get() = mSharedPreferences.getInt("accountCreationSteps", Constants.ACCOUNT_INITIALIZATION)
+            ?: 0
+        set(value) {
+            mEditor.putInt("accountCreationSteps", value).apply()
+        }
 
     var tokenSavedAt: Long
         get() = mSharedPreferences.getLong("tokenSavedAt", 0L)
@@ -127,7 +133,7 @@ class PreferenceManager(context: Context) {
 
 
     var portfolioCompletionStep: Int
-        get() = mSharedPreferences.getInt("portfolioCompletionStep", Constants.ACCOUNT_CREATED)
+        get() = mSharedPreferences.getInt("portfolioCompletionStep", -1)
         set(value) = mEditor.putInt("portfolioCompletionStep", value).apply()
 
 

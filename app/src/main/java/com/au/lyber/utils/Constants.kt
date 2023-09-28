@@ -1,5 +1,6 @@
 package com.au.lyber.utils
 
+import android.accounts.Account
 import com.au.lyber.R
 import okhttp3.internal.connection.Exchange
 
@@ -23,6 +24,10 @@ object Constants {
     const val INVESTMENT_EXP = 5
 
     const val ACCOUNT_CREATED = 1
+    const val ACCOUNT_CREATING = 6
+    const val Account_CREATION_STEP_PHONE = 1
+    const val Account_CREATION_STEP_EMAIL = 2
+    const val Account_CREATION_STEP_CREATE_PIN = 3
     const val PERSONAL_DATA_FILLED = 2
     const val KYC_COMPLETED = 3
     const val PROFILE_COMPLETED = 4

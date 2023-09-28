@@ -224,6 +224,7 @@
     <string name="total_earnings">Total earnings</string>
     <string name="about_value">Bitcoin is a decentralized digital currency, without a central bank or gove… <b><u>View more</u></b></string>
     <string name="log_out"><u>Log out</u></string>
+    <string name="stop_reg"><u>Stop Registration</u></string>
     <string name="view_all_underline"><u>View all</u></string>
     <string name="add_payment_method"><u>Add payment method</u></string>
     <string name="make_investment">Make investment</string>
@@ -235,6 +236,7 @@
     <string name="edit"><b><u>Edit</u></b></string>
     <string name="resend_email"><u>RESEND EMAIL</u></string>
     <string name="logout_message">"Are you sure you want to logout ? "</string>
+    <string name="reg_message">The progress of your registration will be lost.</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
     <string name="logout"><u>Logout</u></string>
@@ -315,6 +317,7 @@
     <string name="your_strategy_is_ready_to_be_saved">Your strategy is ready to be saved.</string>
     <string name="deposit_adress">Deposit Address</string>
     <string name="adress_copied">Address copied</string>
+    <string name="_1_3_steps_completed">1/3 steps completed</string>
     <string name="_2_3_steps_completed">2/3 steps completed</string>
     <string name="_3_3_steps_completed">3/3 steps completed</string>
     <string name="confirm_exchange">Confirm exchange</string>
@@ -328,7 +331,7 @@
     <string name="please_enter_password">Please enter password.</string>
     <string name="please_enter_your_email">Please enter your email.</string>
     <string name="please_enter_a_valid_email_address">Please enter a valid email address.</string>
-    <string name="password_should_be_of_minimum_8_characters">Password should be of minimum 8 characters.</string>
+    <string name="password_should_be_of_minimum_8_characters">Password should be of minimum 10 characters.</string>
     <string name="otp_sent_successfully">Otp sent successfully.</string>
     <string name="please_enter_wallet_address">Please enter wallet address</string>
     <string name="email_verified">Email Verified</string>
@@ -432,6 +435,7 @@
     <string name="crypto_asset_deposit">Crypto asset deposit</string>
     <string name="asset">Asset</string>
     <string name="_1_3_step_completed">⅓ step completed</string>
+    <string name="_0_3_step_completed">0 step completed</string>
     <string name="exchange_to">Exchange → To</string>
     <string name="exchange_to_">Exchange To</string>
     <string name="frequency">Frequency</string>
@@ -570,5 +574,6 @@
     <string name="start_identity_verifications">Start Identity Verification</string>
     <string name="review_my_informations">Review my information</string>
     <string name="change_my_informations">Change my information</string>
+    <string name="password_warning">The password must have atleast 10 characters, 1 special character, 1 lower case and 1 upper case</string>
     <string name="please_enter_name_for_your_strategy">Please enter name for your strategy.</string>
 </resources>

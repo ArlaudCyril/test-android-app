@@ -130,6 +130,55 @@
 </RelativeLayout>
         </FrameLayout>
     </ScrollView>
+    <LinearLayout
+        android:id="@+id/llIndicators"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="24dp"
+        android:elevation="2dp"
+        android:layout_marginTop="32dp"
+        android:orientation="horizontal"
+        android:padding="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/indicator_unselected"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:src="@drawable/indicator_unselected"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
+            android:src="@drawable/indicator_unselected"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
+            android:src="@drawable/indicator_unselected"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
+            android:src="@drawable/page_selected_indicator"/>
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_marginHorizontal="4dp"
+            android:layout_height="wrap_content"
+            android:src="@drawable/indicator_unselected"/>
+
+    </LinearLayout>
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/topGuide"
         android:layout_width="match_parent"

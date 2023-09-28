@@ -1,9 +1,11 @@
 package com.au.lyber.ui.fragments
 
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
@@ -11,6 +13,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
+import com.au.lyber.databinding.CustomDialogLayoutBinding
 import com.au.lyber.databinding.FragmentTestFillDetailBinding
 import com.au.lyber.models.JWTPayload
 import com.au.lyber.ui.activities.SplashActivity
@@ -22,8 +25,10 @@ import com.au.lyber.utils.CommonMethods.Companion.add
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.getViewModel
+import com.au.lyber.utils.CommonMethods.Companion.gone
 import com.au.lyber.utils.CommonMethods.Companion.replace
 import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
+import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
 import com.au.lyber.viewmodels.PersonalDataViewModel
 import com.google.gson.Gson
@@ -41,8 +46,6 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
     private val fragmentList
         get() = listOf(
             PersonalDataFragment(),
-            EmailAddressFragment(),
-            VerificationEmailAddressFragment(),
             AddressFragment(),
             InvestmentExperienceFragment()
         )
@@ -74,8 +77,6 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
         SplashActivity.activityCallbacks = this
 
         viewModel.listener = this
-        viewModel.password = ""
-        viewModel.email = ""
 
         /* new Apis */
 
@@ -83,19 +84,6 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
                 prefsManager.personalDataSteps = Constants.PERSONAL_DATA
-                if (arguments != null && requireArguments().containsKey(Constants.IS_REVIEW)) {
-                    position = 2
-                    moveToNext()
-                } else {
-                    replace(R.id.flFillPersonalData, fragmentList[1], true)
-                }
-            }
-        }
-
-        viewModel.setUpEmailResponse.observe(viewLifecycleOwner) {
-            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                dismissProgressDialog()
-                prefsManager.personalDataSteps = Constants.EMAIL_ADDRESS
                 moveToNext()
             }
         }
@@ -138,17 +126,10 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
             }
         }
 
-        viewModel.verifyEmailResponse.observe(viewLifecycleOwner) {
-            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                dismissProgressDialog()
-                prefsManager.personalDataSteps = Constants.EMAIL_VERIFIED
-                moveToNext()
-            }
-        }
 
 
 
-
+        binding.ivTopActionClear.setOnClickListener(this)
         binding.ivTopAction.setOnClickListener(this)
         binding.btnCommon.setOnClickListener(this)
 
@@ -162,10 +143,8 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
                 when (prefsManager.personalDataSteps) {
                     Constants.ACCOUNT_INITIALIZATION -> 0
                     Constants.PERSONAL_DATA -> 1
-                    Constants.EMAIL_ADDRESS -> 1
-                    Constants.EMAIL_VERIFIED -> 3
-                    Constants.ADDRESS -> 4
-                    Constants.INVESTMENT_EXP -> 4
+                    Constants.ADDRESS -> 2
+                    Constants.INVESTMENT_EXP -> 3
                     else -> 0
                 }
         }
@@ -189,18 +168,15 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
         /* top action image */
 
         when (position) {
-            0 -> binding.ivTopAction.setImageResource(R.drawable.ic_close)
+            0 -> binding.ivTopAction.gone()
             else -> {
-                if (childFragmentManager.backStackEntryCount > 0)
-                    binding.ivTopAction.setImageResource(R.drawable.ic_back)
-                else binding.ivTopAction.setImageResource(R.drawable.ic_close)
+                binding.ivTopAction.visible()
             }
         }
 
         /* button text view */
         binding.btnCommon.text = when (position) {
-            4 -> getString(R.string.send_to_lyber)
-            2 -> getString(R.string.email_verified)
+            3-> getString(R.string.send_to_lyber)
             else -> getString(R.string.next)
         }
 
@@ -236,30 +212,10 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
             1 -> {
 
                 position++
-                val transparentView = View(context)
-                transparentView.setBackgroundColor(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.semi_transparent_dark
-                    )
+                childFragmentManager.popBackStack(
+                    null, FragmentManager.POP_BACK_STACK_INCLUSIVE
                 )
-
-                // Set layout parameters for the transparent view
-                val viewParams = RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                    RelativeLayout.LayoutParams.MATCH_PARENT
-                )
-
-                val vc  = EmailVerificationBottomSheet()
-
-                vc.viewToDelete = transparentView
-                vc.mainView = view?.rootView as ViewGroup
-                vc.viewModel = viewModel
-                vc.show(childFragmentManager, "")
-
-                // Add the transparent view to the RelativeLayout
-                val mainView = view?.rootView as ViewGroup
-                mainView.addView(transparentView, viewParams)
+                replace(R.id.flFillPersonalData, fragmentList[position], false)
             }
 
             2 -> {
@@ -294,16 +250,53 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
             when (v!!) {
                 btnCommon -> buttonClicked(position)
                 ivTopAction -> {
-                    if (position ==0){
-                        requireActivity().finishAffinity()
-                        startActivity(Intent(requireActivity(),SplashActivity::class.java)
-                            .putExtra(Constants.FOR_LOGOUT,Constants.FOR_LOGOUT))
-                    }else{
                         requireActivity().onBackPressed()
                     }
+                ivTopActionClear->{
+                    showLogoutDialog()
+
                 }
             }
         }
+    }
+    private fun showLogoutDialog() {
+
+        Dialog(requireActivity(), R.style.DialogTheme).apply {
+
+            CustomDialogLayoutBinding.inflate(layoutInflater).let {
+
+                requestWindowFeature(Window.FEATURE_NO_TITLE)
+                setCancelable(false)
+                setCanceledOnTouchOutside(false)
+                setContentView(it.root)
+
+                it.tvTitle.text = getString(R.string.stop_reg)
+                it.tvMessage.text = getString(R.string.reg_message)
+                it.tvNegativeButton.text = getString(R.string.cancel)
+                it.tvPositiveButton.text = getString(R.string.ok)
+
+                it.tvNegativeButton.setOnClickListener { dismiss() }
+
+                it.tvPositiveButton.setOnClickListener {
+                    dismiss()
+                    prefsManager.logout()
+                    requireActivity().supportFragmentManager.popBackStack()
+
+
+                 CommonMethods.checkInternet(requireContext()) {
+                        dismiss()
+                        CommonMethods.showProgressDialog(requireContext())
+                        viewModel.logout(CommonMethods.getDeviceId(requireActivity().contentResolver))
+                    }
+
+
+                }
+
+                show()
+
+            }
+        }
+
     }
 
     private fun buttonClicked(position: Int) {
@@ -345,49 +338,8 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
                 }
             }
 
-            1 -> (fragment as EmailAddressFragment).let {
-                if (it.checkData()) {
-                    if (toEdit.isNotEmpty() && viewModel.personalData?.email == viewModel.email) {
-                        this.position = 2
-                        moveToNext()
-                    } else checkInternet(requireContext()) {
 
-                        showProgressDialog(requireContext())
-
-                        val emailSalt = BigInteger(1, generator.generateRandomSalt())
-                        val emailVerifier = generator.generateVerifier(
-                            emailSalt, viewModel.email, viewModel.password
-                        )
-
-                        val phoneSalt = BigInteger(1, generator.generateRandomSalt())
-                        val phoneVerifier = generator.generateVerifier(
-                            phoneSalt, prefsManager.getPhone(), viewModel.password
-                        )
-
-                        viewModel.setEmail(
-                            viewModel.email,
-                            emailSalt.toString(),
-                            emailVerifier.toString(),
-                            phoneSalt.toString(),
-                            phoneVerifier.toString()
-                        )
-                    }
-                }
-            }
-
-            2 -> (fragment as EmailVerificationBottomSheet).let {
-                showProgressDialog(requireContext())
-
-                val jwtParser = JWTParser.parse(prefsManager.accessToken)
-                val jwtPayload = Gson().fromJson(
-                    jwtParser.jwtClaimsSet.toPayload().toString(),
-                    JWTPayload::class.java
-                )
-
-                viewModel.verifyEmail(/*jwtPayload.uuid,*/ "1234")
-            }
-
-            3 -> (fragment as AddressFragment).let {
+            1 -> (fragment as AddressFragment).let {
 
                 if (it.checkData()) {
 
@@ -406,7 +358,7 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
                 }
             }
 
-            4 -> (fragment as InvestmentExperienceFragment).let {
+            2 -> (fragment as InvestmentExperienceFragment).let {
                 if (it.checkData()) {
                     checkInternet(requireContext()) {
                         showProgressDialog(requireContext())

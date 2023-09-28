@@ -28,8 +28,8 @@ class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceB
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (requireParentFragment() as FillDetailFragment).position = 4
-        (requireParentFragment() as FillDetailFragment).setUpViews(4)
+        (requireParentFragment() as FillDetailFragment).position = 2
+        (requireParentFragment() as FillDetailFragment).setUpViews(2)
 
         viewModel = CommonMethods.getViewModel(requireParentFragment())
 
