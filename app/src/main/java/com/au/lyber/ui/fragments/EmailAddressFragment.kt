@@ -80,10 +80,10 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
         viewModel.verifyEmailResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 CommonMethods.dismissProgressDialog()
-                App.prefsManager.personalDataSteps = Constants.EMAIL_VERIFIED
                 val bundle = Bundle().apply {
                     putBoolean(Constants.FOR_LOGIN, false)
                 }
+                App.prefsManager.accountCreationSteps= Constants.Account_CREATION_STEP_PHONE
                 findNavController().navigate(R.id.createPinFragment,bundle)
             }
         }

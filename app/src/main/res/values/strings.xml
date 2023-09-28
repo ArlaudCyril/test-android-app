@@ -315,6 +315,7 @@
     <string name="your_strategy_is_ready_to_be_saved">Your strategy is ready to be saved.</string>
     <string name="deposit_adress">Deposit Address</string>
     <string name="adress_copied">Address copied</string>
+    <string name="_1_3_steps_completed">1/3 steps completed</string>
     <string name="_2_3_steps_completed">2/3 steps completed</string>
     <string name="_3_3_steps_completed">3/3 steps completed</string>
     <string name="confirm_exchange">Confirm exchange</string>
@@ -432,6 +433,7 @@
     <string name="crypto_asset_deposit">Crypto asset deposit</string>
     <string name="asset">Asset</string>
     <string name="_1_3_step_completed">⅓ step completed</string>
+    <string name="_0_3_step_completed">0 step completed</string>
     <string name="exchange_to">Exchange → To</string>
     <string name="exchange_to_">Exchange To</string>
     <string name="frequency">Frequency</string>
