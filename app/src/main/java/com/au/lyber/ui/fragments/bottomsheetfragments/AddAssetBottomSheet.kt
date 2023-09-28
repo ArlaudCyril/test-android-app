@@ -40,7 +40,8 @@ class AddAssetBottomSheet(private val clickListener: (PriceServiceResume) -> Uni
     private lateinit var viewModel: PortfolioViewModel
     private lateinit var adapter: AddAssetAdapter
     private lateinit var layoutManager: LinearLayoutManager
-
+    lateinit var viewToDelete: View
+    lateinit var mainView: ViewGroup
     private var page: Int = 1
     private var assets = mutableListOf<PriceServiceResume>()
     private var trendings = mutableListOf<PriceServiceResume>()
@@ -205,7 +206,10 @@ class AddAssetBottomSheet(private val clickListener: (PriceServiceResume) -> Uni
         override fun onTabReselected(tab: TabLayout.Tab?) {}
 
     }
-
+    override fun onDestroyView() {
+        super.onDestroyView()
+        this.mainView.removeView(this.viewToDelete)
+    }
 
 
     class AddAssetAdapter(

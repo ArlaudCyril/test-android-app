@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,6 +21,7 @@ import com.au.lyber.ui.activities.BaseActivity
 import com.au.lyber.ui.adapters.BuildStrategyAdapter
 import com.au.lyber.ui.fragments.bottomsheetfragments.AddAssetBottomSheet
 import com.au.lyber.ui.fragments.bottomsheetfragments.BaseBottomSheet
+import com.au.lyber.ui.fragments.bottomsheetfragments.EmailVerificationBottomSheet
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.getViewModel
@@ -156,10 +158,30 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
         binding.apply {
             when (v!!) {
                 btnAddAssets -> {
-                    AddAssetBottomSheet(::clickListen,viewModel.addedAsset).show(
-                        requireActivity().supportFragmentManager,
-                        ""
+                    val transparentView = View(context)
+                    transparentView.setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.semi_transparent_dark
+                        )
                     )
+
+                    // Set layout parameters for the transparent view
+                    val viewParams = RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.MATCH_PARENT
+                    )
+
+                    val vc  = AddAssetBottomSheet(::clickListen,viewModel.addedAsset)
+
+                    vc.viewToDelete = transparentView
+                    vc.mainView = view?.rootView as ViewGroup
+                    vc.show(childFragmentManager, "")
+
+                    // Add the transparent view to the RelativeLayout
+                    val mainView = view?.rootView as ViewGroup
+                    mainView.addView(transparentView, viewParams)
+
                 }
                 ivTopAction -> requireActivity().onBackPressed()
                 btnSaveMyStrategy -> {
