@@ -196,7 +196,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 App.prefsManager.setPhone(viewModel.mobileNumber)
                 App.prefsManager.accountCreationSteps= Constants.Account_CREATION_STEP_PHONE
-                App.prefsManager.portfolioCompletionStep = Constants.ACCOUNT_CREATED
+                App.prefsManager.portfolioCompletionStep = Constants.ACCOUNT_CREATING
                 CommonMethods.dismissProgressDialog()
 
                 val bundle = Bundle().apply {

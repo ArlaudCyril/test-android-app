@@ -1,9 +1,11 @@
 package com.au.lyber.ui.fragments
 
+import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.ImageView
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
@@ -11,6 +13,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
+import com.au.lyber.databinding.CustomDialogLayoutBinding
 import com.au.lyber.databinding.FragmentTestFillDetailBinding
 import com.au.lyber.models.JWTPayload
 import com.au.lyber.ui.activities.SplashActivity
@@ -22,8 +25,10 @@ import com.au.lyber.utils.CommonMethods.Companion.add
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.getViewModel
+import com.au.lyber.utils.CommonMethods.Companion.gone
 import com.au.lyber.utils.CommonMethods.Companion.replace
 import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
+import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
 import com.au.lyber.viewmodels.PersonalDataViewModel
 import com.google.gson.Gson
@@ -124,7 +129,7 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
 
 
 
-
+        binding.ivTopActionClear.setOnClickListener(this)
         binding.ivTopAction.setOnClickListener(this)
         binding.btnCommon.setOnClickListener(this)
 
@@ -163,11 +168,9 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
         /* top action image */
 
         when (position) {
-            0 -> binding.ivTopAction.setImageResource(R.drawable.ic_close)
+            0 -> binding.ivTopAction.gone()
             else -> {
-                if (childFragmentManager.backStackEntryCount > 0)
-                    binding.ivTopAction.setImageResource(R.drawable.ic_back)
-                else binding.ivTopAction.setImageResource(R.drawable.ic_close)
+                binding.ivTopAction.visible()
             }
         }
 
@@ -247,16 +250,53 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
             when (v!!) {
                 btnCommon -> buttonClicked(position)
                 ivTopAction -> {
-                    if (position ==0){
-                        requireActivity().finishAffinity()
-                        startActivity(Intent(requireActivity(),SplashActivity::class.java)
-                            .putExtra(Constants.FOR_LOGOUT,Constants.FOR_LOGOUT))
-                    }else{
                         requireActivity().onBackPressed()
                     }
+                ivTopActionClear->{
+                    showLogoutDialog()
+
                 }
             }
         }
+    }
+    private fun showLogoutDialog() {
+
+        Dialog(requireActivity(), R.style.DialogTheme).apply {
+
+            CustomDialogLayoutBinding.inflate(layoutInflater).let {
+
+                requestWindowFeature(Window.FEATURE_NO_TITLE)
+                setCancelable(false)
+                setCanceledOnTouchOutside(false)
+                setContentView(it.root)
+
+                it.tvTitle.text = getString(R.string.stop_reg)
+                it.tvMessage.text = getString(R.string.reg_message)
+                it.tvNegativeButton.text = getString(R.string.cancel)
+                it.tvPositiveButton.text = getString(R.string.ok)
+
+                it.tvNegativeButton.setOnClickListener { dismiss() }
+
+                it.tvPositiveButton.setOnClickListener {
+                    dismiss()
+                    prefsManager.logout()
+                    requireActivity().supportFragmentManager.popBackStack()
+
+
+                 CommonMethods.checkInternet(requireContext()) {
+                        dismiss()
+                        CommonMethods.showProgressDialog(requireContext())
+                        viewModel.logout(CommonMethods.getDeviceId(requireActivity().contentResolver))
+                    }
+
+
+                }
+
+                show()
+
+            }
+        }
+
     }
 
     private fun buttonClicked(position: Int) {

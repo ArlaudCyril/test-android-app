@@ -135,7 +135,7 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
                 getString(R.string.please_enter_password).showToast(requireContext())
                 binding.etPassword.requestKeyboard()
             }
-            password.length < 8 -> {
+            password.length < 10 -> {
                 getString(R.string.password_should_be_of_minimum_8_characters).showToast(requireContext())
                 binding.etPassword.requestKeyboard()
             }

@@ -224,6 +224,7 @@
     <string name="total_earnings">Total earnings</string>
     <string name="about_value">Bitcoin is a decentralized digital currency, without a central bank or gove… <b><u>View more</u></b></string>
     <string name="log_out"><u>Log out</u></string>
+    <string name="stop_reg"><u>Stop Registration</u></string>
     <string name="view_all_underline"><u>View all</u></string>
     <string name="add_payment_method"><u>Add payment method</u></string>
     <string name="make_investment">Make investment</string>
@@ -235,6 +236,7 @@
     <string name="edit"><b><u>Edit</u></b></string>
     <string name="resend_email"><u>RESEND EMAIL</u></string>
     <string name="logout_message">"Are you sure you want to logout ? "</string>
+    <string name="reg_message">The progress of your registration will be lost.</string>
     <string name="no">No</string>
     <string name="yes">Yes</string>
     <string name="logout"><u>Logout</u></string>
@@ -329,7 +331,7 @@
     <string name="please_enter_password">Please enter password.</string>
     <string name="please_enter_your_email">Please enter your email.</string>
     <string name="please_enter_a_valid_email_address">Please enter a valid email address.</string>
-    <string name="password_should_be_of_minimum_8_characters">Password should be of minimum 8 characters.</string>
+    <string name="password_should_be_of_minimum_8_characters">Password should be of minimum 10 characters.</string>
     <string name="otp_sent_successfully">Otp sent successfully.</string>
     <string name="please_enter_wallet_address">Please enter wallet address</string>
     <string name="email_verified">Email Verified</string>
