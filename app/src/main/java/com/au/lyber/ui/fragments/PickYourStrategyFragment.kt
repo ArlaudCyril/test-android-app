@@ -75,14 +75,7 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
 
     private val getStrategies = Observer<StrategiesResponse> {
         dismissProgressDialog()
-
         adapter.setList(it.data)
-
-      /*  val strategy: Strategy? = it.data.find { it.is_chosen == 1 }
-        val position = it.data.indexOf(strategy)
-        previousPosition = position*/
-       // viewModel.strategyPositionSelected.postValue(position)
-
         binding.recyclerViewStrategies.startLayoutAnimation()
     }
 
@@ -117,7 +110,6 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
                     requireContext(),
                     R.drawable.round_stroke_purple_500
                 )
-                currentView.radioButton.setImageResource(R.drawable.radio_select)
                 previousPosition = position
                 viewModel.strategyPositionSelected.postValue(previousPosition)
             }
@@ -137,7 +129,6 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
                         requireContext(),
                         R.drawable.round_stroke_purple_500
                     )
-                    currentView.radioButton.setImageResource(R.drawable.radio_select)
                     previousPosition = position
                     viewModel.strategyPositionSelected.postValue(previousPosition)
                 }
@@ -151,7 +142,6 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
                     requireContext(),
                     R.drawable.round_stroke_purple_500
                 )
-                currentView.radioButton.setImageResource(R.drawable.radio_select)
                 previousView.background = getDrawable(
                     requireContext(),
                     R.drawable.round_stroke_gray_100

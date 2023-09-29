@@ -24,7 +24,7 @@ class PickStrategyFragmentAdapter(val itemClicked: (position: Int) -> Unit) :
             }
 
             strategyView.rootView.setOnClickListener {
-                //itemClicked(adapterPosition)
+              itemClicked(adapterPosition)
             }
 
         }
