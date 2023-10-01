@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.au.lyber.databinding.BottomSheetInvestWithStrategyBinding
 
-class InvestWithStrategyBottomSheet (val clickListener: (Boolean) -> Unit) :
+class InvestWithStrategyBottomSheet (val clickListener: (Int) -> Unit) :
     BaseBottomSheet<BottomSheetInvestWithStrategyBinding>(), View.OnClickListener {
     lateinit var viewToDelete: View
     lateinit var mainView: ViewGroup
@@ -26,7 +26,7 @@ class InvestWithStrategyBottomSheet (val clickListener: (Boolean) -> Unit) :
 
                 ivTopAction -> dismiss()
                 tvSubTitleAdjust, tvTitleAdjust, ivAdjust -> {
-                    clickListener(true)
+                    clickListener(0)
                     dismiss()
                 }
             }

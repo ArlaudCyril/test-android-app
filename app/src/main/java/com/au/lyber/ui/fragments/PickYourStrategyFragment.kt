@@ -3,7 +3,10 @@ package com.au.lyber.ui.fragments
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
+import android.widget.RelativeLayout
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
@@ -13,6 +16,8 @@ import com.au.lyber.databinding.FragmentPickYourStrategyBinding
 import com.au.lyber.models.MessageResponse
 import com.au.lyber.models.StrategiesResponse
 import com.au.lyber.ui.adapters.PickStrategyFragmentAdapter
+import com.au.lyber.ui.fragments.bottomsheetfragments.InvestWithStrategyBottomSheet
+import com.au.lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet
 import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.App
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
@@ -151,9 +156,37 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
                 viewModel.strategyPositionSelected.postValue(previousPosition)
             }
         }
+        val transparentView = View(context)
+        transparentView.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.semi_transparent_dark
+            )
+        )
+
+        // Set layout parameters for the transparent view
+        val viewParams = RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.MATCH_PARENT,
+            RelativeLayout.LayoutParams.MATCH_PARENT
+        )
+
+        val vc  = InvestWithStrategyBottomSheet(::clicked)
+        vc.viewToDelete = transparentView
+        vc.mainView = getView()?.rootView as ViewGroup
+        vc.show(childFragmentManager, "")
+
+        // Add the transparent view to the RelativeLayout
+        val mainView = getView()?.rootView as ViewGroup
+        mainView.addView(transparentView, viewParams)
 
         Log.d(TAG, "itemClicked: $previousPosition $position ")
 
+    }
+
+    private fun clicked(type: Int) {
+        when(type){
+            0->{findNavController().navigate(R.id.investAddMoneyFragment)}
+        }
     }
 
     override fun onClick(v: View?) {

@@ -295,6 +295,10 @@
         android:id="@+id/emailAddressFragment"
         android:name="com.au.lyber.ui.fragments.EmailAddressFragment"
         android:label="EmailAddressFragment" />
+    <fragment
+        android:id="@+id/investAddMoneyFragment"
+        android:name="com.au.lyber.ui.fragments.InvestAddMoneyFragment"
+        android:label="InvestAddMoneyFragment" />
     <dialog
         android:id="@+id/portfolioThreeDots"
         android:name="com.au.lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDots"
