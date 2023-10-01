@@ -576,4 +576,14 @@
     <string name="change_my_informations">Change my information</string>
     <string name="password_warning">The password must have atleast 10 characters, 1 special character, 1 lower case and 1 upper case</string>
     <string name="please_enter_name_for_your_strategy">Please enter name for your strategy.</string>
+    <string name="invest_with_strategies">Invest with strategies</string>
+    <string name="one_time_investment">One-Time Investment</string>
+    <string name="execute_a_strategy_a_single_time">Execute a strategy a single time</string>
+    <string name="adjust_investment">Adjust Investment</string>
+    <string name="change_frequency_and_amount">Change frequency and amount</string>
+    <string name="recurrent_investment">Recurrent Investment</string>
+    <string name="execute_a_strategy_on_a_regular_basis">Execute a strategy on a regular basis</string>
+    <string name="tailor_strategy">Tailor Strategy</string>
+    <string name="change_asset_repartition">Change asset repartition</string>
+    <string name="delete_strategy">Delete Strategy</string>
 </resources>
