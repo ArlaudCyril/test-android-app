@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.Window
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
 import com.au.lyber.databinding.ConfirmationDialogBinding
 import com.au.lyber.databinding.FragmentConfirmInvestmentBinding
@@ -46,7 +47,8 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         viewModel.investStrategyResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
-                ConfirmationBottomSheet().show(childFragmentManager, "")
+                requireActivity().clearBackStack()
+                findNavController().navigate(R.id.pickYourStrategyFragment)
             }
         }
 
@@ -65,10 +67,17 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                         Constants.USING_STRATEGY -> {
                             viewModel.selectedStrategy?.let {
                                 checkInternet(requireContext()) {
+                                    /*frequency = "now" || "1d" || "1w" || "1m"*/
+                                    val freq = when(viewModel.selectedFrequency){
+                                        "Once"-> "now"
+                                        "Daily"-> "1d"
+                                        "Weekly"-> "1w"
+                                        else -> "1m"
+                                    }
                                     showProgressDialog(requireContext())
                                     viewModel.investStrategy(
                                         it.ownerUuid,
-                                        viewModel.selectedFrequency.uppercase(),
+                                        freq,
                                         viewModel.amount.toFloat().toInt()
                                     )
                                 }
@@ -140,31 +149,4 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
     }
 
 
-    private fun showDialog(logo: String, amount: String, assetSymbol: String) {
-        Dialog(requireActivity(), R.style.DialogTheme).apply {
-            ConfirmationDialogBinding.inflate(layoutInflater).let {
-                requestWindowFeature(Window.FEATURE_NO_TITLE)
-                setCancelable(false)
-                setCanceledOnTouchOutside(true)
-                setContentView(it.root)
-
-                 it.ivAsset.loadCircleCrop(logo)
-
-                it.tvAssetAmount.text = amount.commaFormatted
-
-                it.tvMessage.text =
-                    getString(R.string.you_now_own, assetSymbol.uppercase(), amount.commaFormatted)
-
-                it.root.setOnClickListener {
-                    dismiss()
-                }
-
-                setOnDismissListener {
-                    requireActivity().clearBackStack()
-                }
-
-                show()
-            }
-        }
-    }
 }

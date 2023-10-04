@@ -106,7 +106,7 @@ interface Api {
     @POST("user/invest-on-asset")
     suspend fun investOnSingleAsset(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
 
-    @POST("user/invest-on-strategy")
+    @POST("strategy-service/active-strategy")
     suspend fun investOnStrategy(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
 
     @POST("user/swap-crypto")

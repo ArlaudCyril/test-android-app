@@ -327,7 +327,8 @@ open class NetworkViewModel : ViewModel() {
         viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().investOnStrategy(
                 hashMapOf(
-                    "user_investment_strategy_id" to strategyId,
+                    "strategyName" to "usdt",
+                    "ownerUuid" to strategyId,
                     "frequency" to frequency,
                     "amount" to amount
                 )

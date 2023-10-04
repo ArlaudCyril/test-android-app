@@ -98,6 +98,8 @@ class InvestAddMoneyFragment: BaseFragment<FragmentInvestAddMoneyBinding>(),View
         }else if (selectedFrequency.trim().isEmpty()){
             getString(R.string.please_select_the_frequency).showToast(requireActivity())
         }else{
+            viewModel.amount = finalAmount
+            viewModel.selectedFrequency = selectedFrequency
             val bundle = Bundle()
             bundle.putString(Constants.AMOUNT,finalAmount)
             bundle.putString(Constants.FREQUENCY,selectedFrequency)
