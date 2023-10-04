@@ -102,12 +102,12 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
 
             val buyValue = (viewModel.amount.toFloat().toInt() * (0.08)).toFloat()
             tvNestedAmountValue.text =
-                viewModel.amount.decimalPoint().commaFormatted + Constants.EURO
+                viewModel.amount.decimalPoint().commaFormatted + " USDT"
             tvValueTotal.text =
                 (viewModel.amount.toFloat() + buyValue).toString()
-                    .decimalPoint().commaFormatted + Constants.EURO
+                    .decimalPoint().commaFormatted + " USDT"
             tvValueLyberFee.text =
-                buyValue.toString().decimalPoint().commaFormatted + Constants.EURO
+                buyValue.toString().decimalPoint().commaFormatted + " USDT"
 
             when (viewModel.selectedOption) {
 
@@ -138,7 +138,7 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                     tvValueFrequency.text = viewModel.selectedFrequency
 
                     tvAmount.text =
-                        "${viewModel.amount.decimalPoint().commaFormatted} ${Constants.EURO}"
+                        (viewModel.amount.toFloat() + buyValue).toString()+" USDT"
 
                 }
 
