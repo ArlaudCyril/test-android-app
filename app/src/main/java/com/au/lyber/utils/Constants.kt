@@ -6,6 +6,8 @@ import okhttp3.internal.connection.Exchange
 
 object Constants {
 
+    const val FREQUENCY: String = "frequency"
+    const val AMOUNT: String = "amount"
     const val URL: String="KYCURL"
     const val IS_REVIEW: String = "isReview"
     const val ORDER_ID: String = "order_id"

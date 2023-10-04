@@ -156,6 +156,7 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
                 viewModel.strategyPositionSelected.postValue(previousPosition)
             }
         }
+        viewModel.selectedStrategy = adapter.getItem(position)
         val transparentView = View(context)
         transparentView.setBackgroundColor(
             ContextCompat.getColor(
