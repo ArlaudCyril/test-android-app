@@ -157,11 +157,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                         price = priceCoin,
                         rounding = RoundingMode.DOWN
                     ) + " "+it!!.id.uppercase()
-                tvAmount.text =
-                    "${requireArguments().getString(Constants.EURO)!!.formattedAsset(
-                        price = priceCoin,
-                        rounding = RoundingMode.DOWN
-                    ) } ${it.id.uppercase()}"
+
 
                 tvExchangeFrom.text = getString(R.string.address)
                 tvExchangeFromValue.text = viewModel.withdrawAddress!!.address.substring(0,7)+"...."+
@@ -173,6 +169,11 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                         requireArguments().getString(Constants.EURO,"")
                             .replace(it.id.uppercase(),"").toDouble()
                 tvValueTotal.text =
+                    "${valueTotal.toString().formattedAsset(
+                        price = priceCoin,
+                        rounding = RoundingMode.DOWN
+                    ) } ${it.id.uppercase()}"
+                tvAmount.text =
                     "${valueTotal.toString().formattedAsset(
                         price = priceCoin,
                         rounding = RoundingMode.DOWN
