@@ -2,10 +2,8 @@ package com.au.lyber.ui.fragments
 
 import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.RelativeLayout
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
@@ -15,10 +13,8 @@ import com.au.lyber.databinding.FragmentConfirmInvestmentBinding
 import com.au.lyber.network.RestClient
 import com.au.lyber.ui.activities.BaseActivity
 import com.au.lyber.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
-import com.au.lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet
 import com.au.lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet2FA
 import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
-import com.au.lyber.utils.App
 import com.au.lyber.utils.CommonMethods
 import com.au.lyber.utils.CommonMethods.Companion.formattedAsset
 import com.au.lyber.utils.CommonMethods.Companion.gone

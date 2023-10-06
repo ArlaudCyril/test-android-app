@@ -15,6 +15,8 @@ data class ErrorResponse(
 
 data class CommonResponse(val success: String, val message: String,val withdrawalId:String)
 
+data class CommonResponseVerfiy(val success: String, val message: String,val withdrawalId:String)
+
 data class MessageResponse(
     val message: String,
     val msg: String

@@ -281,6 +281,8 @@ interface Api {
     suspend fun getWithdrawalAddress():Response<WithdrawalAddress>
     @POST("user-service/verify-2FA")
     suspend fun verify2FA(@Body hashMap: HashMap<String, Any>): Response<UserLoginResponse>
+    @POST("user-service/verify-2FA")
+    suspend fun verify2FAWithdraw(@Body hashMap: HashMap<String, Any>): Response<CommonResponseVerfiy>
     @POST("wallet-service/withdraw")
     suspend fun createWithdrawalRequest(@Body hashMap: HashMap<String, Any>): Response<CommonResponse>
 }

@@ -175,6 +175,7 @@ open class NetworkViewModel : ViewModel() {
     val userChallengeResponse get() = _userChallengeResponse
 
     private val _userLoginResponse = MutableLiveData<UserLoginResponse>()
+    val commonResponseWithdraw = MutableLiveData<CommonResponseVerfiy>()
     val userLoginResponse get() = _userLoginResponse
 
     private val _setPhoneResponse = MutableLiveData<SetPhoneResponse>()
@@ -741,6 +742,17 @@ open class NetworkViewModel : ViewModel() {
             val res = RestClient.get(Constants.NEW_BASE_URL).verify2FA(hash)
             if (res.isSuccessful)
                 _userLoginResponse.postValue(res.body())
+
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+    fun verify2FAWithdraw(code: String){
+        viewModelScope.launch(exceptionHandler) {
+            val hash = hashMapOf<String, Any>()
+            hash["code"] = code
+            val res = RestClient.get(Constants.NEW_BASE_URL).verify2FAWithdraw(hash)
+            if (res.isSuccessful)
+                commonResponseWithdraw.postValue(res.body())
 
             else listener?.onRetrofitError(res.errorBody())
         }

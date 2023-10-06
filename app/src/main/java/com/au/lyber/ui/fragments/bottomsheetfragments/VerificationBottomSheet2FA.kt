@@ -175,7 +175,7 @@ class VerificationBottomSheet2FA (private val handle: () -> Unit = { }):
                     binding.etCodeSix -> {
                         if (getCode().length == 6) {
                             CommonMethods.showProgressDialog(requireActivity())
-                            viewModel.verify2FA(code = getCode())
+                            viewModel.verify2FAWithdraw(code = getCode())
 
                         }
                     }
