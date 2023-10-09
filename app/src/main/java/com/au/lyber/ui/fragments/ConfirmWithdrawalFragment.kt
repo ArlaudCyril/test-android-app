@@ -50,6 +50,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                 if (isOtpScreen) {
                     openOtpScreen()
                 } else {
+
                     viewModel.selectedOption = Constants.USING_WITHDRAW
                     ConfirmationBottomSheet().show(childFragmentManager, "")
                 }
