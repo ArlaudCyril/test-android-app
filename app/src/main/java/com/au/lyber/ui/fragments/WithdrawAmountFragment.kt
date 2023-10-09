@@ -300,7 +300,19 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
     }
 
     private fun openAddressSheet() {
-        WithdrawalAddressBottomSheet(addresses,viewModel.selectedNetworkDeposit!!.id,::handle).show(childFragmentManager, "")
+        if (addresses.size == 0) {
+            val bundle =Bundle().apply {
+                putBoolean(Constants.ACTION_WITHDRAW,true)
+                putString(Constants.ID,viewModel.selectedNetworkDeposit!!.id)
+            }
+            findNavController().navigate(R.id.addCryptoAddress,bundle)
+        } else {
+            WithdrawalAddressBottomSheet(
+                addresses,
+                viewModel.selectedNetworkDeposit!!.id,
+                ::handle
+            ).show(childFragmentManager, "")
+        }
     }
 
     private fun handle(withdrawAddress: WithdrawAddress?, s: String?) {

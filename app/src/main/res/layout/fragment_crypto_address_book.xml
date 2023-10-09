@@ -158,7 +158,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/curved_button"
-            android:backgroundTint="@color/purple_gray_50"
+            android:backgroundTint="@color/purple_gray_100"
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingVertical="12dp">
