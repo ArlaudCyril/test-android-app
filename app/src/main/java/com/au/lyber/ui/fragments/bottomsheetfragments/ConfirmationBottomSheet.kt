@@ -27,6 +27,7 @@ class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
 
         binding.btnThanks.setOnClickListener {
             dismiss()
+            findNavController().navigate(R.id.portfolioHomeFragment)
         }
 
         when(viewModel.selectedOption){

@@ -180,6 +180,7 @@ open class NetworkViewModel : ViewModel() {
     val userChallengeResponse get() = _userChallengeResponse
 
     private val _userLoginResponse = MutableLiveData<UserLoginResponse>()
+    val commonResponseWithdraw = MutableLiveData<CommonResponseVerfiy>()
     val userLoginResponse get() = _userLoginResponse
 
     private val _setPhoneResponse = MutableLiveData<SetPhoneResponse>()
@@ -788,6 +789,17 @@ open class NetworkViewModel : ViewModel() {
             else listener?.onRetrofitError(res.errorBody())
         }
     }
+    fun verify2FAWithdraw(code: String){
+        viewModelScope.launch(exceptionHandler) {
+            val hash = hashMapOf<String, Any>()
+            hash["code"] = code
+            val res = RestClient.get(Constants.NEW_BASE_URL).verify2FAWithdraw(hash)
+            if (res.isSuccessful)
+                commonResponseWithdraw.postValue(res.body())
+
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
 
 
     fun refreshToken() {
@@ -975,22 +987,18 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun createWithdrawalRequest(
-        assetId: String,
-        amount: Double,
-        destination: String,
-        network: String
-    ) {
-        viewModelScope.launch(exceptionHandler) {
-            val map = HashMap<String, Any>()
+    fun createWithdrawalRequest(assetId: String,amount: Double,destination: String,network: String,code: String){
+        viewModelScope.launch(exceptionHandler){
+            val map = HashMap<String,Any>()
             map["asset"] = assetId
             map["amount"] = amount
             map["destination"] = destination
             map["network"] = network
+            map["otp"] = code
             val res = RestClient.get(Constants.NEW_BASE_URL).createWithdrawalRequest(map)
-            if (res.isSuccessful) {
+            if (res.isSuccessful){
                 _commonResponse.postValue(res.body())
-            } else {
+            }else{
                 listener!!.onRetrofitError(res.errorBody())
             }
         }
