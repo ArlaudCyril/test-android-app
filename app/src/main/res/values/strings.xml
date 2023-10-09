@@ -554,4 +554,5 @@
     <string name="sell_">Sell</string>
     <string name="withdrawal_is_deactivated_on_this_asset">Withdrawal is deactivated on this asset</string>
     <string name="select_address">Please select address</string>
+    <string name="choose_an_operation">Choose an operation</string>
 </resources>
