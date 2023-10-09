@@ -847,8 +847,9 @@ class CommonMethods {
             }
 
         fun String.formattedAsset(price: Double?, rounding : RoundingMode): String {
-             if (this == "" || price == null || price == 0.0 || price.isNaN()) {
-                 return "0.00"
+            var priceFinal = price
+            if (this == "" || priceFinal == null || priceFinal == 0.0 || priceFinal.isNaN()) {
+                priceFinal= 1.026
              }
 
              val formatter = DecimalFormat()
@@ -856,7 +857,7 @@ class CommonMethods {
              // Pour trouver la précision, ici X
              // Prix * 10e-X >= 0.01 (centimes)
              // => X >= -log(0,01/Prix)
-             val precision = ceil(-log10(0.01 / price)).toInt()
+             val precision = ceil(-log10(0.01 / priceFinal)).toInt()
              if (precision > 0) {
                  formatter.maximumFractionDigits = precision
                  formatter.minimumFractionDigits = precision
