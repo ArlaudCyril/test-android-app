@@ -566,4 +566,5 @@
     <string name="no_security">No Security</string>
     <string name="enter_the_exchange_name">Enter the exchange name</string>
     <string name="edit_address">Edit Address</string>
+    <string name="choose_an_operation">Choose an operation</string>
 </resources>

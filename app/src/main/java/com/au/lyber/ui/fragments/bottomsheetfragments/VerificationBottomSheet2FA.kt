@@ -7,15 +7,12 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-import androidx.lifecycle.Lifecycle
 import com.au.lyber.R
 import com.au.lyber.databinding.BottomSheetVerificationBinding
-import com.au.lyber.models.WithdrawAddress
-import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
-import com.au.lyber.utils.CommonMethods
 import com.au.lyber.utils.CommonMethods.Companion.requestKeyboard
+import kotlin.reflect.KFunction1
 
-class VerificationBottomSheet2FA (private val handle: () -> Unit = { }):
+class VerificationBottomSheet2FA(private val handle: (String) -> Unit):
     BaseBottomSheet<BottomSheetVerificationBinding>() {
 
     private val codeOne get() = binding.etCodeOne.text.trim().toString()
@@ -27,7 +24,6 @@ class VerificationBottomSheet2FA (private val handle: () -> Unit = { }):
 
     lateinit var viewToDelete: View
     lateinit var mainView: ViewGroup
-    lateinit var viewModel: PortfolioViewModel
 
     override fun bind() = BottomSheetVerificationBinding.inflate(layoutInflater)
 
@@ -36,12 +32,6 @@ class VerificationBottomSheet2FA (private val handle: () -> Unit = { }):
         setUpView()
         this.binding.etCodeOne.requestFocus()
         binding.etCodeOne.requestKeyboard()
-        viewModel.userLoginResponse.observe(viewLifecycleOwner){
-            if (lifecycle.currentState == Lifecycle.State.RESUMED){
-                dismiss()
-                handle
-            }
-        }
         binding.btnCancel.setOnClickListener {
             dismiss()
         }
@@ -174,8 +164,9 @@ class VerificationBottomSheet2FA (private val handle: () -> Unit = { }):
 
                     binding.etCodeSix -> {
                         if (getCode().length == 6) {
-                            CommonMethods.showProgressDialog(requireActivity())
-                            viewModel.verify2FA(code = getCode())
+                            dismiss()
+                            handle.invoke(getCode())
+                          //  viewModel.verify2FAWithdraw(code = getCode())
 
                         }
                     }

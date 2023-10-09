@@ -420,7 +420,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                     if (CommonMethods.getBalance(viewModel.selectedAsset!!.id!!) != null){
                         portfolioThreeDotsFragment.typePopUp = "AssetPopUpWithdraw"
                     }else{
-                        portfolioThreeDotsFragment.typePopUp = "AssetPopUp"
+                        portfolioThreeDotsFragment.typePopUp = "AssetPopUpWithdraw"
                     }
 
                     portfolioThreeDotsFragment.show(

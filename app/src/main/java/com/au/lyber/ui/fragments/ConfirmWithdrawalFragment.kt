@@ -2,10 +2,8 @@ package com.au.lyber.ui.fragments
 
 import android.os.Build
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.widget.RelativeLayout
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
@@ -15,10 +13,8 @@ import com.au.lyber.databinding.FragmentConfirmInvestmentBinding
 import com.au.lyber.network.RestClient
 import com.au.lyber.ui.activities.BaseActivity
 import com.au.lyber.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
-import com.au.lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet
 import com.au.lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet2FA
 import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
-import com.au.lyber.utils.App
 import com.au.lyber.utils.CommonMethods
 import com.au.lyber.utils.CommonMethods.Companion.formattedAsset
 import com.au.lyber.utils.CommonMethods.Companion.gone
@@ -54,6 +50,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                 if (isOtpScreen) {
                     openOtpScreen()
                 } else {
+
                     viewModel.selectedOption = Constants.USING_WITHDRAW
                     ConfirmationBottomSheet().show(childFragmentManager, "")
                 }
@@ -77,7 +74,6 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         val vc  = VerificationBottomSheet2FA(::handle)
         vc.viewToDelete = transparentView
         vc.mainView = getView()?.rootView as ViewGroup
-        vc.viewModel = viewModel
         vc.show(childFragmentManager, "")
 
         // Add the transparent view to the RelativeLayout
@@ -85,11 +81,12 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         mainView.addView(transparentView, viewParams)
     }
 
-    private fun handle() {
+    private fun handle(code:String) {
         CommonMethods.showProgressDialog(requireActivity())
         isOtpScreen = false
         viewModel.createWithdrawalRequest(viewModel.selectedAssetDetail!!.id
-            ,valueTotal,viewModel.withdrawAddress!!.address,viewModel.selectedNetworkDeposit!!.id)
+            ,valueTotal,viewModel.withdrawAddress!!.address,viewModel.selectedNetworkDeposit!!.id
+        ,code)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
