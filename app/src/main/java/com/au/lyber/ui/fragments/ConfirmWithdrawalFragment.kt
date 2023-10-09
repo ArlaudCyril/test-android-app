@@ -73,7 +73,6 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         val vc  = VerificationBottomSheet2FA(::handle)
         vc.viewToDelete = transparentView
         vc.mainView = getView()?.rootView as ViewGroup
-        vc.viewModel = viewModel
         vc.show(childFragmentManager, "")
 
         // Add the transparent view to the RelativeLayout
@@ -81,11 +80,12 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         mainView.addView(transparentView, viewParams)
     }
 
-    private fun handle() {
+    private fun handle(code:String) {
         CommonMethods.showProgressDialog(requireActivity())
         isOtpScreen = false
         viewModel.createWithdrawalRequest(viewModel.selectedAssetDetail!!.id
-            ,valueTotal,viewModel.withdrawAddress!!.address,viewModel.selectedNetworkDeposit!!.id)
+            ,valueTotal,viewModel.withdrawAddress!!.address,viewModel.selectedNetworkDeposit!!.id
+        ,code)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

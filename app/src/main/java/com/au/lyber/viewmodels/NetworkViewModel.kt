@@ -945,13 +945,14 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun createWithdrawalRequest(assetId: String,amount: Double,destination: String,network: String){
+    fun createWithdrawalRequest(assetId: String,amount: Double,destination: String,network: String,code: String){
         viewModelScope.launch(exceptionHandler){
             val map = HashMap<String,Any>()
             map["asset"] = assetId
             map["amount"] = amount
             map["destination"] = destination
             map["network"] = network
+            map["otp"] = code
             val res = RestClient.get(Constants.NEW_BASE_URL).createWithdrawalRequest(map)
             if (res.isSuccessful){
                 _commonResponse.postValue(res.body())
