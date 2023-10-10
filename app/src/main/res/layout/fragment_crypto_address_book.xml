@@ -146,6 +146,7 @@
         android:background="@drawable/top_curved_layout"
         android:fitsSystemWindows="false"
         android:orientation="vertical"
+        android:layout_marginBottom="8dp"
         android:paddingHorizontal="24dp"
         android:paddingTop="24dp"
         android:paddingBottom="48dp"
