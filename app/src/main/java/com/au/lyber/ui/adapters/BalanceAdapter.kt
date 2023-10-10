@@ -65,7 +65,7 @@ class BalanceAdapter(
                     tvAssetAmount.text = balance.euroBalance.commaFormatted.currencyFormatted
                     tvAssetAmountInCrypto.text =
                         balance.balance.formattedAsset(
-                            price = priceCoin,
+                            priceCoin,
                             rounding = RoundingMode.DOWN
                         )
 

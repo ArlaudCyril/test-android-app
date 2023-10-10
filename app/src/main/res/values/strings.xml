@@ -555,8 +555,8 @@
     <string name="active_during">Active during:</string>
     <string name="the_address_book_limits_your_withdrawals_and_deposits_to_the_addresses_in_your_address_book">The address book limits your withdrawals and deposits to the addresses in your address book.</string>
     <string name="you_can_immediately_withdraw_to_any_address_newly_added_to_your_address_book">You can immediately withdraw to any address newly added to your address book.</string>
-    <string name="a_delay_of_72_hours_will_be_required_before_you_can_withdraw_to_any_address_newly_added_to_your_address_book">A delay of 72 hours will be required before you can withdraw to any address newly added to your address book</string>
-    <string name="a_24h_delay_is_required_before_you_can_withdraw_to_any_address_newly_added_to_your_address_book">A 24h delay is required before you can withdraw to any address newly added to your address book.</string>
+    <string name="a_delay_of_72_hours_will_be_required_before_you_can_withdraw_to_any_address_newly_added_to_your_address_book">A delay of 72h will be required before you can withdraw to any address newly added to your address book.</string>
+    <string name="a_24h_delay_is_required_before_you_can_withdraw_to_any_address_newly_added_to_your_address_book">A delay of 24h will be required before you can withdraw to any address newly added to your address book.</string>
     <string name="you_will_be_able_to_withdraw_immediately_to_any_address_newly_added_to_your_address_book_these_changes_will_take_effect_after_24_hours">You will be able to withdraw immediately to any address newly added to your address book. These changes will take effect after 24 hours.</string>
     <string name="assetpopup">AssetPopUp</string>
     <string name="send_assets_to_your_bank_account">Send assets to your bank account</string>
@@ -570,6 +570,8 @@
     <string name="no_security">No Security</string>
     <string name="enter_the_exchange_name">Enter the exchange name</string>
     <string name="edit_address">Edit Address</string>
+    <string name="choose_an_operation">Choose an operation</string>
+    <string name="you_do_not_have_this_asset">You do not have this asset</string>
     <string name="verification_text">To finalise your registration, we need to verify your identity. In the next step, you will need to provide an electronic signature and a photograph of an identity document.</string>
     <string name="start_identity_verifications">Start Identity Verification</string>
     <string name="review_my_informations">Review my information</string>

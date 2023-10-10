@@ -172,7 +172,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
             Constants.HOURS_24 -> "24H"
             else -> "No Security"
         }
-//        binding.ivTopAction.setOnClickListener(this)
+       binding.ivTopAction.setOnClickListener(this)
 //        binding.llChangePin.setOnClickListener(this)
 //        binding.tvViewAllTransaction.setOnClickListener(this)
 //        binding.tvAddPaymentMethod.setOnClickListener(this)

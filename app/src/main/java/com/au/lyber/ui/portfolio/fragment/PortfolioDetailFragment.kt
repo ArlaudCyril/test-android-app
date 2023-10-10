@@ -361,13 +361,13 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             "withdraw" -> {
                 viewModel.selectedOption = Constants.USING_WITHDRAW
                 val currency = viewModel.selectedAsset
-                if (currency!!.isWithdrawalActive){
+                //if (currency!!.isWithdrawalActive){
                     val bundle = Bundle()
-                    bundle.putString(Constants.ID, currency.id)
+                    bundle.putString(Constants.ID, currency!!.id)
                     findNavController().navigate(R.id.withdrawlNetworksFragment, bundle)
-                }else{
-                    getString(R.string.withdrawal_is_deactivated_on_this_asset).showToast(requireActivity())
-                }
+              //  }else{
+                 //   getString(R.string.withdrawal_is_deactivated_on_this_asset).showToast(requireActivity())
+              //  }
             }
 
             "deposit" -> {
@@ -420,7 +420,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                     if (CommonMethods.getBalance(viewModel.selectedAsset!!.id!!) != null){
                         portfolioThreeDotsFragment.typePopUp = "AssetPopUpWithdraw"
                     }else{
-                        portfolioThreeDotsFragment.typePopUp = "AssetPopUp"
+                        portfolioThreeDotsFragment.typePopUp = "AssetPopUpWithdraw"
                     }
 
                     portfolioThreeDotsFragment.show(
