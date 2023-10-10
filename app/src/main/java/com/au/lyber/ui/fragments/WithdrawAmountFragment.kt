@@ -27,6 +27,7 @@ import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
 import com.au.lyber.utils.OnTextChange
 import java.math.RoundingMode
+import kotlin.math.max
 
 class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), View.OnClickListener {
     override fun bind() = FragmentWithdrawAmountBinding.inflate(layoutInflater)
@@ -280,19 +281,26 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                     } else {
                         amount.replace(mConversionCurrency, "")
                     }
-                    if (maxValue >= amountFinal.toDouble()) {
-                        if (viewModel.withdrawAddress != null) {
-                            val bundle = Bundle().apply {
-                                putString(Constants.EURO, amountFinal)
+                    val balance =
+                        BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
+
+                    if (balance == null){
+                        getString(R.string.you_do_not_have_this_asset).showToast(requireActivity())
+                    }else {
+                        if (maxValue >= amountFinal.toDouble()) {
+                            if (viewModel.withdrawAddress != null) {
+                                val bundle = Bundle().apply {
+                                    putString(Constants.EURO, amountFinal)
+                                }
+                                findNavController().navigate(
+                                    R.id.confirmWithdrawalFragment, bundle
+                                )
+                            } else {
+                                getString(R.string.select_address).showToast(requireActivity())
                             }
-                            findNavController().navigate(
-                                R.id.confirmWithdrawalFragment, bundle
-                            )
                         } else {
-                            getString(R.string.select_address).showToast(requireActivity())
+                            getString(R.string.insufficient_balance).showToast(requireActivity())
                         }
-                    } else {
-                        getString(R.string.insufficient_balance).showToast(requireActivity())
                     }
                 }
             }
