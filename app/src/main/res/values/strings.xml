@@ -567,4 +567,5 @@
     <string name="enter_the_exchange_name">Enter the exchange name</string>
     <string name="edit_address">Edit Address</string>
     <string name="choose_an_operation">Choose an operation</string>
+    <string name="you_do_not_have_this_asset">You do not have this asset</string>
 </resources>
