@@ -915,7 +915,9 @@ open class NetworkViewModel : ViewModel() {
     ) {
         viewModelScope.launch(exceptionHandler) {
             val hash = hashMapOf<String, Any>()
+            if (streetNumber.isNotEmpty())
             hash["streetNumber"] = streetNumber
+            if (street.isNotEmpty())
             hash["street"] = street.toString()
             hash["city"] = city
             hash["stateOrProvince"] = stateOrProvince

@@ -76,11 +76,11 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
 
     fun checkData(): Boolean {
         when {
-            streetHouseNumber.isEmpty() -> {
+       /*     streetHouseNumber.isEmpty() -> {
                 getString(R.string.please_enter_street_number).showToast(requireContext())
                 binding.etStreetNumber.requestKeyboard()
             }
-
+*/
          /*   buildingFloor.isEmpty() -> {
                 getString(R.string.please_enter_building_name_or_floor_name).showToast(
                     requireContext()

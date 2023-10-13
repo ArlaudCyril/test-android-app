@@ -196,7 +196,7 @@
         <item name="android:windowMinWidthMinor">80%</item>
         <item name="dialogCornerRadius">12dp</item>
 
-        <item name="backgroundColor">@color/semi_transparent_dark</item>
+        <item name="backgroundColor">@color/black</item>
     </style>
 
     <style name="Theme.Liber.NoActionBar">

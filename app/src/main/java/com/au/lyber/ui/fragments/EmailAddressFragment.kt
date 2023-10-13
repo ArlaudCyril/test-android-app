@@ -1,6 +1,8 @@
 package com.au.lyber.ui.fragments
 
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
@@ -13,7 +15,6 @@ import com.au.lyber.ui.fragments.bottomsheetfragments.EmailVerificationBottomShe
 import com.au.lyber.utils.App
 import com.au.lyber.utils.CommonMethods
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
-import com.au.lyber.utils.CommonMethods.Companion.replace
 import com.au.lyber.utils.CommonMethods.Companion.requestKeyboard
 import com.au.lyber.utils.CommonMethods.Companion.showToast
 import com.au.lyber.utils.Constants
@@ -22,6 +23,7 @@ import com.nimbusds.srp6.SRP6CryptoParams
 import com.nimbusds.srp6.SRP6VerifierGenerator
 import com.nimbusds.srp6.XRoutineWithUserIdentity
 import java.math.BigInteger
+import java.util.regex.Pattern
 
 class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
 
@@ -32,6 +34,9 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
     private val password: String get() = binding.etPassword.text.trim().toString()
 
     private lateinit var viewModel: PersonalDataViewModel
+    val textPattern: Pattern = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$")
+
+    private val passwordRegex = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{10}$")
 
     override fun bind() = FragmentEmailAddressBinding.inflate(layoutInflater)
 
@@ -47,6 +52,26 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
         binding.ivTopAction.setOnClickListener {
             requireActivity().onBackPressed()
         }
+        binding.etPassword.addTextChangedListener(object :TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                if (passwordRegex.matcher(s.toString()).matches()){
+                    binding.tvPasswordWarning.text = getString(R.string.you_have_strong_password)
+                    binding.tvPasswordWarning.setTextColor(ContextCompat.getColor(requireActivity(),R.color.green_500))
+                }else{
+                    binding.tvPasswordWarning.text = getString(R.string.password_warning)
+                    binding.tvPasswordWarning.setTextColor(ContextCompat.getColor(requireActivity(),R.color.red_500))
+                }
+            }
+
+        })
         binding.etEmail.requestKeyboard()
         setObervers()
         binding.btnNext.setOnClickListener {
@@ -135,7 +160,7 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
                 getString(R.string.please_enter_password).showToast(requireContext())
                 binding.etPassword.requestKeyboard()
             }
-            password.length < 10 -> {
+            !passwordRegex.matcher(password.toString()).matches()-> {
                 getString(R.string.password_should_be_of_minimum_8_characters).showToast(requireContext())
                 binding.etPassword.requestKeyboard()
             }
