@@ -85,7 +85,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         CommonMethods.showProgressDialog(requireActivity())
         isOtpScreen = false
         viewModel.createWithdrawalRequest(viewModel.selectedAssetDetail!!.id
-            ,valueTotal,viewModel.withdrawAddress!!.address,viewModel.selectedNetworkDeposit!!.id
+            ,valueTotal,viewModel.withdrawAddress!!.address!!,viewModel.selectedNetworkDeposit!!.id
         ,code)
     }
 

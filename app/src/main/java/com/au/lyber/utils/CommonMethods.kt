@@ -95,6 +95,14 @@ class CommonMethods {
             }
             return false
         }
+        @JvmStatic
+        fun getScreenWidth(activity: Context?): Int {
+            val w = activity!!.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            val size = Point()
+            w.defaultDisplay.getSize(size)
+            return size.x
+        }
+
 
         fun showProgressDialog(context: Context) {
 
