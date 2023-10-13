@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rlContainer"
+    android:orientation="vertical"
+    android:backgroundTint="@color/white"
+    android:background="@drawable/drawable_white_with_stroke"
+    android:layout_height="match_parent">
+<TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/purple_500"
+    android:padding="16dp"
+    android:textSize="16sp"
+    android:gravity="center"
+    android:textColor="@color/white"
+    android:fontFamily="@font/atypdisplay_regular"
+    android:text="@string/select_birth_date"/>
+    <com.github.florent37.singledateandtimepicker.SingleDateAndTimePicker
+        android:id="@+id/datePicker"
+        android:layout_width="match_parent"
+        android:layout_height="200dp"
+        app:fontFamily="@font/atypdisplay_bold"
+        app:picker_curved="true"
+        app:picker_curvedMaxAngle="35"
+        app:picker_cyclic="true"
+        app:picker_displayDays="false"
+        app:picker_displayDaysOfMonth="true"
+        app:picker_displayHours="false"
+        app:picker_displayMinutes="false"
+        app:picker_displayMonth="true"
+        app:picker_displayYears="true"
+        app:picker_itemSpacing="1dp"
+        app:picker_monthFormat="MMM"
+        app:picker_selectedTextColor="#232326"
+        app:picker_selectorColor="@color/black"
+        app:picker_selectorHeight="0dp"
+        app:picker_textColor="#BAB9BB"
+        app:picker_textSize="28sp"
+        app:picker_visibleItemCount="5" />
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:orientation="horizontal"
+        android:layout_margin="16dp">
+        <TextView
+            android:layout_marginEnd="8dp"
+            android:id="@+id/btnCancel"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/mabry_pro"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/curved_button"
+            android:backgroundTint="@color/purple_gray_100"
+            android:text="@string/cancel"
+            android:textAllCaps="false"
+            android:gravity="center"
+            android:textColor="@color/black" />
+        <TextView
+           android:layout_marginStart="8dp"
+            android:id="@+id/btnNext"
+            android:gravity="center"
+            android:layout_height="match_parent"
+            android:fontFamily="@font/mabry_pro"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:background="@drawable/curved_button"
+            android:backgroundTint="@color/purple_500"
+            android:text="@string/done"
+            android:textAllCaps="false"
+            android:textColor="@color/white" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+</LinearLayout>

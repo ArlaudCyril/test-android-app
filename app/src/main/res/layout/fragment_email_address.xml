@@ -106,6 +106,7 @@
                         android:paddingVertical="16dp" />
                 </com.google.android.material.textfield.TextInputLayout>
                 <TextView
+                    android:id="@+id/tvPasswordWarning"
                     style="@style/SubTitleText"
                     android:layout_marginTop="16dp"
                     android:lineSpacingExtra="4dp"

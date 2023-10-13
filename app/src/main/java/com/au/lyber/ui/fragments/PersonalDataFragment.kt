@@ -10,6 +10,7 @@ import androidx.appcompat.app.AppCompatActivity
 import com.au.countrycodepicker.CountryPicker
 import com.au.lyber.databinding.FragmentPersonalDataBinding
 import com.au.lyber.models.PersonalDataLocal
+import com.au.lyber.ui.fragments.dialogs.DateTimePicker
 import com.au.lyber.utils.App
 import com.au.lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.getViewModel
@@ -146,26 +147,20 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding>(), View.O
 
     @SuppressLint("SimpleDateFormat")
     private fun showDatePicker() {
-        DatePickerDialog(
-            requireContext(),
-            com.au.lyber.R.style.DatePickerTheme,
-            { _, year, month, day ->
+        DateTimePicker(requireActivity(),object :DateTimePicker.OnDialogClickListener{
+            override fun onDateSelected(year:Long) {
                 val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                 val outputFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
                 birthDate =
-                    inputFormat.parse("$year-${month + 1}-$day")?.let { inputFormat.format(it) }
+                    year.let { inputFormat.format(it) }
                         ?: ""
                 val result = inputFormat.parse(birthDate)?.let { outputFormat.format(it) }
                 binding.etBirthDate.setText(result)
                 birthDateLocal = result!!
-            },
-            mYear,
-            mMonth,
-            mDay
-        ).apply {
-            datePicker.maxDate = System.currentTimeMillis() - 18 * (31556952000) // 18 year old date
-            show()
-        }
+            }
+
+        }).show()
+
     }
 
     override fun onClick(v: View?) {
