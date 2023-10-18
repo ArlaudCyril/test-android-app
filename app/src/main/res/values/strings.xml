@@ -1,7 +1,7 @@
 <resources>
     <string name="app_name">Lyber</string>
-    <string name="lyber_investments_reinvented">Lyber, crypto at your fingerprints.</string>
-    <string name="diversified_regular_simple">Simple,secure and diversified investment.</string>
+    <string name="lyber_investments_reinvented">Lyber, crypto at your fingertips.</string>
+    <string name="diversified_regular_simple">Simple, secure and diversified investment.</string>
     <string name="sign_up">Sign up</string>
     <string name="log_in">Log in</string>
     <string name="your_phone_number">Your phone number</string>
@@ -577,7 +577,7 @@
     <string name="review_my_informations">Review my information</string>
     <string name="change_my_informations">Change my information</string>
     <string name="password_warning">The password must have atleast 10 characters, 1 special character, 1 lower case and 1 upper case</string>
-    <string name="you_have_strong_password">You have strong password</string>
+    <string name="you_have_strong_password">You have a strong password</string>
     <string name="select_birth_date">Select Birth Date</string>
     <string name="done">Done</string>
 </resources>

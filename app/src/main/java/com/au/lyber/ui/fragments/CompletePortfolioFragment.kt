@@ -50,7 +50,7 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
         when (state) {
             Constants.ACCOUNT_CREATING -> {
                 accountCreationFilled(false,true)
-              //  personalDataFilled(personalDataFilled = false, true)
+            personalDataFilled(personalDataFilled = false, false)
             }
             Constants.ACCOUNT_CREATED -> {
                 accountCreationFilled(true,false)
@@ -128,19 +128,27 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
                 tvFillPersonalData.setCompoundDrawables(null, null, null, null)
                 tvFillPersonalData.setTextColor(requireContext().getColor(R.color.purple_gray_600))
             } else {
-                if (showProgress)
+                if (showProgress) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         progressSteps.setProgress(30, true)
                     } else
                         progressSteps.progress = 30
-                tvNumFillCreateAccount.gone()
-                tvNumFillPersonalData.visible()
-                tvFillPersonalData.setOnClickListener(this@CompletePortfolioFragment)
-                ivFillPersonalData.setBackgroundResource(R.drawable.circle_drawable_purple_500)
-                tvNumFillPersonalData.text = getString(R.string._2)
-                tvNumFillPersonalData.setTextColor(requireContext().getColor(R.color.white))
-                tvFillPersonalData.text = getString(R.string.fill_personal_data)
-                tvFillPersonalData.setTextColor(requireContext().getColor(R.color.purple_500))
+                    tvNumFillCreateAccount.gone()
+                    tvNumFillPersonalData.visible()
+                    tvFillPersonalData.setOnClickListener(this@CompletePortfolioFragment)
+                    ivFillPersonalData.setBackgroundResource(R.drawable.circle_drawable_purple_500)
+                    tvNumFillPersonalData.text = getString(R.string._2)
+                    tvNumFillPersonalData.setTextColor(requireContext().getColor(R.color.white))
+                    tvFillPersonalData.text = getString(R.string.fill_personal_data)
+                    tvFillPersonalData.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_right_arrow_purple, 0)
+                    tvFillPersonalData.setTextColor(requireContext().getColor(R.color.purple_500))
+                }else{
+                    ivFillPersonalData.setBackgroundResource(R.drawable.circle_drawable)
+                    tvNumFillPersonalData.text = getString(R.string._2)
+                    tvNumFillPersonalData.setTextColor(requireContext().getColor(R.color.purple_gray_600))
+                    tvFillPersonalData.text = getString(R.string.fill_personal_data)
+                    tvFillPersonalData.setTextColor(requireContext().getColor(R.color.purple_gray_600))
+                }
             }
         }
     }
