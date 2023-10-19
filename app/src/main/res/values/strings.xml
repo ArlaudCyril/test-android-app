@@ -193,7 +193,7 @@
     <string name="a_new_code_will_be_sent_in">A new code will be sent in</string>
     <string name="subtitle_build_strategy">Add as many assets as you wish and choose their respective allocation.</string>
     <string name="save_my_strategy">Save my strategy</string>
-    <string name="save_strategy_caption">You must add a minimum asset to create your strategy</string>
+    <string name="save_strategy_caption">You must add at least one asset to create your strategy.</string>
     <string name="view_all_16_available_assets"><u>View all 16 available assets</u></string>
     <string name="auto">Auto</string>
     <string name="allocations">Allocations</string>
