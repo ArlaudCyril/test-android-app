@@ -315,6 +315,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
             }
             findNavController().navigate(R.id.addCryptoAddress,bundle)
         } else {
+
             WithdrawalAddressBottomSheet(
                 addresses,
                 viewModel.selectedNetworkDeposit!!.id,

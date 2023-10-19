@@ -148,8 +148,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                     BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
                 val priceCoin = balance!!.balanceData.euroBalance.toDouble()
                     .div(balance.balanceData.balance.toDouble() ?: 1.0)
-                tvNestedAmountValue.text = requireArguments().getString(Constants.EURO)+" "+it!!.id.uppercase()
-                tvValueLyberFee.text =
+                 tvValueLyberFee.text =
                     viewModel.selectedNetworkDeposit!!.withdrawFee.toString().formattedAsset(
                         price = priceCoin,
                         rounding = RoundingMode.DOWN
@@ -162,7 +161,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                             !!.length-4)
                 tvExchangeTo.text = getString(R.string.network)
                 tvExchangeToValue.text = viewModel.selectedNetworkDeposit!!.fullName
-                 valueTotal = viewModel.selectedNetworkDeposit!!.withdrawFee.toDouble()+
+                 valueTotal =
                         requireArguments().getString(Constants.EURO,"")
                             .replace(it.id.uppercase(),"").toDouble()
                 tvValueTotal.text =
@@ -175,6 +174,12 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                         price = priceCoin,
                         rounding = RoundingMode.DOWN
                     ) } ${it.id.uppercase()}"
+                val amount = valueTotal-viewModel.selectedNetworkDeposit!!.withdrawFee.toDouble()
+                tvNestedAmountValue.text = "${amount.toString().formattedAsset(
+                    price = priceCoin,
+                    rounding = RoundingMode.DOWN
+                ) } ${it.id.uppercase()}"
+
                 btnConfirmInvestment.isEnabled = true
                 btnConfirmInvestment.text =
                     getString(R.string.confirm_withdrawal)
