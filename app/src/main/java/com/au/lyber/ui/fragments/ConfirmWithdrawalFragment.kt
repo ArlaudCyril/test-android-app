@@ -161,7 +161,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                             !!.length-4)
                 tvExchangeTo.text = getString(R.string.network)
                 tvExchangeToValue.text = viewModel.selectedNetworkDeposit!!.fullName
-                 valueTotal = viewModel.selectedNetworkDeposit!!.withdrawFee.toDouble()+
+                 valueTotal =
                         requireArguments().getString(Constants.EURO,"")
                             .replace(it.id.uppercase(),"").toDouble()
                 tvValueTotal.text =
@@ -174,7 +174,8 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                         price = priceCoin,
                         rounding = RoundingMode.DOWN
                     ) } ${it.id.uppercase()}"
-                tvNestedAmountValue.text = "${valueTotal.toString().formattedAsset(
+                val amount = valueTotal-viewModel.selectedNetworkDeposit!!.withdrawFee.toDouble()
+                tvNestedAmountValue.text = "${amount.toString().formattedAsset(
                     price = priceCoin,
                     rounding = RoundingMode.DOWN
                 ) } ${it.id.uppercase()}"
