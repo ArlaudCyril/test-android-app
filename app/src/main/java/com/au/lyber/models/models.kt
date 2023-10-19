@@ -142,7 +142,8 @@ data class Strategy(
     val publicType: String,
     val strategyType: String,
     val risk: String?,
-    val expectedYield: String?
+    val expectedYield: String?,
+    var isSelected :Boolean= false
 )
 
 data class InvestmentStrategyAsset(

@@ -11,8 +11,9 @@ import com.au.lyber.ui.fragments.StrategyView
 import com.au.lyber.utils.CommonMethods.Companion.gone
 import com.au.lyber.utils.CommonMethods.Companion.visible
 
-class PickStrategyFragmentAdapter(val itemClicked: (position: Int) -> Unit) :
+class PickStrategyFragmentAdapter(val itemClicked: (position: Int,view:StrategyView) -> Unit) :
     BaseAdapter<Strategy>() {
+
 
 
     inner class ViewHolder(val strategyView: StrategyView) :
@@ -24,7 +25,7 @@ class PickStrategyFragmentAdapter(val itemClicked: (position: Int) -> Unit) :
             }
 
             strategyView.rootView.setOnClickListener {
-              itemClicked(adapterPosition)
+              itemClicked(adapterPosition,strategyView)
             }
 
         }

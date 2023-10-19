@@ -105,9 +105,8 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
         }
     }
 
-    private fun itemClicked(position: Int) {
+    private fun itemClicked(position: Int,currentView:StrategyView) {
 
-        val currentView = (layoutManager.getChildAt(position) as StrategyView)
         when (previousPosition) {
             -1 -> { // no one is selected yet
                 currentView.isStrategySelected = true
@@ -139,19 +138,25 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
                 }
             }
             else -> {
-                val previousView = (layoutManager.getChildAt(previousPosition) as StrategyView)
+                try {
+                    val previousView = (layoutManager.getChildAt(previousPosition) as StrategyView)
+                    if (previousView!=null) {
+                        previousView.isStrategySelected = false
+                        currentView.isStrategySelected = true
+                        currentView.background = getDrawable(
+                            requireContext(),
+                            R.drawable.round_stroke_purple_500
+                        )
+                        previousView.background = getDrawable(
+                            requireContext(),
+                            R.drawable.round_stroke_gray_100
+                        )
+                        previousView.radioButton.setImageResource(R.drawable.radio_unselect)
 
-                previousView.isStrategySelected = false
-                currentView.isStrategySelected = true
-                currentView.background = getDrawable(
-                    requireContext(),
-                    R.drawable.round_stroke_purple_500
-                )
-                previousView.background = getDrawable(
-                    requireContext(),
-                    R.drawable.round_stroke_gray_100
-                )
-                previousView.radioButton.setImageResource(R.drawable.radio_unselect)
+                    }
+                }catch (e:Exception){
+                    e.printStackTrace()
+                }
                 previousPosition = position
                 viewModel.strategyPositionSelected.postValue(previousPosition)
             }
