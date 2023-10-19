@@ -36,8 +36,8 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
     private lateinit var viewModel: PersonalDataViewModel
     val textPattern: Pattern = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$")
 
-    private val passwordRegex = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{10}$")
-
+    private val passwordRegex = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{10,}$")
+    private var isPasswordOk = false
     override fun bind() = FragmentEmailAddressBinding.inflate(layoutInflater)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -63,9 +63,11 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
 
             override fun afterTextChanged(s: Editable?) {
                 if (passwordRegex.matcher(s.toString()).matches()){
+                    isPasswordOk = true
                     binding.tvPasswordWarning.text = getString(R.string.you_have_strong_password)
                     binding.tvPasswordWarning.setTextColor(ContextCompat.getColor(requireActivity(),R.color.green_500))
                 }else{
+                    isPasswordOk = false
                     binding.tvPasswordWarning.text = getString(R.string.password_warning)
                     binding.tvPasswordWarning.setTextColor(ContextCompat.getColor(requireActivity(),R.color.red_500))
                 }
@@ -156,12 +158,8 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
                 getString(R.string.please_enter_a_valid_email_address).showToast(requireContext())
                 binding.etEmail.requestKeyboard()
             }
-            password.isEmpty() -> {
-                getString(R.string.please_enter_password).showToast(requireContext())
-                binding.etPassword.requestKeyboard()
-            }
-            !passwordRegex.matcher(password.toString()).matches()-> {
-                getString(R.string.password_should_be_of_minimum_8_characters).showToast(requireContext())
+            !isPasswordOk -> {
+                //getString(R.string.please_enter_password).showToast(requireContext())
                 binding.etPassword.requestKeyboard()
             }
             else -> {

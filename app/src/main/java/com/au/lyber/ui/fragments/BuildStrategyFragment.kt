@@ -194,7 +194,24 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
     }
 
     private fun showDialog() {
-        Dialog(requireActivity(), R.style.DialogTheme).apply {
+        val transparentView = View(context)
+        transparentView.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.semi_transparent_dark
+            )
+        )
+
+        // Set layout parameters for the transparent view
+        val viewParams = RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.MATCH_PARENT,
+            RelativeLayout.LayoutParams.MATCH_PARENT
+        )
+
+        // Add the transparent view to the RelativeLayout
+        val mainView = view?.rootView as ViewGroup
+        mainView.addView(transparentView, viewParams)
+        val dialog = Dialog(requireActivity(), R.style.DialogTheme).apply {
             CustomDialogLayoutBinding.inflate(layoutInflater).let { bind ->
                 requestWindowFeature(Window.FEATURE_NO_TITLE)
                 setCancelable(false)
@@ -204,6 +221,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                 bind.rlCustom.gone()
 
                 bind.tvCancel.setOnClickListener {
+                    mainView.removeView(transparentView)
                     dismiss()
                 }
                 bind.tvSave.setOnClickListener {
@@ -215,6 +233,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                         }
                         else -> {
                             checkInternet(requireContext()) {
+                                mainView.removeView(transparentView)
                                 dismiss()
                                 showProgressDialog(requireContext())
                                 checkInternet(requireContext()) {
