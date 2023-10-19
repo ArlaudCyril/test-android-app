@@ -21,4 +21,8 @@ public String origin;
 @Expose
 public String creationDate;
 
+@SerializedName("exchange")
+ @Expose
+ public String exchange;
+
 }

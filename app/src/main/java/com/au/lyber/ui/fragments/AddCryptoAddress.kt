@@ -47,8 +47,9 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
     private lateinit var viewModel: ProfileViewModel
     private var toEdit: Boolean = false
     private var originSelectedPosition = 0
-    private var networkId:String = ""
+    private var networkId: String = ""
     private var isFromWithdraw = false
+
     /* network popup */
     private var network: Network? = null
     private lateinit var networkAdapter: NetworkPopupAdapter
@@ -80,7 +81,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
         super.onViewCreated(view, savedInstanceState)
         viewModel = getViewModel(requireActivity())
         viewModel.listener = this
-        if (arguments!=null){
+        if (arguments != null) {
             arguments.let {
                 if (requireArguments().containsKey(Constants.ID)) {
                     networkId = requireArguments().getString(Constants.ID)!!
@@ -91,19 +92,19 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
 
         /*  changing ui according to view cases */
 
-            binding.tvTitle.text = getString(R.string.add_a_crypto_address)
-            binding.ivNetwork.gone()
-            binding.etNetwork.hint = getString(R.string.choose_network)
+        binding.tvTitle.text = getString(R.string.add_a_crypto_address)
+        binding.ivNetwork.gone()
+        binding.etNetwork.hint = getString(R.string.choose_network)
 
-        if (isFromWithdraw || toEdit){
+        if (isFromWithdraw || toEdit) {
             binding.llNetwork.background =
                 getDrawable(requireContext(), R.drawable.rec_solid_gray_100)
         }
-        if (isFromWithdraw){
+        if (isFromWithdraw) {
             binding.btnAddUseAddress.text = getString(R.string.add_and_use_this_address)
-            binding.tvTitle.text = getString(R.string.add_a_address,networkId.uppercase())
+            binding.tvTitle.text = getString(R.string.add_a_address, networkId.uppercase())
         }
-        if (toEdit){
+        if (toEdit) {
             binding.tvTitle.text = getString(R.string.edit_address)
             binding.btnAddUseAddress.text = getString(R.string.edit_address)
             binding.etAddress.background =
@@ -112,9 +113,9 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
 
         /* observers */
         viewModel.singleNetworkResponse.observe(viewLifecycleOwner) {
-            if (lifecycle.currentState == Lifecycle.State.RESUMED){
-                val format=address.addressMatched(it.data.addressRegex)
-                if (format){
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                val format = address.addressMatched(it.data.addressRegex)
+                if (format) {
                     viewModel.addAddress(
                         addressName,
                         network?.id ?: "",
@@ -123,7 +124,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                         binding.etExchange.text.toString() ?: "",
                         network?.imageUrl ?: ""
                     )
-                }else{
+                } else {
                     CommonMethods.dismissProgressDialog()
                     binding.etAddress.requestKeyboard()
                     binding.ttlAddress.helperText = getString(R.string.please_enter_valid_address)
@@ -143,9 +144,9 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                 } else networkAdapter.setData(it.data)
 
 
-                if (network!=null){
-                    for (data in it.data){
-                        if (data.id == network!!.id){
+                if (network != null) {
+                    for (data in it.data) {
+                        if (data.id == network!!.id) {
                             network = data
                             binding.tvTitle.fadeIn()
                             binding.ivNetwork.visible()
@@ -157,9 +158,9 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                         }
                     }
                 }
-                if (isFromWithdraw){
-                    for (data in it.data){
-                        if (data.id == networkId){
+                if (isFromWithdraw) {
+                    for (data in it.data) {
+                        if (data.id == networkId) {
                             network = data
                             binding.tvTitle.fadeIn()
                             binding.ivNetwork.visible()
@@ -232,10 +233,12 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
 
         if (toEdit) {
             viewModel.whitelistAddress?.let {
-                    binding.etAddress.isEnabled = false
+                binding.etAddress.isEnabled = false
                 binding.etAddress.setText("${it.address}")
                 binding.etAddressName.setText(it.name)
                 binding.etNetwork.setText(it.network)
+                if (it.exchange != null)
+                    binding.etExchange.setText(it.exchange)
                 val id = it.network
                 network = Network(id = it.network)
                 originSelectedPosition = if (it.origin == "exchange") 0 else 1
@@ -259,7 +262,6 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
         }
 
     }
-
 
 
     private fun setOrigin(position: Int) {
@@ -520,7 +522,6 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
 
         private const val DRAWABLE_RIGHT = 2
         private const val TO_EDIT = "toEdit"
-
 
 
     }
