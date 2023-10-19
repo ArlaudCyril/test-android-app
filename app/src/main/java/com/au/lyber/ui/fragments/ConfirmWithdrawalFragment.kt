@@ -148,8 +148,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                     BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
                 val priceCoin = balance!!.balanceData.euroBalance.toDouble()
                     .div(balance.balanceData.balance.toDouble() ?: 1.0)
-                tvNestedAmountValue.text = requireArguments().getString(Constants.EURO)+" "+it!!.id.uppercase()
-                tvValueLyberFee.text =
+                 tvValueLyberFee.text =
                     viewModel.selectedNetworkDeposit!!.withdrawFee.toString().formattedAsset(
                         price = priceCoin,
                         rounding = RoundingMode.DOWN
@@ -175,6 +174,11 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                         price = priceCoin,
                         rounding = RoundingMode.DOWN
                     ) } ${it.id.uppercase()}"
+                tvNestedAmountValue.text = "${valueTotal.toString().formattedAsset(
+                    price = priceCoin,
+                    rounding = RoundingMode.DOWN
+                ) } ${it.id.uppercase()}"
+
                 btnConfirmInvestment.isEnabled = true
                 btnConfirmInvestment.text =
                     getString(R.string.confirm_withdrawal)

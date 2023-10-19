@@ -52,6 +52,7 @@ class WithdrawalAddressBottomSheet (private val addresses: MutableList<WithdrawA
                 putBoolean(Constants.ACTION_WITHDRAW,true)
                 putString(Constants.ID,selectedNetwork)
             }
+            dismiss()
             findNavController().navigate(R.id.addCryptoAddress,bundle)
         }
     }

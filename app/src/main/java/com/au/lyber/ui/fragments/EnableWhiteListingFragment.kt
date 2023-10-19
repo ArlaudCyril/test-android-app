@@ -130,7 +130,7 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
                         binding.tvSecurityText.text = getString(R.string.you_can_immediately_withdraw_to_any_address_newly_added_to_your_address_book)
                     }
                     else->{
-                        binding.tvSecurityText.text = getString(R.string.you_can_immediately_withdraw_to_any_address_newly_added_to_your_address_book)
+                        binding.tvSecurityText.text = getString(R.string.shifting)
 
                     }
                 }
