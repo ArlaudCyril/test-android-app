@@ -23,4 +23,8 @@ class WithdrawAddress {
     @SerializedName("creationDate")
     @Expose
     var creationDate: String? = null
+
+    @SerializedName("exchange")
+    @Expose
+    var exchange: String? = null
 }
