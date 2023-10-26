@@ -595,4 +595,6 @@
     <string name="you_need_to_invest_at_least_per_asset_in_the_strategy">You need to invest at least %1$s%2$s per asset in the strategy.</string>
     <string name="you_don_t_have_enough_to_perform_this_action">You don`t have enough%1$s to perform this action.</string>
     <string name="please_select_the_frequency">Please select the frequency</string>
+    <string name="enabled">Enabled</string>
+    <string name="pause_strategy">Pause Strategy</string>
 </resources>

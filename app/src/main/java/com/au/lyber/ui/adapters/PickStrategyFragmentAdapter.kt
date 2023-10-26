@@ -91,6 +91,11 @@ class PickStrategyFragmentAdapter(val itemClicked: (position: Int,view:StrategyV
                             yeild = ""
                         }
                         allocationView.setAssetsList(it.bundle)
+                        if (it.activeStrategy!=null) {
+                            binding.tvPriceStrategy.visible()
+                        }else{
+                            binding.tvPriceStrategy.gone()
+                        }
                     }
                 }
             }

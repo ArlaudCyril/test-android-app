@@ -324,11 +324,11 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun investStrategy(strategyId: String, frequency: String, amount: Int) {
+    fun investStrategy(strategyId: String, frequency: String, amount: Int,strateggyName:String) {
         viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().investOnStrategy(
                 hashMapOf(
-                    "strategyName" to "usdt",
+                    "strategyName" to strateggyName,
                     "ownerUuid" to strategyId,
                     "frequency" to frequency,
                     "amount" to amount

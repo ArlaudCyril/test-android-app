@@ -120,6 +120,49 @@
         app:layout_constraintTop_toTopOf="@id/tvTitleAdjust" />
 
     <ImageView
+        android:id="@+id/ivAdjustNew"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/circle_drawable"
+        android:backgroundTint="@color/purple_gray_50"
+        android:padding="4dp"
+        android:src="@drawable/pencil"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivAdjust"
+        app:tint="@color/purple_500" />
+
+    <TextView
+        android:id="@+id/tvTitleAdjustNew"
+        style="@style/SubheadMabry"
+        android:layout_width="0dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="36dp"
+        android:text="@string/adjust_investment"
+        android:textColor="@color/purple_gray_700"
+        app:layout_constraintStart_toEndOf="@id/ivAdjustNew"
+        app:layout_constraintTop_toBottomOf="@id/ivAdjust" />
+
+    <TextView
+        android:id="@+id/tvSubTitleAdjustNew"
+        style="@style/BodyMabry"
+        android:layout_width="0dp"
+        android:layout_marginStart="12dp"
+        android:text="@string/change_frequency_and_amount"
+        android:textColor="@color/purple_gray_500"
+        app:layout_constraintStart_toEndOf="@id/ivAdjustNew"
+        app:layout_constraintTop_toBottomOf="@id/tvTitleAdjustNew" />
+
+    <ImageView
+        android:id="@+id/ivRightArrowAdjustNew"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:src="@drawable/ic_right_arrow_grey"
+        app:layout_constraintBottom_toBottomOf="@id/tvSubTitleAdjustNew"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvTitleAdjustNew" />
+
+    <ImageView
         android:id="@+id/ivTailor"
         android:layout_width="32dp"
         android:layout_height="32dp"
@@ -129,7 +172,7 @@
         android:padding="4dp"
         android:src="@drawable/ic_invest_single_assets"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivAdjust"
+        app:layout_constraintTop_toBottomOf="@id/ivAdjustNew"
         app:tint="@color/purple_500" />
 
     <TextView
@@ -141,7 +184,7 @@
         android:text="@string/tailor_strategy"
         android:textColor="@color/purple_gray_700"
         app:layout_constraintStart_toEndOf="@id/ivTailor"
-        app:layout_constraintTop_toBottomOf="@id/ivAdjust" />
+        app:layout_constraintTop_toBottomOf="@id/ivAdjustNew" />
 
     <TextView
         android:id="@+id/tvSubTitleTailor"
@@ -193,6 +236,39 @@
         android:layout_height="0dp"
         android:src="@drawable/ic_right_arrow_grey"
         app:layout_constraintBottom_toBottomOf="@id/tvTitleDelete"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvTitleDelete" />
+    <ImageView
+        android:id="@+id/ivPAuse"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/circle_drawable"
+        android:backgroundTint="@color/purple_gray_50"
+        android:padding="4dp"
+        android:src="@drawable/pause"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivDelete"
+        app:tint="@color/purple_500" />
+
+    <TextView
+        android:id="@+id/tvTitlePAuse"
+        style="@style/SubheadMabry"
+        android:layout_width="0dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="36dp"
+        android:text="@string/pause_strategy"
+        android:textColor="@color/purple_gray_700"
+        app:layout_constraintStart_toEndOf="@id/ivPAuse"
+        app:layout_constraintTop_toBottomOf="@id/ivDelete" />
+
+
+    <ImageView
+        android:id="@+id/ivRightArrowPAuse"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:src="@drawable/ic_right_arrow_grey"
+        app:layout_constraintBottom_toBottomOf="@id/tvTitlePAuse"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/tvTitleDelete" />
 </androidx.constraintlayout.widget.ConstraintLayout>

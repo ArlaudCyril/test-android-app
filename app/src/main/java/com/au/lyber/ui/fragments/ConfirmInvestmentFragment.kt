@@ -79,7 +79,7 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                                         it.ownerUuid,
                                         freq,
                                         viewModel.amount.toFloat().toInt()
-                                    )
+                                    ,viewModel.selectedStrategy!!.name)
                                 }
                             }
                         }

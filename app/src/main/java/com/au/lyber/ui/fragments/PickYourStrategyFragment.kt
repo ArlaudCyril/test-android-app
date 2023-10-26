@@ -179,6 +179,7 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
         val vc  = InvestWithStrategyBottomSheet(::clicked)
         vc.viewToDelete = transparentView
         vc.mainView = getView()?.rootView as ViewGroup
+        vc.viewModel = viewModel
         vc.show(childFragmentManager, "")
 
         // Add the transparent view to the RelativeLayout

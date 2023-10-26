@@ -31,9 +31,10 @@
         android:id="@+id/tvPriceStrategy"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
-        android:visibility="gone"
+        android:visibility="visible"
+        android:text="@string/enabled"
         android:enabled="false"
-        android:src="@drawable/radio_unselect" />
+        android:textColor="@color/solanaColor" />
 
     <ImageView
         android:id="@+id/ivYield"

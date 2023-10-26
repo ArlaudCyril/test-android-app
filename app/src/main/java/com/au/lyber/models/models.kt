@@ -2,6 +2,9 @@ package com.au.lyber.models
 
 import com.au.lyber.R
 import com.github.mikephil.charting.data.Entry
+import com.google.gson.annotations.Expose
+
+import com.google.gson.annotations.SerializedName
 
 
 /* api responses */
@@ -15,7 +18,7 @@ data class ErrorResponse(
 
 data class CommonResponse(val success: String, val message: String, val withdrawalId: String)
 
-data class CommonResponseVerfiy(val success: String, val message: String,val withdrawalId:String)
+data class CommonResponseVerfiy(val success: String, val message: String, val withdrawalId: String)
 
 data class MessageResponse(
     val message: String,
@@ -143,8 +146,19 @@ data class Strategy(
     val strategyType: String,
     val risk: String?,
     val expectedYield: String?,
-    var isSelected :Boolean= false
+    var isSelected: Boolean = false,
+    var activeStrategy: ActiveStrategy?=null
 )
+
+class ActiveStrategy {
+    @SerializedName("amount")
+    @Expose
+    var amount: Int? = null
+
+    @SerializedName("frequency")
+    @Expose
+    var frequency: String? = null
+}
 
 data class InvestmentStrategyAsset(
     val share: Float,
@@ -152,7 +166,11 @@ data class InvestmentStrategyAsset(
 )
 
 
-data class AddedAsset(val addAsset: PriceServiceResume, var allocation: Float, var isChangedManually :Boolean = false)
+data class AddedAsset(
+    val addAsset: PriceServiceResume,
+    var allocation: Float,
+    var isChangedManually: Boolean = false
+)
 
 data class AddAsset(
     val asset: Asset,
