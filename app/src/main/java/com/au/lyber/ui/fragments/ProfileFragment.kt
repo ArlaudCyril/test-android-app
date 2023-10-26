@@ -220,7 +220,12 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         }
 
 
-//        binding.ivProfile.setProfile
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.ivProfile.setProfile
     }
 
 
@@ -275,7 +280,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         binding.apply {
             when (v!!) {
 
-                ivProfile -> ProfileBottomSheet(::optionSelected).show(childFragmentManager, "")
+                ivProfile -> findNavController().navigate(R.id.defaultImagesFragment)/*ProfileBottomSheet(::optionSelected).show(childFragmentManager, "")*/
 
                 rlAddressBook -> findNavController().navigate(R.id.addAddressBookFragment)
 

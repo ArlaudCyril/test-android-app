@@ -634,6 +634,18 @@ open class NetworkViewModel : ViewModel() {
             else listener?.onRetrofitError(res.errorBody())
         }
     }
+    fun updateAvtaar(
+        lock: String
+    ) {
+        viewModelScope.launch(exceptionHandler) {
+            val hashMap: HashMap<String, Any> = hashMapOf()
+            hashMap["avatar"] = lock
+            val res = RestClient.get().updateUserInfo(hashMap)
+            if (res.isSuccessful)
+                _updateUserInfoResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
 
     fun getWhiteListings() {
         viewModelScope.launch(exceptionHandler) {

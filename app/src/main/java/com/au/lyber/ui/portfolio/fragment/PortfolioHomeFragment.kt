@@ -41,6 +41,7 @@ import com.au.lyber.utils.CommonMethods.Companion.fadeOut
 import com.au.lyber.utils.CommonMethods.Companion.getViewModel
 import com.au.lyber.utils.CommonMethods.Companion.px
 import com.au.lyber.utils.CommonMethods.Companion.roundFloat
+import com.au.lyber.utils.CommonMethods.Companion.setProfile
 import com.au.lyber.utils.CommonMethods.Companion.toMilli
 import com.au.lyber.utils.CommonMethods.Companion.visibleFromLeft
 import com.au.lyber.utils.CommonMethods.Companion.zoomIn
@@ -459,6 +460,11 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 }
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.ivProfile.setProfile
     }
 
 
