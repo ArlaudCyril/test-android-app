@@ -24,6 +24,10 @@ data class MessageResponse(
     val message: String,
     val msg: String
 )
+data class MessageResponsePause(
+    val message: String,
+    val msg: String
+)
 
 
 data class KycStatusResponse(

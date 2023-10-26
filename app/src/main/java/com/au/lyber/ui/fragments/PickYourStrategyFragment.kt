@@ -20,11 +20,13 @@ import com.au.lyber.ui.fragments.bottomsheetfragments.InvestWithStrategyBottomSh
 import com.au.lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet
 import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.App
+import com.au.lyber.utils.CommonMethods
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.getViewModel
 import com.au.lyber.utils.CommonMethods.Companion.replaceFragment
 import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
+import com.au.lyber.utils.Constants
 import com.au.lyber.utils.ItemOffsetDecoration
 
 class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>(),
@@ -74,6 +76,15 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
         checkInternet(requireContext()) {
             showProgressDialog(requireContext())
             viewModel.getStrategies()
+        }
+
+        viewModel.pauseStrategyResponse.observe(viewLifecycleOwner){
+            if (lifecycle.currentState == Lifecycle.State.RESUMED){
+                checkInternet(requireContext()) {
+                    showProgressDialog(requireContext())
+                    viewModel.getStrategies()
+                }
+            }
         }
 
     }
@@ -193,6 +204,23 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
     private fun clicked(type: Int) {
         when(type){
             0->{findNavController().navigate(R.id.investAddMoneyFragment)}
+            1->{
+                checkInternet(requireActivity()){
+                    CommonMethods.showProgressDialog(requireActivity())
+                    viewModel.pauseStrategy(viewModel.selectedStrategy!!.ownerUuid,viewModel.selectedStrategy!!.name)
+                }
+            }
+            2->{
+                checkInternet(requireActivity()){
+                    CommonMethods.showProgressDialog(requireActivity())
+                    viewModel.deleteStrategy(viewModel.selectedStrategy!!.name)
+                }
+            }
+            3->{
+                val bundle = Bundle()
+                bundle.putBoolean(Constants.ID,true)
+                findNavController().navigate(R.id.buildStrategyFragment,bundle)
+            }
         }
     }
 

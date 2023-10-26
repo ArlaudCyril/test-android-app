@@ -65,6 +65,8 @@ open class NetworkViewModel : ViewModel() {
 
     private var _investStrategyResponse = MutableLiveData<MessageResponse>()
     val investStrategyResponse get() = _investStrategyResponse
+    private var _pauseStrategyResponse = MutableLiveData<MessageResponsePause>()
+    val pauseStrategyResponse get() = _pauseStrategyResponse
 
     private var _withdrawResponse = MutableLiveData<MessageResponse>()
     val withdrawResponse get() = _withdrawResponse
@@ -259,7 +261,28 @@ open class NetworkViewModel : ViewModel() {
             }
         }
     }
+    fun editOwnStrategy(strategyName: String, addedAsset: List<AddedAsset>) {
 
+        val list = arrayListOf<PortfolioViewModel.ChooseAssets>()
+        for (i in addedAsset)
+            list.add(
+                PortfolioViewModel.ChooseAssets(
+                    i.addAsset.id,
+                    i.allocation.toInt()
+                )
+            )
+        val hashMap = hashMapOf<String, Any>()
+        hashMap["bundle"] = list
+        hashMap["strategyName"] = strategyName
+
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().editStrategy(hashMap)
+            if (res.isSuccessful)
+                _buildStrategyResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+
+    }
     fun buildOwnStrategy(strategyName: String, addedAsset: List<AddedAsset>) {
 
         val list = arrayListOf<PortfolioViewModel.ChooseAssets>()
@@ -336,6 +359,31 @@ open class NetworkViewModel : ViewModel() {
             )
             if (res.isSuccessful)
                 _investStrategyResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+    fun pauseStrategy(strategyId: String,strateggyName:String) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().pauseStrategy(
+                hashMapOf(
+                    "strategyName" to strateggyName,
+                    "ownerUuid" to strategyId
+                )
+            )
+            if (res.isSuccessful)
+                pauseStrategyResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+    fun deleteStrategy(strateggyName:String) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().deleteStrategy(
+                hashMapOf(
+                    "strategyName" to strateggyName
+                )
+            )
+            if (res.isSuccessful)
+                pauseStrategyResponse.postValue(res.body())
             else listener?.onRetrofitError(res.errorBody())
         }
     }

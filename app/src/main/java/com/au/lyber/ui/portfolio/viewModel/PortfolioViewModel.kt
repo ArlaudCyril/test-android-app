@@ -204,6 +204,9 @@ class PortfolioViewModel : NetworkViewModel() {
     fun buildOwnStrategy(strategyName: String) {
         buildOwnStrategy(strategyName, addedAsset)
     }
+    fun editOwnStrategy(strategyName: String) {
+        editOwnStrategy(strategyName, addedAsset)
+    }
 
     fun getBalance(){
         getBalanceApi()

@@ -21,6 +21,18 @@ class InvestWithStrategyBottomSheet (val clickListener: (Int) -> Unit) :
         binding.tvTitleAdjust.setOnClickListener(this)
         binding.ivAdjust.setOnClickListener(this)
         binding.ivTopAction.setOnClickListener(this)
+        //
+        binding.ivPAuse.setOnClickListener(this)
+        binding.tvTitlePAuse.setOnClickListener(this)
+        binding.ivRightArrowPAuse.setOnClickListener(this)
+        //
+        binding.ivDelete.setOnClickListener(this)
+        binding.tvTitleDelete.setOnClickListener(this)
+        binding.ivRightArrowDelete.setOnClickListener(this)
+        //
+        binding.tvSubTitleTailor.setOnClickListener(this)
+        binding.tvTitleTailor.setOnClickListener(this)
+        binding.ivTailor.setOnClickListener(this)
         if (viewModel.selectedStrategy!!.activeStrategy!=null){
             binding.apply {
                 ivDelete.gone()
@@ -72,6 +84,18 @@ class InvestWithStrategyBottomSheet (val clickListener: (Int) -> Unit) :
                 ivTopAction -> dismiss()
                 tvSubTitleAdjust, tvTitleAdjust, ivAdjust -> {
                     clickListener(0)
+                    dismiss()
+                }
+                ivPAuse, tvTitlePAuse, ivRightArrowPAuse -> {
+                    clickListener(1)
+                    dismiss()
+                }
+                ivDelete, tvTitleDelete, ivRightArrowDelete -> {
+                    clickListener(2)
+                    dismiss()
+                }
+                tvSubTitleTailor, tvTitleTailor, ivTailor -> {
+                    clickListener(3)
                     dismiss()
                 }
             }

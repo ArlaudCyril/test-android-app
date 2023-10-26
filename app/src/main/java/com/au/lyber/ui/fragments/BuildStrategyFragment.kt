@@ -33,6 +33,7 @@ import com.au.lyber.utils.CommonMethods.Companion.toPx
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.CommonMethods.Companion.loadCircleCrop
+import com.au.lyber.utils.Constants
 
 class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View.OnClickListener {
 
@@ -42,12 +43,15 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
     private lateinit var viewModel: PortfolioViewModel
 
     private var canBuildStrategy: Boolean = false
+    private var isEdit = false
 
     override fun bind() = FragmentBuildStrategyBinding.inflate(layoutInflater)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        if (arguments!=null && requireArguments().containsKey(Constants.ID)){
+            isEdit= requireArguments().getBoolean(Constants.ID)
+        }
         binding.btnAddAssets.setOnClickListener(this)
         binding.ivTopAction.setOnClickListener(this)
         binding.btnSaveMyStrategy.setOnClickListener(this)
@@ -65,7 +69,20 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
             it.layoutManager = layoutManager
             it.isNestedScrollingEnabled = false
         }
+        if (isEdit){
+            val strategy =viewModel.selectedStrategy
+            for (ada in strategy!!.bundle){
+                val priceServiceResume = BaseActivity.balanceResume.firstNotNullOfOrNull { item -> item.takeIf { item.id == ada.asset } }
+                val assest = AddedAsset(priceServiceResume!!,ada.share,false)
+                viewModel.addedAsset.apply {
+                    add(assest)
+                }
+                adapter.addItem(assest)
 
+            }
+            calculateAllocations()
+
+        }
 
     }
 
@@ -238,7 +255,11 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                                 showProgressDialog(requireContext())
                                 checkInternet(requireContext()) {
                                     showProgressDialog(requireContext())
-                                    viewModel.buildOwnStrategy(name)
+                                    if (isEdit) {
+                                        viewModel.editOwnStrategy(name)
+                                    } else {
+                                        viewModel.buildOwnStrategy(name)
+                                    }
                                 }
                             }
                         }

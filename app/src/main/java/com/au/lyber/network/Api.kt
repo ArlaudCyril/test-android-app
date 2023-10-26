@@ -105,9 +105,17 @@ interface Api {
 
     @POST("user/invest-on-asset")
     suspend fun investOnSingleAsset(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
+    @PATCH("strategy-service/strategy")
+    suspend fun editStrategy(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
 
     @POST("strategy-service/active-strategy")
     suspend fun investOnStrategy(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
+    @HTTP(method = "DELETE", path = "strategy-service/active-strategy", hasBody = true)
+    suspend fun pauseStrategy(@Body hashMap: HashMap<String, Any>): Response<MessageResponsePause>
+
+    @HTTP(method = "DELETE", path = "strategy-service/strategy", hasBody = true)
+    suspend fun deleteStrategy(@Body hashMap: HashMap<String, Any>): Response<MessageResponsePause>
+
 
     @POST("user/swap-crypto")
     suspend fun swapCrypto(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
