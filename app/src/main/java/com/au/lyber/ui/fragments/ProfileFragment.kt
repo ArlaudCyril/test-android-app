@@ -173,7 +173,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
             else -> "No Security"
         }
        binding.ivTopAction.setOnClickListener(this)
-//        binding.llChangePin.setOnClickListener(this)
+        binding.llChangePin.setOnClickListener(this)
 //        binding.tvViewAllTransaction.setOnClickListener(this)
 //        binding.tvAddPaymentMethod.setOnClickListener(this)
         binding.tvLogout.setOnClickListener(this)
@@ -306,8 +306,11 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 )
 
                 llChangePin -> checkInternet(requireContext()) {
-                    showProgressDialog(requireContext())
-                    viewModel.sendOtpPinChange()
+                    val bundle = Bundle().apply {
+                        putBoolean(Constants.FOR_LOGIN,false)
+                        putBoolean(Constants.IS_CHANGE_PIN,true)
+                    }
+                    findNavController().navigate(R.id.createPinFragment,bundle)
                 }
             }
         }
