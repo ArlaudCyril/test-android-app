@@ -127,7 +127,7 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
                             getString(R.string.a_delay_of_72_hours_will_be_required_before_you_can_withdraw_to_any_address_newly_added_to_your_address_book)
                     }
                     2->{
-                        binding.tvSecurityText.text = getString(R.string.you_can_immediately_withdraw_to_any_address_newly_added_to_your_address_book)
+                        binding.tvSecurityText.text = getString(R.string.shifting_no_security)
                     }
                     else->{
                         binding.tvSecurityText.text = getString(R.string.shifting)
