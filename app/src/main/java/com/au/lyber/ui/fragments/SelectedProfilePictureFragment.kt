@@ -26,19 +26,18 @@ class SelectedProfilePictureFragment : BaseFragment<FragmentSelectedProfilePictu
         super.onViewCreated(view, savedInstanceState)
         viewModel = CommonMethods.getViewModel(requireActivity())
         binding.ivTopAction.setOnClickListener {
-            requireActivity().onBackPressed()
-        }
-        binding.ivProfile.setImageResource(Constants.defaults[profilePIc])
-
-        binding.btnSave.setOnClickListener {
-           CommonMethods.checkInternet(requireActivity()){
-               CommonMethods.showProgressDialog(requireActivity())
+//            requireActiv":?>                       bgf "+IKxxxxxxxxxxxxxxxxxxxxxxxxxxxx wsrvwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwg\saaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaqlkh9n=[p'a========='''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''''wwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwwsaz5trdgrvb ./vc gfffffffffffffffffffffaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaz
+//            ".setImageResource(Constants.defaults[profilePIc])
+//
+//        binding.btnSave.setOnClickListener {
+//           CommonMethods.checkInternet(requireActivity()){
+//               CommonMethods.showProgressDialog(requireActivity())
                App.prefsManager.defaultImage = profilePIc
                viewModel.updateAvtaar(profilePIc.toString())
            }
         //requireActivity().supportFragmentManager.popBackStack()
             //requireActivity().supportFragmentManager.popBackStack()
-        }
+
         viewModel.updateUserInfoResponse.observe(viewLifecycleOwner){
             if (lifecycle.currentState == Lifecycle.State.RESUMED){
                 CommonMethods.dismissProgressDialog()
