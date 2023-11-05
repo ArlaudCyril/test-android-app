@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.au.lyber.R
@@ -54,8 +55,10 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
 
         viewModel = getViewModel(requireActivity())
         viewModel.buildStrategyResponse.observe(viewLifecycleOwner) {
-            dismissProgressDialog()
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+            if(lifecycle.currentState == Lifecycle.State.RESUMED) {
+                dismissProgressDialog()
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
         }
 
         adapter = BuildStrategyAdapter(::clickListener)

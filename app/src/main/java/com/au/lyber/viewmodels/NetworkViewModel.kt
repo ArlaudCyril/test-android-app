@@ -263,13 +263,19 @@ open class NetworkViewModel : ViewModel() {
     fun buildOwnStrategy(strategyName: String, addedAsset: List<AddedAsset>) {
 
         val list = arrayListOf<PortfolioViewModel.ChooseAssets>()
-        for (i in addedAsset)
+        var total = 0
+        for (i in addedAsset) {
+            total = total + i.allocation.toInt()
             list.add(
                 PortfolioViewModel.ChooseAssets(
                     i.addAsset.id,
                     i.allocation.toInt()
                 )
             )
+        }
+        if (total<100){
+            list[0].share = list[0].share+(100 - total)
+        }
         val hashMap = hashMapOf<String, Any>()
         hashMap["bundle"] = list
         hashMap["strategyType"] = "SingleAsset"
