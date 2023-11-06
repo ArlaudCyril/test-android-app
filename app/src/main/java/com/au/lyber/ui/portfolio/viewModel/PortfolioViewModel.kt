@@ -213,5 +213,5 @@ class PortfolioViewModel : NetworkViewModel() {
     }
 
 
-    data class ChooseAssets(val asset: String, val share: Int)
+    data class ChooseAssets(val asset: String, var share: Int)
 }

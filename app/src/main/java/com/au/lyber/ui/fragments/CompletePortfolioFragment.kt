@@ -84,7 +84,7 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
                     } else
                         progressSteps.progress = 60
 
-                tvStepsCompleted.text = getString(R.string._1_3_steps_completed)
+                tvStepsCompleted.text = getString(R.string._2_3_steps_completed)
 
                 tvNumFillCreateAccount.gone()
                 tvNumFillCreateAccount.setOnClickListener(null)
