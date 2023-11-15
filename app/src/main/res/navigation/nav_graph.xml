@@ -182,6 +182,16 @@
             app:popExitAnim="@anim/slide_down"/>
     </fragment>
     <fragment
+        android:id="@+id/selectAssestForBuy"
+        android:name="com.au.lyber.ui.fragments.SelectAssestForBuy"
+        android:label="SelectAssestForBuy" >
+        <action
+            android:id="@+id/action_discoveryFragment_to_chooseAssetForDepositFragment"
+            app:destination="@id/chooseAssetForDepositFragment"
+            app:enterAnim="@anim/slide_up"
+            app:popExitAnim="@anim/slide_down"/>
+    </fragment>
+    <fragment
         android:id="@+id/depositFiatWalletFragment"
         android:name="com.au.lyber.ui.fragments.DepositFiatWalletFragment"
         android:label="DepositFiatWalletFragment" >

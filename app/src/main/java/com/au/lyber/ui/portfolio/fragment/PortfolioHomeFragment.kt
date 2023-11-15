@@ -313,7 +313,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
     override fun investMoneyClicked(toStrategy: Boolean) {
         if (toStrategy) navController.navigate(R.id.pickYourStrategyFragment)
-        else navController.navigate(R.id.selectAnAssetFragment)
+        else navController.navigate(R.id.selectAssestForBuy)
     }
 
     override fun assetClicked(balance: Balance) {
@@ -339,7 +339,10 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         viewModel.selectedAsset
 
         when (option) {
-
+            "buy"->{
+                viewModel.selectedOption = Constants.USING_BUY
+                navController.navigate(R.id.selectAssestForBuy)
+            }
             "withdraw" -> {
                 viewModel.selectedOption = Constants.USING_WITHDRAW
                 navController.navigate(R.id.swapWithdrawFromFragment)

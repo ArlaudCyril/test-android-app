@@ -369,6 +369,16 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                  //   getString(R.string.withdrawal_is_deactivated_on_this_asset).showToast(requireActivity())
               //  }
             }
+            "buy"->{
+                val balance =BaseActivity.balances.find { it1 -> it1.id == "usdt"}
+                if (balance!=null){
+                    viewModel.exchangeAssetTo = viewModel.selectedAsset!!.id
+                    viewModel.exchangeAssetFrom = "usdt"
+                    findNavController().navigate(R.id.addAmountForExchangeFragment)
+                }else{
+
+                }
+            }
 
             "deposit" -> {
 

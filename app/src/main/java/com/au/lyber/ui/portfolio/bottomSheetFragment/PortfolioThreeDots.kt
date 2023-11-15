@@ -45,6 +45,7 @@ class PortfolioThreeDots(private val listenItemClicked: (String, String) -> Unit
         binding.llWithdraw.root.setOnClickListener(this)
         binding.llExchange.root.setOnClickListener(this)
         binding.llDepositFiat.root.setOnClickListener(this)
+        binding.llBuy.root.setOnClickListener(this)
         binding.llSell.root.setOnClickListener(this)
         binding.ivTopAction.setOnClickListener(this)
 
@@ -86,6 +87,19 @@ class PortfolioThreeDots(private val listenItemClicked: (String, String) -> Unit
             it.ivItem.setImageResource(R.drawable.ic_withdraw)
             it.tvStartTitle.text = getString(R.string.withdraw)
             it.tvStartSubTitle.text = getString(R.string.send_assets_to_your_bank_account)
+            it.ivEndIcon.setImageResource(R.drawable.ic_right_arrow_grey)
+        }
+        binding.llBuy.let {
+            it.root.updatePadding(left = 0, right = 0)
+            if (this.typePopUp == "AssetPopUp") it.root.gone()
+            it.ivItem.setImageResource(R.drawable.euro)
+            it.tvStartTitle.text = getString(R.string.buy)
+            if (this.typePopUp == "AssetPopUp" || this.typePopUp == "AssetPopUpWithdraw"){
+                it.tvStartSubTitle.text = getString(R.string.buy__with_usdt,viewModel.selectedAsset?.id?.uppercase())
+            }else{
+                it.tvStartSubTitle.text = getString(R.string.buy_assets_with_usdt)
+            }
+
             it.ivEndIcon.setImageResource(R.drawable.ic_right_arrow_grey)
         }
 
@@ -136,6 +150,10 @@ class PortfolioThreeDots(private val listenItemClicked: (String, String) -> Unit
             when (v!!) {
                 llWithdraw.root -> {
                     listenItemClicked(tag ?: "PortfolioThreeDots", "withdraw")
+                    dismiss()
+                }
+                llBuy.root->{
+                    listenItemClicked(tag ?: "PortfolioThreeDots", "buy")
                     dismiss()
                 }
 
