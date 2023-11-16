@@ -296,6 +296,10 @@
         android:id="@+id/confirmWithdrawalFragment"
         android:name="com.au.lyber.ui.fragments.ConfirmWithdrawalFragment"
         android:label="ConfirmWithdrawalFragment" />
+    <fragment android:id="@+id/buyUsdt"
+        android:name="com.au.lyber.ui.fragments.BuyUSDTFragment"
+        android:label="BuyUSDTFragment"
+        />
     <fragment
         android:id="@+id/addAddressBookFragment"
         android:name="com.au.lyber.ui.fragments.AddAddressBookFragment"
@@ -324,6 +328,7 @@
         android:id="@+id/investAddMoneyFragment"
         android:name="com.au.lyber.ui.fragments.InvestAddMoneyFragment"
         android:label="InvestAddMoneyFragment" />
+
     <dialog
         android:id="@+id/portfolioThreeDots"
         android:name="com.au.lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDots"

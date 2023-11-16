@@ -23,6 +23,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.airbnb.lottie.LottieAnimationView
 import com.au.lyber.R
+import com.au.lyber.databinding.CustomDialogLayoutBinding
 import com.au.lyber.databinding.FragmentPortfolioDetailBinding
 import com.au.lyber.databinding.LottieViewBinding
 import com.au.lyber.models.Balance
@@ -376,7 +377,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                     viewModel.exchangeAssetFrom = "usdt"
                     findNavController().navigate(R.id.addAmountForExchangeFragment)
                 }else{
-
+                    showDialog()
                 }
             }
 
@@ -405,6 +406,31 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 requireActivity().replaceFragment(
                     R.id.flSplashActivity, AddAmountFragment()
                 )
+            }
+        }
+    }
+
+    private fun showDialog() {
+        Dialog(requireActivity(), R.style.DialogTheme).apply {
+            CustomDialogLayoutBinding.inflate(layoutInflater).let {
+                requestWindowFeature(Window.FEATURE_NO_TITLE)
+                setCancelable(false)
+                setCanceledOnTouchOutside(false)
+                App.prefsManager.accountCreationSteps = Constants.Account_CREATION_STEP_PHONE
+                setContentView(it.root)
+                it.tvTitle.text = getString(R.string.buy_usdt)
+                it.tvMessage.text =
+                    getString(R.string.to_invest_in_an_asset_you_must_first_buy_usdt_then_use_the_purchased_usdt_and_exchange_it_for_desired_asset)
+                it.tvNegativeButton.text = getString(R.string.cancel)
+                it.tvPositiveButton.text = getString(R.string.buy_usdt)
+                it.tvNegativeButton.setOnClickListener {
+                    dismiss()
+                }
+                it.tvPositiveButton.setOnClickListener {
+                    dismiss()
+                    findNavController().navigate(R.id.buyUsdt)
+
+                }
             }
         }
     }

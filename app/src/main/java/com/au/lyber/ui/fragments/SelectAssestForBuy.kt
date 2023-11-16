@@ -1,14 +1,17 @@
 package com.au.lyber.ui.fragments
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.Window
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.au.lyber.R
+import com.au.lyber.databinding.CustomDialogLayoutBinding
 import com.au.lyber.databinding.FragmentAllAssetsBinding
 import com.au.lyber.databinding.FragmentSelectAssestForDepostBinding
 import com.au.lyber.models.AssetBaseData
@@ -196,15 +199,15 @@ class SelectAssestForBuy : BaseFragment<FragmentAllAssetsBinding>(), View.OnClic
     }
 
     private fun assetClicked(asset: PriceServiceResume) {
-        val balance =BaseActivity.balances.find { it1 -> it1.id == "usdt"}
+      /*  val balance =BaseActivity.balances.find { it1 -> it1.id == "usdt"}
         if (balance!=null){
             viewModel.exchangeAssetTo = asset.id
             viewModel.exchangeAssetFrom = "usdt"
             findNavController().navigate(R.id.addAmountForExchangeFragment)
         }else{
-
-        }
-
+            showDialog()
+        }*/
+        showDialog()
       /*  CommonMethods.getViewModel<PortfolioViewModel>(requireActivity()).let {
             it.selectedAssetPriceResume = asset
             it.chosenAssets = asset
@@ -220,7 +223,31 @@ class SelectAssestForBuy : BaseFragment<FragmentAllAssetsBinding>(), View.OnClic
 
     }
 
+    private fun showDialog() {
+        Dialog(requireActivity(), R.style.DialogTheme).apply {
+            CustomDialogLayoutBinding.inflate(layoutInflater).let {
+                requestWindowFeature(Window.FEATURE_NO_TITLE)
+                setCancelable(false)
+                setCanceledOnTouchOutside(false)
+                App.prefsManager.accountCreationSteps = Constants.Account_CREATION_STEP_PHONE
+                setContentView(it.root)
+                it.tvTitle.text = getString(R.string.buy_usdt)
+                it.tvMessage.text =
+                    getString(R.string.to_invest_in_an_asset_you_must_first_buy_usdt_then_use_the_purchased_usdt_and_exchange_it_for_desired_asset)
+                it.tvNegativeButton.text = getString(R.string.cancel)
+                it.tvPositiveButton.text = getString(R.string.buy_usdt)
+                it.tvNegativeButton.setOnClickListener {
+                    dismiss()
+                }
+                it.tvPositiveButton.setOnClickListener {
+                    dismiss()
+                    findNavController().navigate(R.id.buyUsdt)
 
+                }
+                show()
+            }
+        }
+    }
 
     override fun onClick(v: View?) {
         binding.apply {
