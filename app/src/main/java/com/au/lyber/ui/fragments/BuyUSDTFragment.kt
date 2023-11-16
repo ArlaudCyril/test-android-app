@@ -2,25 +2,34 @@ package com.au.lyber.ui.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.Editable
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
-import com.au.lyber.databinding.FragmentInvestAddMoneyBinding
+import com.au.lyber.databinding.FragmentBuyUsdtBinding
 import com.au.lyber.ui.activities.BaseActivity
-import com.au.lyber.ui.fragments.bottomsheetfragments.FrequencyModel
 import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.CommonMethods
 import com.au.lyber.utils.CommonMethods.Companion.commaFormatted
-import com.au.lyber.utils.CommonMethods.Companion.setBackgroundTint
+import com.au.lyber.utils.CommonMethods.Companion.formattedAsset
 import com.au.lyber.utils.Constants
+import com.au.lyber.utils.OnTextChange
+import java.math.RoundingMode
 
-class BuyUSDTFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), View.OnClickListener{
-    private var selectedFrequency:String =""
+class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickListener {
+    private var selectedFrequency: String = ""
+    private var valueConversion: Double = 1.0
     private var mCurrency: String = " USDT"
+    private val focusedData: ValueHolder = ValueHolder()
+    private val unfocusedData: ValueHolder = ValueHolder()
+    private var mConversionCurrency: String = ""
+    private val assetConversion get() = binding.tvAssetConversion.text.trim().toString()
     private lateinit var viewModel: PortfolioViewModel
     private val amount get() = binding.etAmount.text.trim().toString()
-    override fun bind()= FragmentInvestAddMoneyBinding.inflate(layoutInflater)
+    override fun bind() = FragmentBuyUsdtBinding.inflate(layoutInflater)
+    data class ValueHolder(var value: Double = 0.0, var currency: String = Constants.EURO)
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = CommonMethods.getViewModel(requireActivity())
@@ -39,16 +48,14 @@ class BuyUSDTFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), View.OnCl
         binding.tvNine.setOnClickListener(this)
         binding.btnPreviewInvestment.setOnClickListener(this)
         binding.ivTopAction.setOnClickListener(this)
-        binding.btnAddFrequency.setOnClickListener {
-            FrequencyModel(::frequencySelected).show(
-                parentFragmentManager, ""
-            )
-        }
+        binding.etAmount.addTextChangedListener(textOnTextChange)
+
     }
 
     private fun prepareView() {
         binding.etAmount.text = "0$mCurrency"
     }
+
     override fun onClick(v: View?) {
         binding.apply {
             when (v) {
@@ -65,28 +72,106 @@ class BuyUSDTFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), View.OnCl
                 tvEight -> type('8')
                 tvNine -> type('9')
                 tvZero -> type('0')
-                btnPreviewInvestment-> investment()
+                btnPreviewInvestment -> investment()
             }
         }
     }
+
     private fun activateButton(activate: Boolean) {
         binding.btnPreviewInvestment.background = ContextCompat.getDrawable(
             requireContext(),
             if (activate) R.drawable.button_purple_500 else R.drawable.button_purple_400
         )
     }
-    private fun investment() {
-        val finalAmount = amount.replace(mCurrency,"").pointFormat
-        val balance = BaseActivity.balances.find { it1 -> it1.id == "usdt" }
-        val aount :Float= balance?.balanceData?.balance?.toFloat() ?: 0f
 
-            viewModel.amount = finalAmount
-            viewModel.selectedFrequency = selectedFrequency
-            val bundle = Bundle()
-            bundle.putString(Constants.AMOUNT,finalAmount)
-            bundle.putString(Constants.FREQUENCY,selectedFrequency)
-            viewModel.selectedOption = Constants.USING_STRATEGY
-            findNavController().navigate(R.id.confirmInvestmentFragment,bundle)
+    private val textOnTextChange = object : OnTextChange {
+
+
+        @SuppressLint("SetTextI18n")
+        override fun onTextChange() {
+
+
+            val valueAmount =
+                if (amount.contains(mCurrency)) amount.replace(mCurrency, "").pointFormat.toDouble()
+                else amount.replace(mConversionCurrency, "").pointFormat.toDouble()
+
+
+            when {
+
+                valueAmount > 0 -> {
+                    if (focusedData.currency.contains(mCurrency)) {
+                        val assetAmount = (valueAmount * valueConversion).toString()
+                        viewModel.assetAmount = assetAmount
+                        setAssesstAmount(assetAmount)
+                    } else {
+                        val convertedValue = valueAmount / valueConversion
+                        setAssesstAmount(convertedValue.toString())
+                    }
+                }
+
+                else -> {
+
+                    activateButton(false)
+
+                    viewModel.assetAmount = "0"
+
+                    setAssesstAmount("0")
+                }
+            }
+            if (focusedData.currency.contains(mCurrency)) {
+                val valueAmountNew =
+                    if (assetConversion.contains(mCurrency)) assetConversion.replace(mCurrency, "")
+                        .replace("~", "").pointFormat.toDouble()
+                    else assetConversion.replace(mConversionCurrency, "")
+                        .replace("~", "").pointFormat.toDouble()
+
+                activateButton(true)
+
+            } else {
+                activateButton(true)
+
+            }
+
+        }
+
+        override fun afterTextChanged(s: Editable?) {
+
+        }
+    }
+
+
+    private fun setAssesstAmount(assetAmount: String) {
+        val valueAmount =
+            if (amount.contains(mCurrency)) amount.replace(mCurrency, "").pointFormat.toDouble()
+            else amount.replace(mConversionCurrency, "").pointFormat.toDouble()
+
+        if (focusedData.currency.contains(mCurrency)) {
+            val priceCoin = valueAmount.toDouble()
+                .div(assetAmount.toDouble())
+            binding.tvAssetConversion.text =
+                "~${assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN)} $mConversionCurrency"
+        } else {
+            val priceCoin = assetAmount.toDouble()
+                .div(valueAmount.toDouble())
+            binding.tvAssetConversion.text =
+                "~${assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN)} $mCurrency"
+        }
+
+
+    }
+
+    private fun investment() {
+        val finalAmount = amount.replace(mCurrency, "").pointFormat
+        val balance = BaseActivity.balances.find { it1 -> it1.id == "usdt" }
+        val aount: Float = balance?.balanceData?.balance?.toFloat() ?: 0f
+
+        viewModel.amount = finalAmount
+        viewModel.selectedFrequency = selectedFrequency
+        val bundle = Bundle()
+        bundle.putString(Constants.AMOUNT, finalAmount)
+        bundle.putString(Constants.FREQUENCY, selectedFrequency)
+        viewModel.selectedOption = Constants.USING_STRATEGY
+        findNavController().navigate(R.id.confirmInvestmentFragment, bundle)
     }
 
     @SuppressLint("SetTextI18n")
@@ -94,7 +179,7 @@ class BuyUSDTFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), View.OnCl
 
         activateButton(true)
         binding.apply {
-            val currency =  mCurrency
+            val currency = mCurrency
             when {
 
                 amount.length == (currency.length + 1) && amount[0] == '0' -> {
@@ -123,6 +208,7 @@ class BuyUSDTFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), View.OnCl
 
 
     }
+
     private val String.pointFormat
         get() = replace(",", "", true)
 
@@ -132,7 +218,7 @@ class BuyUSDTFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), View.OnCl
             val builder = StringBuilder()
 
             val value =
-                amount.replace(mCurrency,"").pointFormat
+                amount.replace(mCurrency, "").pointFormat
 
 
             builder.append(value.dropLast(1))
@@ -149,27 +235,6 @@ class BuyUSDTFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), View.OnCl
             e.printStackTrace()
         }
     }
-    private fun frequencySelected(
-        frequency: String
-    ) {
-        binding.apply {
 
-
-            btnAddFrequency.background =
-                ContextCompat.getDrawable(requireContext(), R.drawable.curved_button)
-            btnAddFrequency.setBackgroundTint(R.color.purple_gray_50)
-
-            tvAddFrequency.setCompoundDrawablesWithIntrinsicBounds(
-                R.drawable.ic_calendar_black, 0, R.drawable.ic_drop_down, 0
-            )
-            tvAddFrequency.setTextColor(
-                ContextCompat.getColor(
-                    requireContext(), R.color.purple_gray_800
-                )
-            )
-            tvAddFrequency.text = frequency
-            selectedFrequency = frequency
-        }
-    }
 
 }
