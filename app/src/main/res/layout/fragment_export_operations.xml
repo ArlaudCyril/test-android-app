@@ -63,7 +63,7 @@
         android:layout_height="0dp"
         android:layout_weight="1"/>
     <LinearLayout
-        android:id="@+id/btnPlaceOrder"
+        android:id="@+id/btnExport"
         style="@style/ButtonStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -77,7 +77,7 @@
         android:translationZ="4dp">
 
         <TextView
-            android:id="@+id/tvInvestMoney"
+            android:id="@+id/tvExport"
             style="@style/SubheadMabry"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
