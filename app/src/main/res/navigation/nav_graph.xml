@@ -124,6 +124,15 @@
         android:id="@+id/profileFragment"
         android:name="com.au.lyber.ui.fragments.ProfileFragment"
         android:label="ProfileFragment" >
+        <action
+            android:id="@+id/action_profileFragment_to_exportOperationsFragment"
+            app:destination="@id/exportOperationsFragment" />
+
+    </fragment>
+    <fragment
+        android:id="@+id/exportOperationsFragment"
+        android:name="com.au.lyber.ui.fragments.ExportOperationsFragment"
+        android:label="ExportOperationsFragment" >
 
     </fragment>
     <fragment
@@ -201,7 +210,7 @@
         <action
             android:id="@+id/action_enableNotificationFragment_to_completePortfolioFragment"
             app:destination="@id/completePortfolioFragment"
-           />
+            />
     </fragment>
     <fragment
         android:id="@+id/completePortfolioFragment"
