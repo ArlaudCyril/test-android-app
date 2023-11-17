@@ -37,7 +37,7 @@ class ExportOperationsFragment : BaseFragment<FragmentExportOperationsBinding>()
 
     private lateinit var viewModel: PortfolioViewModel
     override fun bind() = FragmentExportOperationsBinding.inflate(layoutInflater)
-
+    lateinit var selectedDate: String
     lateinit var monthsList: List<String>
 
     var listPopupWindow: ListPopupWindow? = null
@@ -61,6 +61,7 @@ class ExportOperationsFragment : BaseFragment<FragmentExportOperationsBinding>()
         }
         binding.ivTopAction.setOnClickListener(this)
         binding.rlBalance.setOnClickListener(this)
+        binding.btnExport.setOnClickListener(this)
 
         if (Build.VERSION.SDK_INT >= 26) {
             val currentDate = LocalDate.now()
@@ -69,6 +70,8 @@ class ExportOperationsFragment : BaseFragment<FragmentExportOperationsBinding>()
             binding.tvExportMonth.text = "${
                 Month.of(currentMonth).name.lowercase().replaceFirstChar { it.uppercase() }
             } $currentYear"
+            selectedDate =
+                CommonMethods.convertToYearMonthVersion26(binding.tvExportMonth.text.toString())
             monthsList = CommonMethods.getMonthsAndYearsBetweenWithApi26(
                 App.prefsManager.user!!.registeredAt, CommonMethods.getCurrentDateTime()
             )
@@ -79,6 +82,7 @@ class ExportOperationsFragment : BaseFragment<FragmentExportOperationsBinding>()
             val currentYear = calendar.get(Calendar.YEAR)
             val currentMonth = calendar.get(Calendar.MONTH) + 1  // Month is 0-based, so add 1
             binding.tvExportMonth.text = "${getMonthName(currentMonth)} $currentYear"
+            selectedDate = CommonMethods.convertToYearMonth(binding.tvExportMonth.text.toString())
             monthsList = CommonMethods.getMonthsAndYearsBetween(
                 App.prefsManager.user!!.registeredAt, CommonMethods.getCurrentDateTime()
             )
@@ -106,30 +110,33 @@ class ExportOperationsFragment : BaseFragment<FragmentExportOperationsBinding>()
                     )
                     if (listPopupWindow != null) {
                         listPopupWindow!!.setOnItemClickListener { adapterView, view, pos, l ->
-                           var selectedDate=""
+
                             if (Build.VERSION.SDK_INT >= 26)
-                                selectedDate=CommonMethods.convertToYearMonthVersion26(monthsList[pos])
+                                selectedDate =
+                                    CommonMethods.convertToYearMonthVersion26(monthsList[pos])
                             else
-                                selectedDate=CommonMethods.convertToYearMonth(monthsList[pos])
-                            try {
-                                CommonMethods.checkInternet(requireContext()) {
-                                    CommonMethods.showProgressDialog(requireContext())
-                                    viewModel.getExportOperations(selectedDate)
-                                }
-
-                            } catch (e: IndexOutOfBoundsException) {
-                                Log.i("error", e.message.toString())
-                                listPopupWindow!!.dismiss()
-                            }
-
+                                selectedDate = CommonMethods.convertToYearMonth(monthsList[pos])
+                            binding.tvExportMonth.text = monthsList[pos]
+                            listPopupWindow!!.dismiss()
                         }
-                        listPopupWindow!!.setOnDismissListener(PopupWindow.OnDismissListener {
-                        })
                     }
 
                     Handler(Looper.getMainLooper()).postDelayed({
                         listPopupWindow!!.show()
                     }, 50)
+                }
+
+                btnExport -> {
+                    if (::selectedDate.isInitialized)
+                        try {
+                            CommonMethods.checkInternet(requireContext()) {
+                                CommonMethods.showProgressDialog(requireContext())
+                                viewModel.getExportOperations(selectedDate)
+                            }
+
+                        } catch (e: IndexOutOfBoundsException) {
+                            Log.i("error", e.message.toString())
+                        }
                 }
             }
         }
