@@ -207,6 +207,10 @@ open class NetworkViewModel : ViewModel() {
     private val _balanceResponse = MutableLiveData<BalanceResponse>()
     val balanceResponse get() = _balanceResponse
 
+
+    private var _exportOperationResponse: MutableLiveData<ExportResponse> = MutableLiveData()
+    val exportOperationResponse get() = _exportOperationResponse
+
     fun cancelJob() {
 
     }
@@ -929,5 +933,16 @@ open class NetworkViewModel : ViewModel() {
             else listener?.onRetrofitError(res.errorBody())
         }
     }
-
+    fun getExportOperation(date: String) {
+        try {
+            viewModelScope.launch(exceptionHandler) {
+                val res = RestClient.get().getOperationExport(date)
+                if (res.isSuccessful)
+                    _exportOperationResponse.postValue(res.body())
+                else listener?.onRetrofitError(res.errorBody())
+            }
+        } catch (e: Exception) {
+            listener?.onError()
+        }
+    }
 }

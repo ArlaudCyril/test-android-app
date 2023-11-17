@@ -277,4 +277,9 @@ interface Api {
 
     @POST("user-service/verify-2FA")
     suspend fun verify2FA(@Body hashMap: HashMap<String, Any>): Response<UserLoginResponse>
+
+    @GET("user-service/export")
+    suspend fun getOperationExport(
+        @Query("date") date: String = ""
+    ): Response<ExportResponse>
 }

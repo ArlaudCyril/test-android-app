@@ -54,7 +54,7 @@ object Constants {
     const val NAME = "name"
     const val USING_ALL_PORTFOLIO = "using_all_portfolio"
     const val USING_WITHDRAW_FIAT = "using_withdraw_fiat"
-
+    const val EXPORT_DONE = "exportDone"
 
     /* icons */
     const val EURO = "€"

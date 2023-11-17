@@ -537,4 +537,13 @@
     <string name="the_minimum_amount_to_be_exchanged">The minimum Amount to be exchanged</string>
     <string name="the_minimum_amount_to_be_exchanged_1">The minimum amount to be exchanged %1$s %2$s</string>
     <string name="availiable_fiat">Available FIAT</string>
+    <string name="export">Export</string>
+    <string name="exportOperations">Export operations</string>
+    <string name="successful">Successful</string>
+    <string name="successfulMsg">Your request has been received\nThe export will be delivered to your email address in a few minutes</string>
+    <string name="error">Error</string>
+    <string name="somethingWentWrong">Oh no ! Something went wrong.</string>
+    <string name="tryAgain">Try Again</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
