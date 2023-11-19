@@ -71,7 +71,96 @@
 
             </LinearLayout>
 
+            <RelativeLayout
+                android:id="@+id/llInfo"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginHorizontal="24dp"
+                android:background="@drawable/curved_button"
+                android:backgroundTint="@color/purple_gray_50"
+                android:orientation="vertical"
+                android:paddingHorizontal="12dp">
+                <TextView
+                    android:id="@+id/tvMoreDetails"
+                    style="@style/SubheadMabry"
+                    android:drawableStart="@drawable/ic_right_arrow_grey"
+                    android:layout_marginTop="16dp"
+                    android:layout_marginBottom="16dp"
+                    android:text="More details"
+                    android:textColor="@color/purple_gray_500" />
+               <RelativeLayout
+                   android:id="@+id/zzInfor"
+                   android:visibility="gone"
+                   android:layout_below="@id/tvMoreDetails"
+                   android:layout_width="match_parent"
+                   android:layout_height="wrap_content">
+                   <TextView
+                       android:id="@+id/tvPrice"
+                       style="@style/SubheadMabry"
+                       android:layout_marginTop="32dp"
+                       android:text="@string/price"
+                       android:textColor="@color/purple_gray_500" />
 
+                   <TextView
+                       android:id="@+id/tvValuePrice"
+                       style="@style/SubheadMabry"
+                       android:layout_alignParentEnd="true"
+                       android:layout_marginTop="32dp"
+                       android:textColor="@color/purple_gray_700"
+                       android:textStyle="bold" />
+                   <TextView
+                       android:id="@+id/tvDeposit"
+                       style="@style/SubheadMabry"
+                       android:layout_below="@id/tvPrice"
+                       android:layout_marginTop="32dp"
+                       android:text="@string/amount"
+                       android:textColor="@color/purple_gray_500" />
+
+                   <TextView
+                       android:id="@+id/tvValueDeposit"
+                       style="@style/SubheadMabry"
+                       android:layout_below="@id/tvPrice"
+                       android:layout_alignParentEnd="true"
+                       android:layout_marginTop="32dp"
+                       android:textColor="@color/purple_gray_700"
+                       android:textStyle="bold" />
+
+                   <TextView
+                       android:id="@+id/tvDepositFee"
+                       style="@style/SubheadMabry"
+                       android:layout_below="@id/tvDeposit"
+                       android:layout_marginTop="32dp"
+                       android:text="@string/lyber_fees"
+                       android:textColor="@color/purple_gray_500" />
+
+                   <TextView
+                       android:id="@+id/tvValueDepositFee"
+                       style="@style/SubheadMabry"
+                       android:layout_below="@id/tvValueDeposit"
+                       android:layout_alignParentEnd="true"
+                       android:layout_marginTop="32dp"
+                       android:textColor="@color/purple_gray_700"
+                       android:textStyle="bold" />
+
+
+                   <TextView
+                       android:id="@+id/tvTotal"
+                       style="@style/SubheadMabry"
+                       android:layout_below="@id/tvDepositFee"
+                       android:layout_marginVertical="32dp"
+                       android:text="@string/total"
+                       android:textColor="@color/purple_gray_700" />
+
+                   <TextView
+                       android:id="@+id/tvValueTotal"
+                       style="@style/SubheadMabry"
+                       android:layout_below="@id/tvValueDepositFee"
+                       android:layout_alignParentEnd="true"
+                       android:layout_marginTop="32dp"
+                       android:textColor="@color/purple_gray_700"
+                       android:textStyle="bold" />
+               </RelativeLayout>
+            </RelativeLayout>
 
         </LinearLayout>
 
@@ -97,13 +186,31 @@
         android:translationZ="4dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
-        <TextView
-            android:id="@+id/btnConfirmInvestment"
-            style="@style/ButtonStyle"
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:background="@drawable/button_purple_500"
+            android:backgroundTint="@color/black">
+            <TextView
+                android:id="@+id/btnConfirmInvestment"
+                style="@style/ButtonStyle"
+                android:layout_width="wrap_content"
+                android:layout_centerInParent="true"
+                android:drawableStart="@drawable/ic_gpay_removebg_preview"
+                android:gravity="center"
+                android:text="@string/pay" />
+        </RelativeLayout>
+        <TextView
+            android:id="@+id/tvTimer"
+            style="@style/BodyMabry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
             android:gravity="center"
-            android:text="@string/confirm_investment" />
-
+            android:layout_gravity="center"
+            android:lineSpacingExtra="6dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            android:textColor="@color/red_500" />
         <TextView
             android:id="@+id/tvInfo"
             style="@style/BodyMabry"

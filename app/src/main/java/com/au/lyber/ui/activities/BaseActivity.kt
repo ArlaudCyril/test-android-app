@@ -7,8 +7,10 @@ import androidx.viewbinding.ViewBinding
 import com.au.lyber.models.AssetBaseData
 import com.au.lyber.models.Balance
 import com.au.lyber.models.PriceServiceResume
+import com.stripe.android.PaymentConfiguration
 
 abstract class BaseActivity<viewBinding : ViewBinding> : AppCompatActivity() {
+
     //Global variables
     companion object {
         var assets = ArrayList<AssetBaseData>()
@@ -26,6 +28,7 @@ abstract class BaseActivity<viewBinding : ViewBinding> : AppCompatActivity() {
         super.onCreate(savedInstanceState, persistentState)
         _binding = bind()
         setContentView(binding.root)
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {

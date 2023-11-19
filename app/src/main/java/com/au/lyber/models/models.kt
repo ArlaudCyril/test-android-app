@@ -321,7 +321,8 @@ data class DataQuote(
     val fees: String,
     val orderId: String,
     val fromAsset: String,
-    val toAsset: String
+    val toAsset: String,
+    val clientSecret:String
 )
 
 data class Data(

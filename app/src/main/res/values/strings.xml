@@ -604,4 +604,5 @@
     <string name="buy_usdt">Buy USDT</string>
     <string name="preview_my_purchase">Preview my purchase</string>
     <string name="confirm_purchase">Confirm Purcahse</string>
+    <string name="pay">Pay</string>
 </resources>

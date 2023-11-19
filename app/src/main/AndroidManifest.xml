@@ -92,7 +92,9 @@
                 android:resource="@xml/provider_paths" />
 
         </provider>
-
+        <meta-data
+            android:name="com.google.android.gms.wallet.api.enabled"
+            android:value="true" />
 
     </application>
 

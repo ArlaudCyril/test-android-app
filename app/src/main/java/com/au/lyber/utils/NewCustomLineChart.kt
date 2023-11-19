@@ -253,7 +253,7 @@ class NewCustomLineChart : RelativeLayout {
 
     }
 
-    override fun onDraw(canvas: Canvas?) {
+    override fun onDraw(canvas: Canvas) {
         canvas?.let {
             mCanvas = it
             if (lineData.isNotEmpty()) calculatePoints()
