@@ -305,6 +305,10 @@
         android:name="com.au.lyber.ui.fragments.AddAddressBookFragment"
         android:label="AddAddressBookFragment" />
     <fragment
+        android:id="@+id/previewMyPurchaseFragment"
+        android:name="com.au.lyber.ui.fragments.PreviewMyPurchaseFragment"
+        android:label="PreviewMyPurchaseFragment" />
+    <fragment
         android:id="@+id/addCryptoAddress"
         android:name="com.au.lyber.ui.fragments.AddCryptoAddress"
         android:label="AddCryptoAddress" />

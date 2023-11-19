@@ -602,4 +602,6 @@
     <string name="buy__with_usdt">Buy %1$s with USDT</string>
     <string name="to_invest_in_an_asset_you_must_first_buy_usdt_then_use_the_purchased_usdt_and_exchange_it_for_desired_asset" tools:ignore="ExtraTranslation">To invest in an asset,you must first buy USDT, then use the purchased USDT and exchange it for desired asset.</string>
     <string name="buy_usdt">Buy USDT</string>
+    <string name="preview_my_purchase">Preview my purchase</string>
+    <string name="confirm_purchase">Confirm Purcahse</string>
 </resources>

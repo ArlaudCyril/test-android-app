@@ -26,7 +26,6 @@
         android:text="@string/buy_usdt"
         android:textColor="#423D33"
         android:textStyle="bold"
-        app:layout_constraintBottom_toTopOf="@id/tvSubTitle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/ivTopAction"
@@ -42,6 +41,7 @@
         app:layout_constraintVertical_chainStyle="packed"
         android:id="@+id/etAmount"
         android:textStyle="bold"
+        android:layout_marginTop="64dp"
         android:textColor="@color/purple_500"
         android:layout_width="match_parent"
         android:gravity="center"
@@ -61,7 +61,7 @@
         android:layout_marginTop="8dp"
         android:textColor="@color/purple_gray_500"
         android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@id/tvAssetFees"
+        app:layout_constraintBottom_toTopOf="@id/etAmount"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/etAmount" />
@@ -258,7 +258,7 @@
         android:id="@+id/groupWithdrawAllPortfolio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="btnAddFrequency,groupDigits,tvSubTitle" />
+        app:constraint_referenced_ids="groupDigits" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/groupDigits"
@@ -266,26 +266,32 @@
         android:layout_height="wrap_content"
         app:constraint_referenced_ids="tvOne,tvTwo,tvThree,tvFour,tvFive,tvSix,tvSeven,tvEight,tvNine,tvZero,tvDot,tvBackArrow" />
 
-    <androidx.appcompat.widget.LinearLayoutCompat
+    <RelativeLayout
         android:id="@+id/llBottom"
+        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent">
+        android:layout_height="44dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginBottom="16dp">
 
         <TextView
             android:id="@+id/btnPreviewInvestment"
             style="@style/ButtonStyle"
             android:layout_width="match_parent"
-            android:layout_marginHorizontal="24dp"
-            android:layout_marginBottom="16dp"
             android:background="@drawable/button_purple_400"
             android:gravity="center"
-            android:text="@string/next"
-            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+            android:text="@string/preview_my_purchase"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
-            />
-
-    </androidx.appcompat.widget.LinearLayoutCompat>
+        <ImageView
+            android:id="@+id/progress"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_centerInParent="true"
+            android:elevation="12dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_progress_small"
+            android:visibility="gone" />
+    </RelativeLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

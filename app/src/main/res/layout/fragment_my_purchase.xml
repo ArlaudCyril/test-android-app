@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:id="@+id/root"
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <ImageView
+        android:id="@+id/ivTopAction"
+        style="@style/TopActionView"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:background="@android:color/transparent"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_goneMarginTop="16dp"
+        app:tint="@color/purple_gray_800" />
+
+    <androidx.core.widget.NestedScrollView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:fillViewport="true"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toTopOf="@+id/llBottom"
+        app:layout_constraintTop_toBottomOf="@id/ivTopAction">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/ivTopAction">
+
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvTotalAmount"
+                    style="@style/HeadingStyle"
+                    android:layout_width="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/purple_500"
+                    tools:text="100€" />
+
+                <ImageView
+                    android:id="@+id/ivSingleAsset"
+                    android:layout_width="32dp"
+                    android:layout_height="36dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:src="@drawable/title"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="4dp"
+                    android:visibility="visible" />
+                <TextView
+                    android:id="@+id/tvAmount"
+                    style="@style/HeadingStyle"
+                    android:layout_width="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/purple_500"
+                    tools:text="100€" />
+
+            </LinearLayout>
+
+
+
+        </LinearLayout>
+
+    </androidx.core.widget.NestedScrollView>
+
+    <TextView
+        android:id="@+id/title"
+        style="@style/SubheadMabry"
+        android:text="@string/confirm_purchase"
+        app:layout_constraintBottom_toBottomOf="@+id/ivTopAction"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ivTopAction" />
+
+    <LinearLayout
+        android:id="@+id/llBottom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/top_curved_layout"
+        android:backgroundTint="@color/purple_gray_50"
+        android:orientation="vertical"
+        android:padding="24dp"
+        android:translationZ="4dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <TextView
+            android:id="@+id/btnConfirmInvestment"
+            style="@style/ButtonStyle"
+            android:background="@drawable/button_purple_500"
+            android:gravity="center"
+            android:text="@string/confirm_investment" />
+
+        <TextView
+            android:id="@+id/tvInfo"
+            style="@style/BodyMabry"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:gravity="center"
+            android:lineSpacingExtra="6dp"
+            android:text="@string/the_price_of_cryptocurrencies_is_volatile_the_value_of_your_investment_can_go_up_down_or_to_zero"
+            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+            android:textColor="@color/purple_gray_500" />
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
