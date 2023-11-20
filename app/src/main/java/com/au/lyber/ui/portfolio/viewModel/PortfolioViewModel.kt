@@ -195,5 +195,10 @@ class PortfolioViewModel : NetworkViewModel() {
     }
 
 
+
+    fun contactSupport(msg: String) {
+        sendMsgToSupport(msg)
+    }
+
     data class ChooseAssets(val asset_id: String, val allocation: Int)
 }

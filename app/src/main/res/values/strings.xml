@@ -537,4 +537,14 @@
     <string name="the_minimum_amount_to_be_exchanged">The minimum Amount to be exchanged</string>
     <string name="the_minimum_amount_to_be_exchanged_1">The minimum amount to be exchanged %1$s %2$s</string>
     <string name="availiable_fiat">Available FIAT</string>
+    <string name="contact_us">Contact Us</string>
+    <string name="send_us_email">Send us an email to contact@lyber.com or fill out the contact form below:</string>
+    <string name="contact_form">Contact form</string>
+    <string name="msg">Message</string>
+    <string name="contact_us_by_mail">You can also contact us by mail at the address</string>
+    <string name="contact_address">274 ter/3, Avenue de la Marne, 59700 Marcq-en-Baroeul, Lille, France.</string>
+    <string name="will_get_back">We will get back to you at</string>
+    <string name="send">Send</string>
+    <string name="msgIsEmpty">The message field is empty</string>
+    <string name="msgHasBeenSent">The message has been sent successfully</string>
 </resources>
