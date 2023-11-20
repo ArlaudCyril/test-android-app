@@ -268,6 +268,13 @@ class BottomSheetDialog(
                 add(DataBottomSheet("Health, Medical & Pharmaceutical"))
                 add(DataBottomSheet("Hospitality, Tourism & Catering"))
                 add(DataBottomSheet("IT"))
+                add(DataBottomSheet("Manufacturing & Metallurgy Industry"))
+                add(DataBottomSheet("Marketing, Advertising & Public Relations"))
+                add(DataBottomSheet("Real Estate & Property Management"))
+                add(DataBottomSheet("Retail & E-commerce"))
+                add(DataBottomSheet("Sports, Leisure & Interactive Entertainment"))
+                add(DataBottomSheet("Textile, Fashion & Apparel"))
+                add(DataBottomSheet("Transport, Logistics & Wholesale"))
             }
 
             override val title: String
@@ -276,7 +283,7 @@ class BottomSheetDialog(
         ANNUAL_INCOME {
             override fun getData() = mutableListOf<DataBottomSheet>().apply {
                 add(DataBottomSheet("Less than 500"))
-                add(DataBottomSheet("500 - 1000"))
+                add(DataBottomSheet("500-1000"))
                 add(DataBottomSheet("1001-1500"))
                 add(DataBottomSheet("1501-2000"))
                 add(DataBottomSheet("2001-3000"))
@@ -309,7 +316,7 @@ class BottomSheetDialog(
         },
         YOUR_ACTIVITY_ON_LYBER {
             override fun getData(): List<DataBottomSheet> = mutableListOf<DataBottomSheet>().apply {
-                add(DataBottomSheet("Buy and Sell digital assets"))
+                add(DataBottomSheet("Buy and sell digital assets"))
                 add(DataBottomSheet("Save money"))
                 add(DataBottomSheet("Store my digital assets"))
             }

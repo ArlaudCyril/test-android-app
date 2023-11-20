@@ -2,7 +2,10 @@ package com.au.lyber.utils
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.au.lyber.models.AddressDataLocal
 import com.au.lyber.models.AssetBaseDataResponse
+import com.au.lyber.models.InvestmentExperienceLocal
+import com.au.lyber.models.PersonalDataLocal
 import com.au.lyber.models.User
 import com.google.gson.Gson
 
@@ -29,6 +32,12 @@ class PreferenceManager(context: Context) {
         set(value) {
             mEditor.putString("refresh_token", value).apply()
             refreshTokenSavedAt = System.currentTimeMillis()
+        }
+    var withdrawalLockSecurity: String
+        get() = mSharedPreferences.getString("withdrawalLockSecurity", "") ?: ""
+        set(value) {
+            mEditor.putString("withdrawalLockSecurity", value).apply()
+
         }
 
     var accessToken: String
@@ -71,6 +80,12 @@ class PreferenceManager(context: Context) {
         set(value) {
             mEditor.putInt("personalDataSteps", value).apply()
         }
+    var accountCreationSteps: Int
+        get() = mSharedPreferences.getInt("accountCreationSteps", Constants.ACCOUNT_INITIALIZATION)
+            ?: 0
+        set(value) {
+            mEditor.putInt("accountCreationSteps", value).apply()
+        }
 
     var tokenSavedAt: Long
         get() = mSharedPreferences.getLong("tokenSavedAt", 0L)
@@ -85,11 +100,40 @@ class PreferenceManager(context: Context) {
         }
 
 
+    var personalDataLocal : PersonalDataLocal?
+        get() =
+            if ((mSharedPreferences.getString("PersonalDataLocal", "") ?: "").isNotEmpty()) {
+                Gson().fromJson((mSharedPreferences.getString("PersonalDataLocal", "") ?: ""), PersonalDataLocal::class.java)
+            } else null
+        set(value) {
+            mEditor.putString("PersonalDataLocal", Gson().toJson(value).toString())
+            mEditor.apply()
+        }
+
+    var addressDataLocal : AddressDataLocal?
+        get() =
+            if ((mSharedPreferences.getString("AddressDataLocal", "") ?: "").isNotEmpty()) {
+                Gson().fromJson((mSharedPreferences.getString("AddressDataLocal", "") ?: ""), AddressDataLocal::class.java)
+            } else null
+        set(value) {
+            mEditor.putString("AddressDataLocal", Gson().toJson(value).toString())
+            mEditor.apply()
+        }
+    var investmentExperienceLocal : InvestmentExperienceLocal?
+        get() =
+            if ((mSharedPreferences.getString("InvestmentExperienceLocal", "") ?: "").isNotEmpty()) {
+                Gson().fromJson((mSharedPreferences.getString("InvestmentExperienceLocal", "") ?: ""), InvestmentExperienceLocal::class.java)
+            } else null
+        set(value) {
+            mEditor.putString("InvestmentExperienceLocal", Gson().toJson(value).toString())
+            mEditor.apply()
+        }
+
 
 
 
     var portfolioCompletionStep: Int
-        get() = mSharedPreferences.getInt("portfolioCompletionStep", Constants.ACCOUNT_CREATED)
+        get() = mSharedPreferences.getInt("portfolioCompletionStep", -1)
         set(value) = mEditor.putInt("portfolioCompletionStep", value).apply()
 
 

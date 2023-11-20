@@ -7,7 +7,16 @@
         <item name="android:windowBackground">@color/transparent_window</item>
 
     </style>
-
+    <style name="TransparentDilaog" parent="Animation.AppCompat.Dialog">
+        <item name="android:windowFrame">@null</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+        <item name="android:windowTitleStyle">@null</item>
+        <item name="android:windowSoftInputMode">stateUnspecified|adjustPan</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:background">@android:color/transparent</item>
+    </style>
     <style name="DialogAnimation">
         <item name="android:windowEnterAnimation">@anim/enter_from_bottom</item>
         <item name="android:windowExitAnimation">@anim/exit_from_bottom</item>

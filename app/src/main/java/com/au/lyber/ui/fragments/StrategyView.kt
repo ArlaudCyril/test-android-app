@@ -89,7 +89,7 @@ class StrategyView : RelativeLayout, View.OnClickListener {
             context, R.drawable.round_stroke_gray_100
         )
 
-        setPadding(20)
+        setPadding(60)
         layoutManager = GridLayoutManager(
             context, 2
         )

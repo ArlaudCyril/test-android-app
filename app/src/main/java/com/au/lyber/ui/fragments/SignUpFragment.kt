@@ -311,44 +311,7 @@ class SignUpFragment : BaseFragment<FragmentTestSignUpBinding>() {
         }
     }
 
-    private fun showLogoutDialog() {
 
-        Dialog(requireActivity(), R.style.DialogTheme).apply {
-
-            CustomDialogLayoutBinding.inflate(layoutInflater).let {
-
-                requestWindowFeature(Window.FEATURE_NO_TITLE)
-                setCancelable(false)
-                setCanceledOnTouchOutside(false)
-                setContentView(it.root)
-
-                it.tvTitle.text = getString(R.string.log_out)
-                it.tvMessage.text = getString(R.string.logout_message)
-                it.tvNegativeButton.text = getString(R.string.no)
-                it.tvPositiveButton.text = getString(R.string.yes)
-
-                it.tvNegativeButton.setOnClickListener { dismiss() }
-
-                it.tvPositiveButton.setOnClickListener {
-                    dismiss()
-                    prefsManager.logout()
-                    requireActivity().supportFragmentManager.popBackStack()
-
-*/
-/*                    CommonMethods.checkInternet(requireContext()) {
-                        dismiss()
-                        CommonMethods.showProgressDialog(requireContext())
-                        viewModel.logout(CommonMethods.getDeviceId(requireActivity().contentResolver))
-                    }*//*
-
-
-                }
-
-                show()
-
-            }
-        }
-    }
 
     fun showDialog() {
         Dialog(requireActivity(), R.style.DialogTheme).apply {

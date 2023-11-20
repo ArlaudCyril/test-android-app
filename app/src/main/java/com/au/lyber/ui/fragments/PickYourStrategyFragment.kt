@@ -3,25 +3,31 @@ package com.au.lyber.ui.fragments
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
+import android.widget.RelativeLayout
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentPickYourStrategyBinding
 import com.au.lyber.models.MessageResponse
 import com.au.lyber.models.StrategiesResponse
-import com.au.lyber.models.Strategy
 import com.au.lyber.ui.adapters.PickStrategyFragmentAdapter
+import com.au.lyber.ui.fragments.bottomsheetfragments.InvestWithStrategyBottomSheet
+import com.au.lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet
+import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.App
+import com.au.lyber.utils.CommonMethods
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.getViewModel
 import com.au.lyber.utils.CommonMethods.Companion.replaceFragment
 import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
-import com.au.lyber.utils.CommonMethods.Companion.showToast
+import com.au.lyber.utils.Constants
 import com.au.lyber.utils.ItemOffsetDecoration
-import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 
 class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>(),
     View.OnClickListener {
@@ -64,7 +70,6 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
                 it.addItemDecoration(ItemOffsetDecoration(12))
             }
             ivTopAction.setOnClickListener(this@PickYourStrategyFragment)
-            tvBuildYourStrategy.setOnClickListener(this@PickYourStrategyFragment)
             btnChooseStrategy.setOnClickListener(this@PickYourStrategyFragment)
         }
 
@@ -73,18 +78,20 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
             viewModel.getStrategies()
         }
 
+        viewModel.pauseStrategyResponse.observe(viewLifecycleOwner){
+            if (lifecycle.currentState == Lifecycle.State.RESUMED){
+                checkInternet(requireContext()) {
+                    showProgressDialog(requireContext())
+                    viewModel.getStrategies()
+                }
+            }
+        }
+
     }
 
     private val getStrategies = Observer<StrategiesResponse> {
         dismissProgressDialog()
-
-        adapter.setList(it.strategies)
-
-        val strategy: Strategy? = it.strategies.find { it.is_chosen == 1 }
-        val position = it.strategies.indexOf(strategy)
-        previousPosition = position
-        viewModel.strategyPositionSelected.postValue(position)
-
+        adapter.setList(it.data)
         binding.recyclerViewStrategies.startLayoutAnimation()
     }
 
@@ -109,9 +116,8 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
         }
     }
 
-    private fun itemClicked(position: Int) {
+    private fun itemClicked(position: Int,currentView:StrategyView) {
 
-        val currentView = (layoutManager.getChildAt(position) as StrategyView)
         when (previousPosition) {
             -1 -> { // no one is selected yet
                 currentView.isStrategySelected = true
@@ -119,7 +125,6 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
                     requireContext(),
                     R.drawable.round_stroke_purple_500
                 )
-                currentView.radioButton.setImageResource(R.drawable.radio_select)
                 previousPosition = position
                 viewModel.strategyPositionSelected.postValue(previousPosition)
             }
@@ -139,56 +144,93 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
                         requireContext(),
                         R.drawable.round_stroke_purple_500
                     )
-                    currentView.radioButton.setImageResource(R.drawable.radio_select)
                     previousPosition = position
                     viewModel.strategyPositionSelected.postValue(previousPosition)
                 }
             }
             else -> {
-                val previousView = (layoutManager.getChildAt(previousPosition) as StrategyView)
+                try {
+                    val previousView = (layoutManager.getChildAt(previousPosition) as StrategyView)
+                    if (previousView!=null) {
+                        previousView.isStrategySelected = false
+                        currentView.isStrategySelected = true
+                        currentView.background = getDrawable(
+                            requireContext(),
+                            R.drawable.round_stroke_purple_500
+                        )
+                        previousView.background = getDrawable(
+                            requireContext(),
+                            R.drawable.round_stroke_gray_100
+                        )
+                        previousView.radioButton.setImageResource(R.drawable.radio_unselect)
 
-                previousView.isStrategySelected = false
-                currentView.isStrategySelected = true
-                currentView.background = getDrawable(
-                    requireContext(),
-                    R.drawable.round_stroke_purple_500
-                )
-                currentView.radioButton.setImageResource(R.drawable.radio_select)
-                previousView.background = getDrawable(
-                    requireContext(),
-                    R.drawable.round_stroke_gray_100
-                )
-                previousView.radioButton.setImageResource(R.drawable.radio_unselect)
+                    }
+                }catch (e:Exception){
+                    e.printStackTrace()
+                }
                 previousPosition = position
                 viewModel.strategyPositionSelected.postValue(previousPosition)
             }
         }
+        viewModel.selectedStrategy = adapter.getItem(position)
+        val transparentView = View(context)
+        transparentView.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.semi_transparent_dark
+            )
+        )
+
+        // Set layout parameters for the transparent view
+        val viewParams = RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.MATCH_PARENT,
+            RelativeLayout.LayoutParams.MATCH_PARENT
+        )
+
+        val vc  = InvestWithStrategyBottomSheet(::clicked)
+        vc.viewToDelete = transparentView
+        vc.mainView = getView()?.rootView as ViewGroup
+        vc.viewModel = viewModel
+        vc.show(childFragmentManager, "")
+
+        // Add the transparent view to the RelativeLayout
+        val mainView = getView()?.rootView as ViewGroup
+        mainView.addView(transparentView, viewParams)
 
         Log.d(TAG, "itemClicked: $previousPosition $position ")
 
+    }
+
+    private fun clicked(type: Int) {
+        when(type){
+            0->{findNavController().navigate(R.id.investAddMoneyFragment)}
+            1->{
+                checkInternet(requireActivity()){
+                    CommonMethods.showProgressDialog(requireActivity())
+                    viewModel.pauseStrategy(viewModel.selectedStrategy!!.ownerUuid,viewModel.selectedStrategy!!.name)
+                }
+            }
+            2->{
+                checkInternet(requireActivity()){
+                    CommonMethods.showProgressDialog(requireActivity())
+                    viewModel.deleteStrategy(viewModel.selectedStrategy!!.name)
+                }
+            }
+            3->{
+                val bundle = Bundle()
+                bundle.putBoolean(Constants.ID,true)
+                findNavController().navigate(R.id.buildStrategyFragment,bundle)
+            }
+        }
     }
 
     override fun onClick(v: View?) {
         binding.apply {
             when (v!!) {
 
-                ivTopAction -> requireActivity().onBackPressed()
-
-                tvBuildYourStrategy -> {
-                    requireActivity().replaceFragment(
-                        R.id.flSplashActivity,
-                        BuildStrategyFragment(),
-                        topBottom = true
-                    )
-                }
+                ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
                 btnChooseStrategy -> {
-                    if (previousPosition != -1) {
-                        viewModel.selectedStrategy = adapter.getItem(previousPosition)
-                        checkInternet(requireContext()) {
-                            showProgressDialog(requireContext())
-                            viewModel.chooseStrategy()
-                        }
-                    } else getString(R.string.please_selected_an_strategy).showToast(requireContext())
+                    findNavController().navigate(R.id.buildStrategyFragment)
                 }
             }
         }
@@ -203,36 +245,5 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
         viewModelStore.clear()
     }
 
-
-    /* static data */
-//    private fun getStrategies(): List<Strategy> {
-//        val list = mutableListOf<Strategy>()
-//        list.add(Strategy("Safe", "~5% APY", "Low", assetsOne))
-//        list.add(Strategy("Intermediate", "~10% APY", "Medium", assetsTwo))
-//        list.add(Strategy("Bold", "~15% APY", "High", assetsThree))
-//        return list
-//    }
-
-/*    private val assetsOne = mutableListOf<AssetItems>().apply {
-        add(AssetItems("USDC", 50, R.color.purple_600))
-        add(AssetItems("USDT", 50, R.color.purple_400))
-    }
-
-    private val assetsTwo = mutableListOf<AssetItems>().apply {
-        add(AssetItems("USDC", 50, R.color.purple_600))
-        add(AssetItems("BTC", 25, R.color.purple_400))
-        add(AssetItems("ETH", 25, R.color.purple_200))
-    }
-
-    private val assetsThree = mutableListOf<AssetItems>().apply {
-        add(AssetItems("BTC", 20, R.color.purple_800))
-        add(AssetItems("ETH", 20, R.color.purple_700))
-        add(AssetItems("SOL", 10, R.color.purple_600))
-        add(AssetItems("AVAX", 10, R.color.purple_500))
-        add(AssetItems("AVA", 10, R.color.purple_400))
-        add(AssetItems("XRP", 10, R.color.purple_300))
-        add(AssetItems("FTT", 10, R.color.purple_100))
-        add(AssetItems("MATIC", 10, R.color.purple_00))
-    }*/
 
 }

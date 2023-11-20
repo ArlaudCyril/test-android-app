@@ -2,6 +2,7 @@ package com.au.lyber.utils
 
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Dialog
 import android.content.ContentResolver
 import android.content.Context
@@ -70,6 +71,7 @@ import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.math.RoundingMode
+import java.text.DateFormat
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.util.*
@@ -93,6 +95,14 @@ class CommonMethods {
             }
             return false
         }
+        @JvmStatic
+        fun getScreenWidth(activity: Context?): Int {
+            val w = activity!!.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            val size = Point()
+            w.defaultDisplay.getSize(size)
+            return size.x
+        }
+
 
         fun showProgressDialog(context: Context) {
 
@@ -119,30 +129,19 @@ class CommonMethods {
             }
 
         }
-        fun showLottieProgressDialog(context: Context) {
-
-            if (dialog == null) {
-                dialog = Dialog(context)
-                dialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                dialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                dialog!!.window!!.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-                dialog!!.window!!.setDimAmount(0.2F)
-                dialog!!.setCancelable(false)
-                dialog!!.setContentView(LottieViewBinding.inflate(LayoutInflater.from(context)).root)
-            }
+        fun String.toFormat(format: String,convertFormat:String): String {
             try {
-                dialog?.findViewById<LottieAnimationView>(R.id.animationView)?.
-                    setMinAndMaxProgress(0f,0.5f)
-                dialog!!.show()
-            } catch (e: WindowManager.BadTokenException) {
-                Log.d("Exception", "showProgressDialog: ${e.message}")
-                dialog?.dismiss()
-                dialog = null
-                showProgressDialog(context)
-            } catch (e: Exception) {
-                Log.d("Exception", "showProgressDialog: ${e.message}")
-            }
+                var result = ""
+                val formatter: DateFormat = SimpleDateFormat(format,Locale.getDefault())
+                formatter.timeZone = TimeZone.getTimeZone("UTC")
+                val outputFormatter: DateFormat = SimpleDateFormat(convertFormat,Locale.getDefault())
+                outputFormatter.timeZone = TimeZone.getDefault()
+                formatter.parse(this)?.let { result = outputFormatter.format(it) }
 
+                return result
+            }catch (e:Exception){
+                return this
+            }
         }
         fun dismissProgressDialog() {
             dialog?.let {
@@ -584,6 +583,13 @@ class CommonMethods {
             ) == PackageManager.PERMISSION_GRANTED
         }
 
+        fun Activity.checkPermission(permission: String): Boolean {
+            return ContextCompat.checkSelfPermission(
+                this,
+                permission
+            ) == PackageManager.PERMISSION_GRANTED
+        }
+
 
         fun List<View>.gone() {
             forEach { it.gone() }
@@ -857,8 +863,9 @@ class CommonMethods {
             }
 
         fun String.formattedAsset(price: Double?, rounding : RoundingMode): String {
-             if (this == "" || price == null || price == 0.0 || price.isNaN()) {
-                 return "0.00"
+            var priceFinal = price
+            if (this == "" || priceFinal == null || priceFinal == 0.0 || priceFinal.isNaN()) {
+                priceFinal= 1.026
              }
 
              val formatter = DecimalFormat()
@@ -866,7 +873,7 @@ class CommonMethods {
              // Pour trouver la précision, ici X
              // Prix * 10e-X >= 0.01 (centimes)
              // => X >= -log(0,01/Prix)
-             val precision = ceil(-log10(0.01 / price)).toInt()
+             val precision = ceil(-log10(0.01 / priceFinal)).toInt()
              if (precision > 0) {
                  formatter.maximumFractionDigits = precision
                  formatter.minimumFractionDigits = precision
@@ -1183,7 +1190,9 @@ class CommonMethods {
 
             return true
         }
-
+       fun String.addressMatched(format :String):Boolean{
+            return this.matches(format.toRegex())
+        }
         fun String.checkFormat(type: String): Boolean {
 
             return when (type) {

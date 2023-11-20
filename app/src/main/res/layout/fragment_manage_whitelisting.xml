@@ -28,7 +28,7 @@
                 style="@style/TitleText"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="20dp"
-                android:text="Enable whitelisting" />
+                android:text="@string/security_of_your_notebook" />
 
 
             <TextView
@@ -37,7 +37,7 @@
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="4dp"
                 android:lineSpacingExtra="6dp"
-                android:text="@string/whitelisting_is_a_feature_that_limits_your_withdrawals_and_deposits_to_addresses_in_your_lyber_address_book"
+                android:text="@string/the_address_book_limits_your_withdrawals_and_deposits_to_the_addresses_in_your_address_book"
                 android:textColor="@color/purple_gray_600" />
 
 
@@ -62,7 +62,7 @@
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/curved_button"
-                android:backgroundTint="@color/purple_gray_50"
+                android:backgroundTint="@color/orange_100"
                 android:orientation="horizontal"
                 android:paddingHorizontal="12dp"
                 android:paddingVertical="16dp">
@@ -78,6 +78,7 @@
                     android:src="@drawable/ic_info" />
 
                 <TextView
+                    android:id="@+id/tvSecurityText"
                     style="@style/BodyMabry"
                     android:layout_alignParentEnd="true"
                     android:layout_marginStart="12dp"
@@ -97,7 +98,7 @@
                 android:layout_marginTop="32dp"
                 android:background="@drawable/curved_button"
                 android:backgroundTint="@color/purple_500"
-                android:text="@string/enable_whitelisting"
+                android:text="@string/save_settings"
                 android:textColor="@color/white" />
 
         </LinearLayout>
