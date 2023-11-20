@@ -84,16 +84,16 @@ class PortfolioThreeDots(private val listenItemClicked: (String, String) -> Unit
             it.root.updatePadding(left = 0, right = 0)
             if (this.typePopUp == "AssetPopUp") it.root.gone()
             it.ivItem.setImageResource(R.drawable.ic_withdraw)
-            it.tvStartTitle.text = "Withdraw"
-            it.tvStartSubTitle.text = "Send assets to your bank account"
+            it.tvStartTitle.text = getString(R.string.withdraw)
+            it.tvStartSubTitle.text = getString(R.string.send_assets_to_your_bank_account)
             it.ivEndIcon.setImageResource(R.drawable.ic_right_arrow_grey)
         }
 
         binding.llExchange.let {
             it.root.updatePadding(left = 0, right = 0)
             it.ivItem.setImageResource(R.drawable.ic_exchange)
-            it.tvStartTitle.text = "Exchange"
-            it.tvStartSubTitle.text = "Trade one asset for another"
+            it.tvStartTitle.text = getString(R.string.exchange)
+            it.tvStartSubTitle.text = getString(R.string.trade_one_asset_for_another)
             it.ivEndIcon.setImageResource(R.drawable.ic_right_arrow_grey)
 
         }
@@ -104,11 +104,12 @@ class PortfolioThreeDots(private val listenItemClicked: (String, String) -> Unit
             it.ivItem.setImageResource(R.drawable.ic_deposit)
             it.ivEndIcon.setImageResource(R.drawable.ic_right_arrow_grey)
             //    {
-            it.tvStartTitle.text = "Deposit"
-            if (this.typePopUp == "AssetPopUp") {
-                it.tvStartSubTitle.text = "Add ${viewModel.selectedAsset?.id?.uppercase()} on Lyber"
+            it.tvStartTitle.text = getString(R.string.deposit_)
+            if (this.typePopUp == "AssetPopUp" || this.typePopUp == "AssetPopUpWithdraw"){
+                it.tvStartSubTitle.text =
+                    getString(R.string.add_on_lyber, viewModel.selectedAsset?.id?.uppercase())
             }else{
-                it.tvStartSubTitle.text = "Add money on Lyber"
+                it.tvStartSubTitle.text = getString(R.string.add_money_on_lyber)
             }
             // } else {
             //   it.tvStartTitle.text = "Deposit"
@@ -117,13 +118,13 @@ class PortfolioThreeDots(private val listenItemClicked: (String, String) -> Unit
         }
 
         binding.llSell.let {
-            if (this.typePopUp == "AssetPopUp") {
+            if (this.typePopUp == "AssetPopUp" || this.typePopUp == "AssetPopUpWithdraw") {
                 it.root.updatePadding(left = 0, right = 0)
                 it.ivItem.setImageResource(R.drawable.ic_sell)
                 it.tvStartSubTitle.gone()
                 val layoutParams = it.tvStartTitle.layoutParams as ConstraintLayout.LayoutParams
                 layoutParams.topMargin = 20
-                it.tvStartTitle.text = "Sell"
+                it.tvStartTitle.text = getString(R.string.sell_)
                 it.ivEndIcon.setImageResource(R.drawable.ic_right_arrow_grey)
             } else it.root.gone()
         }

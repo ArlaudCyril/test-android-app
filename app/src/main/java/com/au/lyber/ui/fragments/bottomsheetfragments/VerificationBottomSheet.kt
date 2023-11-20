@@ -48,6 +48,9 @@ class VerificationBottomSheet() :
             }
             fieldToVerify.text = ""
             btnCancel.text =getString(R.string.cancel)
+            btnCancel.setOnClickListener {
+                dismiss()
+            }
 
             // Usage example
             val editTextArray : List<EditText> = listOf(etCodeOne, etCodeTwo, etCodeThree,
@@ -164,6 +167,7 @@ class VerificationBottomSheet() :
             }
 
         }
+
 
         private fun  nextEditText(modifiedEditText: EditText) : EditText{
             when (modifiedEditText) {

@@ -27,7 +27,7 @@
             android:id="@+id/tvTitle"
             style="@style/SubheadMabry"
             android:layout_centerInParent="true"
-            android:text="Withdraw, deposit or exchange"
+            android:text="@string/choose_an_operation"
             android:textColor="#423D33" />
 
     </RelativeLayout>

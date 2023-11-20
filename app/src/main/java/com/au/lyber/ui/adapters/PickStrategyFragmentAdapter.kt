@@ -8,9 +8,12 @@ import com.au.lyber.R
 import com.au.lyber.databinding.LoaderViewBinding
 import com.au.lyber.models.Strategy
 import com.au.lyber.ui.fragments.StrategyView
+import com.au.lyber.utils.CommonMethods.Companion.gone
+import com.au.lyber.utils.CommonMethods.Companion.visible
 
-class PickStrategyFragmentAdapter(val itemClicked: (position: Int) -> Unit) :
+class PickStrategyFragmentAdapter(val itemClicked: (position: Int,view:StrategyView) -> Unit) :
     BaseAdapter<Strategy>() {
+
 
 
     inner class ViewHolder(val strategyView: StrategyView) :
@@ -18,11 +21,11 @@ class PickStrategyFragmentAdapter(val itemClicked: (position: Int) -> Unit) :
         init {
 
             strategyView.setOnRadioButtonClickListener {
-                itemClicked(adapterPosition)
+               // itemClicked(adapterPosition)
             }
 
             strategyView.rootView.setOnClickListener {
-                itemClicked(adapterPosition)
+              itemClicked(adapterPosition,strategyView)
             }
 
         }
@@ -52,7 +55,7 @@ class PickStrategyFragmentAdapter(val itemClicked: (position: Int) -> Unit) :
             ORDINARY_VIEW -> {
                 (holder as ViewHolder).strategyView.apply {
                     itemList[position]?.let {
-                        background = if (it.is_chosen == 1) {
+                        background = if (false) {
                             isStrategySelected = true
                             radioButton.setImageResource(R.drawable.radio_select)
                             getDrawable(context, R.drawable.round_stroke_purple_500)
@@ -61,11 +64,38 @@ class PickStrategyFragmentAdapter(val itemClicked: (position: Int) -> Unit) :
                             radioButton.setImageResource(R.drawable.radio_unselect)
                             getDrawable(context, R.drawable.round_stroke_gray_100)
                         }
-
-                        topText = it.status ?: ""
-                        yeild = "~${it.yield}% ROI"
-                        risk = it.risk
-                        allocationView.setAssetsList(it.investment_strategy_assets)
+                        radioButton.gone()
+                        topText = it.name ?: ""
+                        if (it.expectedYield !=null) {
+                            binding.ivRisk.visible()
+                            binding.tvRisk.visible()
+                            binding.tvValueRisk.visible()
+                            risk = it.expectedYield.substring(0, 1)
+                                .uppercase() + it.expectedYield.substring(1).lowercase()
+                        }else{
+                            binding.ivRisk.gone()
+                            binding.tvRisk.gone()
+                            binding.tvValueRisk.gone()
+                            risk = ""
+                        }
+                        if (it.risk!=null) {
+                            binding.ivYield.visible()
+                            binding.tvYield.visible()
+                            binding.tvValueYield.visible()
+                            yeild = it.risk.substring(0, 1).uppercase() + it.risk.substring(1)
+                                .lowercase()
+                        }else{
+                            binding.ivYield.gone()
+                            binding.tvYield.gone()
+                            binding.tvValueYield.gone()
+                            yeild = ""
+                        }
+                        allocationView.setAssetsList(it.bundle)
+                        if (it.activeStrategy!=null) {
+                            binding.tvPriceStrategy.visible()
+                        }else{
+                            binding.tvPriceStrategy.gone()
+                        }
                     }
                 }
             }

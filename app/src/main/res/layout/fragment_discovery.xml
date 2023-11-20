@@ -49,5 +49,11 @@
 
     </LinearLayout>
 
-
+<ImageView
+    android:layout_width="50dp"
+    android:layout_height="50dp"
+    android:src="@drawable/ic_logo"
+    android:layout_marginEnd="28dp"
+    android:layout_marginTop="64dp"
+    android:layout_alignParentEnd="true"/>
 </RelativeLayout>

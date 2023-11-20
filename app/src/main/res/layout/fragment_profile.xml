@@ -305,6 +305,7 @@
                     <TextView
                         android:id="@+id/tvStatusAddressBook"
                         style="@style/BodyMabry"
+                        android:visibility="gone"
                         android:layout_below="@id/tvTitleAddressBook"
                         android:layout_alignParentStart="true"
                         android:text="@string/whitelisting_disabled"

@@ -12,6 +12,12 @@ class PortfolioViewModel : NetworkViewModel() {
         set(value) {
             _selectedAsset = value
         }
+    private var _withdrawAddress: WithdrawAddress?=null
+    var withdrawAddress
+        get() = _withdrawAddress
+        set(value){
+            _withdrawAddress = value
+        }
     private var _selectedAssetPriceResume: PriceServiceResume? = null
     var selectedAssetPriceResume
         get() = _selectedAssetPriceResume
@@ -24,6 +30,12 @@ class PortfolioViewModel : NetworkViewModel() {
         get() = _selectedAssetDetail
         set(value) {
             _selectedAssetDetail = value
+        }
+    private var _selectedNetworkDeposit: NetworkDeposit? = null
+    var selectedNetworkDeposit
+        get() = _selectedNetworkDeposit
+        set(value) {
+            _selectedNetworkDeposit= value
         }
 
     var selectedBalance : Balance? = null
@@ -185,9 +197,15 @@ class PortfolioViewModel : NetworkViewModel() {
             chooseStrategy(it)
         }
     }
+    fun startKyc(){
+        startKYC()
+    }
 
     fun buildOwnStrategy(strategyName: String) {
         buildOwnStrategy(strategyName, addedAsset)
+    }
+    fun editOwnStrategy(strategyName: String) {
+        editOwnStrategy(strategyName, addedAsset)
     }
 
     fun getBalance(){
@@ -195,5 +213,5 @@ class PortfolioViewModel : NetworkViewModel() {
     }
 
 
-    data class ChooseAssets(val asset_id: String, val allocation: Int)
+    data class ChooseAssets(val asset: String, var share: Int)
 }

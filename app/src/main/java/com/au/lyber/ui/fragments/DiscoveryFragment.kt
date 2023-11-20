@@ -21,7 +21,7 @@ class DiscoveryFragment : BaseFragment<FragmentDiscoveryBinding>() {
             val bundle = Bundle().apply {
                 putBoolean(Constants.FOR_LOGIN, false)
             }
-            if (App.prefsManager.userPin.isNotEmpty() && App.prefsManager.refreshToken.isEmpty()) {
+            if ( App.prefsManager.portfolioCompletionStep !=-1) {
                 findNavController().navigate(R.id.completePortfolioFragment)
             } else {
                 findNavController().navigate(R.id.createAccountFragment, bundle)

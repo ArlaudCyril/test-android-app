@@ -3,6 +3,7 @@ package com.au.lyber.ui.fragments.bottomsheetfragments
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
+import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentConfirmationBinding
 import com.au.lyber.utils.CommonMethods.Companion.clearBackStack
@@ -26,6 +27,7 @@ class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
 
         binding.btnThanks.setOnClickListener {
             dismiss()
+            findNavController().navigate(R.id.portfolioHomeFragment)
         }
 
         when(viewModel.selectedOption){
@@ -40,6 +42,7 @@ class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
         requireActivity().clearBackStack()
+        findNavController().navigate(R.id.portfolioHomeFragment)
     }
 
 }
