@@ -207,6 +207,8 @@ open class NetworkViewModel : ViewModel() {
     private val _balanceResponse = MutableLiveData<BalanceResponse>()
     val balanceResponse get() = _balanceResponse
 
+    private var _msgResponse: MutableLiveData<BooleanResponse> = MutableLiveData()
+    val msgResponse get() = _msgResponse
     fun cancelJob() {
 
     }
@@ -930,4 +932,19 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
+
+    fun sendMsgToSupport(msg: String) {
+        try {
+            viewModelScope.launch(exceptionHandler) {
+                val hash = hashMapOf<String, Any>()
+                hash["message"] = msg
+                val res = RestClient.get().contactSupport(hash)
+                if (res.isSuccessful)
+                    _msgResponse.postValue(res.body())
+                else listener?.onRetrofitError(res.errorBody())
+            }
+        } catch (e: Exception) {
+            listener?.onError()
+        }
+    }
 }

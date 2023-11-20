@@ -344,7 +344,31 @@
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_right_arrow_grey" />
                 </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/llContactUS"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="16dp">
 
+                    <TextView
+                        android:id="@+id/tvContactUs"
+                        style="@style/SubheadMabry"
+                        android:text="@string/contact_us"
+                        android:textColor="@color/purple_gray_700"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_right_arrow_grey" />
+                </LinearLayout>
                 <LinearLayout
                     android:id="@+id/llFaceId"
                     android:layout_width="wrap_content"
