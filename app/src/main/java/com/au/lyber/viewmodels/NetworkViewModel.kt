@@ -561,7 +561,7 @@ open class NetworkViewModel : ViewModel() {
             hashMap["network"] = network
             hashMap["address"] = address
             hashMap["origin"] = origin.lowercase()
-            if (exchange.isNotEmpty())
+            if (origin.lowercase() == "exchange")
                 hashMap["exchange"] = exchange
             val res = RestClient.get().addWhitelistingAddress(hashMap)
             if (res.isSuccessful)
