@@ -537,4 +537,11 @@
     <string name="the_minimum_amount_to_be_exchanged">The minimum Amount to be exchanged</string>
     <string name="the_minimum_amount_to_be_exchanged_1">The minimum amount to be exchanged %1$s %2$s</string>
     <string name="availiable_fiat">Available FIAT</string>
+    <string name="forgot_your_pass"><u>Forgot your password?</u></string>
+    <string name="happens_even_to_best">Happens even to the best</string>
+    <string name="send_reset_link">We will send you a reset link to your email address</string>
+    <string name="send_me_reset_link">Send me a reset link</string>
+    <string name="we_have_sent_an_email">We have sent you an email containing the reset link that you must follow in order to reset your password</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

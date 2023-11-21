@@ -195,5 +195,9 @@ class PortfolioViewModel : NetworkViewModel() {
     }
 
 
+    fun forgotPassword(email:String){
+        forgotPass(email)
+    }
+
     data class ChooseAssets(val asset_id: String, val allocation: Int)
 }

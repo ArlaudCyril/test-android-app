@@ -644,3 +644,7 @@ data class Balance(
     val id: String,
     val balanceData: BalanceData
 )
+
+data class BooleanResponse(
+    val success:Boolean
+)
