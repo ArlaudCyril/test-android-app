@@ -79,12 +79,16 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                 getString(R.string.phone_login_helper_text)
             binding.tvLoginViaEmail.fadeIn()
             binding.tvLoginViaEmail.visible()
+            binding.tvForgotPassword.fadeIn()
+            binding.tvForgotPassword.visible()
             binding.tilPassword.visible()
         }
 
         binding.tvLoginViaEmail.setOnClickListener(this)
+        binding.tvForgotPassword.setOnClickListener(this)
         binding.tvLoginViaPhone.setOnClickListener(this)
         binding.btnNext.setOnClickListener(this)
+        binding.tvForgotPassword.setOnClickListener(this)
 
         binding.tvCountryCode.setOnClickListener(this)
         binding.root.viewTreeObserver?.addOnGlobalLayoutListener(
@@ -332,6 +336,9 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                                 }
                         }
 
+                }
+                tvForgotPassword->{
+                    findNavController().navigate(R.id.forgotPasswordFragment)
                 }
 
             }

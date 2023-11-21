@@ -207,6 +207,10 @@ open class NetworkViewModel : ViewModel() {
     private val _balanceResponse = MutableLiveData<BalanceResponse>()
     val balanceResponse get() = _balanceResponse
 
+
+    private var _booleanResponse: MutableLiveData<BooleanResponse> = MutableLiveData()
+    val booleanResponse get() = _booleanResponse
+
     fun cancelJob() {
 
     }
@@ -927,6 +931,21 @@ open class NetworkViewModel : ViewModel() {
                 _balanceResponse.postValue(res.body())
 
             else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun forgotPass(email: String) {
+        try {
+            viewModelScope.launch(exceptionHandler) {
+                val hash = hashMapOf<String, Any>()
+                hash["email"] = email
+                val res = RestClient.get().forgotPassword(hash)
+                if (res.isSuccessful)
+                    _booleanResponse.postValue(res.body())
+                else listener?.onRetrofitError(res.errorBody())
+            }
+        } catch (e: Exception) {
+            listener?.onError()
         }
     }
 

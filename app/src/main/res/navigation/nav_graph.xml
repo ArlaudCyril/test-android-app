@@ -187,7 +187,18 @@
     <fragment
         android:id="@+id/createAccountFragment"
         android:name="com.au.lyber.ui.fragments.CreateAccountFragment"
-        android:label="CreateAccountFragment" />
+        android:label="CreateAccountFragment" >
+        <action
+            android:id="@+id/action_createAccountFragment_to_forgotPasswordFragment"
+            app:destination="@id/forgotPasswordFragment" />
+    </fragment>
+
+
+    <fragment
+        android:id="@+id/forgotPasswordFragment"
+        android:name="com.au.lyber.ui.fragments.ForgotPasswordFragment"
+        android:label="ForgotPasswordFragment" />
+
     <fragment
         android:id="@+id/investmentDetailFragment"
         android:name="com.au.lyber.ui.fragments.InvestmentDetailFragment"
