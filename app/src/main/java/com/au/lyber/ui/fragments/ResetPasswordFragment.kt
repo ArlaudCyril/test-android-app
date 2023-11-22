@@ -1,60 +1,172 @@
 package com.au.lyber.ui.fragments
 
+import android.content.res.ColorStateList
+import android.graphics.PorterDuff
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
+import com.au.lyber.databinding.FragmentForgotPasswordBinding
+import com.au.lyber.databinding.FragmentResetPasswordBinding
+import com.au.lyber.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
+import com.au.lyber.utils.App
+import com.au.lyber.utils.CommonMethods
+import com.au.lyber.utils.Constants
+import com.au.lyber.viewmodels.SignUpViewModel
+import com.nimbusds.srp6.SRP6ClientSession
+import com.nimbusds.srp6.SRP6CryptoParams
+import com.nimbusds.srp6.SRP6VerifierGenerator
+import com.nimbusds.srp6.XRoutineWithUserIdentity
+import okhttp3.ResponseBody
+import java.math.BigInteger
 
-// TODO: Rename parameter arguments, choose names that match
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
-/**
- * A simple [Fragment] subclass.
- * Use the [ResetPasswordFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
-class ResetPasswordFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
+class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>(), OnClickListener {
+    private lateinit var viewModel: SignUpViewModel
+    var buttonClicked = false
+    override fun bind() = FragmentResetPasswordBinding.inflate(layoutInflater)
+    private lateinit var config: SRP6CryptoParams
+    lateinit var generator: SRP6VerifierGenerator
+    lateinit var client: SRP6ClientSession
+    var resetToken = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
+            resetToken = it.getString("resetToken", "") ?: ""
+            Log.d("token", "$resetToken")
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater, container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_reset_password, container, false)
-    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel = CommonMethods.getViewModel(this)
+        viewModel.listener = this
+        config = SRP6CryptoParams.getInstance(2048, "SHA-512")
+        generator = SRP6VerifierGenerator(config)
+        generator.xRoutine = XRoutineWithUserIdentity()
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment ResetPasswordFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            ResetPasswordFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+        client = SRP6ClientSession()
+        client.xRoutine = XRoutineWithUserIdentity()
+        binding.etPassword.addTextChangedListener(onTextChange)
+        binding.btnSendResetLink.setOnClickListener(this)
+        binding.ivTopAction.setOnClickListener(this)
+        viewModel.resetPasswordResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+//                CommonMethods.dismissProgressDialog()
+                val password = binding.etPassword.text.trim().toString()
+                Log.d("res", "${it.data}")
+                val emailSalt = BigInteger(1, generator.generateRandomSalt())
+                val emailVerifier = generator.generateVerifier(
+                    emailSalt, it.data.email, password
+                )
+
+                val phoneSalt = BigInteger(1, generator.generateRandomSalt())
+                val phoneVerifier = generator.generateVerifier(
+                    phoneSalt, it.data.phoneNo, password
+                )
+                Log.d("emailSalt", "$emailSalt")
+                Log.d("emailVerifier", " $emailVerifier  ")
+                Log.d("phoneSalt", "  $phoneSalt ")
+                Log.d("phoneVerifier", "   $phoneVerifier")
+                viewModel.resetNewPass(
+                    emailSalt.toString(), emailVerifier.toString(),
+                    phoneSalt.toString(), phoneVerifier.toString()
+                )
+            }
+        }
+        viewModel.booleanResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                CommonMethods.dismissProgressDialog()
+                if (it.success) {
+                    App.prefsManager.accessToken = ""
+                    val bundle = Bundle().apply {
+                        putBoolean(Constants.FOR_LOGIN, true)
+                    }
+                    findNavController().navigate(R.id.createAccountFragment, bundle)
                 }
             }
+        }
     }
+
+    override fun onRetrofitError(responseBody: ResponseBody?) {
+        CommonMethods.dismissProgressDialog()
+        CommonMethods.showErrorMessage(requireContext(), responseBody)
+    }
+
+    private val onTextChange = object : TextWatcher {
+        override fun afterTextChanged(s: Editable?) {}
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            if (binding.etPassword.text.trim().toString().isNotEmpty()) {
+                if (CommonMethods.isValidPassword(binding.etPassword.text.trim().toString())) {
+                    val colorStateList =
+                        ColorStateList.valueOf(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.purple_500
+                            )
+                        )
+                    binding.btnSendResetLink.backgroundTintList = colorStateList
+                    binding.tvPassValidMsg.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.green_500
+                        )
+                    )
+                    // Set background tint mode to SRC_ATOP
+                    binding.btnSendResetLink.backgroundTintMode = PorterDuff.Mode.SRC_ATOP
+                    buttonClicked = true
+                } else {
+                    val colorStateList =
+                        ColorStateList.valueOf(
+                            ContextCompat.getColor(
+                                requireContext(),
+                                R.color.purple_gray_600
+                            )
+                        )
+                    binding.btnSendResetLink.backgroundTintList = colorStateList
+                    binding.tvPassValidMsg.setTextColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.red_500
+                        )
+                    )
+                    // Set background tint mode to SRC_ATOP
+                    binding.btnSendResetLink.backgroundTintMode = PorterDuff.Mode.SRC_ATOP
+                    buttonClicked = false
+                }
+            } else
+                buttonClicked = false
+
+        }
+
+
+    }
+
+    override fun onClick(v: View?) {
+        binding.apply {
+            when (v!!) {
+                ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
+                btnSendResetLink -> {
+                    if (buttonClicked) {
+                        CommonMethods.showProgressDialog(requireContext())
+                        App.prefsManager.accessToken = resetToken
+                        viewModel.getResetPass()
+                    }
+
+                }
+
+            }
+        }
+    }
+
 }

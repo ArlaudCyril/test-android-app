@@ -1288,6 +1288,12 @@ class CommonMethods {
         {
             return BaseActivity.balances.firstOrNull { it.id == id }
         }
+
+        fun isValidPassword(password: String): Boolean {
+            val passwordRegex = Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@=#\$%^&*(),.?\":{}|<>])(?=\\S+\$).{10,}\$")
+            return passwordRegex.matches(password)
+        }
+
     }
 }
 

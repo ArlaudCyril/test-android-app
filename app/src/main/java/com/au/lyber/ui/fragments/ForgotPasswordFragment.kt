@@ -25,7 +25,7 @@ import com.au.lyber.viewmodels.SignUpViewModel
 class ForgotPasswordFragment : BaseFragment<FragmentForgotPasswordBinding>(), OnClickListener {
     private lateinit var viewModel: SignUpViewModel
     override fun bind() = FragmentForgotPasswordBinding.inflate(layoutInflater)
-var buttonClicked=false
+    var buttonClicked = false
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = CommonMethods.getViewModel(this)
@@ -72,9 +72,8 @@ var buttonClicked=false
                     binding.btnSendResetLink.backgroundTintMode = PorterDuff.Mode.SRC_ATOP
                     buttonClicked = false
                 }
-            }
-            else
-                buttonClicked=false
+            } else
+                buttonClicked = false
 
         }
 
@@ -86,7 +85,7 @@ var buttonClicked=false
             when (v!!) {
                 ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
                 btnSendResetLink -> {
-                    if(buttonClicked) {
+                    if (buttonClicked) {
                         val email = binding.etEmail.text.trim().toString()
                         CommonMethods.showProgressDialog(requireContext())
                         viewModel.forgotPass(email)

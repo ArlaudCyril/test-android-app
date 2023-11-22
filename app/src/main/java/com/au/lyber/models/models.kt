@@ -648,3 +648,14 @@ data class Balance(
 data class BooleanResponse(
     val success:Boolean
 )
+
+
+
+data class ResetPasswordResponse(
+    val email: String,
+    val phoneNo: String
+)
+data class res(
+    val `data`: ResetPasswordResponse
+)
+

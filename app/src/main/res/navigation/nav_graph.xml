@@ -200,6 +200,11 @@
         android:label="ForgotPasswordFragment" />
 
     <fragment
+        android:id="@+id/resetPasswordFragment"
+        android:name="com.au.lyber.ui.fragments.ResetPasswordFragment"
+        android:label="ResetPasswordFragment" />
+
+    <fragment
         android:id="@+id/investmentDetailFragment"
         android:name="com.au.lyber.ui.fragments.InvestmentDetailFragment"
         android:label="InvestmentDetailFragment" >

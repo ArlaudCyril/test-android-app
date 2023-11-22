@@ -1,6 +1,7 @@
 package com.au.lyber.ui.activities
 
 import android.annotation.SuppressLint
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.OnBackPressedCallback
@@ -30,19 +31,37 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
             this /* lifecycle owner */,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    if (navHostFragment.childFragmentManager.backStackEntryCount>2) {
+                    if (navHostFragment.childFragmentManager.backStackEntryCount > 2) {
                         navController.popBackStack()
-                    }else{
+                    } else {
                         finishAffinity()
                     }
                 }
             })
-
-        if ((intent?.extras?.getString(Constants.FOR_LOGOUT, "") ?: "").isNotEmpty())
+        if(intent.data!=null) {
+            val uriString = intent.data?.toString()
+            if (uriString != null && uriString.contains("reset?token")) {
+                Log.d("URI Data", "$uriString")
+                val urit = Uri.parse(uriString)
+                val token = urit.getQueryParameter("token")
+                if (token != null) {
+                    Log.d("Token: ", "$token")
+//                    navController.navigate(R.id.resetPasswordFragment)
+                    val arguments = Bundle().apply {
+                        putString("resetToken", token)
+                    }
+                    navController.navigate(R.id.splashFragment, arguments)
+                } else {
+                    Log.d("Token not found in the URI", "")
+                }
+            }
+        }
+      else  if ((intent?.extras?.getString(Constants.FOR_LOGOUT, "") ?: "").isNotEmpty())
             navController.navigate(R.id.discoveryFragment)
-        else navController.navigate(R.id.splashFragment)
-    }
+        else
+            navController.navigate(R.id.splashFragment)
 
+    }
 
     companion object {
         private var _activityCallbacks: ActivityCallbacks? = null

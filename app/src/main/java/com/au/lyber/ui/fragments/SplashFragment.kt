@@ -10,12 +10,13 @@ import com.au.lyber.R
 import com.au.lyber.databinding.FragmentSplashBinding
 import com.au.lyber.utils.App
 import com.au.lyber.utils.CommonMethods.Companion.is30DaysOld
+import com.au.lyber.utils.Constants
 
 class SplashFragment : BaseFragment<FragmentSplashBinding>() {
     private lateinit var handler : Handler
     private lateinit var runnable : Runnable
     private var isScreen = false
-
+var token=""
     override fun bind() = FragmentSplashBinding.inflate(layoutInflater)
 
 
@@ -23,6 +24,9 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>() {
         super.onCreate(savedInstanceState)
         enterTransition = Fade()
         exitTransition = Fade()
+        if(arguments!=null && requireArguments().containsKey("resetToken")){
+             token=requireArguments().getString("resetToken").toString()
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -36,7 +40,15 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>() {
 
             if (!isScreen) {
                 isScreen = true
-                if (App.prefsManager.tokenSavedAt.is30DaysOld()) {
+                if(token.isNotEmpty()){
+
+//                    navController.navigate(R.id.resetPasswordFragment)
+                    val arguments = Bundle().apply {
+                        putString("resetToken", token)
+                    }
+                    findNavController().navigate(R.id.resetPasswordFragment, arguments)
+                }
+               else if (App.prefsManager.tokenSavedAt.is30DaysOld()) {
                     App.prefsManager.logout()
                     findNavController().navigate(R.id.discoveryFragment)
                 } else {
