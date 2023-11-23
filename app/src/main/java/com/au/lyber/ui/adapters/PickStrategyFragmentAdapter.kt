@@ -1,5 +1,6 @@
 package com.au.lyber.ui.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
@@ -11,7 +12,7 @@ import com.au.lyber.ui.fragments.StrategyView
 import com.au.lyber.utils.CommonMethods.Companion.gone
 import com.au.lyber.utils.CommonMethods.Companion.visible
 
-class PickStrategyFragmentAdapter(val itemClicked: (position: Int,view:StrategyView) -> Unit) :
+class PickStrategyFragmentAdapter(val itemClicked: (position: Int) -> Unit) :
     BaseAdapter<Strategy>() {
 
 
@@ -25,10 +26,18 @@ class PickStrategyFragmentAdapter(val itemClicked: (position: Int,view:StrategyV
             }
 
             strategyView.rootView.setOnClickListener {
-              itemClicked(adapterPosition,strategyView)
+                Log.d("positionAdapter",adapterPosition.toString())
+              itemClicked(adapterPosition)
             }
 
         }
+    }
+    fun markSelected(position: Int){
+        for (item in itemList){
+            item!!.isSelected = false
+        }
+        itemList[position]!!.isSelected = true
+        notifyDataSetChanged()
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -55,7 +64,7 @@ class PickStrategyFragmentAdapter(val itemClicked: (position: Int,view:StrategyV
             ORDINARY_VIEW -> {
                 (holder as ViewHolder).strategyView.apply {
                     itemList[position]?.let {
-                        background = if (false) {
+                        background = if (it.isSelected) {
                             isStrategySelected = true
                             radioButton.setImageResource(R.drawable.radio_select)
                             getDrawable(context, R.drawable.round_stroke_purple_500)

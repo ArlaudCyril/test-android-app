@@ -50,8 +50,8 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if (arguments!=null && requireArguments().containsKey(Constants.ID)){
-            isEdit= requireArguments().getBoolean(Constants.ID)
+        if (arguments != null && requireArguments().containsKey(Constants.ID)) {
+            isEdit = requireArguments().getBoolean(Constants.ID)
         }
         binding.btnAddAssets.setOnClickListener(this)
         binding.ivTopAction.setOnClickListener(this)
@@ -59,7 +59,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
 
         viewModel = getViewModel(requireActivity())
         viewModel.buildStrategyResponse.observe(viewLifecycleOwner) {
-            if(lifecycle.currentState == Lifecycle.State.RESUMED) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
                 requireActivity().onBackPressedDispatcher.onBackPressed()
             }
@@ -72,11 +72,12 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
             it.layoutManager = layoutManager
             it.isNestedScrollingEnabled = false
         }
-        if (isEdit){
-            val strategy =viewModel.selectedStrategy
-            for (ada in strategy!!.bundle){
-                val priceServiceResume = BaseActivity.balanceResume.firstNotNullOfOrNull { item -> item.takeIf { item.id == ada.asset } }
-                val assest = AddedAsset(priceServiceResume!!,ada.share,false)
+        if (isEdit) {
+            val strategy = viewModel.selectedStrategy
+            for (ada in strategy!!.bundle) {
+                val priceServiceResume =
+                    BaseActivity.balanceResume.firstNotNullOfOrNull { item -> item.takeIf { item.id == ada.asset } }
+                val assest = AddedAsset(priceServiceResume!!, ada.share, false)
                 viewModel.addedAsset.apply {
                     add(assest)
                 }
@@ -143,20 +144,26 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                     val redColor = ContextCompat.getColor(requireContext(), R.color.red_500)
                     binding.tvAllocationInfo.visible()
                     binding.tvAllocationInfo.setTextColor(redColor)
-                    binding.tvAllocationInfo.text = "${getString(
-                        R.string.your_allocations_is_greater_than_100_remove)} ${(count - 100).toInt()} %"
+                    binding.tvAllocationInfo.text = "${
+                        getString(
+                            R.string.your_allocations_is_greater_than_100_remove
+                        )
+                    } ${(count - 100).toInt()} %"
                     binding.btnSaveMyStrategy.background =
                         ContextCompat.getDrawable(requireContext(), R.drawable.button_purple_400)
                 }
+
                 count < 100 -> {
                     canBuildStrategy = false
                     val redColor = ContextCompat.getColor(requireContext(), R.color.red_500)
                     binding.tvAllocationInfo.visible()
                     binding.tvAllocationInfo.setTextColor(redColor)
-                    binding.tvAllocationInfo.text = "${getString(R.string.your_allocations_is_less_than_100_add)} ${ (100 - count).toInt()}%"
+                    binding.tvAllocationInfo.text =
+                        "${getString(R.string.your_allocations_is_less_than_100_add)} ${(100 - count).toInt()}%"
                     binding.btnSaveMyStrategy.background =
                         ContextCompat.getDrawable(requireContext(), R.drawable.button_purple_400)
                 }
+
                 else -> {
                     val one = ContextCompat.getColor(requireContext(), R.color.purple_gray_800)
                     val two = ContextCompat.getColor(requireContext(), R.color.purple_gray_600)
@@ -192,7 +199,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                         RelativeLayout.LayoutParams.MATCH_PARENT
                     )
 
-                    val vc  = AddAssetBottomSheet(::clickListen,viewModel.addedAsset)
+                    val vc = AddAssetBottomSheet(::clickListen, viewModel.addedAsset)
 
                     vc.viewToDelete = transparentView
                     vc.mainView = view?.rootView as ViewGroup
@@ -203,10 +210,22 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                     mainView.addView(transparentView, viewParams)
 
                 }
+
                 ivTopAction -> requireActivity().onBackPressed()
                 btnSaveMyStrategy -> {
-                    if (canBuildStrategy) {
-                        showDialog()
+                    if (isEdit) {
+                        checkInternet(requireContext()) {
+                            showProgressDialog(requireContext())
+                            checkInternet(requireContext()) {
+                                showProgressDialog(requireContext())
+                                viewModel.editOwnStrategy(viewModel.selectedStrategy!!.name)
+
+                            }
+                        }
+                    } else {
+                        if (canBuildStrategy) {
+                            showDialog()
+                        }
                     }
                 }
             }
@@ -248,9 +267,12 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                     val name: String = bind.etInput.text.trim().toString()
                     when {
                         name.isEmpty() -> {
-                            getString(R.string.please_enter_name_for_your_strategy).showToast(requireContext())
+                            getString(R.string.please_enter_name_for_your_strategy).showToast(
+                                requireContext()
+                            )
                             bind.etInput.requestKeyboard()
                         }
+
                         else -> {
                             checkInternet(requireContext()) {
                                 mainView.removeView(transparentView)
@@ -280,8 +302,9 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
     private fun clickListener(position: Int) {
         viewModel.addedAsset[position].let {
             val allocationValue = it.allocation.toInt()
-            val assest = BaseActivity.assets.firstNotNullOfOrNull{ item -> item.takeIf {item.id ==viewModel.addedAsset[position].addAsset.id}}
-            val assetsName = assest!!.fullName+ " (${assest.id.uppercase()})"
+            val assest =
+                BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.addedAsset[position].addAsset.id } }
+            val assetsName = assest!!.fullName + " (${assest.id.uppercase()})"
             SpinnerBottomSheet(::manuallySelectedAllocation).apply {
                 arguments = Bundle().apply {
                     putString("assetsName", assetsName)
