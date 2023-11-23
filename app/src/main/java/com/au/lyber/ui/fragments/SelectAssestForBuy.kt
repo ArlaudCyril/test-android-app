@@ -207,19 +207,8 @@ class SelectAssestForBuy : BaseFragment<FragmentAllAssetsBinding>(), View.OnClic
         }else{
             showDialog()
         }
-       // showDialog()
-      /*  CommonMethods.getViewModel<PortfolioViewModel>(requireActivity()).let {
-            it.selectedAssetPriceResume = asset
-            it.chosenAssets = asset
-            it.screenCount = 1
-            viewModel.selectedAsset = it.selectedAsset
-            if (type == Constants.Exchange) {
-                viewModel.exchangeAssetTo = asset.id
-                findNavController().navigate(R.id.addAmountForExchangeFragment)
-            } else {
-                requireActivity().onBackPressedDispatcher.onBackPressed()
-            }
-        }*/
+        //showDialog()
+
 
     }
 
@@ -233,7 +222,7 @@ class SelectAssestForBuy : BaseFragment<FragmentAllAssetsBinding>(), View.OnClic
                 setContentView(it.root)
                 it.tvTitle.text = getString(R.string.buy_usdt)
                 it.tvMessage.text =
-                    getString(R.string.to_invest_in_an_asset_you_must_first_buy_usdt_then_use_the_purchased_usdt_and_exchange_it_for_desired_asset)
+                    getString(R.string.usdt_error)
                 it.tvNegativeButton.text = getString(R.string.cancel)
                 it.tvPositiveButton.text = getString(R.string.buy_usdt)
                 it.tvNegativeButton.setOnClickListener {

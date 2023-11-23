@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
@@ -15,8 +14,10 @@ import com.au.lyber.models.BalanceData
 import com.au.lyber.models.DataQuote
 import com.au.lyber.network.RestClient
 import com.au.lyber.ui.activities.BaseActivity
+import com.au.lyber.ui.fragments.bottomsheetfragments.ErrorBottomSheet
 import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.CommonMethods
+import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.formattedAsset
 import com.au.lyber.utils.CommonMethods.Companion.gone
 import com.au.lyber.utils.CommonMethods.Companion.visible
@@ -48,12 +49,22 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
             fragment = this@PreviewMyPurchaseFragment,
             config = GooglePayLauncher.Config(
                 environment = GooglePayEnvironment.Test,
-                merchantCountryCode = "IN",
-                merchantName = "merchantname"
+                merchantCountryCode = "US",
+                merchantName = "Widget Store"
             ),
             readyCallback = ::onGooglePayReady,
             resultCallback = ::onGooglePayResult
         )
+        viewModel.getQuoteResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                CommonMethods.dismissProgressDialog()
+                val bundle = Bundle().apply {
+                    putString(Constants.DATA_SELECTED, Gson().toJson(it.data))
+                }
+                this.arguments = bundle
+
+            }
+        }
     }
 
     private fun onGooglePayReady(isReady: Boolean) {
@@ -153,6 +164,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
             Handler(Looper.getMainLooper()).postDelayed({
                 if (lifecycle.currentState == Lifecycle.State.RESUMED)
                     if (timer == 0) {
+                        ErrorBottomSheet(::dismissList).show(childFragmentManager, "")
                     } else {
                         timer -= 1
                         binding.tvTimer.text = "You have $timer seconds to confirm this purchase."
@@ -164,6 +176,22 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
         }
     }
 
+    private fun dismissList(clicked:Boolean){
+        if (clicked){
+            checkInternet(requireActivity()) {
+                val data = Gson().fromJson(
+                    requireArguments().getString(Constants.DATA_SELECTED),
+                    DataQuote::class.java
+                )
+                CommonMethods.showProgressDialog(requireActivity())
+                viewModel.getQuote(
+                    "eur",
+                    "usdt",
+                    data.fromAmount
+                )
+            }
+        }
+    }
 
 
 

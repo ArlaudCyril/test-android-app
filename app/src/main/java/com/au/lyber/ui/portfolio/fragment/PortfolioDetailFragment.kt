@@ -420,7 +420,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 setContentView(it.root)
                 it.tvTitle.text = getString(R.string.buy_usdt)
                 it.tvMessage.text =
-                    getString(R.string.to_invest_in_an_asset_you_must_first_buy_usdt_then_use_the_purchased_usdt_and_exchange_it_for_desired_asset)
+                    getString(R.string.usdt_error)
                 it.tvNegativeButton.text = getString(R.string.cancel)
                 it.tvPositiveButton.text = getString(R.string.buy_usdt)
                 it.tvNegativeButton.setOnClickListener {

@@ -95,6 +95,10 @@ class PortfolioThreeDots(private val listenItemClicked: (String, String) -> Unit
             it.ivItem.setImageResource(R.drawable.euro)
             it.tvStartTitle.text = getString(R.string.buy)
             if (this.typePopUp == "AssetPopUp" || this.typePopUp == "AssetPopUpWithdraw"){
+                if (viewModel.selectedAsset!!.id!!.lowercase() =="usdt"){
+                    it.tvStartSubTitle.text = getString(R.string.buy_usdt_with_euro)
+
+                }else
                 it.tvStartSubTitle.text = getString(R.string.buy__with_usdt,viewModel.selectedAsset?.id?.uppercase())
             }else{
                 it.tvStartSubTitle.text = getString(R.string.buy_assets_with_usdt)
