@@ -2,6 +2,7 @@ package com.au.lyber.network
 
 import com.au.lyber.models.*
 import okhttp3.MultipartBody
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -277,4 +278,17 @@ interface Api {
 
     @POST("user-service/verify-2FA")
     suspend fun verify2FA(@Body hashMap: HashMap<String, Any>): Response<UserLoginResponse>
+
+    //patch
+
+
+    @PATCH("user-service/user")
+    suspend fun updateUserAuthentication( @Body hashMap: HashMap<String, Any>): Response<BooleanResponse>
+
+    @GET("user-service/2fa-otp")
+    suspend fun switchOffAuthentication(
+        @Query("details") details: String,
+        @Query("action") action: String
+    ): Response<BooleanResponse>
+
 }

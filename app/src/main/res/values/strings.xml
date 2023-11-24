@@ -537,4 +537,9 @@
     <string name="the_minimum_amount_to_be_exchanged">The minimum Amount to be exchanged</string>
     <string name="the_minimum_amount_to_be_exchanged_1">The minimum amount to be exchanged %1$s %2$s</string>
     <string name="availiable_fiat">Available FIAT</string>
+    <string name="google_authenticator">Google authenticator</string>
+    <string name="by_email">By Email</string>
+    <string name="manage_app_cases">Manage the application cases of 2FA</string>
+    <string name="validate_withdrawal">Validate a withdrawal</string>
+    <string name="enableDisableWhitelisting">Enable/Disable whitelisting</string>
 </resources>

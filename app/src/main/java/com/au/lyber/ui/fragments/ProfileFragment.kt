@@ -18,6 +18,7 @@ import android.view.Window
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.au.lyber.BuildConfig
@@ -173,7 +174,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 //        binding.tvViewAllTransaction.setOnClickListener(this)
 //        binding.tvAddPaymentMethod.setOnClickListener(this)
         binding.tvLogout.setOnClickListener(this)
-//        binding.llStrongAuthentication.setOnClickListener(this)
+        binding.llStrongAuthentication.setOnClickListener(this)
 //        binding.rlAddressBook.setOnClickListener(this)
         binding.ivProfile.setOnClickListener(this)
 //        binding.llNotification.setOnClickListener(this)
@@ -278,10 +279,11 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                     AddAddressBookFragment()
                 )
 
-                llStrongAuthentication -> requireActivity().replaceFragment(
-                    R.id.flSplashActivity,
-                    StrongAuthenticationFragment()
-                )
+                llStrongAuthentication ->findNavController().navigate(R.id.strongAuthentication)
+//                    requireActivity().replaceFragment(
+//                    R.id.flSplashActivity,
+//                    StrongAuthenticationFragment()
+//                )
 
                 ivTopAction -> requireActivity().onBackPressed()
 
