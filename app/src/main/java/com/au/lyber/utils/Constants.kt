@@ -176,4 +176,11 @@ object Constants {
     const val CAP_RANGE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     const val POPUP_HEIGHT = 400
 
+    const val LOGIN="login"
+    const val WITHDRAWAL="withdrawal"
+    const val WHITELISTING="whitelisting"
+    const val GOOGLE="google"
+    const val PHONE="phone"
+    const val EMAIL="email"
+
 }

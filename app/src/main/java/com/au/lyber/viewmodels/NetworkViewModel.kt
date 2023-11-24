@@ -207,6 +207,8 @@ open class NetworkViewModel : ViewModel() {
     private val _balanceResponse = MutableLiveData<BalanceResponse>()
     val balanceResponse get() = _balanceResponse
 
+    private var _booleanResponse: MutableLiveData<BooleanResponse> = MutableLiveData()
+    val booleanResponse get() = _booleanResponse
     fun cancelJob() {
 
     }
@@ -930,4 +932,23 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
+    fun updateAuthentication(hash: HashMap<String,Any>){
+        viewModelScope.launch(exceptionHandler) {
+
+            val res = RestClient.get(Constants.NEW_BASE_URL).updateUserAuthentication(hash)
+            if (res.isSuccessful)
+                _booleanResponse.postValue(res.body())
+
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+    fun switchOffAuthentication(detail: String,scope:String){
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).switchOffAuthentication(detail,scope)
+            if (res.isSuccessful)
+                _booleanResponse.postValue(res.body())
+
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
 }

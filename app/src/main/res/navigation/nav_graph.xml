@@ -124,8 +124,16 @@
         android:id="@+id/profileFragment"
         android:name="com.au.lyber.ui.fragments.ProfileFragment"
         android:label="ProfileFragment" >
+        <action
+            android:id="@+id/profileFragment_to_strongAuthentication"
+            app:destination="@+id/strongAuthentication"/>
 
     </fragment>
+    <fragment
+        android:id="@+id/strongAuthentication"
+        android:name="com.au.lyber.ui.fragments.StrongAuthenticationFragment"
+        android:label="StrongAuthentication"/>
+
     <fragment
         android:id="@+id/addAmountFragment"
         android:name="com.au.lyber.ui.fragments.AddAmountFragment"
