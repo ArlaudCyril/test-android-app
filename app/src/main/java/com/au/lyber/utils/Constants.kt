@@ -182,5 +182,6 @@ object Constants {
     const val GOOGLE="google"
     const val PHONE="phone"
     const val EMAIL="email"
+    const val SCOPE="scope"
 
 }

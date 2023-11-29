@@ -24,6 +24,8 @@
         style="@style/SubheadMabry"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginHorizontal="24dp"
         android:layout_marginTop="4dp"
         android:text="@string/enter_the_code_displayed_on_your_email_" />
 
@@ -34,6 +36,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:gravity="center"
+        android:visibility="gone"
         android:text="mail@gmail.com"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@color/purple_gray_800" />
@@ -149,6 +152,16 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+
+    <TextView
+        android:id="@+id/tvBack"
+        style="@style/SubheadMabry"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="24dp"
+        android:text="@string/back" />
 
     <Button
         android:id="@+id/btnCancel"

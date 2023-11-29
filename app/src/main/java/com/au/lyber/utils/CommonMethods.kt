@@ -2,6 +2,7 @@ package com.au.lyber.utils
 
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Dialog
 import android.content.ContentResolver
 import android.content.Context
@@ -25,6 +26,7 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
+import android.util.Base64
 import android.util.Log
 import android.util.TypedValue
 import android.view.*
@@ -1288,6 +1290,12 @@ class CommonMethods {
         {
             return BaseActivity.balances.firstOrNull { it.id == id }
         }
+        fun encodeToBase64(input: String): String {
+            val bytes = input.toByteArray(Charsets.UTF_8)
+            val base64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
+            return base64
+        }
+
     }
 }
 

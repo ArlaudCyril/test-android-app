@@ -283,12 +283,15 @@ interface Api {
 
 
     @PATCH("user-service/user")
-    suspend fun updateUserAuthentication( @Body hashMap: HashMap<String, Any>): Response<BooleanResponse>
+    suspend fun updateUserAuthentication( @Body hashMap: HashMap<String, Any>): Response<UpdateAuthenticateResponse>
 
     @GET("user-service/2fa-otp")
     suspend fun switchOffAuthentication(
         @Query("details") details: String,
         @Query("action") action: String
     ): Response<BooleanResponse>
+
+    @GET("user-service/google-otp")
+    suspend fun getQrUrl():Response<QrCodeResponse>
 
 }

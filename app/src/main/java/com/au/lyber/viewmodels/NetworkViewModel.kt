@@ -209,6 +209,11 @@ open class NetworkViewModel : ViewModel() {
 
     private var _booleanResponse: MutableLiveData<BooleanResponse> = MutableLiveData()
     val booleanResponse get() = _booleanResponse
+
+    private var _updateAuthenticateResponse: MutableLiveData<UpdateAuthenticateResponse> = MutableLiveData()
+    val updateAuthenticateResponse get() = _updateAuthenticateResponse
+    private var _qrCodeResponse: MutableLiveData<QrCodeResponse> = MutableLiveData()
+    val qrCodeResponse get() = _qrCodeResponse
     fun cancelJob() {
 
     }
@@ -937,7 +942,7 @@ open class NetworkViewModel : ViewModel() {
 
             val res = RestClient.get(Constants.NEW_BASE_URL).updateUserAuthentication(hash)
             if (res.isSuccessful)
-                _booleanResponse.postValue(res.body())
+                _updateAuthenticateResponse.postValue(res.body())
 
             else listener?.onRetrofitError(res.errorBody())
         }
@@ -947,6 +952,15 @@ open class NetworkViewModel : ViewModel() {
             val res = RestClient.get(Constants.NEW_BASE_URL).switchOffAuthentication(detail,scope)
             if (res.isSuccessful)
                 _booleanResponse.postValue(res.body())
+
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+    fun qrCodeUrl(){
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).getQrUrl()
+            if (res.isSuccessful)
+                _qrCodeResponse.postValue(res.body())
 
             else listener?.onRetrofitError(res.errorBody())
         }
