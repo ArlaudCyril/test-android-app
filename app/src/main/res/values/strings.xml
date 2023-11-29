@@ -542,4 +542,12 @@
     <string name="manage_app_cases">Manage the application cases of 2FA</string>
     <string name="validate_withdrawal">Validate a withdrawal</string>
     <string name="enableDisableWhitelisting">Enable/Disable whitelisting</string>
+    <string name="enter_the_code_received_by_sms">Enter the code received by sms</string>
+    <string name="enter_the_code_displayed_by_google_authenticator">Enter the code displayed by Google Authenticator</string>
+    <string name="enter_the_code_received_by_email">Enter the code received by email</string>
+    <string name="back">Back</string>
+    <string name="add_google_authenticator">Add to your Google Authenticator application</string>
+    <string name="two_fact_authentication">Two factor authentication</string>
+    <string name="tap_to_add_google_authenticator"><u>Tap to add to Google Authenticator</u></string>
+    <string name="you_must_install_authenticator">You must first install an authentication application such as Google Authenticator before you can use this link</string>
 </resources>

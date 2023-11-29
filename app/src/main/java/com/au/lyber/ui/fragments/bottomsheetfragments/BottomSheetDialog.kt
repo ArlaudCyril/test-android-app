@@ -20,7 +20,7 @@ import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class BottomSheetDialog(
+open class BottomSheetDialog(
     private val listenItemClicked: (tag: String, item: String) -> Unit = { _, _ -> },
     private val selectedAsset: AssetBaseData? = null,
     private val fromDetailScreen: Boolean = false

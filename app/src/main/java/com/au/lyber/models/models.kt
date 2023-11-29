@@ -667,3 +667,13 @@ data class Balance(
 data class BooleanResponse(
     val success:Boolean
 )
+data class UpdateAuthenticateResponse(
+    val success:Boolean
+)
+data class QrCodeResponse(
+    val `data`: QR
+)
+
+data class QR(
+    val url: String
+)

@@ -132,7 +132,11 @@
     <fragment
         android:id="@+id/strongAuthentication"
         android:name="com.au.lyber.ui.fragments.StrongAuthenticationFragment"
-        android:label="StrongAuthentication"/>
+        android:label="StrongAuthentication">
+        <action
+            android:id="@+id/strongAuthentication_to_twoFactorAuthentication"
+            app:destination="@+id/twoFactorAuthentication"/>
+    </fragment>
 
     <fragment
         android:id="@+id/addAmountFragment"
@@ -267,6 +271,10 @@
         android:id="@+id/verifyYourIdentityFragment"
         android:name="com.au.lyber.ui.fragments.VerifyYourIdentityFragment"
         android:label="VerifyYourIdentityFragment" />
+    <fragment
+        android:id="@+id/twoFactorAuthentication"
+        android:name="com.au.lyber.ui.fragments.TwoFactorAuthenticationFragment"
+        android:label="TwoFactorAuthenticationFragment" />
     <dialog
         android:id="@+id/portfolioThreeDots"
         android:name="com.au.lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDots"
