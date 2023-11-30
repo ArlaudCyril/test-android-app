@@ -265,17 +265,24 @@ open class NetworkViewModel : ViewModel() {
     fun editOwnStrategy(strategyName: String, addedAsset: List<AddedAsset>) {
 
         val list = arrayListOf<PortfolioViewModel.ChooseAssets>()
-        for (i in addedAsset)
+        var total = 0
+        for (i in addedAsset) {
+            total = total + i.allocation.toInt()
             list.add(
                 PortfolioViewModel.ChooseAssets(
                     i.addAsset.id,
                     i.allocation.toInt()
                 )
             )
+        }
         val hashMap = hashMapOf<String, Any>()
+        if (total < 100) {
+            list[0].share = list[0].share + (100 - total)
+        }
         hashMap["bundle"] = list
         hashMap["strategyName"] = strategyName
         hashMap["strategyType"] = "SingleAsset"
+
         viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().editStrategy(hashMap)
             if (res.isSuccessful)
