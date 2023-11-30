@@ -197,8 +197,8 @@
                     android:checked="true"
                     android:enabled="false"
                     android:minHeight="36dp"
-                    android:thumb="@drawable/custom_thumb"
-                    app:track="@drawable/custom_track" />
+                    android:thumb="@drawable/custom_thumb_grey"
+                    app:track="@drawable/custom_track_grey" />
 
 
                 <TextView
