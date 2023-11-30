@@ -62,7 +62,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
                     putString(Constants.DATA_SELECTED, Gson().toJson(it.data))
                 }
                 this.arguments = bundle
-
+                getData()
             }
         }
     }

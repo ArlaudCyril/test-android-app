@@ -179,7 +179,7 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
                 focusedData.currency = mCurrency
                 unfocusedData.currency = mConversionCurrency
 
-                "${getString(R.string.withdraw)} ${"usdt".uppercase()}".also { tvTitle.text = it }
+                "${getString(R.string.buy)} ${"usdt".uppercase()}".also { tvTitle.text = it }
                 var balance =
                     BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == "usdt" } }
                 if (balance == null) {
