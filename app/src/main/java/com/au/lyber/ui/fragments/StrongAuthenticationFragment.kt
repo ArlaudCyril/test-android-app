@@ -51,7 +51,7 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
         binding.tvNumber.text = "To: ${App.prefsManager.user?.phoneNo}"
         setView()
 
-        if(App.prefsManager.user?.type2FA!=Constants.GOOGLE) {
+        if (App.prefsManager.user?.type2FA != Constants.GOOGLE) {
             viewModel.qrCodeUrl()
             viewModel.qrCodeResponse.observe(viewLifecycleOwner) {
                 if (Lifecycle.State.RESUMED == lifecycle.currentState) {
@@ -59,10 +59,6 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                 }
             }
         }
-
-
-
-
 
         viewModel.booleanResponse.observe(viewLifecycleOwner) {
             if (Lifecycle.State.RESUMED == lifecycle.currentState) {
@@ -125,7 +121,7 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
         }
         viewModel.updateAuthenticateResponse.observe(viewLifecycleOwner) {
             if (Lifecycle.State.RESUMED == lifecycle.currentState) {
-                    viewModel.getUser()
+                viewModel.getUser()
 
             }
         }
@@ -137,7 +133,6 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
 
             }
         }
-
 
         binding.switchWhitelisting.setOnCheckedChangeListener { button, isChecked ->
             if (button.isPressed) {
@@ -218,15 +213,15 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                     binding.ivEmail.visibility = View.VISIBLE
                     binding.ivSms.visibility = View.GONE
                     binding.ivGoogle.visibility = View.GONE
-                    binding.ivGoogleAuth.visibility=View.VISIBLE
+                    binding.ivGoogleAuth.visibility = View.VISIBLE
                 } else if (App.prefsManager.user?.type2FA == Constants.PHONE) {
                     binding.ivSms.visibility = View.VISIBLE
                     binding.ivEmail.visibility = View.GONE
                     binding.ivGoogle.visibility = View.GONE
-                    binding.ivGoogleAuth.visibility=View.VISIBLE
+                    binding.ivGoogleAuth.visibility = View.VISIBLE
                 } else {
                     binding.ivGoogle.visibility = View.VISIBLE
-                    binding.ivGoogleAuth.visibility=View.GONE
+                    binding.ivGoogleAuth.visibility = View.GONE
                     binding.ivSms.visibility = View.GONE
                     binding.ivEmail.visibility = View.GONE
                 }
@@ -239,7 +234,6 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
         val intent = Intent(Intent.ACTION_VIEW, Uri.parse("otpauth://"))
         val activities = requireActivity().packageManager.queryIntentActivities(intent, 0)
         return activities.isNotEmpty()
-
     }
 
     override fun onClick(v: View?) {
@@ -247,7 +241,7 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
             when (v!!) {
                 ivTopAction -> requireActivity().onBackPressed()
                 rlGoogle -> {
-                    if(App.prefsManager.user?.type2FA!=Constants.GOOGLE) {
+                    if (App.prefsManager.user?.type2FA != Constants.GOOGLE) {
                         var args = Bundle().apply {
                             putString("QrCode", qrCodeUrl)
                         }
@@ -256,85 +250,50 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                 }
 
                 rlEmail -> {
-                    if(App.prefsManager.user?.type2FA!=Constants.EMAIL) {
-                        if(App.prefsManager.user?.type2FA!=Constants.GOOGLE) {
+                    if (App.prefsManager.user?.type2FA != Constants.EMAIL) {
+                        if (App.prefsManager.user?.type2FA != Constants.GOOGLE) {
                             CommonMethods.showProgressDialog(requireContext())
                             var json = """{"type2FA" : "email"}""".trimMargin()
                             val detail = encodeToBase64(json)
                             scopeType = Constants.TYPE
                             clickedOn = Constants.EMAIL
                             viewModel.switchOffAuthentication(detail, scopeType)
-                        } else{
-                            if(isAuthenticatorAppInstalled()){
-                                qrCodeUrl.let { urlString ->
-                                    try {
-                                        val uriString = urlString
-                                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uriString))
-
-                                        try {
-                                            startActivity(intent)
-                                        } catch (e: ActivityNotFoundException) {
-                                            e.printStackTrace()
-                                        }
-                                    } catch (e: MalformedURLException) {
-                                        // Handle the case where the URL is malformed
-                                        e.printStackTrace()
-                                    }
-                                }
-                                val transparentView = View(context)
-                                transparentView.setBackgroundColor(
-                                    ContextCompat.getColor(
-                                        requireContext(), R.color.semi_transparent_dark
-                                    )
+                        } else {
+                            val transparentView = View(context)
+                            transparentView.setBackgroundColor(
+                                ContextCompat.getColor(
+                                    requireContext(), R.color.semi_transparent_dark
                                 )
-                                val viewParams = RelativeLayout.LayoutParams(
-                                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                                    RelativeLayout.LayoutParams.MATCH_PARENT
-                                )
-                                val vc = VerificationBottomSheet()
-                                vc.viewToDelete = transparentView
-                                vc.mainView = getView()?.rootView as ViewGroup
-                                vc.viewModel = viewModel
-                                vc.arguments = Bundle().apply {
-                                    putString(Constants.TYPE, Constants.GOOGLE)
-                                    putString("changeType", Constants.EMAIL)
-                                }
-                                vc.show(childFragmentManager, App.prefsManager.user?.type2FA)
-                                val mainView = getView()?.rootView as ViewGroup
-                                mainView.addView(transparentView, viewParams)
-
-                            }else
-                                getString(R.string.you_must_install_authenticator).showToast(requireContext())
-                             }
+                            )
+                            val viewParams = RelativeLayout.LayoutParams(
+                                RelativeLayout.LayoutParams.MATCH_PARENT,
+                                RelativeLayout.LayoutParams.MATCH_PARENT
+                            )
+                            val vc = VerificationBottomSheet()
+                            vc.viewToDelete = transparentView
+                            vc.mainView = getView()?.rootView as ViewGroup
+                            vc.viewModel = viewModel
+                            vc.arguments = Bundle().apply {
+                                putString(Constants.TYPE, Constants.GOOGLE)
+                                putString("changeType", Constants.EMAIL)
+                            }
+                            vc.show(childFragmentManager, App.prefsManager.user?.type2FA)
+                            val mainView = getView()?.rootView as ViewGroup
+                            mainView.addView(transparentView, viewParams)
+                        }
                     }
                 }
 
                 rlBySms -> {
-                    if(App.prefsManager.user?.type2FA!=Constants.PHONE) {
-                        if(App.prefsManager.user?.type2FA!=Constants.GOOGLE){
-                        CommonMethods.showProgressDialog(requireContext())
-                        var json = """{"type2FA" : "phone"}""".trimMargin()
-                        val detail = encodeToBase64(json)
-                        scopeType = Constants.TYPE
-                        clickedOn = Constants.PHONE
-                        viewModel.switchOffAuthentication(detail, scopeType)}
-                        else{
-                            if(isAuthenticatorAppInstalled()){
-                                qrCodeUrl.let { urlString ->
-                                    try {
-                                        val uriString = urlString
-                                        val intent = Intent(Intent.ACTION_VIEW, Uri.parse(uriString))
-
-                                        try {
-                                            startActivity(intent)
-                                        } catch (e: ActivityNotFoundException) {
-                                            e.printStackTrace()
-                                        }
-                                    } catch (e: MalformedURLException) {
-                                        // Handle the case where the URL is malformed
-                                        e.printStackTrace()
-                                    }
-                                }
+                    if (App.prefsManager.user?.type2FA != Constants.PHONE) {
+                        if (App.prefsManager.user?.type2FA != Constants.GOOGLE) {
+                            CommonMethods.showProgressDialog(requireContext())
+                            var json = """{"type2FA" : "phone"}""".trimMargin()
+                            val detail = encodeToBase64(json)
+                            scopeType = Constants.TYPE
+                            clickedOn = Constants.PHONE
+                            viewModel.switchOffAuthentication(detail, scopeType)
+                        } else {
                             val transparentView = View(context)
                             transparentView.setBackgroundColor(
                                 ContextCompat.getColor(
@@ -356,10 +315,9 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                             vc.show(childFragmentManager, App.prefsManager.user?.type2FA)
                             val mainView = getView()?.rootView as ViewGroup
                             mainView.addView(transparentView, viewParams)
-                        }else{
-                                getString(R.string.you_must_install_authenticator).showToast(requireContext())
-                         }
-                    }}
+
+                        }
+                    }
                 }
             }
         }
