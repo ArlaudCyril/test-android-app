@@ -199,15 +199,15 @@ class SelectAssestForBuy : BaseFragment<FragmentAllAssetsBinding>(), View.OnClic
     }
 
     private fun assetClicked(asset: PriceServiceResume) {
-       /* val balance =BaseActivity.balances.find { it1 -> it1.id == "usdt"}
+       val balance =BaseActivity.balances.find { it1 -> it1.id == "usdt"}
         if (balance!=null){
             viewModel.exchangeAssetTo = asset.id
             viewModel.exchangeAssetFrom = "usdt"
             findNavController().navigate(R.id.addAmountForExchangeFragment)
         }else{
             showDialog()
-        }*/
-        showDialog()
+        }
+        //showDialog()
 
 
     }

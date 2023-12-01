@@ -36,6 +36,8 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
     private var orderId: String = ""
     private lateinit var googlePayLauncher: GooglePayLauncher
     private lateinit var viewModel: PortfolioViewModel
+    private var isTimerRunning = false
+    private lateinit var handler:Handler
     override fun bind() = FragmentMyPurchaseBinding.inflate(layoutInflater)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -45,6 +47,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
         binding.ivTopAction.setOnClickListener(this)
         binding.tvMoreDetails.setOnClickListener(this)
         binding.btnConfirmInvestment.setOnClickListener(this)
+        handler = Handler()
          googlePayLauncher = GooglePayLauncher(
             fragment = this@PreviewMyPurchaseFragment,
             config = GooglePayLauncher.Config(
@@ -65,6 +68,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
                 getData()
             }
         }
+        getData()
     }
 
     private fun onGooglePayReady(isReady: Boolean) {
@@ -89,10 +93,6 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
                 // Operation failed; inspect `result.error` for the exception
             }
         }
-    }
-    override fun onResume() {
-        super.onResume()
-        getData()
     }
 
 
@@ -145,12 +145,14 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
                 .div(balance.balanceData.balance.toDouble())
             tvValueDepositFee.text = data.fees+" "+Constants.EURO
             tvValueTotal.text = "${data.fromAmount+" "+ Constants.EURO}"
-            tvValuePrice.text = data.ratio+Constants.EURO
+            tvValuePrice.text = data.ratio.formattedAsset(priceCoin,RoundingMode.DOWN)+" "+Constants.EURO
             tvTotalAmount.text = "${data.fromAmount+" "+ Constants.EURO}"
             tvValueDeposit.text = ""+(data.fromAmount.toDouble() - data.fees.toDouble())+" "+Constants.EURO
             tvAmount.text = "${data.toAmount.formattedAsset(priceCoin,RoundingMode.DOWN)+" "+ "USDT"}"
             btnConfirmInvestment.isEnabled = true
             timer = ((data.validTimestamp.toLong() - System.currentTimeMillis())/1000).toInt()
+
+            handler.removeCallbacks(runnable)
             startTimer()
             title.text = getString(R.string.confirm_purchase)
 
@@ -160,19 +162,24 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
 
 
     private fun startTimer() {
+
         try {
-            Handler(Looper.getMainLooper()).postDelayed({
-                if (lifecycle.currentState == Lifecycle.State.RESUMED)
-                    if (timer == 0) {
-                        ErrorBottomSheet(::dismissList).show(childFragmentManager, "")
-                    } else {
-                        timer -= 1
-                        binding.tvTimer.text = "You have $timer seconds to confirm this purchase."
-                        startTimer()
-                    }
-            }, 1000)
+            handler.postDelayed(runnable, 1000)
         }catch (e:Exception){
             e.printStackTrace()
+        }
+    }
+    private val runnable = Runnable {
+        isTimerRunning = true
+        if (timer == 0) {
+
+            ErrorBottomSheet(::dismissList).show(childFragmentManager, "")
+
+
+        } else {
+            timer -= 1
+            binding.tvTimer.text = getString(R.string.you_have_seconds_to_confirm_this_purchase, timer.toString())
+            startTimer()
         }
     }
 

@@ -608,4 +608,5 @@
     <string name="pay">Pay</string>
     <string name="oops">Oops!</string>
     <string name="purchase_error">The deadline for confirming your purchase has passed. Would you like to receive a new proposal?</string>
+    <string name="you_have_seconds_to_confirm_this_purchase">You have %1$s seconds to confirm this purchase.</string>
 </resources>
