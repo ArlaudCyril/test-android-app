@@ -17,6 +17,7 @@ class InvestWithStrategyBottomSheet (val clickListener: (Int) -> Unit) :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        isCancelable = false
         binding.tvSubTitleAdjust.setOnClickListener(this)
         binding.tvTitleAdjust.setOnClickListener(this)
         binding.ivAdjust.setOnClickListener(this)
@@ -81,7 +82,10 @@ class InvestWithStrategyBottomSheet (val clickListener: (Int) -> Unit) :
         binding.apply {
             when (v!!) {
 
-                ivTopAction -> dismiss()
+                ivTopAction -> {
+                    clickListener(-1)
+                    dismiss()
+                }
                 tvSubTitleAdjust, tvTitleAdjust, ivAdjust -> {
                     clickListener(0)
                     dismiss()

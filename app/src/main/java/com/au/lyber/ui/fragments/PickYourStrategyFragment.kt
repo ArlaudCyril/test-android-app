@@ -115,6 +115,7 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
     private fun itemClicked(position: Int) {
         viewModel.selectedStrategy = adapter.getItem(position)
         adapter.markSelected(position)
+        binding.recyclerViewStrategies.smoothScrollToPosition(position)
         val transparentView = View(context)
         transparentView.setBackgroundColor(
             ContextCompat.getColor(
@@ -144,6 +145,9 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
 
     private fun clicked(type: Int) {
         when(type){
+            -1->{
+                adapter.markSelected(-1)
+            }
             0->{findNavController().navigate(R.id.investAddMoneyFragment)}
             1->{
                 checkInternet(requireActivity()){
