@@ -71,6 +71,7 @@ import okhttp3.ResponseBody
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.lang.NumberFormatException
 import java.math.RoundingMode
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
@@ -802,61 +803,70 @@ class CommonMethods {
 
         val String.currencyFormatted: SpannableString
             get() = kotlin.run {
-                if(this.isEmpty()){
-                    SpannableString("0.00"+Constants.EURO)
-                }else{
-                    val value: Double = this.toDouble()
-                    var numberZerosLeft = 0 // we count also the coma
-                    var formatter = DecimalFormat()
-                    if (value > 10000) {
-                        formatter.maximumFractionDigits = 0
-                        formatter.minimumFractionDigits = 0
-                    } else if (value > 1000) {
-                        formatter.maximumFractionDigits = 1
-                        formatter.minimumFractionDigits = 1
-                    } else if (value > 1) {
-                        formatter.maximumFractionDigits = 2
-                        formatter.minimumFractionDigits = 2
-                    } else if (value > 0.1) {
-                        numberZerosLeft = 2
-                        formatter.maximumFractionDigits = 3
-                        formatter.minimumFractionDigits = 3
-                    } else if (value > 0.01) {
-                        numberZerosLeft = 3
-                        formatter.maximumFractionDigits = 4
-                        formatter.minimumFractionDigits = 4
-                    } else if (value > 0.001) {
-                        numberZerosLeft = 4
-                        formatter.maximumFractionDigits = 5
-                        formatter.minimumFractionDigits = 5
-                    } else if (value > 0.0001) {
-                        numberZerosLeft = 5
-                        formatter.maximumFractionDigits = 6
-                        formatter.minimumFractionDigits = 6
-                    } else if (value > 0.00001) {
-                        numberZerosLeft = 6
-                        formatter.maximumFractionDigits = 7
-                        formatter.minimumFractionDigits = 7
-                    } else if (value > 0.000001) {
-                        numberZerosLeft = 7
-                        formatter.maximumFractionDigits = 8
-                        formatter.minimumFractionDigits = 8
-                    } else if (value > 0.0000001) {
-                        numberZerosLeft = 8
-                        formatter.maximumFractionDigits = 9
-                        formatter.minimumFractionDigits = 9
-                    } else if (value > 0.00000001) {
-                        numberZerosLeft = 9
-                        formatter.maximumFractionDigits = 10
-                        formatter.minimumFractionDigits = 10
-                    }
+                if (this.isEmpty()) {
+                    SpannableString("0.00" + Constants.EURO)
+                } else {
+                    try {
+                        var value: Double = 0.0
+                        if (this.contains(","))
+                            value = this.replace(",", "").toDouble()
+                        else
+                            value = this.toDouble()
+                        var numberZerosLeft = 0 // we count also the coma
+                        var formatter = DecimalFormat()
+                        if (value > 10000) {
+                            formatter.maximumFractionDigits = 0
+                            formatter.minimumFractionDigits = 0
+                        } else if (value > 1000) {
+                            formatter.maximumFractionDigits = 1
+                            formatter.minimumFractionDigits = 1
+                        } else if (value > 1) {
+                            formatter.maximumFractionDigits = 2
+                            formatter.minimumFractionDigits = 2
+                        } else if (value > 0.1) {
+                            numberZerosLeft = 2
+                            formatter.maximumFractionDigits = 3
+                            formatter.minimumFractionDigits = 3
+                        } else if (value > 0.01) {
+                            numberZerosLeft = 3
+                            formatter.maximumFractionDigits = 4
+                            formatter.minimumFractionDigits = 4
+                        } else if (value > 0.001) {
+                            numberZerosLeft = 4
+                            formatter.maximumFractionDigits = 5
+                            formatter.minimumFractionDigits = 5
+                        } else if (value > 0.0001) {
+                            numberZerosLeft = 5
+                            formatter.maximumFractionDigits = 6
+                            formatter.minimumFractionDigits = 6
+                        } else if (value > 0.00001) {
+                            numberZerosLeft = 6
+                            formatter.maximumFractionDigits = 7
+                            formatter.minimumFractionDigits = 7
+                        } else if (value > 0.000001) {
+                            numberZerosLeft = 7
+                            formatter.maximumFractionDigits = 8
+                            formatter.minimumFractionDigits = 8
+                        } else if (value > 0.0000001) {
+                            numberZerosLeft = 8
+                            formatter.maximumFractionDigits = 9
+                            formatter.minimumFractionDigits = 9
+                        } else if (value > 0.00000001) {
+                            numberZerosLeft = 9
+                            formatter.maximumFractionDigits = 10
+                            formatter.minimumFractionDigits = 10
+                        }
 
-                    val stringFormatted = formatter.format(value)+Constants.EURO
-                    val ss1 = SpannableString(stringFormatted)
-                    ss1.setSpan(RelativeSizeSpan(0.8f), 0, numberZerosLeft, 0) // set size
-                    ss1
+                        val stringFormatted = formatter.format(value) + Constants.EURO
+                        val ss1 = SpannableString(stringFormatted)
+                        ss1.setSpan(RelativeSizeSpan(0.8f), 0, numberZerosLeft, 0) // set size
+                        ss1
+                    } catch (ex: NumberFormatException) {
+                        SpannableString("0.00" + Constants.EURO)
+                    }
                 }
             }
+
 
         fun String.formattedAsset(price: Double?, rounding : RoundingMode): String {
              if (this == "" || price == null || price == 0.0 || price.isNaN()) {
