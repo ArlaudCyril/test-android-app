@@ -1140,13 +1140,7 @@ class CommonMethods {
 
         val ImageView.setProfile: Unit
             get() = kotlin.run {
-//                if (prefsManager.haveDefaultImage) {
-//                    updatePadding(8.px, 8.px, 8.px, 8.px)
-//                    setImageResource(Constants.defaults[prefsManager.defaultImage])
-//                } else if (!prefsManager.user?.profile_pic.isNullOrEmpty()) {
-//                    updatePadding(2.px, 2.px, 2.px, 2.px)
-//                    loadImage(prefsManager.user?.profile_pic ?: "")
-//                } else setImageResource(R.drawable.ic_profile)
+                setImageResource(Constants.defaults[prefsManager.defaultImage])
             }
 
         val List<List<Double>>.lineData: MutableList<Float>
