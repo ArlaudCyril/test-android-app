@@ -631,7 +631,28 @@ data class User(
     val profilePicType: String,
     val strongAuthentification: Boolean,
     val uuid: String,
-    val scope2FA: MutableList<String>
+
+    val accountClosed: Boolean,
+    val avatar: String,
+    val birthDate: String,
+    val birthPlace: String,
+    val blacklisted: Boolean,
+    val canDeposit: Boolean,
+    val canTrade: Boolean,
+    val canWithdraw: Boolean,
+    val city: String,
+    val country: String,
+    val isBlocked: Boolean,
+    val language: String,
+    val registeredAt: String,
+    val scope2FA: List<String>,
+    val street: String,
+    val streetNumber: String,
+    val type2FA: String,
+    val verified: Boolean,
+    val withdrawalLock: String,
+    val zipCode: String
+
 )
 
 data class JWTPayload(
@@ -673,4 +694,17 @@ data class BalanceData(
 data class Balance(
     val id: String,
     val balanceData: BalanceData
+)
+data class BooleanResponse(
+    val success:Boolean
+)
+data class UpdateAuthenticateResponse(
+    val success:Boolean
+)
+data class QrCodeResponse(
+    val `data`: QR
+)
+
+data class QR(
+    val url: String
 )

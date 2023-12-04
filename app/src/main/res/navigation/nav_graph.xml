@@ -124,8 +124,20 @@
         android:id="@+id/profileFragment"
         android:name="com.au.lyber.ui.fragments.ProfileFragment"
         android:label="ProfileFragment" >
+        <action
+            android:id="@+id/profileFragment_to_strongAuthentication"
+            app:destination="@+id/strongAuthentication"/>
 
     </fragment>
+    <fragment
+        android:id="@+id/strongAuthentication"
+        android:name="com.au.lyber.ui.fragments.StrongAuthenticationFragment"
+        android:label="StrongAuthentication">
+        <action
+            android:id="@+id/strongAuthentication_to_twoFactorAuthentication"
+            app:destination="@+id/twoFactorAuthentication"/>
+    </fragment>
+
     <fragment
         android:id="@+id/addAmountFragment"
         android:name="com.au.lyber.ui.fragments.AddAmountFragment"
@@ -299,21 +311,11 @@
         android:name="com.au.lyber.ui.fragments.VerifyYourIdentityFragment"
         android:label="VerifyYourIdentityFragment" />
     <fragment
-        android:id="@+id/codeScannerFragment"
-        android:name="com.au.lyber.ui.fragments.CodeScannerFragment"
-        android:label="CodeScannerFragment" />
-    <fragment
-        android:id="@+id/enableWhiteListingFragment"
-        android:name="com.au.lyber.ui.fragments.EnableWhiteListingFragment"
-        android:label="EnableWhiteListingFragment" />
-    <fragment
-        android:id="@+id/emailAddressFragment"
-        android:name="com.au.lyber.ui.fragments.EmailAddressFragment"
-        android:label="EmailAddressFragment" />
-    <fragment
-        android:id="@+id/investAddMoneyFragment"
-        android:name="com.au.lyber.ui.fragments.InvestAddMoneyFragment"
-        android:label="InvestAddMoneyFragment" />
+
+        android:id="@+id/twoFactorAuthentication"
+        android:name="com.au.lyber.ui.fragments.TwoFactorAuthenticationFragment"
+        android:label="TwoFactorAuthenticationFragment" />
+
     <dialog
         android:id="@+id/portfolioThreeDots"
         android:name="com.au.lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDots"
