@@ -7,12 +7,9 @@ import android.os.Handler
 import android.os.Looper
 import android.util.DisplayMetrics
 import android.util.Log
-import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.View.OnClickListener
-import android.widget.ArrayAdapter
 import android.widget.ListPopupWindow
-import android.widget.PopupWindow
 import androidx.lifecycle.Lifecycle
 import com.au.lyber.databinding.FragmentExportOperationsBinding
 import com.au.lyber.ui.adapters.CustomArrayAdapter

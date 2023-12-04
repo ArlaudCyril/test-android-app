@@ -1302,18 +1302,23 @@ class CommonMethods {
             val startDateTime = LocalDate.parse(startDate, formatter)
             val endDateTime = LocalDate.parse(endDate, formatter)
 
+
+
+
             val period = Period.between(startDateTime, endDateTime)
             val months = period.toTotalMonths().toInt()
 
+            val days = period.days
+
             val result = mutableListOf<String>()
 
-            var currentMonth = startDateTime
-            for (i in 0..months) {
-                result.add("${currentMonth.month.toString().lowercase().replaceFirstChar { it.uppercase() }} ${currentMonth.year}")
-                currentMonth = currentMonth.plusMonths(1)
+            var currentDate = startDateTime
+            for (i in 0..days) {
+                result.add("${currentDate.month.toString().lowercase().replaceFirstChar { it.uppercase() }} ${currentDate.year}")
+                currentDate = currentDate.plusDays(1)
             }
 
-            return result
+            return result.distinct()
         }
         fun getMonthsAndYearsBetween(startDate: String, endDate: String): List<String> {
             val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
