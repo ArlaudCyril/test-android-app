@@ -2,6 +2,9 @@ package com.au.lyber.models
 
 import com.au.lyber.R
 import com.github.mikephil.charting.data.Entry
+import com.google.gson.annotations.Expose
+
+import com.google.gson.annotations.SerializedName
 
 
 /* api responses */
@@ -13,9 +16,15 @@ data class ErrorResponse(
     val type: String
 )
 
-data class CommonResponse(val success: String, val message: String)
+data class CommonResponse(val success: String, val message: String, val withdrawalId: String)
+
+data class CommonResponseVerfiy(val success: String, val message: String, val withdrawalId: String)
 
 data class MessageResponse(
+    val message: String,
+    val msg: String
+)
+data class MessageResponsePause(
     val message: String,
     val msg: String
 )
@@ -130,34 +139,42 @@ data class UserTreezor(
 
 
 data class StrategiesResponse(
-    val strategies: List<Strategy>
+    val data: List<Strategy>
 )
 
 data class Strategy(
-    val __v: Int,
-    val _id: String,
-    val is_own_strategy: Int = 0,
-    val created_at: String,
-    val investment_strategy_assets: List<InvestmentStrategyAsset>,
-    val risk: String,
-    val status: String? = "",
-    val updated_at: Any,
-    val yield: Int,
-    val is_chosen: Int
+    val name: String,
+    val bundle: MutableList<InvestmentStrategyAsset>,
+    val ownerUuid: String,
+    val publicType: String,
+    val strategyType: String,
+    val risk: String?,
+    val expectedYield: String?,
+    var isSelected: Boolean = false,
+    var activeStrategy: ActiveStrategy?=null
 )
+
+class ActiveStrategy {
+    @SerializedName("amount")
+    @Expose
+    var amount: Int? = null
+
+    @SerializedName("frequency")
+    @Expose
+    var frequency: String? = null
+}
 
 data class InvestmentStrategyAsset(
-    val __v: Int = 0,
-    val _id: String,
-    val allocation: Float,
-    val asset_id: String,
-    val created_at: String = System.currentTimeMillis().toString(),
-    val investment_strategy_id: String = "",
-    val updated_at: Any = ""
+    val share: Float,
+    val asset: String
 )
 
 
-data class AddedAsset(val addAsset: Data, var allocation: Float)
+data class AddedAsset(
+    val addAsset: PriceServiceResume,
+    var allocation: Float,
+    var isChangedManually: Boolean = false
+)
 
 data class AddAsset(
     val asset: Asset,
@@ -285,23 +302,27 @@ data class CoinsResponse(
     val message: String,
     val success: Boolean
 )
+
 data class GetQuoteResponse(
     val code: Int,
     val data: DataQuote?,
     val message: String,
     val success: Boolean
 )
-data class DataQuote(val quoteId:String,
-    val ratio:String,
-    val inverseRatio:String,
-    val validTimestamp:String,
-    val toAmount:String,
-    val fromAmount:String,
-    val fromAmountDeductedFees:String,
-    val fees :String,
-    val orderId:String,
-    val fromAsset:String,
-    val toAsset:String)
+
+data class DataQuote(
+    val quoteId: String,
+    val ratio: String,
+    val inverseRatio: String,
+    val validTimestamp: String,
+    val toAmount: String,
+    val fromAmount: String,
+    val fromAmountDeductedFees: String,
+    val fees: String,
+    val orderId: String,
+    val fromAsset: String,
+    val toAsset: String
+)
 
 data class Data(
     val ath: Double,
@@ -419,17 +440,21 @@ data class Whitelistings(
 )
 
 data class NetworksResponse(
-    val networks: List<Network>
+    val data: List<Network>
+)
+
+data class NetworkResponse(
+    val data: Network
 )
 
 data class Network(
     val __v: Int = 1100,
-    val _id: String = "",
-    val asset_id: String,
-    val createdAt: Long = System.currentTimeMillis(),
-    val is_deleted: Boolean = false,
-    val logo: String,
-    val name: String
+    val id: String = "",
+    val addressRegex: String = "",
+    val depositStatus: Boolean = false,
+    val withdrawalStatus: Boolean = false,
+    val imageUrl: String = "",
+    val fullName: String = ""
 )
 
 data class ExchangeListingResponse(
@@ -499,7 +524,7 @@ data class AssetDetailBaseData(
     val isStablecoin: Boolean,
     val isDepositActive: Boolean,
     val isWithdrawalActive: Boolean,
-    val networks:MutableList<NetworkDeposit>
+    val networks: MutableList<NetworkDeposit>
 )
 
 data class NetworkDeposit(
@@ -509,8 +534,8 @@ data class NetworkDeposit(
     val imageUrl: String,
     val isUIActive: Boolean,
     val binanceId: String,
-    val withdrawMin: Float,
-    val withdrawFee: Float,
+    val withdrawMin: String,
+    val withdrawFee: String,
     val isDepositActive: Boolean,
     val isWithdrawalActive: Boolean
 )
@@ -577,9 +602,10 @@ data class ChallengeResponse(
 data class UserLoginResponse(
     val data: LoginData
 )
+
 data class GetAddress(val data: Address)
 
-data class Address(val address:String)
+data class Address(val address: String)
 data class LoginData(
     val access_token: String,
     val refresh_token: String,
@@ -591,6 +617,9 @@ data class SetPhoneResponse(val data: DataNew)
 data class DataNew(val token: String)
 
 data class GetUserResponse(val data: User)
+data class KYCResponse(val data: KYCData)
+
+data class KYCData(val url: String)
 
 data class User(
     val email: String,
@@ -602,6 +631,7 @@ data class User(
     val profilePicType: String,
     val strongAuthentification: Boolean,
     val uuid: String,
+
     val accountClosed: Boolean,
     val avatar: String,
     val birthDate: String,
@@ -622,6 +652,7 @@ data class User(
     val verified: Boolean,
     val withdrawalLock: String,
     val zipCode: String
+
 )
 
 data class JWTPayload(

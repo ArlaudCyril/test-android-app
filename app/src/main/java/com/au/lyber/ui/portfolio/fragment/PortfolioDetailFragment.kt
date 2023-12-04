@@ -112,7 +112,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         /* initializing adapters for recycler views */
         adapterBalance = BalanceAdapter()
         resourcesAdapter = ResourcesAdapter()
-        assetBreakdownAdapter = BalanceAdapter(isAssetBreakdown = true)
+        assetBreakdownAdapter = BalanceAdapter()
 
         binding.apply {
 
@@ -360,16 +360,14 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
             "withdraw" -> {
                 viewModel.selectedOption = Constants.USING_WITHDRAW
-                if (viewModel.screenCount == 0) {
-                    requireActivity().replaceFragment(
-                        R.id.flSplashActivity, SwapWithdrawFromFragment(), topBottom = true
-                    )
-                } else {
-                    viewModel.withdrawAsset = viewModel.selectedAsset
-                    requireActivity().replaceFragment(
-                        R.id.flSplashActivity, AddAmountFragment(), topBottom = true
-                    )
-                }
+                val currency = viewModel.selectedAsset
+                //if (currency!!.isWithdrawalActive){
+                    val bundle = Bundle()
+                    bundle.putString(Constants.ID, currency!!.id)
+                    findNavController().navigate(R.id.withdrawlNetworksFragment, bundle)
+              //  }else{
+                 //   getString(R.string.withdrawal_is_deactivated_on_this_asset).showToast(requireActivity())
+              //  }
             }
 
             "deposit" -> {
@@ -419,7 +417,12 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 llThreeDot -> {
                     val portfolioThreeDotsFragment = PortfolioThreeDots(::menuOptionSelected)
                     portfolioThreeDotsFragment.dismissListener = this@PortfolioDetailFragment
-                    portfolioThreeDotsFragment.typePopUp = "AssetPopUp"
+                    if (CommonMethods.getBalance(viewModel.selectedAsset!!.id!!) != null){
+                        portfolioThreeDotsFragment.typePopUp = "AssetPopUpWithdraw"
+                    }else{
+                        portfolioThreeDotsFragment.typePopUp = "AssetPopUpWithdraw"
+                    }
+
                     portfolioThreeDotsFragment.show(
                         childFragmentManager,
                         "PortfolioThreeDots"

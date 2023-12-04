@@ -8,9 +8,11 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
+
     <uses-permission android:name="android.permission.GET_PACKAGE_SIZE" />
     <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
+
     <uses-feature
         android:name="android.hardware.camera"
         android:required="true" />
@@ -21,7 +23,8 @@
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        />
 
     <application
         android:name=".utils.App"
@@ -42,10 +45,8 @@
         <activity
             android:name=".ui.activities.SplashActivity"
             android:exported="true"
-
-
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustResize|stateVisible"
+            android:windowSoftInputMode="adjustPan"
             tools:ignore="LockedOrientationActivity">
 
             <intent-filter>
@@ -72,6 +73,12 @@
             android:exported="true"
 
 
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="adjustResize|stateVisible"
+            tools:ignore="LockedOrientationActivity"/>
+        <activity
+            android:name=".ui.activities.WebViewActivity"
+            android:exported="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateVisible"
             tools:ignore="LockedOrientationActivity"/>

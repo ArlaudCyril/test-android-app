@@ -1,13 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/white"
     android:fitsSystemWindows="true">
 
-
-    <!--android:background="@drawable/curved_button"-->
 
     <ImageView
         android:id="@+id/ivTopAction"
@@ -86,11 +84,16 @@
         android:id="@+id/llBottom"
         android:layout_width="match_parent"
         android:layout_height="164dp"
+        android:layout_marginHorizontal="16dp"
         android:layout_alignParentBottom="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/top_curved_layout"
-        android:backgroundTint="@color/purple_gray_00"
+        android:fitsSystemWindows="false"
         android:orientation="vertical"
-        android:paddingHorizontal="24dp">
+        android:paddingHorizontal="12dp"
+        android:paddingTop="24dp"
+        android:translationZ="8dp">
 
         <TextView
             android:id="@+id/btnSaveMyStrategy"
@@ -107,22 +110,11 @@
             android:id="@+id/tvInitialInfo"
             style="@style/SubTitleText"
             android:gravity="center"
+            android:layout_gravity="center"
             android:lineSpacingExtra="4dp"
             android:paddingHorizontal="12dp"
             android:text="@string/save_strategy_caption"
             android:textAppearance="@style/TextAppearance.AppCompat.Caption" />
-
-        <TextView
-            android:id="@+id/tvNumberAssets"
-            style="@style/SubTitleText"
-            android:layout_gravity="center_horizontal"
-            android:gravity="center"
-            android:lineSpacingExtra="4dp"
-            android:paddingHorizontal="12dp"
-            android:text=""
-            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
-            android:textStyle="bold"
-            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tvAllocationInfo"
