@@ -177,8 +177,9 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 //        binding.tvViewAllTransaction.setOnClickListener(this)
 //        binding.tvAddPaymentMethod.setOnClickListener(this)
         binding.tvLogout.setOnClickListener(this)
-//        binding.llStrongAuthentication.setOnClickListener(this)
-       binding.rlAddressBook.setOnClickListener(this)
+
+        binding.llStrongAuthentication.setOnClickListener(this)
+
         binding.ivProfile.setOnClickListener(this)
 //        binding.llNotification.setOnClickListener(this)
 
@@ -284,10 +285,11 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 
                 rlAddressBook -> findNavController().navigate(R.id.addAddressBookFragment)
 
-                llStrongAuthentication -> requireActivity().replaceFragment(
-                    R.id.flSplashActivity,
-                    StrongAuthenticationFragment()
-                )
+                llStrongAuthentication ->findNavController().navigate(R.id.strongAuthentication)
+//                    requireActivity().replaceFragment(
+//                    R.id.flSplashActivity,
+//                    StrongAuthenticationFragment()
+//                )
 
                 ivTopAction -> requireActivity().onBackPressed()
 

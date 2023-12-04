@@ -223,6 +223,13 @@ open class NetworkViewModel : ViewModel() {
     private val _kycResponse = MutableLiveData<KYCResponse>()
     val kycResponse get() = _kycResponse
 
+    private var _booleanResponse: MutableLiveData<BooleanResponse> = MutableLiveData()
+    val booleanResponse get() = _booleanResponse
+
+    private var _updateAuthenticateResponse: MutableLiveData<UpdateAuthenticateResponse> = MutableLiveData()
+    val updateAuthenticateResponse get() = _updateAuthenticateResponse
+    private var _qrCodeResponse: MutableLiveData<QrCodeResponse> = MutableLiveData()
+    val qrCodeResponse get() = _qrCodeResponse
     fun cancelJob() {
 
     }
@@ -1105,4 +1112,32 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
+    fun updateAuthentication(hash: HashMap<String,Any>){
+        viewModelScope.launch(exceptionHandler) {
+
+            val res = RestClient.get(Constants.NEW_BASE_URL).updateUserAuthentication(hash)
+            if (res.isSuccessful)
+                _updateAuthenticateResponse.postValue(res.body())
+
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+    fun switchOffAuthentication(detail: String,scope:String){
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).switchOffAuthentication(detail,scope)
+            if (res.isSuccessful)
+                _booleanResponse.postValue(res.body())
+
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+    fun qrCodeUrl(){
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).getQrUrl()
+            if (res.isSuccessful)
+                _qrCodeResponse.postValue(res.body())
+
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
 }
