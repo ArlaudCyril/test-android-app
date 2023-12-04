@@ -17,9 +17,20 @@
         android:layout_marginStart="8dp"
         android:backgroundTint="@color/purple_gray_50"
         android:padding="12dp"
-        android:src="@drawable/ic_close"
+        android:src="@drawable/ic_back"
         app:layout_constraintBottom_toTopOf="@id/topGuide"
         app:layout_constraintStart_toStartOf="parent"
+        app:tint="@color/purple_gray_800" />
+    <ImageView
+        android:id="@+id/ivTopActionClear"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:backgroundTint="@color/purple_gray_50"
+        android:padding="12dp"
+        android:src="@drawable/ic_close"
+        app:layout_constraintBottom_toTopOf="@id/topGuide"
+        app:layout_constraintEnd_toEndOf="parent"
         app:tint="@color/purple_gray_800" />
 
 

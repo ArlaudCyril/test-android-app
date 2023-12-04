@@ -1,10 +1,18 @@
 package com.au.lyber.utils
 
+import android.accounts.Account
 import com.au.lyber.R
 import okhttp3.internal.connection.Exchange
 
 object Constants {
-    const val ORDER_ID:String = "order_id"
+
+    const val IS_CHANGE_PIN: String = "changePin"
+    const val FREQUENCY: String = "frequency"
+    const val AMOUNT: String = "amount"
+    const val URL: String="KYCURL"
+    const val IS_REVIEW: String = "isReview"
+    const val ORDER_ID: String = "order_id"
+    const val ID: String ="ID"
     const val LOADING: Int = 0
     const val LOADING_SUCCESS: Int = 1
     const val LOADING_FAILURE: Int = 2
@@ -19,6 +27,10 @@ object Constants {
     const val INVESTMENT_EXP = 5
 
     const val ACCOUNT_CREATED = 1
+    const val ACCOUNT_CREATING = 6
+    const val Account_CREATION_STEP_PHONE = 1
+    const val Account_CREATION_STEP_EMAIL = 2
+    const val Account_CREATION_STEP_CREATE_PIN = 3
     const val PERSONAL_DATA_FILLED = 2
     const val KYC_COMPLETED = 3
     const val PROFILE_COMPLETED = 4
@@ -47,6 +59,7 @@ object Constants {
     const val USING_SINGULAR_ASSET = "using_singular_asset"
     const val USING_DEPOSIT = "using_deposit"
     const val USING_WITHDRAW = "using_withdraw"
+    const val ACTION_WITHDRAW = "withdraw"
     const val SINGULAR = "SINGULAR"
     const val TO_EDIT = "toEdit"
     const val USING_EXCHANGE = "using_exchange"
@@ -68,9 +81,9 @@ object Constants {
     const val STABLE_COINS = "stable_coins"
 
     /*  whitelisting duartion  */
-    const val HOURS_72 = "72_HOURS"
-    const val HOURS_24 = "24_HOURS"
-    const val NO_EXTRA_SECURITY = "NO_EXTRA_SECURITY"
+    const val HOURS_72 = "3d"
+    const val HOURS_24 = "1d"
+    const val NO_EXTRA_SECURITY = "none"
 
     const val JPEG_FILE_PREFIX: String = "IMG_"
     const val JPEG_FILE_SUFFIX: String = ".jpg"
@@ -132,11 +145,11 @@ object Constants {
 
     val colors = mutableListOf<Int>().apply {
         add(R.color.purple_800)
-//        add(R.color.purple_700)
+       add(R.color.purple_700)
         add(R.color.purple_600)
-//        add(R.color.purple_500)
+        add(R.color.purple_500)
         add(R.color.purple_400)
-//        add(R.color.purple_300)
+       add(R.color.purple_300)
         add(R.color.purple_200)
         add(R.color.purple_100)
         add(R.color.purple_00)

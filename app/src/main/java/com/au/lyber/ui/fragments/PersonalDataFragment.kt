@@ -9,6 +9,9 @@ import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import com.au.countrycodepicker.CountryPicker
 import com.au.lyber.databinding.FragmentPersonalDataBinding
+import com.au.lyber.models.PersonalDataLocal
+import com.au.lyber.ui.fragments.dialogs.DateTimePicker
+import com.au.lyber.utils.App
 import com.au.lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.getViewModel
 import com.au.lyber.utils.CommonMethods.Companion.requestKeyboard
@@ -28,8 +31,11 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding>(), View.O
     private val specifiedUsPerson: String get() = binding.etSpecifiedUsPerson.text.trim().toString()
 
     private var birthCountry: String = ""
+    private var birthCountryLocal: String = ""
     private var birthDate: String = ""
+    private var birthDateLocal: String = ""
     private var nationality: String = ""
+    private var nationalityLocal: String = ""
 
     private lateinit var specifiedUsPersonAdapter: ArrayAdapter<String>
 
@@ -55,31 +61,24 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding>(), View.O
 
         viewModel = getViewModel(requireParentFragment())
 
-        viewModel.personDataResponse.observe(viewLifecycleOwner) {
+        if (viewModel.isReview){
+            binding.apply {
+                App.prefsManager.personalDataLocal.let {
+                    etFirstName.setText(it!!.firstName)
+                    etLastName.setText(it.lastName)
+                    etBirthPlace.setText(it.birthPlace)
+                    etBirthDate.setText(it.birthDateLocal)
+                    etBirthCountry.setText(it.birthCountry)
+                    etNationality.setText(it.nationality)
+                    etSpecifiedUsPerson.setText(it.specifiedUsPerson.toString())
+                    nationality = it.nationalityCode
+                    nationalityLocal = it.nationality
+                    birthCountry = it.birthCountryCode
+                    birthCountryLocal = it.birthCountry
+                    birthDate = it.birthDate
+                }
 
-            dismissProgressDialog()
-            viewModel.personalData = it
-
-//            binding.etFirstName.setText(it.first_name)
-//            binding.etLastName.setText("${it.last_name}")
-
-//            val countryBirth = CountryPicker.getCountryName(it.birth_country)
-//            birthCountry = countryBirth.code
-//            binding.etBirthCountry.setText(countryBirth.name)
-
-//            binding.etBirthPlace.setText(it.birth_place)
-            val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-            val outputFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
-
-//            birthDate = it.dob
-            binding.etBirthDate.setText(outputFormat.format(inputFormat.parse(birthDate) ?: ""))
-
-//            binding.etSpecifiedUsPerson.setText(if (it.specifiedUSPerson) "Yes" else "No")
-
-            val national = CountryPicker.getCountryName(it.nationality)
-            nationality = national.code
-            binding.etNationality.setText(national.name)
-
+            }
         }
 
 
@@ -126,6 +125,11 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding>(), View.O
             )
 
             else -> {
+                val personalDataLocal = PersonalDataLocal(firstName=firstName,lastName=lastName
+                ,birthDate=birthDate,birthPlace=birthPlace,birthCountry=birthCountryLocal,nationality= nationalityLocal
+                ,specifiedUsPerson= specifiedUsPerson, birthCountryCode = birthCountry, nationalityCode = nationality
+                , birthDateLocal = birthDateLocal)
+                App.prefsManager.personalDataLocal = personalDataLocal
                 viewModel.let {
                     it.firstName = firstName
                     it.lastName = lastName
@@ -143,25 +147,20 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding>(), View.O
 
     @SuppressLint("SimpleDateFormat")
     private fun showDatePicker() {
-        DatePickerDialog(
-            requireContext(),
-            com.au.lyber.R.style.DatePickerTheme,
-            { _, year, month, day ->
+        DateTimePicker(requireActivity(),object :DateTimePicker.OnDialogClickListener{
+            override fun onDateSelected(year:Long) {
                 val inputFormat = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                 val outputFormat = SimpleDateFormat("dd MMM yyyy", Locale.getDefault())
                 birthDate =
-                    inputFormat.parse("$year-${month + 1}-$day")?.let { inputFormat.format(it) }
+                    year.let { inputFormat.format(it) }
                         ?: ""
                 val result = inputFormat.parse(birthDate)?.let { outputFormat.format(it) }
                 binding.etBirthDate.setText(result)
-            },
-            mYear,
-            mMonth,
-            mDay
-        ).apply {
-            datePicker.maxDate = System.currentTimeMillis() - 18 * (31556952000) // 18 year old date
-            show()
-        }
+                birthDateLocal = result!!
+            }
+
+        }).show()
+
     }
 
     override fun onClick(v: View?) {
@@ -188,6 +187,7 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding>(), View.O
             .listener {
                 binding.etBirthCountry.setText(it.name)
                 birthCountry = it.code
+                birthCountryLocal = it.name
             }.style(com.au.lyber.R.style.CountryPickerStyle)
             .sortBy(CountryPicker.SORT_BY_NAME)
             .build()
@@ -203,6 +203,7 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding>(), View.O
             .listener {
                 binding.etNationality.setText(it.name)
                 nationality = it.code
+                nationalityLocal = it.name
             }.style(com.au.lyber.R.style.CountryPickerStyle)
             .sortBy(CountryPicker.SORT_BY_NAME)
             .build()
