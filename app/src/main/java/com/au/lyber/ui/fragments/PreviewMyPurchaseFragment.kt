@@ -72,7 +72,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
     }
 
     private fun onGooglePayReady(isReady: Boolean) {
-        binding.btnConfirmInvestment.isEnabled = isReady
+     //   binding.btnConfirmInvestment.isEnabled = isReady
         // implemented below
     }
 
@@ -112,7 +112,6 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
             when (v!!) {
                 ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
                 btnConfirmInvestment -> {
-
                     googlePayLauncher.presentForPaymentIntent(clientSecret)
                 }
                 tvMoreDetails->{
@@ -178,7 +177,13 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
 
         } else {
             timer -= 1
-            binding.tvTimer.text = getString(R.string.you_have_seconds_to_confirm_this_purchase, timer.toString())
+            if (timer>0) {
+                binding.tvTimer.text =
+                    getString(R.string.you_have_seconds_to_confirm_this_purchase, timer.toString())
+            }else{
+                binding.tvTimer.text =
+                    getString(R.string.you_have_seconds_to_confirm_this_purchase, "0")
+            }
             startTimer()
         }
     }

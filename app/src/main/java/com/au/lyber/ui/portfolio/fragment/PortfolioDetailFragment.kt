@@ -443,10 +443,19 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
                 btnPlaceOrder -> {
                     viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
-                    viewModel.selectedAsset
-                    requireActivity().replaceFragment(
-                        R.id.flSplashActivity, AddAmountFragment()
-                    )
+                    if (viewModel.selectedAsset!!.id == "usdt"){
+                        findNavController().navigate(R.id.buyUsdt)
+                    }else{
+                        val balance =BaseActivity.balances.find { it1 -> it1.id == "usdt"}
+                        if (balance!=null){
+                            viewModel.exchangeAssetTo = viewModel.selectedAsset!!.id
+                            viewModel.exchangeAssetFrom = "usdt"
+                            findNavController().navigate(R.id.addAmountForExchangeFragment)
+                        }else{
+                            showDialog()
+                        }
+                    }
+
                 }
 
 

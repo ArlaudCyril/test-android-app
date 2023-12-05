@@ -187,12 +187,13 @@
         app:layout_constraintBottom_toBottomOf="parent">
 
         <RelativeLayout
+            android:id="@+id/btnConfirmInvestment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="@drawable/button_purple_500"
             android:backgroundTint="@color/black">
             <TextView
-                android:id="@+id/btnConfirmInvestment"
+
                 style="@style/ButtonStyle"
                 android:layout_width="wrap_content"
                 android:layout_centerInParent="true"
