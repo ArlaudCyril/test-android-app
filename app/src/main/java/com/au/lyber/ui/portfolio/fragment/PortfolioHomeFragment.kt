@@ -432,6 +432,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 }
 
                 ivProfile -> navController.navigate(R.id.profileFragment)
+                ivProfile -> navController.navigate(R.id.profileFragment)
 
                 llThreeDot -> {
                     PortfolioThreeDots(::menuOptionSelected).show(

@@ -56,6 +56,7 @@ class BalanceAdapter(
                             tvAssetNameCode.visible()
                         }
                     }else {
+                        if(currency!=null)
                         if (currency!!.isTradeActive) {
                             tvAssetNameCode.gone()
                         } else {

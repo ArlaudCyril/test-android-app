@@ -1,12 +1,17 @@
 package com.au.lyber.ui.fragments
 
 import android.annotation.SuppressLint
+import android.content.ContentValues.TAG
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.view.updatePadding
+import androidx.core.widget.NestedScrollView
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.au.lyber.R
@@ -14,7 +19,11 @@ import com.au.lyber.databinding.FragmentTransactionBinding
 import com.au.lyber.databinding.ItemTransactionBinding
 import com.au.lyber.databinding.LoaderViewBinding
 import com.au.lyber.models.Transaction
+import com.au.lyber.models.TransactionData
 import com.au.lyber.ui.adapters.BaseAdapter
+import com.au.lyber.ui.fragments.bottomsheetfragments.AddAddressInfoBottomSheet
+import com.au.lyber.ui.fragments.bottomsheetfragments.TransactionDetailsBottomSheetFragment
+import com.au.lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet
 import com.au.lyber.utils.CommonMethods.Companion.decimalPoints
 import com.au.lyber.utils.CommonMethods.Companion.getViewModel
 import com.au.lyber.utils.CommonMethods.Companion.gone
@@ -24,47 +33,115 @@ import com.au.lyber.utils.CommonMethods.Companion.toDateFormatTwo
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
 import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
+import com.au.lyber.utils.CommonMethods
+import com.au.lyber.utils.CommonMethods.Companion.roundFloat
+import com.au.lyber.utils.CommonMethods.Companion.showToast
+import com.au.lyber.utils.PaginationListener
+import com.google.gson.GsonBuilder
+import java.lang.Exception
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.TimeZone
 
 class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
 
     private lateinit var adapter: TransactionAdapter
-    private lateinit var viewModel: PortfolioViewModel
+    private val viewModel: PortfolioViewModel by viewModels()
+    val limit = 50 // as on this screen we have to show max 3 enteries
+    var offset = 0
+
+    private var isLoading = true
+    private var isLastPage = false
 
     override fun bind() = FragmentTransactionBinding.inflate(layoutInflater)
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = getViewModel(requireActivity())
+//        viewModel = getViewModel(requireActivity())
+        viewModel.listener = this
+        CommonMethods.checkInternet(requireContext()) {
+            viewModel.getTransactions(limit, offset)
+        }
+
+        val mLayoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
         binding.rvTransactions.let {
             adapter = TransactionAdapter()
+            it.layoutManager = mLayoutManager
             it.adapter = adapter
-            it.layoutManager = LinearLayoutManager(requireContext())
-            it.isNestedScrollingEnabled = false
+            binding.nsv.setOnScrollChangeListener(object :
+                PaginationListener.NestedScrollPaginationListener() {
+                override fun loadMoreItems() {
+                    binding.rvTransactions.post {
+                        offset++
+                        isLoading = true
+                        adapter.addProgress()
+                        CommonMethods.checkInternet(requireContext()) {
+                            viewModel.getTransactions(limit, offset)
+                        }
+                    }
+                }
+
+                override fun isLastPage() = isLastPage
+                override fun isLoading() = isLoading
+
+            })
+
         }
+
 
         binding.toolbar.setNavigationOnClickListener {
             requireActivity().onBackPressed()
         }
+        viewModel.getTransactionListingResponse.observe(viewLifecycleOwner) { response ->
+            response?.let {
+                // Process the response here
+                adapter.calculatePositions(it.data)
+                if (offset == 0)
+                    binding.rvTransactions.startLayoutAnimation()
+                isLoading = false
+                isLastPage = it.data.count() < limit
 
-        viewModel.transactionResponse.value?.let {
-            adapter.calculatePositions(it.transactions)
-            adapter.addList(it.transactions)
-            binding.rvTransactions.startLayoutAnimation()
+                if (offset == 0) {
+
+                    Log.d(TAG, "notificationResponse: Success  page == 1")
+                    if (it.data.isNotEmpty()) {
+                        Log.d(TAG, "notificationResponse: page == 1 setList")
+                        adapter.setList(it.data)
+
+                    }
+                } else {
+                    adapter.removeProgress()
+                    adapter.addList(it.data)
+                }
+            }
         }
 
     }
 
-    class TransactionAdapter : BaseAdapter<Transaction>() {
+    inner class TransactionAdapter : BaseAdapter<TransactionData>() {
 
         private val positionList = mutableListOf<Int>()
+        fun String.toMillis(): Long {
+            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
+            dateFormat.timeZone = TimeZone.getTimeZone("UTC")
 
-        fun calculatePositions(list: List<Transaction>) {
-            var date = list[0].created_at.toLong().toDateFormatTwo()
+            return try {
+                dateFormat.parse(this)?.time ?: 0
+            } catch (e: Exception) {
+                e.printStackTrace()
+                0
+            }
+        }
+
+        fun calculatePositions(list: List<TransactionData>) {
+            var date = list[0].date.toMillis().toLong().toDateFormatTwo()
             positionList.add(0)
             for (i in 0 until list.count()) {
-                val currentValue = list[i].created_at.toLong().toDateFormatTwo()
+                val currentValue = list[i].date.toMillis().toLong().toDateFormatTwo()
                 if (date.split("/")[0] != currentValue.split("/")[0]) {
                     positionList.add(i)
                     date = currentValue
@@ -84,6 +161,7 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
                         false
                     )
                 )
+
                 else -> LoaderViewHolder(
                     LoaderViewBinding.inflate(
                         LayoutInflater.from(parent.context),
@@ -105,47 +183,65 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
 
                         if (position in positionList) {
                             tvDate.visible()
-                            tvDate.text = it.created_at.toLong().toDateFormat()
+                            tvDate.text = it.date.toMillis().toLong().toDateFormat()
                         }
-
                         when (it.type) {
-                            1 -> { //exchange
+                            Constants.ORDER -> { //exchange
                                 ivItem.setImageResource(R.drawable.ic_exchange)
+                                tvStartTitle.text = "Exchange"
+                                tvStartSubTitle.text =
+                                    "${it.fromAsset.uppercase()} to ${it.toAsset.uppercase()}"
+                                tvEndTitle.text = "-${it.fromAmount} ${it.fromAsset.uppercase()}"
+                                var amount = it.toAmount
+                                try {
+                                    amount = String.format("%.10f", it.toAmount.toFloat())
+                                } catch (ex: Exception) {
+
+                                }
+                                tvEndSubTitle.text = "+${amount} ${it.toAsset.uppercase()}"
+                                tvFailed.visibility = View.GONE
+                                tvStartTitleCenter.visibility = View.GONE
+                                tvEndTitleCenter.visibility = View.GONE
+                            }
+
+                            Constants.STRATEGY -> {
+                                ivItem.setImageResource(R.drawable.strategy)
                                 tvStartTitleCenter.text =
-                                    "Exch. ${it.exchange_from.uppercase()} to ${it.exchange_to.uppercase()}"
-                                tvEndTitle.text =
-                                    "-${
-                                        it.exchange_from_amount.toString().decimalPoints(6)
-                                    }${it.exchange_from.uppercase()}"
-                                tvEndSubTitle.text =
-                                    "${
-                                        it.exchange_to_amount.toString().decimalPoints(5)
-                                    }${it.exchange_to.uppercase()}"
+                                    "${it.strategyName.replaceFirstChar(Char::uppercase)}"
+                                if (it.status == Constants.FAILURE)
+                                    tvFailed.visibility = View.VISIBLE
+                                else {
+                                    if (it.successfulBundleEntries.isNotEmpty()) {
+                                        try {
+                                            tvEndTitleCenter.text =
+                                                "${it.successfulBundleEntries[0].assetAmount} ${it.successfulBundleEntries[0].asset}"
+
+                                        } catch (ex: Exception) {
+
+                                        }
+                                    }
+                                }
                             }
-                            2 -> { // deposit
-                                root.gone()
-                            }
-                            3 -> { // withdraw
-                                ivItem.setImageResource(R.drawable.ic_withdraw)
-                                tvStartTitleCenter.text = "Withdrawal"
-                                tvEndTitle.text = "-${it.amount}${Constants.EURO}"
-                                tvEndSubTitle.text =
-                                    "${
-                                        it.asset_amount.toString().decimalPoints(5)
-                                    }${it.asset_id.uppercase()}"
-                            }
-                            4 -> { // single asset
+
+                            Constants.DEPOSIT -> {
                                 ivItem.setImageResource(R.drawable.ic_deposit)
-                                tvStartTitleCenter.text = "Bought ${it.asset_id.uppercase()}"
-                                tvEndTitle.text = "+${it.amount.toFloat().toInt()}${Constants.EURO}"
-                                tvEndSubTitle.text =
-                                    "${
-                                        it.asset_amount.toString().decimalPoints(5)
-                                    }${it.asset_id.uppercase()}"
+                                tvStartTitle.text = "${it.asset.uppercase()} Deposit"
+                                tvStartSubTitle.text =
+                                    it.status.lowercase().replaceFirstChar(Char::uppercase)
+                                tvEndTitleCenter.text = "+${it.amount} ${it.asset.uppercase()}"
+                                tvFailed.visibility = View.GONE
+                                tvStartTitleCenter.visibility = View.GONE
                             }
+
+                            Constants.WITHDRAWAL -> { // single asset
+                                //TODO
+                                ivItem.setImageResource(R.drawable.ic_withdraw)
+                                tvFailed.visibility = View.GONE
+//
+                            }
+
                             else -> root.gone()
                         }
-
                     }
                 }
         }
@@ -154,6 +250,17 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
         inner class TransactionViewHolder(val binding: ItemTransactionBinding) :
             RecyclerView.ViewHolder(binding.root) {
             init {
+                binding.root.setOnClickListener {
+
+                    val detailBottomSheet = TransactionDetailsBottomSheetFragment()
+                    val gson = GsonBuilder().create()
+                    var data = ""
+                    data = gson.toJson(itemList[adapterPosition])
+                    detailBottomSheet.arguments = Bundle().apply {
+                        putString("data", data)
+                    }
+                    detailBottomSheet.show(childFragmentManager, "")
+                }
                 binding.root.setBackgroundColor(
                     getColor(
                         binding.root.context,

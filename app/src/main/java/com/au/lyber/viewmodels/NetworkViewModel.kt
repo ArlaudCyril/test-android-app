@@ -230,6 +230,9 @@ open class NetworkViewModel : ViewModel() {
     val updateAuthenticateResponse get() = _updateAuthenticateResponse
     private var _qrCodeResponse: MutableLiveData<QrCodeResponse> = MutableLiveData()
     val qrCodeResponse get() = _qrCodeResponse
+
+    private var _getTransactionListing = MutableLiveData<TransactionList>()
+    val getTransactionListingResponse get() = _getTransactionListing
     fun cancelJob() {
 
     }
@@ -1137,6 +1140,14 @@ open class NetworkViewModel : ViewModel() {
             if (res.isSuccessful)
                 _qrCodeResponse.postValue(res.body())
 
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+    fun getTransactions(limit:Int,offset:Int) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().getTransactionsList(limit,offset)
+            if (res.isSuccessful)
+                _getTransactionListing.postValue(res.body())
             else listener?.onRetrofitError(res.errorBody())
         }
     }
