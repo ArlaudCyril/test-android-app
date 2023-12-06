@@ -71,17 +71,16 @@
                     />
 
             </RelativeLayout>
-
-            <TextView
+             <TextView
                 style="@style/TitleText"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="32dp"
-                android:text="@string/transaction"
+                android:text="@string/operations"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 android:textColor="@color/purple_gray_900" />
 
             <RelativeLayout
-                android:id="@+id/llTransactions"
+                android:id="@+id/rlTransactions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
@@ -96,7 +95,7 @@
                     android:id="@+id/tvNoTransaction"
                     style="@style/SubheadMabry"
                     android:layout_centerInParent="true"
-                    android:text="@string/no_transactions"
+                    android:text="@string/no_operations"
                     android:textColor="@color/purple_gray_600"
                     android:visibility="gone" />
 

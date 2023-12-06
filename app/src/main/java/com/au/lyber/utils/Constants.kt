@@ -197,4 +197,9 @@ object Constants {
     const val EMAIL="email"
     const val SCOPE="scope"
 
+    const val FAILURE="FAILURE"
+    const val ORDER="order"
+    const val STRATEGY="strategy"
+    const val DEPOSIT="deposit"
+
 }

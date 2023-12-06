@@ -319,4 +319,9 @@ interface Api {
     @GET("network-service/network")
     suspend fun getNetworkById(@Query("id")id: String): Response<NetworkResponse>
 
+    @GET("user-service/transactions")
+    suspend fun getTransactionsList(
+        @Query("limit") limit: Int,
+        @Query("offset") page: Int
+    ): Response<TransactionList>
 }

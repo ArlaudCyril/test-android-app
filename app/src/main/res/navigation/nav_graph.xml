@@ -316,6 +316,29 @@
         android:name="com.au.lyber.ui.fragments.TwoFactorAuthenticationFragment"
         android:label="TwoFactorAuthenticationFragment" />
 
+    <fragment
+        android:id="@+id/codeScannerFragment"
+        android:name="com.au.lyber.ui.fragments.CodeScannerFragment"
+        android:label="CodeScannerFragment" />
+    <fragment
+        android:id="@+id/enableWhiteListingFragment"
+        android:name="com.au.lyber.ui.fragments.EnableWhiteListingFragment"
+        android:label="EnableWhiteListingFragment" />
+    <fragment
+        android:id="@+id/emailAddressFragment"
+        android:name="com.au.lyber.ui.fragments.EmailAddressFragment"
+        android:label="EmailAddressFragment" />
+    <fragment
+        android:id="@+id/investAddMoneyFragment"
+        android:name="com.au.lyber.ui.fragments.InvestAddMoneyFragment"
+        android:label="InvestAddMoneyFragment" />
+
+<fragment
+        android:id="@+id/transactionFragment"
+        android:name="com.au.lyber.ui.fragments.TransactionFragment"
+        android:label="TransactionFragment" />
+
+
     <dialog
         android:id="@+id/portfolioThreeDots"
         android:name="com.au.lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDots"
