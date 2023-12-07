@@ -631,7 +631,6 @@ data class User(
     val profilePicType: String,
     val strongAuthentification: Boolean,
     val uuid: String,
-
     val accountClosed: Boolean,
     val avatar: String,
     val birthDate: String,
@@ -652,7 +651,6 @@ data class User(
     val verified: Boolean,
     val withdrawalLock: String,
     val zipCode: String
-
 )
 
 data class JWTPayload(
@@ -696,7 +694,10 @@ data class Balance(
     val balanceData: BalanceData
 )
 
+data class ExportResponse(
+    val success:Boolean
+  }
+
 data class BooleanResponse(
     val success:Boolean
-
 )

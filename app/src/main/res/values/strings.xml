@@ -544,6 +544,15 @@
     <string name="the_minimum_amount_to_be_exchanged_1">The minimum amount to be exchanged %1$s %2$s</string>
     <string name="availiable_fiat">Available FIAT</string>
 
+    <string name="export">Export</string>
+    <string name="exportOperations">Export operations</string>
+    <string name="successful">Successful</string>
+    <string name="successfulMsg">Your request has been received\nThe export will be delivered to your email address in a few minutes.</string>
+    <string name="error">Error</string>
+    <string name="somethingWentWrong">Oh no ! Something went wrong.</string>
+    <string name="tryAgain">Try Again</string>
+
+
     <string name="contact_us">Contact us</string>
     <string name="send_us_email">Send us an email to contact@lyber.com or fill out the contact form below:</string>
     <string name="contact_form">Contact form</string>

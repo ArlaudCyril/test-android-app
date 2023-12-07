@@ -18,7 +18,6 @@ import android.view.Window
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Lifecycle
-
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 
@@ -34,6 +33,7 @@ import com.au.lyber.models.Transaction
 import com.au.lyber.ui.activities.SplashActivity
 import com.au.lyber.ui.adapters.BaseAdapter
 import com.au.lyber.ui.fragments.bottomsheetfragments.ProfileBottomSheet
+import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.App
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.checkPermission
@@ -48,10 +48,8 @@ import com.au.lyber.utils.CommonMethods.Companion.setProfile
 import com.au.lyber.utils.CommonMethods.Companion.shouldShowPermission
 import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.showToast
-import com.au.lyber.utils.CommonMethods.Companion.toDateFormatTwo
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
-import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -74,6 +72,8 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 
         viewModel = getViewModel(requireActivity())
         viewModel.listener = this
+        val navHostFragment =  requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.findNavController()
 
         val navHostFragment =  requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
@@ -191,7 +191,11 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 
         binding.ivProfile.setOnClickListener(this)
 //        binding.llNotification.setOnClickListener(this)
+
+        binding.rlExport.setOnClickListener(this)
+
         binding.llContactUS.setOnClickListener(this)
+
 
         binding.switchFaceId.setOnCheckedChangeListener { button, isChecked ->
             if (button.isPressed) {
@@ -329,7 +333,10 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                     }
                     findNavController().navigate(R.id.createPinFragment,bundle)
                 }
+                rlExport-> navController.navigate(R.id.exportOperationsFragment)
+
                 llContactUS->navController.navigate(R.id.contactUsFragment)
+
             }
         }
     }
