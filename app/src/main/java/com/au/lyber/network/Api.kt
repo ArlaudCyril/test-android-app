@@ -295,6 +295,9 @@ interface Api {
     @POST("user-service/verify-2FA")
     suspend fun verify2FA(@Body hashMap: HashMap<String, Any>): Response<UserLoginResponse>
 
+    @POST("user-service/contact-support")
+    suspend fun contactSupport(@Body hashMap: HashMap<String, Any>): Response<BooleanResponse>
+
 
     //patch
 

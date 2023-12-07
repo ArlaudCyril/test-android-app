@@ -18,6 +18,10 @@ import android.view.Window
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Lifecycle
+
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -61,6 +65,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
     private var imageFile: File? = null
     private var option = 1 // 1 -> camera option 2-> gallery option
 
+    private lateinit var navController : NavController
     override fun bind() = FragmentProfileBinding.inflate(layoutInflater)
 
     @SuppressLint("ClickableViewAccessibility")
@@ -70,6 +75,8 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         viewModel = getViewModel(requireActivity())
         viewModel.listener = this
 
+        val navHostFragment =  requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.findNavController()
         viewModel.transactionResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
 
@@ -166,6 +173,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 //        binding.tvStatusStrongAuth.text =
 //            if (App.prefsManager.isStrongAuth()) "Enabled" else "Disabled"
 
+
         binding.tvStatusAddressBook.gone()
         binding.tvStatusAddressBook.text = when (App.prefsManager.withdrawalLockSecurity) {
             Constants.HOURS_72 -> "72H"
@@ -174,6 +182,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         }
        binding.ivTopAction.setOnClickListener(this)
         binding.llChangePin.setOnClickListener(this)
+
 //        binding.tvViewAllTransaction.setOnClickListener(this)
 //        binding.tvAddPaymentMethod.setOnClickListener(this)
         binding.tvLogout.setOnClickListener(this)
@@ -182,6 +191,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 
         binding.ivProfile.setOnClickListener(this)
 //        binding.llNotification.setOnClickListener(this)
+        binding.llContactUS.setOnClickListener(this)
 
         binding.switchFaceId.setOnCheckedChangeListener { button, isChecked ->
             if (button.isPressed) {
@@ -319,6 +329,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                     }
                     findNavController().navigate(R.id.createPinFragment,bundle)
                 }
+                llContactUS->navController.navigate(R.id.contactUsFragment)
             }
         }
     }
