@@ -1,14 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
-
-
-    <!--android:background="@drawable/curved_button"-->
+    android:background="@color/white"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
 
     <ImageView
         android:id="@+id/ivTopAction"
@@ -22,75 +19,39 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
-    <androidx.core.widget.NestedScrollView
+
+    <TextView
+        android:id="@+id/tvTitle"
+        style="@style/TitleText"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/investment_strategies" />
+
+    <TextView
+        android:id="@+id/tvSubTitle"
+        style="@style/SubTitleText"
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="4dp"
+        android:lineSpacingExtra="8dp"
+        android:text="@string/subtitle_investment_strategies" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerViewStrategies"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:fillViewport="true"
-        android:scrollbars="none"
-        android:orientation="vertical"
-        app:layout_constraintBottom_toTopOf="@id/llChooseStrategy"
-        app:layout_constraintTop_toBottomOf="@id/ivTopAction">
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
-
-            <TextView
-                android:id="@+id/tvTitle"
-                style="@style/TitleText"
-                android:layout_marginTop="20dp"
-                android:layout_marginHorizontal="24dp"
-                android:text="@string/investment_strategies" />
-
-            <TextView
-                android:id="@+id/tvSubTitle"
-                style="@style/SubTitleText"
-                android:layout_width="match_parent"
-                android:layout_marginHorizontal="24dp"
-                android:layout_marginTop="4dp"
-                android:lineSpacingExtra="8dp"
-                android:text="@string/subtitle_investment_strategies" />
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/recyclerViewStrategies"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layoutAnimation="@anim/recycler_view_item_animation"
-                android:layout_marginHorizontal="12dp"
-                android:layout_marginTop="16dp" />
-
-            <TextView
-                android:id="@+id/tvBuildYourStrategy"
-                style="@style/SubTitleText"
-                android:layout_width="match_parent"
-                android:layout_gravity="center_horizontal"
-                android:gravity="center"
-                android:padding="12dp"
-                android:text="@string/build_my_own_strategy"
-                android:textColor="@color/purple_500" />
-
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+        android:layout_marginHorizontal="12dp"
+        android:layout_marginTop="16dp"
+        android:layout_weight="1"
+        android:layoutAnimation="@anim/recycler_view_item_animation" />
 
 
-    <LinearLayout
-        android:id="@+id/llChooseStrategy"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:background="@drawable/top_curved_layout"
-        android:backgroundTint="@color/purple_gray_00"
-        android:elevation="4dp"
-        app:elevation="4dp"
-        app:layout_constraintBottom_toBottomOf="parent">
+    <Button
+        android:id="@+id/btnChooseStrategy"
+        style="@style/ButtonStyle"
+        android:layout_margin="24dp"
+        android:background="@drawable/button_purple_500"
+        android:text="@string/build_my_own_strategy" />
 
-        <Button
-            android:id="@+id/btnChooseStrategy"
-            style="@style/ButtonStyle"
-            android:layout_margin="24dp"
-            android:background="@drawable/button_purple_400"
-            android:text="@string/choose_this_strategy" />
-    </LinearLayout>
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

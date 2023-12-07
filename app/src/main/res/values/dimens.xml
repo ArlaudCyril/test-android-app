@@ -5,6 +5,7 @@
     <dimen name="px_200">120dp</dimen>
     <dimen name="px_300">120dp</dimen>
     <dimen name="sp_18">12sp</dimen>
+    <dimen name="dp_4">4dp</dimen>
     <array name="autosize_text">
         <item>38sp</item>
         <item>32sp</item>
