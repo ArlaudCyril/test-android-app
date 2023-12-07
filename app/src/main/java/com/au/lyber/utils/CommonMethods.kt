@@ -2,6 +2,7 @@ package com.au.lyber.utils
 
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Dialog
 import android.content.ContentResolver
 import android.content.Context
@@ -26,6 +27,7 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
+import android.util.Base64
 import android.util.Log
 import android.util.TypedValue
 import android.view.*
@@ -71,7 +73,9 @@ import okhttp3.ResponseBody
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.lang.NumberFormatException
 import java.math.RoundingMode
+import java.text.DateFormat
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -100,6 +104,14 @@ class CommonMethods {
             }
             return false
         }
+        @JvmStatic
+        fun getScreenWidth(activity: Context?): Int {
+            val w = activity!!.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            val size = Point()
+            w.defaultDisplay.getSize(size)
+            return size.x
+        }
+
 
         fun showProgressDialog(context: Context) {
 
@@ -126,30 +138,19 @@ class CommonMethods {
             }
 
         }
-        fun showLottieProgressDialog(context: Context) {
-
-            if (dialog == null) {
-                dialog = Dialog(context)
-                dialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                dialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                dialog!!.window!!.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-                dialog!!.window!!.setDimAmount(0.2F)
-                dialog!!.setCancelable(false)
-                dialog!!.setContentView(LottieViewBinding.inflate(LayoutInflater.from(context)).root)
-            }
+        fun String.toFormat(format: String,convertFormat:String): String {
             try {
-                dialog?.findViewById<LottieAnimationView>(R.id.animationView)?.
-                    setMinAndMaxProgress(0f,0.5f)
-                dialog!!.show()
-            } catch (e: WindowManager.BadTokenException) {
-                Log.d("Exception", "showProgressDialog: ${e.message}")
-                dialog?.dismiss()
-                dialog = null
-                showProgressDialog(context)
-            } catch (e: Exception) {
-                Log.d("Exception", "showProgressDialog: ${e.message}")
-            }
+                var result = ""
+                val formatter: DateFormat = SimpleDateFormat(format,Locale.getDefault())
+                formatter.timeZone = TimeZone.getTimeZone("UTC")
+                val outputFormatter: DateFormat = SimpleDateFormat(convertFormat,Locale.getDefault())
+                outputFormatter.timeZone = TimeZone.getDefault()
+                formatter.parse(this)?.let { result = outputFormatter.format(it) }
 
+                return result
+            }catch (e:Exception){
+                return this
+            }
         }
         fun dismissProgressDialog() {
             dialog?.let {
@@ -591,6 +592,13 @@ class CommonMethods {
             ) == PackageManager.PERMISSION_GRANTED
         }
 
+        fun Activity.checkPermission(permission: String): Boolean {
+            return ContextCompat.checkSelfPermission(
+                this,
+                permission
+            ) == PackageManager.PERMISSION_GRANTED
+        }
+
 
         fun List<View>.gone() {
             forEach { it.gone() }
@@ -807,65 +815,75 @@ class CommonMethods {
 
         val String.currencyFormatted: SpannableString
             get() = kotlin.run {
-                if(this.isEmpty()){
-                    SpannableString("0.00"+Constants.EURO)
-                }else{
-                    val value: Double = this.toDouble()
-                    var numberZerosLeft = 0 // we count also the coma
-                    var formatter = DecimalFormat()
-                    if (value > 10000) {
-                        formatter.maximumFractionDigits = 0
-                        formatter.minimumFractionDigits = 0
-                    } else if (value > 1000) {
-                        formatter.maximumFractionDigits = 1
-                        formatter.minimumFractionDigits = 1
-                    } else if (value > 1) {
-                        formatter.maximumFractionDigits = 2
-                        formatter.minimumFractionDigits = 2
-                    } else if (value > 0.1) {
-                        numberZerosLeft = 2
-                        formatter.maximumFractionDigits = 3
-                        formatter.minimumFractionDigits = 3
-                    } else if (value > 0.01) {
-                        numberZerosLeft = 3
-                        formatter.maximumFractionDigits = 4
-                        formatter.minimumFractionDigits = 4
-                    } else if (value > 0.001) {
-                        numberZerosLeft = 4
-                        formatter.maximumFractionDigits = 5
-                        formatter.minimumFractionDigits = 5
-                    } else if (value > 0.0001) {
-                        numberZerosLeft = 5
-                        formatter.maximumFractionDigits = 6
-                        formatter.minimumFractionDigits = 6
-                    } else if (value > 0.00001) {
-                        numberZerosLeft = 6
-                        formatter.maximumFractionDigits = 7
-                        formatter.minimumFractionDigits = 7
-                    } else if (value > 0.000001) {
-                        numberZerosLeft = 7
-                        formatter.maximumFractionDigits = 8
-                        formatter.minimumFractionDigits = 8
-                    } else if (value > 0.0000001) {
-                        numberZerosLeft = 8
-                        formatter.maximumFractionDigits = 9
-                        formatter.minimumFractionDigits = 9
-                    } else if (value > 0.00000001) {
-                        numberZerosLeft = 9
-                        formatter.maximumFractionDigits = 10
-                        formatter.minimumFractionDigits = 10
-                    }
+                if (this.isEmpty()) {
+                    SpannableString("0.00" + Constants.EURO)
+                } else {
+                    try {
+                        var value: Double = 0.0
+                        if (this.contains(","))
+                            value = this.replace(",", "").toDouble()
+                        else
+                            value = this.toDouble()
+                        var numberZerosLeft = 0 // we count also the coma
+                        var formatter = DecimalFormat()
+                        if (value > 10000) {
+                            formatter.maximumFractionDigits = 0
+                            formatter.minimumFractionDigits = 0
+                        } else if (value > 1000) {
+                            formatter.maximumFractionDigits = 1
+                            formatter.minimumFractionDigits = 1
+                        } else if (value > 1) {
+                            formatter.maximumFractionDigits = 2
+                            formatter.minimumFractionDigits = 2
+                        } else if (value > 0.1) {
+                            numberZerosLeft = 2
+                            formatter.maximumFractionDigits = 3
+                            formatter.minimumFractionDigits = 3
+                        } else if (value > 0.01) {
+                            numberZerosLeft = 3
+                            formatter.maximumFractionDigits = 4
+                            formatter.minimumFractionDigits = 4
+                        } else if (value > 0.001) {
+                            numberZerosLeft = 4
+                            formatter.maximumFractionDigits = 5
+                            formatter.minimumFractionDigits = 5
+                        } else if (value > 0.0001) {
+                            numberZerosLeft = 5
+                            formatter.maximumFractionDigits = 6
+                            formatter.minimumFractionDigits = 6
+                        } else if (value > 0.00001) {
+                            numberZerosLeft = 6
+                            formatter.maximumFractionDigits = 7
+                            formatter.minimumFractionDigits = 7
+                        } else if (value > 0.000001) {
+                            numberZerosLeft = 7
+                            formatter.maximumFractionDigits = 8
+                            formatter.minimumFractionDigits = 8
+                        } else if (value > 0.0000001) {
+                            numberZerosLeft = 8
+                            formatter.maximumFractionDigits = 9
+                            formatter.minimumFractionDigits = 9
+                        } else if (value > 0.00000001) {
+                            numberZerosLeft = 9
+                            formatter.maximumFractionDigits = 10
+                            formatter.minimumFractionDigits = 10
+                        }
 
-                    val stringFormatted = formatter.format(value)+Constants.EURO
-                    val ss1 = SpannableString(stringFormatted)
-                    ss1.setSpan(RelativeSizeSpan(0.8f), 0, numberZerosLeft, 0) // set size
-                    ss1
+                        val stringFormatted = formatter.format(value) + Constants.EURO
+                        val ss1 = SpannableString(stringFormatted)
+                        ss1.setSpan(RelativeSizeSpan(0.8f), 0, numberZerosLeft, 0) // set size
+                        ss1
+                    } catch (ex: NumberFormatException) {
+                        SpannableString("0.00" + Constants.EURO)
+                    }
                 }
             }
 
+
         fun String.formattedAsset(price: Double?, rounding : RoundingMode): String {
-             if (this == "" || price == null || price == 0.0 || price.isNaN()) {
-                 return "0.00"
+            var priceFinal = price
+            if (this == "" || priceFinal == null || priceFinal == 0.0 || priceFinal.isNaN()) {
+                priceFinal= 1.026
              }
 
              val formatter = DecimalFormat()
@@ -873,7 +891,7 @@ class CommonMethods {
              // Pour trouver la précision, ici X
              // Prix * 10e-X >= 0.01 (centimes)
              // => X >= -log(0,01/Prix)
-             val precision = ceil(-log10(0.01 / price)).toInt()
+             val precision = ceil(-log10(0.01 / priceFinal)).toInt()
              if (precision > 0) {
                  formatter.maximumFractionDigits = precision
                  formatter.minimumFractionDigits = precision
@@ -1140,13 +1158,7 @@ class CommonMethods {
 
         val ImageView.setProfile: Unit
             get() = kotlin.run {
-//                if (prefsManager.haveDefaultImage) {
-//                    updatePadding(8.px, 8.px, 8.px, 8.px)
-//                    setImageResource(Constants.defaults[prefsManager.defaultImage])
-//                } else if (!prefsManager.user?.profile_pic.isNullOrEmpty()) {
-//                    updatePadding(2.px, 2.px, 2.px, 2.px)
-//                    loadImage(prefsManager.user?.profile_pic ?: "")
-//                } else setImageResource(R.drawable.ic_profile)
+                setImageResource(Constants.defaults[prefsManager.defaultImage])
             }
 
         val List<List<Double>>.lineData: MutableList<Float>
@@ -1190,7 +1202,9 @@ class CommonMethods {
 
             return true
         }
-
+       fun String.addressMatched(format :String):Boolean{
+            return this.matches(format.toRegex())
+        }
         fun String.checkFormat(type: String): Boolean {
 
             return when (type) {
@@ -1372,6 +1386,11 @@ class CommonMethods {
                 // Handle parsing exception if needed
                 return ""
             }
+        }
+        fun encodeToBase64(input: String): String {
+            val bytes = input.toByteArray(Charsets.UTF_8)
+            val base64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
+            return base64
         }
     }
 

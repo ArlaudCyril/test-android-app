@@ -82,9 +82,8 @@ class InvestmentDetailFragment : BaseFragment<FragmentInvestmentDetailBinding>()
                     for (i in it.strategy_assets) {
                         list.add(
                             InvestmentStrategyAsset(
-                                allocation = i.allocation,
-                                _id = i._id,
-                                asset_id = i.asset_id
+                                share = i.allocation,
+                                asset = i.asset_id
                             )
                         )
                     }

@@ -36,33 +36,39 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
         viewModel = getViewModel(this)
         viewModel.listener = this
 
-        viewModel.enableWhitelisting.observe(viewLifecycleOwner) {
+        viewModel.updateUserInfoResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
-//                App.prefsManager.setWhitelisting(!App.prefsManager.isWhitelisting())
+
                 val security: String = when (selectedPosition) {
                     0 -> Constants.HOURS_72
                     1 -> Constants.HOURS_24
                     else -> Constants.NO_EXTRA_SECURITY
                 }
-//                App.prefsManager.setExtraSecurity(security)
+               App.prefsManager.withdrawalLockSecurity = security
                 requireActivity().onBackPressed()
             }
         }
 
         /* if whitelisting is enabled */
-//        if (App.prefsManager.isWhitelisting()) {
-//            binding.btnEnableWhitelisting.setBackgroundTint(R.color.purple_500)
-//            binding.btnEnableWhitelisting.setTextColor(
-//                getColor(requireContext(), R.color.purple_gray_00)
-//            )
-//            binding.btnEnableWhitelisting.text = "Disable whitelisting"
-//            selectedPosition = when (App.prefsManager.getExtraSecurity()) {
-//                Constants.HOURS_72 -> 0
-//                Constants.HOURS_24 -> 1
-//                else -> 2
-//            }
-//        }
+
+        selectedPosition = when (App.prefsManager.withdrawalLockSecurity) {
+            Constants.HOURS_72 -> 0
+            Constants.HOURS_24 -> 1
+            else -> 2
+        }
+        when(selectedPosition){
+            1->{binding.tvSecurityText.text =
+                getString(R.string.a_24h_delay_is_required_before_you_can_withdraw_to_any_address_newly_added_to_your_address_book).also { binding.tvSecurityText.text = it }
+            }
+            0->{
+                binding.tvSecurityText.text =
+                    getString(R.string.a_delay_of_72_hours_will_be_required_before_you_can_withdraw_to_any_address_newly_added_to_your_address_book)
+            }
+            2->{
+                binding.tvSecurityText.text = getString(R.string.you_can_immediately_withdraw_to_any_address_newly_added_to_your_address_book)
+            }
+        }
 
 
         binding.rvExtraSecurity.let {
@@ -77,17 +83,16 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
 
         binding.btnEnableWhitelisting.setOnClickListener {
 
-           /* checkInternet(requireContext()) {
+            checkInternet(requireContext()) {
                 showProgressDialog(requireContext())
-                viewModel.enableWhitelisting(
-                    !App.prefsManager.isWhitelisting(),
+                viewModel.updateWithdrawalLock(
                     when (selectedPosition) {
                         0 -> Constants.HOURS_72
                         1 -> Constants.HOURS_24
                         else -> Constants.NO_EXTRA_SECURITY
                     }
                 )
-            }*/
+            }
         }
     }
 
@@ -113,7 +118,24 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
             adapter.getItem(position)?.let {
                 it.isSelected = true
                 selectedPosition = position
+                when(selectedPosition){
+                    1->{
+                        binding.tvSecurityText.text =
+                            getString(R.string.a_24h_delay_is_required_before_you_can_withdraw_to_any_address_newly_added_to_your_address_book) }
+                    0->{
+                        binding.tvSecurityText.text =
+                            getString(R.string.a_delay_of_72_hours_will_be_required_before_you_can_withdraw_to_any_address_newly_added_to_your_address_book)
+                    }
+                    2->{
+                        binding.tvSecurityText.text = getString(R.string.shifting_no_security)
+                    }
+                    else->{
+                        binding.tvSecurityText.text = getString(R.string.shifting)
+
+                    }
+                }
             }
+
 
             adapter.notifyItemChanged(position)
 
@@ -145,7 +167,6 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
                             root.context,
                             R.drawable.round_stroke_purple_500
                         )
-                        tvTitle.setTextColor(getColor(tvTitle.context, R.color.purple_500))
                         ivRadio.setImageResource(R.drawable.radio_select)
                     } else {
 
@@ -155,14 +176,6 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
                         )
 
                         ivRadio.setImageResource(R.drawable.radio_unselect)
-//                        tvTitle.setTextColor(
-//                            getColor(
-//                                tvTitle.context,
-//                                if (App.prefsManager.isWhitelisting()) R.color.purple_gray_500 else R.color.purple_gray_700
-//                            )
-//                        )
-
-
                     }
 
                     tvTitle.text = it.title

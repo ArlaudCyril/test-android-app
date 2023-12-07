@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/ripple_click_background"
+    android:foreground="?android:attr/selectableItemBackground"
+    android:paddingHorizontal="12dp"
+    android:orientation="horizontal"
+    android:paddingBottom="16dp">
+
+
+
+    <ImageView
+        android:id="@+id/ivAssetIcon"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="18dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llFiatWallet"
+        android:src="@drawable/ic_euro" />
+
+
+   <androidx.appcompat.widget.LinearLayoutCompat
+       android:layout_width="0dp"
+       android:layout_marginTop="12dp"
+       android:layout_marginStart="12dp"
+       android:gravity="center_vertical"
+       android:orientation="vertical"
+       android:layout_height="match_parent"
+       android:layout_weight="1">
+       <TextView
+           android:id="@+id/tvAssetName"
+           style="@style/SubheadMabry"
+           android:gravity="center_vertical"
+           android:textStyle="bold"
+           android:text="Euro" />
+
+       <TextView
+           android:id="@+id/tvAssetNameCode"
+           style="@style/BodyMabry"
+           android:layout_below="@id/tvAssetName"
+           android:visibility="visible"
+           android:layout_toEndOf="@id/ivAssetIcon"
+           android:textColor="@color/purple_gray_500"
+           android:text="H9LGrxGNtuZx4enf78efBg6skRRo1XhPYdEtiCQVWC" />
+   </androidx.appcompat.widget.LinearLayoutCompat>
+
+    <ImageView
+        android:id="@+id/ivDropIcon"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_drop_down"
+        android:rotation="-90"
+        android:layout_marginTop="18dp"
+        android:layout_gravity="center_vertical"/>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

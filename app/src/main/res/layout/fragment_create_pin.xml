@@ -11,14 +11,14 @@
     <ImageView
         android:id="@+id/ivTopAction"
         android:layout_width="48dp"
-        android:visibility="gone"
         android:layout_height="48dp"
         android:layout_marginStart="8dp"
         android:layout_marginBottom="12dp"
         android:background="@drawable/white_back"
         android:paddingHorizontal="12dp"
         android:paddingVertical="12dp"
-        android:src="@drawable/ic_back"
+        android:src="@drawable/ic_close"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/topGuide"
         app:layout_constraintStart_toStartOf="parent"
         app:tint="@color/black" />
@@ -55,81 +55,134 @@
             android:elevation="2dp"
             android:paddingHorizontal="24dp"
             android:paddingBottom="24dp">
-<RelativeLayout android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:paddingVertical="20dp">
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical"
+                android:paddingVertical="20dp">
 
 
-    <TextView
-        android:id="@+id/tvTitle"
-        style="@style/TitleText"
-        android:text="@string/create_a_pin" />
+                <TextView
+                    android:id="@+id/tvTitle"
+                    style="@style/TitleText"
+                    android:text="@string/create_a_pin" />
 
-    <TextView
-        android:id="@+id/tvSubTitle"
-        style="@style/SubTitleText"
-        android:layout_below="@id/tvTitle"
-        android:layout_marginTop="4dp"
-        android:text="@string/secure_your_account_by_creating_a_4_digit_code" />
+                <TextView
+                    android:id="@+id/tvSubTitle"
+                    style="@style/SubTitleText"
+                    android:layout_below="@id/tvTitle"
+                    android:layout_marginTop="4dp"
+                    android:text="@string/secure_your_account_by_creating_a_4_digit_code" />
 
-    <EditText
-        android:id="@+id/etCreatePin"
-        android:layout_width="match_parent"
-        android:layout_height="160dp"
-        android:layout_below="@id/tvSubTitle"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentEnd="true"
-        android:layout_marginTop="24dp"
-        android:background="@android:color/transparent"
-        android:cursorVisible="false"
-        android:focusable="true"
-        android:inputType="numberPassword"
-        android:maxLength="4"
-        android:paddingVertical="32dp"
-        android:textColor="@android:color/transparent" />
+                <EditText
+                    android:id="@+id/etCreatePin"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:layout_below="@id/tvSubTitle"
+                    android:layout_alignParentStart="true"
+                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="24dp"
+                    android:background="@android:color/transparent"
+                    android:cursorVisible="false"
+                    android:focusable="true"
+                    android:inputType="numberPassword"
+                    android:maxLength="4"
+                    android:paddingVertical="32dp"
+                    android:textColor="@android:color/transparent" />
+
+                <LinearLayout
+                    android:id="@+id/llPinIndicators"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignStart="@id/etCreatePin"
+                    android:layout_alignTop="@id/etCreatePin"
+                    android:layout_alignEnd="@id/etCreatePin"
+                    android:layout_alignBottom="@id/etCreatePin"
+                    android:gravity="center"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:background="@drawable/circle_dot_unselected" />
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="8dp"
+                        android:background="@drawable/circle_dot_unselected" />
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:layout_marginStart="8dp"
+                        android:layout_marginEnd="16dp"
+                        android:background="@drawable/circle_dot_unselected" />
+
+                    <ImageView
+                        android:layout_width="16dp"
+                        android:layout_height="16dp"
+                        android:background="@drawable/circle_dot_unselected" />
+
+                </LinearLayout>
+
+
+            </RelativeLayout>
+        </FrameLayout>
+    </ScrollView>
 
     <LinearLayout
-        android:id="@+id/llPinIndicators"
+        android:id="@+id/llIndicators"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignStart="@id/etCreatePin"
-        android:layout_alignTop="@id/etCreatePin"
-        android:layout_alignEnd="@id/etCreatePin"
-        android:layout_alignBottom="@id/etCreatePin"
-        android:gravity="center"
-        android:orientation="horizontal">
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="24dp"
+        android:elevation="2dp"
+        android:orientation="horizontal"
+        android:padding="2dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:background="@drawable/circle_dot_unselected" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/indicator_unselected" />
 
         <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_marginStart="16dp"
-            android:layout_marginEnd="8dp"
-            android:background="@drawable/circle_dot_unselected" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="4dp"
+            android:src="@drawable/indicator_unselected" />
 
         <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:layout_marginStart="8dp"
-            android:layout_marginEnd="16dp"
-            android:background="@drawable/circle_dot_unselected" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
+            android:src="@drawable/indicator_unselected" />
 
         <ImageView
-            android:layout_width="16dp"
-            android:layout_height="16dp"
-            android:background="@drawable/circle_dot_unselected" />
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
+            android:src="@drawable/indicator_unselected" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
+            android:src="@drawable/page_selected_indicator" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="4dp"
+            android:src="@drawable/indicator_unselected" />
 
     </LinearLayout>
 
-
-</RelativeLayout>
-        </FrameLayout>
-    </ScrollView>
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/topGuide"
         android:layout_width="match_parent"

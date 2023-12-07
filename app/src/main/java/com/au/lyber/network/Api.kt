@@ -2,6 +2,7 @@ package com.au.lyber.network
 
 import com.au.lyber.models.*
 import okhttp3.MultipartBody
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -45,6 +46,9 @@ interface Api {
     @GET("user/personal_info")
     suspend fun getPersonalInfo(): Response<User>
 
+    @POST("kyc-service/kyc")
+    suspend fun startKyc():Response<KYCResponse>
+
     @GET("treezor/kyc-liveness")
     suspend fun initiateKyc(): Response<InitiateKycResponse>
 
@@ -57,10 +61,10 @@ interface Api {
     @POST("user/invest/education")
     suspend fun educationStrategy(): Response<MessageResponse>
 
-    @GET("investment-strategies")
-    suspend fun getStrategies(): Response<StrategiesResponse>
+    @GET("strategy-service/strategies")
+    suspend fun getStrategies(@QueryMap hashMap: HashMap<String, Any>): Response<StrategiesResponse>
 
-    @POST("user/investment-strategy")
+    @POST("strategy-service/strategy")
     suspend fun chooseStrategy(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
 
     @GET("coingecko/coins")
@@ -102,9 +106,17 @@ interface Api {
 
     @POST("user/invest-on-asset")
     suspend fun investOnSingleAsset(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
+    @PATCH("strategy-service/strategy")
+    suspend fun editStrategy(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
 
-    @POST("user/invest-on-strategy")
+    @POST("strategy-service/active-strategy")
     suspend fun investOnStrategy(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
+    @HTTP(method = "DELETE", path = "strategy-service/active-strategy", hasBody = true)
+    suspend fun pauseStrategy(@Body hashMap: HashMap<String, Any>): Response<MessageResponsePause>
+
+    @HTTP(method = "DELETE", path = "strategy-service/strategy", hasBody = true)
+    suspend fun deleteStrategy(@Body hashMap: HashMap<String, Any>): Response<MessageResponsePause>
+
 
     @POST("user/swap-crypto")
     suspend fun swapCrypto(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
@@ -169,7 +181,7 @@ interface Api {
     @GET("aplo/venues")
     suspend fun getExchangeListing(): Response<ExchangeListingResponse>
 
-    @GET("user/networks")
+    @GET("network-service/networks")
     suspend fun getNetworks(): Response<NetworksResponse>
 
     @GET("user/whitelisted-addresses")
@@ -181,10 +193,11 @@ interface Api {
     @GET("user/whitelisted-addresses")
     suspend fun getWhitelistedAddress(@Query("keyword") keyword: String): Response<WhitelistingResponse>
 
-    @POST("user/whitelist-address")
+    @POST("wallet-service/withdrawal-address")
     suspend fun addWhitelistingAddress(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
-
-    @HTTP(method = "DELETE", path = "user/whitelist-address", hasBody = true)
+    @PATCH("user-service/user")
+    suspend fun updateUserInfo(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
+    @HTTP(method = "DELETE", path = "wallet-service/withdrawal-address", hasBody = true)
     suspend fun deleteWhiteListing(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
 
     @PUT("user/whitelist-address")
@@ -262,6 +275,8 @@ interface Api {
 
     @POST("user-service/finish-registration")
     suspend fun finishRegistration(): Response<UserLoginResponse>
+    @GET("user-service/2fa-otp")
+    suspend fun getOtpForWithdraw(@QueryMap hashMap: HashMap<String, Any>): Response<CommonResponse>
 
     @GET("news-service/news")
     suspend fun getNews(@Query("id") id: String): Response<NewsResponse>
@@ -275,11 +290,42 @@ interface Api {
     @GET("wallet-service/balance")
     suspend fun getBalance(): Response<BalanceResponse>
 
+    @GET("wallet-service/withdrawal-address")
+    suspend fun getWithdrawalAddress():Response<WithdrawalAddress>
     @POST("user-service/verify-2FA")
     suspend fun verify2FA(@Body hashMap: HashMap<String, Any>): Response<UserLoginResponse>
+
 
     @GET("user-service/export")
     suspend fun getOperationExport(
         @Query("date") date: String = ""
     ): Response<ExportResponse>
+
+    @POST("user-service/contact-support")
+    suspend fun contactSupport(@Body hashMap: HashMap<String, Any>): Response<BooleanResponse>
+
+
+    //patch
+
+
+    @PATCH("user-service/user")
+    suspend fun updateUserAuthentication( @Body hashMap: HashMap<String, Any>): Response<UpdateAuthenticateResponse>
+
+    @GET("user-service/2fa-otp")
+    suspend fun switchOffAuthentication(
+        @Query("details") details: String,
+        @Query("action") action: String
+    ): Response<BooleanResponse>
+
+    @GET("user-service/google-otp")
+    suspend fun getQrUrl():Response<QrCodeResponse>
+
+
+    @POST("user-service/verify-2FA")
+    suspend fun verify2FAWithdraw(@Body hashMap: HashMap<String, Any>): Response<CommonResponseVerfiy>
+    @POST("wallet-service/withdraw")
+    suspend fun createWithdrawalRequest(@Body hashMap: HashMap<String, Any>): Response<CommonResponse>
+    @GET("network-service/network")
+    suspend fun getNetworkById(@Query("id")id: String): Response<NetworkResponse>
+
 }

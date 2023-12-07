@@ -102,7 +102,7 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
             tvNestedAmountValue.text = "1 : "+data!!.ratio
             tvValueLyberFee.text =
                 data.fees.formattedAsset(
-                    price = priceCoin,
+                    priceCoin,
                     rounding = RoundingMode.DOWN
                 ) + data.fromAsset.uppercase()
 
