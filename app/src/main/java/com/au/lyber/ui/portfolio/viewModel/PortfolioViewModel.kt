@@ -212,6 +212,10 @@ class PortfolioViewModel : NetworkViewModel() {
         getBalanceApi()
     }
 
+    fun getExportOperations(date: String) {
+        getExportOperation(date)
+    }
+
 
     fun contactSupport(msg: String) {
         sendMsgToSupport(msg)

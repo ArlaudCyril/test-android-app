@@ -234,6 +234,10 @@ open class NetworkViewModel : ViewModel() {
     private var _qrCodeResponse: MutableLiveData<QrCodeResponse> = MutableLiveData()
     val qrCodeResponse get() = _qrCodeResponse
 
+
+    private var _exportOperationResponse: MutableLiveData<ExportResponse> = MutableLiveData()
+    val exportOperationResponse get() = _exportOperationResponse
+
     fun cancelJob() {
 
     }
@@ -1135,6 +1139,14 @@ open class NetworkViewModel : ViewModel() {
             else listener?.onRetrofitError(res.errorBody())
         }
     }
+
+    fun getExportOperation(date: String) {
+        try {
+            viewModelScope.launch(exceptionHandler) {
+                val res = RestClient.get().getOperationExport(date)
+                if (res.isSuccessful)
+                    _exportOperationResponse.postValue(res.body())
+
     fun qrCodeUrl(){
         viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get(Constants.NEW_BASE_URL).getQrUrl()
@@ -1149,12 +1161,11 @@ open class NetworkViewModel : ViewModel() {
                 val res = RestClient.get().contactSupport(hash)
                 if (res.isSuccessful)
                     _msgResponse.postValue(res.body())
+
                 else listener?.onRetrofitError(res.errorBody())
             }
         } catch (e: Exception) {
             listener?.onError()
-
-          
 
         }
     }
