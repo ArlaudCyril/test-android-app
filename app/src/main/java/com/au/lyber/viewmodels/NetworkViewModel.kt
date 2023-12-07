@@ -223,6 +223,9 @@ open class NetworkViewModel : ViewModel() {
     private val _kycResponse = MutableLiveData<KYCResponse>()
     val kycResponse get() = _kycResponse
 
+    private var _msgResponse: MutableLiveData<BooleanResponse> = MutableLiveData()
+    val msgResponse get() = _msgResponse
+
     private var _booleanResponse: MutableLiveData<BooleanResponse> = MutableLiveData()
     val booleanResponse get() = _booleanResponse
 
@@ -230,6 +233,7 @@ open class NetworkViewModel : ViewModel() {
     val updateAuthenticateResponse get() = _updateAuthenticateResponse
     private var _qrCodeResponse: MutableLiveData<QrCodeResponse> = MutableLiveData()
     val qrCodeResponse get() = _qrCodeResponse
+
     fun cancelJob() {
 
     }
@@ -1137,7 +1141,21 @@ open class NetworkViewModel : ViewModel() {
             if (res.isSuccessful)
                 _qrCodeResponse.postValue(res.body())
 
-            else listener?.onRetrofitError(res.errorBody())
+    fun sendMsgToSupport(msg: String) {
+        try {
+            viewModelScope.launch(exceptionHandler) {
+                val hash = hashMapOf<String, Any>()
+                hash["message"] = msg
+                val res = RestClient.get().contactSupport(hash)
+                if (res.isSuccessful)
+                    _msgResponse.postValue(res.body())
+                else listener?.onRetrofitError(res.errorBody())
+            }
+        } catch (e: Exception) {
+            listener?.onError()
+
+          
+
         }
     }
 }
