@@ -20,6 +20,7 @@ import androidx.core.content.FileProvider
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
+
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -74,6 +75,8 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         val navHostFragment =  requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
 
+        val navHostFragment =  requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.findNavController()
         viewModel.transactionResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
 
@@ -170,19 +173,29 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 //        binding.tvStatusStrongAuth.text =
 //            if (App.prefsManager.isStrongAuth()) "Enabled" else "Disabled"
 
-//        binding.tvStatusAddressBook.text =
-//            if (App.prefsManager.isWhitelisting()) "Whitelisting: Enabled" else "Whitelisting: Disabled"
 
-//        binding.ivTopAction.setOnClickListener(this)
-//        binding.llChangePin.setOnClickListener(this)
+        binding.tvStatusAddressBook.gone()
+        binding.tvStatusAddressBook.text = when (App.prefsManager.withdrawalLockSecurity) {
+            Constants.HOURS_72 -> "72H"
+            Constants.HOURS_24 -> "24H"
+            else -> "No Security"
+        }
+       binding.ivTopAction.setOnClickListener(this)
+        binding.llChangePin.setOnClickListener(this)
+
 //        binding.tvViewAllTransaction.setOnClickListener(this)
 //        binding.tvAddPaymentMethod.setOnClickListener(this)
         binding.tvLogout.setOnClickListener(this)
-//        binding.llStrongAuthentication.setOnClickListener(this)
-//        binding.rlAddressBook.setOnClickListener(this)
+
+        binding.llStrongAuthentication.setOnClickListener(this)
+
         binding.ivProfile.setOnClickListener(this)
 //        binding.llNotification.setOnClickListener(this)
+
         binding.rlExport.setOnClickListener(this)
+
+        binding.llContactUS.setOnClickListener(this)
+
 
         binding.switchFaceId.setOnCheckedChangeListener { button, isChecked ->
             if (button.isPressed) {
@@ -222,7 +235,12 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         }
 
 
-//        binding.ivProfile.setProfile
+
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.ivProfile.setProfile
     }
 
 
@@ -277,17 +295,15 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         binding.apply {
             when (v!!) {
 
-                ivProfile -> ProfileBottomSheet(::optionSelected).show(childFragmentManager, "")
+                ivProfile -> findNavController().navigate(R.id.defaultImagesFragment)/*ProfileBottomSheet(::optionSelected).show(childFragmentManager, "")*/
 
-                rlAddressBook -> requireActivity().replaceFragment(
-                    R.id.flSplashActivity,
-                    AddAddressBookFragment()
-                )
+                rlAddressBook -> findNavController().navigate(R.id.addAddressBookFragment)
 
-                llStrongAuthentication -> requireActivity().replaceFragment(
-                    R.id.flSplashActivity,
-                    StrongAuthenticationFragment()
-                )
+                llStrongAuthentication ->findNavController().navigate(R.id.strongAuthentication)
+//                    requireActivity().replaceFragment(
+//                    R.id.flSplashActivity,
+//                    StrongAuthenticationFragment()
+//                )
 
                 ivTopAction -> requireActivity().onBackPressed()
 
@@ -311,10 +327,16 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 )
 
                 llChangePin -> checkInternet(requireContext()) {
-                    showProgressDialog(requireContext())
-                    viewModel.sendOtpPinChange()
+                    val bundle = Bundle().apply {
+                        putBoolean(Constants.FOR_LOGIN,false)
+                        putBoolean(Constants.IS_CHANGE_PIN,true)
+                    }
+                    findNavController().navigate(R.id.createPinFragment,bundle)
                 }
                 rlExport-> navController.navigate(R.id.exportOperationsFragment)
+
+                llContactUS->navController.navigate(R.id.contactUsFragment)
+
             }
         }
     }

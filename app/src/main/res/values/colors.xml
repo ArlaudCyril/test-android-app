@@ -18,8 +18,8 @@
     <color name="purple_600">#5825AC</color>
     <color name="purple_400">#945DEE</color>
     <color name="purple_200">#C5A7F5</color>
-    <color name="purple_800">#35126D</color>
-    <color name="purple_700">#3E167D</color>
+    <color name="purple_800">#35127D</color>
+    <color name="purple_700">#DF35126D</color>
     <color name="purple_300">#AC82F2</color>
     <color name="purple_100">#DDCCF9</color>
 
@@ -30,10 +30,11 @@
     <color name="purple_gray_600">#6C6577</color>
     <color name="purple_gray_700">#36323C</color>
     <color name="purple_gray_900">#1B191E</color>
+    <color name="purple_gray_300">#9C999E</color>
 
     <color name="green_500">#1EB35A</color>
     <color name="red_500">#DF5A43</color>
-
+    <color name="orange_100">#FFF2D9</color>
 
     <!-- asset colors -->
 

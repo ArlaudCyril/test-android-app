@@ -13,6 +13,12 @@ import kotlinx.coroutines.launch
 class PersonalDataViewModel : NetworkViewModel() {
 
 
+    private var _isReview: Boolean = false
+    var isReview
+        get() = _isReview
+        set(value) {
+            _isReview = value
+        }
     private var _personalData: User? = null
     var personalData
         get() = _personalData
@@ -37,7 +43,7 @@ class PersonalDataViewModel : NetworkViewModel() {
             _firstname = value
             if (personalData != null) {
 //                if (value != personalData!!.first_name)
-                    hashMap["first_name"] = value
+                hashMap["first_name"] = value
             } else
                 hashMap["first_name"] = value
         }
@@ -49,7 +55,7 @@ class PersonalDataViewModel : NetworkViewModel() {
             _lastname = value
             if (personalData != null) {
 //                if (value != personalData!!.last_name)
-                    hashMap["last_name"] = value
+                hashMap["last_name"] = value
             } else
                 hashMap["last_name"] = value
         }
@@ -61,7 +67,7 @@ class PersonalDataViewModel : NetworkViewModel() {
             _birthdate = value
             if (personalData != null) {
 //                if (value != personalData!!.last_name)
-                    hashMap["dob"] = value
+                hashMap["dob"] = value
             } else
                 hashMap["dob"] = value
         }
@@ -73,7 +79,7 @@ class PersonalDataViewModel : NetworkViewModel() {
             _birthPlace = value
             if (personalData != null) {
 //                if (value != personalData!!.birth_place)
-                    hashMap["birth_place"] = value
+                hashMap["birth_place"] = value
             } else
                 hashMap["birth_place"] = value
         }
@@ -85,7 +91,7 @@ class PersonalDataViewModel : NetworkViewModel() {
             _birthCountry = value
             if (personalData != null) {
 //                if (value != personalData!!.birth_place)
-                    hashMap["birth_country"] = value
+                hashMap["birth_country"] = value
             } else
                 hashMap["birth_country"] = value
         }
@@ -105,7 +111,7 @@ class PersonalDataViewModel : NetworkViewModel() {
             _nationality = value
             if (personalData != null) {
 //                if (value != personalData!!.birth_place)
-                    hashMap["nationality"] = value
+                hashMap["nationality"] = value
             } else
                 hashMap["nationality"] = value
         }
@@ -117,7 +123,7 @@ class PersonalDataViewModel : NetworkViewModel() {
             _email = value
             if (personalData != null) {
 //                if (value != personalData!!.birth_place)
-                    hashMap["email"] = value
+                hashMap["email"] = value
             } else
                 hashMap["email"] = value
         }
@@ -151,7 +157,7 @@ class PersonalDataViewModel : NetworkViewModel() {
             _city = value
             if (personalData != null) {
 //                if (value != personalData!!.city)
-                    hashMap["city"] = value
+                hashMap["city"] = value
             } else
                 hashMap["city"] = value
         }
@@ -163,7 +169,7 @@ class PersonalDataViewModel : NetworkViewModel() {
             _state = value
             if (personalData != null) {
 //                if (value != personalData!!.state)
-                    hashMap["state"] = value
+                hashMap["state"] = value
             } else
                 hashMap["state"] = value
         }
@@ -175,7 +181,7 @@ class PersonalDataViewModel : NetworkViewModel() {
             _zipCode = value
             if (personalData != null) {
 //                if (value != personalData!!.zip_code.toString())
-                    hashMap["zip_code"] = value.toLong()
+                hashMap["zip_code"] = value.toLong()
             } else
                 hashMap["zip_code"] = value.toLong()
         }
@@ -187,7 +193,7 @@ class PersonalDataViewModel : NetworkViewModel() {
             _country = value
             if (personalData != null) {
 //                if (value != personalData!!.country)
-                    hashMap["country"] = value
+                hashMap["country"] = value
             } else
                 hashMap["country"] = value
         }
@@ -199,7 +205,7 @@ class PersonalDataViewModel : NetworkViewModel() {
             _completeAddress = value
             if (personalData != null) {
 //                if (value != personalData!!.address1)
-                    hashMap["address1"] = value
+                hashMap["address1"] = value
             } else
                 hashMap["address1"] = value
         }
@@ -226,7 +232,7 @@ class PersonalDataViewModel : NetworkViewModel() {
             _workIndustry = value
             if (personalData != null) {
 //                if (value != personalData!!.occupation)
-                    hashMap["occupation"] = value
+                hashMap["occupation"] = value
             } else
                 hashMap["occupation"] = value
         }
@@ -238,7 +244,7 @@ class PersonalDataViewModel : NetworkViewModel() {
             _annualIncome = value
             if (personalData != null) {
 //                if (value != personalData!!.incomeRange)
-                    hashMap["incomeRange"] = value
+                hashMap["incomeRange"] = value
             } else
                 hashMap["incomeRange"] = value
         }
@@ -250,7 +256,7 @@ class PersonalDataViewModel : NetworkViewModel() {
             _personalAssets = value
             if (personalData != null) {
 //                if (value != personalData!!.personalAssets)
-                    hashMap["mainUse"] = value
+                hashMap["mainUse"] = value
             } else
                 hashMap["mainUse"] = value
         }
