@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -8,6 +8,10 @@
     android:fitsSystemWindows="true"
     android:orientation="vertical">
 
+<androidx.appcompat.widget.LinearLayoutCompat
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/title"
@@ -24,6 +28,8 @@
         style="@style/SubheadMabry"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:gravity="center"
+        android:layout_marginHorizontal="24dp"
         android:layout_marginTop="4dp"
         android:text="@string/enter_the_code_displayed_on_your_email_" />
 
@@ -34,6 +40,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="24dp"
         android:gravity="center"
+        android:visibility="gone"
         android:text="mail@gmail.com"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@color/purple_gray_800" />
@@ -150,6 +157,16 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
+    <TextView
+        android:id="@+id/tvBack"
+        style="@style/SubheadMabry"
+        android:visibility="gone"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="4dp"
+        android:layout_marginBottom="24dp"
+        android:text="@string/back" />
+
     <Button
         android:id="@+id/btnCancel"
         style="@style/ButtonStyle"
@@ -163,5 +180,6 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         android:textColor="@color/purple_gray_700" />
 
+</androidx.appcompat.widget.LinearLayoutCompat>
 
-</LinearLayout>
+</ScrollView>

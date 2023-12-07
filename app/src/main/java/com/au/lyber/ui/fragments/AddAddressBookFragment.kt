@@ -12,6 +12,7 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.au.lyber.R
@@ -19,7 +20,10 @@ import com.au.lyber.databinding.AppItemLayoutBinding
 import com.au.lyber.databinding.FragmentCryptoAddressBookBinding
 import com.au.lyber.databinding.ItemAddressesBinding
 import com.au.lyber.databinding.LoaderViewBinding
+import com.au.lyber.models.AssetBaseData
 import com.au.lyber.models.Whitelistings
+import com.au.lyber.models.WithdrawAddress
+import com.au.lyber.ui.activities.BaseActivity
 import com.au.lyber.ui.adapters.BaseAdapter
 import com.au.lyber.ui.fragments.bottomsheetfragments.AddAddressInfoBottomSheet
 import com.au.lyber.utils.App
@@ -42,8 +46,7 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
 
     private lateinit var viewModel: ProfileViewModel
     private lateinit var adapter: AddressesAdapter
-
-    private var nestedViewHeight: Int = 0
+    private val completeList :MutableList<WithdrawAddress> = mutableListOf()
     private val keyword get() = binding.etSearch.text.trim().toString()
 
     override fun bind() = FragmentCryptoAddressBookBinding.inflate(layoutInflater)
@@ -62,30 +65,26 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
         viewModel = getViewModel(requireActivity())
         viewModel.listener = this
 
-        viewModel.getWhiteListing.observe(viewLifecycleOwner) {
+        viewModel.withdrawalAddresses.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
                 adapter.removeProgress()
-                adapter.setList(it.addresses)
+                adapter.setList(it.data!!)
+                completeList.clear()
+                completeList.addAll(it.data!!)
                 binding.rvAddresses.startLayoutAnimation()
             }
         }
 
         viewModel.deleteWhiteList.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                dismissProgressDialog()
                 checkInternet(requireContext()) {
-                    viewModel.getWhiteListings()
+                    viewModel.getWithdrawalAddresses()
                 }
             }
         }
 
-        viewModel.searchWhitelisting.observe(viewLifecycleOwner) {
-            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                adapter.removeProgress()
-                adapter.setList(it.addresses)
-                binding.rvAddresses.startLayoutAnimation()
-            }
-        }
 
         binding.rvAddresses.let {
             it.adapter = adapter
@@ -95,48 +94,59 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
 
         binding.ivTopAction.setOnClickListener(this)
         binding.llAddAddress.setOnClickListener(this)
-
-        binding.switchWhitelisting.setOnCheckedChangeListener { buttonView, _ ->
-            if (buttonView.isPressed) {
-                requireActivity().replaceFragment(
-                    R.id.flSplashActivity,
-                    EnableWhiteListingFragment()
-                )
-            }
+        binding.llWhitelisting.setOnClickListener {
+            findNavController().navigate(R.id.enableWhiteListingFragment)
         }
-
-        binding.etSearch.addTextChangedListener(onTextChange)
 
         checkInternet(requireContext()) {
-            viewModel.getWhiteListings()
+            viewModel.getWithdrawalAddresses()
         }
 
+        setSearchLogic()
+    }
+    private fun setSearchLogic() {
+        binding.etSearch.addTextChangedListener(object :TextWatcher{
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+                searchingInList(s.toString())
+            }
+
+        })
+
+    }
+    private fun searchingInList(newText: String) {
+        val dummyList  :MutableList<WithdrawAddress> = mutableListOf()
+        for (ina in completeList){
+            if (ina.name!!.contains(newText,true) || ina.address!!.contains(newText,true)){
+                dummyList.add(ina)
+            }
+        }
+        adapter.setList(dummyList)
     }
 
 
-//    private val onFocusChange = View.OnFocusChangeListener { v, hasFocus ->
-//        if (hasFocus)
-//            binding.appBar.setExpanded(false,true)
-//        else binding.appBar.setExpanded(true,true)
-//    }
-
-    private fun showInfo(data: Whitelistings) {
+    private fun showInfo(data: WithdrawAddress) {
         AddAddressInfoBottomSheet(true,requireActivity()) {
             if (it == 1) {
                 // delete
                 checkInternet(requireContext()) {
-                    showProgressDialog(requireContext())
-                    viewModel.deleteWhiteList(hashMapOf(Constants.ADDRESS_ID to data._id))
+                showProgressDialog(requireContext())
+                    viewModel.deleteWhiteList(data.address!!,data.network!!)
                 }
             } else {
                 //edit
                 viewModel.whitelistAddress = data
-                requireActivity().replaceFragment(R.id.flSplashActivity, AddCryptoAddress().apply {
-                    arguments = Bundle().apply {
-                        putBoolean(Constants.TO_EDIT, true)
-                    }
-                })
+                val bundle = Bundle().apply {
+                    putBoolean(Constants.TO_EDIT, true)
+                }
+                findNavController().navigate(R.id.addCryptoAddress,bundle)
             }
         }
             .setWhiteListing(data)
@@ -156,7 +166,7 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
                 if (keyword.isNotEmpty())
                     viewModel.searchWhitelist(keyword)
                 else
-                    viewModel.getWhiteListings()
+                    viewModel.getWithdrawalAddresses()
 
 
             }
@@ -165,19 +175,17 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
     }
 
     override fun onResume() {
-//        with(App.prefsManager.isWhitelisting()) {
-//            binding.switchWhitelisting.isChecked = this
-//            if (this) {
-//                binding.llDurationInfo.visible()
-//                binding.tvDuration.text = when (App.prefsManager.getExtraSecurity()) {
-//                    Constants.HOURS_72 -> "72H"
-//                    Constants.HOURS_24 -> "24H"
-//                    else -> "No Security"
-//                }
-//            } else {
-//                binding.llDurationInfo.gone()
-//            }
-//        }
+        binding.llDurationInfo.visible()
+        binding.tvDuration.text = when (App.prefsManager.withdrawalLockSecurity) {
+            Constants.HOURS_72 -> "72H"
+            Constants.HOURS_24 -> "24H"
+            else -> ""
+        }
+        binding.tvDurationText.text = when (App.prefsManager.withdrawalLockSecurity) {
+            Constants.HOURS_72 -> getString(R.string.active_during)
+            Constants.HOURS_24 -> getString(R.string.active_during)
+            else ->  getString(R.string.no_security)
+        }
 
         super.onResume()
     }
@@ -186,23 +194,17 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
         binding.apply {
             when (v!!) {
 
-                ivTopAction -> requireActivity().onBackPressed()
+                ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
                 llAddAddress -> {
-//                    if (App.prefsManager.user?.is_address_whitelisting_enabled == true)
-//                        requireActivity().replaceFragment(
-//                            R.id.flSplashActivity,
-//                            AddCryptoAddress()
-//                        ) else "Please enable whitelisting to add addresses".showToast(
-//                        requireContext()
-//                    )
+                 findNavController().navigate(R.id.addCryptoAddress)
                 }
 
             }
         }
     }
 
-    class AddressesAdapter(private val clickListener: (Whitelistings) -> Unit = { _ -> }) :
-        BaseAdapter<Whitelistings>() {
+    class AddressesAdapter(private val clickListener: (WithdrawAddress) -> Unit = { _ -> }) :
+        BaseAdapter<WithdrawAddress>() {
 
         inner class AddressViewHolder(val binding: ItemAddressesBinding) :
             RecyclerView.ViewHolder(binding.root) {
@@ -238,10 +240,14 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
             if (itemList[position] != null) {
 
                 (holder as AddressViewHolder).binding.apply {
+
                     itemList[position]?.let {
+                        val id = it.network
+                        BaseActivity.assets.firstNotNullOfOrNull{ item -> item.takeIf {item.id == id}}
+                            ?.let {
+                                    it1 -> ivItem.loadCircleCrop(it1.imageUrl);
 
-                        ivItem.loadCircleCrop(it.logo)
-
+                            }
                         tvStartTitle.text = it.name
                         tvStartSubTitle.text = it.address
 

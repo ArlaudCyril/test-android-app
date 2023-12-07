@@ -2,6 +2,6 @@
 <shape xmlns:android="http://schemas.android.com/apk/res/android"
     android:shape="line">
 
-    <solid android:color="@color/purple_gray_500"/>
+    <solid android:color="@color/purple_gray_100"/>
 
 </shape>
