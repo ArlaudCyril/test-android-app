@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+
+    <ImageView
+        android:id="@+id/ivTopAction"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="12dp"
+        android:padding="12dp"
+        android:src="@drawable/ic_back" />
+
+    <TextView
+        android:id="@+id/tvInvestmentTitle"
+        style="@style/SubheadMabry"
+        android:layout_alignTop="@id/ivTopAction"
+        android:layout_alignBottom="@id/ivTopAction"
+        android:layout_centerHorizontal="true"
+        android:layout_marginStart="12dp"
+        android:gravity="center"
+        android:text="@string/language"
+        android:textColor="@color/purple_gray_900" />
+
+    <LinearLayout
+        android:id="@+id/llAccount"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ivTopAction"
+        android:layout_marginHorizontal="18dp"
+        android:layout_marginTop="34dp"
+        android:background="@drawable/curved_button"
+        android:backgroundTint="@color/purple_gray_50"
+        android:orientation="vertical">
+
+        <RelativeLayout
+            android:id="@+id/rlEnglish"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="16dp">
+
+            <TextView
+                style="@style/SubheadMabry"
+                android:layout_alignParentStart="true"
+                android:text="@string/english"
+                android:drawablePadding="16dp"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="12dp"
+                android:drawableStart="@drawable/flag_british"
+                android:textColor="@color/purple_gray_700"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/ivEnglish"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_centerVertical="true"
+                android:layout_marginEnd="12dp"
+                android:src="@drawable/purple_tick" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rlFrench"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="16dp">
+
+            <TextView
+                style="@style/SubheadMabry"
+                android:layout_alignParentStart="true"
+                android:text="@string/french"
+                android:layout_centerVertical="true"
+                android:drawablePadding="16dp"
+                android:layout_marginStart="12dp"
+                android:drawableStart="@drawable/flag_france"
+                android:textColor="@color/purple_gray_700"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/ivFrench"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginEnd="12dp"
+                android:layout_centerVertical="true"
+                android:src="@drawable/purple_tick"
+                android:visibility="gone" />
+
+        </RelativeLayout>
+    </LinearLayout>
+</RelativeLayout>
