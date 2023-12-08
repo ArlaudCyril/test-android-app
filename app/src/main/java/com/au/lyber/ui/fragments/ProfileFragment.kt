@@ -119,6 +119,14 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 //                binding.tvAddPaymentMethod.gone()
 //            }
         }
+        if (App.prefsManager.getLanguage().isNotEmpty()) {
+            val ln = App.prefsManager.getLanguage()
+            if (ln == Constants.FRENCH)
+                binding.tvLanguage.text = getString(R.string.french)
+            else
+                binding.tvLanguage.text = getString(R.string.english)
+
+        }
 
         viewModel.logoutResponse.observe(viewLifecycleOwner) {
             dismissProgressDialog()
@@ -162,7 +170,6 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         }
 
 
-
 //        binding.tvStatusStrongAuth.text =
 //            if (App.prefsManager.isStrongAuth()) "Enabled" else "Disabled"
 
@@ -172,7 +179,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
             Constants.HOURS_24 -> "24H"
             else -> "No Security"
         }
-       binding.ivTopAction.setOnClickListener(this)
+        binding.ivTopAction.setOnClickListener(this)
         binding.llChangePin.setOnClickListener(this)
 //        binding.tvViewAllTransaction.setOnClickListener(this)
 //        binding.tvAddPaymentMethod.setOnClickListener(this)
@@ -182,6 +189,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 
         binding.ivProfile.setOnClickListener(this)
 //        binding.llNotification.setOnClickListener(this)
+        binding.rlLanguage.setOnClickListener(this)
 
         binding.switchFaceId.setOnCheckedChangeListener { button, isChecked ->
             if (button.isPressed) {
@@ -219,7 +227,6 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 
             binding.rvTransactions.startLayoutAnimation()
         }
-
 
 
     }
@@ -285,7 +292,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 
                 rlAddressBook -> findNavController().navigate(R.id.addAddressBookFragment)
 
-                llStrongAuthentication ->findNavController().navigate(R.id.strongAuthentication)
+                llStrongAuthentication -> findNavController().navigate(R.id.strongAuthentication)
 //                    requireActivity().replaceFragment(
 //                    R.id.flSplashActivity,
 //                    StrongAuthenticationFragment()
@@ -314,10 +321,17 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 
                 llChangePin -> checkInternet(requireContext()) {
                     val bundle = Bundle().apply {
-                        putBoolean(Constants.FOR_LOGIN,false)
-                        putBoolean(Constants.IS_CHANGE_PIN,true)
+                        putBoolean(Constants.FOR_LOGIN, false)
+                        putBoolean(Constants.IS_CHANGE_PIN, true)
                     }
-                    findNavController().navigate(R.id.createPinFragment,bundle)
+                    findNavController().navigate(R.id.createPinFragment, bundle)
+                }
+
+                rlLanguage -> {
+                    val bundle = Bundle().apply {
+                        putString(Constants.SELECTED_LANGUAGE, "english")
+                    }
+                    findNavController().navigate(R.id.chooseLanguageFragment, bundle)
                 }
             }
         }
@@ -353,9 +367,11 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                                     it.exchange_to_amount.toString().decimalPoints(5)
                                 }${it.exchange_to.uppercase()}"
                         }
+
                         2 -> { // deposit
                             root.gone()
                         }
+
                         3 -> { // withdraw
                             ivAssetIcon.setImageResource(R.drawable.ic_withdraw)
                             tvAssetName.text = context.getString(R.string.withdrawal)
@@ -365,6 +381,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                                     it.asset_amount.toString().decimalPoints(5)
                                 }${it.asset_id.uppercase()}"
                         }
+
                         4 -> { // single asset
                             ivAssetIcon.setImageResource(R.drawable.ic_deposit)
                             tvAssetName.text = "Bought ${it.asset_id.uppercase()}"
@@ -374,6 +391,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                                     it.asset_amount.toString().decimalPoints(5)
                                 }${it.asset_id.uppercase()}"
                         }
+
                         else -> root.gone()
                     }
                 }
@@ -401,6 +419,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                             viewModel.upload(image)
                         }
                     }
+
                     2 -> {
                         it.data?.data?.let { uri ->
 

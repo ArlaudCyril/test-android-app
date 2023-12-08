@@ -151,7 +151,15 @@ class PreferenceManager(context: Context) {
         return mSharedPreferences.getString("phone", "") ?: ""
 
     }
+    fun setLanguage(language: String) {
+        mEditor.putString("language", language)
+        mEditor.apply()
+    }
 
+    fun getLanguage(): String {
+        return mSharedPreferences.getString("language", "") ?: ""
+
+    }
     fun logout() {
         mEditor.clear()
         mEditor.apply()

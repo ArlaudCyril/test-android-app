@@ -110,13 +110,10 @@
     <string name="activate_face_message">Access Lyber fast and easily by logging with Face ID.</string>
     <string name="decline">Decline</string>
     <string name="activate">Activate</string>
-
     <string name="choose_strategy">Choose a strategy</string>
-
     <string name="titleOne">A diversified strategy</string>
     <string name="titleTwo">A flexible frequency</string>
     <string name="titleThree">An evolving and automated portfolio</string>
-
     <string name="subTitleOne">Choose an investment strategy according to your risk profile. The allocation to crypto-currencies or FIAT will depend on your selection.</string>
     <string name="subTitleTwo">Investing the same amount regularly is the best way to see profits. Every week, every month, it\'s up to you.</string>
     <string name="subTitleThree">Once the regular investment is set, your portfolio will be managed automatically and you will be able to see its evolution.</string>
@@ -162,7 +159,7 @@
     <string name="open_gmail">Open Gmail</string>
     <string name="address">Address</string>
     <string name="subtitle_address">We need this information to ensure that crypto services are legal in your country of residence.</string>
-    <string name="hint_street_and_number">Street and number</string>
+    <string name="hint_street_and_number">Street number</string>
     <string name="hint_building_floor">Building, floor</string>
     <string name="hint_city">City</string>
     <string name="hint_zip_code">ZIP code</string>
@@ -174,13 +171,13 @@
     <string name="hint_source_income">Your source of income</string>
     <string name="hint_work_industry">Your work industry</string>
     <string name="hint_annual_income">Your annual income</string>
-    <string name="bottom_sheet_cypto_exp_title">What’s your investment experience with cryptos ?</string>
+    <string name="bottom_sheet_cypto_exp_title">What’s your investment experience with cryptos?</string>
     <string name="verification_ongoing">Verification ongoing …</string>
     <string name="identity_verification">Identity verification</string>
     <string name="subtitle_verify_your_identity">This step protects you from fraud and identity theft. Use your phone to:</string>
     <string name="_1">1</string>
     <string name="take_a_picture_of_your_papers"><stroke>Take a picture of your documents</stroke></string>
-    <string name="national_id_card_passport_ou_driving_license"><stroke>National ID card, passport or driving license</stroke></string>
+    <string name="national_id_card_passport_ou_driving_license"><stroke>National ID card, passport or driving licence</stroke></string>
     <string name="take_a_selfie"><stroke>Take a selfie</stroke></string>
     <string name="open_camera">Open camera</string>
     <string name="openSettings">Open settings</string>
@@ -271,7 +268,7 @@
     <string name="top_gainers">Top gainers</string>
     <string name="top_losers">Top losers</string>
     <string name="stable">Stable</string>
-    <string name="how_many_personal_asset_you_have">How many personal asset you have ?</string>
+    <string name="how_many_personal_asset_you_have">How many personal Assets Do you have?</string>
     <string name="your_withdrawal_has_been_taken_into_account">Your withdrawal has been taken into account.</string>
     <string name="your_investment_has_been_taken_into_account">Your investment has been taken into account.</string>
     <string name="verification">Verification</string>
@@ -296,12 +293,12 @@
     <string name="add_a_address">Add a %1$s address</string>
     <string name="add_an_address">Add address</string>
     <string name="wallet">Wallet</string>
-    <string name="please_enter_address_name">Please enter address name</string>
-    <string name="please_select_a_network">Please select a network</string>
+    <string name="please_enter_address_name">Please enter your address name</string>
+    <string name="please_select_a_network">Please select your network</string>
     <string name="please_enter_address">Please enter %1$s address</string>
     <string name="please_enter_address_">Please enter address</string>
-    <string name="please_enter_valid_address">Please enter valid address</string>
-    <string name="please_select_a_exchange">Please enter exchange</string>
+    <string name="please_enter_valid_address">Please enter a valid address</string>
+    <string name="please_select_a_exchange">Please select your exchange</string>
     <string name="limited_to_25_000_per_week">Limited to 25 000€ per week</string>
     <string name="limited_to_1000_per_week">Limited to 1000€ per week</string>
     <string name="please_enter_street_number">Please enter street number</string>
@@ -312,7 +309,7 @@
     <string name="all_assets">All assets</string>
     <string name="unable_to_connect_to_the_server">Unable to connect to the server</string>
     <string name="assetbasedata">%1$s AssetBaseData</string>
-    <string name="your_allocations_is_greater_than_100_remove">Your allocations is greater than 100%, remove </string>
+    <string name="your_allocations_is_greater_than_100_remove">Your allocation is greater than 100%, remove </string>
     <string name="your_allocations_is_less_than_100_add">Your allocations is less than 100%, add </string>
     <string name="your_strategy_is_ready_to_be_saved">Your strategy is ready to be saved.</string>
     <string name="deposit_adress">Deposit Address</string>
@@ -337,19 +334,19 @@
     <string name="email_verified">Email Verified</string>
     <string name="medium">Medium</string>
     <string name="_5_roi">~5% ROI</string>
-    <string name="please_tell_us_your_investment_experience_with_crypto">Please tell us your investment experience with crypto</string>
-    <string name="please_tell_us_your_source_of_income">Please tell us your source of income</string>
-    <string name="please_tell_us_which_work_industry_your_are_working">Please tell us which work industry your are working</string>
-    <string name="please_tell_us_your_annual_income">Please tell us your annual income</string>
+    <string name="please_tell_us_your_investment_experience_with_crypto">Please choose your investment experience with crypto</string>
+    <string name="please_tell_us_your_source_of_income">Please select your source of income</string>
+    <string name="please_tell_us_which_work_industry_your_are_working">Please select your work industry</string>
+    <string name="please_tell_us_your_annual_income">Please select your annual income</string>
     <string name="today">TODAY</string>
     <string name="yesterday">YESTERDAY</string>
-    <string name="please_enter_your_first_name">Please enter your First Name</string>
+    <string name="please_enter_your_first_name">Please enter first name</string>
     <string name="please_enter_your_last_name">Please enter your Last Name</string>
     <string name="please_enter_your_birth_date">Please enter your birth date</string>
     <string name="please_enter_your_birth_place">Please enter your birth place</string>
     <string name="please_select_your_birth_country">Please select your birth country</string>
     <string name="please_enter_your_nationality">Please enter your Nationality</string>
-    <string name="please_tell_us_that_you_have_us_citizenship_or_not">Please tell us that you have US citizenship or not</string>
+    <string name="please_tell_us_that_you_have_us_citizenship_or_not">Please select are you US Citizen or not?</string>
     <string name="please_selected_an_strategy">Please selected an strategy</string>
     <string name="withdrawal">Withdrawal</string>
     <string name="file_not_found">file not found</string>
@@ -465,7 +462,7 @@
     <string name="enter_wallet_address">Enter wallet address</string>
     <string name="enter_address">Enter address</string>
     <string name="fund_your_account_from_your_bank_account">Fund your account from your bank account</string>
-    <string name="make_sure_the_name_of_the_bank_account_is_the_same_as_your_name_on_lyber_frida_kahlo">Make sure the name of the bank account is the same as your name on Lyber (Frida Kahlo).</string>
+    <string name="make_sure_the_name_of_the_bank_account_is_the_same_as_your_name_on_lyber_frida_kahlo">Make sure the name of the bank account is the same as your name on Lyber).</string>
     <string name="reference_number">Reference number</string>
     <string name="swift_bic">SWIFT/BIC</string>
     <string name="recipient_name">Recipient name</string>
@@ -569,7 +566,7 @@
     <string name="security_of_your_notebook">Security of your notebook</string>
     <string name="active_during">Active during:</string>
     <string name="the_address_book_limits_your_withdrawals_and_deposits_to_the_addresses_in_your_address_book">The address book limits your withdrawals and deposits to the addresses in your address book.</string>
-    <string name="you_can_immediately_withdraw_to_any_address_newly_added_to_your_address_book">You can immediately withdraw to any address newly added to your address book.</string>
+    <string name="you_can_immediately_withdraw_to_any_address_newly_added_to_your_address_book">You will be able to withdraw immediately to an address newly added to your address book.</string>
     <string name="shifting_no_security">You will be able to withdraw immediately to any address newly added to your address book. These changes will take effect after 24 hours.</string>
     <string name="a_delay_of_72_hours_will_be_required_before_you_can_withdraw_to_any_address_newly_added_to_your_address_book">A delay of 72h will be required before you can withdraw to any address newly added to your address book.</string>
     <string name="a_24h_delay_is_required_before_you_can_withdraw_to_any_address_newly_added_to_your_address_book">A delay of 24h will be required before you can withdraw to any address newly added to your address book.</string>
@@ -591,8 +588,8 @@
     <string name="you_do_not_have_this_asset">You do not have this asset</string>
     <string name="verification_text">To finalise your registration, we need to verify your identity. In the next step, you will need to provide an electronic signature and a photograph of an identity document.</string>
     <string name="start_identity_verifications">Start Identity Verification</string>
-    <string name="review_my_informations">Review my information</string>
-    <string name="change_my_informations">Change my information</string>
+    <string name="review_my_informations">Review my informations</string>
+    <string name="change_my_informations">Change my informations</string>
     <string name="password_warning">The password must have atleast 10 characters, 1 special character, 1 lower case and 1 upper case</string>
     <string name="you_have_strong_password">You have a strong password</string>
     <string name="please_enter_name_for_your_strategy">Please enter name for your strategy.</string>
@@ -613,5 +610,253 @@
     <string name="please_select_the_frequency">Please select the frequency</string>
     <string name="enabled">Enabled</string>
     <string name="pause_strategy">Pause Strategy</string>
+    <string name="language">Language</string>
+    <string name="english">English</string>
+    <string name="french">Français</string>
+    <string name="LYBER_UNDER_MAINTENANCE">Lyber is under maintenance. Come back later!</string>
+    <string name="LOADING_MORE">Loading more</string>
+    <string name="NO_MORE_DATA">No more data</string>
+    <string name="LOADING">Loading…</string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
+    <string name="pull_to_refresh">Pull to refresh</string>
+    <string name="release_to_refresh">Release to refresh</string>
+    <string name="or">OR</string>
+    <string name="invest_in_asset_usdt">To invest in an asset, you must first buy USDT, then use the purchased USDT and exchange it for the desired asset.</string>
+    <string name="buy_usdt">Buy USDT</string>
+    <string name="copied">Copied</string>
+    <string name="low">Low</string>
+    <string name="high">High</string>
+    <string name="oops">Oops!</string>
+    <string name="deadline_confirming_purchase_passed">The deadline for confirming your purchase has passed. Would you like to receive a new proposal?</string>
+    <string name="close_account_message">Are you sure you want to close your account? All your data, including saved preferences, transaction history and personal information will be retained for 5 years from the date of account closure. If you are sure, please confirm below.
+    Make sure to withdraw all the money you have in your account before closing it.</string>
+    <string name="make_sure_withdraw">Make sure to withdraw all the money you have in your account before closing it.</string>
+    <string name="minimum_investment">Min Invest</string>
+    <string name="invest">Invest</string>
+    <string name="immediate">Immediate</string>
+    <string name="executing_your_strategy">We are executing your strategy, which may take a few seconds.</string>
+    <string name="execution_in_progress">Execution in progress</string>
+    <string name="single_execution">Single execution</string>
+    <string name="strategy_rejected">Strategy rejected</string>
+    <string name="strategy_executed">Strategy executed</string>
+    <string name="strategy_partially_executed">Strategy partially executed</string>
+    <string name="progress_registration_saved_each_stage">The progress of your registration is saved at each stage. You can stop and start again at any time.</string>
+    <string name="invest_in">Invest in</string>
+    <string name="send_assets_to_another_account">Send assets to another account</string>
+    <string name="return_on_investment">Return on Investment</string>
+    <string name="infos">Infos</string>
+    <string name="annual_percentage">*Annual Percentage</string>
+    <string name="bought">Bought</string>
+    <string name="view_more">View more</string>
+    <string name="read_less">Read Less</string>
+    <string name="next_payment">Next payment</string>
+    <string name="no_active_strategy">You do not have any active strategy yet</string>
+    <string name="deposit_now">Deposit now</string>
+    <string name="no_assets">You don\'t have any assets yet</string>
+    <string name="activate_create_one">Activate/create one now</string>
+    <string name="for_legal_reasons">In order for Lyber to maintain the highest level of security for your account, we need some information from you.</string>
+    <string name="card_holder_name">Cardholder\'s name</string>
+    <string name="are_you_US_citizen">Are you a US Citizen?</string>
+    <string name="postal_address">Postal address</string>
+    <string name="need_informations_legal">We need this information for legal reasons.</string>
+    <string name="street_name">Street name</string>
+    <string name="department">Department</string>
+    <string name="your_monthly_income">Your monthly income</string>
+    <string name="i_have_never_invested">I have never invested</string>
+<!--    <string name="less_than_1000€">&lt; 1 000€</string>-->
+<!--    <string name="between_1000€_and_9999€">Between 1 000€ and 9 999€</string>-->
+<!--    <string name="between_10000€_and_99999€">Between 10 000€ and 99 999€</string>-->
+<!--    <string name="greater_than_100000€">&gt; 100 000€</string>-->
+    <string name="what_your_source_of_income">What\'s your main source of income?</string>
+    <string name="salary">Salary</string>
+    <string name="investments">Investments</string>
+    <string name="savings">Savings</string>
+    <string name="inheritance">Inheritance</string>
+    <string name="credit_loan">Credit/loan</string>
+    <string name="family_others">Family or others</string>
+    <string name="whats_your_work_industry">What’s your work industry?</string>
+    <string name="agriculture">Agriculture, Agribusiness &amp; Natural Resources</string>
+    <string name="arts_media">Art, Entertainment &amp; Media</string>
+    <string name="banking_finance_insurance">Banking, Finance &amp; Insurance</string>
+    <string name="business_services_consulting">Business Services &amp; Consulting</string>
+    <string name="building">Construction, Engineering &amp; Public Works</string>
+    <string name="education_training_research">Education, Training &amp; Research</string>
+    <string name="energy_environment">Energy &amp; Environment</string>
+    <string name="government_administration_social">Government, Public Administration &amp; Social Services</string>
+    <string name="health_medical_pharmaceutical">Health, Medical &amp; Pharmaceutical</string>
+    <string name="hospitality_tourism_catering">Hospitality, Tourism &amp; Catering</string>
+    <string name="it">IT</string>
+    <string name="manufacturing_mettalurgy">Manufacturing &amp; Metallurgy Industry</string>
+    <string name="marketing_advertising_public_relations">Marketing, Advertising &amp; Public Relations</string>
+    <string name="real_estate_property_management">Real Estate &amp; Property Management</string>
+    <string name="retail_ecommerce">Retail &amp; E-commerce</string>
+    <string name="sports_leisure_entertainment">Sports, Leisure &amp; Interactive Entertainment</string>
+    <string name="textile_fashion_apparel">Textile, Fashion &amp; Apparel</string>
+    <string name="transport_logistics_wholesale">Transport, Logistics &amp; Wholesale</string>
+    <string name="what_salary_range_you_fall_into">What salary range do you fall into (net salary)?</string>
+    <string name="disclaimer">Disclaimer</string>
+    <string name="information_provided_application_not_investment_advice">The information provided on the
+    application should not be considered as investment advice, financial advice, trading advice or
+    any other kind of advice and no content of the application should be considered as such. As a
+    reminder, any investment carries a risk of loss. Please note that investing in crypto-currency
+    is risky. It can be highly speculative and can result in both profits and losses.</string>
+    <string name="edit_personal_data">Edit Personal Data</string>
+    <string name="verification_in_progress">Verification in progress</string>
+    <string name="start_verification">Start verification</string>
+    <string name="label_cgu_conditions">I have read and accept the General Terms and Conditions of Sale</string>
+    <string name="label_privacy_policy">I have read and accept the privacy policy</string>
+    <string name="cgu_conditions">General Terms and Conditions of Sale</string>
+    <string name="privacy_policy">privacy policy</string>
+    <string name="preview_my_purchase">Preview my purchase</string>
+    <string name="seconds_to_confirm_purchase">You have %@ seconds to confirm the purchase</string>
+    <string name="confirm_purchase">Confirm purchase</string>
+    <string name="confirm_my_deposit">Confirm my deposit</string>
+    <string name="confirm_deposit">Confirm deposit</string>
+    <string name="more_details">More details</string>
+    <string name="euro_deposit">Euro desposit</string>
+    <string name="preview_deposit">Preview desposit</string>
+    <string name="euros_bank_account">In Euros, from my bank account</string>
+    <string name="pay_with">Pay with</string>
+    <string name="max">€ Max.</string>
+    <string name="recommended">Recommended</string>
+    <string name="to">To</string>
+    <string name="your_Assets">Your assets</string>
+
+
+
+
+
+
+<!--    //MARK: KYC-->
+<!--    "FEATURE_SOON_AVAILABLE" = "This feature will soon be available";-->
+<!--    "DOWNLOAD_ERROR" = "Download error";-->
+<!--    "DOWNLOAD_COMPLETED" = "Download completed";-->
+<!--    //MARK: - ForgotPassword-->
+<!--    "SENT_EMAIL_CONTAINING_RESET_LINK" = "We have sent you an email containing the reset link that you must follow in order to reset your password.";-->
+<!--    "RESET_PASSWORD" = "Reset password";-->
+<!--    "CHANGE_PASSWORD" = "Change password";-->
+<!--    "ENTER_NEW_PASSWORD" = "Enter your new password";-->
+<!--    "ENTER_OLD_PASSWORD" = "Enter your old password";-->
+<!--    "SAVE_NEW_PASSWORD" = "Save my new password";-->
+<!--    "NEW_PASSWORD_CANNOT_SAME" = "Your new password cannot be the same as your old one.";-->
+
+
+<!--    //MARK: - Export-->
+<!--    "REQUEST_BEEN_RECEIVED" = "Your request has been received. The export will be delivered to your email address in a few minutes.";-->
+<!--    "SOMETHING_WENT_WRONG" = "Oh no ! Something went wrong.";-->
+<!--    "SUCCESSFUL" = "Successful";-->
+<!--    "ERROR" = "Error";-->
+<!--    "TRY_AGAIN" = "Try Again";-->
+
+<!--    //MARK: - Adress Book-->
+<!--   "DATE_CREATION" = "Date of creation";-->
+
+<!--    //MARK: - Withdraw-->
+<!--    "AMOUNT_WITHDRAW_ACCOUNT" = "The amount has been withdrawn from your account.";-->
+
+<!--    //MARK: - Transactions-->
+<!--    "IN_PROGRESS" = "In progress";-->
+<!--    "UNDER_CONFORMITY_ANALYSIS" = "Under conformity analysis";-->
+<!--    "CREDITED" = "Credited";-->
+<!--    "PENDING" = "Pending";-->
+<!--    "PROCESSED" = "Processed";-->
+<!--    "VALIDATED" = "Validated";-->
+<!--    "FAILED_SEND" = "Sending failed";-->
+<!--    "SENT" = "Sent";-->
+<!--    "CANCELED" = "Canceled";-->
+
+
+<!--    "ALERT_ACTIVITY" = "Please Select your activity on Lyber";-->
+<!--    "ALERT_LOG_OUT" = "Are you sure you want to Log Out?";-->
+<!--    "ALERT_STRATEGY_NAMET" = "Please enter Strategy name";-->
+<!--    "ALERT_VALID_PASSWORD" = "Password should be of minimum 8 characters";-->
+<!--    "ALERT_DEPARTMENT" = "Please enter the department";-->
+<!--    "ALERT_VALID_ZIPCODE" = "Please enter valid zipcode";-->
+<!--    "ALERT_SCAN_ADDRESS" = "Please enter or scan an address";-->
+<!--    "ALERT_WHITELISTING" = "Please enable whitelisting address to add address";-->
+<!--    "ALERT_AMOUNT_WITHDRAWAL_INFERIOR" = "Your withdrawal amount is inferior to the minimum required";-->
+<!--    "ALERT_AMOUNT_WITHDRAWAL_SUPERIOR" = "Your withdrawal amount plus the fees exceeds your balance";-->
+<!--    "ALERT_STREET_NAME" = "Please enter street name";-->
+
+
+<!--    "SEND_RESET_LINK" = "Send me a reset link";-->
+<!--     "USE_FACE_ID" = "Use Face Id";-->
+<!--    "ADDRESS_BOOK_SECURITY" = "Address book security";-->
+<!--    "HOURS" = "Hours";-->
+<!--    "72_HOURS" = "72 hours";-->
+<!--    "24_HOURS" = "24 hours";-->
+<!--    "NO_EXTRA_SECURITY" = "No extra security";-->
+<!--    "CHANGES_EFFECTIVE_AFTER" = "The changes will be effective after %@";-->
+<!--    "NHOURS_DELAY_REQUIRED" = "A %@ delay is required before you can withdraw to an address newly-->
+<!--    added to your address book.";-->
+<!--    "NHOURS_DELAY_REQUIRED_FUTURE" = "A %@ delay will be required before you can withdraw to an-->
+<!--    address newly added to your address book.";-->
+<!--    "CAN_WITHDRAW_IMMEDIATELY" = "You can withdraw immediately to an address that has just been-->
+<!--    added to your address book.";-->
+<!--    "CAN_WITHDRAW_IMMEDIATELY_FUTURE" = "You will be able to withdraw immediately to an address-->
+<!--    newly added to your address book.";-->
+<!--    "SEND_ONLY" = "Send only";-->
+<!--    "NETWORKS_ASSET_DEACTIVATED" = "All networks of this asset are currently deactivated for-->
+<!--    deposit";-->
+<!--    "ADDRESS_USING" = "to this address, using the";-->
+<!--    "PROTOCOL_CHAIN" = "protocol";-->
+<!--    "ON_LYBER" = "on Lyber";-->
+<!--    "FUND_ACCOUNT" = "Fund account";-->
+<!--    "FORGOT_PASSWORD" = "Forgot your password?";-->
+<!--    "HAPPENS_EVEN_BEST" = "Happens even to the best";-->
+<!--    "SEND_RESET_LINK_EMAIL_ADDRESS" = "We will send you a reset link to your email address";-->
+
+
+<!--    "WITHDRAWAL_SECURITY_SETTINGS" = "Withdrawal security settings";-->
+<!--    "EDIT_CRYPTO_ADRESS" = "Edit crypto address";-->
+<!--    //MARK: - PROFILE-->
+<!--    "OPERATIONS" = "Operations";-->
+<!--    "EXCH" = "Exch. ";-->
+<!--    "WITHDRAWAL_TRANSACTION" = "%@ withdrawal";-->
+<!--    "ACCOUNT" = "Account";-->
+<!--    "ACTIVITY_LOGS" = "Activity logs";-->
+<!--    "CHANGE_PASSWORD" = "Change Password";-->
+<!--    "FACE_ID" = "Face ID";-->
+<!--    "CLOSE_ACCOUNT" = "Close account";-->
+<!--    "CONTACT_FORM" = "Contact form";-->
+<!--    "LIST_ALL_OPERATIONS" = "List of all operations (deposit, exchange and withdrawal) made on your-->
+<!--    account";-->
+<!--    "TOO_MANY_FAILED_ATTEMPT_PLEASE_REAUTHENTICATE" = "Too many failed attempts, please-->
+<!--    reauthenticate";-->
+<!--    "DEVICE_NOT_SUPPORT_REGISTERED_FACEID" = "Device do not support or is not registered with-->
+<!--    FaceID";-->
+<!--    "EXPORT" = "Export";-->
+<!--    "EXPORT_OPERATIONS" = "Export operations";-->
+<!--    "WITHDRAW_ALL_MY_PORTFOLIO" = "Withdraw all my portfolio";-->
+<!--    "PREVIEW_WITHDRAW" = "Preview withdraw";-->
+<!--    "BIC_NUMBER" = "BIC number";-->
+<!--    "RECURRENT" = "Recurrent";-->
+<!--    "OPTIONAL" = "Optional";-->
+<!--    "AVAILABLE" = "Available";-->
+<!--    "SEPA_TRANSFER" = "SEPA transfers take 1-3 business days to be received by Lyber.";-->
+<!--    "ASSETS_ALLOCATIONS_GREATER_0" = "All assets must have allocations greater than 0";-->
+<!--    "CANT_EXCHANGE_ASSET_DONT_HAVE" = "You can't exchange assets you don't have in your wallet";-->
+<!--    "NOT_ENOUGH_BALANCE" = "You don't have enough balance to invest";-->
+<!--    "NOT_ENOUGH_INVESTMENT_PART_1" = "You need to invest atleast";-->
+<!--    "NOT_ENOUGH_INVESTMENT_PART_2" = "USDT in the strategy";-->
+<!--    "NOT_ENOUGH_COINS" = "You don't have enough coins to exchange";-->
+<!--    "NOT_ENOUGH_USDT" = "You don't have enough USDT to perform this action";-->
+<!--    "CANT_BUY_MORE_THAN" = "You can't buy for more than %@ euros in an asset";-->
+<!--    "NOT_ENOUGH_COINS_WITHDRAW" = "You don't have enough coins to withdraw";-->
+<!--    "MINIMUM_AMOUNT_EXCHANGE" = "The minimum amount of assets to be exchanged is";-->
+<!--    "AMOUNT_STRATEGY_INSUFFICIENT" = "Your amount invested in this strategy is insufficient.";-->
+<!--    "TAILOR_STRATEGY_RAISE_AMOUNT" = "To tailor at this strategy, you need to raise your current-->
+<!--    amount";-->
+<!--    "AGREE_INCREASE_INVESTMENT" = "Do you agree to increase the amount you invest?";-->
+<!--    "OH_MY" = "Oh, my !";-->
+<!--    "MUST_HAVE_CARD_REGISTERED_APPLE_PAY" = "You must have Apple Pay activated and a registered card-->
+<!--    to be able to buy USDT with euros.";-->
+<!--    "UNDERSTAND" = "I understand";-->
+<!--    "APPLE_PAY_ERROR" = "Apple Pay error";-->
+
+
+    <!--    "AVAILABLE_FLAT" = "Available FlAT";FlAT disponible to check //TODO-->
+
 
 </resources>
