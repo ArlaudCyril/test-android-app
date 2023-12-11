@@ -99,9 +99,9 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
 
     private fun getList(): List<ExtraSecurity> {
         val list = mutableListOf<ExtraSecurity>()
-        list.add(ExtraSecurity("72 Hours", false))
-        list.add(ExtraSecurity("24 Hours", false))
-        list.add(ExtraSecurity("No Extra Security", false))
+        list.add(ExtraSecurity(requireContext().getString(R.string.hours_72), false))
+        list.add(ExtraSecurity(requireContext().getString(R.string.hours_24), false))
+        list.add(ExtraSecurity(requireContext().getString(R.string.no_extra_security), false))
         list[selectedPosition].isSelected = true
         return list
     }

@@ -18,10 +18,11 @@ import android.view.Window
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.au.lyber.BuildConfig
 import com.au.lyber.R
 import com.au.lyber.databinding.CustomDialogLayoutBinding
 import com.au.lyber.databinding.FragmentProfileBinding
@@ -29,7 +30,7 @@ import com.au.lyber.databinding.ItemMyAssetBinding
 import com.au.lyber.models.Transaction
 import com.au.lyber.ui.activities.SplashActivity
 import com.au.lyber.ui.adapters.BaseAdapter
-import com.au.lyber.ui.fragments.bottomsheetfragments.ProfileBottomSheet
+import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.App
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.checkPermission
@@ -44,10 +45,9 @@ import com.au.lyber.utils.CommonMethods.Companion.setProfile
 import com.au.lyber.utils.CommonMethods.Companion.shouldShowPermission
 import com.au.lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.showToast
-import com.au.lyber.utils.CommonMethods.Companion.toDateFormatTwo
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
-import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
+import com.caverock.androidsvg.BuildConfig
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.*
@@ -61,6 +61,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
     private var imageFile: File? = null
     private var option = 1 // 1 -> camera option 2-> gallery option
 
+    private lateinit var navController : NavController
     override fun bind() = FragmentProfileBinding.inflate(layoutInflater)
 
     @SuppressLint("ClickableViewAccessibility")
@@ -69,7 +70,8 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 
         viewModel = getViewModel(requireActivity())
         viewModel.listener = this
-
+        val navHostFragment =  requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.findNavController()
         viewModel.transactionResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
 
@@ -173,14 +175,16 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 //        binding.tvStatusStrongAuth.text =
 //            if (App.prefsManager.isStrongAuth()) "Enabled" else "Disabled"
 
+
         binding.tvStatusAddressBook.gone()
         binding.tvStatusAddressBook.text = when (App.prefsManager.withdrawalLockSecurity) {
             Constants.HOURS_72 -> "72H"
             Constants.HOURS_24 -> "24H"
-            else -> "No Security"
+            else -> getString(R.string.no_security)
         }
         binding.ivTopAction.setOnClickListener(this)
         binding.llChangePin.setOnClickListener(this)
+
 //        binding.tvViewAllTransaction.setOnClickListener(this)
 //        binding.tvAddPaymentMethod.setOnClickListener(this)
         binding.tvLogout.setOnClickListener(this)
@@ -190,6 +194,11 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         binding.ivProfile.setOnClickListener(this)
 //        binding.llNotification.setOnClickListener(this)
         binding.rlLanguage.setOnClickListener(this)
+
+        binding.rlExport.setOnClickListener(this)
+
+        binding.llContactUS.setOnClickListener(this)
+
 
         binding.switchFaceId.setOnCheckedChangeListener { button, isChecked ->
             if (button.isPressed) {
@@ -260,8 +269,8 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 setContentView(it.root)
                 it.tvTitle.text = getString(R.string.log_out)
                 it.tvMessage.text = getString(R.string.logout_message)
-                it.tvNegativeButton.text = getString(R.string.no)
-                it.tvPositiveButton.text = getString(R.string.yes)
+                it.tvNegativeButton.text = getString(R.string.no_t)
+                it.tvPositiveButton.text = getString(R.string.yes_t)
                 it.tvNegativeButton.setOnClickListener {
                     dismiss()
                 }
@@ -328,11 +337,13 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 }
 
                 rlLanguage -> {
-                    val bundle = Bundle().apply {
-                        putString(Constants.SELECTED_LANGUAGE, "english")
-                    }
-                    findNavController().navigate(R.id.chooseLanguageFragment, bundle)
+
+                    findNavController().navigate(R.id.chooseLanguageFragment)
                 }
+                rlExport-> navController.navigate(R.id.exportOperationsFragment)
+
+                llContactUS->navController.navigate(R.id.contactUsFragment)
+
             }
         }
     }
@@ -357,7 +368,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                         1 -> { //exchange
                             ivAssetIcon.setImageResource(R.drawable.ic_exchange)
                             tvAssetName.text =
-                                "Exch. ${it.exchange_from.uppercase()} to ${it.exchange_to.uppercase()}"
+                                "${context.getString(R.string.exchange)} ${it.exchange_from.uppercase()} ${context.getString(R.string.to_)} ${it.exchange_to.uppercase()}"
                             tvAssetAmount.text =
                                 "-${
                                     it.exchange_from_amount.toString().decimalPoints(5)
@@ -384,7 +395,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 
                         4 -> { // single asset
                             ivAssetIcon.setImageResource(R.drawable.ic_deposit)
-                            tvAssetName.text = "Bought ${it.asset_id.uppercase()}"
+                            tvAssetName.text = "${context.getString(R.string.bought)} ${it.asset_id.uppercase()}"
                             tvAssetAmount.text = "+${it.amount.toFloat().toInt()}${Constants.EURO}"
                             tvAssetAmountInCrypto.text =
                                 "${

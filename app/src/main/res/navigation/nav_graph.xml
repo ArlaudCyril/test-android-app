@@ -11,19 +11,17 @@
             android:id="@+id/action_splashFragment_to_unlockAppFragment2"
             app:destination="@id/unlockAppFragment"
             app:popUpTo="@id/splashFragment"
-            app:popUpToInclusive="true"
-            />
+            app:popUpToInclusive="true" />
         <action
             android:id="@+id/action_splashFragment_to_discoveryFragment"
             app:destination="@id/discoveryFragment"
             app:popUpTo="@id/splashFragment"
-            app:popUpToInclusive="true"
-            />
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/unlockAppFragment"
         android:name="com.au.lyber.ui.fragments.UnlockAppFragment"
-        android:label="UnlockAppFragment" >
+        android:label="UnlockAppFragment">
         <action
             android:id="@+id/action_unlockAppFragment2_to_portfolioFragment"
             app:destination="@id/portfolioHomeFragment" />
@@ -54,47 +52,56 @@
             android:id="@+id/action_portfolioHomeFragment_to_pickYourStrategyFragment"
             app:destination="@id/pickYourStrategyFragment"
             app:enterAnim="@anim/slide_up"
-            app:popExitAnim="@anim/slide_down"/>
+            app:popExitAnim="@anim/slide_down" />
         <action
             android:id="@+id/action_portfolioHomeFragment_to_selectAnAssetFragment"
             app:destination="@id/selectAnAssetFragment"
             app:enterAnim="@anim/slide_up"
-            app:popExitAnim="@anim/slide_down"/>
+            app:popExitAnim="@anim/slide_down" />
         <action
             android:id="@+id/action_portfolioHomeFragment_to_swapWithdrawFromFragment"
             app:destination="@id/swapWithdrawFromFragment"
             app:enterAnim="@anim/slide_up"
-            app:popExitAnim="@anim/slide_down"/>
+            app:popExitAnim="@anim/slide_down" />
         <action
             android:id="@+id/action_portfolioHomeFragment_to_ExchangeFromFragment"
             app:destination="@id/exchangeFromFragment"
             app:enterAnim="@anim/slide_up"
-            app:popExitAnim="@anim/slide_down"/>
+            app:popExitAnim="@anim/slide_down" />
         <action
             android:id="@+id/action_portfolioHomeFragment_to_chooseAssetForDepositFragment"
             app:destination="@id/chooseAssetForDepositFragment"
             app:enterAnim="@anim/slide_up"
-            app:popExitAnim="@anim/slide_down"/>
+            app:popExitAnim="@anim/slide_down" />
         <action
             android:id="@+id/action_portfolioHomeFragment_to_selectAssestForDepositFragment"
             app:destination="@id/selectAssestForDepositFragment"
             app:enterAnim="@anim/slide_up"
-            app:popExitAnim="@anim/slide_down"/>
+            app:popExitAnim="@anim/slide_down" />
         <action
             android:id="@+id/action_portfolioHomeFragment_to_depositFiatWalletFragment"
             app:destination="@id/depositFiatWalletFragment"
             app:enterAnim="@anim/slide_up"
-            app:popExitAnim="@anim/slide_down"/>
+            app:popExitAnim="@anim/slide_down" />
         <action
             android:id="@+id/action_portfolioHomeFragment_to_investmentDetailFragment"
             app:destination="@id/investmentDetailFragment"
             app:enterAnim="@anim/slide_up"
-            app:popExitAnim="@anim/slide_down"/>
+            app:popExitAnim="@anim/slide_down" />
+        <action
+            android:id="@+id/action_profileFragment_to_contactUsFragment"
+            app:destination="@id/contactUsFragment" />
+
     </fragment>
+    <fragment
+        android:id="@+id/contactUsFragment"
+        android:name="com.au.lyber.ui.fragments.ContactUsFragment"
+        android:label="ContactUsFragment" />
+
     <fragment
         android:id="@+id/allAssetFragment"
         android:name="com.au.lyber.ui.fragments.AllAssetFragment"
-        android:label="AllAssetFragment" >
+        android:label="AllAssetFragment">
         <action
             android:id="@+id/action_allAssetFragment_to_portfolioDetailFragment"
             app:destination="@id/portfolioDetailFragment" />
@@ -102,7 +109,7 @@
     <fragment
         android:id="@+id/portfolioDetailFragment"
         android:name="com.au.lyber.ui.portfolio.fragment.PortfolioDetailFragment"
-        android:label="PortfolioDetailFragment" >
+        android:label="PortfolioDetailFragment">
         <action
             android:id="@+id/action_portfolioDetailFragment_to_allAssetFragment"
             app:destination="@id/allAssetFragment" />
@@ -113,51 +120,57 @@
     <fragment
         android:id="@+id/discoveryFragment"
         android:name="com.au.lyber.ui.fragments.DiscoveryFragment"
-        android:label="DiscoveryFragment" >
+        android:label="DiscoveryFragment">
         <action
             android:id="@+id/action_discoveryFragment_to_signupFragment"
             app:destination="@id/createAccountFragment"
             app:enterAnim="@anim/slide_up"
-            app:popExitAnim="@anim/slide_down"/>
+            app:popExitAnim="@anim/slide_down" />
     </fragment>
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.au.lyber.ui.fragments.ProfileFragment"
-        android:label="ProfileFragment" >
+        android:label="ProfileFragment">
         <action
             android:id="@+id/profileFragment_to_strongAuthentication"
-            app:destination="@+id/strongAuthentication"/>
+            app:destination="@+id/strongAuthentication" />
         <action
             android:id="@+id/profileFragment_to_chooseLanguageFragment"
-            app:destination="@+id/chooseLanguageFragment"
-            />
+            app:destination="@+id/chooseLanguageFragment" />
+        <action
+            android:id="@+id/action_profileFragment_to_exportOperationsFragment"
+            app:destination="@id/exportOperationsFragment" />
 
     </fragment>
+    <fragment
+        android:id="@+id/exportOperationsFragment"
+        android:name="com.au.lyber.ui.fragments.ExportOperationsFragment"
+        android:label="ExportOperationsFragment"></fragment>
     <fragment
         android:id="@+id/strongAuthentication"
         android:name="com.au.lyber.ui.fragments.StrongAuthenticationFragment"
         android:label="StrongAuthentication">
         <action
             android:id="@+id/strongAuthentication_to_twoFactorAuthentication"
-            app:destination="@+id/twoFactorAuthentication"/>
+            app:destination="@+id/twoFactorAuthentication" />
     </fragment>
 
     <fragment
         android:id="@+id/addAmountFragment"
         android:name="com.au.lyber.ui.fragments.AddAmountFragment"
-        android:label="AddAmountFragment" >
+        android:label="AddAmountFragment">
 
     </fragment>
     <fragment
         android:id="@+id/pickYourStrategyFragment"
         android:name="com.au.lyber.ui.fragments.PickYourStrategyFragment"
-        android:label="PickYourStrategyFragment" >
+        android:label="PickYourStrategyFragment">
 
     </fragment>
     <fragment
         android:id="@+id/selectAnAssetFragment"
         android:name="com.au.lyber.ui.fragments.SelectAnAssetFragment"
-        android:label="SelectAnAssetFragment" >
+        android:label="SelectAnAssetFragment">
 
     </fragment>
     <fragment
@@ -184,23 +197,23 @@
     <fragment
         android:id="@+id/chooseAssetForDepositFragment"
         android:name="com.au.lyber.ui.fragments.ChooseAssetForDepositFragment"
-        android:label="ChooseAssetForDepositFragment" >
+        android:label="ChooseAssetForDepositFragment">
 
     </fragment>
     <fragment
         android:id="@+id/selectAssestForDepositFragment"
         android:name="com.au.lyber.ui.fragments.SelectAnAssestDepositFragment"
-        android:label="SelectAssestForDepositFragment" >
+        android:label="SelectAssestForDepositFragment">
         <action
             android:id="@+id/action_discoveryFragment_to_chooseAssetForDepositFragment"
             app:destination="@id/chooseAssetForDepositFragment"
             app:enterAnim="@anim/slide_up"
-            app:popExitAnim="@anim/slide_down"/>
+            app:popExitAnim="@anim/slide_down" />
     </fragment>
     <fragment
         android:id="@+id/depositFiatWalletFragment"
         android:name="com.au.lyber.ui.fragments.DepositFiatWalletFragment"
-        android:label="DepositFiatWalletFragment" >
+        android:label="DepositFiatWalletFragment">
 
     </fragment>
 
@@ -211,13 +224,12 @@
     <fragment
         android:id="@+id/confirmPinFragment"
         android:name="com.au.lyber.ui.fragments.ConfirmPinFragment"
-        android:label="ConfirmPinFragment" >
+        android:label="ConfirmPinFragment">
         <action
             android:id="@+id/action_confirmPinFragment_to_profile"
             app:destination="@id/profileFragment"
             app:popUpTo="@id/profileFragment"
-            app:popUpToInclusive="true"
-            />
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/createAccountFragment"
@@ -226,37 +238,37 @@
     <fragment
         android:id="@+id/investmentDetailFragment"
         android:name="com.au.lyber.ui.fragments.InvestmentDetailFragment"
-        android:label="InvestmentDetailFragment" >
+        android:label="InvestmentDetailFragment">
 
     </fragment>
     <fragment
         android:id="@+id/enableNotificationFragment"
         android:name="com.au.lyber.ui.fragments.EnableNotificationFragment"
-        android:label="EnableNotificationFragment" >
+        android:label="EnableNotificationFragment">
         <action
             android:id="@+id/action_enableNotificationFragment_to_completePortfolioFragment"
-            app:destination="@id/completePortfolioFragment"
-           />
+            app:destination="@id/completePortfolioFragment" />
+
     </fragment>
     <fragment
         android:id="@+id/completePortfolioFragment"
         android:name="com.au.lyber.ui.fragments.CompletePortfolioFragment"
-        android:label="CompletePortfolioFragment" >
+        android:label="CompletePortfolioFragment">
         <action
             android:id="@+id/action_completePortfolioFragment_to_educationStrategyHolderFragment"
             app:destination="@id/educationStrategyHolderFragment"
             app:enterAnim="@anim/slide_up"
-            app:popExitAnim="@anim/slide_down"/>
+            app:popExitAnim="@anim/slide_down" />
         <action
             android:id="@+id/action_completePortfolioFragment_to_fillDetailFragment"
             app:destination="@id/fillDetailFragment"
             app:enterAnim="@anim/slide_up"
-            app:popExitAnim="@anim/slide_down"/>
+            app:popExitAnim="@anim/slide_down" />
         <action
             android:id="@+id/action_completePortfolioFragment_to_verifyYourIdentityFragment"
             app:destination="@id/verifyYourIdentityFragment"
             app:enterAnim="@anim/slide_up"
-            app:popExitAnim="@anim/slide_down"/>
+            app:popExitAnim="@anim/slide_down" />
     </fragment>
     <fragment
         android:id="@+id/educationStrategyHolderFragment"
@@ -281,22 +293,20 @@
     <fragment
         android:id="@+id/addAmountForExchangeFragment"
         android:name="com.au.lyber.ui.fragments.AddAmountForExchangeFragment"
-        android:label="AddAmountForExchangeFragment" >
+        android:label="AddAmountForExchangeFragment">
         <action
             android:id="@+id/action_confirmExchangeFragment_to_confirm_fragment"
-            app:destination="@id/confirmExchangeFragment"
-            />
+            app:destination="@id/confirmExchangeFragment" />
     </fragment>
     <fragment
         android:id="@+id/confirmExchangeFragment"
         android:name="com.au.lyber.ui.fragments.ConfirmExchangeFragment"
-        android:label="ConfirmExchangeFragment" >
+        android:label="ConfirmExchangeFragment">
         <action
             android:id="@+id/action_confirmExchangeFragment_to_deatil_fragment"
             app:destination="@id/portfolioDetailFragment"
             app:popUpTo="@id/portfolioHomeFragment"
-            app:popUpToInclusive="true"
-            />
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/confirmWithdrawalFragment"

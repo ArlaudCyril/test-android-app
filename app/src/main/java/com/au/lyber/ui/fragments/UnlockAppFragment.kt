@@ -182,7 +182,7 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
                     if (pin == App.prefsManager.userPin)
                         verified()
                     else {
-                        "Incorrect Pin".showToast(requireContext())
+                        getString(R.string.incorrect_pin).showToast(requireContext())
                         binding.etPin.setText("")
                     }
                 }, 200)
