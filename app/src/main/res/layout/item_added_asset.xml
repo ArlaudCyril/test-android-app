@@ -31,7 +31,7 @@
             android:layout_gravity="center_vertical"
             android:layout_marginStart="12dp"
             android:textStyle="bold"
-            tools:text="Bitcoin" />
+            tools:text="@string/bitcoin" />
 
         <ImageView
             android:id="@+id/lineChart"

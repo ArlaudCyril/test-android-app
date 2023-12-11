@@ -18,7 +18,6 @@
     <string name="title_activity_scrolling">ScrollingActivity</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
-
         "A material metaphor is the unifying theory of a rationalized space and a system of motion."
         "The material is grounded in tactile reality, inspired by the study of paper and ink, yet "
         "technologically advanced and open to imagination and magic.\n"
@@ -29,9 +28,7 @@
         "The fundamentals of light, surface, and movement are key to conveying how objects move, "
         "interact, and exist in space and in relation to each other. Realistic lighting shows "
         "seams, divides space, and indicates moving parts.\n\n"
-
         "Bold, graphic, intentional.\n\n"
-
         "The foundational elements of print based design typography, grids, space, scale, color, "
         "and use of imagery guide visual treatments. These elements do far more than please the "
         "eye. They create hierarchy, meaning, and focus. Deliberate color choices, edge to edge "
@@ -39,49 +36,37 @@
         "interface that immerse the user in the experience.\n"
         "An emphasis on user actions makes core functionality immediately apparent and provides "
         "waypoints for the user.\n\n"
-
         "Motion provides meaning.\n\n"
-
         "Motion respects and reinforces the user as the prime mover. Primary user actions are "
         "inflection points that initiate motion, transforming the whole design.\n"
         "All action takes place in a single environment. Objects are presented to the user without "
         "breaking the continuity of experience even as they transform and reorganize.\n"
         "Motion is meaningful and appropriate, serving to focus attention and maintain continuity. "
         "Feedback is subtle yet clear. Transitions are efﬁcient yet coherent.\n\n"
-
         "3D world.\n\n"
-
         "The material environment is a 3D space, which means all objects have x, y, and z "
         "dimensions. The z-axis is perpendicularly aligned to the plane of the display, with the "
         "positive z-axis extending towards the viewer. Every sheet of material occupies a single "
         "position along the z-axis and has a standard 1dp thickness.\n"
         "On the web, the z-axis is used for layering and not for perspective. The 3D world is "
         "emulated by manipulating the y-axis.\n\n"
-
         "Light and shadow.\n\n"
-
         "Within the material environment, virtual lights illuminate the scene. Key lights create "
         "directional shadows, while ambient light creates soft shadows from all angles.\n"
         "Shadows in the material environment are cast by these two light sources. In Android "
         "development, shadows occur when light sources are blocked by sheets of material at "
         "various positions along the z-axis. On the web, shadows are depicted by manipulating the "
         "y-axis only. The following example shows the card with a height of 6dp.\n\n"
-
         "Resting elevation.\n\n"
-
         "All material objects, regardless of size, have a resting elevation, or default elevation "
         "that does not change. If an object changes elevation, it should return to its resting "
         "elevation as soon as possible.\n\n"
-
         "Component elevations.\n\n"
-
         "The resting elevation for a component type is consistent across apps (e.g., FAB elevation "
         "does not vary from 6dp in one app to 16dp in another app).\n"
         "Components may have different resting elevations across platforms, depending on the depth "
         "of the environment (e.g., TV has a greater depth than mobile or desktop).\n\n"
-
         "Responsive elevation and dynamic elevation offsets.\n\n"
-
         "Some component types have responsive elevation, meaning they change elevation in response "
         "to user input (e.g., normal, focused, and pressed) or system events. These elevation "
         "changes are consistently implemented using dynamic elevation offsets.\n"
@@ -91,9 +76,7 @@
         "the same elevation change relative to their resting elevation.\n"
         "Once the input event is completed or cancelled, the component will return to its resting "
         "elevation.\n\n"
-
         "Avoiding elevation interference.\n\n"
-
         "Components with responsive elevations may encounter other components as they move between "
         "their resting elevations and dynamic elevation offsets. Because material cannot pass "
         "through other material, components avoid interfering with one another any number of ways, "
@@ -119,21 +102,16 @@
     <string name="subTitleThree">Une fois l\'investissement régulier fixé, votre portefeuille sera géré automatiquement et vous pourrez voir son évolution.</string>
     <string name="next">Suivant</string>
     <string name="complete_acc_to_start_investing">Complétez votre compte pour commencer à investir</string>
-
     <string name="create_an_account">Créer un compte</string>
     <string name="create_an_account_strike"><strike>Créer un compte</strike></string>
     <string name="_2">2</string>
-
     <string name="fill_personal_data">Remplir les données personnelles</string>
     <string name="fill_personal_data_strike"><strike>Remplir les données personnelles</strike></string>
-
     <string name="verify_your_identity">Vérifier votre identité</string>
     <string name="verify_your_identity_strike"><strike>Vérifier votre identité</strike></string>
-
     <string name="_3">3</string>
     <string name="make_your_first_investment">Réalisez votre premier investissement</string>
     <string name="make_your_first_investment_strike"><strike>Réalisez votre premier investissement</strike></string>
-
     <string name="_4">4</string>
     <string name="invest_money">Investir</string>
     <string name="complete_your_account">Compléter votre compte</string>
@@ -234,8 +212,8 @@
     <string name="resend_email"><u>Renvoi de l\'email</u></string>
     <string name="logout_message">Êtes-vous sûr de vouloir vous déconnecter ?</string>
     <string name="reg_message">La progression de votre inscription sera perdue</string>
-    <string name="no">Non</string>
-    <string name="yes">Oui</string>
+    <string name="no_t">Non</string>
+    <string name="yes_t">Oui</string>
     <string name="logout"><u>Déconnexion</u></string>
     <string name="note_add_bitcoin_address"><b>Note importante:</b> Votre note va ici et va sur une grande quantité de ligne</string>
     <string name="subtitle_crypto_book">Le carnet d’adresse permet aux retraits de crypto-monnaies de n\'être effectués qu\'à des adresses déjà désignées dans votre carnet d\'adresses. Vous pouvez également activer votre carnet pour ces adresses.</string>
@@ -542,6 +520,23 @@
     <string name="availiable_fiat">FlAT disponible</string>
     <string name="google_authenticator">Google authenticator</string>
     <string name="by_email">Par e-mail</string>
+    <string name="export">Exporter</string>
+    <string name="exportOperations">Actions d\'exportation</string>
+    <string name="successful">Réussite</string>
+    <string name="successfulMsg">Votre demande a été reçue. L\'exportation sera envoyée à votre adresse électronique dans quelques minutes.</string>
+    <string name="error">Erreur</string>
+    <string name="somethingWentWrong">Oh non ! Il y a eu un problème.</string>
+    <string name="tryAgain">Essayez à nouveaun</string>
+    <string name="contact_us">Contactez nous</string>
+    <string name="send_us_email">Envoyez-nous un courriel à contact@lyber.com ou remplissez le formulaire de contact ci-dessous :</string>
+    <string name="contact_form">Formulaire de contact</string>
+    <string name="msg">Message</string>
+    <string name="contact_us_by_mail">Vous pouvez également nous contacter par courrier à l\'adresse </string>
+    <string name="contact_address">274 ter/3, Avenue de la Marne, 59700 Marcq-en-Baroeul, Lille, France.</string>
+    <string name="will_get_back">Nous vous répondrons à l\'adresse suivante : %@</string>
+    <string name="send">Envoyer</string>
+    <string name="msgIsEmpty">Le champ du message est vide</string>
+    <string name="msgHasBeenSent">Le message a bien été envoyé</string>
     <string name="manage_app_cases">Gérer les cas d\'application du 2FA</string>
     <string name="validate_withdrawal">Valider un retrait</string>
     <string name="enableDisableWhitelisting">Activer/Désactiver la liste blanche</string>
@@ -663,10 +658,6 @@
     <string name="department">Département</string>
     <string name="your_monthly_income">Votre revenu mensuel</string>
     <string name="i_have_never_invested">Je n\'ai jamais investi</string>
-<!--    <string name="less_than_1000€">&lt; 1 000€</string>-->
-<!--    <string name="between_1000€_and_9999€">Entre 1 000€ et 9 999€</string>-->
-<!--    <string name="between_10000€_and_99999€">Entre 10 000€ et 99 999€</string>-->
-<!--    <string name="greater_than_100000€">&gt; 100 000€</string>-->
     <string name="what_your_source_of_income">Quelle est votre principale source de revenus ?</string>
     <string name="salary">Salaire</string>
     <string name="investments">Placements</string>
@@ -693,7 +684,7 @@
     <string name="sports_leisure_entertainment">Sport, Loisirs &amp; Divertissement Interactif</string>
     <string name= "textile_fashion_apparel">Textile, Mode &amp; Habillement</string>
     <string name="transport_logistics_wholesale">Transport, Logistique &amp; Vente en Gros</string>
-    <string name= "what_salary_range_you_fall_into">Dans quelle tranche de salaire vous situez-vous (salaire net) ?</string>
+    <string name= "what_salary_range_you_fall_into">Dans quelle tranche de salaire vous situez-vous ?</string>
     <string name="disclaimer">Avertissement</string>
     <string name="information_provided_application_not_investment_advice">Les informations fournies sur l\'application ne doivent pas être considérées comme des conseils en investissement,
     des conseils financiers, des conseils en trading ou toute autre sorte de conseil et aucun contenu de l\'application ne
@@ -718,6 +709,54 @@
     <string name="pay_with">Payer avec</string>
     <string name="max">€ Max.</string>
     <string name="recommended">Recommandé</string>
-    <string name="to">Vers</string>
+    <string name="to">Vers:</string>
     <string name="your_Assets">Vos actifs</string>
+    <string name="bitcoin">Bitcoin</string>
+    <string name="choose_a_network">Choisissez un réseau</string>
+    <string name="successfully_sold">Vendu avec succès</string>
+    <string name="you_just_sold">tu viens de vendre</string>
+    <string name="bic_number">Numéro BIC</string>
+    <string name="buy_bitcoin_on_lyber">Acheter du Bitcoin sur Lyber</string>
+    <string name="btc_price">BTC Prix</string>
+    <string name="every_month">Tous les mois</string>
+    <string name="safe">sûr</string>
+    <string name="cancelInvestment">Annuler l\'investissement</string>
+    <string name="hours_72">72 heures</string>
+    <string name="hours_24">24 heures</string>
+    <string name="inter_strategy">Stratégie intermédiaire</string>
+    <string name="month">mois</string>
+    <string name="deposit_an_asset">dépôtAnAsset</string>
+    <string name="address_">adresse</string>
+    <string name="less_than_1000">&lt; 1 000€</string>
+    <string name="between_1000_and_9999">Entre 1 000€ et 9 999€</string>
+    <string name="between_10000_and_99999">Entre 10 000€ et 99 999€</string>
+    <string name="greater_than_100000">&gt; 100 000€</string>
+    <string name="available">Disponible</string>
+    <string name="add_a_frequency_optional">Ajouter une fréquence (facultatif)</string>
+    <string name="withdraw_all_my_portfolio">Retirer tout mon portefeuille</string>
+    <string name="preview_withdraw">Aperçu du retrait</string>
+    <string name="withdraw_from">Se retirer de</string>
+    <string name="no_extra_security">Pas de sécurité supplémentaire</string>
+    <string name="to_">vers</string>
+    <string name="incorrect_pin">Incorrecte Pin</string>
+    <string name="save_money">Épargner de l\'argent</string>
+    <string name="buy_sell_digital_assets">Acheter et vendre des actifs numériques</string>
+    <string name="store_my_digital_assets">Conserver mes actifs numériques</string>
+    <string name="two_assets">0-2 actifs</string>
+    <string name="two2_assets">3-22 actifs</string>
+    <string name="one28_assets">23-128 actifs</string>
+    <string name="three19_assets">129-319 actifs</string>
+    <string name="four64_assets">320-464 actifs</string>
+    <string name="four65_assets">465+ actifs</string>
+    <string name="less_than_500">Moins de 500</string>
+    <string name="five00_1000">500-1000</string>
+    <string name="one001_1500">1001-1500</string>
+    <string name="one501_2000">1501-2000</string>
+    <string name="two001_3000">2001-3000</string>
+    <string name="over_3001">Plus de 3001</string>
+    <string name="withdraw_or_exchange">Retirer ou échanger</string>
+
+
+
+
 </resources>

@@ -114,14 +114,15 @@ class PayWithModel(
                     setTint(getColor(requireContext(), R.color.purple_500))
                 })
             it.ivEndIcon.setImageResource(R.drawable.ic_right_arrow_grey)
-            it.tvStartTitle.text = "Add a bank account"
-            it.tvStartSubTitle.text = "Limited to 25000${Constants.EURO} per week"
+            it.tvStartTitle.text =requireContext().getString(R.string.add_a_bank_account)
+            it.tvStartSubTitle.text = requireContext().getString(R.string.limited_to_25_000_per_week)
         }
         binding.includeAddCryptoAddress.let {
             it.ivEndIcon.setImageResource(R.drawable.ic_right_arrow_grey)
             it.ivItem.setImageResource(R.drawable.ic_add_btc_address)
-            it.tvStartTitle.text = "Add ${viewModel.withdrawAsset?.id?.uppercase()} address"
-            it.tvStartSubTitle.text = "Unlimited withdrawal"
+            it.tvStartTitle.text = "${getString(R.string.add)} ${viewModel.withdrawAsset?.id?.uppercase()} ${getString(R.string.address_)}"
+            it.tvStartSubTitle.text = getString(R.string.unlimited_withdrawl)
+
         }
     }
 

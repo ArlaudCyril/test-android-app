@@ -73,7 +73,7 @@
         android:layout_marginStart="12dp"
         android:gravity="center_vertical"
         android:textStyle="bold"
-        android:text="Euro" />
+        android:text="@string/euro" />
 
     <TextView
         android:id="@+id/tvAssetNameCode"

@@ -47,8 +47,8 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
 
         viewModel = getViewModel(this)
         viewModel.listener = this
-        binding.tvEmail.text = "To: ${App.prefsManager.user?.email}"
-        binding.tvNumber.text = "To: ${App.prefsManager.user?.phoneNo}"
+        binding.tvEmail.text = "${getString(R.string.to)} ${App.prefsManager.user?.email}"
+        binding.tvNumber.text = "${getString(R.string.to)} ${App.prefsManager.user?.phoneNo}"
         setView()
 
         if (App.prefsManager.user?.type2FA != Constants.GOOGLE) {

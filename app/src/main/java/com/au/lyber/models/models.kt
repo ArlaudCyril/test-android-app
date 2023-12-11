@@ -196,7 +196,7 @@ enum class Asset(val image: Int, val nameCode: String) {
 }
 
 
-data class DataBottomSheet(val title: String)
+data class DataBottomSheet(val id:Int,val title: String)
 
 
 /* choose your strategy */
@@ -631,7 +631,6 @@ data class User(
     val profilePicType: String,
     val strongAuthentification: Boolean,
     val uuid: String,
-
     val accountClosed: Boolean,
     val avatar: String,
     val birthDate: String,
@@ -652,7 +651,6 @@ data class User(
     val verified: Boolean,
     val withdrawalLock: String,
     val zipCode: String
-
 )
 
 data class JWTPayload(
@@ -695,16 +693,22 @@ data class Balance(
     val id: String,
     val balanceData: BalanceData
 )
+
+data class ExportResponse(
+    val success:Boolean
+)
+
 data class BooleanResponse(
     val success:Boolean
 )
 data class UpdateAuthenticateResponse(
-    val success:Boolean
-)
-data class QrCodeResponse(
-    val `data`: QR
+    val success: Boolean
 )
 
-data class QR(
+data class QrCodeResponse(
+    val `data`: QrCode
+)
+
+data class QrCode(
     val url: String
 )

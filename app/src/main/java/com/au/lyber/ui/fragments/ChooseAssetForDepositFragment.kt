@@ -97,7 +97,7 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                         ) else it.toString()
                     }} (${sa.id.uppercase()})")
                     binding.ivNetwork.loadCircleCrop(sa.imageUrl)
-                    binding.btnAddUseAddress.text = "Buy ${sa.fullName.capitalize()} on Lyber"
+                    binding.btnAddUseAddress.text = "${getString(R.string.buy)} ${sa.fullName.capitalize()} ${getString(R.string.on)} Lyber"
                     CommonMethods.showProgressDialog(requireActivity())
                     viewModel.getAssetDetailIncludeNetworks(sa.id)
                     break
@@ -151,7 +151,7 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                 binding.etAssets.setText("${it.fullName.capitalize(Locale.ROOT)} (${it.id.uppercase()})")
 
                 binding.ivNetwork.loadCircleCrop(it.imageUrl)
-                binding.btnAddUseAddress.text = "Buy ${it.fullName.capitalize()} on Lyber"
+                binding.btnAddUseAddress.text = "${getString(R.string.buy)} ${it.fullName.capitalize()} ${getString(R.string.on)} Lyber"
                 viewModel.getAssetDetailIncludeNetworks(it.id)
                 CommonMethods.showProgressDialog(requireActivity())
                 assetPopup.dismiss()
@@ -186,7 +186,7 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
 
 
         viewModel.selectedAsset?.let {
-            binding.btnAddUseAddress.text = "Buy ${it.fullName.capitalize()} on Lyber"
+            binding.btnAddUseAddress.text = "${getString(R.string.buy)} ${it.fullName.capitalize()} ${getString(R.string.on)} Lyber"
         }
 
 

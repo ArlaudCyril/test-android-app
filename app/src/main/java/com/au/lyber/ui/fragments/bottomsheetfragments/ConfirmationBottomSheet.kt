@@ -30,9 +30,17 @@ class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
             findNavController().navigate(R.id.portfolioHomeFragment)
         }
 
-        when(viewModel.selectedOption){
-            Constants.USING_WITHDRAW-> binding.tvInfoOne.text = getString(R.string.your_withdrawal_has_been_taken_into_account)
-            else -> binding.tvInfoOne.text = getString(R.string.your_investment_has_been_taken_into_account)
+        when (viewModel.selectedOption) {
+            Constants.USING_WITHDRAW -> binding.tvInfoOne.text =
+                getString(R.string.your_withdrawal_has_been_taken_into_account)
+
+            Constants.EXPORT_DONE -> {
+                binding.tvInfoTwo.visibility = View.GONE
+                binding.tvInfoOne.text = getString(R.string.successfulMsg)
+            }
+
+            else -> binding.tvInfoOne.text =
+                getString(R.string.your_investment_has_been_taken_into_account)
         }
 
 
@@ -41,8 +49,13 @@ class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        requireActivity().clearBackStack()
-        findNavController().navigate(R.id.portfolioHomeFragment)
+        if (viewModel.selectedOption != "" && viewModel.selectedOption == Constants.EXPORT_DONE) {
+            viewModel.selectedOption = ""
+        } else{
+            
+          requireActivity().clearBackStack()
+          findNavController().navigate(R.id.portfolioHomeFragment)
+        }
     }
 
 }

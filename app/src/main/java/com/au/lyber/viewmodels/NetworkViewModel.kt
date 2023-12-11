@@ -223,6 +223,9 @@ open class NetworkViewModel : ViewModel() {
     private val _kycResponse = MutableLiveData<KYCResponse>()
     val kycResponse get() = _kycResponse
 
+    private var _msgResponse: MutableLiveData<BooleanResponse> = MutableLiveData()
+    val msgResponse get() = _msgResponse
+
     private var _booleanResponse: MutableLiveData<BooleanResponse> = MutableLiveData()
     val booleanResponse get() = _booleanResponse
 
@@ -230,6 +233,11 @@ open class NetworkViewModel : ViewModel() {
     val updateAuthenticateResponse get() = _updateAuthenticateResponse
     private var _qrCodeResponse: MutableLiveData<QrCodeResponse> = MutableLiveData()
     val qrCodeResponse get() = _qrCodeResponse
+
+
+    private var _exportOperationResponse: MutableLiveData<ExportResponse> = MutableLiveData()
+    val exportOperationResponse get() = _exportOperationResponse
+
     fun cancelJob() {
 
     }
@@ -303,9 +311,10 @@ open class NetworkViewModel : ViewModel() {
                 )
             )
         }
-        if (total<100){
-            list[0].share = list[0].share+(100 - total)
-        }
+        //tocheck
+//        if (total<100){
+//            list[0].share = list[0].share+(100 - total)
+//        }
         val hashMap = hashMapOf<String, Any>()
         hashMap["bundle"] = list
         hashMap["strategyType"] = "SingleAsset"
@@ -319,7 +328,6 @@ open class NetworkViewModel : ViewModel() {
         }
 
     }
-
     fun getCoins(
         page: Int = 1,
         limit: Int = 100,
@@ -1131,13 +1139,36 @@ open class NetworkViewModel : ViewModel() {
             else listener?.onRetrofitError(res.errorBody())
         }
     }
-    fun qrCodeUrl(){
+
+    fun getExportOperation(date: String) {
+        try {
+            viewModelScope.launch(exceptionHandler) {
+                val res = RestClient.get().getOperationExport(date)
+                if (res.isSuccessful)
+                    _exportOperationResponse.postValue(res.body())
+            }
+        }catch (ex:Exception){}}
+    fun qrCodeUrl() {
         viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get(Constants.NEW_BASE_URL).getQrUrl()
             if (res.isSuccessful)
                 _qrCodeResponse.postValue(res.body())
+        }
+    }
+    fun sendMsgToSupport(msg: String) {
+        try {
+            viewModelScope.launch(exceptionHandler) {
+                val hash = hashMapOf<String, Any>()
+                hash["message"] = msg
+                val res = RestClient.get().contactSupport(hash)
+                if (res.isSuccessful)
+                    _msgResponse.postValue(res.body())
 
-            else listener?.onRetrofitError(res.errorBody())
+                else listener?.onRetrofitError(res.errorBody())
+            }
+        } catch (e: Exception) {
+            listener?.onError()
+
         }
     }
 }

@@ -78,7 +78,7 @@
             android:layout_alignTop="@id/tvNetwork"
             android:layout_alignBottom="@id/tvNetwork"
             android:layout_alignParentEnd="true"
-            tools:text="Bitcoin" />
+            tools:text="@string/bitcoin" />
 
         <TextView
             android:id="@+id/tvAddressOrigin"

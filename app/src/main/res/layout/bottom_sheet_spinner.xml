@@ -48,7 +48,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvTitleAllocation"
-        tools:text="Bitcoin (BTC) " />
+        tools:text="@string/bitcoin_btc" />
 
     <NumberPicker
         android:id="@+id/allocationSpinner"

@@ -18,7 +18,6 @@
     <string name="title_activity_scrolling">ScrollingActivity</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"
-
         "A material metaphor is the unifying theory of a rationalized space and a system of motion."
         "The material is grounded in tactile reality, inspired by the study of paper and ink, yet "
         "technologically advanced and open to imagination and magic.\n"
@@ -29,9 +28,7 @@
         "The fundamentals of light, surface, and movement are key to conveying how objects move, "
         "interact, and exist in space and in relation to each other. Realistic lighting shows "
         "seams, divides space, and indicates moving parts.\n\n"
-
         "Bold, graphic, intentional.\n\n"
-
         "The foundational elements of print based design typography, grids, space, scale, color, "
         "and use of imagery guide visual treatments. These elements do far more than please the "
         "eye. They create hierarchy, meaning, and focus. Deliberate color choices, edge to edge "
@@ -39,49 +36,37 @@
         "interface that immerse the user in the experience.\n"
         "An emphasis on user actions makes core functionality immediately apparent and provides "
         "waypoints for the user.\n\n"
-
         "Motion provides meaning.\n\n"
-
         "Motion respects and reinforces the user as the prime mover. Primary user actions are "
         "inflection points that initiate motion, transforming the whole design.\n"
         "All action takes place in a single environment. Objects are presented to the user without "
         "breaking the continuity of experience even as they transform and reorganize.\n"
         "Motion is meaningful and appropriate, serving to focus attention and maintain continuity. "
         "Feedback is subtle yet clear. Transitions are efﬁcient yet coherent.\n\n"
-
         "3D world.\n\n"
-
         "The material environment is a 3D space, which means all objects have x, y, and z "
         "dimensions. The z-axis is perpendicularly aligned to the plane of the display, with the "
         "positive z-axis extending towards the viewer. Every sheet of material occupies a single "
         "position along the z-axis and has a standard 1dp thickness.\n"
         "On the web, the z-axis is used for layering and not for perspective. The 3D world is "
         "emulated by manipulating the y-axis.\n\n"
-
         "Light and shadow.\n\n"
-
         "Within the material environment, virtual lights illuminate the scene. Key lights create "
         "directional shadows, while ambient light creates soft shadows from all angles.\n"
         "Shadows in the material environment are cast by these two light sources. In Android "
         "development, shadows occur when light sources are blocked by sheets of material at "
         "various positions along the z-axis. On the web, shadows are depicted by manipulating the "
         "y-axis only. The following example shows the card with a height of 6dp.\n\n"
-
         "Resting elevation.\n\n"
-
         "All material objects, regardless of size, have a resting elevation, or default elevation "
         "that does not change. If an object changes elevation, it should return to its resting "
         "elevation as soon as possible.\n\n"
-
         "Component elevations.\n\n"
-
         "The resting elevation for a component type is consistent across apps (e.g., FAB elevation "
         "does not vary from 6dp in one app to 16dp in another app).\n"
         "Components may have different resting elevations across platforms, depending on the depth "
         "of the environment (e.g., TV has a greater depth than mobile or desktop).\n\n"
-
         "Responsive elevation and dynamic elevation offsets.\n\n"
-
         "Some component types have responsive elevation, meaning they change elevation in response "
         "to user input (e.g., normal, focused, and pressed) or system events. These elevation "
         "changes are consistently implemented using dynamic elevation offsets.\n"
@@ -91,9 +76,7 @@
         "the same elevation change relative to their resting elevation.\n"
         "Once the input event is completed or cancelled, the component will return to its resting "
         "elevation.\n\n"
-
         "Avoiding elevation interference.\n\n"
-
         "Components with responsive elevations may encounter other components as they move between "
         "their resting elevations and dynamic elevation offsets. Because material cannot pass "
         "through other material, components avoid interfering with one another any number of ways, "
@@ -119,21 +102,16 @@
     <string name="subTitleThree">Once the regular investment is set, your portfolio will be managed automatically and you will be able to see its evolution.</string>
     <string name="next">Next</string>
     <string name="complete_acc_to_start_investing">Complete your account to start investing</string>
-
     <string name="create_an_account">Create an account</string>
     <string name="create_an_account_strike"><strike>Create an account</strike></string>
     <string name="_2">2</string>
-
     <string name="fill_personal_data">Fill personal data</string>
     <string name="fill_personal_data_strike"><strike>Fill personal data</strike></string>
-
     <string name="verify_your_identity">Verify your identity</string>
     <string name="verify_your_identity_strike"><strike>Verify your identity</strike></string>
-
     <string name="_3">3</string>
     <string name="make_your_first_investment">Make your first investment</string>
     <string name="make_your_first_investment_strike"><strike>Make your first investment</strike></string>
-
     <string name="_4">4</string>
     <string name="invest_money">Invest money</string>
     <string name="complete_your_account">Complete your account</string>
@@ -171,7 +149,7 @@
     <string name="hint_source_income">Your source of income</string>
     <string name="hint_work_industry">Your work industry</string>
     <string name="hint_annual_income">Your annual income</string>
-    <string name="bottom_sheet_cypto_exp_title">What’s your investment experience with cryptos?</string>
+    <string name="bottom_sheet_cypto_exp_title">What’s your investment experience with cryptos ?</string>
     <string name="verification_ongoing">Verification ongoing …</string>
     <string name="identity_verification">Identity verification</string>
     <string name="subtitle_verify_your_identity">This step protects you from fraud and identity theft. Use your phone to:</string>
@@ -234,8 +212,8 @@
     <string name="resend_email"><u>RESEND EMAIL</u></string>
     <string name="logout_message">"Are you sure you want to logout ? "</string>
     <string name="reg_message">The progress of your registration will be lost.</string>
-    <string name="no">No</string>
-    <string name="yes">Yes</string>
+    <string name="no_t">No</string>
+    <string name="yes_t">Yes</string>
     <string name="logout"><u>Logout</u></string>
     <string name="note_add_bitcoin_address"><b>Important note:</b> Your note goes here and goes on a big amount of line</string>
     <string name="subtitle_crypto_book">The address book allows cryptocurrency withdrawals to be made only at addresses already designated in your address book. You can also activate your address book for these addresses.</string>
@@ -268,7 +246,7 @@
     <string name="top_gainers">Top gainers</string>
     <string name="top_losers">Top losers</string>
     <string name="stable">Stable</string>
-    <string name="how_many_personal_asset_you_have">How many personal Assets Do you have?</string>
+    <string name="how_many_personal_asset_you_have">How many personal Assets Do you have ?</string>
     <string name="your_withdrawal_has_been_taken_into_account">Your withdrawal has been taken into account.</string>
     <string name="your_investment_has_been_taken_into_account">Your investment has been taken into account.</string>
     <string name="verification">Verification</string>
@@ -540,7 +518,23 @@
     <string name="the_minimum_amount_to_be_exchanged">The minimum Amount to be exchanged</string>
     <string name="the_minimum_amount_to_be_exchanged_1">The minimum amount to be exchanged %1$s %2$s</string>
     <string name="availiable_fiat">Available FIAT</string>
-
+    <string name="export">Export</string>
+    <string name="exportOperations">Export operations</string>
+    <string name="successful">Successful</string>
+    <string name="successfulMsg">Your request has been received\nThe export will be delivered to your email address in a few minutes.</string>
+    <string name="error">Error</string>
+    <string name="somethingWentWrong">Oh no ! Something went wrong.</string>
+    <string name="tryAgain">Try Again</string>
+    <string name="contact_us">Contact us</string>
+    <string name="send_us_email">Send us an email to contact@lyber.com or fill out the contact form below:</string>
+    <string name="contact_form">Contact form</string>
+    <string name="msg">Message</string>
+    <string name="contact_us_by_mail">You can also contact us by mail at the address</string>
+    <string name="contact_address">274 ter/3, Avenue de la Marne, 59700 Marcq-en-Baroeul, Lille, France.</string>
+    <string name="will_get_back">We will get back to you at</string>
+    <string name="send">Send</string>
+    <string name="msgIsEmpty">The message field is empty</string>
+    <string name="msgHasBeenSent">The message has been sent successfully</string>
     <string name="google_authenticator">Google authenticator</string>
     <string name="by_email">By Email</string>
     <string name="manage_app_cases">Manage the application cases of 2FA</string>
@@ -664,18 +658,15 @@
     <string name="department">Department</string>
     <string name="your_monthly_income">Your monthly income</string>
     <string name="i_have_never_invested">I have never invested</string>
-<!--    <string name="less_than_1000€">&lt; 1 000€</string>-->
-<!--    <string name="between_1000€_and_9999€">Between 1 000€ and 9 999€</string>-->
-<!--    <string name="between_10000€_and_99999€">Between 10 000€ and 99 999€</string>-->
-<!--    <string name="greater_than_100000€">&gt; 100 000€</string>-->
-    <string name="what_your_source_of_income">What\'s your main source of income?</string>
+<!--    <string name="what_your_source_of_income">What\'s your main source of income?</string>-->
+    <string name="what_your_source_of_income">What’s your source of income ?</string>
     <string name="salary">Salary</string>
     <string name="investments">Investments</string>
     <string name="savings">Savings</string>
     <string name="inheritance">Inheritance</string>
     <string name="credit_loan">Credit/loan</string>
     <string name="family_others">Family or others</string>
-    <string name="whats_your_work_industry">What’s your work industry?</string>
+    <string name="whats_your_work_industry">What’s your work industry ?</string>
     <string name="agriculture">Agriculture, Agribusiness &amp; Natural Resources</string>
     <string name="arts_media">Art, Entertainment &amp; Media</string>
     <string name="banking_finance_insurance">Banking, Finance &amp; Insurance</string>
@@ -694,7 +685,7 @@
     <string name="sports_leisure_entertainment">Sports, Leisure &amp; Interactive Entertainment</string>
     <string name="textile_fashion_apparel">Textile, Fashion &amp; Apparel</string>
     <string name="transport_logistics_wholesale">Transport, Logistics &amp; Wholesale</string>
-    <string name="what_salary_range_you_fall_into">What salary range do you fall into (net salary)?</string>
+    <string name="what_salary_range_you_fall_into">What salary range do you fall into ?</string>
     <string name="disclaimer">Disclaimer</string>
     <string name="information_provided_application_not_investment_advice">The information provided on the
     application should not be considered as investment advice, financial advice, trading advice or
@@ -714,149 +705,57 @@
     <string name="confirm_my_deposit">Confirm my deposit</string>
     <string name="confirm_deposit">Confirm deposit</string>
     <string name="more_details">More details</string>
-    <string name="euro_deposit">Euro desposit</string>
-    <string name="preview_deposit">Preview desposit</string>
+    <string name="euro_deposit">Euro deposit</string>
+    <string name="preview_deposit">Preview deposit</string>
     <string name="euros_bank_account">In Euros, from my bank account</string>
     <string name="pay_with">Pay with</string>
     <string name="max">€ Max.</string>
     <string name="recommended">Recommended</string>
-    <string name="to">To</string>
+    <string name="to">To:</string>
     <string name="your_Assets">Your assets</string>
+    <string name="bitcoin">Bitcoin</string>
+    <string name="choose_a_network">Choose a network</string>
+    <string name="successfully_sold">Successfully sold</string>
+    <string name="you_just_sold">You just sold</string>
+    <string name="bic_number">BIC number</string>
+    <string name="buy_bitcoin_on_lyber">Buy Bitcoin on Lyber</string>
+    <string name="btc_price">BTC price</string>
+    <string name="every_month">Every month</string>
+    <string name="safe">Safe</string>
+    <string name="cancelInvestment">Cancel Investment</string>
+    <string name="hours_72">72 hours</string>
+    <string name="hours_24">24 hours</string>
+    <string name="inter_strategy">Intermediate strategy</string>
+    <string name="month">month</string>
+    <string name="deposit_an_asset">depositAnAsset</string>
+    <string name="address_">address</string>
+    <string name="less_than_1000">&lt; 1 000€</string>
+    <string name="between_1000_and_9999">Between 1 000€ and 9 999€</string>
+    <string name="between_10000_and_99999">Between 10 000€ and 99 999€</string>
+    <string name="greater_than_100000">&gt; 100 000€</string>
+    <string name="available">Available</string>
+    <string name="add_a_frequency_optional">Add a frequency (optional)</string>
+    <string name="withdraw_all_my_portfolio">Withdraw all my portfolio</string>
+    <string name="preview_withdraw">Preview withdraw</string>
+    <string name="withdraw_from">Withdraw from</string>
+    <string name="no_extra_security">No Extra Security</string>
+    <string name="to_">to</string>
+    <string name="incorrect_pin">Incorrect Pin</string>
+    <string name="save_money">Save money</string>
+    <string name="buy_sell_digital_assets">Buy and sell digital assets</string>
+    <string name="store_my_digital_assets">Store my digital assets</string>
+    <string name="two_assets">0-2 assets</string>
+    <string name="two2_assets">3-22 assets</string>
+    <string name="one28_assets">23-128 assets</string>
+    <string name="three19_assets">129-319 assets</string>
+    <string name="four64_assets">320-464 assets</string>
+    <string name="four65_assets">465+ assets</string>
 
-
-
-
-
-
-<!--    //MARK: KYC-->
-<!--    "FEATURE_SOON_AVAILABLE" = "This feature will soon be available";-->
-<!--    "DOWNLOAD_ERROR" = "Download error";-->
-<!--    "DOWNLOAD_COMPLETED" = "Download completed";-->
-<!--    //MARK: - ForgotPassword-->
-<!--    "SENT_EMAIL_CONTAINING_RESET_LINK" = "We have sent you an email containing the reset link that you must follow in order to reset your password.";-->
-<!--    "RESET_PASSWORD" = "Reset password";-->
-<!--    "CHANGE_PASSWORD" = "Change password";-->
-<!--    "ENTER_NEW_PASSWORD" = "Enter your new password";-->
-<!--    "ENTER_OLD_PASSWORD" = "Enter your old password";-->
-<!--    "SAVE_NEW_PASSWORD" = "Save my new password";-->
-<!--    "NEW_PASSWORD_CANNOT_SAME" = "Your new password cannot be the same as your old one.";-->
-
-
-<!--    //MARK: - Export-->
-<!--    "REQUEST_BEEN_RECEIVED" = "Your request has been received. The export will be delivered to your email address in a few minutes.";-->
-<!--    "SOMETHING_WENT_WRONG" = "Oh no ! Something went wrong.";-->
-<!--    "SUCCESSFUL" = "Successful";-->
-<!--    "ERROR" = "Error";-->
-<!--    "TRY_AGAIN" = "Try Again";-->
-
-<!--    //MARK: - Adress Book-->
-<!--   "DATE_CREATION" = "Date of creation";-->
-
-<!--    //MARK: - Withdraw-->
-<!--    "AMOUNT_WITHDRAW_ACCOUNT" = "The amount has been withdrawn from your account.";-->
-
-<!--    //MARK: - Transactions-->
-<!--    "IN_PROGRESS" = "In progress";-->
-<!--    "UNDER_CONFORMITY_ANALYSIS" = "Under conformity analysis";-->
-<!--    "CREDITED" = "Credited";-->
-<!--    "PENDING" = "Pending";-->
-<!--    "PROCESSED" = "Processed";-->
-<!--    "VALIDATED" = "Validated";-->
-<!--    "FAILED_SEND" = "Sending failed";-->
-<!--    "SENT" = "Sent";-->
-<!--    "CANCELED" = "Canceled";-->
-
-
-<!--    "ALERT_ACTIVITY" = "Please Select your activity on Lyber";-->
-<!--    "ALERT_LOG_OUT" = "Are you sure you want to Log Out?";-->
-<!--    "ALERT_STRATEGY_NAMET" = "Please enter Strategy name";-->
-<!--    "ALERT_VALID_PASSWORD" = "Password should be of minimum 8 characters";-->
-<!--    "ALERT_DEPARTMENT" = "Please enter the department";-->
-<!--    "ALERT_VALID_ZIPCODE" = "Please enter valid zipcode";-->
-<!--    "ALERT_SCAN_ADDRESS" = "Please enter or scan an address";-->
-<!--    "ALERT_WHITELISTING" = "Please enable whitelisting address to add address";-->
-<!--    "ALERT_AMOUNT_WITHDRAWAL_INFERIOR" = "Your withdrawal amount is inferior to the minimum required";-->
-<!--    "ALERT_AMOUNT_WITHDRAWAL_SUPERIOR" = "Your withdrawal amount plus the fees exceeds your balance";-->
-<!--    "ALERT_STREET_NAME" = "Please enter street name";-->
-
-
-<!--    "SEND_RESET_LINK" = "Send me a reset link";-->
-<!--     "USE_FACE_ID" = "Use Face Id";-->
-<!--    "ADDRESS_BOOK_SECURITY" = "Address book security";-->
-<!--    "HOURS" = "Hours";-->
-<!--    "72_HOURS" = "72 hours";-->
-<!--    "24_HOURS" = "24 hours";-->
-<!--    "NO_EXTRA_SECURITY" = "No extra security";-->
-<!--    "CHANGES_EFFECTIVE_AFTER" = "The changes will be effective after %@";-->
-<!--    "NHOURS_DELAY_REQUIRED" = "A %@ delay is required before you can withdraw to an address newly-->
-<!--    added to your address book.";-->
-<!--    "NHOURS_DELAY_REQUIRED_FUTURE" = "A %@ delay will be required before you can withdraw to an-->
-<!--    address newly added to your address book.";-->
-<!--    "CAN_WITHDRAW_IMMEDIATELY" = "You can withdraw immediately to an address that has just been-->
-<!--    added to your address book.";-->
-<!--    "CAN_WITHDRAW_IMMEDIATELY_FUTURE" = "You will be able to withdraw immediately to an address-->
-<!--    newly added to your address book.";-->
-<!--    "SEND_ONLY" = "Send only";-->
-<!--    "NETWORKS_ASSET_DEACTIVATED" = "All networks of this asset are currently deactivated for-->
-<!--    deposit";-->
-<!--    "ADDRESS_USING" = "to this address, using the";-->
-<!--    "PROTOCOL_CHAIN" = "protocol";-->
-<!--    "ON_LYBER" = "on Lyber";-->
-<!--    "FUND_ACCOUNT" = "Fund account";-->
-<!--    "FORGOT_PASSWORD" = "Forgot your password?";-->
-<!--    "HAPPENS_EVEN_BEST" = "Happens even to the best";-->
-<!--    "SEND_RESET_LINK_EMAIL_ADDRESS" = "We will send you a reset link to your email address";-->
-
-
-<!--    "WITHDRAWAL_SECURITY_SETTINGS" = "Withdrawal security settings";-->
-<!--    "EDIT_CRYPTO_ADRESS" = "Edit crypto address";-->
-<!--    //MARK: - PROFILE-->
-<!--    "OPERATIONS" = "Operations";-->
-<!--    "EXCH" = "Exch. ";-->
-<!--    "WITHDRAWAL_TRANSACTION" = "%@ withdrawal";-->
-<!--    "ACCOUNT" = "Account";-->
-<!--    "ACTIVITY_LOGS" = "Activity logs";-->
-<!--    "CHANGE_PASSWORD" = "Change Password";-->
-<!--    "FACE_ID" = "Face ID";-->
-<!--    "CLOSE_ACCOUNT" = "Close account";-->
-<!--    "CONTACT_FORM" = "Contact form";-->
-<!--    "LIST_ALL_OPERATIONS" = "List of all operations (deposit, exchange and withdrawal) made on your-->
-<!--    account";-->
-<!--    "TOO_MANY_FAILED_ATTEMPT_PLEASE_REAUTHENTICATE" = "Too many failed attempts, please-->
-<!--    reauthenticate";-->
-<!--    "DEVICE_NOT_SUPPORT_REGISTERED_FACEID" = "Device do not support or is not registered with-->
-<!--    FaceID";-->
-<!--    "EXPORT" = "Export";-->
-<!--    "EXPORT_OPERATIONS" = "Export operations";-->
-<!--    "WITHDRAW_ALL_MY_PORTFOLIO" = "Withdraw all my portfolio";-->
-<!--    "PREVIEW_WITHDRAW" = "Preview withdraw";-->
-<!--    "BIC_NUMBER" = "BIC number";-->
-<!--    "RECURRENT" = "Recurrent";-->
-<!--    "OPTIONAL" = "Optional";-->
-<!--    "AVAILABLE" = "Available";-->
-<!--    "SEPA_TRANSFER" = "SEPA transfers take 1-3 business days to be received by Lyber.";-->
-<!--    "ASSETS_ALLOCATIONS_GREATER_0" = "All assets must have allocations greater than 0";-->
-<!--    "CANT_EXCHANGE_ASSET_DONT_HAVE" = "You can't exchange assets you don't have in your wallet";-->
-<!--    "NOT_ENOUGH_BALANCE" = "You don't have enough balance to invest";-->
-<!--    "NOT_ENOUGH_INVESTMENT_PART_1" = "You need to invest atleast";-->
-<!--    "NOT_ENOUGH_INVESTMENT_PART_2" = "USDT in the strategy";-->
-<!--    "NOT_ENOUGH_COINS" = "You don't have enough coins to exchange";-->
-<!--    "NOT_ENOUGH_USDT" = "You don't have enough USDT to perform this action";-->
-<!--    "CANT_BUY_MORE_THAN" = "You can't buy for more than %@ euros in an asset";-->
-<!--    "NOT_ENOUGH_COINS_WITHDRAW" = "You don't have enough coins to withdraw";-->
-<!--    "MINIMUM_AMOUNT_EXCHANGE" = "The minimum amount of assets to be exchanged is";-->
-<!--    "AMOUNT_STRATEGY_INSUFFICIENT" = "Your amount invested in this strategy is insufficient.";-->
-<!--    "TAILOR_STRATEGY_RAISE_AMOUNT" = "To tailor at this strategy, you need to raise your current-->
-<!--    amount";-->
-<!--    "AGREE_INCREASE_INVESTMENT" = "Do you agree to increase the amount you invest?";-->
-<!--    "OH_MY" = "Oh, my !";-->
-<!--    "MUST_HAVE_CARD_REGISTERED_APPLE_PAY" = "You must have Apple Pay activated and a registered card-->
-<!--    to be able to buy USDT with euros.";-->
-<!--    "UNDERSTAND" = "I understand";-->
-<!--    "APPLE_PAY_ERROR" = "Apple Pay error";-->
-
-
-    <!--    "AVAILABLE_FLAT" = "Available FlAT";FlAT disponible to check //TODO-->
-
-
+    <string name="less_than_500">Less then 500</string>
+    <string name="five00_1000">500-1000</string>
+    <string name="one001_1500">1001-1500</string>
+    <string name="one501_2000">1501-2000</string>
+    <string name="two001_3000">2001-3000</string>
+    <string name="over_3001">Over 3001</string>
+    <string name="withdraw_or_exchange">Withdraw or exchange</string>
 </resources>
