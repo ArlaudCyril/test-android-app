@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
@@ -53,7 +54,8 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
             config = GooglePayLauncher.Config(
                 environment = GooglePayEnvironment.Test,
                 merchantCountryCode = "US",
-                merchantName = "Widget Store"
+                merchantName = "Widget Store",
+                        existingPaymentMethodRequired = false
             ),
             readyCallback = ::onGooglePayReady,
             resultCallback = ::onGooglePayResult
@@ -74,6 +76,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
     private fun onGooglePayReady(isReady: Boolean) {
      //   binding.btnConfirmInvestment.isEnabled = isReady
         // implemented below
+        Log.d("isGpayReady","$isReady")
     }
 
     private fun onGooglePayResult(result: GooglePayLauncher.Result) {
@@ -88,9 +91,11 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
             }
             GooglePayLauncher.Result.Canceled -> {
                 // User canceled the operation
+                Log.d("isGpayReady","Cancelled")
             }
             is GooglePayLauncher.Result.Failed -> {
                 // Operation failed; inspect `result.error` for the exception
+                Log.d("isGpayReady","Failed")
             }
         }
     }
@@ -110,7 +115,10 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
     override fun onClick(v: View?) {
         binding.apply {
             when (v!!) {
-                ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
+                ivTopAction -> {
+                    stopTimer()
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                }
                 btnConfirmInvestment -> {
                     googlePayLauncher.presentForPaymentIntent(clientSecret)
                 }
@@ -186,6 +194,15 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
             }
             startTimer()
         }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopTimer()
+    }
+    private fun stopTimer() {
+        handler.removeCallbacks(runnable)
+        isTimerRunning = false
     }
 
     private fun dismissList(clicked:Boolean){

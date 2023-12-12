@@ -11,6 +11,7 @@ import android.view.ViewGroup
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.updatePadding
 import androidx.fragment.app.DialogFragment
+import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
 import com.au.lyber.databinding.PortfolioThreeDotsBinding
 import com.au.lyber.ui.portfolio.fragment.PortfolioHomeFragment
@@ -94,13 +95,14 @@ class PortfolioThreeDots(private val listenItemClicked: (String, String) -> Unit
             if (this.typePopUp == "AssetPopUp") it.root.gone()
             it.ivItem.setImageResource(R.drawable.euro)
             it.tvStartTitle.text = getString(R.string.buy)
-            if (this.typePopUp == "AssetPopUp" || this.typePopUp == "AssetPopUpWithdraw"){
-                if (viewModel.selectedAsset!!.id!!.lowercase() =="usdt"){
+            if (this.typePopUp == "AssetPopUp" || this.typePopUp == "AssetPopUpWithdraw") {
+                if (viewModel.selectedAsset!!.id!!.lowercase() == "usdt") {
                     it.tvStartSubTitle.text = getString(R.string.buy_usdt_with_euro)
 
-                }else
-                it.tvStartSubTitle.text = getString(R.string.buy__with_usdt,viewModel.selectedAsset?.id?.uppercase())
-            }else{
+                } else
+                    it.tvStartSubTitle.text =
+                        getString(R.string.buy__with_usdt, viewModel.selectedAsset?.id?.uppercase())
+            } else {
                 it.tvStartSubTitle.text = getString(R.string.buy_assets_with_usdt)
             }
 
@@ -123,10 +125,10 @@ class PortfolioThreeDots(private val listenItemClicked: (String, String) -> Unit
             it.ivEndIcon.setImageResource(R.drawable.ic_right_arrow_grey)
             //    {
             it.tvStartTitle.text = getString(R.string.deposit_)
-            if (this.typePopUp == "AssetPopUp" || this.typePopUp == "AssetPopUpWithdraw"){
+            if (this.typePopUp == "AssetPopUp" || this.typePopUp == "AssetPopUpWithdraw") {
                 it.tvStartSubTitle.text =
                     getString(R.string.add_on_lyber, viewModel.selectedAsset?.id?.uppercase())
-            }else{
+            } else {
                 it.tvStartSubTitle.text = getString(R.string.add_money_on_lyber)
             }
             // } else {
@@ -156,8 +158,12 @@ class PortfolioThreeDots(private val listenItemClicked: (String, String) -> Unit
                     listenItemClicked(tag ?: "PortfolioThreeDots", "withdraw")
                     dismiss()
                 }
-                llBuy.root->{
-                    listenItemClicked(tag ?: "PortfolioThreeDots", "buy")
+
+                llBuy.root -> {
+                    if (typePopUp!="" && viewModel.selectedAsset!=null && viewModel.selectedAsset!!.id!!.lowercase() == "usdt")
+                        findNavController().navigate(R.id.buyUsdt)
+                    else
+                        listenItemClicked(tag ?: "PortfolioThreeDots", "buy")
                     dismiss()
                 }
 

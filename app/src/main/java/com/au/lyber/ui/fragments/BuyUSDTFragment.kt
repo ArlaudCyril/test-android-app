@@ -46,6 +46,7 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = CommonMethods.getViewModel(requireActivity())
+        viewModel.listener=this
         binding.tvBackArrow.setOnClickListener(this)
         binding.tvDot.setOnClickListener(this)
         binding.tvZero.setOnClickListener(this)

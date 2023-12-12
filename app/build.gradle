@@ -111,4 +111,5 @@ dependencies {
     implementation 'com.github.jinatonic.confetti:confetti:1.1.2'
     def lottieVersion = "3.7.0"
     implementation "com.airbnb.android:lottie:$lottieVersion"
+    implementation  "com.google.android.gms:play-services-wallet:18.1.3"
 }
