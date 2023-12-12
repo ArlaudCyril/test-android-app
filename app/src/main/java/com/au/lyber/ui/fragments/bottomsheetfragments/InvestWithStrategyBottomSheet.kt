@@ -18,6 +18,7 @@ class InvestWithStrategyBottomSheet (val clickListener: (Int) -> Unit) :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         isCancelable = false
+        viewModel.listener=this
         binding.tvSubTitleAdjust.setOnClickListener(this)
         binding.tvTitleAdjust.setOnClickListener(this)
         binding.ivAdjust.setOnClickListener(this)

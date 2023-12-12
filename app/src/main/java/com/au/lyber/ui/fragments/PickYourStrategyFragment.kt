@@ -186,6 +186,8 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
     override fun onDestroyView() {
         super.onDestroyView()
         viewModelStore.clear()
+        viewModel.getStrategiesResponse.removeObserver(getStrategies)
+
     }
 
 

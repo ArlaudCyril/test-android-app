@@ -11,6 +11,7 @@ import com.au.lyber.models.Strategy
 import com.au.lyber.ui.fragments.StrategyView
 import com.au.lyber.utils.CommonMethods.Companion.gone
 import com.au.lyber.utils.CommonMethods.Companion.visible
+import kotlin.math.abs
 
 class PickStrategyFragmentAdapter(val itemClicked: (position: Int) -> Unit) :
     BaseAdapter<Strategy>() {
