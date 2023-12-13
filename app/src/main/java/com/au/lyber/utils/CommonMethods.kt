@@ -16,6 +16,7 @@ import android.graphics.drawable.PictureDrawable
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
 import android.os.Looper
 import android.provider.Settings
@@ -26,6 +27,7 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
+import android.util.Base64
 import android.util.Log
 import android.util.TypedValue
 import android.view.*
@@ -35,6 +37,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK
 import androidx.biometric.BiometricPrompt
@@ -70,10 +73,16 @@ import okhttp3.ResponseBody
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.lang.NumberFormatException
 import java.math.RoundingMode
 import java.text.DateFormat
 import java.text.DecimalFormat
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.Period
+import java.time.YearMonth
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.absoluteValue
@@ -806,61 +815,70 @@ class CommonMethods {
 
         val String.currencyFormatted: SpannableString
             get() = kotlin.run {
-                if(this.isEmpty()){
-                    SpannableString("0.00"+Constants.EURO)
-                }else{
-                    val value: Double = this.toDouble()
-                    var numberZerosLeft = 0 // we count also the coma
-                    var formatter = DecimalFormat()
-                    if (value > 10000) {
-                        formatter.maximumFractionDigits = 0
-                        formatter.minimumFractionDigits = 0
-                    } else if (value > 1000) {
-                        formatter.maximumFractionDigits = 1
-                        formatter.minimumFractionDigits = 1
-                    } else if (value > 1) {
-                        formatter.maximumFractionDigits = 2
-                        formatter.minimumFractionDigits = 2
-                    } else if (value > 0.1) {
-                        numberZerosLeft = 2
-                        formatter.maximumFractionDigits = 3
-                        formatter.minimumFractionDigits = 3
-                    } else if (value > 0.01) {
-                        numberZerosLeft = 3
-                        formatter.maximumFractionDigits = 4
-                        formatter.minimumFractionDigits = 4
-                    } else if (value > 0.001) {
-                        numberZerosLeft = 4
-                        formatter.maximumFractionDigits = 5
-                        formatter.minimumFractionDigits = 5
-                    } else if (value > 0.0001) {
-                        numberZerosLeft = 5
-                        formatter.maximumFractionDigits = 6
-                        formatter.minimumFractionDigits = 6
-                    } else if (value > 0.00001) {
-                        numberZerosLeft = 6
-                        formatter.maximumFractionDigits = 7
-                        formatter.minimumFractionDigits = 7
-                    } else if (value > 0.000001) {
-                        numberZerosLeft = 7
-                        formatter.maximumFractionDigits = 8
-                        formatter.minimumFractionDigits = 8
-                    } else if (value > 0.0000001) {
-                        numberZerosLeft = 8
-                        formatter.maximumFractionDigits = 9
-                        formatter.minimumFractionDigits = 9
-                    } else if (value > 0.00000001) {
-                        numberZerosLeft = 9
-                        formatter.maximumFractionDigits = 10
-                        formatter.minimumFractionDigits = 10
-                    }
+                if (this.isEmpty()) {
+                    SpannableString("0.00" + Constants.EURO)
+                } else {
+                    try {
+                        var value: Double = 0.0
+                        if (this.contains(","))
+                            value = this.replace(",", "").toDouble()
+                        else
+                            value = this.toDouble()
+                        var numberZerosLeft = 0 // we count also the coma
+                        var formatter = DecimalFormat()
+                        if (value > 10000) {
+                            formatter.maximumFractionDigits = 0
+                            formatter.minimumFractionDigits = 0
+                        } else if (value > 1000) {
+                            formatter.maximumFractionDigits = 1
+                            formatter.minimumFractionDigits = 1
+                        } else if (value > 1) {
+                            formatter.maximumFractionDigits = 2
+                            formatter.minimumFractionDigits = 2
+                        } else if (value > 0.1) {
+                            numberZerosLeft = 2
+                            formatter.maximumFractionDigits = 3
+                            formatter.minimumFractionDigits = 3
+                        } else if (value > 0.01) {
+                            numberZerosLeft = 3
+                            formatter.maximumFractionDigits = 4
+                            formatter.minimumFractionDigits = 4
+                        } else if (value > 0.001) {
+                            numberZerosLeft = 4
+                            formatter.maximumFractionDigits = 5
+                            formatter.minimumFractionDigits = 5
+                        } else if (value > 0.0001) {
+                            numberZerosLeft = 5
+                            formatter.maximumFractionDigits = 6
+                            formatter.minimumFractionDigits = 6
+                        } else if (value > 0.00001) {
+                            numberZerosLeft = 6
+                            formatter.maximumFractionDigits = 7
+                            formatter.minimumFractionDigits = 7
+                        } else if (value > 0.000001) {
+                            numberZerosLeft = 7
+                            formatter.maximumFractionDigits = 8
+                            formatter.minimumFractionDigits = 8
+                        } else if (value > 0.0000001) {
+                            numberZerosLeft = 8
+                            formatter.maximumFractionDigits = 9
+                            formatter.minimumFractionDigits = 9
+                        } else if (value > 0.00000001) {
+                            numberZerosLeft = 9
+                            formatter.maximumFractionDigits = 10
+                            formatter.minimumFractionDigits = 10
+                        }
 
-                    val stringFormatted = formatter.format(value)+Constants.EURO
-                    val ss1 = SpannableString(stringFormatted)
-                    ss1.setSpan(RelativeSizeSpan(0.8f), 0, numberZerosLeft, 0) // set size
-                    ss1
+                        val stringFormatted = formatter.format(value) + Constants.EURO
+                        val ss1 = SpannableString(stringFormatted)
+                        ss1.setSpan(RelativeSizeSpan(0.8f), 0, numberZerosLeft, 0) // set size
+                        ss1
+                    } catch (ex: NumberFormatException) {
+                        SpannableString("0.00" + Constants.EURO)
+                    }
                 }
             }
+
 
         fun String.formattedAsset(price: Double?, rounding : RoundingMode): String {
             var priceFinal = price
@@ -1140,13 +1158,7 @@ class CommonMethods {
 
         val ImageView.setProfile: Unit
             get() = kotlin.run {
-//                if (prefsManager.haveDefaultImage) {
-//                    updatePadding(8.px, 8.px, 8.px, 8.px)
-//                    setImageResource(Constants.defaults[prefsManager.defaultImage])
-//                } else if (!prefsManager.user?.profile_pic.isNullOrEmpty()) {
-//                    updatePadding(2.px, 2.px, 2.px, 2.px)
-//                    loadImage(prefsManager.user?.profile_pic ?: "")
-//                } else setImageResource(R.drawable.ic_profile)
+                setImageResource(Constants.defaults[prefsManager.defaultImage])
             }
 
         val List<List<Double>>.lineData: MutableList<Float>
@@ -1297,7 +1309,91 @@ class CommonMethods {
         {
             return BaseActivity.balances.firstOrNull { it.id == id }
         }
+
+        @RequiresApi(Build.VERSION_CODES.O)
+        fun getMonthsAndYearsBetweenWithApi26(startDate: String, endDate: String): List<String> {
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+            val startDateTime = LocalDate.parse(startDate, formatter)
+            val endDateTime = LocalDate.parse(endDate, formatter)
+
+
+
+
+            val period = Period.between(startDateTime, endDateTime)
+            val months = period.toTotalMonths().toInt()
+
+            val days = period.days
+
+            val result = mutableListOf<String>()
+
+            var currentDate = startDateTime
+            for (i in 0..days) {
+                result.add("${currentDate.month.toString().lowercase().replaceFirstChar { it.uppercase() }} ${currentDate.year}")
+                currentDate = currentDate.plusDays(1)
+            }
+
+            return result.distinct()
+        }
+        fun getMonthsAndYearsBetween(startDate: String, endDate: String): List<String> {
+            val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+            val startDateTime = Calendar.getInstance()
+            startDateTime.time = sdf.parse(startDate) ?: Date()
+
+            val endDateTime = Calendar.getInstance()
+            endDateTime.time = sdf.parse(endDate) ?: Date()
+
+            val result = mutableListOf<String>()
+
+            while (startDateTime.before(endDateTime) || startDateTime == endDateTime) {
+                result.add(
+                    "${startDateTime.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()).lowercase().replaceFirstChar { it.uppercase() }} ${startDateTime.get(Calendar.YEAR)}"
+                )
+                startDateTime.add(Calendar.MONTH, 1)
+            }
+            return result
+        }
+        fun getCurrentDateTime(): String {
+            val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+            sdf.timeZone = TimeZone.getTimeZone("UTC") // Set the time zone to UTC to get the desired format
+
+            val currentDate = Calendar.getInstance().time
+            return sdf.format(currentDate)
+        }
+        @RequiresApi(Build.VERSION_CODES.O)
+        fun convertToYearMonthVersion26(inputDate: String): String {
+                val inputFormat = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH)
+
+                try {
+                    val temporalAccessor = inputFormat.parse(inputDate)
+                    val yearMonth = YearMonth.from(temporalAccessor)
+
+                    return yearMonth.format(DateTimeFormatter.ofPattern("yyyy-MM", Locale.ENGLISH))
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    // Handle parsing exception if needed
+                    return ""
+                }
+        }
+        fun convertToYearMonth(inputDate: String): String {
+            val inputFormat = SimpleDateFormat("MMMM yyyy", Locale.ENGLISH)
+            val outputFormat = SimpleDateFormat("yyyy-MM", Locale.ENGLISH)
+
+            try {
+                val date = inputFormat.parse(inputDate)
+                return outputFormat.format(date)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                // Handle parsing exception if needed
+                return ""
+            }
+        }
+        fun encodeToBase64(input: String): String {
+            val bytes = input.toByteArray(Charsets.UTF_8)
+            val base64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
+            return base64
+        }
     }
+
 }
 
 

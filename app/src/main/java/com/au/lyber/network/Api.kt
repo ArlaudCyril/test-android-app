@@ -2,6 +2,7 @@ package com.au.lyber.network
 
 import com.au.lyber.models.*
 import okhttp3.MultipartBody
+import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -293,10 +294,38 @@ interface Api {
     suspend fun getWithdrawalAddress():Response<WithdrawalAddress>
     @POST("user-service/verify-2FA")
     suspend fun verify2FA(@Body hashMap: HashMap<String, Any>): Response<UserLoginResponse>
+
+
+    @GET("user-service/export")
+    suspend fun getOperationExport(
+        @Query("date") date: String = ""
+    ): Response<ExportResponse>
+
+    @POST("user-service/contact-support")
+    suspend fun contactSupport(@Body hashMap: HashMap<String, Any>): Response<BooleanResponse>
+
+
+    //patch
+
+
+    @PATCH("user-service/user")
+    suspend fun updateUserAuthentication( @Body hashMap: HashMap<String, Any>): Response<UpdateAuthenticateResponse>
+
+    @GET("user-service/2fa-otp")
+    suspend fun switchOffAuthentication(
+        @Query("details") details: String,
+        @Query("action") action: String
+    ): Response<BooleanResponse>
+
+    @GET("user-service/google-otp")
+    suspend fun getQrUrl():Response<QrCodeResponse>
+
+
     @POST("user-service/verify-2FA")
     suspend fun verify2FAWithdraw(@Body hashMap: HashMap<String, Any>): Response<CommonResponseVerfiy>
     @POST("wallet-service/withdraw")
     suspend fun createWithdrawalRequest(@Body hashMap: HashMap<String, Any>): Response<CommonResponse>
     @GET("network-service/network")
     suspend fun getNetworkById(@Query("id")id: String): Response<NetworkResponse>
+
 }

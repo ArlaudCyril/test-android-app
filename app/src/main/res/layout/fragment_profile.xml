@@ -6,8 +6,8 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:animateLayoutChanges="true"
-    android:fitsSystemWindows="true"
     android:background="@color/white"
+    android:fitsSystemWindows="true"
     android:orientation="vertical">
 
     <ImageView
@@ -53,10 +53,10 @@
                     android:id="@+id/tvEmail"
                     style="@style/SubheadMabry"
                     android:layout_below="@id/tvName"
+                    android:layout_alignStart="@id/tvName"
                     android:layout_alignEnd="@+id/tvName"
                     android:layout_marginTop="2dp"
                     android:text="frida@gmail.com"
-                    android:layout_alignStart="@id/tvName"
                     android:textColor="@color/purple_gray_500"
                     android:textStyle="bold" />
 
@@ -67,8 +67,9 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:background="@drawable/circle_stroke_profile"
-                    android:padding="2dp"
+                    android:padding="4dp"
                     />
+
 
             </RelativeLayout>
 
@@ -174,8 +175,8 @@
                         android:id="@+id/tvBic"
                         style="@style/SubheadMabry"
                         android:layout_marginStart="16dp"
-                        android:textStyle="bold"
                         android:textColor="@color/purple_gray_700"
+                        android:textStyle="bold"
                         tools:text="55786454653" />
                 </LinearLayout>
 
@@ -203,8 +204,6 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="24dp"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="16dp"
                 android:background="@drawable/curved_button"
                 android:backgroundTint="@color/purple_gray_50"
                 android:orientation="vertical">
@@ -214,7 +213,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="horizontal"
-                    >
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="16dp">
 
                     <TextView
                         style="@style/SubheadMabry"
@@ -232,6 +232,29 @@
 
                 </RelativeLayout>
 
+                <RelativeLayout
+                    android:id="@+id/rlExport"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="16dp">
+
+                    <TextView
+                        style="@style/SubheadMabry"
+                        android:layout_alignParentStart="true"
+                        android:text="@string/export"
+                        android:textColor="@color/purple_gray_700"
+                        android:textStyle="bold" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:src="@drawable/ic_right_arrow_grey" />
+
+                </RelativeLayout>
             </LinearLayout>
 
             <TextView
@@ -345,7 +368,31 @@
                         android:layout_height="wrap_content"
                         android:src="@drawable/ic_right_arrow_grey" />
                 </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/llContactUS"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="16dp">
 
+                    <TextView
+                        android:id="@+id/tvContactUs"
+                        style="@style/SubheadMabry"
+                        android:text="@string/contact_us"
+                        android:textColor="@color/purple_gray_700"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_right_arrow_grey" />
+                </LinearLayout>
                 <LinearLayout
                     android:id="@+id/llFaceId"
                     android:layout_width="wrap_content"

@@ -39,6 +39,10 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
 
         binding.etConfirmPin.addTextChangedListener(onTextChange)
         binding.etConfirmPin.requestKeyboard()
+        if (requireArguments().containsKey(Constants.IS_CHANGE_PIN)
+            && requireArguments().getBoolean(Constants.IS_CHANGE_PIN)){
+            binding.llIndicators.visibility = View.GONE
+        }
     }
 
 
@@ -80,6 +84,9 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
                     if (viewModel.forLogin) {
 
                         findNavController().navigate(R.id.portfolioHomeFragment)
+                    }else if (requireArguments().containsKey(Constants.IS_CHANGE_PIN)
+                        && requireArguments().getBoolean(Constants.IS_CHANGE_PIN)){
+                        findNavController().navigate(R.id.action_confirmPinFragment_to_profile)
                     } else showDialog()
 
                     /*checkInternet(requireContext()) {

@@ -223,6 +223,21 @@ open class NetworkViewModel : ViewModel() {
     private val _kycResponse = MutableLiveData<KYCResponse>()
     val kycResponse get() = _kycResponse
 
+    private var _msgResponse: MutableLiveData<BooleanResponse> = MutableLiveData()
+    val msgResponse get() = _msgResponse
+
+    private var _booleanResponse: MutableLiveData<BooleanResponse> = MutableLiveData()
+    val booleanResponse get() = _booleanResponse
+
+    private var _updateAuthenticateResponse: MutableLiveData<UpdateAuthenticateResponse> = MutableLiveData()
+    val updateAuthenticateResponse get() = _updateAuthenticateResponse
+    private var _qrCodeResponse: MutableLiveData<QrCodeResponse> = MutableLiveData()
+    val qrCodeResponse get() = _qrCodeResponse
+
+
+    private var _exportOperationResponse: MutableLiveData<ExportResponse> = MutableLiveData()
+    val exportOperationResponse get() = _exportOperationResponse
+
     fun cancelJob() {
 
     }
@@ -646,6 +661,18 @@ open class NetworkViewModel : ViewModel() {
         viewModelScope.launch(exceptionHandler) {
             val hashMap: HashMap<String, Any> = hashMapOf()
             hashMap["withdrawalLock"] = lock
+            val res = RestClient.get().updateUserInfo(hashMap)
+            if (res.isSuccessful)
+                _updateUserInfoResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+    fun updateAvtaar(
+        lock: String
+    ) {
+        viewModelScope.launch(exceptionHandler) {
+            val hashMap: HashMap<String, Any> = hashMapOf()
+            hashMap["avatar"] = lock
             val res = RestClient.get().updateUserInfo(hashMap)
             if (res.isSuccessful)
                 _updateUserInfoResponse.postValue(res.body())
@@ -1112,4 +1139,53 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
+    fun updateAuthentication(hash: HashMap<String,Any>){
+        viewModelScope.launch(exceptionHandler) {
+
+            val res = RestClient.get(Constants.NEW_BASE_URL).updateUserAuthentication(hash)
+            if (res.isSuccessful)
+                _updateAuthenticateResponse.postValue(res.body())
+
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+    fun switchOffAuthentication(detail: String,scope:String){
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).switchOffAuthentication(detail,scope)
+            if (res.isSuccessful)
+                _booleanResponse.postValue(res.body())
+
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun getExportOperation(date: String) {
+        try {
+            viewModelScope.launch(exceptionHandler) {
+                val res = RestClient.get().getOperationExport(date)
+                if (res.isSuccessful)
+                    _exportOperationResponse.postValue(res.body())
+
+    fun qrCodeUrl(){
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).getQrUrl()
+            if (res.isSuccessful)
+                _qrCodeResponse.postValue(res.body())
+
+    fun sendMsgToSupport(msg: String) {
+        try {
+            viewModelScope.launch(exceptionHandler) {
+                val hash = hashMapOf<String, Any>()
+                hash["message"] = msg
+                val res = RestClient.get().contactSupport(hash)
+                if (res.isSuccessful)
+                    _msgResponse.postValue(res.body())
+
+                else listener?.onRetrofitError(res.errorBody())
+            }
+        } catch (e: Exception) {
+            listener?.onError()
+
+        }
+    }
 }
