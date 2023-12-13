@@ -29,7 +29,11 @@ abstract class BaseAdapter<items> :
         itemList.add(item)
         notifyItemInserted(startCount)
     }
-
+    fun removeItem(item: items) {
+        val startCount = itemList.count()
+        itemList.remove(item)
+        notifyDataSetChanged()
+    }
     fun getItem(position: Int): items? {
         return itemList[position]
     }

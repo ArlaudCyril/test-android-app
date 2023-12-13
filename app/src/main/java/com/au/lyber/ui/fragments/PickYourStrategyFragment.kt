@@ -1,7 +1,6 @@
 package com.au.lyber.ui.fragments
 
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
@@ -17,10 +16,8 @@ import com.au.lyber.models.MessageResponse
 import com.au.lyber.models.StrategiesResponse
 import com.au.lyber.ui.adapters.PickStrategyFragmentAdapter
 import com.au.lyber.ui.fragments.bottomsheetfragments.InvestWithStrategyBottomSheet
-import com.au.lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet
 import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.App
-import com.au.lyber.utils.CommonMethods
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.au.lyber.utils.CommonMethods.Companion.getViewModel
@@ -37,7 +34,6 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
     private lateinit var viewModel: PortfolioViewModel
 
     /* previous item clicked */
-    private var previousPosition: Int = -1
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -116,63 +112,10 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
         }
     }
 
-    private fun itemClicked(position: Int,currentView:StrategyView) {
-
-        when (previousPosition) {
-            -1 -> { // no one is selected yet
-                currentView.isStrategySelected = true
-                currentView.background = getDrawable(
-                    requireContext(),
-                    R.drawable.round_stroke_purple_500
-                )
-                previousPosition = position
-                viewModel.strategyPositionSelected.postValue(previousPosition)
-            }
-            position -> { // previous
-                if (currentView.isStrategySelected) { // unselected the item
-                    currentView.isStrategySelected = false
-                    currentView.background = getDrawable(
-                        requireContext(),
-                        R.drawable.round_stroke_gray_100
-                    )
-                    currentView.radioButton.setImageResource(R.drawable.radio_unselect)
-                    previousPosition = -1
-                    viewModel.strategyPositionSelected.postValue(previousPosition)
-                } else { // select the item
-                    currentView.isStrategySelected = true
-                    currentView.background = getDrawable(
-                        requireContext(),
-                        R.drawable.round_stroke_purple_500
-                    )
-                    previousPosition = position
-                    viewModel.strategyPositionSelected.postValue(previousPosition)
-                }
-            }
-            else -> {
-                try {
-                    val previousView = (layoutManager.getChildAt(previousPosition) as StrategyView)
-                    if (previousView!=null) {
-                        previousView.isStrategySelected = false
-                        currentView.isStrategySelected = true
-                        currentView.background = getDrawable(
-                            requireContext(),
-                            R.drawable.round_stroke_purple_500
-                        )
-                        previousView.background = getDrawable(
-                            requireContext(),
-                            R.drawable.round_stroke_gray_100
-                        )
-                        previousView.radioButton.setImageResource(R.drawable.radio_unselect)
-
-                    }
-                }catch (e:Exception){
-                    e.printStackTrace()
-                }
-                previousPosition = position
-                viewModel.strategyPositionSelected.postValue(previousPosition)
-            }
-        }
+    private fun itemClicked(position: Int) {
         viewModel.selectedStrategy = adapter.getItem(position)
+        adapter.markSelected(position)
+        binding.recyclerViewStrategies.smoothScrollToPosition(position)
         val transparentView = View(context)
         transparentView.setBackgroundColor(
             ContextCompat.getColor(
@@ -189,30 +132,32 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
 
         val vc  = InvestWithStrategyBottomSheet(::clicked)
         vc.viewToDelete = transparentView
-        vc.mainView = getView()?.rootView as ViewGroup
+        vc.mainView = view?.rootView as ViewGroup
         vc.viewModel = viewModel
         vc.show(childFragmentManager, "")
 
         // Add the transparent view to the RelativeLayout
-        val mainView = getView()?.rootView as ViewGroup
+        val mainView = view?.rootView as ViewGroup
         mainView.addView(transparentView, viewParams)
 
-        Log.d(TAG, "itemClicked: $previousPosition $position ")
 
     }
 
     private fun clicked(type: Int) {
         when(type){
+            -1->{
+                adapter.markSelected(-1)
+            }
             0->{findNavController().navigate(R.id.investAddMoneyFragment)}
             1->{
                 checkInternet(requireActivity()){
-                    CommonMethods.showProgressDialog(requireActivity())
+                    showProgressDialog(requireActivity())
                     viewModel.pauseStrategy(viewModel.selectedStrategy!!.ownerUuid,viewModel.selectedStrategy!!.name)
                 }
             }
             2->{
                 checkInternet(requireActivity()){
-                    CommonMethods.showProgressDialog(requireActivity())
+                    showProgressDialog(requireActivity())
                     viewModel.deleteStrategy(viewModel.selectedStrategy!!.name)
                 }
             }
@@ -236,13 +181,13 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
         }
     }
 
-    companion object {
-        private const val TAG = "PickYourStrategyFragment"
-    }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
         viewModelStore.clear()
+        viewModel.getStrategiesResponse.removeObserver(getStrategies)
+
     }
 
 

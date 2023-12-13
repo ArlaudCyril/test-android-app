@@ -1,124 +1,314 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginTop="16dp"
-    android:background="@drawable/round_stroke_gray_100"
-    android:orientation="vertical"
-    android:paddingHorizontal="16dp"
-    android:paddingBottom="16dp">
+    android:orientation="vertical">
 
     <androidx.appcompat.widget.LinearLayoutCompat
+        android:id="@+id/llContent"
         android:layout_width="match_parent"
-        android:paddingTop="16dp"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <ImageView
-            android:id="@+id/ivAsset"
-            android:layout_width="32dp"
-            android:layout_height="32dp"
-            android:layout_gravity="center_vertical"
-            tools:src="@drawable/ic_bitcoin" />
-
-        <TextView
-            android:id="@+id/tvAssetName"
-            style="@style/SubheadMabry"
-            android:layout_width="0dp"
-            android:layout_weight="0.8"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="12dp"
-            android:textStyle="bold"
-            tools:text="Bitcoin" />
-
-        <ImageView
-            android:id="@+id/lineChart"
-            android:layout_width="100dp"
-            android:layout_height="40dp"
-            android:layout_gravity="center_vertical"
-            android:adjustViewBounds="false"
-            android:contentDescription="@string/graph_of_currency"
-            android:cropToPadding="false"
-            android:scaleType="centerInside"
-             />
+        android:paddingBottom="16dp"
+        android:paddingHorizontal="16dp"
+        android:background="@drawable/round_stroke_gray_100"
+        android:orientation="vertical">
 
         <androidx.appcompat.widget.LinearLayoutCompat
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:gravity="end"
-            android:layout_gravity="center_vertical"
+            android:layout_width="match_parent"
+            android:paddingTop="16dp"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:orientation="horizontal">
+
+            <ImageView
+                android:id="@+id/ivAsset"
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_vertical"
+                tools:src="@drawable/ic_bitcoin" />
 
             <TextView
-                android:id="@+id/tvAssetValue"
+                android:id="@+id/tvAssetName"
                 style="@style/SubheadMabry"
+                android:layout_width="0dp"
+                android:layout_weight="0.8"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="12dp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="41 255,74€" />
+                tools:text="Bitcoin" />
+
+            <ImageView
+                android:id="@+id/lineChart"
+                android:layout_width="100dp"
+                android:layout_height="40dp"
+                android:layout_gravity="center_vertical"
+                android:adjustViewBounds="false"
+                android:contentDescription="@string/graph_of_currency"
+                android:cropToPadding="false"
+                android:scaleType="centerInside" />
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:gravity="end"
+                android:layout_gravity="center_vertical"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvAssetValue"
+                    style="@style/SubheadMabry"
+                    android:textStyle="bold"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    tools:text="41 255,74€" />
+
+                <TextView
+                    android:id="@+id/tvAssetVariation"
+                    style="@style/BodyMabry"
+                    android:textColor="@color/purple_gray_500"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tvAssetValue"
+                    tools:text="+2.87%" />
+            </androidx.appcompat.widget.LinearLayoutCompat>
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+        <TextView
+            android:id="@+id/tvAllocation"
+            style="@style/BodyMabry"
+            android:layout_marginTop="20dp"
+            android:text="@string/allocation"
+            android:textColor="@color/purple_gray_400"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tvAssetVariation" />
+
+        <LinearLayout
+            android:id="@+id/llAllocation"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="4dp"
+            android:background="@drawable/round_stroke_gray_100"
+            android:gravity="center_vertical"
+            android:orientation="horizontal"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="14dp"
+            app:layout_constraintTop_toBottomOf="@id/tvAllocation">
 
             <TextView
-                android:id="@+id/tvAssetVariation"
-                style="@style/BodyMabry"
-                android:textColor="@color/purple_gray_500"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tvAssetValue"
-                tools:text="+2.87%" />
-        </androidx.appcompat.widget.LinearLayoutCompat>
+                android:id="@+id/tvAuto"
+                style="@style/SubheadMabry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/auto" />
+
+            <TextView
+                android:id="@+id/tvAllocationValue"
+                style="@style/SubheadMabry"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="4dp"
+                android:text="(100%)"
+                android:textColor="@color/purple_gray_500" />
+
+            <View
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:layout_weight="1" />
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_drop_down" />
+
+        </LinearLayout>
+
+
     </androidx.appcompat.widget.LinearLayoutCompat>
 
 
-    <TextView
-        android:id="@+id/tvAllocation"
-        style="@style/BodyMabry"
-        android:layout_marginTop="20dp"
-        android:text="@string/allocation"
-        android:textColor="@color/purple_gray_400"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvAssetVariation" />
-
     <LinearLayout
-        android:id="@+id/llAllocation"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
-        android:background="@drawable/round_stroke_gray_100"
-        android:gravity="center_vertical"
-        android:orientation="horizontal"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="14dp"
-        app:layout_constraintTop_toBottomOf="@id/tvAllocation">
+        android:id="@+id/llOptionsHere"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:layout_alignTop="@id/llContent"
+        android:layout_alignBottom="@id/llContent"
+        android:layout_alignParentEnd="true"
+        android:alpha="0"
+        android:elevation="2dp"
+        android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/tvAuto"
-            style="@style/SubheadMabry"
+        <RelativeLayout
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/auto" />
+            android:layout_height="match_parent"
+            android:background="@color/shibColor"
+            android:orientation="vertical"
+            android:visibility="visible">
 
-        <TextView
-            android:id="@+id/tvAllocationValue"
-            style="@style/SubheadMabry"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="4dp"
-            android:text="(100%)"
-            android:textColor="@color/purple_gray_500" />
+            <TextView
+                style="@style/SubheadMabry"
+                android:textColor="@color/white"
+                android:text="@string/delete"
+                android:layout_centerInParent="true"
+                android:padding="24dp" />
 
-        <View
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_weight="1" />
-
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_drop_down" />
+        </RelativeLayout>
 
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/llOptions"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/llContent"
+        android:layout_alignBottom="@id/llContent"
+        android:layout_alignParentEnd="true"
+        android:elevation="2dp"
+        android:orientation="horizontal">
 
-</androidx.appcompat.widget.LinearLayoutCompat>
+        <RelativeLayout
+            android:id="@+id/rlDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:background="@color/shibColor"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/tvDelete"
+                style="@style/SubheadMabry"
+                android:textColor="@color/white"
+                android:layout_centerInParent="true"
+                android:text="@string/delete"
+                android:padding="24dp" />
+
+        </RelativeLayout>
+
+
+    </LinearLayout>
+</RelativeLayout>
+<!--<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"-->
+<!--    xmlns:app="http://schemas.android.com/apk/res-auto"-->
+<!--    xmlns:tools="http://schemas.android.com/tools"-->
+<!--    android:layout_width="match_parent"-->
+<!--    android:layout_height="wrap_content"-->
+<!--    android:layout_marginTop="16dp"-->
+<!--    android:background="@drawable/round_stroke_gray_100"-->
+<!--    android:orientation="vertical"-->
+<!--    android:paddingHorizontal="16dp"-->
+<!--    android:paddingBottom="16dp">-->
+
+<!--    <androidx.appcompat.widget.LinearLayoutCompat-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:paddingTop="16dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal">-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/ivAsset"-->
+<!--            android:layout_width="32dp"-->
+<!--            android:layout_height="32dp"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            tools:src="@drawable/ic_bitcoin" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvAssetName"-->
+<!--            style="@style/SubheadMabry"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_weight="0.8"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            android:layout_marginStart="12dp"-->
+<!--            android:textStyle="bold"-->
+<!--            tools:text="Bitcoin" />-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/lineChart"-->
+<!--            android:layout_width="100dp"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            android:adjustViewBounds="false"-->
+<!--            android:contentDescription="@string/graph_of_currency"-->
+<!--            android:cropToPadding="false"-->
+<!--            android:scaleType="centerInside"-->
+<!--             />-->
+
+<!--        <androidx.appcompat.widget.LinearLayoutCompat-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_weight="1"-->
+<!--            android:gravity="end"-->
+<!--            android:layout_gravity="center_vertical"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:orientation="vertical">-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/tvAssetValue"-->
+<!--                style="@style/SubheadMabry"-->
+<!--                android:textStyle="bold"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintTop_toTopOf="parent"-->
+<!--                tools:text="41 255,74€" />-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/tvAssetVariation"-->
+<!--                style="@style/BodyMabry"-->
+<!--                android:textColor="@color/purple_gray_500"-->
+<!--                app:layout_constraintEnd_toEndOf="parent"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/tvAssetValue"-->
+<!--                tools:text="+2.87%" />-->
+<!--        </androidx.appcompat.widget.LinearLayoutCompat>-->
+<!--    </androidx.appcompat.widget.LinearLayoutCompat>-->
+
+
+<!--    <TextView-->
+<!--        android:id="@+id/tvAllocation"-->
+<!--        style="@style/BodyMabry"-->
+<!--        android:layout_marginTop="20dp"-->
+<!--        android:text="@string/allocation"-->
+<!--        android:textColor="@color/purple_gray_400"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/tvAssetVariation" />-->
+
+<!--    <LinearLayout-->
+<!--        android:id="@+id/llAllocation"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_marginTop="4dp"-->
+<!--        android:background="@drawable/round_stroke_gray_100"-->
+<!--        android:gravity="center_vertical"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:paddingHorizontal="12dp"-->
+<!--        android:paddingVertical="14dp"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/tvAllocation">-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvAuto"-->
+<!--            style="@style/SubheadMabry"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:text="@string/auto" />-->
+
+<!--        <TextView-->
+<!--            android:id="@+id/tvAllocationValue"-->
+<!--            style="@style/SubheadMabry"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="4dp"-->
+<!--            android:text="(100%)"-->
+<!--            android:textColor="@color/purple_gray_500" />-->
+
+<!--        <View-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_weight="1" />-->
+
+<!--        <ImageView-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:src="@drawable/ic_drop_down" />-->
+
+<!--    </LinearLayout>-->
+
+
+<!--</androidx.appcompat.widget.LinearLayoutCompat>-->
