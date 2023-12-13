@@ -26,6 +26,11 @@ class PreferenceManager(context: Context) {
         set(value) {
             mEditor.putString("user_pin", value).apply()
         }
+    var defaultImage: Int
+        get() = mSharedPreferences.getInt("defaultImage", 0) ?: 0
+        set(value) {
+            mEditor.putInt("defaultImage", value).apply()
+        }
 
     var refreshToken: String
         get() = mSharedPreferences.getString("refresh_token", "") ?: ""

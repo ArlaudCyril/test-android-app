@@ -2,14 +2,17 @@ package com.au.lyber.ui.fragments
 
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.Lifecycle
 import com.au.lyber.databinding.FragmentSelectedProfilePictureBinding
+import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.App
+import com.au.lyber.utils.CommonMethods
 import com.au.lyber.utils.Constants
 
 class SelectedProfilePictureFragment : BaseFragment<FragmentSelectedProfilePictureBinding>() {
 
     private var profilePIc: Int = 0
-
+    private lateinit var viewModel: PortfolioViewModel
     override fun bind() = FragmentSelectedProfilePictureBinding.inflate(layoutInflater)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -21,16 +24,27 @@ class SelectedProfilePictureFragment : BaseFragment<FragmentSelectedProfilePictu
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        binding.ivTopAction.setOnClickListener {
-            requireActivity().onBackPressed()
-        }
+        viewModel = CommonMethods.getViewModel(requireActivity())
         binding.ivProfile.setImageResource(Constants.defaults[profilePIc])
-
+        binding.ivTopAction.setOnClickListener {
+            requireActivity().supportFragmentManager.popBackStack()
+            //requireActivity().supportFragmentManager.popBackStack()
+        }
         binding.btnSave.setOnClickListener {
-//            App.prefsManager.defaultImage = profilePIc
-            requireActivity().supportFragmentManager.popBackStack()
-            requireActivity().supportFragmentManager.popBackStack()
+            CommonMethods.checkInternet(requireActivity()) {
+                CommonMethods.showProgressDialog(requireActivity())
+                App.prefsManager.defaultImage = profilePIc
+                viewModel.updateAvtaar(profilePIc.toString())
+            }
+        }
+
+
+        viewModel.updateUserInfoResponse.observe(viewLifecycleOwner){
+            if (lifecycle.currentState == Lifecycle.State.RESUMED){
+                CommonMethods.dismissProgressDialog()
+                requireActivity().supportFragmentManager.popBackStack()
+                requireActivity().supportFragmentManager.popBackStack()
+            }
         }
 
     }

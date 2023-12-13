@@ -6,6 +6,7 @@ import okhttp3.internal.connection.Exchange
 
 object Constants {
 
+    const val IS_CHANGE_PIN: String = "changePin"
     const val FREQUENCY: String = "frequency"
     const val AMOUNT: String = "amount"
     const val URL: String="KYCURL"
@@ -66,7 +67,7 @@ object Constants {
     const val NAME = "name"
     const val USING_ALL_PORTFOLIO = "using_all_portfolio"
     const val USING_WITHDRAW_FIAT = "using_withdraw_fiat"
-
+    const val EXPORT_DONE = "exportDone"
 
     /* icons */
     const val EURO = "€"
@@ -187,5 +188,13 @@ object Constants {
     const val SMALL_RANGE = "ghijklmnopqrstuvwxyz"
     const val CAP_RANGE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     const val POPUP_HEIGHT = 400
+
+    const val LOGIN="login"
+    const val WITHDRAWAL="withdrawal"
+    const val WHITELISTING="whitelisting"
+    const val GOOGLE="google"
+    const val PHONE="phone"
+    const val EMAIL="email"
+    const val SCOPE="scope"
 
 }
