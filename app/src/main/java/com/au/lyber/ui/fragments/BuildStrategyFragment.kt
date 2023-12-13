@@ -79,9 +79,6 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
             it.layoutManager = layoutManager
             it.isNestedScrollingEnabled = false
         }
-//        val swipeController = SwipeController(adapter)
-//        val itemTouchHelper = ItemTouchHelper(swipeController)
-//        itemTouchHelper.attachToRecyclerView(binding.rvAssets)
         setItemTouchHelper(requireContext(), binding.rvAssets, adapter)
 
         if (isEdit) {
@@ -430,7 +427,6 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
             }
 
             override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-                "yes Swiped".showToast(requireContext())
             }
 
             override fun getSwipeThreshold(viewHolder: RecyclerView.ViewHolder): Float {
@@ -650,6 +646,23 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
 
                 "delete" -> {
                     try {
+                        for (i in 0 until binding.rvAssets.childCount) {
+                            val itemView =
+                                binding.rvAssets.getChildAt(i)?.findViewById<View>(R.id.llContent)
+
+                            val itemOption =
+                                binding.rvAssets.getChildAt(i)?.findViewById<View>(R.id.llOptions)
+                            itemView?.scrollTo(0, 0)
+                            val param = itemOption!!.layoutParams
+                            param?.width = 0
+                            itemOption.layoutParams = param
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                val param = itemOption.layoutParams
+                                param?.width = 0
+                                itemOption.layoutParams = param
+                                itemView?.scrollTo(0, 0)
+                            }, 300)
+                        }
                         val id = viewModel.addedAsset[position]
                         viewModel.addedAsset.apply {
                             remove(id)
