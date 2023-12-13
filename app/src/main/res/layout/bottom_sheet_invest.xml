@@ -23,19 +23,21 @@
         android:id="@+id/tvTitle"
         style="@style/SubheadMabry"
         android:gravity="center"
-        app:layout_constraintStart_toEndOf="@id/ivTopAction"
-      app:layout_constraintEnd_toStartOf="@id/blnView"
-       android:text="@string/invest_in_strategies_or_a_single_nasset"
+        android:text="@string/invest_in_strategies_or_a_single_nasset"
         android:textColor="#423D33"
-       app:layout_constraintTop_toTopOf="@id/ivTopAction"
+        android:layout_height="0dp"
+        android:lineSpacingExtra="5sp"
         app:layout_constraintBottom_toBottomOf="@id/ivTopAction"
-   />
+        app:layout_constraintEnd_toStartOf="@id/blnView"
+        app:layout_constraintStart_toEndOf="@id/ivTopAction"
+        app:layout_constraintTop_toTopOf="@id/ivTopAction" />
+
     <View
         android:id="@+id/blnView"
         android:layout_width="32dp"
         android:layout_height="1dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/ivTopAction"/>
+        app:layout_constraintTop_toTopOf="@id/ivTopAction" />
 
     <ImageView
         android:id="@id/ivWithdraw"
@@ -45,10 +47,10 @@
         android:background="@drawable/circle_drawable"
         android:backgroundTint="@color/purple_gray_50"
         android:padding="4dp"
-        app:tint="@color/purple_500"
         android:src="@drawable/ic_invest_money"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivTopAction" />
+        app:layout_constraintTop_toBottomOf="@id/ivTopAction"
+        app:tint="@color/purple_500" />
 
     <TextView
         android:id="@+id/tvTitleInvestInStrategy"
