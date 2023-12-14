@@ -675,3 +675,17 @@ data class Balance(
     val id: String,
     val balanceData: BalanceData
 )
+
+data class OrderResponseData(
+    val `data`: OrderResponse
+)
+
+data class OrderResponse(
+    val fromAmount: String,
+    val fromAsset: String,
+    val orderId: String,
+    val orderStatus: String,
+    val toAmount: String,
+    val toAsset: String,
+    val validated: String
+)

@@ -1,6 +1,8 @@
 package com.au.lyber.ui.fragments
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -21,6 +23,7 @@ import com.au.lyber.utils.CommonMethods
 import com.au.lyber.utils.CommonMethods.Companion.checkInternet
 import com.au.lyber.utils.CommonMethods.Companion.formattedAsset
 import com.au.lyber.utils.CommonMethods.Companion.gone
+import com.au.lyber.utils.CommonMethods.Companion.showToast
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
 import com.google.gson.Gson
@@ -48,7 +51,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
         binding.ivTopAction.setOnClickListener(this)
         binding.tvMoreDetails.setOnClickListener(this)
         binding.btnConfirmInvestment.setOnClickListener(this)
-        handler = Handler()
+        handler = Handler(Looper.getMainLooper())
          googlePayLauncher = GooglePayLauncher(
             fragment = this@PreviewMyPurchaseFragment,
             config = GooglePayLauncher.Config(
@@ -82,11 +85,13 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
     private fun onGooglePayResult(result: GooglePayLauncher.Result) {
         when (result) {
             GooglePayLauncher.Result.Completed -> {
+                stopTimer()
                 viewModel.selectedAsset = CommonMethods.getAsset("usdt")
                 val bundle = Bundle().apply {
                     putString(Constants.ORDER_ID,orderId)
+                    putString(Constants.FROM_SWAP,PreviewMyPurchaseFragment::class.java.name)
                 }
-                findNavController().navigate(R.id.action_confirmExchangeFragment_to_deatil_fragment
+                findNavController().navigate(R.id.action_preview_my_purchase_to_detail_fragment
                     ,bundle)
             }
             GooglePayLauncher.Result.Canceled -> {
@@ -95,7 +100,8 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
             }
             is GooglePayLauncher.Result.Failed -> {
                 // Operation failed; inspect `result.error` for the exception
-                Log.d("isGpayReady","Failed")
+                Log.d("isGpayReady","${result.error}")
+                result.error.showToast(requireContext())
             }
         }
     }
@@ -120,7 +126,10 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
                     requireActivity().onBackPressedDispatcher.onBackPressed()
                 }
                 btnConfirmInvestment -> {
+                    if(CommonMethods.isAppInstalled(requireActivity(),"com.google.android.apps.nbu.paisa.user"))
                     googlePayLauncher.presentForPaymentIntent(clientSecret)
+                    else
+                        getString(R.string.you_must_install_gpay).showToast(requireContext())
                 }
                 tvMoreDetails->{
                     if (isExpand){

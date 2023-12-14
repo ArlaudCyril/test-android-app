@@ -9,6 +9,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -274,6 +275,9 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 this.setTimer("1h")// le code ne s'exécute pas
 
                 if (arguments != null && requireArguments().containsKey(Constants.ORDER_ID)) {
+                    if(requireArguments().containsKey(Constants.FROM_SWAP))
+                    viewModel.getOrderApi(requireArguments().getString(Constants.ORDER_ID, ""))
+                    else
                     viewModel.confirmOrder(requireArguments().getString(Constants.ORDER_ID, ""))
                 }
             }
@@ -292,7 +296,15 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 //
             }
         }
+        viewModel.orderResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                if(it.data.orderStatus=="VALIDATED")
+                Handler(Looper.getMainLooper()).postDelayed({
+                    viewModel.getBalance()
+                },4000)
 
+            }
+        }
     }
 
     private fun setData() {

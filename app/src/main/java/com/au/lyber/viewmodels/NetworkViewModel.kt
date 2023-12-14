@@ -223,6 +223,9 @@ open class NetworkViewModel : ViewModel() {
     private val _kycResponse = MutableLiveData<KYCResponse>()
     val kycResponse get() = _kycResponse
 
+    private val _getOrderResponse = MutableLiveData<OrderResponseData>()
+    val orderResponse get() = _getOrderResponse
+
     fun cancelJob() {
 
     }
@@ -1104,5 +1107,12 @@ open class NetworkViewModel : ViewModel() {
             else listener?.onRetrofitError(res.errorBody())
         }
     }
-
+    fun getOrderApi(id:String) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).getOrder(id)
+            if (res.isSuccessful)
+                _getOrderResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
 }

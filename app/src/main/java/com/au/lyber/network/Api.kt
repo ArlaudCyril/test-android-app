@@ -299,4 +299,9 @@ interface Api {
     suspend fun createWithdrawalRequest(@Body hashMap: HashMap<String, Any>): Response<CommonResponse>
     @GET("network-service/network")
     suspend fun getNetworkById(@Query("id")id: String): Response<NetworkResponse>
+
+    @GET("order-service/order")
+    suspend fun getOrder(
+        @Query("orderId") orderId: String
+    ): Response<OrderResponseData>
 }

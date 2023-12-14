@@ -3,8 +3,6 @@ package com.au.lyber.ui.fragments
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.view.View
 import android.view.Window
 import androidx.lifecycle.Lifecycle
@@ -13,18 +11,12 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.au.lyber.R
 import com.au.lyber.databinding.CustomDialogLayoutBinding
 import com.au.lyber.databinding.FragmentAllAssetsBinding
-import com.au.lyber.databinding.FragmentSelectAssestForDepostBinding
-import com.au.lyber.models.AssetBaseData
 import com.au.lyber.models.PriceServiceResume
 import com.au.lyber.ui.activities.BaseActivity
-import com.au.lyber.ui.adapters.AllAssesstAdapterDeposit
 import com.au.lyber.ui.adapters.AllAssetAdapter
-import com.au.lyber.ui.portfolio.action.AssestFragmentAction
 import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.App
 import com.au.lyber.utils.CommonMethods
-import com.au.lyber.utils.CommonMethods.Companion.gone
-import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
 import com.au.lyber.utils.OnTextChange
 import com.google.android.material.tabs.TabLayout
@@ -72,9 +64,9 @@ class SelectAssestForBuy : BaseFragment<FragmentAllAssetsBinding>(), View.OnClic
                 BaseActivity.balanceResume.clear()
                 BaseActivity.balanceResume.addAll(it)
                 assets.addAll(it)
-                if (type == Constants.Exchange){
-                    for (asset in it){
-                        if (asset.id == viewModel.exchangeAssetFrom){
+                if (type == Constants.Exchange) {
+                    for (asset in it) {
+                        if (asset.id == viewModel.exchangeAssetFrom) {
                             assets.remove(asset)
                         }
                     }
@@ -108,12 +100,14 @@ class SelectAssestForBuy : BaseFragment<FragmentAllAssetsBinding>(), View.OnClic
 
             /* tab layout */
             it.tabLayout.addTab(it.tabLayout.newTab().apply { text = getString(R.string.trending) })
-            it.tabLayout.addTab(it.tabLayout.newTab().apply { text = getString(R.string.top_gainers) })
-            it.tabLayout.addTab(it.tabLayout.newTab().apply { text = getString(R.string.top_losers) })
+            it.tabLayout.addTab(
+                it.tabLayout.newTab().apply { text = getString(R.string.top_gainers) })
+            it.tabLayout.addTab(
+                it.tabLayout.newTab().apply { text = getString(R.string.top_losers) })
             it.tabLayout.addTab(it.tabLayout.newTab().apply { text = getString(R.string.stable) })
             it.tabLayout.addOnTabSelectedListener(tabSelectedListener)
 
-            adapter = AllAssetAdapter(::assetClicked,type == Constants.Exchange)
+            adapter = AllAssetAdapter(::assetClicked, type == Constants.Exchange)
             layoutManager = LinearLayoutManager(requireContext())
 
             it.rvAddAsset.adapter = adapter
@@ -131,28 +125,52 @@ class SelectAssestForBuy : BaseFragment<FragmentAllAssetsBinding>(), View.OnClic
                     when (binding.tabLayout.selectedTabPosition) {
                         0 -> {
                             if (searchText.isNotEmpty())
-                                adapter.setList(assets.filter { it.id.startsWith(searchText, true)
-                                        || CommonMethods.getAsset(it.id).fullName.startsWith(searchText, true)})
+                                adapter.setList(assets.filter {
+                                    it.id.startsWith(searchText, true)
+                                            || CommonMethods.getAsset(it.id).fullName.startsWith(
+                                        searchText,
+                                        true
+                                    )
+                                })
                             else adapter.setList(trendings)
                         }
+
                         1 -> {
                             if (searchText.isNotEmpty())
-                                adapter.setList(assets.filter { it.id.startsWith(searchText, true)
-                                        || CommonMethods.getAsset(it.id).fullName.startsWith(searchText, true)})
+                                adapter.setList(assets.filter {
+                                    it.id.startsWith(searchText, true)
+                                            || CommonMethods.getAsset(it.id).fullName.startsWith(
+                                        searchText,
+                                        true
+                                    )
+                                })
                             else adapter.setList(topGainers)
                         }
+
                         2 -> {
                             if (searchText.isNotEmpty())
-                                adapter.setList(assets.filter { it.id.startsWith(searchText, true)
-                                        || CommonMethods.getAsset(it.id).fullName.startsWith(searchText, true)})
+                                adapter.setList(assets.filter {
+                                    it.id.startsWith(searchText, true)
+                                            || CommonMethods.getAsset(it.id).fullName.startsWith(
+                                        searchText,
+                                        true
+                                    )
+                                })
                             else adapter.setList(topLosers)
                         }
+
                         3 -> {
                             if (searchText.isNotEmpty())
-                                adapter.setList(assets.filter { it.id.startsWith(searchText, true)
-                                        || CommonMethods.getAsset(it.id).fullName.startsWith(searchText, true)})
+                                adapter.setList(assets.filter {
+                                    it.id.startsWith(searchText, true)
+                                            || CommonMethods.getAsset(it.id).fullName.startsWith(
+                                        searchText,
+                                        true
+                                    )
+                                })
                             else adapter.setList(stables)
                         }
+
                         else -> {
 
                         }
@@ -199,14 +217,14 @@ class SelectAssestForBuy : BaseFragment<FragmentAllAssetsBinding>(), View.OnClic
     }
 
     private fun assetClicked(asset: PriceServiceResume) {
-       val balance =BaseActivity.balances.find { it1 -> it1.id == "usdt"}
-     if(asset.id=="usdt")
-         findNavController().navigate(R.id.buyUsdt)
-   else   if (balance!=null){
+        val balance = BaseActivity.balances.find { it1 -> it1.id == "usdt" }
+        if (asset.id == "usdt")
+            findNavController().navigate(R.id.buyUsdt)
+        else if (balance != null) {
             viewModel.exchangeAssetTo = asset.id
             viewModel.exchangeAssetFrom = "usdt"
             findNavController().navigate(R.id.addAmountForExchangeFragment)
-        }else{
+        } else {
             showDialog()
         }
         //showDialog()*

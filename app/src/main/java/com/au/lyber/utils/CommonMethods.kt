@@ -7,6 +7,7 @@ import android.app.Dialog
 import android.content.ContentResolver
 import android.content.Context
 import android.content.Intent
+import android.content.pm.ApplicationInfo
 import android.content.pm.PackageManager
 import android.content.res.Resources.getSystem
 import android.graphics.*
@@ -15,7 +16,7 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.PictureDrawable
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
-import android.net.Uri
+import android.os.Build
 import android.os.Environment
 import android.os.Looper
 import android.provider.Settings
@@ -48,9 +49,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
-import com.airbnb.lottie.LottieAnimationView
 import com.au.lyber.R
-import com.au.lyber.databinding.LottieViewBinding
 import com.au.lyber.databinding.ProgressBarBinding
 import com.au.lyber.models.AssetBaseData
 import com.au.lyber.models.Balance
@@ -95,6 +94,7 @@ class CommonMethods {
             }
             return false
         }
+
         @JvmStatic
         fun getScreenWidth(activity: Context?): Int {
             val w = activity!!.getSystemService(Context.WINDOW_SERVICE) as WindowManager
@@ -129,25 +129,28 @@ class CommonMethods {
             }
 
         }
-        fun String.toFormat(format: String,convertFormat:String): String {
+
+        fun String.toFormat(format: String, convertFormat: String): String {
             try {
                 var result = ""
-                val formatter: DateFormat = SimpleDateFormat(format,Locale.getDefault())
+                val formatter: DateFormat = SimpleDateFormat(format, Locale.getDefault())
                 formatter.timeZone = TimeZone.getTimeZone("UTC")
-                val outputFormatter: DateFormat = SimpleDateFormat(convertFormat,Locale.getDefault())
+                val outputFormatter: DateFormat =
+                    SimpleDateFormat(convertFormat, Locale.getDefault())
                 outputFormatter.timeZone = TimeZone.getDefault()
                 formatter.parse(this)?.let { result = outputFormatter.format(it) }
 
                 return result
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 return this
             }
         }
+
         fun dismissProgressDialog() {
             dialog?.let {
                 try {
                     it.findViewById<ImageView>(R.id.progressImage).clearAnimation()
-                }catch (e:Exception){
+                } catch (e: Exception) {
                     e.printStackTrace()
                 }
                 it.dismiss()
@@ -244,9 +247,9 @@ class CommonMethods {
         }
 
         fun ImageView.loadCircleCrop(any: Any, placeHolderRes: Int? = -1) {
-            if (any.toString().contains("btc")){
+            if (any.toString().contains("btc")) {
                 this.setImageResource(R.drawable.ic_bitcoin)
-            }else {
+            } else {
                 var res = any
                 val requestBuilder: RequestBuilder<PictureDrawable> =
                     Glide.with(this).`as`(PictureDrawable::class.java)
@@ -343,6 +346,7 @@ class CommonMethods {
                 when (errorRes?.error) {
                     "Invalid UpdateExpression: Syntax error; token: \"0\", near: \", 0)\"" ->
                         "Invalid OTP".showToast(context)
+
                     "Email already verified" -> "Email already exists".showToast(context)
                     "Bad client credentials" -> "Invalid credentials".showToast(context)
                     "No user registerd with this email" -> "Invalid credentials".showToast(context)
@@ -606,6 +610,7 @@ class CommonMethods {
         fun View.visible() {
             visibility = View.VISIBLE
         }
+
         fun View.invisible() {
             visibility = View.INVISIBLE
         }
@@ -625,6 +630,7 @@ class CommonMethods {
         fun FragmentActivity.clearBackStack() {
             supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
+
 
         inline fun <reified T : ViewModel> getViewModel(owner: ViewModelStoreOwner): T {
             return ViewModelProvider(owner)[T::class.java]
@@ -806,9 +812,9 @@ class CommonMethods {
 
         val String.currencyFormatted: SpannableString
             get() = kotlin.run {
-                if(this.isEmpty()){
-                    SpannableString("0.00"+Constants.EURO)
-                }else{
+                if (this.isEmpty()) {
+                    SpannableString("0.00" + Constants.EURO)
+                } else {
                     val value: Double = this.toDouble()
                     var numberZerosLeft = 0 // we count also the coma
                     var formatter = DecimalFormat()
@@ -855,41 +861,39 @@ class CommonMethods {
                         formatter.minimumFractionDigits = 10
                     }
 
-                    val stringFormatted = formatter.format(value)+Constants.EURO
+                    val stringFormatted = formatter.format(value) + Constants.EURO
                     val ss1 = SpannableString(stringFormatted)
                     ss1.setSpan(RelativeSizeSpan(0.8f), 0, numberZerosLeft, 0) // set size
                     ss1
                 }
             }
 
-        fun String.formattedAsset(price: Double?, rounding : RoundingMode): String {
+        fun String.formattedAsset(price: Double?, rounding: RoundingMode): String {
             var priceFinal = price
             if (this == "" || priceFinal == null || priceFinal == 0.0 || priceFinal.isNaN()) {
-                priceFinal= 1.026
-             }
+                priceFinal = 1.026
+            }
 
-             val formatter = DecimalFormat()
+            val formatter = DecimalFormat()
 
-             // Pour trouver la précision, ici X
-             // Prix * 10e-X >= 0.01 (centimes)
-             // => X >= -log(0,01/Prix)
-             val precision = ceil(-log10(0.01 / priceFinal)).toInt()
-             if (precision > 0) {
-                 formatter.maximumFractionDigits = precision
-                 formatter.minimumFractionDigits = precision
-             } else {
-                 formatter.maximumFractionDigits = 0
-                 formatter.minimumFractionDigits = 0
-             }
+            // Pour trouver la précision, ici X
+            // Prix * 10e-X >= 0.01 (centimes)
+            // => X >= -log(0,01/Prix)
+            val precision = ceil(-log10(0.01 / priceFinal)).toInt()
+            if (precision > 0) {
+                formatter.maximumFractionDigits = precision
+                formatter.minimumFractionDigits = precision
+            } else {
+                formatter.maximumFractionDigits = 0
+                formatter.minimumFractionDigits = 0
+            }
 
-             formatter.roundingMode = rounding
+            formatter.roundingMode = rounding
 
-             val valueFormatted = formatter.format(this.toDouble() ?: 0.0)
+            val valueFormatted = formatter.format(this.toDouble() ?: 0.0)
 
-             return valueFormatted.toString()
-         }
-
-
+            return valueFormatted.toString()
+        }
 
 
         fun TextView.expandWith(string: String) {
@@ -1174,19 +1178,23 @@ class CommonMethods {
                         Log.d("isHexadecimalFormat", ": $i")
                         return false
                     }
+
                     in CAP_RANGE -> {
                         Log.d("isHexadecimalFormat", ": $i")
                         return false
                     }
+
                     else -> {}
                 }
             }
 
             return true
         }
-       fun String.addressMatched(format :String):Boolean{
+
+        fun String.addressMatched(format: String): Boolean {
             return this.matches(format.toRegex())
         }
+
         fun String.checkFormat(type: String): Boolean {
 
             return when (type) {
@@ -1215,6 +1223,7 @@ class CommonMethods {
                 "BTC" ->
                     ((length in 27..37) &&
                             (startsWith('1') || startsWith('3') || startsWith("bc1")))
+
                 "BCH" ->
                     ((length in 27..34) && (startsWith('q') || startsWith("bitcoincash")))
 
@@ -1283,14 +1292,31 @@ class CommonMethods {
 
             }
         }
-        fun getAsset(id: String): AssetBaseData
-        {
+
+        fun getAsset(id: String): AssetBaseData {
             return BaseActivity.assets.first { it.id == id }
         }
-        fun getBalance(id: String): Balance?
-        {
+
+        fun getBalance(id: String): Balance? {
             return BaseActivity.balances.firstOrNull { it.id == id }
         }
+
+        @SuppressLint("NewApi")
+        fun isAppInstalled(context: FragmentActivity, packageName: String): Boolean {
+            try {
+                val packageInfo = context.packageManager.getPackageInfo(
+                    packageName,
+                    PackageManager.MATCH_UNINSTALLED_PACKAGES
+                )
+                // Check if the packageInfo is not null, indicating the app is installed
+                return packageInfo != null
+            } catch (e: PackageManager.NameNotFoundException) {
+                // Package not found
+                return false
+            }
+        }
+
+
     }
 }
 

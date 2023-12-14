@@ -234,7 +234,7 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
                 ivRepeat -> swapConversion()
 
                 btnPreviewInvestment -> {
-                   hitAPi()
+                     hitAPi()
                 }
             }
         }
