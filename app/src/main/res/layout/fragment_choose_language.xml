@@ -26,7 +26,8 @@
         android:layout_marginStart="12dp"
         android:gravity="center"
         android:text="@string/language"
-        android:textColor="@color/purple_gray_900" />
+        android:textColor="@color/purple_gray_900"
+        android:textStyle="bold" />
 
     <LinearLayout
         android:id="@+id/llAccount"
@@ -45,18 +46,27 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingHorizontal="12dp"
-            android:paddingVertical="16dp">
+            android:paddingVertical="28dp">
 
-            <TextView
-                style="@style/SubheadMabry"
+            <ImageView
+                android:id="@+id/ivFlag"
+                android:layout_width="26dp"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/tvEnglish"
+                android:layout_alignBottom="@id/tvEnglish"
                 android:layout_alignParentStart="true"
-                android:text="@string/english"
-                android:drawablePadding="16dp"
                 android:layout_centerVertical="true"
                 android:layout_marginStart="12dp"
-                android:drawableStart="@drawable/flag_british"
-                android:textColor="@color/purple_gray_700"
-                android:textStyle="bold" />
+                android:background="@drawable/flag_british"/>
+
+            <TextView
+                android:id="@+id/tvEnglish"
+                style="@style/BodyMabry"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/ivFlag"
+                android:layout_marginStart="14dp"
+                android:text="@string/english"
+                android:textColor="@color/purple_gray_700" />
 
             <ImageView
                 android:id="@+id/ivEnglish"
@@ -75,28 +85,35 @@
             android:layout_height="wrap_content"
             android:orientation="horizontal"
             android:paddingHorizontal="12dp"
-            android:paddingVertical="16dp">
-
-            <TextView
-                style="@style/SubheadMabry"
+            android:paddingVertical="28dp">
+            <ImageView
+                android:id="@+id/ivFlagFr"
+                android:layout_width="26dp"
+                android:layout_height="wrap_content"
+                android:layout_alignTop="@id/tvFrench"
+                android:layout_alignBottom="@id/tvFrench"
                 android:layout_alignParentStart="true"
-                android:text="@string/french"
                 android:layout_centerVertical="true"
-                android:drawablePadding="16dp"
                 android:layout_marginStart="12dp"
-                android:drawableStart="@drawable/flag_france"
-                android:textColor="@color/purple_gray_700"
-                android:textStyle="bold" />
+                android:background="@drawable/flag_france"/>
+            <TextView
+                android:id="@+id/tvFrench"
+                style="@style/BodyMabry"
+                android:layout_centerVertical="true"
+                android:layout_marginStart="14dp"
+                android:layout_toRightOf="@id/ivFlagFr"
+                android:text="@string/french"
+                android:textColor="@color/purple_gray_700" />
 
             <ImageView
                 android:id="@+id/ivFrench"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentEnd="true"
-                android:layout_marginEnd="12dp"
                 android:layout_centerVertical="true"
+                android:layout_marginEnd="12dp"
                 android:src="@drawable/purple_tick"
-                android:visibility="gone" />
+                android:visibility="invisible" />
 
         </RelativeLayout>
     </LinearLayout>
