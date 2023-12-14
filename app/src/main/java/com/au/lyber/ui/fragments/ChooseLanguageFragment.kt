@@ -19,10 +19,10 @@ class ChooseLanguageFragment : BaseFragment<FragmentChooseLanguageBinding>(), On
            val ln = App.prefsManager.getLanguage()
                 if (ln == Constants.FRENCH) {
                     binding.ivFrench.visibility = View.VISIBLE
-                    binding.ivEnglish.visibility = View.GONE
+                    binding.ivEnglish.visibility = View.INVISIBLE
                 } else {
                     binding.ivEnglish.visibility = View.VISIBLE
-                binding.ivFrench.visibility = View.GONE
+                binding.ivFrench.visibility = View.INVISIBLE
             }
 
         }
@@ -43,7 +43,7 @@ class ChooseLanguageFragment : BaseFragment<FragmentChooseLanguageBinding>(), On
                     config.setLocale(locale)
                     resources.updateConfiguration(config, resources.displayMetrics)
                     binding.ivEnglish.visibility = View.VISIBLE
-                    binding.ivFrench.visibility = View.GONE
+                    binding.ivFrench.visibility = View.INVISIBLE
                     App.prefsManager.setLanguage(Constants.ENGLISH)
                 }
 
@@ -54,7 +54,7 @@ class ChooseLanguageFragment : BaseFragment<FragmentChooseLanguageBinding>(), On
                     val config: Configuration = resources.configuration
                     config.setLocale(locale)
                     resources.updateConfiguration(config, resources.displayMetrics)
-                    binding.ivEnglish.visibility = View.GONE
+                    binding.ivEnglish.visibility = View.INVISIBLE
                     binding.ivFrench.visibility = View.VISIBLE
                     App.prefsManager.setLanguage(Constants.FRENCH)
 
