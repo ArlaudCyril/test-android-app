@@ -1,5 +1,6 @@
 package com.au.lyber.ui.adapters
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
@@ -10,10 +11,10 @@ import com.au.lyber.models.Strategy
 import com.au.lyber.ui.fragments.StrategyView
 import com.au.lyber.utils.CommonMethods.Companion.gone
 import com.au.lyber.utils.CommonMethods.Companion.visible
+import kotlin.math.abs
 
-class PickStrategyFragmentAdapter(val itemClicked: (position: Int,view:StrategyView) -> Unit) :
+class PickStrategyFragmentAdapter(val itemClicked: (position: Int) -> Unit) :
     BaseAdapter<Strategy>() {
-
 
 
     inner class ViewHolder(val strategyView: StrategyView) :
@@ -21,14 +22,24 @@ class PickStrategyFragmentAdapter(val itemClicked: (position: Int,view:StrategyV
         init {
 
             strategyView.setOnRadioButtonClickListener {
-               // itemClicked(adapterPosition)
+                // itemClicked(adapterPosition)
             }
 
             strategyView.rootView.setOnClickListener {
-              itemClicked(adapterPosition,strategyView)
+                Log.d("positionAdapter", adapterPosition.toString())
+                itemClicked(adapterPosition)
             }
 
         }
+    }
+
+    fun markSelected(position: Int) {
+        for (item in itemList) {
+            item!!.isSelected = false
+        }
+        if (position >= 0)
+            itemList[position]!!.isSelected = true
+        notifyDataSetChanged()
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -55,7 +66,7 @@ class PickStrategyFragmentAdapter(val itemClicked: (position: Int,view:StrategyV
             ORDINARY_VIEW -> {
                 (holder as ViewHolder).strategyView.apply {
                     itemList[position]?.let {
-                        background = if (false) {
+                        background = if (it.isSelected) {
                             isStrategySelected = true
                             radioButton.setImageResource(R.drawable.radio_select)
                             getDrawable(context, R.drawable.round_stroke_purple_500)
@@ -66,39 +77,40 @@ class PickStrategyFragmentAdapter(val itemClicked: (position: Int,view:StrategyV
                         }
                         radioButton.gone()
                         topText = it.name ?: ""
-                        if (it.expectedYield !=null) {
+                        if (it.expectedYield != null) {
                             binding.ivRisk.visible()
                             binding.tvRisk.visible()
                             binding.tvValueRisk.visible()
                             risk = it.expectedYield.substring(0, 1)
                                 .uppercase() + it.expectedYield.substring(1).lowercase()
-                        }else{
+                        } else {
                             binding.ivRisk.gone()
                             binding.tvRisk.gone()
                             binding.tvValueRisk.gone()
                             risk = ""
                         }
-                        if (it.risk!=null) {
+                        if (it.risk != null) {
                             binding.ivYield.visible()
                             binding.tvYield.visible()
                             binding.tvValueYield.visible()
                             yeild = it.risk.substring(0, 1).uppercase() + it.risk.substring(1)
                                 .lowercase()
-                        }else{
+                        } else {
                             binding.ivYield.gone()
                             binding.tvYield.gone()
                             binding.tvValueYield.gone()
                             yeild = ""
                         }
                         allocationView.setAssetsList(it.bundle)
-                        if (it.activeStrategy!=null) {
+                        if (it.activeStrategy != null) {
                             binding.tvPriceStrategy.visible()
-                        }else{
+                        } else {
                             binding.tvPriceStrategy.gone()
                         }
                     }
                 }
             }
+
             else -> {}
         }
 
