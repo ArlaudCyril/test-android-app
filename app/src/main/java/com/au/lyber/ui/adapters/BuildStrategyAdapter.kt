@@ -1,6 +1,6 @@
 package com.au.lyber.ui.adapters
 
-import android.net.Uri
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -8,22 +8,30 @@ import com.au.lyber.R
 import com.au.lyber.databinding.ItemAddedAssetBinding
 import com.au.lyber.models.AddedAsset
 import com.au.lyber.ui.activities.BaseActivity
+import com.au.lyber.ui.fragments.BuildStrategyFragment
 import com.au.lyber.utils.CommonMethods.Companion.commaFormatted
-import com.au.lyber.utils.CommonMethods.Companion.formLineData
-import com.au.lyber.utils.CommonMethods.Companion.getLineData
-import com.au.lyber.utils.CommonMethods.Companion.getRedLineData
 import com.au.lyber.utils.CommonMethods.Companion.loadCircleCrop
 import com.au.lyber.utils.CommonMethods.Companion.loadImage
 import com.au.lyber.utils.CommonMethods.Companion.roundFloat
+import com.au.lyber.utils.CommonMethods.Companion.showToast
 import kotlin.math.roundToInt
 
-class BuildStrategyAdapter(val handle: (position: Int) -> Unit = { _ -> }) :
+class BuildStrategyAdapter(
+    val rv: RecyclerView,
+    val callback: (position: Int, String) -> Unit) :
     BaseAdapter<AddedAsset>() {
 
     inner class ViewHolder(val bind: ItemAddedAssetBinding) : RecyclerView.ViewHolder(bind.root) {
         init {
+            bind.root.setOnClickListener {
+                if(BuildStrategyFragment.isAnyItemSwiped(rv))
+                    callback.invoke(adapterPosition,"setView")
+            }
+            bind.rlDelete.setOnClickListener {
+                callback.invoke(adapterPosition, "delete")
+            }
             bind.llAllocation.setOnClickListener {
-                handle(adapterPosition)
+                callback(adapterPosition,"allocation")
             }
         }
     }
@@ -73,6 +81,14 @@ class BuildStrategyAdapter(val handle: (position: Int) -> Unit = { _ -> }) :
             }
         }
     }
-
+//    fun showButton(position: Int) {
+//        // Implement logic to show the button at the specified position
+//     Log.d("show","Button")
+//    }
+//
+//    fun removeItem(position: Int) {
+//        // Implement logic to remove the item at the specified position
+//        Log.d("show","Remove")
+//    }
 
 }
