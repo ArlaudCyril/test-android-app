@@ -146,12 +146,12 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
             val priceCoin = valueAmount.toDouble()
                 .div(assetAmount.toDouble())
             binding.tvAssetConversion.text =
-                "~${assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN)} $mConversionCurrency"
+                "~${assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN)}$mConversionCurrency"
         } else {
             val priceCoin = assetAmount.toDouble()
                 .div(valueAmount.toDouble())
             binding.tvAssetConversion.text =
-                "~${assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN)} $mCurrency"
+                "~${assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN)}$mCurrency"
         }
 
 
@@ -175,8 +175,8 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
             ).visible()
             binding.etAmount.text = "0 €"
 
-                mCurrency = " " + Constants.EURO
-                mConversionCurrency = " " + "usdt".uppercase()
+                mCurrency = Constants.EURO
+                mConversionCurrency = "usdt".uppercase()
                 focusedData.currency = mCurrency
                 unfocusedData.currency = mConversionCurrency
 
