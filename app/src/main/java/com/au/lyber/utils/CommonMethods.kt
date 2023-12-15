@@ -77,6 +77,7 @@ import java.lang.NumberFormatException
 import java.math.RoundingMode
 import java.text.DateFormat
 import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.LocalDateTime
@@ -203,7 +204,15 @@ class CommonMethods {
         }
 
         fun String.roundFloat(): String {
-            return String.format("%.2f", this.toFloat())
+            try {
+                var value=this
+                if(value.contains(","))
+                    value=this.replace(",","")
+                return String.format(Locale.US,"%.2f", value.toFloat())
+            }catch (ex:NumberFormatException){
+                return ""
+            }
+
         }
 
         fun isBiometricReady(context: Context) =
@@ -781,14 +790,20 @@ class CommonMethods {
             }
         }
 
+//        val <T> T.commaFormatted: String
+//            get() = when (this) {
+//                is Number -> this.commaFormatted
+//                is String -> toDoubleOrNull().commaFormatted
+//                is Char -> this.toString()
+//                else -> "0"
+//            }
         val <T> T.commaFormatted: String
             get() = when (this) {
-                is Number -> this.commaFormatted
-                is String -> toDoubleOrNull().commaFormatted
+                is Number -> String.format(Locale.US, "%,d", this.toLong())
+                is String -> toDoubleOrNull()?.let { String.format(Locale.US, "%,.2f", it) } ?: "0"
                 is Char -> this.toString()
                 else -> "0"
             }
-
         private val Number.commaFormatted: String
             get() = when (this) {
 
@@ -869,6 +884,8 @@ class CommonMethods {
                             formatter.minimumFractionDigits = 10
                         }
 
+                        val symbols = DecimalFormatSymbols(Locale.US)
+                        formatter.decimalFormatSymbols = symbols
                         val stringFormatted = formatter.format(value) + Constants.EURO
                         val ss1 = SpannableString(stringFormatted)
                         ss1.setSpan(RelativeSizeSpan(0.8f), 0, numberZerosLeft, 0) // set size
@@ -902,11 +919,12 @@ class CommonMethods {
 
              formatter.roundingMode = rounding
 
+            val symbols = DecimalFormatSymbols(Locale.US)
+            formatter.decimalFormatSymbols = symbols
              val valueFormatted = formatter.format(this.toDouble() ?: 0.0)
 
              return valueFormatted.toString()
          }
-
 
 
 

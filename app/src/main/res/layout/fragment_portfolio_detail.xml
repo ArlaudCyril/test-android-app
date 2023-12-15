@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -54,7 +53,7 @@
                     android:drawablePadding="4dp"
                     android:gravity="center"
                     android:paddingHorizontal="16dp"
-                    android:text="Bitcoin (BTC) "
+                    android:text="@string/bitcoin_btc"
                     app:drawableEndCompat="@drawable/ic_right_arrow_grey" />
 
             </RelativeLayout>
@@ -166,7 +165,7 @@
                     <TextView
                         style="@style/TitleText"
                         android:layout_marginTop="32dp"
-                        android:text="Infos"
+                        android:text="@string/infos"
                         android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
                     <RelativeLayout

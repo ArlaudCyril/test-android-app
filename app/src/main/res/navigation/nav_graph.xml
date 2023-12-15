@@ -130,10 +130,13 @@
     <fragment
         android:id="@+id/profileFragment"
         android:name="com.au.lyber.ui.fragments.ProfileFragment"
-        android:label="ProfileFragment" >
-        <action 
+        android:label="ProfileFragment">
+        <action
             android:id="@+id/profileFragment_to_strongAuthentication"
-            app:destination="@+id/strongAuthentication"/>
+            app:destination="@+id/strongAuthentication" />
+        <action
+            android:id="@+id/profileFragment_to_chooseLanguageFragment"
+            app:destination="@+id/chooseLanguageFragment" />
         <action
             android:id="@+id/action_profileFragment_to_exportOperationsFragment"
             app:destination="@id/exportOperationsFragment" />
@@ -142,18 +145,14 @@
     <fragment
         android:id="@+id/exportOperationsFragment"
         android:name="com.au.lyber.ui.fragments.ExportOperationsFragment"
-        android:label="ExportOperationsFragment" >
-
-
-
-    </fragment>
+        android:label="ExportOperationsFragment"></fragment>
     <fragment
         android:id="@+id/strongAuthentication"
         android:name="com.au.lyber.ui.fragments.StrongAuthenticationFragment"
         android:label="StrongAuthentication">
         <action
             android:id="@+id/strongAuthentication_to_twoFactorAuthentication"
-            app:destination="@+id/twoFactorAuthentication"/>
+            app:destination="@+id/twoFactorAuthentication" />
     </fragment>
 
     <fragment
@@ -225,13 +224,12 @@
     <fragment
         android:id="@+id/confirmPinFragment"
         android:name="com.au.lyber.ui.fragments.ConfirmPinFragment"
-        android:label="ConfirmPinFragment" >
+        android:label="ConfirmPinFragment">
         <action
             android:id="@+id/action_confirmPinFragment_to_profile"
             app:destination="@id/profileFragment"
             app:popUpTo="@id/profileFragment"
-            app:popUpToInclusive="true"
-            />
+            app:popUpToInclusive="true" />
     </fragment>
     <fragment
         android:id="@+id/createAccountFragment"
@@ -249,8 +247,7 @@
         android:label="EnableNotificationFragment">
         <action
             android:id="@+id/action_enableNotificationFragment_to_completePortfolioFragment"
-            app:destination="@id/completePortfolioFragment"
-            />
+            app:destination="@id/completePortfolioFragment" />
 
     </fragment>
     <fragment
@@ -332,7 +329,26 @@
         android:id="@+id/twoFactorAuthentication"
         android:name="com.au.lyber.ui.fragments.TwoFactorAuthenticationFragment"
         android:label="TwoFactorAuthenticationFragment" />
-
+    <fragment
+        android:id="@+id/codeScannerFragment"
+        android:name="com.au.lyber.ui.fragments.CodeScannerFragment"
+        android:label="CodeScannerFragment" />
+    <fragment
+        android:id="@+id/enableWhiteListingFragment"
+        android:name="com.au.lyber.ui.fragments.EnableWhiteListingFragment"
+        android:label="EnableWhiteListingFragment" />
+    <fragment
+        android:id="@+id/emailAddressFragment"
+        android:name="com.au.lyber.ui.fragments.EmailAddressFragment"
+        android:label="EmailAddressFragment" />
+    <fragment
+        android:id="@+id/investAddMoneyFragment"
+        android:name="com.au.lyber.ui.fragments.InvestAddMoneyFragment"
+        android:label="InvestAddMoneyFragment" />
+    <fragment
+        android:id="@+id/chooseLanguageFragment"
+        android:name="com.au.lyber.ui.fragments.ChooseLanguageFragment"
+        android:label="ChooseLanguageFragment" />
     <dialog
         android:id="@+id/portfolioThreeDots"
         android:name="com.au.lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDots"

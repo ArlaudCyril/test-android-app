@@ -196,7 +196,7 @@ enum class Asset(val image: Int, val nameCode: String) {
 }
 
 
-data class DataBottomSheet(val title: String)
+data class DataBottomSheet(val id:Int,val title: String)
 
 
 /* choose your strategy */
@@ -696,8 +696,19 @@ data class Balance(
 
 data class ExportResponse(
     val success:Boolean
-  }
+)
 
 data class BooleanResponse(
     val success:Boolean
+)
+data class UpdateAuthenticateResponse(
+    val success: Boolean
+)
+
+data class QrCodeResponse(
+    val `data`: QrCode
+)
+
+data class QrCode(
+    val url: String
 )

@@ -336,7 +336,6 @@ open class NetworkViewModel : ViewModel() {
         }
 
     }
-
     fun getCoins(
         page: Int = 1,
         limit: Int = 100,
@@ -1165,13 +1164,15 @@ open class NetworkViewModel : ViewModel() {
                 val res = RestClient.get().getOperationExport(date)
                 if (res.isSuccessful)
                     _exportOperationResponse.postValue(res.body())
-
-    fun qrCodeUrl(){
+            }
+        }catch (ex:Exception){}}
+    fun qrCodeUrl() {
         viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get(Constants.NEW_BASE_URL).getQrUrl()
             if (res.isSuccessful)
                 _qrCodeResponse.postValue(res.body())
-
+        }
+    }
     fun sendMsgToSupport(msg: String) {
         try {
             viewModelScope.launch(exceptionHandler) {
