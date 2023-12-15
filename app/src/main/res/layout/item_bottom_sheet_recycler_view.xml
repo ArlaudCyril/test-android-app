@@ -13,4 +13,4 @@
     android:orientation="horizontal"
     android:paddingVertical="16dp"
     app:drawableEndCompat="@drawable/ic_right_arrow_grey"
-    tools:text="I have never invested" />
+    tools:text="@string/i_have_never_invested" />

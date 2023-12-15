@@ -196,5 +196,8 @@ object Constants {
     const val PHONE="phone"
     const val EMAIL="email"
     const val SCOPE="scope"
+    const val SELECTED_LANGUAGE="selectedLanguage"
+    const val FRENCH="fr"
+    const val ENGLISH="en"
 
 }

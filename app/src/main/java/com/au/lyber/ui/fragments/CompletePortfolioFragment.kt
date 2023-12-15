@@ -212,7 +212,7 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
 
                 btnMenu -> BottomSheetDialog().show(
                     requireActivity().supportFragmentManager,
-                    BottomSheetDialog.SheetType.COMPLETE_ACCOUNT.title
+                    BottomSheetDialog.SheetType.COMPLETE_ACCOUNT.title(requireContext())
                 )
 
                 btnInvestMoney -> {

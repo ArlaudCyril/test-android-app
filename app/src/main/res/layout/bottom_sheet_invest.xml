@@ -25,9 +25,18 @@
         android:gravity="center"
         android:text="@string/invest_in_strategies_or_a_single_nasset"
         android:textColor="#423D33"
+        android:layout_height="0dp"
+        android:lineSpacingExtra="5sp"
         app:layout_constraintBottom_toBottomOf="@id/ivTopAction"
+        app:layout_constraintEnd_toStartOf="@id/blnView"
+        app:layout_constraintStart_toEndOf="@id/ivTopAction"
+        app:layout_constraintTop_toTopOf="@id/ivTopAction" />
+
+    <View
+        android:id="@+id/blnView"
+        android:layout_width="32dp"
+        android:layout_height="1dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/ivTopAction" />
 
     <ImageView
@@ -38,10 +47,10 @@
         android:background="@drawable/circle_drawable"
         android:backgroundTint="@color/purple_gray_50"
         android:padding="4dp"
-        app:tint="@color/purple_500"
         android:src="@drawable/ic_invest_money"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivTopAction" />
+        app:layout_constraintTop_toBottomOf="@id/ivTopAction"
+        app:tint="@color/purple_500" />
 
     <TextView
         android:id="@+id/tvTitleInvestInStrategy"
@@ -97,7 +106,6 @@
         android:layout_marginTop="36dp"
         android:text="@string/invest_in_a_single_asset"
         android:textColor="@color/purple_gray_700"
-        app:layout_constraintEnd_toStartOf="@+id/ivRightArrowExchange"
         app:layout_constraintStart_toEndOf="@id/ivExchange"
         app:layout_constraintTop_toBottomOf="@id/ivWithdraw" />
 
@@ -106,7 +114,7 @@
         style="@style/BodyMabry"
         android:layout_width="0dp"
         android:layout_marginStart="12dp"
-        android:text="@string/choose_among_80_different_assets"
+        android:text="@string/choose_among_20_different_assets"
         android:textColor="@color/purple_gray_500"
         app:layout_constraintStart_toEndOf="@id/ivExchange"
         app:layout_constraintTop_toBottomOf="@id/tvTitleSingleAsset" />

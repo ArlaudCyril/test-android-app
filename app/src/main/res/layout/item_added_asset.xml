@@ -77,6 +77,27 @@
 
 
         <TextView
+            android:id="@+id/tvAssetName"
+            style="@style/SubheadMabry"
+            android:layout_width="0dp"
+            android:layout_weight="0.8"
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="12dp"
+            android:textStyle="bold"
+            tools:text="@string/bitcoin" />
+
+        <ImageView
+            android:id="@+id/lineChart"
+            android:layout_width="100dp"
+            android:layout_height="40dp"
+            android:layout_gravity="center_vertical"
+            android:adjustViewBounds="false"
+            android:contentDescription="@string/graph_of_currency"
+            android:cropToPadding="false"
+            android:scaleType="centerInside"
+             />
+      
+        <TextView
             android:id="@+id/tvAllocation"
             style="@style/BodyMabry"
             android:layout_marginTop="20dp"
