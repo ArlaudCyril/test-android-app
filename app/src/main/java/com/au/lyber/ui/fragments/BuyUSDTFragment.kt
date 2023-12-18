@@ -292,8 +292,17 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
 
                     val string = amount.substring(0, amount.count() - currency.length)
 
+
                     if (string.contains('.')) {
-                        if (char != '.') etAmount.text = "$string$char${currency}"
+                        if (char != '.')
+                     {
+                            //                     etAmount.text = "$string$char${currency}"
+                        val decimalPart = string.substringAfter('.')
+                        if (decimalPart.length < 2 && char.isDigit()) {
+                            etAmount.text = "$string$char$currency"
+                        }
+                    }
+
                     } else {
                         if (char == '.') etAmount.text = ("${
                             string.pointFormat

@@ -1358,6 +1358,10 @@ class CommonMethods {
 
             return valueFormatted.toString()
         }
+        fun String.decimalPointUptoTwoPlaces(): String {
+            val decimalFormat = DecimalFormat("#.##", DecimalFormatSymbols(Locale.ENGLISH))
+            return decimalFormat.format(toDouble())
+        }
 
 
     }
