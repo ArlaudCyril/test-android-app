@@ -196,6 +196,7 @@ object Constants {
     const val PHONE="phone"
     const val EMAIL="email"
     const val SCOPE="scope"
+    const val WITHDRAW="withdraw"
 
     const val FAILURE="FAILURE"
     const val ORDER="order"

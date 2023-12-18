@@ -225,7 +225,8 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
 
                             Constants.DEPOSIT -> {
                                 ivItem.setImageResource(R.drawable.ic_deposit)
-                                tvStartTitle.text = "${it.asset.uppercase()} Deposit"
+                                tvStartTitle.text =
+                                    "${it.asset.uppercase()} ${getString(R.string.deposit_)}"
                                 tvStartSubTitle.text =
                                     it.status.lowercase().replaceFirstChar(Char::uppercase)
                                 tvEndTitleCenter.text = "+${it.amount} ${it.asset.uppercase()}"
@@ -233,11 +234,17 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
                                 tvStartTitleCenter.visibility = View.GONE
                             }
 
-                            Constants.WITHDRAWAL -> { // single asset
+                            Constants.WITHDRAW -> { // single asset
                                 //TODO
                                 ivItem.setImageResource(R.drawable.ic_withdraw)
                                 tvFailed.visibility = View.GONE
-//
+                                tvStartTitle.text =
+                                    "${it.network.uppercase()} ${getString(R.string.withdrawal)}"
+                                tvStartSubTitle.text =
+                                    it.status.lowercase().replaceFirstChar(Char::uppercase)
+                                tvEndTitleCenter.text = "-${it.amount} ${it.asset.uppercase()}"
+                                tvFailed.visibility = View.GONE
+                                tvStartTitleCenter.visibility = View.GONE
                             }
 
                             else -> root.gone()
