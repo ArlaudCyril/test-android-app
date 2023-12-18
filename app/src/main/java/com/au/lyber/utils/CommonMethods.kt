@@ -187,7 +187,8 @@ class CommonMethods {
         }
 
         fun String.decimalPoint(): String {
-            return DecimalFormat("#.######").format(toDouble())
+            val decimalFormat = DecimalFormat("#.######", DecimalFormatSymbols(Locale.ENGLISH))
+            return decimalFormat.format(toDouble())
         }
 
         fun String.decimalPoints(points: Int): String {
@@ -198,7 +199,7 @@ class CommonMethods {
         }
 
         fun String.roundFloat(): String {
-            return String.format("%.2f", this.toFloat())
+            return String.format(Locale.US,"%.2f", this.toFloat())
         }
 
         fun isBiometricReady(context: Context) =
@@ -796,16 +797,16 @@ class CommonMethods {
                         val split = toString().split(".")[1]
                         if (split.toFloat() > 0)
                             when (split.length) {
-                                1 -> String.format("%,.1f", this)
-                                else -> String.format("%,.2f", this)
+                                1 -> String.format(Locale.US,"%,.1f", this)
+                                else -> String.format(Locale.US,"%,.2f", this)
                             }
-                        else String.format("%,d", toString().split(".")[0].toInt()) //+ ".00"
+                        else String.format(Locale.US,"%,d", toString().split(".")[0].toInt()) //+ ".00"
 
-                    } else String.format("%,2f", this) //+ ".00"
+                    } else String.format(Locale.US,"%,2f", this) //+ ".00"
 
                 }
 
-                is Long, is Int -> String.format("%,d", this) //+ ".00"
+                is Long, is Int -> String.format(Locale.US,"%,d", this) //+ ".00"
 
                 else -> toString()
 

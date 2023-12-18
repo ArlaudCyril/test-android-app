@@ -97,7 +97,6 @@
         android:layout_marginTop="36dp"
         android:text="@string/invest_in_a_single_asset"
         android:textColor="@color/purple_gray_700"
-        app:layout_constraintEnd_toStartOf="@+id/ivRightArrowExchange"
         app:layout_constraintStart_toEndOf="@id/ivExchange"
         app:layout_constraintTop_toBottomOf="@id/ivWithdraw" />
 

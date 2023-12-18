@@ -11,21 +11,16 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentBuyUsdtBinding
-import com.au.lyber.databinding.FragmentWithdrawAmountBinding
 import com.au.lyber.models.Balance
 import com.au.lyber.models.BalanceData
-import com.au.lyber.models.WithdrawAddress
 import com.au.lyber.network.RestClient
 import com.au.lyber.ui.activities.BaseActivity
-import com.au.lyber.ui.fragments.bottomsheetfragments.WithdrawalAddressBottomSheet
 import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.au.lyber.utils.CommonMethods
 import com.au.lyber.utils.CommonMethods.Companion.commaFormatted
 import com.au.lyber.utils.CommonMethods.Companion.decimalPoint
 import com.au.lyber.utils.CommonMethods.Companion.formattedAsset
 import com.au.lyber.utils.CommonMethods.Companion.gone
-import com.au.lyber.utils.CommonMethods.Companion.load
-import com.au.lyber.utils.CommonMethods.Companion.showToast
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
 import com.au.lyber.utils.OnTextChange
@@ -33,7 +28,8 @@ import com.google.gson.Gson
 import okhttp3.ResponseBody
 import java.math.RoundingMode
 
-class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickListener, RestClient.OnRetrofitError  {
+class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickListener,
+    RestClient.OnRetrofitError {
     override fun bind() = FragmentBuyUsdtBinding.inflate(layoutInflater)
     private var valueConversion: Double = 1.0
     private val assetConversion get() = binding.tvAssetConversion.text.trim().toString()
@@ -46,7 +42,7 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = CommonMethods.getViewModel(requireActivity())
-        viewModel.listener=this
+        viewModel.listener = this
         binding.tvBackArrow.setOnClickListener(this)
         binding.tvDot.setOnClickListener(this)
         binding.tvZero.setOnClickListener(this)
@@ -71,12 +67,11 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
                 val bundle = Bundle().apply {
                     putString(Constants.DATA_SELECTED, Gson().toJson(it.data))
                 }
-                findNavController().navigate(R.id.previewMyPurchaseFragment,bundle)
+                findNavController().navigate(R.id.previewMyPurchaseFragment, bundle)
 
             }
         }
     }
-
 
 
     private val textOnTextChange = object : OnTextChange {
@@ -130,6 +125,7 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
 
         }
     }
+
     override fun onRetrofitError(responseBody: ResponseBody?) {
         super.onRetrofitError(responseBody)
         binding.progress.clearAnimation()
@@ -173,42 +169,40 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
                 tvAssetConversion,
                 ivRepeat
             ).visible()
-            binding.etAmount.text = "0 €"
+            binding.etAmount.text = "0€"
 
-                mCurrency = Constants.EURO
-                mConversionCurrency = "usdt".uppercase()
-                focusedData.currency = mCurrency
-                unfocusedData.currency = mConversionCurrency
+            mCurrency = Constants.EURO
+            mConversionCurrency = "usdt".uppercase()
+            focusedData.currency = mCurrency
+            unfocusedData.currency = mConversionCurrency
 
-                "${getString(R.string.buy)} ${"usdt".uppercase()}".also { tvTitle.text = it }
+            "${getString(R.string.buy)} ${"usdt".uppercase()}".also { tvTitle.text = it }
+            var balance =
+                BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == "usdt" } }
+            if (balance == null) {
+                val balanceData = BalanceData("0", "0")
+                balance = Balance("0", balanceData)
+            }
+            var priceCoin = balance!!.balanceData.euroBalance.toDouble()
+                .div(balance.balanceData.balance.toDouble())
+
+            valueConversion =
+                (balance.balanceData.balance.toDouble() / balance.balanceData.euroBalance.toDouble())
+            if (balance.balanceData.balance == "0") {
+                val balanceResume =
+                    BaseActivity.balanceResume.firstNotNullOfOrNull { item -> item.takeIf { item.id == "usdt" } }
+
+                valueConversion = 1.0 / balanceResume!!.priceServiceResumeData.lastPrice.toDouble()
+            }
+            setAssesstAmount("0.0")
+
+            viewModel.selectedNetworkDeposit.let {
                 var balance =
                     BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == "usdt" } }
                 if (balance == null) {
                     val balanceData = BalanceData("0", "0")
                     balance = Balance("0", balanceData)
                 }
-                var priceCoin = balance!!.balanceData.euroBalance.toDouble()
-                    .div(balance.balanceData.balance.toDouble())
-
-                valueConversion =
-                    (balance.balanceData.balance.toDouble() / balance.balanceData.euroBalance.toDouble())
-                if (balance.balanceData.balance=="0"){
-                    val balanceResume =
-                        BaseActivity.balanceResume.firstNotNullOfOrNull { item -> item.takeIf { item.id == "usdt" } }
-
-                    valueConversion = 1.0/balanceResume!!.priceServiceResumeData.lastPrice.toDouble()
-                }
-                setAssesstAmount("0.0")
-
-            viewModel.selectedNetworkDeposit.let {
-                var balance =
-                    BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == "usdt"} }
-                if (balance == null) {
-                    val balanceData = BalanceData("0", "0")
-                    balance = Balance("0", balanceData)
-                }
-
-
 
 
             }
@@ -234,11 +228,12 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
                 ivRepeat -> swapConversion()
 
                 btnPreviewInvestment -> {
-                     hitAPi()
+                    hitAPi()
                 }
             }
         }
     }
+
     private fun hitAPi() {
         binding.progress.visible()
         binding.progress.animation =
@@ -301,10 +296,10 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
                         if (char != '.') etAmount.text = "$string$char${currency}"
                     } else {
                         if (char == '.') etAmount.text = ("${
-                            string.pointFormat.toDouble().toInt().commaFormatted
+                            string.pointFormat
                         }.${currency}")
-                        else etAmount.text = ((string.pointFormat.toDouble().toInt()
-                            .toString() + char).commaFormatted + currency)
+                        else etAmount.text = ((string.pointFormat
+                            .toString() + char) + currency)
                     }
                 }
 

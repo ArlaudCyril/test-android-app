@@ -417,10 +417,10 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                         if (char != '.') etAmount.text = "$string$char${currency}"
                     } else {
                         if (char == '.') etAmount.text = ("${
-                            string.pointFormat.toDouble().toInt().commaFormatted
+                            string.pointFormat
                         }.${currency}")
-                        else etAmount.text = ((string.pointFormat.toDouble().toInt()
-                            .toString() + char).commaFormatted + currency)
+                        else etAmount.text = ((string.pointFormat
+                            .toString() + char) + currency)
                     }
                 }
 

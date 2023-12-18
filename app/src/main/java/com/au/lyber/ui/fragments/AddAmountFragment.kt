@@ -538,8 +538,8 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
                 amount.length == (focusedData.currency.length + 1) && amount[0] == '0' -> {
                     if (char == '.') {
-                        if (!amount.contains('.')) etAmount.setText(("0$char${focusedData.currency}"))
-                    } else etAmount.setText((char + focusedData.currency))
+                        if (!amount.contains('.')) etAmount.text = ("0$char${focusedData.currency}")
+                    } else etAmount.text = (char + focusedData.currency)
                 }
 
                 else -> {
@@ -548,18 +548,17 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                             amount.substring(0, amount.count() - focusedData.currency.length)
 
                         if (string.contains('.')) {
-                            if (char != '.') etAmount.setText("$string$char${focusedData.currency}")
+                            if (char != '.') etAmount.text = "$string$char${focusedData.currency}"
                         } else {
-                            if (char == '.') etAmount.setText(
-                                ("${
-                                    string.pointFormat.toDouble().toInt().commaFormatted
-                                }.${focusedData.currency}")
-                            )
-                            else etAmount.setText(
-                                ((string.pointFormat.toDouble().toInt()
-                                    .toString() + char).commaFormatted + focusedData.currency)
-                            )
+                            if (char == '.') etAmount.text = ("${
+                                string.pointFormat
+                            }.${focusedData.currency}")
+                            else etAmount.text = ((string.pointFormat
+                                .toString() + char) + focusedData.currency)
                         }
+
+
+
                     } catch (_: Exception) {
 
                     }

@@ -302,10 +302,10 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                         if (char != '.') etAmount.text = "$string$char${focusedData.currency}"
                     } else {
                         if (char == '.') etAmount.text = ("${
-                            string.pointFormat.toDouble().toInt().commaFormatted
+                            string.pointFormat
                         }.${focusedData.currency}")
-                        else etAmount.text = ((string.pointFormat.toDouble().toInt()
-                            .toString() + char).commaFormatted + focusedData.currency)
+                        else etAmount.text = ((string.pointFormat
+                            .toString() + char) + focusedData.currency)
                     }
                 }
 
