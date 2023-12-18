@@ -90,7 +90,7 @@ lateinit var transactionData: TransactionData
                 binding.tvDateValue.text = transactionData.txId
             }
 
-            Constants.WITHDRAWAL -> { // single asset
+            Constants.WITHDRAW -> { // single asset
                binding.tvTitle.text = transactionData.type.replaceFirstChar(Char::uppercase)
                 binding.tvOrder.text = getString(R.string.transaction_id)
                 binding.tvOrderId.text = transactionData.id
@@ -123,7 +123,7 @@ lateinit var transactionData: TransactionData
                         Constants.ORDER -> textToCopy=transactionData.id
                        Constants.STRATEGY ->textToCopy=transactionData.executionId
                         Constants.DEPOSIT ->textToCopy=transactionData.id
-                        Constants.WITHDRAWAL ->textToCopy=transactionData.id
+                        Constants.WITHDRAW ->textToCopy=transactionData.id
                     }
                     val clipMan =
                         requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
@@ -135,7 +135,7 @@ lateinit var transactionData: TransactionData
                     var textToCopy=""
                     when(transactionData.type){
                         Constants.DEPOSIT ->textToCopy=transactionData.fromAddress
-                        Constants.WITHDRAWAL ->textToCopy=transactionData.toAddress
+                        Constants.WITHDRAW ->textToCopy=transactionData.toAddress
                     }
                     val clipMan =
                         requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?

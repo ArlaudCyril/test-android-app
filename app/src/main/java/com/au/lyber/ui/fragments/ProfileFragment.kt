@@ -388,7 +388,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                             tvEndTitleCenter.text = "+${it.amount} ${it.asset.uppercase()}"
                         }
 
-                        Constants.WITHDRAWAL -> { // single asset
+                        Constants.WITHDRAW -> { // single asset
                             //TODO
                             ivItem.setImageResource(R.drawable.ic_withdraw)
                             tvStartTitle.text =
