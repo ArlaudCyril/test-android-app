@@ -29,6 +29,8 @@ import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
 import com.au.lyber.utils.PaginationListener
 import com.google.gson.GsonBuilder
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
@@ -37,7 +39,7 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
 
     private lateinit var adapter: TransactionAdapter
     private val viewModel: PortfolioViewModel by viewModels()
-    val limit = 50 // as on this screen we have to show max 3 enteries
+    val limit = 10
     var offset = 0
 
     private var isLoading = true
@@ -183,7 +185,20 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
                                 tvStartTitle.text = getString(R.string.exchange)
                                 tvStartSubTitle.text =
                                     "${it.fromAsset.uppercase()} to ${it.toAsset.uppercase()}"
-                                tvEndTitle.text = "-${it.fromAmount} ${it.fromAsset.uppercase()}"
+
+                                var roundedNumber=BigDecimal(it.fromAmount)
+                                try {
+                                    val originalNumber = BigDecimal(it.fromAmount)
+                                    val scale = originalNumber.scale()
+                                     roundedNumber = if (scale > 8) {
+                                        originalNumber.setScale(8, RoundingMode.HALF_UP)
+                                    } else
+                                        originalNumber
+                                }catch (_:Exception){
+
+                                }
+                                 tvEndTitle.text = "-${roundedNumber}${it.fromAsset.uppercase()}"
+//                                tvEndTitle.text = "-${it.fromAmount} ${it.fromAsset.uppercase()}"
                                 var amount = it.toAmount
                                 try {
                                     amount = String.format("%.10f", it.toAmount.toFloat())
@@ -206,7 +221,7 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
                                     if (it.successfulBundleEntries.isNotEmpty()) {
                                         try {
                                             tvEndTitleCenter.text =
-                                                "${it.successfulBundleEntries[0].assetAmount} ${it.successfulBundleEntries[0].asset}"
+                                                "${it.successfulBundleEntries[0].assetAmount} ${it.successfulBundleEntries[0].asset.uppercase(Locale.US)}"
 
                                         } catch (ex: Exception) {
 
