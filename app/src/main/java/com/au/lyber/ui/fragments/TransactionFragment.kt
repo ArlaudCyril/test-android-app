@@ -9,36 +9,26 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.view.updatePadding
-import androidx.core.widget.NestedScrollView
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.au.lyber.R
 import com.au.lyber.databinding.FragmentTransactionBinding
 import com.au.lyber.databinding.ItemTransactionBinding
 import com.au.lyber.databinding.LoaderViewBinding
-import com.au.lyber.models.Transaction
 import com.au.lyber.models.TransactionData
 import com.au.lyber.ui.adapters.BaseAdapter
-import com.au.lyber.ui.fragments.bottomsheetfragments.AddAddressInfoBottomSheet
 import com.au.lyber.ui.fragments.bottomsheetfragments.TransactionDetailsBottomSheetFragment
-import com.au.lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet
-import com.au.lyber.utils.CommonMethods.Companion.decimalPoints
-import com.au.lyber.utils.CommonMethods.Companion.getViewModel
+import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
+import com.au.lyber.utils.CommonMethods
 import com.au.lyber.utils.CommonMethods.Companion.gone
 import com.au.lyber.utils.CommonMethods.Companion.px
 import com.au.lyber.utils.CommonMethods.Companion.toDateFormat
 import com.au.lyber.utils.CommonMethods.Companion.toDateFormatTwo
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
-import com.au.lyber.ui.portfolio.viewModel.PortfolioViewModel
-import com.au.lyber.utils.CommonMethods
-import com.au.lyber.utils.CommonMethods.Companion.roundFloat
-import com.au.lyber.utils.CommonMethods.Companion.showToast
 import com.au.lyber.utils.PaginationListener
 import com.google.gson.GsonBuilder
-import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.Locale
 import java.util.TimeZone
@@ -62,6 +52,7 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
 //        viewModel = getViewModel(requireActivity())
         viewModel.listener = this
         CommonMethods.checkInternet(requireContext()) {
+            CommonMethods.showProgressDialog(requireContext())
             viewModel.getTransactions(limit, offset)
         }
 
@@ -99,6 +90,7 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
         viewModel.getTransactionListingResponse.observe(viewLifecycleOwner) { response ->
             response?.let {
                 // Process the response here
+                CommonMethods.dismissProgressDialog()
                 adapter.calculatePositions(it.data)
                 if (offset == 0)
                     binding.rvTransactions.startLayoutAnimation()
@@ -188,7 +180,7 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
                         when (it.type) {
                             Constants.ORDER -> { //exchange
                                 ivItem.setImageResource(R.drawable.ic_exchange)
-                                tvStartTitle.text = "Exchange"
+                                tvStartTitle.text = getString(R.string.exchange)
                                 tvStartSubTitle.text =
                                     "${it.fromAsset.uppercase()} to ${it.toAsset.uppercase()}"
                                 tvEndTitle.text = "-${it.fromAmount} ${it.fromAsset.uppercase()}"
@@ -235,15 +227,13 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
                             }
 
                             Constants.WITHDRAW -> { // single asset
-                                //TODO
                                 ivItem.setImageResource(R.drawable.ic_withdraw)
                                 tvFailed.visibility = View.GONE
                                 tvStartTitle.text =
-                                    "${it.network.uppercase()} ${getString(R.string.withdrawal)}"
+                                    "${it.asset.uppercase()} ${getString(R.string.withdrawal)}"
                                 tvStartSubTitle.text =
                                     it.status.lowercase().replaceFirstChar(Char::uppercase)
                                 tvEndTitleCenter.text = "-${it.amount} ${it.asset.uppercase()}"
-                                tvFailed.visibility = View.GONE
                                 tvStartTitleCenter.visibility = View.GONE
                             }
 

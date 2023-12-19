@@ -91,7 +91,8 @@ lateinit var transactionData: TransactionData
             }
 
             Constants.WITHDRAW -> { // single asset
-               binding.tvTitle.text = transactionData.type.replaceFirstChar(Char::uppercase)
+               binding.tvTitle.text = getString(R.string.withdrawal)
+//                   transactionData.type.replaceFirstChar(Char::uppercase)
                 binding.tvOrder.text = getString(R.string.transaction_id)
                 binding.tvOrderId.text = transactionData.id
                 binding.tvStatusValue.text =
