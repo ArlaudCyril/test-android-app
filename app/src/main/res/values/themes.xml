@@ -26,6 +26,8 @@
     </style>
 
 
+
+
     <style name="CountryPickerStyle" parent="Theme.AppCompat.Dialog">
         <item name="windowMinWidthMajor">80pt</item>
         <item name="windowMinWidthMinor">80pt</item>
