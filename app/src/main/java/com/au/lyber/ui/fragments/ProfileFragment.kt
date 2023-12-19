@@ -392,7 +392,14 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                             //TODO
                             ivItem.setImageResource(R.drawable.ic_withdraw)
                             tvStartTitle.text =
-                                it.type.lowercase().replaceFirstChar(Char::uppercase)
+                                "${it.asset.uppercase()} ${getString(R.string.withdrawal)}"
+                            tvStartSubTitle.text =
+                                it.status.lowercase().replaceFirstChar(Char::uppercase)
+                            tvEndTitleCenter.text = "-${it.amount} ${it.asset.uppercase()}"
+                            tvFailed.visibility = View.GONE
+                            tvStartTitleCenter.visibility = View.GONE
+
+
 //                            tvEndTitle.text = it.type.lowercase().replaceFirstChar(Char::uppercase)
 //                            tvEndSubTitle.text = it.type.lowercase().replaceFirstChar(Char::uppercase)
                         }
