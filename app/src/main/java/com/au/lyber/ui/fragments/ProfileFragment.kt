@@ -368,7 +368,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 //                            tvEndTitle.text = "-${it.fromAmount} ${it.fromAsset.uppercase()}"
                             var amount = it.toAmount
                             try {
-                                amount = String.format("%.10f", it.toAmount.toFloat())
+                                amount = String.format(Locale.US,"%.10f", it.toAmount.toFloat())
                             } catch (ex: java.lang.Exception) {
 
                             }
