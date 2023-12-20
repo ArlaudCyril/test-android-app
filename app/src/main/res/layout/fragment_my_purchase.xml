@@ -101,7 +101,7 @@
                         android:id="@+id/tvPrice"
                         style="@style/SubheadMabry"
                         android:layout_marginTop="32dp"
-                        android:text="@string/price"
+                        android:text="@string/usdt_price"
                         android:textColor="@color/purple_gray_500" />
 
                     <TextView
@@ -134,7 +134,7 @@
                         style="@style/SubheadMabry"
                         android:layout_below="@id/tvDeposit"
                         android:layout_marginTop="32dp"
-                        android:text="@string/lyber_fees"
+                        android:text="@string/fee"
                         android:textColor="@color/purple_gray_500" />
 
                     <TextView
