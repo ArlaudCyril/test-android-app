@@ -32,6 +32,7 @@ import com.google.gson.GsonBuilder
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.SimpleDateFormat
+import java.time.LocalDateTime
 import java.util.Locale
 import java.util.TimeZone
 
@@ -69,7 +70,7 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
                 PaginationListener.NestedScrollPaginationListener() {
                 override fun loadMoreItems() {
                     binding.rvTransactions.post {
-                        offset++
+                        offset = offset + limit
                         isLoading = true
                         adapter.addProgress()
                         CommonMethods.checkInternet(requireContext()) {
@@ -117,8 +118,8 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
     }
 
     inner class TransactionAdapter : BaseAdapter<TransactionData>() {
-
-        private val positionList = mutableListOf<Int>()
+        private var date = ""
+        private val positionList = mutableListOf<String>()
         fun String.toMillis(): Long {
             val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
             dateFormat.timeZone = TimeZone.getTimeZone("UTC")
@@ -131,13 +132,16 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
             }
         }
 
+
         fun calculatePositions(list: List<TransactionData>) {
-            var date = list[0].date.toMillis().toLong().toDateFormatTwo()
-            positionList.add(0)
+            if (positionList.isEmpty()) {
+                date = list[0].date.toMillis().toLong().toDateFormatTwo()
+                positionList.add(list[0].id)
+            }
             for (i in 0 until list.count()) {
                 val currentValue = list[i].date.toMillis().toLong().toDateFormatTwo()
                 if (date.split("/")[0] != currentValue.split("/")[0]) {
-                    positionList.add(i)
+                    positionList.add(list[i].id)
                     date = currentValue
                 }
             }
@@ -175,7 +179,7 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
                 itemList[position]?.let {
                     (holder as TransactionViewHolder).binding.apply {
 
-                        if (position in positionList) {
+                        if (itemList[position]!!.id in positionList) {
                             tvDate.visible()
                             tvDate.text = it.date.toMillis().toLong().toDateFormat()
                         }
@@ -186,18 +190,18 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
                                 tvStartSubTitle.text =
                                     "${it.fromAsset.uppercase()} to ${it.toAsset.uppercase()}"
 
-                                var roundedNumber=BigDecimal(it.fromAmount)
+                                var roundedNumber = BigDecimal(it.fromAmount)
                                 try {
                                     val originalNumber = BigDecimal(it.fromAmount)
                                     val scale = originalNumber.scale()
-                                     roundedNumber = if (scale > 8) {
+                                    roundedNumber = if (scale > 8) {
                                         originalNumber.setScale(8, RoundingMode.HALF_UP)
                                     } else
                                         originalNumber
-                                }catch (_:Exception){
+                                } catch (_: Exception) {
 
                                 }
-                                 tvEndTitle.text = "-${roundedNumber}${it.fromAsset.uppercase()}"
+                                tvEndTitle.text = "-${roundedNumber}${it.fromAsset.uppercase()}"
 //                                tvEndTitle.text = "-${it.fromAmount} ${it.fromAsset.uppercase()}"
                                 var amount = it.toAmount
                                 try {
@@ -221,7 +225,11 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
                                     if (it.successfulBundleEntries.isNotEmpty()) {
                                         try {
                                             tvEndTitleCenter.text =
-                                                "${it.successfulBundleEntries[0].assetAmount} ${it.successfulBundleEntries[0].asset.uppercase(Locale.US)}"
+                                                "${it.successfulBundleEntries[0].assetAmount} ${
+                                                    it.successfulBundleEntries[0].asset.uppercase(
+                                                        Locale.US
+                                                    )
+                                                }"
 
                                         } catch (ex: Exception) {
 

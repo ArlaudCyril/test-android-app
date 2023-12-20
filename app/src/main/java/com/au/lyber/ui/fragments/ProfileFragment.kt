@@ -15,6 +15,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.view.animation.AnimationUtils
+import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Lifecycle
@@ -76,26 +78,27 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 
 
         CommonMethods.checkInternet(requireContext()) {
+           binding.progressImage.animation =
+            AnimationUtils.loadAnimation(context, R.anim.rotate_drawable)
             viewModel.getTransactions(limit, offset)
         }
         viewModel.getTransactionListingResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-
                 dismissProgressDialog()
-
+                binding.tvNoTransaction.setBackgroundResource(0)
+                binding.progressImage.clearAnimation()
+                binding.progressImage.visibility=View.GONE
                 when {
                     it.data.isEmpty() -> {
                         binding.tvNoTransaction.visible()
                         binding.rvTransactions.gone()
                         binding.tvViewAllTransaction.gone()
                     }
-
                     it.data.count() in 1..3 -> {
                         adapter.setList(it.data)
                         binding.tvViewAllTransaction.visible()
                         binding.tvNoTransaction.gone()
                     }
-
                     else -> {
                         adapter.setList(it.data.subList(0, 3))
                         binding.tvViewAllTransaction.visible()
