@@ -40,7 +40,7 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
 
     private lateinit var adapter: TransactionAdapter
     private val viewModel: PortfolioViewModel by viewModels()
-    val limit = 10
+    val limit = 50
     var offset = 0
 
     private var isLoading = true
@@ -90,9 +90,16 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
         binding.toolbar.setNavigationOnClickListener {
             requireActivity().onBackPressed()
         }
+        binding.rvRefresh.setOnRefreshListener {
+            binding.rvRefresh.isRefreshing=true
+            offset=0
+            positionList.clear()
+            viewModel.getTransactions(limit, offset)
+        }
         viewModel.getTransactionListingResponse.observe(viewLifecycleOwner) { response ->
             response?.let {
                 // Process the response here
+                binding.rvRefresh.isRefreshing=false
                 CommonMethods.dismissProgressDialog()
                 adapter.calculatePositions(it.data)
                 if (offset == 0)
@@ -116,10 +123,10 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
         }
 
     }
-
+    private val positionList = mutableListOf<String>()
     inner class TransactionAdapter : BaseAdapter<TransactionData>() {
         private var date = ""
-        private val positionList = mutableListOf<String>()
+
         fun String.toMillis(): Long {
             val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
             dateFormat.timeZone = TimeZone.getTimeZone("UTC")
@@ -182,7 +189,8 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
                         if (itemList[position]!!.id in positionList) {
                             tvDate.visible()
                             tvDate.text = it.date.toMillis().toLong().toDateFormat()
-                        }
+                        }else
+                            tvDate.gone()
                         when (it.type) {
                             Constants.ORDER -> { //exchange
                                 ivItem.setImageResource(R.drawable.ic_exchange)
