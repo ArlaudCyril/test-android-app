@@ -37,7 +37,7 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:text="41 255,74€" />
 
-    <com.au.lyber.utils.AppLineChart
+    <com.Lyber.utils.AppLineChart
         android:id="@+id/lineChart"
         android:layout_width="0dp"
         android:layout_height="0dp"
