@@ -35,7 +35,7 @@
         android:textStyle="bold"
         tools:text="80,666€" />
 
-    <com.au.lyber.utils.AppLineChart
+    <com.Lyber.utils.AppLineChart
         android:id="@+id/lineChart"
         android:layout_width="match_parent"
         android:layout_height="88dp"
