@@ -22,7 +22,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
-        android:name=".utils.App"
+        android:name="com.Lyber.utils.App"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:enableOnBackInvokedCallback="true"
@@ -38,7 +38,7 @@
         tools:targetApi="33">
 
         <activity
-            android:name=".ui.activities.SplashActivity"
+            android:name="com.Lyber.ui.activities.SplashActivity"
             android:exported="true"
 
 
@@ -52,21 +52,27 @@
             </intent-filter>
 
             <intent-filter android:autoVerify="true">
-
                 <action android:name="android.intent.action.VIEW" />
 
-                <category android:name="android.intent.category.BROWSABLE" />
                 <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
 
                 <data android:scheme="https" />
+                <data android:host="www.lyber.com" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
                 <data android:scheme="http" />
                 <data android:host="www.lyber.com" />
-
             </intent-filter>
 
         </activity>
         <activity
-            android:name=".ui.activities.BarCodeActivity"
+            android:name="com.Lyber.ui.activities.BarCodeActivity"
             android:exported="true"
 
 

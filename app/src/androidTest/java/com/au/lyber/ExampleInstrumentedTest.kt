@@ -1,4 +1,4 @@
-package com.au.lyber
+package com.Lyber
 
 import androidx.test.platform.app.InstrumentationRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
