@@ -541,7 +541,7 @@
     <string name="happens_even_to_best">Happens even to the best</string>
     <string name="send_reset_link">We will send you a reset link to your email address</string>
     <string name="send_me_reset_link">Send me a reset link</string>
-    <string name="we_have_sent_an_email">We have sent you an email containing the reset link that you must follow in order to reset your password</string>
+    <string name="we_have_sent_an_email">We have sent you an email containing the reset link that you must follow in order to reset your password.</string>
    <string name="reset_pass">Reset Password</string>
    <string name="enter_your_new_pass">Enter your new password</string>
     <string name="save_my_new_pass">Save my new password</string>
