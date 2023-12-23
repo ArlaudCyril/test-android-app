@@ -196,7 +196,7 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
                                 ivItem.setImageResource(R.drawable.ic_exchange)
                                 tvStartTitle.text = getString(R.string.exchange)
                                 tvStartSubTitle.text =
-                                    "${it.fromAsset.uppercase()} to ${it.toAsset.uppercase()}"
+                                    "${it.fromAsset.uppercase()} -> ${it.toAsset.uppercase()}"
 
                                 var roundedNumber = BigDecimal(it.fromAmount)
                                 try {
@@ -209,7 +209,7 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
                                 } catch (_: Exception) {
 
                                 }
-                                tvEndTitle.text = "-${roundedNumber}${it.fromAsset.uppercase()}"
+                                tvEndTitle.text = "-${roundedNumber} ${it.fromAsset.uppercase()}"
 //                                tvEndTitle.text = "-${it.fromAmount} ${it.fromAsset.uppercase()}"
                                 var amount = it.toAmount
                                 try {
