@@ -570,4 +570,6 @@
     <string name="edit_address">Edit Address</string>
     <string name="choose_an_operation">Choose an operation</string>
     <string name="you_do_not_have_this_asset">You do not have this asset</string>
+    <string name="selcted_24h">A 24h delay is required before you can withdraw to any address newly added to your address book.</string>
+    <string name="selcted_72h">A 72h delay is required before you can withdraw to any address newly added to your address book.</string>
 </resources>
