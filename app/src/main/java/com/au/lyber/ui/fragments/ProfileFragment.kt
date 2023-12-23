@@ -352,7 +352,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                             ivItem.setImageResource(R.drawable.ic_exchange)
                             tvStartTitle.text = "Exchange"
                             tvStartSubTitle.text =
-                                "${it.fromAsset.uppercase()} to ${it.toAsset.uppercase()}"
+                                "${it.fromAsset.uppercase()} -> ${it.toAsset.uppercase()}"
                             var roundedNumber=BigDecimal(it.fromAmount)
                             try {
                                 val originalNumber = BigDecimal(it.fromAmount)
@@ -364,7 +364,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                             }catch (_:Exception){
 
                             }
-                            tvEndTitle.text = "-${roundedNumber}${it.fromAsset.uppercase()}"
+                            tvEndTitle.text = "-${roundedNumber} ${it.fromAsset.uppercase()}"
 //                            tvEndTitle.text = "-${it.fromAmount} ${it.fromAsset.uppercase()}"
                             var amount = it.toAmount
                             try {
