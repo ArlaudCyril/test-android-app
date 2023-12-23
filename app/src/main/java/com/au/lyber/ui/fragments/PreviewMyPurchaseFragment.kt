@@ -44,6 +44,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
     private lateinit var viewModel: PortfolioViewModel
     private var isTimerRunning = false
     private lateinit var handler: Handler
+    private var isGpayInstalled=false
     override fun bind() = FragmentMyPurchaseBinding.inflate(layoutInflater)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -85,6 +86,8 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
         //   binding.btnConfirmInvestment.isEnabled = isReady
         // implemented below
         Log.d("isGpayReady", "$isReady")
+        if(isReady)
+            isGpayInstalled=true
     }
 
     private fun onGooglePayResult(result: GooglePayLauncher.Result) {
@@ -137,11 +140,12 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
                 }
 
                 btnConfirmInvestment -> {
-                    if (CommonMethods.isAppInstalled(
-                            requireActivity(),
-                            "com.google.android.apps.nbu.paisa.user"
-                        )
-                    )
+//                    if (CommonMethods.isAppInstalled(
+//                            requireActivity(),
+//                            "com.google.android.apps.nbu.paisa.user"
+//                        )
+//                    )
+                        if(isGpayInstalled)
                         googlePayLauncher.presentForPaymentIntent(clientSecret)
                     else
                         getString(R.string.you_must_install_gpay).showToast(requireContext())
