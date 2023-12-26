@@ -73,6 +73,7 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                                         "Once"-> "now"
                                         "Daily"-> "1d"
                                         "Weekly"-> "1w"
+                                        "none"-> "none"
                                         else -> "1m"
                                     }
                                     showProgressDialog(requireContext())
@@ -136,6 +137,9 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                         tvValueDepositFee
                     ).gone()
 
+                    if(viewModel.selectedFrequency=="none")
+                    tvValueFrequency.text = getString(R.string.immediate)
+                    else
                     tvValueFrequency.text = viewModel.selectedFrequency
 
                     tvAmount.text =

@@ -613,5 +613,6 @@
     <string name="you_must_install_gpay">You must first install Google Pay</string>
     <string name="usdt_price">USDT Price</string>
     <string name="fee">Fees</string>
+    <string name="immediate">Immediate</string>
 
 </resources>

@@ -33,6 +33,11 @@ class InvestWithStrategyBottomSheet (val clickListener: (Int) -> Unit) :
         binding.tvSubTitleTailor.setOnClickListener(this)
         binding.tvTitleTailor.setOnClickListener(this)
         binding.ivTailor.setOnClickListener(this)
+        //
+        binding.tvOneTime.setOnClickListener(this)
+        binding.tvSubTitleOneTime.setOnClickListener(this)
+        binding.ivOneTime.setOnClickListener(this)
+        binding.ivRightArrowInvestInStrategy.setOnClickListener(this)
         if (viewModel.selectedStrategy!!.activeStrategy!=null){
             binding.apply {
                 ivDelete.gone()
@@ -96,6 +101,10 @@ class InvestWithStrategyBottomSheet (val clickListener: (Int) -> Unit) :
                 }
                 tvSubTitleTailor, tvTitleTailor, ivTailor -> {
                     clickListener(3)
+                    dismiss()
+                }
+                tvSubTitleOneTime, tvOneTime, ivOneTime -> {
+                    clickListener(4)
                     dismiss()
                 }
             }
