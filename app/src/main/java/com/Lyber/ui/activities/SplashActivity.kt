@@ -10,6 +10,7 @@ import androidx.navigation.fragment.NavHostFragment
 import com.Lyber.R
 import com.Lyber.databinding.ActivitySplashBinding
 import com.Lyber.utils.ActivityCallbacks
+import com.Lyber.utils.App
 import com.Lyber.utils.Constants
 
 @SuppressLint("CustomSplashScreen")
@@ -38,7 +39,7 @@ class SplashActivity : com.Lyber.ui.activities.BaseActivity<ActivitySplashBindin
                     }
                 }
             })
-        if(intent.data!=null) {
+        if(intent.data!=null && App.prefsManager.userPin.isEmpty()) {
             val uriString = intent.data?.toString()
             if (uriString != null && uriString.contains("reset?token")) {
                 Log.d("URI Data", "$uriString")

@@ -3,6 +3,7 @@ package com.Lyber.ui.fragments
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.transition.Fade
@@ -24,9 +25,9 @@ var token=""
         super.onCreate(savedInstanceState)
         enterTransition = Fade()
         exitTransition = Fade()
-        if(arguments!=null && requireArguments().containsKey("resetToken")){
-             token=requireArguments().getString("resetToken").toString()
-        }
+//        if(arguments!=null && requireArguments().containsKey("resetToken")){
+//             token=requireArguments().getString("resetToken").toString()
+//        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -40,8 +41,10 @@ var token=""
 
             if (!isScreen) {
                 isScreen = true
-                if(token.isNotEmpty()){
-
+//                Log.d("token","$token")
+//                if(token.isNotEmpty())
+                    if(arguments!=null && requireArguments().containsKey("resetToken")){
+                        token=requireArguments().getString("resetToken").toString()
 //                    navController.navigate(R.id.resetPasswordFragment)
                     val arguments = Bundle().apply {
                         putString("resetToken", token)
