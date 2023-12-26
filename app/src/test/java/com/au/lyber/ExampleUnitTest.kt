@@ -1,4 +1,4 @@
-package com.au.lyber
+package com.Lyber
 
 import org.junit.Test
 

@@ -67,6 +67,8 @@
             android:drawablePadding="10dp"
             android:text="@string/add_a_frequency"
             android:textColor="@color/white"
+            android:layout_gravity="center"
+            android:gravity="center"
             app:drawableEndCompat="@drawable/ic_drop_down_white"
             app:drawableStartCompat="@drawable/ic_calendar_white" />
 

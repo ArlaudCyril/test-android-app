@@ -34,7 +34,7 @@ android {
     buildFeatures {
         viewBinding = true
     }
-    namespace 'com.au.lyber'
+    namespace 'com.Lyber'
 }
 
 dependencies {
