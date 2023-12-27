@@ -689,3 +689,16 @@ data class OrderResponse(
     val toAsset: String,
     val validated: String
 )
+
+data class OneTimeStrategyData(
+    val `data`:OneTimeStrategyDataResponse
+)
+data class OneTimeStrategyDataResponse(
+    val id: String
+)
+data class StrategyExecution(
+    val `data`:StrategyExecutionResponse
+)
+data class StrategyExecutionResponse(
+    val status: String
+)

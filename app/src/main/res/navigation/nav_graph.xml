@@ -339,6 +339,10 @@
         android:id="@+id/investAddMoneyFragment"
         android:name="com.Lyber.ui.fragments.InvestAddMoneyFragment"
         android:label="InvestAddMoneyFragment" />
+    <fragment
+        android:id="@+id/orderStrategyExecutionFragment"
+        android:name="com.Lyber.ui.fragments.OrderStrategyExecutionFragment"
+        android:label="OrderStrategyExecutionFragment" />
 
     <dialog
         android:id="@+id/portfolioThreeDots"

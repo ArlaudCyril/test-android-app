@@ -82,7 +82,7 @@ interface Api {
     suspend fun getPersonalInfo(): Response<User>
 
     @POST("kyc-service/kyc")
-    suspend fun startKyc():Response<KYCResponse>
+    suspend fun startKyc(): Response<KYCResponse>
 
     @GET("treezor/kyc-liveness")
     suspend fun initiateKyc(): Response<InitiateKycResponse>
@@ -127,6 +127,7 @@ interface Api {
 
     @POST("user/verify/pin")
     suspend fun verifyPin(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
+
     @POST("order-service/quote")
     suspend fun getQuote(@Body hashMap: HashMap<String, Any>): Response<GetQuoteResponse>
 
@@ -141,11 +142,13 @@ interface Api {
 
     @POST("user/invest-on-asset")
     suspend fun investOnSingleAsset(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
+
     @PATCH("strategy-service/strategy")
     suspend fun editStrategy(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
 
     @POST("strategy-service/active-strategy")
     suspend fun investOnStrategy(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
+
     @HTTP(method = "DELETE", path = "strategy-service/active-strategy", hasBody = true)
     suspend fun pauseStrategy(@Body hashMap: HashMap<String, Any>): Response<MessageResponsePause>
 
@@ -230,8 +233,10 @@ interface Api {
 
     @POST("wallet-service/withdrawal-address")
     suspend fun addWhitelistingAddress(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
+
     @PATCH("user-service/user")
     suspend fun updateUserInfo(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
+
     @HTTP(method = "DELETE", path = "wallet-service/withdrawal-address", hasBody = true)
     suspend fun deleteWhiteListing(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
 
@@ -257,10 +262,16 @@ interface Api {
     suspend fun getAssetDetail(@Query("id") id: String): Response<AssetDetailBaseDataResponse>
 
     @GET("asset-service/asset")
-    suspend fun getAssetDetail(@Query("id") id: String,@Query("include_networks") include_networks: String): Response<AssetDetailBaseDataResponse>
+    suspend fun getAssetDetail(
+        @Query("id") id: String,
+        @Query("include_networks") include_networks: String
+    ): Response<AssetDetailBaseDataResponse>
 
     @GET("wallet-service/address")
-    suspend fun getAddress(@Query("network") network: String,@Query("asset") asset: String): Response<GetAddress>
+    suspend fun getAddress(
+        @Query("network") network: String,
+        @Query("asset") asset: String
+    ): Response<GetAddress>
 
     @GET("user/investment")
     suspend fun getRecurringInvestmentDetail(@Query("id") id: String): Response<RecurringInvestmentDetailResponse>
@@ -310,6 +321,7 @@ interface Api {
 
     @POST("user-service/finish-registration")
     suspend fun finishRegistration(): Response<UserLoginResponse>
+
     @GET("user-service/2fa-otp")
     suspend fun getOtpForWithdraw(@QueryMap hashMap: HashMap<String, Any>): Response<CommonResponse>
 
@@ -326,18 +338,29 @@ interface Api {
     suspend fun getBalance(): Response<BalanceResponse>
 
     @GET("wallet-service/withdrawal-address")
-    suspend fun getWithdrawalAddress():Response<WithdrawalAddress>
+    suspend fun getWithdrawalAddress(): Response<WithdrawalAddress>
+
     @POST("user-service/verify-2FA")
     suspend fun verify2FA(@Body hashMap: HashMap<String, Any>): Response<UserLoginResponse>
+
     @POST("user-service/verify-2FA")
     suspend fun verify2FAWithdraw(@Body hashMap: HashMap<String, Any>): Response<CommonResponseVerfiy>
+
     @POST("wallet-service/withdraw")
     suspend fun createWithdrawalRequest(@Body hashMap: HashMap<String, Any>): Response<CommonResponse>
+
     @GET("network-service/network")
-    suspend fun getNetworkById(@Query("id")id: String): Response<NetworkResponse>
+    suspend fun getNetworkById(@Query("id") id: String): Response<NetworkResponse>
 
     @GET("order-service/order")
     suspend fun getOrder(
         @Query("orderId") orderId: String
     ): Response<OrderResponseData>
+
+    @POST("strategy-service/strategy-execution")
+    suspend fun oneTimeStrategyExecution(@Body hashMap: HashMap<String, Any>): Response<OneTimeStrategyData>
+
+    @POST("strategy-service/strategy-execution")
+    suspend fun checkStrategyStatus(@Body hashMap: HashMap<String, Any>): Response<StrategyExecution>
+
 }

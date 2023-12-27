@@ -3,6 +3,7 @@ package com.Lyber.ui.fragments
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.Window
 import androidx.lifecycle.Lifecycle
@@ -53,7 +54,15 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
             }
         }
 
-
+        viewModel.oneTimeStrategyDataResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                dismissProgressDialog()
+               Log.d("dataa","${it.data.id}")
+                val bundle = Bundle()
+                bundle.putString("executionId", it.data.id)
+                findNavController().navigate(R.id.orderStrategyExecutionFragment,bundle)
+            }
+        }
     }
 
     override fun onClick(v: View?) {
@@ -77,6 +86,10 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                                         else -> "1m"
                                     }
                                     showProgressDialog(requireContext())
+                                    if(freq=="none"){
+                                        viewModel.oneTimeOrderStrategy(
+                                            viewModel.selectedStrategy!!.name, viewModel.amount.toFloat().toDouble(),it.ownerUuid,)
+                                    } else
                                     viewModel.investStrategy(
                                         it.ownerUuid,
                                         freq,

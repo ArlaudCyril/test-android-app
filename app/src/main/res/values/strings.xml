@@ -609,10 +609,14 @@
     <string name="oops">Oops!</string>
     <string name="purchase_error">The deadline for confirming your purchase has passed. Would you like to receive a new proposal?</string>
     <string name="you_have_seconds_to_confirm_this_purchase">You have %1$s seconds to confirm this purchase.</string>
-<string name="more_details">More details</string>
+    <string name="more_details">More details</string>
     <string name="you_must_install_gpay">You must first install Google Pay</string>
     <string name="usdt_price">USDT Price</string>
     <string name="fee">Fees</string>
     <string name="immediate">Immediate</string>
-
+    <string name="execution_in_progress">Execution in progress</string>
+    <string name="executing_strategy_may_take_seconds">We are executing your strategy, which may take a few seconds.</string>
+    <string name="strategy_executed">Strategy executed</string>
+    <string name="strategy_partially_executed">Strategy partially executed</string>
+    <string name="strategy_rejected">Strategy rejected</string>
 </resources>

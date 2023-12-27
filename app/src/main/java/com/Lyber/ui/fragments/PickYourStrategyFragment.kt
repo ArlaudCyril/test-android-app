@@ -232,6 +232,7 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
                 findNavController().navigate(R.id.buildStrategyFragment, bundle)
             }
             4->{
+
                 val bundle = Bundle()
                 bundle.putBoolean(Constants.ONE_TIME, true)
                 findNavController().navigate(R.id.investAddMoneyFragment,bundle)

@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.fragments.OrderStrategyExecutionFragment">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:paddingVertical="12dp"
+        android:orientation="vertical">
+
+        <TextView
+            style="@style/TitleText"
+            android:layout_gravity="center"
+            android:layout_marginTop="32dp"
+            android:text="@string/execution_in_progress" />
+
+
+        <FrameLayout
+            android:id="@+id/frameLayout"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:layout_marginBottom="30dp"
+            android:layout_marginTop="82dp"
+            android:background="@drawable/circle_drawable_purple_500">
+            <com.google.android.material.progressindicator.CircularProgressIndicator
+              android:id="@+id/ivCircularProgress"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:indeterminate="true"
+                android:layout_gravity="center"
+                app:trackThickness="4dp"
+                app:indicatorSize="70dp"
+                android:indeterminateDuration="1000"
+                app:indicatorColor="@color/white"/>
+            <ImageView
+                android:id="@+id/ivStatus"
+                android:visibility="gone"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_gravity="center"
+                android:src="@drawable/red_cross"/>
+        </FrameLayout>
+
+
+        <TextView
+            style="@style/DialogTitle"
+            android:layout_gravity="center"
+            android:layout_marginHorizontal="28dp"
+            android:layout_marginBottom="16dp"
+            android:gravity="center"
+            android:text="@string/executing_strategy_may_take_seconds" />
+
+    </LinearLayout>
+
+</ScrollView>
