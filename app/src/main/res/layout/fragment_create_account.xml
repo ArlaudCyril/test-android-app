@@ -127,23 +127,29 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="24dp"
-                    android:visibility="gone"
+                    android:visibility="visible"
                     app:hintAnimationEnabled="false"
                     app:hintEnabled="false"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
                     app:passwordToggleEnabled="true">
 
 
-                    <EditText
+                    <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etPassword"
                         style="@style/EditTextTheme"
                         android:layout_width="match_parent"
+                        android:layout_height="match_parent"
                         android:layout_marginStart="4dp"
                         android:layout_toEndOf="@id/tvCountryCode"
                         android:background="@drawable/edit_text_background"
                         android:hint="@string/hint_enter_password"
                         android:inputType="textPassword"
+                        android:gravity="center_vertical"
                         android:maxLength="16"
-                        android:paddingHorizontal="12dp" />
+                        android:paddingHorizontal="12dp"
+                        android:paddingTop="0dp"
+                        android:paddingBottom="0dp"/>
 
 
                 </com.google.android.material.textfield.TextInputLayout>
