@@ -7,13 +7,21 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import android.widget.RelativeLayout
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentManager
+import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.BottomSheetVerificationBinding
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
+import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.SignUpViewModel
 
 class VerificationBottomSheet() :
-    BaseBottomSheet<BottomSheetVerificationBinding>(){
+    BaseBottomSheet<BottomSheetVerificationBinding>() {
 
     private val codeOne get() = binding.etCodeOne.text.trim().toString()
     private val codeTwo get() = binding.etCodeTwo.text.trim().toString()
@@ -34,26 +42,49 @@ class VerificationBottomSheet() :
         setUpView()
         this.binding.etCodeOne.requestFocus()
         binding.etCodeOne.requestKeyboard()
+        viewModel.userLoginResponse.observe(viewLifecycleOwner) {
 
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                CommonMethods.dismissProgressDialog()
+                if (it.data.access_token != null) {
+                    dismiss()
+                    App.prefsManager.accessToken = it.data.access_token
+                    App.accessToken = it.data.access_token
+                    App.prefsManager.refreshToken = it.data.refresh_token
+
+                    childFragmentManager.popBackStack(
+                        null, FragmentManager.POP_BACK_STACK_INCLUSIVE
+                    )
+                    val bundle = Bundle().apply {
+                        putBoolean(Constants.FOR_LOGIN, viewModel.forLogin)
+                    }
+                    findNavController().navigate(R.id.createPinFragment, bundle)
+                }
+
+            }
+
+        }
     }
 
-    private fun setUpView(){
+    private fun setUpView() {
         binding.apply {
 
             title.text = getString(R.string.verification)
             if (viewModel.forLogin) {
                 subtitle.text = getString(R.string.enter_the_code_displayed_on_your_email)
-            }else{
+            } else {
                 subtitle.text = getString(R.string.enter_the_code_displayed_on_your_sms)
             }
             fieldToVerify.text = ""
-            btnCancel.text =getString(R.string.cancel)
+            btnCancel.text = getString(R.string.cancel)
 
             // Usage example
-            val editTextArray : List<EditText> = listOf(etCodeOne, etCodeTwo, etCodeThree,
-                etCodeFour, etCodeFive, etCodeSix)
+            val editTextArray: List<EditText> = listOf(
+                etCodeOne, etCodeTwo, etCodeThree,
+                etCodeFour, etCodeFive, etCodeSix
+            )
 
-            for (editText in editTextArray){
+            for (editText in editTextArray) {
                 editText.addTextChangedListener(onTextChange)
                 editText.setOnKeyListener(key)
             }
@@ -82,22 +113,27 @@ class VerificationBottomSheet() :
                     binding.etCodeOne.requestFocus()
                     binding.etCodeOne.setSelection(binding.etCodeOne.text.length)
                 }
+
                 binding.etCodeThree -> {
                     binding.etCodeTwo.requestFocus()
                     binding.etCodeTwo.setSelection(binding.etCodeTwo.text.length)
                 }
+
                 binding.etCodeFour -> {
                     binding.etCodeThree.requestFocus()
                     binding.etCodeThree.setSelection(binding.etCodeThree.text.length)
                 }
+
                 binding.etCodeFive -> {
                     binding.etCodeFour.requestFocus()
                     binding.etCodeFour.setSelection(binding.etCodeFour.text.length)
                 }
+
                 binding.etCodeSix -> {
                     binding.etCodeFive.requestFocus()
                     binding.etCodeFive.setSelection(binding.etCodeFive.text.length)
                 }
+
                 else -> {}
             }
             return@OnKeyListener false
@@ -123,9 +159,11 @@ class VerificationBottomSheet() :
                 // Character(s) added
                 if (modifiedEditText != null && s != null && s.count() == 2) {
                     val lastCharacter = modifiedEditText.text[1]
-                    modifiedEditText.text = Editable.Factory.getInstance().newEditable(modifiedEditText.text[0].toString())
+                    modifiedEditText.text = Editable.Factory.getInstance()
+                        .newEditable(modifiedEditText.text[0].toString())
                     val nextEditText = nextEditText(modifiedEditText)
-                    nextEditText.text = Editable.Factory.getInstance().newEditable(lastCharacter.toString())
+                    nextEditText.text =
+                        Editable.Factory.getInstance().newEditable(lastCharacter.toString())
 
                 }
 
@@ -134,28 +172,34 @@ class VerificationBottomSheet() :
                         binding.etCodeTwo.requestFocus()
                         binding.etCodeTwo.setSelection(binding.etCodeTwo.text.length)
                     }
+
                     binding.etCodeTwo -> {
                         binding.etCodeThree.requestFocus()
                         binding.etCodeThree.setSelection(binding.etCodeThree.text.length)
                     }
+
                     binding.etCodeThree -> {
                         binding.etCodeFour.requestFocus()
                         binding.etCodeFour.setSelection(binding.etCodeFour.text.length)
                     }
+
                     binding.etCodeFour -> {
                         binding.etCodeFive.requestFocus()
                         binding.etCodeFive.setSelection(binding.etCodeFive.text.length)
                     }
+
                     binding.etCodeFive -> {
                         binding.etCodeSix.requestFocus()
                         binding.etCodeSix.setSelection(binding.etCodeSix.text.length)
                     }
+
                     binding.etCodeSix -> {
                         if (getCode().length == 6) {
-                            dismiss()
                             if (viewModel.forLogin) {
+                                CommonMethods.showProgressDialog(requireContext())
                                 viewModel.verify2FA(code = getCode())
-                            }else{
+                            } else {
+                                dismiss()
                                 viewModel.verifyPhone(getCode())
                             }
                         }
@@ -165,7 +209,7 @@ class VerificationBottomSheet() :
 
         }
 
-        private fun  nextEditText(modifiedEditText: EditText) : EditText{
+        private fun nextEditText(modifiedEditText: EditText): EditText {
             when (modifiedEditText) {
                 binding.etCodeOne -> return binding.etCodeTwo
                 binding.etCodeTwo -> return binding.etCodeThree
@@ -178,7 +222,6 @@ class VerificationBottomSheet() :
 
 
     }
-
 
 
 }

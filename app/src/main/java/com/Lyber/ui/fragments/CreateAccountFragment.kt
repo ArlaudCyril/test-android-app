@@ -45,7 +45,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
     private val mobile get() = binding.etPhone.text.trim().toString()
     private val countryCode get() = binding.tvCountryCode.text.trim().toString()
     private val email get() = binding.etEmail.text.trim().toString()
-    private val password get() = binding.etPassword.text.trim().toString()
+    private val password get() = binding.etPassword.text!!.trim().toString()
     private lateinit var config: SRP6CryptoParams
     lateinit var generator: SRP6VerifierGenerator
     lateinit var client: SRP6ClientSession
