@@ -111,6 +111,7 @@ class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>(), OnCl
                             )
                         )
                     binding.btnSendResetLink.backgroundTintList = colorStateList
+                    binding.tvPassValidMsg.text=getString(R.string.you_have_strong_password)
                     binding.tvPassValidMsg.setTextColor(
                         ContextCompat.getColor(
                             requireContext(),
