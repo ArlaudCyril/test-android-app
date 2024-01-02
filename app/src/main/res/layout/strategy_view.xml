@@ -113,7 +113,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         tools:text="Medium" />
 
-    <com.au.lyber.ui.fragments.AllocationView
+    <com.Lyber.ui.fragments.AllocationView
         android:id="@+id/allocationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

@@ -51,7 +51,7 @@
                 android:orientation="vertical">
 
 
-                <com.au.lyber.ui.fragments.StrategyView
+                <com.Lyber.ui.fragments.StrategyView
                     android:id="@+id/strategyView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

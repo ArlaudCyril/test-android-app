@@ -112,33 +112,6 @@
             android:layout_alignParentEnd="true"
             tools:text="21 July 2022" />
 
-        <!--<include
-            android:id="@+id/includedNetwork"
-            layout="@layout/app_item_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/tvAddress" />
-
-        <include
-            android:id="@+id/includedAddressOrigin"
-            layout="@layout/app_item_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/includedNetwork" />
-
-        <include
-            android:id="@+id/includedAddressOrigin"
-            layout="@layout/app_item_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/includedNetwork" />
-
-        <include
-            android:id="@+id/includedDateAdded"
-            layout="@layout/app_item_layout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/includedAddressOrigin" />-->
 
     </RelativeLayout>
 

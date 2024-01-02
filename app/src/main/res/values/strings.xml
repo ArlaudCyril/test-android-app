@@ -535,7 +535,6 @@
     <string name="operations">Operations</string>
     <string name="order_id">Order id</string>
     <string name="status">Status</string>
-    <string name="to">To</string>
     <string name="fees_paid">Fees paid</string>
     <string name="date">Date</string>
     <string name="transaction_id">Transaction id</string>
@@ -544,7 +543,6 @@
     <string name="type">Type </string>
     <string name="nameOrder">Name</string>
     <string name="recurrent">Recurrent</string>
-    <string name="single_execution">Single execution</string>
     <string name="failed">FAILED</string>
     <string name="language">Language</string>
     <string name="english">English</string>
@@ -692,7 +690,6 @@
     <string name="three19_assets">129-319 assets</string>
     <string name="four64_assets">320-464 assets</string>
     <string name="four65_assets">465+ assets</string>
-
     <string name="less_than_500">Less then 500</string>
     <string name="five00_1000">500-1000</string>
     <string name="one001_1500">1001-1500</string>
