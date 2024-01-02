@@ -53,7 +53,7 @@
 
             </RelativeLayout>
 
-            <com.au.lyber.utils.NewCustomLineChart
+            <com.Lyber.utils.NewCustomLineChart
                 android:id="@+id/lineChart"
                 android:layout_width="match_parent"
                 android:layout_height="160dp"

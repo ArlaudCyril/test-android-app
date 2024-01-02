@@ -196,7 +196,7 @@
     <string name="add_and_use_this_address">Ajouter et utiliser cette adresse</string>
     <string name="add_a_crypto_address">Ajouter une adresse</string>
     <string name="choose_network">Choisissez le réseau</string>
-    <string name="add_a_address">Ajouter une adresse</string>
+    <string name="add_a_address">Ajouter une adresse %1$s</string>
     <string name="add_an_address">Ajouter une adresse</string>
     <string name="wallet">Portefeuille</string>
     <string name="please_enter_address_name">Veuillez saisir votre nom d\'adresse</string>
@@ -395,7 +395,7 @@
     <string name="portfolio">Portefeuille</string>
     <string name="all_assets_available">Tous les actifs disponibles</string>
     <string name="transaction">Transaction</string>
-    <string name="no_transactions">Aucune transactions</string>
+    <string name="no_operations">Aucune opérations</string>
     <string name="payment_method">Mode de paiement</string>
     <string name="account">Compte</string>
     <string name="notifications">Notifications</string>
@@ -418,7 +418,7 @@
     <string name="edit_account">Modifier le compte</string>
     <string name="all_my_portfolio">Tout mon portefeuille</string>
     <string name="lyber_portfolio">Portefeuille Lyber</string>
-    <string name="list_of_all_transactions_purchase_exchange_or_withdrawal_made_on_your_account">Liste de toutes les transactions (achat, échange ou retrait) effectuées sur votre compte.</string>
+    <string name="list_of_all_operations_purchase_exchange_or_withdrawal_made_on_your_account">Liste de toutes les opérations (achat, échange ou retrait) effectuées sur votre compte.</string>
     <string name="use_biometric">Utiliser la biométrie</string>
     <string name="enter_your_pin">Entrez votre code PIN</string>
     <string name="edit_personal_info">Modifier les informations personnelles</string>
@@ -684,7 +684,16 @@
     <string name="over_3001">Plus de 3001</string>
     <string name="withdraw_or_exchange">Retirer ou échanger</string>
 
-
-
-
+    <string name="operations">Opérations</string>
+    <string name="order_id">Numéro de commande</string>
+    <string name="status">Statut</string>
+    <string name="fees_paid">Frais payés</string>
+    <string name="date">Date</string>
+    <string name="transaction_id">Identifiant de transaction</string>
+    <string name="transaction_hash">Hachage\nde transaction</string>
+    <string name="execution_id">Identifiant d\'exécution</string>
+    <string name="type">Taper </string>
+    <string name="nameOrder">Nom</string>
+    <string name="recurrent">Récurrent</string>
+    <string name="failed">FAILED</string>
 </resources>
