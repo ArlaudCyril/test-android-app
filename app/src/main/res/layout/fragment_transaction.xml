@@ -46,7 +46,7 @@
                     style="@style/HeadingStyle"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="20dp"
-                    android:text="@string/transaction"
+                    android:text="@string/operations"
                     android:textSize="24sp" />
 
                 <TextView
@@ -54,7 +54,7 @@
                     style="@style/SubheadMabry"
                     android:layout_marginHorizontal="24dp"
                     android:lineSpacingExtra="8sp"
-                    android:text="@string/list_of_all_transactions_purchase_exchange_or_withdrawal_made_on_your_account"
+                    android:text="@string/list_of_all_operations_purchase_exchange_or_withdrawal_made_on_your_account"
                     android:textColor="@color/purple_gray_500" />
 
             </LinearLayout>
@@ -74,14 +74,19 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
-
-    <androidx.core.widget.NestedScrollView
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/rvRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/purple_gray_00"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-
-        <LinearLayout
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/nsv"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/purple_gray_00"
+      >
+       <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_marginHorizontal="24dp"
@@ -96,8 +101,9 @@
                 android:nestedScrollingEnabled="false" />
 
         </LinearLayout>
-
     </androidx.core.widget.NestedScrollView>
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
 
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>
