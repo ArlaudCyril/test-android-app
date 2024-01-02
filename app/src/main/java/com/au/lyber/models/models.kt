@@ -712,3 +712,43 @@ data class QrCodeResponse(
 data class QrCode(
     val url: String
 )
+data class TransactionList(
+    val `data`: List<TransactionData>
+)
+
+data class TransactionData(
+    val date: String,
+    val executionId: String,
+    val failedBundleEntries: List<FailedBundleEntry>,
+    val fees: String,
+    val fromAmount: String,
+    val fromAsset: String,
+    val id: String,
+    val status: String,
+    val strategyName: String,
+    val strategyType: String,
+    val successfulBundleEntries: List<SuccessfulBundleEntry>,
+    val toAmount: String,
+    val toAsset: String,
+    val totalStableAmountSpent: String,
+    val type: String,
+val fromAddress: String,
+val toAddress: String,
+val txId: String,
+val asset: String,
+val network: String,
+val amount: String,
+val nextExecution: String?
+)
+
+data class FailedBundleEntry(
+    val asset: String,
+    val share: Int
+)
+
+data class SuccessfulBundleEntry(
+    val asset: String,
+    val assetAmount: String,
+    val share: Int,
+    val stableAmount: String
+)

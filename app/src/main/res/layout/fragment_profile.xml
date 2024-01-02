@@ -67,8 +67,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:background="@drawable/circle_stroke_profile"
-                    android:padding="4dp"
-                    />
+                    android:padding="4dp" />
 
 
             </RelativeLayout>
@@ -77,12 +76,12 @@
                 style="@style/TitleText"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="32dp"
-                android:text="@string/transaction"
+                android:text="@string/operations"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 android:textColor="@color/purple_gray_900" />
 
             <RelativeLayout
-                android:id="@+id/llTransactions"
+                android:id="@+id/rlTransactions"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
@@ -93,13 +92,27 @@
                 android:orientation="vertical"
                 android:paddingVertical="16dp">
 
+                <ImageView
+                    android:id="@+id/progressImage"
+                    android:layout_width="48dp"
+                    android:layout_height="48dp"
+                    android:layout_centerInParent="true"
+                    android:elevation="12dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_progress_large" />
+
                 <TextView
                     android:id="@+id/tvNoTransaction"
                     style="@style/SubheadMabry"
                     android:layout_centerInParent="true"
-                    android:text="@string/no_transactions"
+                    android:text="@string/no_operations"
+                    android:background="@drawable/dark_background"
                     android:textColor="@color/purple_gray_600"
-                    android:visibility="gone" />
+                    android:paddingVertical="12dp"
+                    android:gravity="center"
+                    android:layout_width="match_parent"
+                    android:layout_marginHorizontal="24dp"
+                    android:visibility="visible" />
 
                 <androidx.recyclerview.widget.RecyclerView
                     android:id="@+id/rvTransactions"
@@ -206,7 +219,9 @@
                 android:layout_marginTop="24dp"
                 android:background="@drawable/curved_button"
                 android:backgroundTint="@color/purple_gray_50"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:paddingHorizontal="12dp"
+                android:paddingVertical="16dp">
 
                 <RelativeLayout
                     android:id="@+id/llNotification"
@@ -361,11 +376,11 @@
                     <TextView
                         android:id="@+id/tvStatusAddressBook"
                         style="@style/BodyMabry"
-                        android:visibility="gone"
                         android:layout_below="@id/tvTitleAddressBook"
                         android:layout_alignParentStart="true"
                         android:text="@string/whitelisting_disabled"
-                        android:textColor="@color/purple_gray_500" />
+                        android:textColor="@color/purple_gray_500"
+                        android:visibility="gone" />
 
 
                     <ImageView

@@ -395,7 +395,7 @@
     <string name="portfolio">Portfolio</string>
     <string name="all_assets_available">All assets available</string>
     <string name="transaction">Transaction</string>
-    <string name="no_transactions">No Transactions</string>
+    <string name="no_operations">No Operations</string>
     <string name="payment_method">Payment method</string>
     <string name="account">Account</string>
     <string name="notifications">Notifications</string>
@@ -418,7 +418,7 @@
     <string name="edit_account">Edit account</string>
     <string name="all_my_portfolio">All my portfolio</string>
     <string name="lyber_portfolio">Lyber portfolio</string>
-    <string name="list_of_all_transactions_purchase_exchange_or_withdrawal_made_on_your_account">List of all transactions (purchase, exchange or withdrawal) made on your account.</string>
+    <string name="list_of_all_operations_purchase_exchange_or_withdrawal_made_on_your_account">List of all operations (purchase, exchange or withdrawal) made on your account.</string>
     <string name="use_biometric">Use Biometric</string>
     <string name="enter_your_pin">Enter your pin</string>
     <string name="edit_personal_info">Edit personal info</string>
@@ -532,6 +532,20 @@
     <string name="please_select_the_frequency">Please select the frequency</string>
     <string name="enabled">Enabled</string>
     <string name="pause_strategy">Pause Strategy</string>
+    <string name="operations">Operations</string>
+    <string name="order_id">Order id</string>
+    <string name="status">Status</string>
+    <string name="to">To</string>
+    <string name="fees_paid">Fees paid</string>
+    <string name="date">Date</string>
+    <string name="transaction_id">Transaction id</string>
+    <string name="transaction_hash">Transaction\nhash</string>
+    <string name="execution_id">Execution id</string>
+    <string name="type">Type </string>
+    <string name="nameOrder">Name</string>
+    <string name="recurrent">Recurrent</string>
+    <string name="single_execution">Single execution</string>
+    <string name="failed">FAILED</string>
     <string name="language">Language</string>
     <string name="english">English</string>
     <string name="french">Français</string>
@@ -686,4 +700,5 @@
     <string name="two001_3000">2001-3000</string>
     <string name="over_3001">Over 3001</string>
     <string name="withdraw_or_exchange">Withdraw or exchange</string>
+
 </resources>

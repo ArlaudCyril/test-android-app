@@ -74,6 +74,7 @@
             style="@style/BodyMabry"
             android:layout_marginEnd="12dp"
             android:textColor="@color/purple_gray_500"
+            android:gravity="end"
             app:layout_constraintEnd_toStartOf="@id/ivEndIcon"
             app:layout_constraintTop_toBottomOf="@id/tvEndTitle"
             tools:text="554260" />
@@ -86,6 +87,21 @@
             app:layout_constraintBottom_toBottomOf="@id/ivItem"
             app:layout_constraintEnd_toStartOf="@id/ivEndIcon"
             app:layout_constraintTop_toTopOf="@id/ivItem" />
+        <TextView
+            android:id="@+id/tvFailed"
+            style="@style/SubheadMabry"
+            android:textStyle="bold"
+            android:text="@string/failed"
+            android:background="@drawable/curved_layout_4_dp"
+            android:backgroundTint="@color/red_500"
+            android:padding="4dp"
+            android:drawablePadding="2dp"
+            android:visibility="gone"
+            android:textColor="@color/white"
+            app:layout_constraintBottom_toBottomOf="@id/ivItem"
+            app:layout_constraintEnd_toStartOf="@id/ivEndIcon"
+            app:layout_constraintTop_toTopOf="@id/ivItem"
+            app:drawableStartCompat="@drawable/ic_close_white" />
 
         <ImageView
             android:id="@+id/ivEndIcon"
