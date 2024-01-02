@@ -13,7 +13,7 @@
         android:id="@+id/tvPortfolio"
         style="@style/SubTitleText"
         android:layout_marginStart="24dp"
-        android:text="Portfolio"
+        android:text="@string/portfolio"
         app:layout_constraintBottom_toTopOf="@id/tvPortfolioAmount"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

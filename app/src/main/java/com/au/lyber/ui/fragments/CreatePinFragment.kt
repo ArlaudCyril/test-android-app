@@ -77,8 +77,8 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
 
                 it.tvTitle.text = getString(R.string.log_out)
                 it.tvMessage.text = getString(R.string.logout_message)
-                it.tvNegativeButton.text = getString(R.string.no)
-                it.tvPositiveButton.text = getString(R.string.yes)
+                it.tvNegativeButton.text = getString(R.string.no_t)
+                it.tvPositiveButton.text = getString(R.string.yes_t)
 
                 it.tvNegativeButton.setOnClickListener { dismiss() }
 

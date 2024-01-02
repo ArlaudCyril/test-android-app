@@ -212,6 +212,15 @@ class PortfolioViewModel : NetworkViewModel() {
         getBalanceApi()
     }
 
+    fun getExportOperations(date: String) {
+        getExportOperation(date)
+    }
 
-    data class ChooseAssets(val asset: String, var share: Int)
+
+    fun contactSupport(msg: String) {
+        sendMsgToSupport(msg)
+    }
+
+    data class ChooseAssets(val asset_id: String, val allocation: Int)
+
 }

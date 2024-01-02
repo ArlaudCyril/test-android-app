@@ -136,7 +136,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 ContextCompat.getDrawable(requireContext(), R.drawable.curved_button)
             includedMyAsset.root.setBackgroundTint(R.color.purple_gray_50)
 
-            tvInvestMoney.text = "Invest in ${viewModel.selectedAsset?.id?.uppercase()}"
+            tvInvestMoney.text = "${getString(R.string.invest_in)} ${viewModel.selectedAsset?.id?.uppercase()}"
             tvAssetName.text = "${viewModel.selectedAsset?.fullName}"
             tvAssetName.typeface = context?.resources?.getFont(R.font.mabry_pro_medium)
 
@@ -189,7 +189,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
         binding.lineChart.timeSeries = getLineData(viewModel.totalPortfolio)
 
-        binding.tvInvestMoney.text = "Invest Money"
+        binding.tvInvestMoney.text = getString(R.string.invest_money)
         binding.tvValuePortfolioAndAssetPrice.text =
             "${viewModel.totalPortfolio.commaFormatted}${Constants.EURO}"
 

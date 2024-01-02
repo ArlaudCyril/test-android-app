@@ -31,6 +31,7 @@
     <color name="purple_gray_600">#6C6577</color>
     <color name="purple_gray_700">#36323C</color>
     <color name="purple_gray_900">#1B191E</color>
+    <color name="purple_gray_300">#9C999E</color>
 
     <color name="green_500">#1EB35A</color>
     <color name="red_500">#DF5A43</color>
