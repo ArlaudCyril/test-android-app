@@ -360,7 +360,7 @@ interface Api {
     @POST("strategy-service/strategy-execution")
     suspend fun oneTimeStrategyExecution(@Body hashMap: HashMap<String, Any>): Response<OneTimeStrategyData>
 
-    @POST("strategy-service/strategy-execution")
-    suspend fun checkStrategyStatus(@Body hashMap: HashMap<String, Any>): Response<StrategyExecution>
+    @GET("strategy-service/strategy-execution")
+    suspend fun checkStrategyStatus(@Query("executionId") executionId: String): Response<StrategyExecution>
 
 }

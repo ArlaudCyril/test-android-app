@@ -696,9 +696,22 @@ data class OneTimeStrategyData(
 data class OneTimeStrategyDataResponse(
     val id: String
 )
+
 data class StrategyExecution(
-    val `data`:StrategyExecutionResponse
+    val `data`: StrategyExecutionResponse
 )
+
 data class StrategyExecutionResponse(
-    val status: String
+    val failedBundleEntries: List<Any>,
+    val status: String,
+    val successfulBundleEntries: List<SuccessfulBundleEntry>,
+    val totalFeeSpent: String,
+    val totalStableAmountSpent: String
+)
+
+data class SuccessfulBundleEntry(
+    val asset: String,
+    val assetAmount: String,
+    val share: Int,
+    val stableAmount: String
 )

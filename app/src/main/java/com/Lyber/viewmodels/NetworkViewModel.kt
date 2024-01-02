@@ -1172,9 +1172,7 @@ open class NetworkViewModel : ViewModel() {
     }
     fun strategyStatus(executionId: String){
         viewModelScope.launch(exceptionHandler){
-            val map = HashMap<String,Any>()
-            map["executionId"] = executionId
-            val res = RestClient.get(Constants.NEW_BASE_URL).checkStrategyStatus(map)
+            val res = RestClient.get(Constants.NEW_BASE_URL).checkStrategyStatus(executionId)
             if (res.isSuccessful){
                 _strategyExecutionResponse.postValue(res.body())
             }else{

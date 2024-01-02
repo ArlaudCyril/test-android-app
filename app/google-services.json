@@ -7,6 +7,42 @@
   "client": [
     {
       "client_info": {
+        "mobilesdk_app_id": "1:672116436946:android:cfad940c73e0cb5d9ca20b",
+        "android_client_info": {
+          "package_name": "com.Lyber"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "672116436946-8cmm6aostu86cshf4v10n1ru4v54cees.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAY-akLZ8Ew5C6dPg-gyU_wYgbL9tze0Ls"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "672116436946-8cmm6aostu86cshf4v10n1ru4v54cees.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "672116436946-6f6esv5397stq7vho549u71dfmmujjl3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.Lyber"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
         "mobilesdk_app_id": "1:672116436946:android:8f7cf7e192acb3469ca20b",
         "android_client_info": {
           "package_name": "com.au.liber"
@@ -29,6 +65,13 @@
             {
               "client_id": "672116436946-8cmm6aostu86cshf4v10n1ru4v54cees.apps.googleusercontent.com",
               "client_type": 3
+            },
+            {
+              "client_id": "672116436946-6f6esv5397stq7vho549u71dfmmujjl3.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.Lyber"
+              }
             }
           ]
         }
