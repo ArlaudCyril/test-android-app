@@ -16,127 +16,30 @@
     <string name="a_new_code_will_be_sent_in_00_15">A new code will be sent in 00:15</string>
     <string name="confirm_pin">Confirm PIN</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
-    <string name="large_text">
-        "Material is the metaphor.\n\n"
-
-        "A material metaphor is the unifying theory of a rationalized space and a system of motion."
-        "The material is grounded in tactile reality, inspired by the study of paper and ink, yet "
-        "technologically advanced and open to imagination and magic.\n"
-        "Surfaces and edges of the material provide visual cues that are grounded in reality. The "
-        "use of familiar tactile attributes helps users quickly understand affordances. Yet the "
-        "flexibility of the material creates new affordances that supercede those in the physical "
-        "world, without breaking the rules of physics.\n"
-        "The fundamentals of light, surface, and movement are key to conveying how objects move, "
-        "interact, and exist in space and in relation to each other. Realistic lighting shows "
-        "seams, divides space, and indicates moving parts.\n\n"
-
-        "Bold, graphic, intentional.\n\n"
-
-        "The foundational elements of print based design typography, grids, space, scale, color, "
-        "and use of imagery guide visual treatments. These elements do far more than please the "
-        "eye. They create hierarchy, meaning, and focus. Deliberate color choices, edge to edge "
-        "imagery, large scale typography, and intentional white space create a bold and graphic "
-        "interface that immerse the user in the experience.\n"
-        "An emphasis on user actions makes core functionality immediately apparent and provides "
-        "waypoints for the user.\n\n"
-
-        "Motion provides meaning.\n\n"
-
-        "Motion respects and reinforces the user as the prime mover. Primary user actions are "
-        "inflection points that initiate motion, transforming the whole design.\n"
-        "All action takes place in a single environment. Objects are presented to the user without "
-        "breaking the continuity of experience even as they transform and reorganize.\n"
-        "Motion is meaningful and appropriate, serving to focus attention and maintain continuity. "
-        "Feedback is subtle yet clear. Transitions are efﬁcient yet coherent.\n\n"
-
-        "3D world.\n\n"
-
-        "The material environment is a 3D space, which means all objects have x, y, and z "
-        "dimensions. The z-axis is perpendicularly aligned to the plane of the display, with the "
-        "positive z-axis extending towards the viewer. Every sheet of material occupies a single "
-        "position along the z-axis and has a standard 1dp thickness.\n"
-        "On the web, the z-axis is used for layering and not for perspective. The 3D world is "
-        "emulated by manipulating the y-axis.\n\n"
-
-        "Light and shadow.\n\n"
-
-        "Within the material environment, virtual lights illuminate the scene. Key lights create "
-        "directional shadows, while ambient light creates soft shadows from all angles.\n"
-        "Shadows in the material environment are cast by these two light sources. In Android "
-        "development, shadows occur when light sources are blocked by sheets of material at "
-        "various positions along the z-axis. On the web, shadows are depicted by manipulating the "
-        "y-axis only. The following example shows the card with a height of 6dp.\n\n"
-
-        "Resting elevation.\n\n"
-
-        "All material objects, regardless of size, have a resting elevation, or default elevation "
-        "that does not change. If an object changes elevation, it should return to its resting "
-        "elevation as soon as possible.\n\n"
-
-        "Component elevations.\n\n"
-
-        "The resting elevation for a component type is consistent across apps (e.g., FAB elevation "
-        "does not vary from 6dp in one app to 16dp in another app).\n"
-        "Components may have different resting elevations across platforms, depending on the depth "
-        "of the environment (e.g., TV has a greater depth than mobile or desktop).\n\n"
-
-        "Responsive elevation and dynamic elevation offsets.\n\n"
-
-        "Some component types have responsive elevation, meaning they change elevation in response "
-        "to user input (e.g., normal, focused, and pressed) or system events. These elevation "
-        "changes are consistently implemented using dynamic elevation offsets.\n"
-        "Dynamic elevation offsets are the goal elevation that a component moves towards, relative "
-        "to the component’s resting state. They ensure that elevation changes are consistent "
-        "across actions and component types. For example, all components that lift on press have "
-        "the same elevation change relative to their resting elevation.\n"
-        "Once the input event is completed or cancelled, the component will return to its resting "
-        "elevation.\n\n"
-
-        "Avoiding elevation interference.\n\n"
-
-        "Components with responsive elevations may encounter other components as they move between "
-        "their resting elevations and dynamic elevation offsets. Because material cannot pass "
-        "through other material, components avoid interfering with one another any number of ways, "
-        "whether on a per component basis or using the entire app layout.\n"
-        "On a component level, components can move or be removed before they cause interference. "
-        "For example, a floating action button (FAB) can disappear or move off screen before a "
-        "user picks up a card, or it can move if a snackbar appears.\n"
-        "On the layout level, design your app layout to minimize opportunities for interference. "
-        "For example, position the FAB to one side of stream of a cards so the FAB won’t interfere "
-        "when a user tries to pick up one of cards.\n\n"
-    </string>
     <string name="action_settings">Settings</string>
     <string name="activate_face_id">Activate Face ID</string>
     <string name="activate_face_message">Access Lyber fast and easily by logging with Face ID.</string>
     <string name="decline">Decline</string>
     <string name="activate">Activate</string>
-
     <string name="choose_strategy">Choose a strategy</string>
-
     <string name="titleOne">A diversified strategy</string>
     <string name="titleTwo">A flexible frequency</string>
     <string name="titleThree">An evolving and automated portfolio</string>
-
     <string name="subTitleOne">Choose an investment strategy according to your risk profile. The allocation to crypto-currencies or FIAT will depend on your selection.</string>
     <string name="subTitleTwo">Investing the same amount regularly is the best way to see profits. Every week, every month, it\'s up to you.</string>
     <string name="subTitleThree">Once the regular investment is set, your portfolio will be managed automatically and you will be able to see its evolution.</string>
     <string name="next">Next</string>
     <string name="complete_acc_to_start_investing">Complete your account to start investing</string>
-
     <string name="create_an_account">Create an account</string>
     <string name="create_an_account_strike"><strike>Create an account</strike></string>
     <string name="_2">2</string>
-
     <string name="fill_personal_data">Fill personal data</string>
     <string name="fill_personal_data_strike"><strike>Fill personal data</strike></string>
-
     <string name="verify_your_identity">Verify your identity</string>
     <string name="verify_your_identity_strike"><strike>Verify your identity</strike></string>
-
     <string name="_3">3</string>
     <string name="make_your_first_investment">Make your first investment</string>
     <string name="make_your_first_investment_strike"><strike>Make your first investment</strike></string>
-
     <string name="_4">4</string>
     <string name="invest_money">Invest money</string>
     <string name="complete_your_account">Complete your account</string>
@@ -162,7 +65,7 @@
     <string name="open_gmail">Open Gmail</string>
     <string name="address">Address</string>
     <string name="subtitle_address">We need this information to ensure that crypto services are legal in your country of residence.</string>
-    <string name="hint_street_and_number">Street and number</string>
+    <string name="hint_street_and_number">Street number</string>
     <string name="hint_building_floor">Building, floor</string>
     <string name="hint_city">City</string>
     <string name="hint_zip_code">ZIP code</string>
@@ -180,7 +83,7 @@
     <string name="subtitle_verify_your_identity">This step protects you from fraud and identity theft. Use your phone to:</string>
     <string name="_1">1</string>
     <string name="take_a_picture_of_your_papers"><stroke>Take a picture of your documents</stroke></string>
-    <string name="national_id_card_passport_ou_driving_license"><stroke>National ID card, passport or driving license</stroke></string>
+    <string name="national_id_card_passport_ou_driving_license"><stroke>National ID card, passport or driving licence</stroke></string>
     <string name="take_a_selfie"><stroke>Take a selfie</stroke></string>
     <string name="open_camera">Open camera</string>
     <string name="openSettings">Open settings</string>
@@ -237,8 +140,8 @@
     <string name="resend_email"><u>RESEND EMAIL</u></string>
     <string name="logout_message">"Are you sure you want to logout ? "</string>
     <string name="reg_message">The progress of your registration will be lost.</string>
-    <string name="no">No</string>
-    <string name="yes">Yes</string>
+    <string name="no_t">No</string>
+    <string name="yes_t">Yes</string>
     <string name="logout"><u>Logout</u></string>
     <string name="note_add_bitcoin_address"><b>Important note:</b> Your note goes here and goes on a big amount of line</string>
     <string name="subtitle_crypto_book">The address book allows cryptocurrency withdrawals to be made only at addresses already designated in your address book. You can also activate your address book for these addresses.</string>
@@ -271,7 +174,7 @@
     <string name="top_gainers">Top gainers</string>
     <string name="top_losers">Top losers</string>
     <string name="stable">Stable</string>
-    <string name="how_many_personal_asset_you_have">How many personal asset you have ?</string>
+    <string name="how_many_personal_asset_you_have">How many personal Assets Do you have ?</string>
     <string name="your_withdrawal_has_been_taken_into_account">Your withdrawal has been taken into account.</string>
     <string name="your_investment_has_been_taken_into_account">Your investment has been taken into account.</string>
     <string name="verification">Verification</string>
@@ -296,12 +199,12 @@
     <string name="add_a_address">Add a %1$s address</string>
     <string name="add_an_address">Add address</string>
     <string name="wallet">Wallet</string>
-    <string name="please_enter_address_name">Please enter address name</string>
-    <string name="please_select_a_network">Please select a network</string>
+    <string name="please_enter_address_name">Please enter your address name</string>
+    <string name="please_select_a_network">Please select your network</string>
     <string name="please_enter_address">Please enter %1$s address</string>
     <string name="please_enter_address_">Please enter address</string>
-    <string name="please_enter_valid_address">Please enter valid address</string>
-    <string name="please_select_a_exchange">Please enter exchange</string>
+    <string name="please_enter_valid_address">Please enter a valid address</string>
+    <string name="please_select_a_exchange">Please select your exchange</string>
     <string name="limited_to_25_000_per_week">Limited to 25 000€ per week</string>
     <string name="limited_to_1000_per_week">Limited to 1000€ per week</string>
     <string name="please_enter_street_number">Please enter street number</string>
@@ -312,7 +215,7 @@
     <string name="all_assets">All assets</string>
     <string name="unable_to_connect_to_the_server">Unable to connect to the server</string>
     <string name="assetbasedata">%1$s AssetBaseData</string>
-    <string name="your_allocations_is_greater_than_100_remove">Your allocations is greater than 100%, remove </string>
+    <string name="your_allocations_is_greater_than_100_remove">Your allocation is greater than 100%, remove </string>
     <string name="your_allocations_is_less_than_100_add">Your allocations is less than 100%, add </string>
     <string name="your_strategy_is_ready_to_be_saved">Your strategy is ready to be saved.</string>
     <string name="deposit_adress">Deposit Address</string>
@@ -337,19 +240,19 @@
     <string name="email_verified">Email Verified</string>
     <string name="medium">Medium</string>
     <string name="_5_roi">~5% ROI</string>
-    <string name="please_tell_us_your_investment_experience_with_crypto">Please tell us your investment experience with crypto</string>
-    <string name="please_tell_us_your_source_of_income">Please tell us your source of income</string>
-    <string name="please_tell_us_which_work_industry_your_are_working">Please tell us which work industry your are working</string>
-    <string name="please_tell_us_your_annual_income">Please tell us your annual income</string>
+    <string name="please_tell_us_your_investment_experience_with_crypto">Please choose your investment experience with crypto</string>
+    <string name="please_tell_us_your_source_of_income">Please select your source of income</string>
+    <string name="please_tell_us_which_work_industry_your_are_working">Please select your work industry</string>
+    <string name="please_tell_us_your_annual_income">Please select your annual income</string>
     <string name="today">TODAY</string>
     <string name="yesterday">YESTERDAY</string>
-    <string name="please_enter_your_first_name">Please enter your First Name</string>
+    <string name="please_enter_your_first_name">Please enter first name</string>
     <string name="please_enter_your_last_name">Please enter your Last Name</string>
     <string name="please_enter_your_birth_date">Please enter your birth date</string>
     <string name="please_enter_your_birth_place">Please enter your birth place</string>
     <string name="please_select_your_birth_country">Please select your birth country</string>
     <string name="please_enter_your_nationality">Please enter your Nationality</string>
-    <string name="please_tell_us_that_you_have_us_citizenship_or_not">Please tell us that you have US citizenship or not</string>
+    <string name="please_tell_us_that_you_have_us_citizenship_or_not">Please select are you US Citizen or not?</string>
     <string name="please_selected_an_strategy">Please selected an strategy</string>
     <string name="withdrawal">Withdrawal</string>
     <string name="file_not_found">file not found</string>
@@ -398,7 +301,7 @@
     <string name="invest_in_strategies">Invest in strategies</string>
     <string name="build_your_own_strategy">Build your own strategy</string>
     <string name="invest_in_a_single_asset">Invest in a single asset</string>
-    <string name="choose_among_80_different_assets">Choose among 80 different assets</string>
+    <string name="choose_among_20_different_assets">Choose among 20 different assets</string>
     <string name="set_this_allocation">Set this allocation</string>
     <string name="enter_the_code_displayed_on_your_email_">Enter the code displayed on your email</string>
     <string name="withdraw_deposit_or_exchange">Withdraw, deposit or exchange</string>
@@ -465,7 +368,7 @@
     <string name="enter_wallet_address">Enter wallet address</string>
     <string name="enter_address">Enter address</string>
     <string name="fund_your_account_from_your_bank_account">Fund your account from your bank account</string>
-    <string name="make_sure_the_name_of_the_bank_account_is_the_same_as_your_name_on_lyber_frida_kahlo">Make sure the name of the bank account is the same as your name on Lyber (Frida Kahlo).</string>
+    <string name="make_sure_the_name_of_the_bank_account_is_the_same_as_your_name_on_lyber_frida_kahlo">Make sure the name of the bank account is the same as your name on Lyber).</string>
     <string name="reference_number">Reference number</string>
     <string name="swift_bic">SWIFT/BIC</string>
     <string name="recipient_name">Recipient name</string>
@@ -543,7 +446,23 @@
     <string name="the_minimum_amount_to_be_exchanged">The minimum Amount to be exchanged</string>
     <string name="the_minimum_amount_to_be_exchanged_1">The minimum amount to be exchanged %1$s %2$s</string>
     <string name="availiable_fiat">Available FIAT</string>
-
+    <string name="export">Export</string>
+    <string name="exportOperations">Export operations</string>
+    <string name="successful">Successful</string>
+    <string name="successfulMsg">Your request has been received\nThe export will be delivered to your email address in a few minutes.</string>
+    <string name="error">Error</string>
+    <string name="somethingWentWrong">Oh no ! Something went wrong.</string>
+    <string name="tryAgain">Try Again</string>
+    <string name="contact_us">Contact us</string>
+    <string name="send_us_email">Send us an email to contact@lyber.com or fill out the contact form below:</string>
+    <string name="contact_form">Contact form</string>
+    <string name="msg">Message</string>
+    <string name="contact_us_by_mail">You can also contact us by mail at the address</string>
+    <string name="contact_address">274 ter/3, Avenue de la Marne, 59700 Marcq-en-Baroeul, Lille, France.</string>
+    <string name="will_get_back">We will get back to you at</string>
+    <string name="send">Send</string>
+    <string name="msgIsEmpty">The message field is empty</string>
+    <string name="msgHasBeenSent">The message has been sent successfully</string>
     <string name="google_authenticator">Google authenticator</string>
     <string name="by_email">By Email</string>
     <string name="manage_app_cases">Manage the application cases of 2FA</string>
@@ -569,7 +488,7 @@
     <string name="security_of_your_notebook">Security of your notebook</string>
     <string name="active_during">Active during:</string>
     <string name="the_address_book_limits_your_withdrawals_and_deposits_to_the_addresses_in_your_address_book">The address book limits your withdrawals and deposits to the addresses in your address book.</string>
-    <string name="you_can_immediately_withdraw_to_any_address_newly_added_to_your_address_book">You can immediately withdraw to any address newly added to your address book.</string>
+    <string name="you_can_immediately_withdraw_to_any_address_newly_added_to_your_address_book">You will be able to withdraw immediately to an address newly added to your address book.</string>
     <string name="shifting_no_security">You will be able to withdraw immediately to any address newly added to your address book. These changes will take effect after 24 hours.</string>
     <string name="a_delay_of_72_hours_will_be_required_before_you_can_withdraw_to_any_address_newly_added_to_your_address_book">A delay of 72h will be required before you can withdraw to any address newly added to your address book.</string>
     <string name="a_24h_delay_is_required_before_you_can_withdraw_to_any_address_newly_added_to_your_address_book">A delay of 24h will be required before you can withdraw to any address newly added to your address book.</string>
@@ -591,8 +510,8 @@
     <string name="you_do_not_have_this_asset">You do not have this asset</string>
     <string name="verification_text">To finalise your registration, we need to verify your identity. In the next step, you will need to provide an electronic signature and a photograph of an identity document.</string>
     <string name="start_identity_verifications">Start Identity Verification</string>
-    <string name="review_my_informations">Review my information</string>
-    <string name="change_my_informations">Change my information</string>
+    <string name="review_my_informations">Review my informations</string>
+    <string name="change_my_informations">Change my informations</string>
     <string name="password_warning">The password must have atleast 10 characters, 1 special character, 1 lower case and 1 upper case</string>
     <string name="you_have_strong_password">You have a strong password</string>
     <string name="please_enter_name_for_your_strategy">Please enter name for your strategy.</string>
@@ -627,4 +546,159 @@
     <string name="recurrent">Recurrent</string>
     <string name="single_execution">Single execution</string>
     <string name="failed">FAILED</string>
+    <string name="language">Language</string>
+    <string name="english">English</string>
+    <string name="french">Français</string>
+    <string name="LYBER_UNDER_MAINTENANCE">Lyber is under maintenance. Come back later!</string>
+    <string name="LOADING_MORE">Loading more</string>
+    <string name="NO_MORE_DATA">No more data</string>
+    <string name="LOADING">Loading…</string>
+    <string name="on">On</string>
+    <string name="off">Off</string>
+    <string name="pull_to_refresh">Pull to refresh</string>
+    <string name="release_to_refresh">Release to refresh</string>
+    <string name="or">OR</string>
+    <string name="invest_in_asset_usdt">To invest in an asset, you must first buy USDT, then use the purchased USDT and exchange it for the desired asset.</string>
+    <string name="buy_usdt">Buy USDT</string>
+    <string name="copied">Copied</string>
+    <string name="low">Low</string>
+    <string name="high">High</string>
+    <string name="oops">Oops!</string>
+    <string name="deadline_confirming_purchase_passed">The deadline for confirming your purchase has passed. Would you like to receive a new proposal?</string>
+    <string name="close_account_message">Are you sure you want to close your account? All your data, including saved preferences, transaction history and personal information will be retained for 5 years from the date of account closure. If you are sure, please confirm below.
+    Make sure to withdraw all the money you have in your account before closing it.</string>
+    <string name="make_sure_withdraw">Make sure to withdraw all the money you have in your account before closing it.</string>
+    <string name="minimum_investment">Min Invest</string>
+    <string name="invest">Invest</string>
+    <string name="immediate">Immediate</string>
+    <string name="executing_your_strategy">We are executing your strategy, which may take a few seconds.</string>
+    <string name="execution_in_progress">Execution in progress</string>
+    <string name="single_execution">Single execution</string>
+    <string name="strategy_rejected">Strategy rejected</string>
+    <string name="strategy_executed">Strategy executed</string>
+    <string name="strategy_partially_executed">Strategy partially executed</string>
+    <string name="progress_registration_saved_each_stage">The progress of your registration is saved at each stage. You can stop and start again at any time.</string>
+    <string name="invest_in">Invest in</string>
+    <string name="send_assets_to_another_account">Send assets to another account</string>
+    <string name="return_on_investment">Return on Investment</string>
+    <string name="infos">Infos</string>
+    <string name="annual_percentage">*Annual Percentage</string>
+    <string name="bought">Bought</string>
+    <string name="view_more">View more</string>
+    <string name="read_less">Read Less</string>
+    <string name="next_payment">Next payment</string>
+    <string name="no_active_strategy">You do not have any active strategy yet</string>
+    <string name="deposit_now">Deposit now</string>
+    <string name="no_assets">You don\'t have any assets yet</string>
+    <string name="activate_create_one">Activate/create one now</string>
+    <string name="for_legal_reasons">In order for Lyber to maintain the highest level of security for your account, we need some information from you.</string>
+    <string name="card_holder_name">Cardholder\'s name</string>
+    <string name="are_you_US_citizen">Are you a US Citizen?</string>
+    <string name="postal_address">Postal address</string>
+    <string name="need_informations_legal">We need this information for legal reasons.</string>
+    <string name="street_name">Street name</string>
+    <string name="department">Department</string>
+    <string name="your_monthly_income">Your monthly income</string>
+    <string name="i_have_never_invested">I have never invested</string>
+<!--    <string name="what_your_source_of_income">What\'s your main source of income?</string>-->
+    <string name="what_your_source_of_income">What’s your source of income ?</string>
+    <string name="salary">Salary</string>
+    <string name="investments">Investments</string>
+    <string name="savings">Savings</string>
+    <string name="inheritance">Inheritance</string>
+    <string name="credit_loan">Credit/loan</string>
+    <string name="family_others">Family or others</string>
+    <string name="whats_your_work_industry">What’s your work industry ?</string>
+    <string name="agriculture">Agriculture, Agribusiness &amp; Natural Resources</string>
+    <string name="arts_media">Art, Entertainment &amp; Media</string>
+    <string name="banking_finance_insurance">Banking, Finance &amp; Insurance</string>
+    <string name="business_services_consulting">Business Services &amp; Consulting</string>
+    <string name="building">Construction, Engineering &amp; Public Works</string>
+    <string name="education_training_research">Education, Training &amp; Research</string>
+    <string name="energy_environment">Energy &amp; Environment</string>
+    <string name="government_administration_social">Government, Public Administration &amp; Social Services</string>
+    <string name="health_medical_pharmaceutical">Health, Medical &amp; Pharmaceutical</string>
+    <string name="hospitality_tourism_catering">Hospitality, Tourism &amp; Catering</string>
+    <string name="it">IT</string>
+    <string name="manufacturing_mettalurgy">Manufacturing &amp; Metallurgy Industry</string>
+    <string name="marketing_advertising_public_relations">Marketing, Advertising &amp; Public Relations</string>
+    <string name="real_estate_property_management">Real Estate &amp; Property Management</string>
+    <string name="retail_ecommerce">Retail &amp; E-commerce</string>
+    <string name="sports_leisure_entertainment">Sports, Leisure &amp; Interactive Entertainment</string>
+    <string name="textile_fashion_apparel">Textile, Fashion &amp; Apparel</string>
+    <string name="transport_logistics_wholesale">Transport, Logistics &amp; Wholesale</string>
+    <string name="what_salary_range_you_fall_into">What salary range do you fall into ?</string>
+    <string name="disclaimer">Disclaimer</string>
+    <string name="information_provided_application_not_investment_advice">The information provided on the
+    application should not be considered as investment advice, financial advice, trading advice or
+    any other kind of advice and no content of the application should be considered as such. As a
+    reminder, any investment carries a risk of loss. Please note that investing in crypto-currency
+    is risky. It can be highly speculative and can result in both profits and losses.</string>
+    <string name="edit_personal_data">Edit Personal Data</string>
+    <string name="verification_in_progress">Verification in progress</string>
+    <string name="start_verification">Start verification</string>
+    <string name="label_cgu_conditions">I have read and accept the General Terms and Conditions of Sale</string>
+    <string name="label_privacy_policy">I have read and accept the privacy policy</string>
+    <string name="cgu_conditions">General Terms and Conditions of Sale</string>
+    <string name="privacy_policy">privacy policy</string>
+    <string name="preview_my_purchase">Preview my purchase</string>
+    <string name="seconds_to_confirm_purchase">You have %@ seconds to confirm the purchase</string>
+    <string name="confirm_purchase">Confirm purchase</string>
+    <string name="confirm_my_deposit">Confirm my deposit</string>
+    <string name="confirm_deposit">Confirm deposit</string>
+    <string name="more_details">More details</string>
+    <string name="euro_deposit">Euro deposit</string>
+    <string name="preview_deposit">Preview deposit</string>
+    <string name="euros_bank_account">In Euros, from my bank account</string>
+    <string name="pay_with">Pay with</string>
+    <string name="max">€ Max.</string>
+    <string name="recommended">Recommended</string>
+    <string name="to">To:</string>
+    <string name="your_Assets">Your assets</string>
+    <string name="bitcoin">Bitcoin</string>
+    <string name="choose_a_network">Choose a network</string>
+    <string name="successfully_sold">Successfully sold</string>
+    <string name="you_just_sold">You just sold</string>
+    <string name="bic_number">BIC number</string>
+    <string name="buy_bitcoin_on_lyber">Buy Bitcoin on Lyber</string>
+    <string name="btc_price">BTC price</string>
+    <string name="every_month">Every month</string>
+    <string name="safe">Safe</string>
+    <string name="cancelInvestment">Cancel Investment</string>
+    <string name="hours_72">72 hours</string>
+    <string name="hours_24">24 hours</string>
+    <string name="inter_strategy">Intermediate strategy</string>
+    <string name="month">month</string>
+    <string name="deposit_an_asset">depositAnAsset</string>
+    <string name="address_">address</string>
+    <string name="less_than_1000">&lt; 1 000€</string>
+    <string name="between_1000_and_9999">Between 1 000€ and 9 999€</string>
+    <string name="between_10000_and_99999">Between 10 000€ and 99 999€</string>
+    <string name="greater_than_100000">&gt; 100 000€</string>
+    <string name="available">Available</string>
+    <string name="add_a_frequency_optional">Add a frequency (optional)</string>
+    <string name="withdraw_all_my_portfolio">Withdraw all my portfolio</string>
+    <string name="preview_withdraw">Preview withdraw</string>
+    <string name="withdraw_from">Withdraw from</string>
+    <string name="no_extra_security">No Extra Security</string>
+    <string name="to_">to</string>
+    <string name="incorrect_pin">Incorrect Pin</string>
+    <string name="save_money">Save money</string>
+    <string name="buy_sell_digital_assets">Buy and sell digital assets</string>
+    <string name="store_my_digital_assets">Store my digital assets</string>
+    <string name="two_assets">0-2 assets</string>
+    <string name="two2_assets">3-22 assets</string>
+    <string name="one28_assets">23-128 assets</string>
+    <string name="three19_assets">129-319 assets</string>
+    <string name="four64_assets">320-464 assets</string>
+    <string name="four65_assets">465+ assets</string>
+
+    <string name="less_than_500">Less then 500</string>
+    <string name="five00_1000">500-1000</string>
+    <string name="one001_1500">1001-1500</string>
+    <string name="one501_2000">1501-2000</string>
+    <string name="two001_3000">2001-3000</string>
+    <string name="over_3001">Over 3001</string>
+    <string name="withdraw_or_exchange">Withdraw or exchange</string>
+
 </resources>

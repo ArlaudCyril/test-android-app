@@ -137,12 +137,12 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
             llSwapLayout.visible()
             val balance =BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
             mCurrency = " "+balance!!.id.uppercase()
-            tvTitle.text = "Exchange ${balance.id.uppercase()}"
+            tvTitle.text = "${requireContext().getString(R.string.exchange)} ${balance.id.uppercase()}"
             val priceCoin =balance.balanceData.euroBalance.toDouble()
                 .div(balance.balanceData.balance.toDouble())
             tvSubTitle.text = "${
                 balance.balanceData.balance.formattedAsset(priceCoin, RoundingMode.DOWN)
-            } ${balance.id.uppercase()} Available"
+            } ${balance.id.uppercase()} ${requireContext().getString(R.string.available)}"
             val currency = BaseActivity.assets.find { it1 -> it1.id ==balance.id }
             ivAssetSwapFrom.loadCircleCrop(currency!!.imageUrl)
             tvSwapAssetFrom.text = balance.id.uppercase()

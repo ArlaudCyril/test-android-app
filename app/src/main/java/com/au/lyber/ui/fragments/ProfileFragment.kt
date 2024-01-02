@@ -20,10 +20,11 @@ import android.widget.ImageView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.au.lyber.BuildConfig
 import com.au.lyber.R
 import com.au.lyber.databinding.CustomDialogLayoutBinding
 import com.au.lyber.databinding.FragmentProfileBinding
@@ -51,6 +52,7 @@ import com.au.lyber.utils.CommonMethods.Companion.showToast
 import com.au.lyber.utils.CommonMethods.Companion.visible
 import com.au.lyber.utils.Constants
 import com.google.gson.GsonBuilder
+import com.caverock.androidsvg.BuildConfig
 import java.io.File
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -67,6 +69,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
     private var option = 1 // 1 -> camera option 2-> gallery option
     val limit = 5 // as on this screen we have to show max 3 enteries
     var offset = 0
+    private lateinit var navController : NavController
     override fun bind() = FragmentProfileBinding.inflate(layoutInflater)
 
     @SuppressLint("ClickableViewAccessibility")
@@ -75,6 +78,11 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 
         viewModel = getViewModel(requireActivity())
         viewModel.listener = this
+      
+        val navHostFragment =  requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.findNavController()
+        viewModel.transactionResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
 
 
         CommonMethods.checkInternet(requireContext()) {
@@ -130,6 +138,14 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 //                binding.tvAddPaymentMethod.gone()
 //            }
         }
+        if (App.prefsManager.getLanguage().isNotEmpty()) {
+            val ln = App.prefsManager.getLanguage()
+            if (ln == Constants.FRENCH)
+                binding.tvLanguage.text = getString(R.string.french)
+            else
+                binding.tvLanguage.text = getString(R.string.english)
+
+        }
 
         viewModel.logoutResponse.observe(viewLifecycleOwner) {
             dismissProgressDialog()
@@ -176,15 +192,17 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 //        binding.tvStatusStrongAuth.text =
 //            if (App.prefsManager.isStrongAuth()) "Enabled" else "Disabled"
 
+
         binding.tvStatusAddressBook.gone()
         binding.tvStatusAddressBook.text = when (App.prefsManager.withdrawalLockSecurity) {
             Constants.HOURS_72 -> "72H"
             Constants.HOURS_24 -> "24H"
-            else -> "No Security"
+            else -> getString(R.string.no_security)
         }
         binding.ivTopAction.setOnClickListener(this)
         binding.llChangePin.setOnClickListener(this)
         binding.tvViewAllTransaction.setOnClickListener(this)
+
 //        binding.tvAddPaymentMethod.setOnClickListener(this)
         binding.tvLogout.setOnClickListener(this)
 
@@ -193,6 +211,12 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 
         binding.ivProfile.setOnClickListener(this)
 //        binding.llNotification.setOnClickListener(this)
+        binding.rlLanguage.setOnClickListener(this)
+
+        binding.rlExport.setOnClickListener(this)
+
+        binding.llContactUS.setOnClickListener(this)
+
 
         binding.switchFaceId.setOnCheckedChangeListener { button, isChecked ->
             if (button.isPressed) {
@@ -231,7 +255,6 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 //            binding.rvTransactions.startLayoutAnimation()
 //        }
 
-
     }
 
     override fun onResume() {
@@ -263,8 +286,8 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 setContentView(it.root)
                 it.tvTitle.text = getString(R.string.log_out)
                 it.tvMessage.text = getString(R.string.logout_message)
-                it.tvNegativeButton.text = getString(R.string.no)
-                it.tvPositiveButton.text = getString(R.string.yes)
+                it.tvNegativeButton.text = getString(R.string.no_t)
+                it.tvPositiveButton.text = getString(R.string.yes_t)
                 it.tvNegativeButton.setOnClickListener {
                     dismiss()
                 }
@@ -327,6 +350,15 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                     }
                     findNavController().navigate(R.id.createPinFragment, bundle)
                 }
+
+                rlLanguage -> {
+
+                    findNavController().navigate(R.id.chooseLanguageFragment)
+                }
+                rlExport-> navController.navigate(R.id.exportOperationsFragment)
+
+                llContactUS->navController.navigate(R.id.contactUsFragment)
+
             }
         }
     }
@@ -419,6 +451,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 
 //                            tvEndTitle.text = it.type.lowercase().replaceFirstChar(Char::uppercase)
 //                            tvEndSubTitle.text = it.type.lowercase().replaceFirstChar(Char::uppercase)
+
                         }
 
                         else -> root.gone()

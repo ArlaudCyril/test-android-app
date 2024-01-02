@@ -59,7 +59,8 @@ class BottomSheetAdapter(
                         if (value.size > 1) {
                             text.text = context.getString(R.string.k_month, value[0], value[1])
                         }else{
-                            text.text = it.title+"€/month"
+                            text.text = it.title+"€/${context.getString(R.string.month)}"
+
                         }
                     }
                     else -> text.text = it.title

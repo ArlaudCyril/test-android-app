@@ -1,6 +1,8 @@
 package com.au.lyber.ui.activities
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.OnBackPressedCallback
@@ -9,7 +11,9 @@ import androidx.navigation.fragment.NavHostFragment
 import com.au.lyber.R
 import com.au.lyber.databinding.ActivitySplashBinding
 import com.au.lyber.utils.ActivityCallbacks
+import com.au.lyber.utils.App
 import com.au.lyber.utils.Constants
+import java.util.Locale
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : BaseActivity<ActivitySplashBinding>() {
@@ -30,13 +34,23 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
             this /* lifecycle owner */,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    if (navHostFragment.childFragmentManager.backStackEntryCount>2) {
+                    if (navHostFragment.childFragmentManager.backStackEntryCount > 2) {
                         navController.popBackStack()
-                    }else{
+                    } else {
                         finishAffinity()
                     }
                 }
             })
+        if (App.prefsManager.getLanguage().isNotEmpty()) {
+            var code = App.prefsManager.getLanguage()
+            val locale = Locale(code)
+            Locale.setDefault(locale)
+            val resources: Resources = resources
+            val config: Configuration = resources.configuration
+            config.setLocale(locale)
+            resources.updateConfiguration(config, resources.displayMetrics)
+
+        }
 
         if ((intent?.extras?.getString(Constants.FOR_LOGOUT, "") ?: "").isNotEmpty())
             navController.navigate(R.id.discoveryFragment)

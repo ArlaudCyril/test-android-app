@@ -164,8 +164,8 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         binding.lineChart.clearYAxis()
         binding.lineChart.timeSeries = getLineData(viewModel.totalPortfolio)
 
-        binding.tvInvestMoney.text = "Invest Money"
-        binding.tvPortfolioAssetPrice.text = "Portfolio"
+        binding.tvInvestMoney.text = getString(R.string.invest_money)
+        binding.tvPortfolioAssetPrice.text = getString(R.string.portfolio)
         binding.tvValuePortfolioAndAssetPrice.text =
             "${viewModel.totalPortfolio.commaFormatted}${Constants.EURO}"
 
@@ -372,8 +372,8 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
             llPortfolio.visibleFromLeft()
 
-            tvInvestMoney.text = "Invest Money"
-            tvPortfolioAssetPrice.text = "Portfolio"
+            tvInvestMoney.text = getString(R.string.invest_money)
+            tvPortfolioAssetPrice.text = getString(R.string.portfolio)
             "${viewModel.totalPortfolio.commaFormatted} ${Constants.EURO}".also {
                 tvValuePortfolioAndAssetPrice.text = it
             }

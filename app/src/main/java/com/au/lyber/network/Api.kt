@@ -296,6 +296,15 @@ interface Api {
     suspend fun verify2FA(@Body hashMap: HashMap<String, Any>): Response<UserLoginResponse>
 
 
+    @GET("user-service/export")
+    suspend fun getOperationExport(
+        @Query("date") date: String = ""
+    ): Response<ExportResponse>
+
+    @POST("user-service/contact-support")
+    suspend fun contactSupport(@Body hashMap: HashMap<String, Any>): Response<BooleanResponse>
+
+
     //patch
 
 

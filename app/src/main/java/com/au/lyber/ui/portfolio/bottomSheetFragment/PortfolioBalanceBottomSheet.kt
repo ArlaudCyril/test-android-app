@@ -126,8 +126,8 @@ class PortfolioBalanceBottomSheet(private val clickListener: (BalanceInfo) -> Un
 
     private fun getBalanceInfo(): List<BalanceInfo> {
         val list = mutableListOf<BalanceInfo>()
-        list.add(BalanceInfo("Total earnings", "13,2229€", "+0.00034 BTC"))
-        list.add(BalanceInfo("ROI", "~5,01%*", "*Annual Percentage"))
+        list.add(BalanceInfo(getString(R.string.total_earnings), "13,2229€", "+0.00034 BTC"))
+        list.add(BalanceInfo("ROI", "~5,01%*", getString(R.string.annual_percentage)))
         return list
     }
 
@@ -180,7 +180,7 @@ class PortfolioBalanceBottomSheet(private val clickListener: (BalanceInfo) -> Un
 
     /* history adapter */
 
-    class HistoryAdapter :
+  inner  class HistoryAdapter :
         BaseAdapter<Transaction>() {
 
         override fun getItemViewType(position: Int) =
@@ -219,7 +219,7 @@ class PortfolioBalanceBottomSheet(private val clickListener: (BalanceInfo) -> Un
                             1 -> { //exchange
 
                                 tvTitle.text =
-                                    "Exch. ${it.exchange_from.uppercase()} to ${it.exchange_to.uppercase()}"
+                                    "${requireContext().getString(R.string.exchange)}. ${it.exchange_from.uppercase()} ${requireContext().getString(R.string.to_)} ${it.exchange_to.uppercase()}"
                                 tvPriceTitle.text =
                                     "-${
                                         it.exchange_from_amount.toString().decimalPoints(6)
@@ -234,7 +234,7 @@ class PortfolioBalanceBottomSheet(private val clickListener: (BalanceInfo) -> Un
                             }
                             3 -> { // withdraw
 //                                ivItem.setImageResource(R.drawable.ic_withdraw)
-                                tvTitle.text = "Withdrawal"
+                                tvTitle.text = getString(R.string.withdrawal)
                                 tvPriceTitle.text = "-${it.amount}${Constants.EURO}"
                                 tvPriceSubTitle.text =
                                     "${
@@ -243,7 +243,7 @@ class PortfolioBalanceBottomSheet(private val clickListener: (BalanceInfo) -> Un
                             }
                             4 -> { // single asset
 //                                ivItem.setImageResource(R.drawable.ic_deposit)
-                                tvTitle.text = "Bought ${it.asset_id.uppercase()}"
+                                tvTitle.text = "${getString(R.string.bought)} ${it.asset_id.uppercase()}"
                                 tvPriceTitle.text =
                                     "+${it.amount.toFloat().toInt()}${Constants.EURO}"
                                 tvPriceSubTitle.text =

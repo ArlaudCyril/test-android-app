@@ -16,6 +16,7 @@ import android.graphics.drawable.PictureDrawable
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.net.Uri
+import android.os.Build
 import android.os.Environment
 import android.os.Looper
 import android.provider.Settings
@@ -36,6 +37,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK
 import androidx.biometric.BiometricPrompt
@@ -75,7 +77,13 @@ import java.lang.NumberFormatException
 import java.math.RoundingMode
 import java.text.DateFormat
 import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.time.Period
+import java.time.YearMonth
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.absoluteValue
@@ -196,7 +204,15 @@ class CommonMethods {
         }
 
         fun String.roundFloat(): String {
-            return String.format("%.2f", this.toFloat())
+            try {
+                var value=this
+                if(value.contains(","))
+                    value=this.replace(",","")
+                return String.format(Locale.US,"%.2f", value.toFloat())
+            }catch (ex:NumberFormatException){
+                return ""
+            }
+
         }
 
         fun isBiometricReady(context: Context) =
@@ -774,14 +790,20 @@ class CommonMethods {
             }
         }
 
+//        val <T> T.commaFormatted: String
+//            get() = when (this) {
+//                is Number -> this.commaFormatted
+//                is String -> toDoubleOrNull().commaFormatted
+//                is Char -> this.toString()
+//                else -> "0"
+//            }
         val <T> T.commaFormatted: String
             get() = when (this) {
-                is Number -> this.commaFormatted
-                is String -> toDoubleOrNull().commaFormatted
+                is Number -> String.format(Locale.US, "%,d", this.toLong())
+                is String -> toDoubleOrNull()?.let { String.format(Locale.US, "%,.2f", it) } ?: "0"
                 is Char -> this.toString()
                 else -> "0"
             }
-
         private val Number.commaFormatted: String
             get() = when (this) {
 
@@ -862,6 +884,8 @@ class CommonMethods {
                             formatter.minimumFractionDigits = 10
                         }
 
+                        val symbols = DecimalFormatSymbols(Locale.US)
+                        formatter.decimalFormatSymbols = symbols
                         val stringFormatted = formatter.format(value) + Constants.EURO
                         val ss1 = SpannableString(stringFormatted)
                         ss1.setSpan(RelativeSizeSpan(0.8f), 0, numberZerosLeft, 0) // set size
@@ -895,11 +919,12 @@ class CommonMethods {
 
              formatter.roundingMode = rounding
 
+            val symbols = DecimalFormatSymbols(Locale.US)
+            formatter.decimalFormatSymbols = symbols
              val valueFormatted = formatter.format(this.toDouble() ?: 0.0)
 
              return valueFormatted.toString()
          }
-
 
 
 
@@ -1302,13 +1327,91 @@ class CommonMethods {
         {
             return BaseActivity.balances.firstOrNull { it.id == id }
         }
+
+        @RequiresApi(Build.VERSION_CODES.O)
+        fun getMonthsAndYearsBetweenWithApi26(startDate: String, endDate: String): List<String> {
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+            val startDateTime = LocalDate.parse(startDate, formatter)
+            val endDateTime = LocalDate.parse(endDate, formatter)
+
+
+
+
+            val period = Period.between(startDateTime, endDateTime)
+            val months = period.toTotalMonths().toInt()
+
+            val days = period.days
+
+            val result = mutableListOf<String>()
+
+            var currentDate = startDateTime
+            for (i in 0..days) {
+                result.add("${currentDate.month.toString().lowercase().replaceFirstChar { it.uppercase() }} ${currentDate.year}")
+                currentDate = currentDate.plusDays(1)
+            }
+
+            return result.distinct()
+        }
+        fun getMonthsAndYearsBetween(startDate: String, endDate: String): List<String> {
+            val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+            val startDateTime = Calendar.getInstance()
+            startDateTime.time = sdf.parse(startDate) ?: Date()
+
+            val endDateTime = Calendar.getInstance()
+            endDateTime.time = sdf.parse(endDate) ?: Date()
+
+            val result = mutableListOf<String>()
+
+            while (startDateTime.before(endDateTime) || startDateTime == endDateTime) {
+                result.add(
+                    "${startDateTime.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()).lowercase().replaceFirstChar { it.uppercase() }} ${startDateTime.get(Calendar.YEAR)}"
+                )
+                startDateTime.add(Calendar.MONTH, 1)
+            }
+            return result
+        }
+        fun getCurrentDateTime(): String {
+            val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+            sdf.timeZone = TimeZone.getTimeZone("UTC") // Set the time zone to UTC to get the desired format
+
+            val currentDate = Calendar.getInstance().time
+            return sdf.format(currentDate)
+        }
+        @RequiresApi(Build.VERSION_CODES.O)
+        fun convertToYearMonthVersion26(inputDate: String): String {
+                val inputFormat = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH)
+
+                try {
+                    val temporalAccessor = inputFormat.parse(inputDate)
+                    val yearMonth = YearMonth.from(temporalAccessor)
+
+                    return yearMonth.format(DateTimeFormatter.ofPattern("yyyy-MM", Locale.ENGLISH))
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    // Handle parsing exception if needed
+                    return ""
+                }
+        }
+        fun convertToYearMonth(inputDate: String): String {
+            val inputFormat = SimpleDateFormat("MMMM yyyy", Locale.ENGLISH)
+            val outputFormat = SimpleDateFormat("yyyy-MM", Locale.ENGLISH)
+
+            try {
+                val date = inputFormat.parse(inputDate)
+                return outputFormat.format(date)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                // Handle parsing exception if needed
+                return ""
+            }
+        }
         fun encodeToBase64(input: String): String {
             val bytes = input.toByteArray(Charsets.UTF_8)
             val base64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
             return base64
         }
-
     }
+
 }
 
 
