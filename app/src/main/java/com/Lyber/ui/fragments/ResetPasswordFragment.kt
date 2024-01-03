@@ -8,6 +8,7 @@ import android.text.TextWatcher
 import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
+import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
@@ -89,6 +90,11 @@ class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>(), OnCl
                     findNavController().navigate(R.id.createAccountFragment, bundle)
                 }
             }
+        }
+        requireActivity().onBackPressedDispatcher.addCallback(this) {
+            // Handle back button press
+            findNavController().popBackStack()
+            findNavController().navigate(R.id.discoveryFragment)
         }
     }
 
