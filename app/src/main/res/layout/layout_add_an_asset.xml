@@ -43,7 +43,7 @@
         app:tabMode="auto"
         app:tabSelectedTextColor="@color/purple_500"
         app:tabTextAppearance="@style/tab_text"
-        app:tabTextColor="@color/purple_gray_500" />
+        app:tabTextColor="@color/purple_gray_500"/>
 
     <ImageView
         android:id="@+id/ivProgress"
