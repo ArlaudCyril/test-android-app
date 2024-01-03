@@ -17,6 +17,7 @@ class DiscoveryFragment : BaseFragment<FragmentDiscoveryBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        Log.d("argument","OnDiscovery")
         binding.btnSignUp.setOnClickListener {
             val bundle = Bundle().apply {
                 putBoolean(Constants.FOR_LOGIN, false)

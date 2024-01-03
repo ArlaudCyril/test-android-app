@@ -14,10 +14,10 @@ import com.Lyber.utils.CommonMethods.Companion.is30DaysOld
 import com.Lyber.utils.Constants
 
 class SplashFragment : BaseFragment<FragmentSplashBinding>() {
-    private lateinit var handler : Handler
-    private lateinit var runnable : Runnable
+    private lateinit var handler: Handler
+    private lateinit var runnable: Runnable
     private var isScreen = false
-var token=""
+    var token = ""
     override fun bind() = FragmentSplashBinding.inflate(layoutInflater)
 
 
@@ -32,36 +32,33 @@ var token=""
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        handler =  Handler(Looper.getMainLooper())
-           runnable= Runnable {
-
+        handler = Handler(Looper.getMainLooper())
+        runnable = Runnable {
+            Log.d("argument", "$arguments")
             // 1- 30 days check if greater then logout if not normal flow
             // check for 24 hours if greater hit api for refresh token if not normal flow
             // if not check for user pin
 
             if (!isScreen) {
                 isScreen = true
-//                Log.d("token","$token")
-//                if(token.isNotEmpty())
-                    if(arguments!=null && requireArguments().containsKey("resetToken")){
-                        token=requireArguments().getString("resetToken").toString()
-//                    navController.navigate(R.id.resetPasswordFragment)
+                if (arguments != null && requireArguments().containsKey("resetToken")) {
+                    token = requireArguments().getString("resetToken").toString()
                     val arguments = Bundle().apply {
                         putString("resetToken", token)
                     }
                     findNavController().navigate(R.id.resetPasswordFragment, arguments)
-                }
-               else if (App.prefsManager.tokenSavedAt.is30DaysOld()) {
+                } else if (App.prefsManager.tokenSavedAt.is30DaysOld()) {
                     App.prefsManager.logout()
                     findNavController().navigate(R.id.discoveryFragment)
                 } else {
 
-                    if (App.prefsManager.userPin.isNotEmpty()) {
-                        if ( App.prefsManager.refreshToken.isEmpty()) {
+                    if (arguments == null && App.prefsManager.userPin.isNotEmpty()) {
+                        if (App.prefsManager.refreshToken.isEmpty()) {
                             findNavController().navigate(R.id.discoveryFragment)
-                        }else {
-                             findNavController().navigate(R.id.unlockAppFragment)
-                        } } else {
+                        } else {
+                            findNavController().navigate(R.id.unlockAppFragment)
+                        }
+                    } else {
                         findNavController().navigate(R.id.discoveryFragment)
 
                     }
@@ -71,9 +68,12 @@ var token=""
 
 
         }
-        handler.postDelayed(runnable,1500)
-
-
+        var delayMilli = 1500
+        if (arguments != null)
+            delayMilli = 2000
+        view.post {
+            handler.postDelayed(runnable, 1500)
+        }
     }
 
     override fun onPause() {
