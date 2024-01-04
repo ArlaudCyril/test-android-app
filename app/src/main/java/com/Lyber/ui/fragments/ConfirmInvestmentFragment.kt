@@ -114,7 +114,6 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
     @SuppressLint("SetTextI18n")
     private fun prepareView() {
         binding.apply {
-
             val buyValue = (viewModel.amount.toFloat().toInt() * (0.08)).toFloat()
             tvNestedAmountValue.text =
                 viewModel.amount.decimalPoint().commaFormatted + " USDT"
@@ -155,8 +154,18 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                     else
                     tvValueFrequency.text = viewModel.selectedFrequency
 
+                    tvNestedAmountValue.text =(viewModel.amount.toFloat() - buyValue).toString()
+                        .decimalPoint().commaFormatted + " USDT"
+                        viewModel.amount.decimalPoint().commaFormatted + " USDT"
+                    tvValueTotal.text =
+                        (viewModel.amount.toFloat()).toString()
+                            .decimalPoint().commaFormatted + " USDT"
+                    tvValueLyberFee.text =
+                        buyValue.toString().decimalPoint().commaFormatted + " USDT"
+
+
                     tvAmount.text =
-                        (viewModel.amount.toFloat() + buyValue).toString()+" USDT"
+                        (viewModel.amount.toFloat()).toString()+" USDT"
 
                 }
 
