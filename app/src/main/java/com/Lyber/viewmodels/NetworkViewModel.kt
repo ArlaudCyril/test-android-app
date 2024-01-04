@@ -391,16 +391,16 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun investStrategy(strategyId: String, frequency: String, amount: Int,strateggyName:String) {
+    fun investStrategy(strategyId: String, frequency: String?, amount: Int,strateggyName:String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().investOnStrategy(
-                hashMapOf(
-                    "strategyName" to strateggyName,
-                    "ownerUuid" to strategyId,
-                    "frequency" to frequency,
-                    "amount" to amount
-                )
-            )
+            val hash = hashMapOf<String, Any>()
+            hash["strategyName"] = strateggyName
+            hash["ownerUuid"] = strategyId
+            if(frequency!=null)
+            hash["frequency"] = frequency
+            hash["amount"] = amount
+            Log.d("logData","$hash")
+            val res = RestClient.get().investOnStrategy(hash)
             if (res.isSuccessful)
                 _investStrategyResponse.postValue(res.body())
             else listener?.onRetrofitError(res.errorBody())
