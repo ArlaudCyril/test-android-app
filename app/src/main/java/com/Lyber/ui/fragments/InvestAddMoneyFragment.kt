@@ -17,7 +17,7 @@ import com.Lyber.utils.Constants
 class InvestAddMoneyFragment: BaseFragment<FragmentInvestAddMoneyBinding>(),View.OnClickListener{
     private var selectedFrequency:String =""
     private var mCurrency: String = " USDT"
-    private var minInvestPerAsset = 20f
+    private var minInvestPerAsset = 10f
     private var requiredAmount =0f
     private lateinit var viewModel: PortfolioViewModel
     private val amount get() = binding.etAmount.text.trim().toString()
