@@ -702,7 +702,7 @@ data class StrategyExecution(
 )
 
 data class StrategyExecutionResponse(
-    val failedBundleEntries: List<Any>,
+    val failedBundleEntries: List<FailedBundleEntry>,
     val status: String,
     val successfulBundleEntries: List<SuccessfulBundleEntry>,
     val totalFeeSpent: String,
@@ -714,4 +714,20 @@ data class SuccessfulBundleEntry(
     val assetAmount: String,
     val share: Int,
     val stableAmount: String
+)
+data class FailedBundleEntry(
+    val asset: String,
+    val assetAmount: String,
+    val share: Int,
+    val stableAmount: String
+)
+
+data class BalanceStrategy(
+    val id: String,
+    val balanceData: BalanceStrategyData
+)
+data class BalanceStrategyData(
+    val stableAmount: String,
+    val assetAmount: String,
+    var success:Boolean=false
 )

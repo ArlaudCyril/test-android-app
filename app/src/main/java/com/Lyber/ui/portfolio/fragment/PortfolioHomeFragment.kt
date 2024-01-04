@@ -33,8 +33,6 @@ import com.Lyber.R
 import com.Lyber.databinding.FragmentPortfolioHomeBinding
 import com.Lyber.databinding.LoaderViewBinding
 import com.Lyber.models.*
-import com.Lyber.ui.activities.BaseActivity
-import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.ui.adapters.*
 import com.Lyber.ui.fragments.BaseFragment
 import com.Lyber.ui.fragments.bottomsheetfragments.InvestBottomSheet

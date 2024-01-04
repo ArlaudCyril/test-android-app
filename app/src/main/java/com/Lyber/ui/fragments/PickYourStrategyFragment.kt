@@ -17,7 +17,6 @@ import com.Lyber.models.MessageResponse
 import com.Lyber.models.StrategiesResponse
 import com.Lyber.ui.adapters.PickStrategyFragmentAdapter
 import com.Lyber.ui.fragments.bottomsheetfragments.InvestWithStrategyBottomSheet
-import com.Lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet
 import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
@@ -232,7 +231,6 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
                 findNavController().navigate(R.id.buildStrategyFragment, bundle)
             }
             4->{
-
                 val bundle = Bundle()
                 bundle.putBoolean(Constants.ONE_TIME, true)
                 findNavController().navigate(R.id.investAddMoneyFragment,bundle)

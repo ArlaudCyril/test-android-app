@@ -29,8 +29,6 @@ import com.Lyber.databinding.FragmentPortfolioDetailBinding
 import com.Lyber.databinding.LottieViewBinding
 import com.Lyber.models.Balance
 import com.Lyber.models.Duration
-import com.Lyber.ui.activities.BaseActivity
-import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.ui.adapters.BalanceAdapter
 import com.Lyber.ui.adapters.ResourcesAdapter
 import com.Lyber.ui.fragments.AddAmountFragment
@@ -38,7 +36,6 @@ import com.Lyber.ui.fragments.BaseFragment
 import com.Lyber.ui.fragments.PickYourStrategyFragment
 import com.Lyber.ui.fragments.SearchAssetsFragment
 import com.Lyber.ui.fragments.SelectAnAssetFragment
-import com.Lyber.ui.fragments.SwapWithdrawFromFragment
 import com.Lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDots
 import com.Lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDotsDismissListener
 import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel

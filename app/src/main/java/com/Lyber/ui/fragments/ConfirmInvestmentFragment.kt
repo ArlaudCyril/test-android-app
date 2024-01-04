@@ -85,9 +85,9 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                                         "none"-> "none"
                                         else -> "1m"
                                     }
-                                    showProgressDialog(requireContext())
+//                                    showProgressDialog(requireContext())
                                     if(freq=="none"){
-                                        viewModel.oneTimeOrderStrategy(
+                                         viewModel.oneTimeOrderStrategy(
                                             viewModel.selectedStrategy!!.name, viewModel.amount.toFloat().toDouble(),it.ownerUuid,)
                                     } else
                                     viewModel.investStrategy(
