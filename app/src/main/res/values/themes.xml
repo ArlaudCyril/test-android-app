@@ -1,6 +1,6 @@
 <resources>
     <!-- Base application theme. -->
-    <style name="Theme.Liber" parent="Theme.AppCompat.DayNight.NoActionBar">
+    <style name="Theme.Lyber" parent="Theme.AppCompat.DayNight.NoActionBar">
         <!-- Primary brand color. -->
         <item name="colorPrimary">@color/purple_500</item>
         <item name="colorPrimaryVariant">@color/purple_700</item>
@@ -67,13 +67,13 @@
         <item name="android:navigationBarColor">@android:color/transparent</item>
     </style>
 
-    <style name="TranslucentStatusBar" parent="Theme.Liber">
+    <style name="TranslucentStatusBar" parent="Theme.Lyber">
         <item name="android:windowTranslucentStatus">true</item>
         <item name="android:statusBarColor">@android:color/transparent</item>
         <item name="android:windowLightStatusBar">true</item>
     </style>
 
-    <style name="originalTheme" parent="Theme.Liber"></style>
+    <style name="originalTheme" parent="Theme.Lyber"></style>
 
 
     <style name="TopActionView">
@@ -201,12 +201,12 @@
         <item name="backgroundColor">@color/black</item>
     </style>
 
-    <style name="Theme.Liber.NoActionBar">
+    <style name="Theme.Lyber.NoActionBar">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
     </style>
 
-    <style name="Theme.Liber.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+    <style name="Theme.Lyber.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
-    <style name="Theme.Liber.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <style name="Theme.Lyber.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
 </resources>

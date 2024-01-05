@@ -17,6 +17,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Liber"
+rootProject.name = "Lyber"
 include ':app'
 include ':CountryCodePicker'

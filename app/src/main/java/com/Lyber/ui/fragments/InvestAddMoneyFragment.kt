@@ -189,6 +189,9 @@ class InvestAddMoneyFragment: BaseFragment<FragmentInvestAddMoneyBinding>(),View
                     requireContext(), R.color.purple_gray_800
                 )
             )
+            if(frequency=="none")
+            tvAddFrequency.text = getString(R.string.once)
+            else
             tvAddFrequency.text = frequency
             selectedFrequency = frequency
         }

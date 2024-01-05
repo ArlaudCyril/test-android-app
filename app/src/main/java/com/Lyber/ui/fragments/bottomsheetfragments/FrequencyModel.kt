@@ -62,11 +62,11 @@ class FrequencyModel(private val handle: (String) -> Unit = { _ -> }) :
                     dismiss()
                 }
                 tvTitleOnce -> {
-                    handle(getString(R.string.once))
+                    handle("none")
                     dismiss()
                 }
                 tvSubTitleOnce -> {
-                    handle(getString(R.string.once))
+                    handle("none")
                     dismiss()
                 }
                 tvTitleWeekly -> {
