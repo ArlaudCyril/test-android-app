@@ -696,4 +696,14 @@
     <string name="nameOrder">Nom</string>
     <string name="recurrent">Récurrent</string>
     <string name="failed">FAILED</string>
+    <string name="forgot_your_pass"><u>Mot de passe oublié?</u></string>
+    <string name="happens_even_to_best">Cela arrive même aux meilleurs</string>
+    <string name="send_reset_link">Nous vous enverrons un lien de réinitialisation à votre adresse e-mail</string>
+    <string name="send_me_reset_link">Envoyez-moi un lien de réinitialisation</string>
+    <string name="we_have_sent_an_email">Nous vous avons envoyé un email contenant le lien de réinitialisation que vous devez suivre afin de réinitialiser votre mot de passe.</string>
+    <string name="reset_pass">Réinitialiser le mot de passe</string>
+    <string name="enter_your_new_pass">Entrez votre nouveau mot de passe</string>
+    <string name="save_my_new_pass">Enregistrer mon nouveau mot de passe</string>
+    <string name="pass_valid_msg">Le mot de passe doit comporter au moins 10 caractères, 1 caractère spécial, 1 minuscule et 1 majuscule.</string>
+
 </resources>

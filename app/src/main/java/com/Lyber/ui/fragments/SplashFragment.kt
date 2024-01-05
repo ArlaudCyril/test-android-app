@@ -15,7 +15,7 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>() {
     private lateinit var handler : Handler
     private lateinit var runnable : Runnable
     private var isScreen = false
-
+    var token=""
     override fun bind() = FragmentSplashBinding.inflate(layoutInflater)
 
 
@@ -36,6 +36,13 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>() {
 
             if (!isScreen) {
                 isScreen = true
+                if (arguments != null && requireArguments().containsKey("resetToken")) {
+                    token = requireArguments().getString("resetToken").toString()
+                    val arguments = Bundle().apply {
+                        putString("resetToken", token)
+                    }
+                    findNavController().navigate(R.id.resetPasswordFragment, arguments)
+                } else
                 if (App.prefsManager.tokenSavedAt.is30DaysOld()) {
                     App.prefsManager.logout()
                     findNavController().navigate(R.id.discoveryFragment)
@@ -56,7 +63,13 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>() {
 
 
         }
-        handler.postDelayed(runnable,1500)
+        var delayMilli = 1500
+        if (arguments != null)
+            delayMilli = 2000
+        view.post {
+            handler.postDelayed(runnable, 1500)
+        }
+
 
 
     }

@@ -1406,7 +1406,12 @@ class CommonMethods {
             val base64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
             return base64
         }
+        fun isValidPassword(password: String): Boolean {
+            val passwordRegex = Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@=#\$%^&*(),.?\":{}|<>])(?=\\S+\$).{10,}\$")
+            return passwordRegex.matches(password)
+        }
     }
+
 
 }
 

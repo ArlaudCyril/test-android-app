@@ -357,6 +357,16 @@
         android:name="com.Lyber.ui.fragments.ChooseLanguageFragment"
         android:label="ChooseLanguageFragment" />
 
+
+    <fragment
+        android:id="@+id/forgotPasswordFragment"
+        android:name="com.Lyber.ui.fragments.ForgotPasswordFragment"
+        android:label="ForgotPasswordFragment" />
+
+    <fragment
+        android:id="@+id/resetPasswordFragment"
+        android:name="com.Lyber.ui.fragments.ResetPasswordFragment"
+        android:label="ResetPasswordFragment" />
     <dialog
         android:id="@+id/portfolioThreeDots"
         android:name="com.Lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDots"

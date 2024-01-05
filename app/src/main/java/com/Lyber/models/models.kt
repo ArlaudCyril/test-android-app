@@ -752,3 +752,10 @@ data class SuccessfulBundleEntry(
     val share: Int,
     val stableAmount: String
 )
+data class ResetPasswordResponse(
+    val email: String,
+    val phoneNo: String
+)
+data class res(
+    val `data`: ResetPasswordResponse
+)

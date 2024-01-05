@@ -27,21 +27,26 @@ class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
 
         binding.btnThanks.setOnClickListener {
             dismiss()
-            findNavController().navigate(R.id.portfolioHomeFragment)
+//            findNavController().navigate(R.id.portfolioHomeFragment)
         }
+        if(tag!!.isNotEmpty()){
+            binding.tvInfoOne.text = getString(R.string.we_have_sent_an_email)
+            binding.tvInfoTwo.visibility=View.GONE
+        }else {
 
-        when (viewModel.selectedOption) {
-            Constants.USING_WITHDRAW -> binding.tvInfoOne.text =
-                getString(R.string.your_withdrawal_has_been_taken_into_account)
+                when (viewModel.selectedOption) {
+                    Constants.USING_WITHDRAW -> binding.tvInfoOne.text =
+                        getString(R.string.your_withdrawal_has_been_taken_into_account)
 
-            Constants.EXPORT_DONE -> {
-                binding.tvInfoTwo.visibility = View.GONE
-                binding.tvInfoOne.text = getString(R.string.successfulMsg)
+                    Constants.EXPORT_DONE -> {
+                        binding.tvInfoTwo.visibility = View.GONE
+                        binding.tvInfoOne.text = getString(R.string.successfulMsg)
+                    }
+
+                    else -> binding.tvInfoOne.text =
+                        getString(R.string.your_investment_has_been_taken_into_account)
+                }
             }
-
-            else -> binding.tvInfoOne.text =
-                getString(R.string.your_investment_has_been_taken_into_account)
-        }
 
 
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
@@ -49,12 +54,13 @@ class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        if (viewModel.selectedOption != "" && viewModel.selectedOption == Constants.EXPORT_DONE) {
+        if(tag!!.isNotEmpty())
+        requireActivity().clearBackStack()
+        else   if (viewModel.selectedOption != "" && viewModel.selectedOption == Constants.EXPORT_DONE) {
             viewModel.selectedOption = ""
         } else{
-            
-          requireActivity().clearBackStack()
-          findNavController().navigate(R.id.portfolioHomeFragment)
+            requireActivity().clearBackStack()
+            findNavController().navigate(R.id.portfolioHomeFragment)
         }
     }
 
