@@ -3,6 +3,7 @@ package com.Lyber.ui.activities
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.content.res.Resources
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.OnBackPressedCallback
@@ -51,8 +52,25 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
             resources.updateConfiguration(config, resources.displayMetrics)
 
         }
-
-        if ((intent?.extras?.getString(Constants.FOR_LOGOUT, "") ?: "").isNotEmpty())
+        if(intent.data!=null && App.prefsManager.userPin.isEmpty()) {
+            val uriString = intent.data?.toString()
+            if (uriString != null && uriString.contains("reset?token")) {
+                Log.d("URI Data", "$uriString")
+                val urit = Uri.parse(uriString)
+                val token = urit.getQueryParameter("token")
+                if (token != null) {
+                    Log.d("Token: ", "$token")
+//                    navController.navigate(R.id.resetPasswordFragment)
+                    val arguments = Bundle().apply {
+                        putString("resetToken", token)
+                    }
+                    navController.navigate(R.id.splashFragment, arguments)
+                } else {
+                    Log.d("Token not found in the URI", "")
+                }
+            }
+        }
+        else  if ((intent?.extras?.getString(Constants.FOR_LOGOUT, "") ?: "").isNotEmpty())
             navController.navigate(R.id.discoveryFragment)
         else navController.navigate(R.id.splashFragment)
     }

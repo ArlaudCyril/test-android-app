@@ -372,4 +372,11 @@ interface Api {
         @Query("limit") limit: Int,
         @Query("offset") page: Int
     ): Response<TransactionList>
+
+    @POST("user-service/reset-password")
+    suspend fun resetNewPassword(@Body hashMap: HashMap<String, Any>):Response<BooleanResponse>
+    @POST("user-service/forgot")
+    suspend fun forgotPassword(@Body hashMap: HashMap<String, Any>):Response<BooleanResponse>
+    @GET("user-service/reset-password-identifiers")
+    suspend fun getResetPassword(): Response<res>
 }

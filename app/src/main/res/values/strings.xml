@@ -512,7 +512,7 @@
     <string name="start_identity_verifications">Start Identity Verification</string>
     <string name="review_my_informations">Review my informations</string>
     <string name="change_my_informations">Change my informations</string>
-    <string name="password_warning">The password must have atleast 10 characters, 1 special character, 1 lower case and 1 upper case</string>
+    <string name="password_warning">The password must have at least 10 characters, 1 special character, 1 lower case and 1 upper case.</string>
     <string name="you_have_strong_password">You have a strong password</string>
     <string name="please_enter_name_for_your_strategy">Please enter name for your strategy.</string>
     <string name="select_birth_date">Select Birth Date</string>
@@ -697,5 +697,14 @@
     <string name="two001_3000">2001-3000</string>
     <string name="over_3001">Over 3001</string>
     <string name="withdraw_or_exchange">Withdraw or exchange</string>
+    <string name="forgot_your_pass"><u>Forgot your password?</u></string>
+    <string name="happens_even_to_best">Happens even to the best</string>
+    <string name="send_reset_link">We will send you a reset link to your email address</string>
+    <string name="send_me_reset_link">Send me a reset link</string>
+    <string name="we_have_sent_an_email">We have sent you an email containing the reset link that you must follow in order to reset your password.</string>
+    <string name="reset_pass">Reset Password</string>
+    <string name="enter_your_new_pass">Enter your new password</string>
+    <string name="save_my_new_pass">Save my new password</string>
+    <string name="pass_valid_msg">The password must have at least 10 characters, 1 special character, 1 lower case and 1 upper case.</string>
 
 </resources>

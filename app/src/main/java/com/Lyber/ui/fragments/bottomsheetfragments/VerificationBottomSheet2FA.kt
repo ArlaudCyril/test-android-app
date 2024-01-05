@@ -7,9 +7,6 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
-<<<<<<<< HEAD:app/src/main/java/com/Lyber/ui/fragments/bottomsheetfragments/VerificationBottomSheet.kt
-import android.widget.RelativeLayout
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
@@ -21,15 +18,8 @@ import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.SignUpViewModel
 
-class VerificationBottomSheet() :
-========
-import com.Lyber.R
-import com.Lyber.databinding.BottomSheetVerificationBinding
-import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
-import kotlin.reflect.KFunction1
 
-class VerificationBottomSheet2FA(private val handle: (String) -> Unit):
->>>>>>>> elie:app/src/main/java/com/Lyber/ui/fragments/bottomsheetfragments/VerificationBottomSheet2FA.kt
+class VerificationBottomSheet2FA(private val handle: (String) -> Unit) :
     BaseBottomSheet<BottomSheetVerificationBinding>() {
 
     private val codeOne get() = binding.etCodeOne.text.trim().toString()
@@ -42,14 +32,15 @@ class VerificationBottomSheet2FA(private val handle: (String) -> Unit):
     lateinit var viewToDelete: View
     lateinit var mainView: ViewGroup
 
+    lateinit var viewModel: SignUpViewModel
     override fun bind() = BottomSheetVerificationBinding.inflate(layoutInflater)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        viewModel = CommonMethods.getViewModel(this)
         setUpView()
         this.binding.etCodeOne.requestFocus()
         binding.etCodeOne.requestKeyboard()
-<<<<<<<< HEAD:app/src/main/java/com/Lyber/ui/fragments/bottomsheetfragments/VerificationBottomSheet.kt
         viewModel.userLoginResponse.observe(viewLifecycleOwner) {
 
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
@@ -70,11 +61,10 @@ class VerificationBottomSheet2FA(private val handle: (String) -> Unit):
                 }
 
             }
+        }
 
-========
         binding.btnCancel.setOnClickListener {
             dismiss()
->>>>>>>> elie:app/src/main/java/com/Lyber/ui/fragments/bottomsheetfragments/VerificationBottomSheet2FA.kt
         }
     }
 
@@ -82,17 +72,14 @@ class VerificationBottomSheet2FA(private val handle: (String) -> Unit):
         binding.apply {
 
             title.text = getString(R.string.verification)
-<<<<<<<< HEAD:app/src/main/java/com/Lyber/ui/fragments/bottomsheetfragments/VerificationBottomSheet.kt
             if (viewModel.forLogin) {
                 subtitle.text = getString(R.string.enter_the_code_displayed_on_your_email)
             } else {
                 subtitle.text = getString(R.string.enter_the_code_displayed_on_your_sms)
             }
-========
 
             subtitle.text = getString(R.string.enter_the_code_displayed_on_your_email)
 
->>>>>>>> elie:app/src/main/java/com/Lyber/ui/fragments/bottomsheetfragments/VerificationBottomSheet2FA.kt
             fieldToVerify.text = ""
             btnCancel.text = getString(R.string.cancel)
 
@@ -213,7 +200,6 @@ class VerificationBottomSheet2FA(private val handle: (String) -> Unit):
 
                     binding.etCodeSix -> {
                         if (getCode().length == 6) {
-<<<<<<<< HEAD:app/src/main/java/com/Lyber/ui/fragments/bottomsheetfragments/VerificationBottomSheet.kt
                             if (viewModel.forLogin) {
                                 CommonMethods.showProgressDialog(requireContext())
                                 viewModel.verify2FA(code = getCode())
@@ -221,12 +207,10 @@ class VerificationBottomSheet2FA(private val handle: (String) -> Unit):
                                 dismiss()
                                 viewModel.verifyPhone(getCode())
                             }
-========
                             dismiss()
                             handle.invoke(getCode())
-                          //  viewModel.verify2FAWithdraw(code = getCode())
+                            //  viewModel.verify2FAWithdraw(code = getCode())
 
->>>>>>>> elie:app/src/main/java/com/Lyber/ui/fragments/bottomsheetfragments/VerificationBottomSheet2FA.kt
                         }
                     }
                 }
@@ -234,10 +218,6 @@ class VerificationBottomSheet2FA(private val handle: (String) -> Unit):
 
         }
 
-<<<<<<<< HEAD:app/src/main/java/com/Lyber/ui/fragments/bottomsheetfragments/VerificationBottomSheet.kt
-========
-
->>>>>>>> elie:app/src/main/java/com/Lyber/ui/fragments/bottomsheetfragments/VerificationBottomSheet2FA.kt
         private fun nextEditText(modifiedEditText: EditText): EditText {
             when (modifiedEditText) {
                 binding.etCodeOne -> return binding.etCodeTwo
