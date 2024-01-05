@@ -89,14 +89,14 @@ class InvestAddMoneyFragment: BaseFragment<FragmentInvestAddMoneyBinding>(),View
     private fun investment() {
         val finalAmount = amount.replace(mCurrency,"").pointFormat
         val balance = com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == "usdt" }
-       val aount :Float= balance?.balanceData?.balance?.toFloat() ?: 0f
+       val amount :Float= balance?.balanceData?.balance?.toFloat() ?: 0f
         if (finalAmount.toFloat()< requiredAmount){
             getString(
                 R.string.you_need_to_invest_at_least_per_asset_in_the_strategy,
                 requiredAmount.toString(),
                 mCurrency.uppercase()
             ).showToast(requireActivity())
-        }else if (finalAmount.toFloat() > aount){
+        }else if (finalAmount.toFloat() > amount){
             getString(R.string.you_don_t_have_enough_to_perform_this_action, mCurrency.uppercase()).showToast(requireActivity())
         }else if (selectedFrequency.trim().isEmpty()){
             getString(R.string.please_select_the_frequency).showToast(requireActivity())

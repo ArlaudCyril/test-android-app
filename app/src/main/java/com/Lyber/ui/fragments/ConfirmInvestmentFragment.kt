@@ -79,17 +79,22 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                                 checkInternet(requireContext()) {
                                     /*frequency = "now" || "1d" || "1w" || "1m"*/
                                     val freq = when(viewModel.selectedFrequency){
-                                        "Once"-> "now"
+                                        "Once"-> null     //"now"
                                         "Daily"-> "1d"
                                         "Weekly"-> "1w"
                                         "none"-> "none"
                                         else -> "1m"
                                     }
+
 //                                    showProgressDialog(requireContext())
                                     if(freq=="none"){
                                          viewModel.oneTimeOrderStrategy(
                                             viewModel.selectedStrategy!!.name, viewModel.amount.toFloat().toDouble(),it.ownerUuid,)
                                     } else
+
+                                    showProgressDialog(requireContext())
+
+
                                     viewModel.investStrategy(
                                         it.ownerUuid,
                                         freq,
