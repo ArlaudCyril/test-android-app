@@ -148,20 +148,22 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                         tvValueDeposit,
                         tvValueDepositFee
                     ).gone()
+                    //changed fee to 1 percent of the amount
+                    val fee = (viewModel.amount.toFloat() / (100.0))
 
                     if(viewModel.selectedFrequency=="none")
                     tvValueFrequency.text = getString(R.string.immediate)
                     else
                     tvValueFrequency.text = viewModel.selectedFrequency
 
-                    tvNestedAmountValue.text =(viewModel.amount.toFloat() - buyValue).toString()
+                    tvNestedAmountValue.text =(viewModel.amount.toFloat() - fee).toString()
                         .decimalPoint().commaFormatted + " USDT"
                         viewModel.amount.decimalPoint().commaFormatted + " USDT"
                     tvValueTotal.text =
                         (viewModel.amount.toFloat()).toString()
                             .decimalPoint().commaFormatted + " USDT"
                     tvValueLyberFee.text =
-                        buyValue.toString().decimalPoint().commaFormatted + " USDT"
+                        fee.toString().decimalPoint() + " USDT"
 
 
                     tvAmount.text =
