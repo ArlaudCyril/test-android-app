@@ -45,7 +45,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
     private val mobile get() = binding.etPhone.text.trim().toString()
     private val countryCode get() = binding.tvCountryCode.text.trim().toString()
     private val email get() = binding.etEmail.text.trim().toString()
-    private val password get() = binding.etPassword.text.trim().toString()
+    private val password get() = binding.etPassword.text!!.trim().toString()
     private lateinit var config: SRP6CryptoParams
     lateinit var generator: SRP6VerifierGenerator
     lateinit var client: SRP6ClientSession
@@ -79,12 +79,16 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                 getString(R.string.phone_login_helper_text)
             binding.tvLoginViaEmail.fadeIn()
             binding.tvLoginViaEmail.visible()
+            binding.tvForgotPassword.fadeIn()
+            binding.tvForgotPassword.visible()
             binding.tilPassword.visible()
         }
 
         binding.tvLoginViaEmail.setOnClickListener(this)
+        binding.tvForgotPassword.setOnClickListener(this)
         binding.tvLoginViaPhone.setOnClickListener(this)
         binding.btnNext.setOnClickListener(this)
+        binding.tvForgotPassword.setOnClickListener(this)
 
         binding.tvCountryCode.setOnClickListener(this)
         binding.root.viewTreeObserver?.addOnGlobalLayoutListener(
@@ -334,6 +338,9 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                                 }
                         }
 
+                }
+                tvForgotPassword->{
+                    findNavController().navigate(R.id.forgotPasswordFragment)
                 }
 
             }
