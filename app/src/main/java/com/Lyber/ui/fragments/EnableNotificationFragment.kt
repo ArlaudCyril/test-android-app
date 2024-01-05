@@ -40,7 +40,7 @@ class EnableNotificationFragment : BaseFragment<FragmentEnableNotificationsBindi
 
         }
         binding.ivTopAction.setOnClickListener {
-
+            requireActivity().onBackPressed()
         }
 
         binding.btnEnableNotifications.setOnClickListener {

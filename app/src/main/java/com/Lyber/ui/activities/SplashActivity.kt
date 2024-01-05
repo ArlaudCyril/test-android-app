@@ -1,7 +1,8 @@
 package com.Lyber.ui.activities
 
 import android.annotation.SuppressLint
-import android.net.Uri
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.OnBackPressedCallback
@@ -12,9 +13,10 @@ import com.Lyber.databinding.ActivitySplashBinding
 import com.Lyber.utils.ActivityCallbacks
 import com.Lyber.utils.App
 import com.Lyber.utils.Constants
+import java.util.Locale
 
 @SuppressLint("CustomSplashScreen")
-class SplashActivity : com.Lyber.ui.activities.BaseActivity<ActivitySplashBinding>() {
+class SplashActivity : BaseActivity<ActivitySplashBinding>() {
 
     private val TAG = "CompletePortfolioFragme"
     override fun bind() = ActivitySplashBinding.inflate(layoutInflater)
@@ -39,30 +41,22 @@ class SplashActivity : com.Lyber.ui.activities.BaseActivity<ActivitySplashBindin
                     }
                 }
             })
-        if(intent.data!=null && App.prefsManager.userPin.isEmpty()) {
-            val uriString = intent.data?.toString()
-            if (uriString != null && uriString.contains("reset?token")) {
-                Log.d("URI Data", "$uriString")
-                val urit = Uri.parse(uriString)
-                val token = urit.getQueryParameter("token")
-                if (token != null) {
-                    Log.d("Token: ", "$token")
-//                    navController.navigate(R.id.resetPasswordFragment)
-                    val arguments = Bundle().apply {
-                        putString("resetToken", token)
-                    }
-                    navController.navigate(R.id.splashFragment, arguments)
-                } else {
-                    Log.d("Token not found in the URI", "")
-                }
-            }
-        }
-      else  if ((intent?.extras?.getString(Constants.FOR_LOGOUT, "") ?: "").isNotEmpty())
-            navController.navigate(R.id.discoveryFragment)
-        else
-            navController.navigate(R.id.splashFragment)
+        if (App.prefsManager.getLanguage().isNotEmpty()) {
+            var code = App.prefsManager.getLanguage()
+            val locale = Locale(code)
+            Locale.setDefault(locale)
+            val resources: Resources = resources
+            val config: Configuration = resources.configuration
+            config.setLocale(locale)
+            resources.updateConfiguration(config, resources.displayMetrics)
 
+        }
+
+        if ((intent?.extras?.getString(Constants.FOR_LOGOUT, "") ?: "").isNotEmpty())
+            navController.navigate(R.id.discoveryFragment)
+        else navController.navigate(R.id.splashFragment)
     }
+
 
     companion object {
         private var _activityCallbacks: ActivityCallbacks? = null

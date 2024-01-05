@@ -15,24 +15,27 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
+import android.view.animation.AnimationUtils
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.Lyber.BuildConfig
 import com.Lyber.R
 import com.Lyber.databinding.CustomDialogLayoutBinding
 import com.Lyber.databinding.FragmentProfileBinding
-import com.Lyber.databinding.ItemMyAssetBinding
-import com.Lyber.models.Transaction
-import com.Lyber.ui.activities.SplashActivity
+import com.Lyber.databinding.ItemTransactionBinding
+import com.Lyber.models.TransactionData
 import com.Lyber.ui.adapters.BaseAdapter
-import com.Lyber.ui.fragments.bottomsheetfragments.ProfileBottomSheet
+import com.Lyber.ui.fragments.bottomsheetfragments.TransactionDetailsBottomSheetFragment
+import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.checkPermission
-import com.Lyber.utils.CommonMethods.Companion.decimalPoints
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.getDeviceId
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
@@ -43,11 +46,13 @@ import com.Lyber.utils.CommonMethods.Companion.setProfile
 import com.Lyber.utils.CommonMethods.Companion.shouldShowPermission
 import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.showToast
-import com.Lyber.utils.CommonMethods.Companion.toDateFormatTwo
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
-import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
+import com.caverock.androidsvg.BuildConfig
+import com.google.gson.GsonBuilder
 import java.io.File
+import java.math.BigDecimal
+import java.math.RoundingMode
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -59,7 +64,9 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 
     private var imageFile: File? = null
     private var option = 1 // 1 -> camera option 2-> gallery option
-
+    val limit = 5 // as on this screen we have to show max 3 enteries
+    var offset = 0
+    private lateinit var navController : NavController
     override fun bind() = FragmentProfileBinding.inflate(layoutInflater)
 
     @SuppressLint("ClickableViewAccessibility")
@@ -68,27 +75,61 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 
         viewModel = getViewModel(requireActivity())
         viewModel.listener = this
+      
+        val navHostFragment =  requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        navController = navHostFragment.findNavController()
+//        viewModel.transactionResponse.observe(viewLifecycleOwner) {
+//            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+//                dismissProgressDialog()
+//                when {
+//                    it.transactions.isEmpty() -> {
+//                        binding.tvNoTransaction.visible()
+//                        binding.rvTransactions.gone()
+//                        binding.tvViewAllTransaction.gone()
+//                    }
+//
+//                    it.transactions.count() in 1..3 -> {
+//                        adapter.setList(it.transactions)
+//                        binding.tvViewAllTransaction.visible()
+//                        binding.tvNoTransaction.gone()
+//                    }
+//
+//                    else -> {
+//                        adapter.setList(it.transactions.subList(0, 3))
+//                        binding.tvViewAllTransaction.visible()
+//                        binding.tvNoTransaction.gone()
+//                    }
+//                }
+//                binding.rvTransactions.startLayoutAnimation()
+//            }
+//        }
 
-        viewModel.transactionResponse.observe(viewLifecycleOwner) {
+
+
+        CommonMethods.checkInternet(requireContext()) {
+           binding.progressImage.animation =
+            AnimationUtils.loadAnimation(context, R.anim.rotate_drawable)
+            viewModel.getTransactions(limit, offset)
+        }
+        viewModel.getTransactionListingResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-
                 dismissProgressDialog()
-
+                binding.tvNoTransaction.setBackgroundResource(0)
+                binding.progressImage.clearAnimation()
+                binding.progressImage.visibility=View.GONE
                 when {
-                    it.transactions.isEmpty() -> {
+                    it.data.isEmpty() -> {
                         binding.tvNoTransaction.visible()
                         binding.rvTransactions.gone()
                         binding.tvViewAllTransaction.gone()
                     }
-
-                    it.transactions.count() in 1..3 -> {
-                        adapter.setList(it.transactions)
+                    it.data.count() in 1..3 -> {
+                        adapter.setList(it.data)
                         binding.tvViewAllTransaction.visible()
                         binding.tvNoTransaction.gone()
                     }
-
                     else -> {
-                        adapter.setList(it.transactions.subList(0, 3))
+                        adapter.setList(it.data.subList(0, 3))
                         binding.tvViewAllTransaction.visible()
                         binding.tvNoTransaction.gone()
                     }
@@ -117,6 +158,14 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 //                binding.tvBic.text = "${it.bic}"
 //                binding.tvAddPaymentMethod.gone()
 //            }
+        }
+        if (App.prefsManager.getLanguage().isNotEmpty()) {
+            val ln = App.prefsManager.getLanguage()
+            if (ln == Constants.FRENCH)
+                binding.tvLanguage.text = getString(R.string.french)
+            else
+                binding.tvLanguage.text = getString(R.string.english)
+
         }
 
         viewModel.logoutResponse.observe(viewLifecycleOwner) {
@@ -161,22 +210,34 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         }
 
 
-
 //        binding.tvStatusStrongAuth.text =
 //            if (App.prefsManager.isStrongAuth()) "Enabled" else "Disabled"
 
-//        binding.tvStatusAddressBook.text =
-//            if (App.prefsManager.isWhitelisting()) "Whitelisting: Enabled" else "Whitelisting: Disabled"
 
-//        binding.ivTopAction.setOnClickListener(this)
-//        binding.llChangePin.setOnClickListener(this)
-//        binding.tvViewAllTransaction.setOnClickListener(this)
+        binding.tvStatusAddressBook.gone()
+        binding.tvStatusAddressBook.text = when (App.prefsManager.withdrawalLockSecurity) {
+            Constants.HOURS_72 -> "72H"
+            Constants.HOURS_24 -> "24H"
+            else -> getString(R.string.no_security)
+        }
+        binding.ivTopAction.setOnClickListener(this)
+        binding.llChangePin.setOnClickListener(this)
+        binding.tvViewAllTransaction.setOnClickListener(this)
+
 //        binding.tvAddPaymentMethod.setOnClickListener(this)
         binding.tvLogout.setOnClickListener(this)
-//        binding.llStrongAuthentication.setOnClickListener(this)
+
+        binding.llStrongAuthentication.setOnClickListener(this)
 //        binding.rlAddressBook.setOnClickListener(this)
+
         binding.ivProfile.setOnClickListener(this)
 //        binding.llNotification.setOnClickListener(this)
+        binding.rlLanguage.setOnClickListener(this)
+
+        binding.rlExport.setOnClickListener(this)
+
+        binding.llContactUS.setOnClickListener(this)
+
 
         binding.switchFaceId.setOnCheckedChangeListener { button, isChecked ->
             if (button.isPressed) {
@@ -189,34 +250,37 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
             }
         }
 
-        viewModel.transactionResponse.value?.let {
-            dismissProgressDialog()
+//        viewModel.transactionResponse.value?.let {
+//            dismissProgressDialog()
+//
+//            when {
+//                it.transactions.isEmpty() -> {
+//                    binding.tvNoTransaction.visible()
+//                    binding.rvTransactions.gone()
+//                    binding.tvViewAllTransaction.gone()
+//                }
+//
+//                it.transactions.count() in 1..3 -> {
+//                    adapter.setList(it.transactions)
+//                    binding.tvViewAllTransaction.visible()
+//                    binding.tvNoTransaction.gone()
+//                }
+//
+//                else -> {
+//                    adapter.setList(it.transactions.subList(0, 3))
+//                    binding.tvViewAllTransaction.visible()
+//                    binding.tvNoTransaction.gone()
+//                }
+//            }
+//
+//            binding.rvTransactions.startLayoutAnimation()
+//        }
 
-            when {
-                it.transactions.isEmpty() -> {
-                    binding.tvNoTransaction.visible()
-                    binding.rvTransactions.gone()
-                    binding.tvViewAllTransaction.gone()
-                }
+    }
 
-                it.transactions.count() in 1..3 -> {
-                    adapter.setList(it.transactions)
-                    binding.tvViewAllTransaction.visible()
-                    binding.tvNoTransaction.gone()
-                }
-
-                else -> {
-                    adapter.setList(it.transactions.subList(0, 3))
-                    binding.tvViewAllTransaction.visible()
-                    binding.tvNoTransaction.gone()
-                }
-            }
-
-            binding.rvTransactions.startLayoutAnimation()
-        }
-
-
-//        binding.ivProfile.setProfile
+    override fun onResume() {
+        super.onResume()
+        binding.ivProfile.setProfile
     }
 
 
@@ -243,8 +307,8 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 setContentView(it.root)
                 it.tvTitle.text = getString(R.string.log_out)
                 it.tvMessage.text = getString(R.string.logout_message)
-                it.tvNegativeButton.text = getString(R.string.no)
-                it.tvPositiveButton.text = getString(R.string.yes)
+                it.tvNegativeButton.text = getString(R.string.no_t)
+                it.tvPositiveButton.text = getString(R.string.yes_t)
                 it.tvNegativeButton.setOnClickListener {
                     dismiss()
                 }
@@ -271,17 +335,15 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         binding.apply {
             when (v!!) {
 
-                ivProfile -> ProfileBottomSheet(::optionSelected).show(childFragmentManager, "")
+                ivProfile -> findNavController().navigate(R.id.defaultImagesFragment)/*ProfileBottomSheet(::optionSelected).show(childFragmentManager, "")*/
 
-                rlAddressBook -> requireActivity().replaceFragment(
-                    R.id.flSplashActivity,
-                    AddAddressBookFragment()
-                )
+                rlAddressBook -> findNavController().navigate(R.id.addAddressBookFragment)
 
-                llStrongAuthentication -> requireActivity().replaceFragment(
-                    R.id.flSplashActivity,
-                    StrongAuthenticationFragment()
-                )
+                llStrongAuthentication -> findNavController().navigate(R.id.strongAuthentication)
+//                    requireActivity().replaceFragment(
+//                    R.id.flSplashActivity,
+//                    StrongAuthenticationFragment()
+//                )
 
                 ivTopAction -> requireActivity().onBackPressed()
 
@@ -299,24 +361,34 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                     AddPaymentMethodFragment()
                 )
 
-                tvViewAllTransaction -> requireActivity().replaceFragment(
-                    R.id.flSplashActivity,
-                    TransactionFragment()
-                )
+                tvViewAllTransaction ->
+                    findNavController().navigate(R.id.transactionFragment)
 
                 llChangePin -> checkInternet(requireContext()) {
-                    showProgressDialog(requireContext())
-                    viewModel.sendOtpPinChange()
+                    val bundle = Bundle().apply {
+                        putBoolean(Constants.FOR_LOGIN, false)
+                        putBoolean(Constants.IS_CHANGE_PIN, true)
+                    }
+                    findNavController().navigate(R.id.createPinFragment, bundle)
                 }
+
+                rlLanguage -> {
+
+                    findNavController().navigate(R.id.chooseLanguageFragment)
+                }
+                rlExport-> navController.navigate(R.id.exportOperationsFragment)
+
+                llContactUS->navController.navigate(R.id.contactUsFragment)
+
             }
         }
     }
 
-    class TransactionAdapter(private val context: Context) : BaseAdapter<Transaction>() {
+    inner class TransactionAdapter(private val context: Context) : BaseAdapter<TransactionData>() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             return TransactionViewHolder(
-                ItemMyAssetBinding.inflate(
+                ItemTransactionBinding.inflate(
                     LayoutInflater.from(parent.context),
                     parent,
                     false
@@ -329,51 +401,102 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
             (holder as TransactionViewHolder).binding.apply {
                 itemList[position]?.let {
                     when (it.type) {
-                        1 -> { //exchange
-                            ivAssetIcon.setImageResource(R.drawable.ic_exchange)
-                            tvAssetName.text =
-                                "Exch. ${it.exchange_from.uppercase()} to ${it.exchange_to.uppercase()}"
-                            tvAssetAmount.text =
-                                "-${
-                                    it.exchange_from_amount.toString().decimalPoints(5)
-                                }${it.exchange_from.uppercase()}"
-                            tvAssetAmountInCrypto.text =
-                                "${
-                                    it.exchange_to_amount.toString().decimalPoints(5)
-                                }${it.exchange_to.uppercase()}"
+                        Constants.ORDER -> {
+                            ivItem.setImageResource(R.drawable.ic_exchange)
+                            tvStartTitle.text = "Exchange"
+                            tvStartSubTitle.text =
+                                "${it.fromAsset.uppercase()} -> ${it.toAsset.uppercase()}"
+                            var roundedNumber=BigDecimal(it.fromAmount)
+                            try {
+                                val originalNumber = BigDecimal(it.fromAmount)
+                                val scale = originalNumber.scale()
+                                roundedNumber = if (scale > 8) {
+                                    originalNumber.setScale(8, RoundingMode.HALF_UP)
+                                } else
+                                    originalNumber
+                            }catch (_:Exception){
+
+                            }
+                            tvEndTitle.text = "-${roundedNumber} ${it.fromAsset.uppercase()}"
+//                            tvEndTitle.text = "-${it.fromAmount} ${it.fromAsset.uppercase()}"
+                            var amount = it.toAmount
+                            try {
+                                amount = String.format(Locale.US,"%.10f", it.toAmount.toFloat())
+                            } catch (ex: java.lang.Exception) {
+
+                            }
+                            tvEndSubTitle.text = "+${amount} ${it.toAsset.uppercase()}"
+
+
                         }
-                        2 -> { // deposit
-                            root.gone()
+
+                        Constants.STRATEGY -> {
+                            ivItem.setImageResource(R.drawable.strategy)
+                            tvStartTitleCenter.text =
+                                "${it.strategyName.replaceFirstChar(Char::uppercase)}"
+                            if (it.status == Constants.FAILURE)
+                                tvFailed.visibility = View.VISIBLE
+                            else {
+                                if (it.successfulBundleEntries.isNotEmpty()) {
+                                    try {
+                                        tvEndTitleCenter.text =
+                                            "${it.successfulBundleEntries[0].assetAmount} ${it.successfulBundleEntries[0].asset.uppercase(Locale.US)}"
+
+                                    } catch (ex: java.lang.Exception) {
+
+                                    }
+                                }
+                            }
+
                         }
-                        3 -> { // withdraw
-                            ivAssetIcon.setImageResource(R.drawable.ic_withdraw)
-                            tvAssetName.text = context.getString(R.string.withdrawal)
-                            tvAssetAmount.text = "-${it.amount}${Constants.EURO}"
-                            tvAssetAmountInCrypto.text =
-                                "${
-                                    it.asset_amount.toString().decimalPoints(5)
-                                }${it.asset_id.uppercase()}"
+
+                        Constants.DEPOSIT -> {
+                            ivItem.setImageResource(R.drawable.ic_deposit)
+                            tvStartTitle.text = "${it.asset.uppercase()} Deposit"
+                            tvStartSubTitle.text =
+                                it.status.lowercase().replaceFirstChar(Char::uppercase)
+                            tvEndTitleCenter.text = "+${it.amount} ${it.asset.uppercase()}"
                         }
-                        4 -> { // single asset
-                            ivAssetIcon.setImageResource(R.drawable.ic_deposit)
-                            tvAssetName.text = "Bought ${it.asset_id.uppercase()}"
-                            tvAssetAmount.text = "+${it.amount.toFloat().toInt()}${Constants.EURO}"
-                            tvAssetAmountInCrypto.text =
-                                "${
-                                    it.asset_amount.toString().decimalPoints(5)
-                                }${it.asset_id.uppercase()}"
+
+                        Constants.WITHDRAW -> { // single asset
+                            //TODO
+                            ivItem.setImageResource(R.drawable.ic_withdraw)
+                            tvStartTitle.text =
+                                "${it.asset.uppercase()} ${getString(R.string.withdrawal)}"
+                            tvStartSubTitle.text =
+                                it.status.lowercase().replaceFirstChar(Char::uppercase)
+                            tvEndTitleCenter.text = "-${it.amount} ${it.asset.uppercase()}"
+                            tvFailed.visibility = View.GONE
+                            tvStartTitleCenter.visibility = View.GONE
+
+
+//                            tvEndTitle.text = it.type.lowercase().replaceFirstChar(Char::uppercase)
+//                            tvEndSubTitle.text = it.type.lowercase().replaceFirstChar(Char::uppercase)
+
                         }
+
                         else -> root.gone()
                     }
                 }
             }
         }
 
-        inner class TransactionViewHolder(val binding: ItemMyAssetBinding) :
+        inner class TransactionViewHolder(val binding: ItemTransactionBinding) :
             RecyclerView.ViewHolder(binding.root) {
             init {
-                binding.ivDropIcon.gone()
-                binding.tvAssetName.visible()
+                binding.root.setOnClickListener {
+
+                    val detailBottomSheet = TransactionDetailsBottomSheetFragment()
+                    val gson = GsonBuilder().create()
+                    var data = ""
+                    data = gson.toJson(itemList[adapterPosition])
+                    detailBottomSheet.arguments = Bundle().apply {
+                        putString("data", data)
+                    }
+                    detailBottomSheet.show(childFragmentManager, "")
+                }
+//                binding.ivDropIcon.gone()
+//                binding.tvAssetName.visible()
             }
         }
 
@@ -390,6 +513,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                             viewModel.upload(image)
                         }
                     }
+
                     2 -> {
                         it.data?.data?.let { uri ->
 

@@ -1,20 +1,23 @@
 package com.Lyber.ui.fragments.bottomsheetfragments
 
+import android.app.Dialog
+import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewTreeObserver
+import android.view.WindowManager
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.RelativeLayout
-import androidx.core.content.ContextCompat
-import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.findNavController
+import androidx.fragment.app.DialogFragment
 import com.Lyber.R
 import com.Lyber.databinding.BottomSheetVerificationBinding
-import com.Lyber.utils.App
+import com.Lyber.ui.fragments.TwoFactorAuthenticationFragment
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
 import com.Lyber.utils.Constants
@@ -30,39 +33,28 @@ class VerificationBottomSheet() :
     private val codeFive get() = binding.etCodeFive.text.trim().toString()
     private val codeSix get() = binding.etCodeSix.text.trim().toString()
 
+    private var googleOTP=""
+
     lateinit var typeVerification: String
     lateinit var viewToDelete: View
     lateinit var mainView: ViewGroup
     lateinit var viewModel: SignUpViewModel
 
     override fun bind() = BottomSheetVerificationBinding.inflate(layoutInflater)
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.DialogStyle)
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpView()
+//        viewModel.listener = this
         this.binding.etCodeOne.requestFocus()
         binding.etCodeOne.requestKeyboard()
-        viewModel.userLoginResponse.observe(viewLifecycleOwner) {
-
-            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                CommonMethods.dismissProgressDialog()
-                if (it.data.access_token != null) {
-                    dismiss()
-                    App.prefsManager.accessToken = it.data.access_token
-                    App.accessToken = it.data.access_token
-                    App.prefsManager.refreshToken = it.data.refresh_token
-
-                    childFragmentManager.popBackStack(
-                        null, FragmentManager.POP_BACK_STACK_INCLUSIVE
-                    )
-                    val bundle = Bundle().apply {
-                        putBoolean(Constants.FOR_LOGIN, viewModel.forLogin)
-                    }
-                    findNavController().navigate(R.id.createPinFragment, bundle)
-                }
-
-            }
-
+        binding.tvBack.setOnClickListener {
+            val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+            imm?.hideSoftInputFromWindow(view?.windowToken, 0)
+            dismiss()
         }
     }
 
@@ -70,13 +62,33 @@ class VerificationBottomSheet() :
         binding.apply {
 
             title.text = getString(R.string.verification)
-            if (viewModel.forLogin) {
+            if (tag!!.isNotEmpty()) {
+                btnCancel.visibility = View.GONE
+                tvBack.visibility = View.VISIBLE
+                if (arguments != null && requireArguments().containsKey(Constants.TYPE)) {
+                    var type = requireArguments().getString(Constants.TYPE)
+                    if (type == Constants.EMAIL)
+                        subtitle.text = getString(R.string.enter_the_code_received_by_email)
+                    else if (type == Constants.PHONE)
+                        subtitle.text = getString(R.string.enter_the_code_received_by_sms)
+                    else subtitle.text =
+                        getString(R.string.enter_the_code_displayed_by_google_authenticator)
+                } else {
+                    if (tag == Constants.EMAIL)
+                        subtitle.text = getString(R.string.enter_the_code_received_by_email)
+                    else if (tag == Constants.PHONE)
+                        subtitle.text = getString(R.string.enter_the_code_received_by_sms)
+                    else subtitle.text =
+                        getString(R.string.enter_the_code_displayed_by_google_authenticator)
+                }
+            } else if (viewModel.forLogin) {
                 subtitle.text = getString(R.string.enter_the_code_displayed_on_your_email)
             } else {
                 subtitle.text = getString(R.string.enter_the_code_displayed_on_your_sms)
             }
             fieldToVerify.text = ""
             btnCancel.text = getString(R.string.cancel)
+
 
             // Usage example
             val editTextArray: List<EditText> = listOf(
@@ -90,7 +102,7 @@ class VerificationBottomSheet() :
             }
 
             // Set layout parameters to wrap content for the VerificationBottomSheet's root view
-            binding.root.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
+//            binding.root.layoutParams.height = ViewGroup.LayoutParams.WRAP_CONTENT
         }
     }
 
@@ -195,8 +207,78 @@ class VerificationBottomSheet() :
 
                     binding.etCodeSix -> {
                         if (getCode().length == 6) {
-                            if (viewModel.forLogin) {
-                                CommonMethods.showProgressDialog(requireContext())
+
+                            if (tag!!.isNotEmpty()) {
+                                if (arguments != null && requireArguments().containsKey("clickedOn")) {
+                                    dismiss()
+                                    var args = requireArguments().getString("clickedOn")
+                                    Log.d("text", args!!)
+
+                                    val hash = hashMapOf<String, Any>()
+                                    if (args == "")
+                                        hash["scope2FA"] = listOf("login")
+                                    else
+                                        hash["scope2FA"] = listOf(args)
+                                    hash["otp"] = getCode()
+                                    Log.d("hash", "$hash")
+                                    CommonMethods.showProgressDialog(requireContext())
+                                    viewModel.updateAuthentication(hash)
+                                } else if (arguments != null && requireArguments().containsKey(
+                                        Constants.TYPE
+                                    )
+                                ) {
+                                    var args = requireArguments().getString(Constants.TYPE)
+                                    if (requireArguments().containsKey("changeType")){
+                                        dismiss()
+                                        Log.d("text", args!!)
+                                        val hash = hashMapOf<String, Any>()
+                                        hash["type2FA"] = requireArguments().getString("changeType").toString()
+                                        hash["otp"] = getCode()
+                                        Log.d("hash", "$hash")
+                                        CommonMethods.showProgressDialog(requireContext())
+                                        viewModel.updateAuthentication(hash)
+                                    }
+                                    if(args== Constants.GOOGLE){
+                                        if(googleOTP.isNotEmpty()){
+                                            dismiss()
+                                            Log.d("text", args!!)
+                                            val hash = hashMapOf<String, Any>()
+                                            hash["type2FA"] = args
+                                            hash["otp"] = getCode()
+                                            hash["googleOtp"] = googleOTP
+                                            Log.d("hash", "$hash")
+                                            TwoFactorAuthenticationFragment.showOtp=true
+                                            CommonMethods.showProgressDialog(requireContext())
+                                            viewModel.updateAuthentication(hash)
+                                        }
+                                        else {
+                                            googleOTP = getCode()
+                                            binding.subtitle.text =
+                                                getString(R.string.enter_the_code_received_by_email)
+                                            binding.etCodeSix.setText("")
+                                            binding.etCodeFive.setText("")
+                                            binding.etCodeFour.setText("")
+                                            binding.etCodeThree.setText("")
+                                            binding.etCodeTwo.setText("")
+                                            binding.etCodeOne.setText("")
+                                            binding.etCodeOne.requestFocus()
+                                            binding.etCodeOne.setSelection(binding.etCodeOne.text.length)
+                                        }
+
+                                    }
+                                    else {
+                                        dismiss()
+                                        Log.d("text", args!!)
+                                        val hash = hashMapOf<String, Any>()
+                                        hash["type2FA"] = args
+                                        hash["otp"] = getCode()
+                                        Log.d("hash", "$hash")
+                                        CommonMethods.showProgressDialog(requireContext())
+                                        viewModel.updateAuthentication(hash)
+                                    }
+                                }
+                            } else if (viewModel.forLogin) {
+                                dismiss()
                                 viewModel.verify2FA(code = getCode())
                             } else {
                                 dismiss()
@@ -209,7 +291,9 @@ class VerificationBottomSheet() :
 
         }
 
-        private fun nextEditText(modifiedEditText: EditText): EditText {
+
+        private fun  nextEditText(modifiedEditText: EditText) : EditText{
+
             when (modifiedEditText) {
                 binding.etCodeOne -> return binding.etCodeTwo
                 binding.etCodeTwo -> return binding.etCodeThree

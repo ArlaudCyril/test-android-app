@@ -2,6 +2,7 @@ package com.Lyber.ui.fragments
 
 import android.content.Context
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -66,7 +67,7 @@ class AllocationView : LinearLayout {
                 0,
                 LayoutParams.WRAP_CONTENT
             ).apply {
-                weight = list[pos].allocation.toFloat()
+                weight = list[pos].share.toFloat()
             }
 
             when (pos) {
@@ -100,6 +101,7 @@ class AllocationView : LinearLayout {
 
         fun setList(list: List<InvestmentStrategyAsset>) {
             val start = this.list.count()
+            this.list.clear()
             this.list.addAll(list)
             notifyItemRangeInserted(start, list.count())
         }
@@ -116,9 +118,11 @@ class AllocationView : LinearLayout {
         override fun onBindViewHolder(holder: ViewHolder, position: Int) {
             holder.binding.apply {
                 list[position].let {
+                    Log.d("postPositionList",list.count().toString())
+                    Log.d("postPosition",position.toString())
                     ivColor.setBackgroundTint(colors[position])
-                    tvAssetsName.text = it.asset_id.uppercase()
-                    tvAssetPercent.text = "${it.allocation.roundToInt()}%"
+                    tvAssetsName.text = it.asset.uppercase()
+                    tvAssetPercent.text = "${it.share.roundToInt()}%"
                 }
             }
         }

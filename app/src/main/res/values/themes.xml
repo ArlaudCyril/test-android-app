@@ -56,6 +56,8 @@
 
     <style name="CustomDialogBottomSheet" parent="Theme.Design.Light.BottomSheetDialog">
         <item name="bottomSheetStyle">@style/CustomDialogTheme</item>
+        <item name="android:windowIsFloating">false</item>
+        <item name="android:windowSoftInputMode">adjustResize|stateHidden</item>
     </style>
 
     <style name="CustomDialogTheme" parent="Widget.Design.BottomSheet.Modal">
@@ -197,6 +199,8 @@
         <item name="android:windowMinWidthMajor">80%</item>
         <item name="android:windowMinWidthMinor">80%</item>
         <item name="dialogCornerRadius">12dp</item>
+
+        <item name="backgroundColor">@color/black</item>
     </style>
 
     <style name="Theme.Liber.NoActionBar">

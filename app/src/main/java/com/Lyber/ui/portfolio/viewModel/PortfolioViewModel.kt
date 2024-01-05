@@ -5,9 +5,11 @@ import com.Lyber.models.AddedAsset
 import com.Lyber.models.AssetBaseData
 import com.Lyber.models.AssetDetailBaseData
 import com.Lyber.models.Balance
+import com.Lyber.models.NetworkDeposit
 import com.Lyber.models.PersonalDataResponse
 import com.Lyber.models.PriceServiceResume
 import com.Lyber.models.Strategy
+import com.Lyber.models.WithdrawAddress
 import com.Lyber.models.*
 import com.Lyber.viewmodels.NetworkViewModel
 
@@ -18,6 +20,12 @@ class PortfolioViewModel : NetworkViewModel() {
         get() = _selectedAsset
         set(value) {
             _selectedAsset = value
+        }
+    private var _withdrawAddress: WithdrawAddress?=null
+    var withdrawAddress
+        get() = _withdrawAddress
+        set(value){
+            _withdrawAddress = value
         }
     private var _selectedAssetPriceResume: PriceServiceResume? = null
     var selectedAssetPriceResume
@@ -31,6 +39,12 @@ class PortfolioViewModel : NetworkViewModel() {
         get() = _selectedAssetDetail
         set(value) {
             _selectedAssetDetail = value
+        }
+    private var _selectedNetworkDeposit: NetworkDeposit? = null
+    var selectedNetworkDeposit
+        get() = _selectedNetworkDeposit
+        set(value) {
+            _selectedNetworkDeposit= value
         }
 
     var selectedBalance : Balance? = null
@@ -192,19 +206,30 @@ class PortfolioViewModel : NetworkViewModel() {
             chooseStrategy(it)
         }
     }
+    fun startKyc(){
+        startKYC()
+    }
 
     fun buildOwnStrategy(strategyName: String) {
         buildOwnStrategy(strategyName, addedAsset)
+    }
+    fun editOwnStrategy(strategyName: String) {
+        editOwnStrategy(strategyName, addedAsset)
     }
 
     fun getBalance(){
         getBalanceApi()
     }
 
+    fun getExportOperations(date: String) {
+        getExportOperation(date)
+    }
 
-    fun forgotPassword(email:String){
-        forgotPass(email)
+
+    fun contactSupport(msg: String) {
+        sendMsgToSupport(msg)
     }
 
     data class ChooseAssets(val asset_id: String, val allocation: Int)
+
 }

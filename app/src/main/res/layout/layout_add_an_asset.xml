@@ -43,7 +43,7 @@
         app:tabMode="auto"
         app:tabSelectedTextColor="@color/purple_500"
         app:tabTextAppearance="@style/tab_text"
-        app:tabTextColor="@color/purple_gray_500" />
+        app:tabTextColor="@color/purple_gray_500"/>
 
     <ImageView
         android:id="@+id/ivProgress"
@@ -73,22 +73,16 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Caption"
         android:visibility="visible" />
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/rvRefresh"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rvAddAsset"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/etSearch"
-        android:layout_marginHorizontal="24dp">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rvAddAsset"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layoutAnimation="@anim/recycler_view_item_animation"
-            tools:itemCount="6"
-            tools:listitem="@layout/item_asset" />
-
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        android:layout_marginHorizontal="24dp"
+        android:nestedScrollingEnabled="true"
+        android:layout_below="@+id/etSearch"
+        android:layoutAnimation="@anim/recycler_view_item_animation"
+        tools:itemCount="6"
+        tools:listitem="@layout/item_asset" />
 
 
 </RelativeLayout>

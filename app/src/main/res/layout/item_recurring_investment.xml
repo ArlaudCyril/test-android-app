@@ -20,7 +20,7 @@
         android:layout_toEndOf="@id/ivInvestment"
         android:textColor="@color/purple_gray_700"
         android:textStyle="bold"
-        tools:text="Intermediate strategy" />
+        tools:text="@string/inter_strategy" />
 
     <TextView
         android:id="@+id/tvInvestmentAmount"
@@ -36,7 +36,7 @@
         android:layout_below="@id/tvInvestmentTitle"
         android:layout_alignStart="@id/tvInvestmentTitle"
         android:textColor="@color/purple_gray_500"
-        tools:text="Weekly" />
+        tools:text="@string/weekly" />
 
     <TextView
         android:id="@+id/tvInvestmentUpcomingPayment"
@@ -44,7 +44,7 @@
         android:layout_below="@id/tvInvestmentFrequency"
         android:layout_alignStart="@id/tvInvestmentFrequency"
         android:textColor="@color/purple_gray_500"
-        tools:text="Upcoming Payment:April 27" />
+        tools:text="@string/upcoming_payment_august_27" />
 
 
 </RelativeLayout>

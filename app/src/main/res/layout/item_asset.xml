@@ -1,84 +1,84 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-
-    <ImageView
-        android:id="@+id/lineChart"
-        android:layout_width="100dp"
-        android:layout_height="40dp"
-        android:layout_marginVertical="20dp"
-        android:adjustViewBounds="false"
-        android:contentDescription="@string/graph_of_currency"
-        android:cropToPadding="false"
-        android:scaleType="centerInside"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_bias="0.408" />
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:paddingVertical="16dp">
 
     <ImageView
         android:id="@+id/ivAsset"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:layout_marginVertical="20dp"
+        android:layout_gravity="center"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:src="@drawable/ic_bitcoin" />
 
-    <TextView
-        android:id="@+id/tvAssetName"
-        style="@style/SubheadMabry"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="0dp"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="20dp"
-        android:layout_toEndOf="@id/ivAsset"
-        android:ellipsize="end"
-        android:maxWidth="100dp"
-        android:maxLines="1"
-        android:textColor="@color/purple_gray_700"
-        android:textStyle="bold"
-        app:layout_constraintStart_toEndOf="@id/ivAsset"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:text="Bitcoin" />
+        android:layout_weight="1"
+        android:layout_gravity="center"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tvAssetNameCode"
-        style="@style/BodyMabry"
-        android:layout_below="@id/tvAssetName"
-        android:layout_marginStart="12dp"
-        android:layout_marginBottom="20dp"
-        android:layout_toEndOf="@id/ivAsset"
-        android:textColor="@color/purple_gray_500"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@id/ivAsset"
-        app:layout_constraintTop_toBottomOf="@+id/tvAssetName"
-        app:layout_constraintVertical_bias="0.0"
-        tools:text="BTC" />
+        <TextView
+            android:id="@+id/tvAssetName"
+            style="@style/SubheadMabry"
+            android:layout_toEndOf="@id/ivAsset"
+            android:ellipsize="end"
+            android:maxWidth="100dp"
+            android:maxLines="1"
+            android:textColor="@color/purple_gray_700"
+            android:textStyle="bold"
+            app:layout_constraintStart_toEndOf="@id/ivAsset"
+            app:layout_constraintTop_toTopOf="parent"
+            android:text="@string/bitcoin" />
+
+        <TextView
+            android:id="@+id/tvAssetNameCode"
+            style="@style/BodyMabry"
+            android:layout_below="@id/tvAssetName"
+            android:layout_toEndOf="@id/ivAsset"
+            android:textColor="@color/purple_gray_500"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toEndOf="@id/ivAsset"
+            app:layout_constraintTop_toBottomOf="@+id/tvAssetName"
+            app:layout_constraintVertical_bias="0.0"
+            android:text="BTC" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+    <ImageView
+        android:id="@+id/lineChart"
+        android:layout_width="100dp"
+        android:layout_height="40dp"
+        android:adjustViewBounds="false"
+        android:contentDescription="@string/graph_of_currency"
+        android:cropToPadding="false"
+        android:scaleType="centerInside"
+        android:layout_gravity="center_vertical"/>
+
 
     <LinearLayout
         android:id="@+id/llAssets"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
+        android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="12dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/ivRightArrow"
-        app:layout_constraintTop_toTopOf="parent">
+        android:layout_gravity="center_vertical">
 
         <TextView
             android:id="@+id/tvAssetValue"
             style="@style/SubheadMabry"
-            android:layout_gravity="center_horizontal"
             android:gravity="end"
+            android:layout_gravity="end"
             android:textColor="@color/purple_gray_700"
             android:textStyle="bold"
-            app:layout_constraintEnd_toStartOf="@id/ivRightArrow"
-            app:layout_constraintStart_toEndOf="@id/lineChart"
-            app:layout_constraintTop_toTopOf="parent"
             tools:text="41 255,74€" />
 
         <TextView
@@ -87,10 +87,6 @@
             android:layout_gravity="end"
             android:gravity="end"
             android:textColor="@color/green_500"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/ivRightArrow"
-            app:layout_constraintStart_toEndOf="@+id/lineChart"
-            app:layout_constraintTop_toBottomOf="@id/tvAssetValue"
             tools:text="-0.39%" />
 
     </LinearLayout>
@@ -101,9 +97,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:src="@drawable/ic_right_arrow_grey"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:layout_gravity="center_vertical" />
 
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.appcompat.widget.LinearLayoutCompat>

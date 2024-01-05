@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/top_curved_layout"
+    android:backgroundTint="@color/red_500"
+    android:orientation="vertical"
+    android:padding="24dp">
+
+
+    <ImageView
+        android:id="@+id/ivTopAction"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:padding="12dp"
+        android:src="@drawable/ic_close"
+        app:tint="@color/purple_gray_00" />
+
+    <TextView
+        style="@style/HeadingStyle"
+        android:layout_gravity="center"
+        android:layout_marginTop="32dp"
+        android:gravity="center"
+        android:text="@string/error"
+        android:textColor="@color/purple_gray_00" />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:orientation="vertical">
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/erroricon" />
+
+        <TextView
+            android:id="@+id/tvInfoOne"
+            style="@style/SubheadMabry"
+            android:layout_width="match_parent"
+            android:layout_gravity="center_horizontal"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:text="@string/somethingWentWrong"
+            android:textColor="@color/purple_gray_00" />
+
+
+    </LinearLayout>
+
+
+    <Button
+        android:id="@+id/btnTryAgain"
+        style="@style/ButtonStyle"
+        android:layout_marginTop="60dp"
+        android:background="@drawable/curved_button"
+        android:backgroundTint="@color/purple_gray_00"
+        android:text="@string/tryAgain"
+        android:textColor="@color/purple_gray_700" />
+
+
+</LinearLayout>

@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.Lyber.R
@@ -47,10 +48,14 @@ class DefaultImagesFragment : BaseFragment<FragmentDefaultPicBinding>() {
     }
 
     private fun itemClicked(imageRes: Int) {
-        requireActivity().replaceFragment(
+        val bundle = Bundle().apply {
+            putInt("profilePic",imageRes)
+        }
+        findNavController().navigate(R.id.selectedProfilePictureFragment,bundle)
+        /*requireActivity().replaceFragment(
             R.id.flSplashActivity,
             SelectedProfilePictureFragment.get(imageRes)
-        )
+        )*/
     }
 
     private class ImageAdapter(private val itemClicked: (Int) -> Unit = { _ -> }) :

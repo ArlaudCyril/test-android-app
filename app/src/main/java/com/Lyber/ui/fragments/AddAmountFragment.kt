@@ -133,7 +133,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                     btnAddFrequency.gone()
                     tvAssetConversion.gone()
                     tvSubTitle.gone()
-                    tvTitle.text = "Euro Deposit"
+                    tvTitle.text = requireContext().getString(R.string.euro_deposit)
 //                    maxValue = App.prefsManager.getBalance().toDouble()
                 }
 
@@ -142,7 +142,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                     btnAddFrequency.visible()
                     tvAssetConversion.gone()
                     tvSubTitle.visible()
-                    tvTitle.text = "Invest in my strat.."
+                    tvTitle.text = requireContext().getString(R.string.invest_in_my_strat)
                     mCurrency = Constants.EURO
                     mConversionCurrency = Constants.EURO
                     valueConversion = 1.0
@@ -159,7 +159,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                     rlCardInfo.gone()
                     ivRepeat.visible()
 
-                    tvAddFrequency.text = "Add a frequency (Optional)"
+                    tvAddFrequency.text = requireContext().getString(R.string.add_a_frequency_optional)
 
                     mCurrency = Constants.EURO
                     mConversionCurrency = viewModel.selectedAsset?.id?.uppercase() ?: ""
@@ -167,7 +167,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
 //                    maxValue = App.prefsManager.getBalance().toDouble()
 
-                    tvTitle.text = "Invest in " + viewModel.selectedAsset?.id?.uppercase()
+                    tvTitle.text = getString(R.string.invest_in) + viewModel.selectedAsset?.id?.uppercase()
                     tvAssetConversion.text =
                         "0.00 ${viewModel.selectedAsset?.id?.uppercase()}"
 
@@ -183,7 +183,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                     tvAssetConversion.visible()
                     rlCardInfo.gone()
 
-                    btnPreviewInvestment.text = "Preview exchange"
+                    btnPreviewInvestment.text = getString(R.string.preview_exchange)
                     llSwapLayout.visible()
 
                     viewModel.exchangeAssetFrom?.let {
@@ -238,19 +238,19 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
                     rlCardInfo.visible()
 
-                    btnPreviewInvestment.text = "Next"
+                    btnPreviewInvestment.text = getString(R.string.next)
 
                     if (viewModel.allMyPortfolio.isNotEmpty()) {
 
                         tvAssetConversion.gone()
-                        tvTitle.text = "Withdraw all my portfolio"
+                        tvTitle.text = getString(R.string.withdraw_all_my_portfolio)
                         etAmount.setTextColor(getColor(requireContext(), R.color.purple_300))
                         ivMax.gone()
                         ivRepeat.gone()
                         rlBalance.gone()
                         groupWithdrawAllPortfolio.gone()
                         etAmount.setText(viewModel.totalPortfolio.commaFormatted + Constants.EURO)
-                        btnPreviewInvestment.text = "Preview withdraw"
+                        btnPreviewInvestment.text = getString(R.string.preview_withdraw)
 
                         payMethodBottomSheet = PayWithModel.getToWithdraw(
                             viewModel.withdrawAsset, ::payMethodSelected, true, true
@@ -274,8 +274,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                        /* maxValue =
                             (viewModel.withdrawAsset?.total_balance!!) * (viewModel.withdrawAsset?.euro_amount!!)
                         TODO */
-                        tvTitle.text =
-                            "Withdraw from ${viewModel.withdrawAsset?.id?.uppercase()}"
+                        tvTitle.text = getString(R.string.withdraw_from)+" ${viewModel.withdrawAsset?.id?.uppercase()}"
                         /*tvSubTitle.text = "${
                             viewModel.withdrawAsset?.total_balance.toString().commaFormatted
                         } " + "${viewModel.withdrawAsset?.id?.uppercase()} Available"
@@ -300,11 +299,11 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
                     mCurrency = Constants.EURO
                     rlCardInfo.gone()
-                    btnPreviewInvestment.text = "Next"
+                    btnPreviewInvestment.text = getString(R.string.next)
                     mConversionCurrency = Constants.EURO
                     valueConversion = 1.0
 //                    maxValue = App.prefsManager.getBalance().toDouble()
-                    tvTitle.text = "Withdraw from Fiat"
+                    tvTitle.text = getString(R.string.withdraw_from)+" Fiat"
 //                    tvSubTitle.text = "${App.prefsManager.getBalance().commaFormatted} Available"
 
                     tvAssetConversion.text = "0.00${Constants.EURO}"
@@ -330,9 +329,9 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                     tvAssetConversion.text = "0.00${viewModel.selectedAsset?.id?.uppercase()}"
 
                     btnPreviewInvestment.text =
-                        "Sell ${viewModel.selectedAsset?.id?.uppercase()}"
+                        "${getString(R.string.sell)} ${viewModel.selectedAsset?.id?.uppercase()}"
                     binding.tvTitle.text =
-                        "Sell ${viewModel.selectedAsset?.fullName?.uppercase()}"
+                        "${getString(R.string.sell)} ${viewModel.selectedAsset?.fullName?.uppercase()}"
                     /*binding.tvSubTitle.text =
                         "${viewModel.selectedAsset?.total_balance.commaFormatted} ${viewModel.selectedAsset?.asset_id?.uppercase()}"
                     binding.tvAssetConversion.visible() TODO*/
@@ -860,11 +859,11 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
                 it.ivAsset.loadCircleCrop(logo)
 
-                it.tvTitle.text = "Successfully sold"
+                it.tvTitle.text = getString(R.string.successfully_sold)
                 it.tvAssetAmount.text = amount.commaFormatted
 
                 it.tvMessage.text =
-                    "You just sold ${assetSymbol.uppercase()} ${amount.commaFormatted}"
+                    "${getString(R.string.you_just_sold)} ${assetSymbol.uppercase()} ${amount.commaFormatted}"
 
                 it.root.setOnClickListener {
                     dismiss()

@@ -1,5 +1,7 @@
 package com.Lyber.ui.fragments.bottomsheetfragments
 
+import android.app.Application
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -20,8 +22,8 @@ import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
-class BottomSheetDialog(
-    private val listenItemClicked: (tag: String, item: String) -> Unit = { _, _ -> },
+open class BottomSheetDialog(
+    private val listenItemClicked: (tag: String, item: DataBottomSheet) -> Unit = { _, _ -> },
     private val selectedAsset: AssetBaseData? = null,
     private val fromDetailScreen: Boolean = false
 ) :
@@ -53,7 +55,7 @@ class BottomSheetDialog(
         savedInstanceState: Bundle?
     ): View {
         return when (tag) {
-            SheetType.COMPLETE_ACCOUNT.title -> {
+            SheetType.COMPLETE_ACCOUNT.title(requireContext()) -> {
                 _binding = BottomSheetPortfolioBinding.inflate(layoutInflater)
                 binding.ivDropDown.setOnClickListener {
                     if (behaviour.state != BottomSheetBehavior.STATE_EXPANDED)
@@ -62,27 +64,41 @@ class BottomSheetDialog(
                 }
                 binding.root
             }
-            SheetType.WITHDRAW_EXCHANGE.title -> {
+
+            SheetType.WITHDRAW_EXCHANGE.title(requireContext()) -> {
                 _withdrawBinding = BottomSheetWithdrawExchangeBinding.inflate(layoutInflater)
 
                 withdrawBinding.root
             }
+
             else -> {
                 bottomSheetAdapter = when (tag) {
-                    SheetType.CRYPTO_EXP.title -> BottomSheetAdapter(this, SheetType.CRYPTO_EXP ,requireActivity())
-                    SheetType.SOURCE_OF_INCOME.title -> BottomSheetAdapter(
+                    SheetType.CRYPTO_EXP.title(requireContext()) -> BottomSheetAdapter(
                         this,
-                        SheetType.SOURCE_OF_INCOME
-                    ,requireActivity())
-                    SheetType.WORK_INDUSTRY.title -> BottomSheetAdapter(
+                        SheetType.CRYPTO_EXP,
+                        requireActivity()
+                    )
+
+                    SheetType.SOURCE_OF_INCOME.title(requireContext()) -> BottomSheetAdapter(
                         this,
-                        SheetType.WORK_INDUSTRY
-                        ,requireActivity())
-                    SheetType.ANNUAL_INCOME.title -> BottomSheetAdapter(
+                        SheetType.SOURCE_OF_INCOME, requireActivity()
+                    )
+
+                    SheetType.WORK_INDUSTRY.title(requireContext()) -> BottomSheetAdapter(
                         this,
-                        SheetType.ANNUAL_INCOME
-                        ,requireActivity())
-                    else -> BottomSheetAdapter(this, SheetType.YOUR_ACTIVITY_ON_LYBER ,requireActivity())
+                        SheetType.WORK_INDUSTRY, requireActivity()
+                    )
+
+                    SheetType.ANNUAL_INCOME.title(requireContext()) -> BottomSheetAdapter(
+                        this,
+                        SheetType.ANNUAL_INCOME, requireActivity()
+                    )
+
+                    else -> BottomSheetAdapter(
+                        this,
+                        SheetType.YOUR_ACTIVITY_ON_LYBER,
+                        requireActivity()
+                    )
                 }
 
                 _recyclerBinding = BottomSheetRecyclerViewBinding.inflate(layoutInflater)
@@ -103,24 +119,38 @@ class BottomSheetDialog(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        if (tag != SheetType.COMPLETE_ACCOUNT.title)
+        if (tag != SheetType.COMPLETE_ACCOUNT.title(requireContext()))
             behaviour.state = BottomSheetBehavior.STATE_EXPANDED
 
         when (tag) {
 
-            SheetType.COMPLETE_ACCOUNT.title -> {}
+            SheetType.COMPLETE_ACCOUNT.title(requireContext()) -> {}
 
-            SheetType.CRYPTO_EXP.title -> bottomSheetAdapter.setList(SheetType.CRYPTO_EXP.getData())
+            SheetType.CRYPTO_EXP.title(requireContext()) -> bottomSheetAdapter.setList(
+                SheetType.CRYPTO_EXP.getData(
+                    requireContext()
+                )
+            )
 
-            SheetType.SOURCE_OF_INCOME.title -> bottomSheetAdapter.setList(SheetType.SOURCE_OF_INCOME.getData())
+            SheetType.SOURCE_OF_INCOME.title(requireContext()) -> bottomSheetAdapter.setList(
+                SheetType.SOURCE_OF_INCOME.getData(requireContext())
+            )
 
-            SheetType.WORK_INDUSTRY.title -> bottomSheetAdapter.setList(SheetType.WORK_INDUSTRY.getData())
+            SheetType.WORK_INDUSTRY.title(requireContext()) -> bottomSheetAdapter.setList(
+                SheetType.WORK_INDUSTRY.getData(
+                    requireContext()
+                )
+            )
 
-            SheetType.ANNUAL_INCOME.title -> bottomSheetAdapter.setList(SheetType.ANNUAL_INCOME.getData())
+            SheetType.ANNUAL_INCOME.title(requireContext()) -> bottomSheetAdapter.setList(
+                SheetType.ANNUAL_INCOME.getData(
+                    requireContext()
+                )
+            )
 
-            SheetType.ADD_AN_ASSET.title -> {}
+            SheetType.ADD_AN_ASSET.title(requireContext()) -> {}
 
-            SheetType.WITHDRAW_EXCHANGE.title -> {
+            SheetType.WITHDRAW_EXCHANGE.title(requireContext()) -> {
 
                 viewModel = getViewModel(requireActivity())
 
@@ -145,7 +175,8 @@ class BottomSheetDialog(
                         }
 
                         withdrawBinding.apply {
-                            tvTitleDepositAsset.text = "Sell ${it.id.uppercase()}"
+                            tvTitleDepositAsset.text =
+                                "${requireContext().getString(R.string.sell)} ${it.id.uppercase()}"
 //                        tvSubTitleDepositAsset.text =
 //                            "Sell ${it.asset_id.uppercase()} from your wallet"
                         }
@@ -155,22 +186,29 @@ class BottomSheetDialog(
                 withdrawBinding.ivTopAction.setOnClickListener { dismiss() }
 
                 val withdraw = View.OnClickListener {
-                    listenItemClicked(tag ?: "", "withdraw")
+                    listenItemClicked(tag ?: "", DataBottomSheet(1,requireContext().getString(R.string.withdraw))
+                        )
                     dismiss()
                 }
 
                 val exchange = View.OnClickListener {
-                    listenItemClicked(tag ?: "", "exchange")
+                    listenItemClicked(tag ?: "",
+                        DataBottomSheet(1,requireContext().getString(R.string.exchange))
+                    )
                     dismiss()
                 }
 
                 val deposit = View.OnClickListener {
-                    listenItemClicked(tag ?: "", "deposit")
+                    listenItemClicked(tag ?: "",
+                        DataBottomSheet(1,requireContext().getString(R.string.deposit))
+                    )
                     dismiss()
                 }
 
                 val depositAsset = View.OnClickListener {
-                    listenItemClicked(tag ?: "", "depositAnAsset")
+                    listenItemClicked(
+                        tag ?: "", DataBottomSheet(1,requireContext().getString(R.string.deposit_an_asset))
+                    )
                     dismiss()
                 }
 
@@ -207,7 +245,9 @@ class BottomSheetDialog(
 
             }
 
-            SheetType.YOUR_ACTIVITY_ON_LYBER.title -> bottomSheetAdapter.setList(SheetType.YOUR_ACTIVITY_ON_LYBER.getData())
+            SheetType.YOUR_ACTIVITY_ON_LYBER.title(requireContext()) -> bottomSheetAdapter.setList(
+                SheetType.YOUR_ACTIVITY_ON_LYBER.getData(requireContext())
+            )
 
         }
     }
@@ -220,151 +260,206 @@ class BottomSheetDialog(
 
     override fun onStart() {
         super.onStart()
-        if (tag == SheetType.COMPLETE_ACCOUNT.title)
+        if (tag == SheetType.COMPLETE_ACCOUNT.title(requireContext()))
             behaviour.peekHeight = 100F.toPx(requireContext())
     }
 
     enum class SheetType {
         COMPLETE_ACCOUNT {
-            override fun getData() = emptyList<DataBottomSheet>()
-            override val title: String
-                get() = "Complete your account"
+            override fun getData(context: Context) = emptyList<DataBottomSheet>()
+            override fun title(context: Context): String {
+                return context.getString(R.string.complete_your_account)
+            }
+//            override val title: String
+//                get() ="Complete your account"
         },
         CRYPTO_EXP {
-            override fun getData() = mutableListOf<DataBottomSheet>().apply {
-                add(DataBottomSheet("I have never invested"))
-                add(DataBottomSheet("< 1 000€"))
-                add(DataBottomSheet("Between 1 000€ and 9 999€"))
-                add(DataBottomSheet("Between 10 000€ and 99 999€"))
-                add(DataBottomSheet("> 100 000€"))
+            override fun getData(context: Context) = mutableListOf<DataBottomSheet>().apply {
+                add(DataBottomSheet(R.string.i_have_never_invested, context.getString(R.string.i_have_never_invested)))
+                add(DataBottomSheet(R.string.less_than_1000, context.getString(R.string.less_than_1000)))
+                add(DataBottomSheet(R.string.between_1000_and_9999, context.getString(R.string.between_1000_and_9999)))
+                add(DataBottomSheet(R.string.between_10000_and_99999, context.getString(R.string.between_10000_and_99999)))
+                add(DataBottomSheet(R.string.greater_than_100000, context.getString(R.string.greater_than_100000)))
             }
 
-            override val title: String
-                get() = "What’s your investment experience with cryptos ?"
+            override fun title(context: Context): String {
+                return context.getString(R.string.bottom_sheet_cypto_exp_title)
+            }
+//            override val title: String
+//                get() = "What’s your investment experience with cryptos ?"
         },
         SOURCE_OF_INCOME {
-            override fun getData() = mutableListOf<DataBottomSheet>().apply {
-                add(DataBottomSheet("Salary"))
-                add(DataBottomSheet("Investments"))
-                add(DataBottomSheet("Savings"))
-                add(DataBottomSheet("Inheritance"))
-                add(DataBottomSheet("Credit/loan"))
-                add(DataBottomSheet("Family or others"))
+            override fun getData(context: Context) = mutableListOf<DataBottomSheet>().apply {
+                add(DataBottomSheet(R.string.salary, context.getString(R.string.salary)))
+                add(DataBottomSheet(R.string.investments, context.getString(R.string.investments)))
+                add(DataBottomSheet(R.string.savings, context.getString(R.string.savings)))
+                add(DataBottomSheet(R.string.inheritance, context.getString(R.string.inheritance)))
+                add(DataBottomSheet(R.string.credit_loan, context.getString(R.string.credit_loan)))
+                add(DataBottomSheet(R.string.family_others, context.getString(R.string.family_others)))
             }
 
-            override val title: String
-                get() = "What’s your source of income ?"
+            override fun title(context: Context): String {
+                return context.getString(R.string.what_your_source_of_income)
+            }
+//            override val title: String
+//                get() = "What’s your source of income ?"
         },
         WORK_INDUSTRY {
-            override fun getData() = mutableListOf<DataBottomSheet>().apply {
-                add(DataBottomSheet("Agriculture, Agribusiness & Natural Resources"))
-                add(DataBottomSheet("Art, Entertainment & Media"))
-                add(DataBottomSheet("Banking, Finance & Insurance"))
-                add(DataBottomSheet("Business Services & Consulting"))
-                add(DataBottomSheet("Construction, Engineering & Public Works"))
-                add(DataBottomSheet("Education, Training & Research"))
-                add(DataBottomSheet("Energy & Environment"))
-                add(DataBottomSheet("Government, Public Administration & Social Services"))
-                add(DataBottomSheet("Health, Medical & Pharmaceutical"))
-                add(DataBottomSheet("Hospitality, Tourism & Catering"))
-                add(DataBottomSheet("IT"))
+            override fun getData(context: Context) = mutableListOf<DataBottomSheet>().apply {
+                add(DataBottomSheet(R.string.agriculture, context.getString(R.string.agriculture)))
+                add(DataBottomSheet(R.string.arts_media, context.getString(R.string.arts_media)))
+                add(DataBottomSheet(R.string.banking_finance_insurance, context.getString(R.string.banking_finance_insurance)))
+                add(DataBottomSheet(R.string.business_services_consulting, context.getString(R.string.business_services_consulting)))
+                add(DataBottomSheet(R.string.building, context.getString(R.string.building)))
+                add(DataBottomSheet(R.string.education_training_research, context.getString(R.string.education_training_research)))
+                add(DataBottomSheet(R.string.energy_environment, context.getString(R.string.energy_environment)))
+                add(
+                    DataBottomSheet(
+                        19,
+                        context.getString(R.string.government_administration_social)
+                    )
+                )
+                add(DataBottomSheet(R.string.health_medical_pharmaceutical, context.getString(R.string.health_medical_pharmaceutical)))
+                add(DataBottomSheet(R.string.hospitality_tourism_catering, context.getString(R.string.hospitality_tourism_catering)))
+                add(DataBottomSheet(R.string.it, context.getString(R.string.it)))
+                add(DataBottomSheet(R.string.manufacturing_mettalurgy, context.getString(R.string.manufacturing_mettalurgy)))
+                add(
+                    DataBottomSheet(
+                        24,
+                        context.getString(R.string.marketing_advertising_public_relations)
+                    )
+                )
+                add(
+                    DataBottomSheet(
+                        25,
+                        context.getString(R.string.real_estate_property_management)
+                    )
+                )
+                add(DataBottomSheet(R.string.retail_ecommerce, context.getString(R.string.retail_ecommerce)))
+                add(DataBottomSheet(R.string.sports_leisure_entertainment, context.getString(R.string.sports_leisure_entertainment)))
+                add(DataBottomSheet(R.string.textile_fashion_apparel, context.getString(R.string.textile_fashion_apparel)))
+                add(DataBottomSheet(R.string.transport_logistics_wholesale, context.getString(R.string.transport_logistics_wholesale)))
             }
 
-            override val title: String
-                get() = "What’s your work industry ?"
+            override fun title(context: Context): String {
+                return context.getString(R.string.whats_your_work_industry)
+            }
+//            override val title: String
+//                get() = "What’s your work industry ?"
         },
         ANNUAL_INCOME {
-            override fun getData() = mutableListOf<DataBottomSheet>().apply {
-                add(DataBottomSheet("Less than 500"))
-                add(DataBottomSheet("500 - 1000"))
-                add(DataBottomSheet("1001-1500"))
-                add(DataBottomSheet("1501-2000"))
-                add(DataBottomSheet("2001-3000"))
-                add(DataBottomSheet("Over3001"))
+            override fun getData(context: Context) = mutableListOf<DataBottomSheet>().apply {
+                add(DataBottomSheet(R.string.less_than_500, context.getString(R.string.less_than_500)))
+                add(DataBottomSheet(R.string.five00_1000, context.getString(R.string.five00_1000)))
+                add(DataBottomSheet(R.string.one001_1500, context.getString(R.string.one001_1500)))
+                add(DataBottomSheet(R.string.one501_2000, context.getString(R.string.one501_2000)))
+                add(DataBottomSheet(R.string.two001_3000, context.getString(R.string.two001_3000)))
+                add(DataBottomSheet(R.string.over_3001, context.getString(R.string.over_3001)))
             }
 
-            override val title: String
-                get() = "What salary range do you fall into ?"
+            override fun title(context: Context): String {
+                return context.getString(R.string.what_salary_range_you_fall_into)
+            }
+//            override val title: String
+//                get() = "What salary range do you fall into ?"
         },
         ADD_AN_ASSET {
-            override fun getData(): List<DataBottomSheet> = emptyList()
-            override val title: String = "Add an Asset"
+            override fun getData(context: Context): List<DataBottomSheet> = emptyList()
+
+            //            override val title: String = "Add an Asset"
+            override fun title(context: Context): String {
+                return context.getString(R.string.add_an_asset)
+            }
         },
         WITHDRAW_EXCHANGE {
-            override fun getData(): List<DataBottomSheet> = emptyList()
-            override val title: String = "Withdraw or exchange"
+            override fun getData(context: Context): List<DataBottomSheet> = emptyList()
+
+            //            override val title: String = "Withdraw or exchange"
+            override fun title(context: Context): String {
+                return context.getString(R.string.withdraw_or_exchange)
+            }
         },
         PERSONAL_ASSETS {
-            override fun getData(): List<DataBottomSheet> = mutableListOf<DataBottomSheet>().apply {
-                add(DataBottomSheet("0-2"))
-                add(DataBottomSheet("3-22"))
-                add(DataBottomSheet("23-128"))
-                add(DataBottomSheet("129-319"))
-                add(DataBottomSheet("320-464"))
-                add(DataBottomSheet("465+"))
-            }
+            override fun getData(context: Context): List<DataBottomSheet> =
+                mutableListOf<DataBottomSheet>().apply {
+                    add(DataBottomSheet(R.string.two_assets, context.getString(R.string.two_assets)))
+                    add(DataBottomSheet(R.string.two2_assets, context.getString(R.string.two2_assets)))
+                    add(DataBottomSheet(R.string.one28_assets, context.getString(R.string.one28_assets)))
+                    add(DataBottomSheet(R.string.three19_assets, context.getString(R.string.three19_assets)))
+                    add(DataBottomSheet(R.string.four64_assets, context.getString(R.string.four64_assets)))
+                    add(DataBottomSheet(R.string.four65_assets, context.getString(R.string.four65_assets)))
+                }
 
-            override val title: String
-                get() = "How many personal asset you have ?"
+            override fun title(context: Context): String {
+                return context.getString(R.string.how_many_personal_asset_you_have)
+            }
+//            override val title: String
+//                get() = "How many personal asset you have ?"
         },
         YOUR_ACTIVITY_ON_LYBER {
-            override fun getData(): List<DataBottomSheet> = mutableListOf<DataBottomSheet>().apply {
-                add(DataBottomSheet("Buy and Sell digital assets"))
-                add(DataBottomSheet("Save money"))
-                add(DataBottomSheet("Store my digital assets"))
-            }
+            override fun getData(context: Context): List<DataBottomSheet> =
+                mutableListOf<DataBottomSheet>().apply {
+                    add(DataBottomSheet(R.string.buy_sell_digital_assets, context.getString(R.string.buy_sell_digital_assets)))
+                    add(DataBottomSheet(R.string.save_money, context.getString(R.string.save_money)))
+                    add(DataBottomSheet(R.string.store_my_digital_assets, context.getString(R.string.store_my_digital_assets)))
+                }
 
-            override val title: String
-            get() = "What do you plan to mainly do?"
+            override fun title(context: Context): String {
+                return "What do you plan to mainly do?"
+            }
+//            override val title: String
+//            get() = "What do you plan to mainly do?"
         };
 
-        abstract fun getData(): List<DataBottomSheet>
-        abstract val title: String
+        abstract fun getData(context: Context): List<DataBottomSheet>
+
+        //        abstract val title: String
+        abstract fun title(context: Context): String
     }
 
 
-/*    private val cryptoExp = mutableListOf<DataBottomSheet>().apply {
-        add(DataBottomSheet("I have never invested"))
-        add(DataBottomSheet("< 1 000€"))
-        add(DataBottomSheet("Between 1 000€ and 9 999€"))
-        add(DataBottomSheet("Between 10 000€ and 99 999€"))
-        add(DataBottomSheet("> 100 000€"))
-    }
+    /*    private val cryptoExp = mutableListOf<DataBottomSheet>().apply {
+            add(DataBottomSheet("I have never invested"))
+            add(DataBottomSheet("< 1 000€"))
+            add(DataBottomSheet("Between 1 000€ and 9 999€"))
+            add(DataBottomSheet("Between 10 000€ and 99 999€"))
+            add(DataBottomSheet("> 100 000€"))
+        }
 
-    private val sourceOfIncome = mutableListOf<DataBottomSheet>().apply {
-        add(DataBottomSheet("Salary"))
-        add(DataBottomSheet("Investments"))
-        add(DataBottomSheet("Savings"))
-        add(DataBottomSheet("Inheritance"))
-        add(DataBottomSheet("Credit/loan"))
-        add(DataBottomSheet("Family or others"))
-    }
+        private val sourceOfIncome = mutableListOf<DataBottomSheet>().apply {
+            add(DataBottomSheet("Salary"))
+            add(DataBottomSheet("Investments"))
+            add(DataBottomSheet("Savings"))
+            add(DataBottomSheet("Inheritance"))
+            add(DataBottomSheet("Credit/loan"))
+            add(DataBottomSheet("Family or others"))
+        }
 
-    private val workIndustry = mutableListOf<DataBottomSheet>().apply {
-        add(DataBottomSheet("Agriculture"))
-        add(DataBottomSheet("Arts & Media"))
-        add(DataBottomSheet("Casinos & games"))
-        add(DataBottomSheet("Building"))
-        add(DataBottomSheet("Defense"))
-        add(DataBottomSheet("Entertainment"))
-        add(DataBottomSheet("Education"))
-        add(DataBottomSheet("Energy"))
-        add(DataBottomSheet("Media & TV"))
-        add(DataBottomSheet("New technologies"))
-    }
+        private val workIndustry = mutableListOf<DataBottomSheet>().apply {
+            add(DataBottomSheet("Agriculture"))
+            add(DataBottomSheet("Arts & Media"))
+            add(DataBottomSheet("Casinos & games"))
+            add(DataBottomSheet("Building"))
+            add(DataBottomSheet("Defense"))
+            add(DataBottomSheet("Entertainment"))
+            add(DataBottomSheet("Education"))
+            add(DataBottomSheet("Energy"))
+            add(DataBottomSheet("Media & TV"))
+            add(DataBottomSheet("New technologies"))
+        }
 
-    private val annualIncomeData = mutableListOf<DataBottomSheet>().apply {
-        add(DataBottomSheet("Less than 800€/month"))
-        add(DataBottomSheet("801 - 1100€/month"))
-        add(DataBottomSheet("1101 - 2000€/month"))
-        add(DataBottomSheet("2001 - 4000€/month"))
-        add(DataBottomSheet("4000 - 10 000€/month"))
-        add(DataBottomSheet("Over 10 001€/month"))
-    }*/
+        private val annualIncomeData = mutableListOf<DataBottomSheet>().apply {
+            add(DataBottomSheet("Less than 800€/month"))
+            add(DataBottomSheet("801 - 1100€/month"))
+            add(DataBottomSheet("1101 - 2000€/month"))
+            add(DataBottomSheet("2001 - 4000€/month"))
+            add(DataBottomSheet("4000 - 10 000€/month"))
+            add(DataBottomSheet("Over 10 001€/month"))
+        }*/
 
 
     override fun itemClicked(item: DataBottomSheet) {
-        listenItemClicked(tag.toString(), item.title)
+        listenItemClicked(tag.toString(), item)
         dismiss()
     }
 

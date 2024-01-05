@@ -4,7 +4,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:fitsSystemWindows="true">
+    android:fitsSystemWindows="true"
+    android:background="@color/white">
 
     <ImageView
         android:id="@+id/ivTopAction"
@@ -39,7 +40,7 @@
                     android:layout_width="match_parent"
                     android:layout_marginHorizontal="24dp"
                     android:layout_marginTop="20dp"
-                    android:text="Crypto address book" />
+                    android:text="@string/crypto_address_book" />
 
                 <TextView
                     style="@style/SubheadMabry"
@@ -79,6 +80,7 @@
                             android:orientation="horizontal">
 
                             <TextView
+                                android:id="@+id/tvDurationText"
                                 style="@style/BodyMabry"
                                 android:gravity="center_vertical"
                                 android:text="@string/security"
@@ -100,14 +102,11 @@
                         android:layout_height="1dp"
                         android:layout_weight="1" />
 
-                    <androidx.appcompat.widget.SwitchCompat
-                        android:id="@+id/switchWhitelisting"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:enabled="true"
-                        android:minHeight="36dp"
-                        android:thumb="@drawable/custom_thumb"
-                        app:track="@drawable/custom_track" />
+               <ImageView
+                   android:layout_width="wrap_content"
+                   android:layout_height="wrap_content"
+                   android:layout_gravity="center"
+                   android:src="@drawable/ic_right_arrow_grey"/>
 
                 </LinearLayout>
             </LinearLayout>
@@ -142,10 +141,12 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/top_curved_layout"
-        android:backgroundTint="@color/purple_gray_50"
         android:fitsSystemWindows="false"
         android:orientation="vertical"
+        android:layout_marginBottom="8dp"
         android:paddingHorizontal="24dp"
         android:paddingTop="24dp"
         android:paddingBottom="48dp"
@@ -158,20 +159,17 @@
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:background="@drawable/curved_button"
-            android:backgroundTint="@color/purple_gray_00"
+            android:backgroundTint="@color/purple_gray_100"
             android:gravity="center"
             android:orientation="horizontal"
             android:paddingVertical="12dp">
 
-            <ImageView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="4dp"
-                android:src="@drawable/ic_add" />
 
             <TextView
                 style="@style/SubheadMabry"
-                android:layout_marginStart="4dp"
+                android:drawableStart="@drawable/ic_add"
+                android:drawablePadding="8dp"
+                android:gravity="center"
                 android:text="@string/add_a_new_address" />
 
         </LinearLayout>

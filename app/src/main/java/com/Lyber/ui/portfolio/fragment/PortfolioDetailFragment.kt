@@ -21,11 +21,14 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.airbnb.lottie.LottieAnimationView
 import com.Lyber.R
 import com.Lyber.databinding.FragmentPortfolioDetailBinding
 import com.Lyber.databinding.LottieViewBinding
 import com.Lyber.models.Balance
 import com.Lyber.models.Duration
+import com.Lyber.ui.activities.BaseActivity
+import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.ui.adapters.BalanceAdapter
 import com.Lyber.ui.adapters.ResourcesAdapter
 import com.Lyber.ui.fragments.AddAmountFragment
@@ -50,7 +53,6 @@ import com.Lyber.utils.CommonMethods.Companion.toMilli
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.utils.ItemOffsetDecoration
-import com.airbnb.lottie.LottieAnimationView
 import com.github.jinatonic.confetti.CommonConfetti
 import com.github.jinatonic.confetti.ConfettiManager
 import com.google.android.material.tabs.TabLayout
@@ -69,7 +71,7 @@ import java.util.TimerTask
 
 class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
     View.OnClickListener, PortfolioThreeDotsDismissListener {
-    private var confetti: ConfettiManager? = null
+    private var confetti: ConfettiManager?=null
     private var dialog: Dialog? = null
 
     /* adapters */
@@ -110,7 +112,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         /* initializing adapters for recycler views */
         adapterBalance = BalanceAdapter()
         resourcesAdapter = ResourcesAdapter()
-        assetBreakdownAdapter = BalanceAdapter(isAssetBreakdown = true)
+        assetBreakdownAdapter = BalanceAdapter()
 
         binding.apply {
 
@@ -122,7 +124,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 it.addItemDecoration(ItemOffsetDecoration(8))
             }
 
-            setData()
+           setData()
 
             viewModel.selectedAsset?.id?.let { viewModel.getAssetDetail(it) }
 
@@ -134,7 +136,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 ContextCompat.getDrawable(requireContext(), R.drawable.curved_button)
             includedMyAsset.root.setBackgroundTint(R.color.purple_gray_50)
 
-            tvInvestMoney.text = "Invest in ${viewModel.selectedAsset?.id?.uppercase()}"
+            tvInvestMoney.text = "${getString(R.string.invest_in)} ${viewModel.selectedAsset?.id?.uppercase()}"
             tvAssetName.text = "${viewModel.selectedAsset?.fullName}"
             tvAssetName.typeface = context?.resources?.getFont(R.font.mabry_pro_medium)
 
@@ -187,7 +189,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
         binding.lineChart.timeSeries = getLineData(viewModel.totalPortfolio)
 
-        binding.tvInvestMoney.text = "Invest Money"
+        binding.tvInvestMoney.text = getString(R.string.invest_money)
         binding.tvValuePortfolioAndAssetPrice.text =
             "${viewModel.totalPortfolio.commaFormatted}${Constants.EURO}"
 
@@ -221,13 +223,13 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
     private fun addObservers() {
         viewModel.exchangeResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                Handler().postDelayed({
-                    viewModel.getBalance()
-                }, 4000)
+              Handler().postDelayed({
+                  viewModel.getBalance()
+              },4000)
 
             }
         }
-        viewModel.balanceResponse.observe(viewLifecycleOwner) {
+        viewModel.balanceResponse.observe(viewLifecycleOwner){
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 val balanceDataDict = it.data
                 val balances = ArrayList<Balance>()
@@ -240,10 +242,10 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 showLottieProgressDialog(requireActivity(), Constants.LOADING_SUCCESS)
                 Handler().postDelayed({
                     dismissProgressDialog()
-                    if (confetti != null) {
+                    if (confetti!=null){
                         confetti!!.terminate()
                     }
-                    setData()
+                        setData()
                 }, 2000)
             }
         }
@@ -295,10 +297,9 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
     private fun setData() {
         binding.apply {
             includedMyAsset.let {
-                val balance =
-                    com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.selectedAsset!!.id }
+                val balance = com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.selectedAsset!!.id }
                 viewModel.selectedBalance = balance
-                val priceCoin = balance?.balanceData?.euroBalance?.toDouble()
+                val priceCoin =balance?.balanceData?.euroBalance?.toDouble()
                     ?.div(balance.balanceData.balance.toDouble() ?: 1.0)
                 it.tvAssetAmount.text =
                     balance?.balanceData?.euroBalance?.currencyFormatted
@@ -359,16 +360,14 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
             "withdraw" -> {
                 viewModel.selectedOption = Constants.USING_WITHDRAW
-                if (viewModel.screenCount == 0) {
-                    requireActivity().replaceFragment(
-                        R.id.flSplashActivity, SwapWithdrawFromFragment(), topBottom = true
-                    )
-                } else {
-                    viewModel.withdrawAsset = viewModel.selectedAsset
-                    requireActivity().replaceFragment(
-                        R.id.flSplashActivity, AddAmountFragment(), topBottom = true
-                    )
-                }
+                val currency = viewModel.selectedAsset
+                //if (currency!!.isWithdrawalActive){
+                    val bundle = Bundle()
+                    bundle.putString(Constants.ID, currency!!.id)
+                    findNavController().navigate(R.id.withdrawlNetworksFragment, bundle)
+              //  }else{
+                 //   getString(R.string.withdrawal_is_deactivated_on_this_asset).showToast(requireActivity())
+              //  }
             }
 
             "deposit" -> {
@@ -418,7 +417,12 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 llThreeDot -> {
                     val portfolioThreeDotsFragment = PortfolioThreeDots(::menuOptionSelected)
                     portfolioThreeDotsFragment.dismissListener = this@PortfolioDetailFragment
-                    portfolioThreeDotsFragment.typePopUp = "AssetPopUp"
+                    if (CommonMethods.getBalance(viewModel.selectedAsset!!.id!!) != null){
+                        portfolioThreeDotsFragment.typePopUp = "AssetPopUpWithdraw"
+                    }else{
+                        portfolioThreeDotsFragment.typePopUp = "AssetPopUpWithdraw"
+                    }
+
                     portfolioThreeDotsFragment.show(
                         childFragmentManager,
                         "PortfolioThreeDots"

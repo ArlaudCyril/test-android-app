@@ -199,12 +199,14 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         viewModel.verifyPhoneResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 App.prefsManager.setPhone(viewModel.mobileNumber)
+                App.prefsManager.accountCreationSteps= Constants.Account_CREATION_STEP_PHONE
+                App.prefsManager.portfolioCompletionStep = Constants.ACCOUNT_CREATING
                 CommonMethods.dismissProgressDialog()
 
                 val bundle = Bundle().apply {
                     putBoolean(Constants.FOR_LOGIN, false)
                 }
-                findNavController().navigate(R.id.createPinFragment,bundle)
+                findNavController().navigate(R.id.emailAddressFragment,bundle)
             }
         }
     }

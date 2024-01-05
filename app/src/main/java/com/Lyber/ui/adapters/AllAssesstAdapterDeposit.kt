@@ -8,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.Lyber.R
 import com.Lyber.databinding.ItemAllAssestBinding
 import com.Lyber.models.AssetBaseData
+import com.Lyber.ui.activities.BaseActivity
 import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
 
 class AllAssesstAdapterDeposit (

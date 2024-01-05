@@ -61,7 +61,7 @@ dependencies {
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
 
     implementation 'androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1'
-
+    implementation 'com.github.florent37:singledateandtimepicker:2.2.7'
     /* Retrofit */
     implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofit_version"
     implementation "com.squareup.retrofit2:converter-gson:$rootProject.retrofit_version"

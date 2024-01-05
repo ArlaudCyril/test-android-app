@@ -1,24 +1,36 @@
 package com.Lyber.ui.fragments
 
+import android.content.Context
+import android.content.res.Configuration
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import com.Lyber.R
 import com.Lyber.databinding.FragmentInvenstmentExperienceBinding
+import com.Lyber.models.DataBottomSheet
+import com.Lyber.models.InvestmentExperienceLocal
 import com.Lyber.ui.fragments.bottomsheetfragments.BottomSheetDialog
+import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.viewmodels.PersonalDataViewModel
+import java.util.Locale
 
 class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceBinding>(),
     View.OnClickListener {
 
     /* input fields */
     private val cryptoExp: String get() = binding.etCryptoExp.text.trim().toString()
+    private var cryptoExpID: Int = 0
     private val sourceIncome: String get() = binding.etSourceIncome.text.trim().toString()
+    private var sourceIncomeID: Int = 0
     private val workIndustry: String get() = binding.etChooseIndustry.text.trim().toString()
+    private var workIndustryID: Int = 0
 
     private var annualIncome: String = ""
+    private var annualIncomeID: Int = 0
     private var personalAssets: String = ""
+    private var personalAssetsID: Int = 0
 
     private lateinit var viewModel: PersonalDataViewModel
     override fun bind() = FragmentInvenstmentExperienceBinding.inflate(layoutInflater)
@@ -26,13 +38,8 @@ class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceB
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (requireParentFragment() as FillDetailFragment).position = 4
-        (requireParentFragment() as FillDetailFragment).setUpViews(4)
-
-//        if (App.prefsManager.user?.personal_info_step == Constants.ADDRESS)
-//            (requireParentFragment() as FillDetailFragment).binding.ivTopAction.setBackgroundResource(
-//                R.drawable.ic_close
-//            )
+        (requireParentFragment() as FillDetailFragment).position = 2
+        (requireParentFragment() as FillDetailFragment).setUpViews(2)
 
         viewModel = CommonMethods.getViewModel(requireParentFragment())
 
@@ -44,44 +51,59 @@ class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceB
             etYourActivity.setOnClickListener(this@InvestmentExperienceFragment)
         }
 
+
         binding.etCryptoExp.text.clear()
         binding.etChooseIndustry.text.clear()
         binding.etAnnualIncome.text.clear()
         binding.etSourceIncome.text.clear()
         binding.etYourActivity.text.clear()
+        if (viewModel.isReview) {
+            App.prefsManager.investmentExperienceLocal.let {
+                binding.apply {
+                    etCryptoExp.setText(it!!.investmentExperience)
+                    etSourceIncome.setText(it.sourceOfIncome)
+                    etChooseIndustry.setText(it.workIndustry)
+                    annualIncome = it.annualIncome!!
+                    if (annualIncome == "<500>") binding.etAnnualIncome.setText("Less then 500k€/month")
+                    else binding.etAnnualIncome.setText("${annualIncome}k€/month")
+                    personalAssets = it.activity
+                    etYourActivity.setText(it.activity)
 
-        /*personalDataViewModel.personalData?.let {
 
-            annualIncome = it.incomeRange
-            personalAssets = it.personalAssets
-
-//            binding.etCryptoExp.setText(it.investmentExp.cryptoExp)
-//            binding.etChooseIndustry.setText(it.investmentExp.workIndustry)
-            binding.etAnnualIncome.setText("${annualIncome}k€/month")
-//            binding.etSourceIncome.setText(it.investmentExp.sourceOfIncome)
-            binding.etPersonalAssets.setText("$personalAssets assets")
-        }*/
+                }
+            }
+        }
 
     }
 
-    private fun handleClickEvent(tag: String, itemSelected: String) {
+    private fun handleClickEvent(tag: String, itemSelected: DataBottomSheet) {
         when (tag) {
-            BottomSheetDialog.SheetType.CRYPTO_EXP.title ->
-                binding.etCryptoExp.setText(itemSelected)
-
-            BottomSheetDialog.SheetType.SOURCE_OF_INCOME.title ->
-                binding.etSourceIncome.setText(itemSelected)
-
-            BottomSheetDialog.SheetType.WORK_INDUSTRY.title ->
-                binding.etChooseIndustry.setText(itemSelected)
-
-            BottomSheetDialog.SheetType.ANNUAL_INCOME.title -> {
-                annualIncome = itemSelected
-                binding.etAnnualIncome.setText("${itemSelected}k€/month")
+            BottomSheetDialog.SheetType.CRYPTO_EXP.title(requireContext()) -> {
+                binding.etCryptoExp.setText(itemSelected.title)
+                cryptoExpID = itemSelected.id
             }
+
+            BottomSheetDialog.SheetType.SOURCE_OF_INCOME.title(requireContext()) -> {
+                binding.etSourceIncome.setText(itemSelected.title)
+                sourceIncomeID = itemSelected.id
+            }
+
+            BottomSheetDialog.SheetType.WORK_INDUSTRY.title(requireContext()) -> {
+                binding.etChooseIndustry.setText(itemSelected.title)
+                workIndustryID = itemSelected.id
+            }
+
+            BottomSheetDialog.SheetType.ANNUAL_INCOME.title(requireContext()) -> {
+                annualIncome =
+                    if (itemSelected.title == getString(R.string.less_than_500)) "<500" else itemSelected.title
+                binding.etAnnualIncome.setText("${itemSelected.title}k€/${getString(R.string.month)}")
+                annualIncomeID = itemSelected.id
+            }
+
             else -> {
-                personalAssets = itemSelected
-                binding.etYourActivity.setText("$itemSelected")
+                personalAssets = itemSelected.title
+                binding.etYourActivity.setText("${itemSelected.title}")
+                personalAssetsID = itemSelected.id
             }
         }
     }
@@ -93,21 +115,52 @@ class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceB
             cryptoExp.isEmpty() -> getString(R.string.please_tell_us_your_investment_experience_with_crypto).showToast(
                 requireContext()
             )
+
             sourceIncome.isEmpty() -> getString(R.string.please_tell_us_your_source_of_income).showToast(
                 requireContext()
             )
+
             workIndustry.isEmpty() -> getString(R.string.please_tell_us_which_work_industry_your_are_working).showToast(
                 requireContext()
             )
-            annualIncome.isEmpty() -> getString(R.string.please_tell_us_your_annual_income).showToast(requireContext())
-           personalAssets.isEmpty() -> {
+
+            annualIncome.isEmpty() -> getString(R.string.please_tell_us_your_annual_income).showToast(
+                requireContext()
+            )
+
+            personalAssets.isEmpty() -> {
                 binding.scrollView.scrollTo(0, binding.root.bottom)
-               getString(R.string.please_tell_us_what_do_you_plan_to_mainly_do).showToast(
+                getString(R.string.please_tell_us_what_do_you_plan_to_mainly_do).showToast(
                     requireContext()
                 )
             }
-            else -> {
 
+            else -> {
+//                var tx = requireContext().getLocaleStringResource(Locale("en"), cryptoExpID)
+                val investmentExperienceLocal = InvestmentExperienceLocal(
+                    investmentExperience = requireContext().getLocaleStringResource(
+                        Locale("en"),
+                        cryptoExpID
+                    ),
+                    sourceOfIncome = requireContext().getLocaleStringResource(
+                        Locale("en"),
+                        sourceIncomeID
+                    ),
+                    workIndustry = requireContext().getLocaleStringResource(
+                        Locale("en"),
+                        workIndustryID
+                    ),
+                    annualIncome = requireContext().getLocaleStringResource(
+                        Locale("en"),
+                        annualIncomeID
+                    ),
+                    activity = requireContext().getLocaleStringResource(
+                        Locale("en"),
+                        personalAssetsID
+                    )
+                )
+                Log.d("data", "$investmentExperienceLocal")
+                App.prefsManager.investmentExperienceLocal = investmentExperienceLocal
                 viewModel.let {
                     it.cryptoExp = cryptoExp
                     it.sourceOfIncome = sourceIncome
@@ -121,37 +174,55 @@ class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceB
         return false
     }
 
+    fun Context.getLocaleStringResource(
+        requestedLocale: Locale?,
+        resourceId: Int,
+    ): String {
+        val result: String
+        val config =
+            Configuration(resources.configuration)
+        config.setLocale(requestedLocale)
+               result = createConfigurationContext(config).getText(resourceId).toString()
+        if(App.prefsManager.getLanguage().isNotEmpty())
+            config.setLocale(Locale(App.prefsManager.getLanguage()))
+        return result
+    }
+
     override fun onClick(v: View?) {
         binding.apply {
             when (v!!) {
                 etAnnualIncome -> {
                     BottomSheetDialog(::handleClickEvent).show(
                         requireActivity().supportFragmentManager,
-                        BottomSheetDialog.SheetType.ANNUAL_INCOME.title
+                        BottomSheetDialog.SheetType.ANNUAL_INCOME.title(requireContext())
                     )
                 }
+
                 etChooseIndustry -> {
                     BottomSheetDialog(::handleClickEvent).show(
                         requireActivity().supportFragmentManager,
-                        BottomSheetDialog.SheetType.WORK_INDUSTRY.title
+                        BottomSheetDialog.SheetType.WORK_INDUSTRY.title(requireContext())
                     )
                 }
+
                 etCryptoExp -> {
                     BottomSheetDialog(::handleClickEvent).show(
                         requireActivity().supportFragmentManager,
-                        BottomSheetDialog.SheetType.CRYPTO_EXP.title
+                        BottomSheetDialog.SheetType.CRYPTO_EXP.title(requireContext())
                     )
                 }
+
                 etSourceIncome -> {
                     BottomSheetDialog(::handleClickEvent).show(
                         requireActivity().supportFragmentManager,
-                        BottomSheetDialog.SheetType.SOURCE_OF_INCOME.title
+                        BottomSheetDialog.SheetType.SOURCE_OF_INCOME.title(requireContext())
                     )
                 }
+
                 etYourActivity -> {
                     BottomSheetDialog(::handleClickEvent).show(
                         requireActivity().supportFragmentManager,
-                        BottomSheetDialog.SheetType.YOUR_ACTIVITY_ON_LYBER.title
+                        BottomSheetDialog.SheetType.YOUR_ACTIVITY_ON_LYBER.title(requireContext())
                     )
                 }
             }
