@@ -59,8 +59,9 @@ class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
         else   if (viewModel.selectedOption != "" && viewModel.selectedOption == Constants.EXPORT_DONE) {
             viewModel.selectedOption = ""
         } else{
-            requireActivity().clearBackStack()
-            findNavController().navigate(R.id.portfolioHomeFragment)
+//            requireActivity().clearBackStack()
+//            findNavController().navigate(R.id.portfolioHomeFragment)
+            findNavController().popBackStack(R.id.portfolioHomeFragment,false)
         }
     }
 
