@@ -35,6 +35,9 @@ class EmailVerificationBottomSheet () :
         setUpView()
         this.binding.etCodeOne.requestFocus()
         binding.etCodeOne.requestKeyboard()
+        binding.btnCancel.setOnClickListener {
+            dismiss()
+        }
 
     }
 

@@ -34,7 +34,7 @@ class CodeScannerFragment : BaseFragment<FragmentCodeScannerBinding>() {
         checkPermissions()
 
         binding.ivTopAction.setOnClickListener {
-            requireActivity().onBackPressed()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
         binding.scannerView.setOnClickListener {
             codeScanner.startPreview()
@@ -59,7 +59,7 @@ class CodeScannerFragment : BaseFragment<FragmentCodeScannerBinding>() {
                 requireActivity().sendBroadcast(Intent(SCAN_COMPLETE).apply {
                     putExtra(SCANNED_ADDRESS, it.text.toString())
                 })
-                requireActivity().onBackPressed()
+                requireActivity().onBackPressedDispatcher.onBackPressed()
 
             }
         }

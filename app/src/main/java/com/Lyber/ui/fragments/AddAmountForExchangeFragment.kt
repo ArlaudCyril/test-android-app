@@ -13,7 +13,6 @@ import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.FragmentAddAmountBinding
 import com.Lyber.network.RestClient
-import com.Lyber.ui.activities.BaseActivity
 import com.Lyber.ui.fragments.bottomsheetfragments.FrequencyModel
 import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
@@ -137,12 +136,12 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
             llSwapLayout.visible()
             val balance = com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
             mCurrency = " "+balance!!.id.uppercase()
-            tvTitle.text = "Exchange ${balance.id.uppercase()}"
+            tvTitle.text = "${requireContext().getString(R.string.exchange)} ${balance.id.uppercase()}"
             val priceCoin =balance.balanceData.euroBalance.toDouble()
                 .div(balance.balanceData.balance.toDouble())
             tvSubTitle.text = "${
                 balance.balanceData.balance.formattedAsset(priceCoin, RoundingMode.DOWN)
-            } ${balance.id.uppercase()} Available"
+            } ${balance.id.uppercase()} ${requireContext().getString(R.string.available)}"
             val currency = com.Lyber.ui.activities.BaseActivity.assets.find { it1 -> it1.id ==balance.id }
             ivAssetSwapFrom.loadCircleCrop(currency!!.imageUrl)
             tvSwapAssetFrom.text = balance.id.uppercase()

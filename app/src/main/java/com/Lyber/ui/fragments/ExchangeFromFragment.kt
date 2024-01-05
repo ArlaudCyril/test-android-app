@@ -60,7 +60,7 @@ class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnCli
 
 
         /* recycler view */
-        adapter = BalanceAdapter(::itemClicked)
+        adapter = BalanceAdapter(false,::itemClicked)
         layoutManager = LinearLayoutManager(requireContext())
         binding.rvRecyclerView.let {
             it.adapter = adapter

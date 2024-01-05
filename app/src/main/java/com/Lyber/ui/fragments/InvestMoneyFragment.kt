@@ -32,10 +32,10 @@ class InvestMoneyFragment : BaseFragment<FragmentInvestMoneyBinding>() {
                 btnInvestUsingStrategy.visible()
                 btnPickAnotherStrategy.visible()
 
-                topText = it.status ?: ""
-                yeild = it.yield.toString()
-                risk = it.risk
-                allocationView.setAssetsList(it.investment_strategy_assets)
+                topText = it.name ?: ""
+                yeild = it.expectedYield.toString()
+                risk = it.risk!!
+                allocationView.setAssetsList(it.bundle)
 
             }
 

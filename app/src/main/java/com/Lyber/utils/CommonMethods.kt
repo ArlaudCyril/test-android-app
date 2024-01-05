@@ -2,6 +2,7 @@ package com.Lyber.utils
 
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Dialog
 import android.content.ContentResolver
 import android.content.Context
@@ -14,6 +15,7 @@ import android.graphics.drawable.Drawable
 import android.graphics.drawable.PictureDrawable
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
+import android.os.Build
 import android.os.Environment
 import android.os.Looper
 import android.provider.Settings
@@ -24,6 +26,7 @@ import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.RelativeSizeSpan
+import android.util.Base64
 import android.util.Log
 import android.util.TypedValue
 import android.view.*
@@ -33,6 +36,7 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK
 import androidx.biometric.BiometricPrompt
@@ -46,9 +50,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
-import com.airbnb.lottie.LottieAnimationView
 import com.Lyber.R
-import com.Lyber.databinding.LottieViewBinding
 import com.Lyber.databinding.ProgressBarBinding
 import com.Lyber.models.AssetBaseData
 import com.Lyber.models.Balance
@@ -68,10 +70,16 @@ import okhttp3.ResponseBody
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.lang.NumberFormatException
 import java.math.RoundingMode
+import java.text.DateFormat
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.Period
+import java.time.YearMonth
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.absoluteValue
@@ -93,6 +101,14 @@ class CommonMethods {
             }
             return false
         }
+        @JvmStatic
+        fun getScreenWidth(activity: Context?): Int {
+            val w = activity!!.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+            val size = Point()
+            w.defaultDisplay.getSize(size)
+            return size.x
+        }
+
 
         fun showProgressDialog(context: Context) {
 
@@ -119,30 +135,19 @@ class CommonMethods {
             }
 
         }
-        fun showLottieProgressDialog(context: Context) {
-
-            if (dialog == null) {
-                dialog = Dialog(context)
-                dialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                dialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                dialog!!.window!!.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-                dialog!!.window!!.setDimAmount(0.2F)
-                dialog!!.setCancelable(false)
-                dialog!!.setContentView(LottieViewBinding.inflate(LayoutInflater.from(context)).root)
-            }
+        fun String.toFormat(format: String,convertFormat:String): String {
             try {
-                dialog?.findViewById<LottieAnimationView>(R.id.animationView)?.
-                    setMinAndMaxProgress(0f,0.5f)
-                dialog!!.show()
-            } catch (e: WindowManager.BadTokenException) {
-                Log.d("Exception", "showProgressDialog: ${e.message}")
-                dialog?.dismiss()
-                dialog = null
-                showProgressDialog(context)
-            } catch (e: Exception) {
-                Log.d("Exception", "showProgressDialog: ${e.message}")
-            }
+                var result = ""
+                val formatter: DateFormat = SimpleDateFormat(format,Locale.getDefault())
+                formatter.timeZone = TimeZone.getTimeZone("UTC")
+                val outputFormatter: DateFormat = SimpleDateFormat(convertFormat,Locale.getDefault())
+                outputFormatter.timeZone = TimeZone.getDefault()
+                formatter.parse(this)?.let { result = outputFormatter.format(it) }
 
+                return result
+            }catch (e:Exception){
+                return this
+            }
         }
         fun dismissProgressDialog() {
             dialog?.let {
@@ -195,7 +200,15 @@ class CommonMethods {
         }
 
         fun String.roundFloat(): String {
-            return String.format("%.2f", this.toFloat())
+            try {
+                var value=this
+                if(value.contains(","))
+                    value=this.replace(",","")
+                return String.format(Locale.US,"%.2f", value.toFloat())
+            }catch (ex:NumberFormatException){
+                return ""
+            }
+
         }
 
         fun isBiometricReady(context: Context) =
@@ -358,7 +371,7 @@ class CommonMethods {
             if (errorRes?.error == "UNAUTHORIZED" || errorRes?.error == "Unauthorized") {
 
                 prefsManager.logout()
-                val intent = Intent(context, com.Lyber.ui.activities.SplashActivity::class.java).apply {
+                val intent = Intent(context, SplashActivity::class.java).apply {
                     putExtra(Constants.IS_LOGOUT, true).flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or
                             Intent.FLAG_ACTIVITY_CLEAR_TASK or
                             Intent.FLAG_ACTIVITY_NEW_TASK
@@ -584,6 +597,13 @@ class CommonMethods {
             ) == PackageManager.PERMISSION_GRANTED
         }
 
+        fun Activity.checkPermission(permission: String): Boolean {
+            return ContextCompat.checkSelfPermission(
+                this,
+                permission
+            ) == PackageManager.PERMISSION_GRANTED
+        }
+
 
         fun List<View>.gone() {
             forEach { it.gone() }
@@ -760,12 +780,19 @@ class CommonMethods {
 
         private fun Number.pointFormatted(): String {
             return when (this) {
-                is Float, is Double -> String.format(Locale.US,"%,.2f", this)
-                is Long, is Int -> String.format(Locale.US,"%,d", this)
+                is Float, is Double -> String.format("%,.2f", this)
+                is Long, is Int -> String.format("%,d", this)
                 else -> "$this"
             }
         }
 
+//        val <T> T.commaFormatted: String
+//            get() = when (this) {
+//                is Number -> this.commaFormatted
+//                is String -> toDoubleOrNull().commaFormatted
+//                is Char -> this.toString()
+//                else -> "0"
+//            }
         val <T> T.commaFormatted: String
             get() = when (this) {
                 is Number -> String.format(Locale.US, "%,d", this.toLong())
@@ -773,7 +800,6 @@ class CommonMethods {
                 is Char -> this.toString()
                 else -> "0"
             }
-
         private val Number.commaFormatted: String
             get() = when (this) {
 
@@ -783,16 +809,16 @@ class CommonMethods {
                         val split = toString().split(".")[1]
                         if (split.toFloat() > 0)
                             when (split.length) {
-                                1 -> String.format(Locale.US,"%,.1f", this)
-                                else -> String.format(Locale.US,"%,.2f", this)
+                                1 -> String.format("%,.1f", this)
+                                else -> String.format("%,.2f", this)
                             }
-                        else String.format(Locale.US,"%,d", toString().split(".")[0].toInt()) //+ ".00"
+                        else String.format("%,d", toString().split(".")[0].toInt()) //+ ".00"
 
-                    } else String.format(Locale.US,"%,2f", this) //+ ".00"
+                    } else String.format("%,2f", this) //+ ".00"
 
                 }
 
-                is Long, is Int -> String.format(Locale.US,"%,d", this) //+ ".00"
+                is Long, is Int -> String.format("%,d", this) //+ ".00"
 
                 else -> toString()
 
@@ -866,34 +892,35 @@ class CommonMethods {
                 }
             }
 
+
         fun String.formattedAsset(price: Double?, rounding : RoundingMode): String {
             var priceFinal = price
             if (this == "" || priceFinal == null || priceFinal == 0.0 || priceFinal.isNaN()) {
                 priceFinal= 1.026
-            }
+             }
 
-            val formatter = DecimalFormat()
+             val formatter = DecimalFormat()
 
-            // Pour trouver la précision, ici X
-            // Prix * 10e-X >= 0.01 (centimes)
-            // => X >= -log(0,01/Prix)
-            val precision = ceil(-log10(0.01 / priceFinal)).toInt()
-            if (precision > 0) {
-                formatter.maximumFractionDigits = precision
-                formatter.minimumFractionDigits = precision
-            } else {
-                formatter.maximumFractionDigits = 0
-                formatter.minimumFractionDigits = 0
-            }
+             // Pour trouver la précision, ici X
+             // Prix * 10e-X >= 0.01 (centimes)
+             // => X >= -log(0,01/Prix)
+             val precision = ceil(-log10(0.01 / priceFinal)).toInt()
+             if (precision > 0) {
+                 formatter.maximumFractionDigits = precision
+                 formatter.minimumFractionDigits = precision
+             } else {
+                 formatter.maximumFractionDigits = 0
+                 formatter.minimumFractionDigits = 0
+             }
 
-            formatter.roundingMode = rounding
+             formatter.roundingMode = rounding
 
             val symbols = DecimalFormatSymbols(Locale.US)
             formatter.decimalFormatSymbols = symbols
-            val valueFormatted = formatter.format(this.toDouble() ?: 0.0)
+             val valueFormatted = formatter.format(this.toDouble() ?: 0.0)
 
-            return valueFormatted.toString()
-        }
+             return valueFormatted.toString()
+         }
 
 
 
@@ -1145,13 +1172,7 @@ class CommonMethods {
 
         val ImageView.setProfile: Unit
             get() = kotlin.run {
-//                if (prefsManager.haveDefaultImage) {
-//                    updatePadding(8.px, 8.px, 8.px, 8.px)
-//                    setImageResource(Constants.defaults[prefsManager.defaultImage])
-//                } else if (!prefsManager.user?.profile_pic.isNullOrEmpty()) {
-//                    updatePadding(2.px, 2.px, 2.px, 2.px)
-//                    loadImage(prefsManager.user?.profile_pic ?: "")
-//                } else setImageResource(R.drawable.ic_profile)
+                setImageResource(Constants.defaults[prefsManager.defaultImage])
             }
 
         val List<List<Double>>.lineData: MutableList<Float>
@@ -1195,7 +1216,9 @@ class CommonMethods {
 
             return true
         }
-
+       fun String.addressMatched(format :String):Boolean{
+            return this.matches(format.toRegex())
+        }
         fun String.checkFormat(type: String): Boolean {
 
             return when (type) {
@@ -1294,19 +1317,97 @@ class CommonMethods {
         }
         fun getAsset(id: String): AssetBaseData
         {
-            return com.Lyber.ui.activities.BaseActivity.assets.first { it.id == id }
+            return BaseActivity.assets.first { it.id == id }
         }
         fun getBalance(id: String): Balance?
         {
-            return com.Lyber.ui.activities.BaseActivity.balances.firstOrNull { it.id == id }
+            return BaseActivity.balances.firstOrNull { it.id == id }
         }
 
-        fun isValidPassword(password: String): Boolean {
-            val passwordRegex = Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@=#\$%^&*(),.?\":{}|<>])(?=\\S+\$).{10,}\$")
-            return passwordRegex.matches(password)
-        }
+        @RequiresApi(Build.VERSION_CODES.O)
+        fun getMonthsAndYearsBetweenWithApi26(startDate: String, endDate: String): List<String> {
+            val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+            val startDateTime = LocalDate.parse(startDate, formatter)
+            val endDateTime = LocalDate.parse(endDate, formatter)
 
+
+
+
+            val period = Period.between(startDateTime, endDateTime)
+            val months = period.toTotalMonths().toInt()
+
+            val days = period.days
+
+            val result = mutableListOf<String>()
+
+            var currentDate = startDateTime
+            for (i in 0..days) {
+                result.add("${currentDate.month.toString().lowercase().replaceFirstChar { it.uppercase() }} ${currentDate.year}")
+                currentDate = currentDate.plusDays(1)
+            }
+
+            return result.distinct()
+        }
+        fun getMonthsAndYearsBetween(startDate: String, endDate: String): List<String> {
+            val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+            val startDateTime = Calendar.getInstance()
+            startDateTime.time = sdf.parse(startDate) ?: Date()
+
+            val endDateTime = Calendar.getInstance()
+            endDateTime.time = sdf.parse(endDate) ?: Date()
+
+            val result = mutableListOf<String>()
+
+            while (startDateTime.before(endDateTime) || startDateTime == endDateTime) {
+                result.add(
+                    "${startDateTime.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()).lowercase().replaceFirstChar { it.uppercase() }} ${startDateTime.get(Calendar.YEAR)}"
+                )
+                startDateTime.add(Calendar.MONTH, 1)
+            }
+            return result
+        }
+        fun getCurrentDateTime(): String {
+            val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
+            sdf.timeZone = TimeZone.getTimeZone("UTC") // Set the time zone to UTC to get the desired format
+
+            val currentDate = Calendar.getInstance().time
+            return sdf.format(currentDate)
+        }
+        @RequiresApi(Build.VERSION_CODES.O)
+        fun convertToYearMonthVersion26(inputDate: String): String {
+                val inputFormat = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH)
+
+                try {
+                    val temporalAccessor = inputFormat.parse(inputDate)
+                    val yearMonth = YearMonth.from(temporalAccessor)
+
+                    return yearMonth.format(DateTimeFormatter.ofPattern("yyyy-MM", Locale.ENGLISH))
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                    // Handle parsing exception if needed
+                    return ""
+                }
+        }
+        fun convertToYearMonth(inputDate: String): String {
+            val inputFormat = SimpleDateFormat("MMMM yyyy", Locale.ENGLISH)
+            val outputFormat = SimpleDateFormat("yyyy-MM", Locale.ENGLISH)
+
+            try {
+                val date = inputFormat.parse(inputDate)
+                return outputFormat.format(date)
+            } catch (e: Exception) {
+                e.printStackTrace()
+                // Handle parsing exception if needed
+                return ""
+            }
+        }
+        fun encodeToBase64(input: String): String {
+            val bytes = input.toByteArray(Charsets.UTF_8)
+            val base64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
+            return base64
+        }
     }
+
 }
 
 

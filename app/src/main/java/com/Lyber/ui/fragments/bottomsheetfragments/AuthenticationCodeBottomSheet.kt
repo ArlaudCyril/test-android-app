@@ -154,10 +154,6 @@ class AuthenticationCodeBottomSheet : BaseBottomSheet<BottomSheetEnterCodeBindin
         super.onDestroyView()
     }
 
-    override fun onDismiss(dialog: DialogInterface) {
-        clearFields()
-        (requireParentFragment() as StrongAuthenticationFragment).dismiss()
-        super.onDismiss(dialog)
-    }
+
 
 }

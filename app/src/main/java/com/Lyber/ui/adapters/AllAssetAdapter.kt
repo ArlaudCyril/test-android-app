@@ -11,6 +11,7 @@ import com.Lyber.R
 import com.Lyber.databinding.ItemAssetBinding
 import com.Lyber.databinding.LoaderViewBinding
 import com.Lyber.models.PriceServiceResume
+import com.Lyber.ui.activities.BaseActivity
 import com.Lyber.utils.CommonMethods.Companion.commaFormatted
 import com.Lyber.utils.CommonMethods.Companion.currencyFormatted
 import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop

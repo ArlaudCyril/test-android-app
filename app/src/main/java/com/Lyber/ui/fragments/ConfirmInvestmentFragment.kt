@@ -10,9 +10,9 @@ import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.ConfirmationDialogBinding
 import com.Lyber.databinding.FragmentConfirmInvestmentBinding
-import com.Lyber.ui.activities.BaseActivity
 import com.Lyber.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
 import com.Lyber.ui.portfolio.fragment.PortfolioHomeFragment
+import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.Lyber.utils.CommonMethods.Companion.addFragment
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.clearBackStack
@@ -22,12 +22,9 @@ import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
-import com.Lyber.utils.CommonMethods.Companion.roundFloat
 import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
-import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
-import com.Lyber.utils.CommonMethods
 import java.util.*
 
 class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>(),
@@ -46,34 +43,15 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
 
         prepareView()
 
-        viewModel.investSingleAssetResponse.observe(viewLifecycleOwner) {
-            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                dismissProgressDialog()
-                showDialog(
-                    viewModel.selectedAsset?.imageUrl ?: "",
-                    viewModel.assetAmount,
-                    viewModel.selectedAsset?.id ?: ""
-                )
-//                ConfirmationBottomSheet().show(childFragmentManager, "")
-            }
-        }
 
         viewModel.investStrategyResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
-                ConfirmationBottomSheet().show(childFragmentManager, "")
+                requireActivity().clearBackStack()
+                findNavController().navigate(R.id.pickYourStrategyFragment)
             }
         }
 
-        viewModel.exchangeResponse.observe(viewLifecycleOwner) {
-            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                dismissProgressDialog()
-                findNavController().navigate(R.id.portfolioDetailFragment)
-                //viewModel.selectedAsset = CommonMethods.getAsset(viewModel.exchangeAssetTo!!.id)
-               // viewModel.selectedBalance = BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetTo!!.id }
-            // ConfirmationBottomSheet().show(childFragmentManager, "")
-            }
-        }
 
     }
 
@@ -86,48 +64,25 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                 btnConfirmInvestment -> {
 
                     when (viewModel.selectedOption) {
-
-                        Constants.USING_SINGULAR_ASSET -> {
-                            checkInternet(requireContext()) {
-                                showProgressDialog(requireContext())
-                                viewModel.investSingleAsset(
-                                    viewModel.selectedAsset!!,
-                                    viewModel.amount.toFloat().toInt(),
-                                    viewModel.assetAmount.toFloat(),
-                                    viewModel.selectedFrequency.uppercase()
-                                )
-                            }
-                        }
-
                         Constants.USING_STRATEGY -> {
                             viewModel.selectedStrategy?.let {
                                 checkInternet(requireContext()) {
+                                    /*frequency = "now" || "1d" || "1w" || "1m"*/
+                                    val freq = when(viewModel.selectedFrequency){
+                                        "Once"-> "now"
+                                        "Daily"-> "1d"
+                                        "Weekly"-> "1w"
+                                        else -> "1m"
+                                    }
                                     showProgressDialog(requireContext())
                                     viewModel.investStrategy(
-                                        it._id,
-                                        viewModel.selectedFrequency.uppercase(),
+                                        it.ownerUuid,
+                                        freq,
                                         viewModel.amount.toFloat().toInt()
-                                    )
+                                    ,viewModel.selectedStrategy!!.name)
                                 }
                             }
                         }
-
-                        Constants.USING_EXCHANGE -> {
-                            checkInternet(requireContext()) {
-                                showProgressDialog(requireContext())
-                               /* viewModel.exchange(
-                                    viewModel.exchangeAssetFrom?.id ?: "",
-                                    viewModel.exchangeAssetTo?.id ?: "",
-                                    viewModel.exchangeFromAmount,
-                                    viewModel.exchangeToAmount
-                                )*/
-                            }
-                        }
-
-                        Constants.USING_WITHDRAW -> {
-                            ConfirmationBottomSheet().show(childFragmentManager, "")
-                        }
-
                         else -> {
                             requireActivity().clearBackStack()
                             requireActivity().addFragment(
@@ -147,12 +102,12 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
 
             val buyValue = (viewModel.amount.toFloat().toInt() * (0.08)).toFloat()
             tvNestedAmountValue.text =
-                viewModel.amount.decimalPoint().commaFormatted + Constants.EURO
+                viewModel.amount.decimalPoint().commaFormatted + " USDT"
             tvValueTotal.text =
                 (viewModel.amount.toFloat() + buyValue).toString()
-                    .decimalPoint().commaFormatted + Constants.EURO
+                    .decimalPoint().commaFormatted + " USDT"
             tvValueLyberFee.text =
-                buyValue.toString().decimalPoint().commaFormatted + Constants.EURO
+                buyValue.toString().decimalPoint().commaFormatted + " USDT"
 
             when (viewModel.selectedOption) {
 
@@ -167,7 +122,7 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                         tvValueLyberFee
                     ).visible()
 
-                    viewModel.selectedStrategy?.investment_strategy_assets?.let {
+                    viewModel.selectedStrategy?.bundle?.let {
                         binding.allocationView.setAssetsList(it)
                     }
 
@@ -183,112 +138,10 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                     tvValueFrequency.text = viewModel.selectedFrequency
 
                     tvAmount.text =
-                        "${viewModel.amount.decimalPoint().commaFormatted} ${Constants.EURO}"
+                        (viewModel.amount.toFloat() + buyValue).toString()+" USDT"
 
                 }
 
-                Constants.USING_DEPOSIT -> {
-                    listOf(
-                        tvAssetPrice,
-                        tvValueAssetPrice,
-                        tvFrequency,
-                        tvValueFrequency,
-                        tvAllocation,
-                        allocationView,
-                        tvLyberFee,
-                        tvValueLyberFee
-                    ).gone()
-                    listOf(tvDeposit, tvDepositFee, tvValueDeposit, tvValueDepositFee).visible()
-
-                    tvAmount.text =
-                        "${viewModel.amount.decimalPoint().commaFormatted} ${Constants.EURO}"
-
-                }
-
-                Constants.USING_SINGULAR_ASSET -> {
-
-                    listOf(
-                        tvAssetPrice,
-                        tvValueAssetPrice,
-                        tvFrequency,
-                        tvValueFrequency,
-                        tvLyberFee,
-                        tvValueLyberFee
-                    ).visible()
-
-                    listOf(
-                        tvAllocation,
-                        allocationView,
-                        tvDeposit,
-                        tvDepositFee,
-                        tvValueDeposit,
-                        tvValueDepositFee
-                    ).gone()
-
-                    if (viewModel.selectedFrequency.isEmpty()) {
-                        tvFrequency.gone()
-                        tvValueFrequency.gone()
-                    }
-
-
-                    tvAssetPrice.text =
-                        viewModel.selectedAsset?.fullName?.capitalize(Locale.ROOT) + " Price"
-                    /*tvValueAssetPrice.text =
-                        ((viewModel.selectedAsset?.euro_amount.toString()
-                            .roundFloat().commaFormatted)) + Constants.EURO TODO*/
-                    tvValueFrequency.text = viewModel.selectedFrequency
-
-                    tvAmount.text = viewModel.assetAmount.commaFormatted
-                    viewModel.selectedAsset?.imageUrl?.let {
-                        ivSingleAsset.visible()
-                        ivSingleAsset.loadCircleCrop(viewModel.selectedAsset?.imageUrl ?: "")
-                    }
-
-                }
-
-                Constants.USING_EXCHANGE -> {
-
-                    listOf(
-                        tvNestedAmount,
-                        tvNestedAmountValue,
-                        tvExchangeFrom, tvExchangeFromValue, tvExchangeTo, tvExchangeToValue,
-                        tvLyberFee,
-                        tvValueLyberFee
-                    ).visible()
-
-                    listOf(
-                        tvFrequency,
-                        tvValueFrequency,
-                        tvAllocation,
-                        allocationView,
-                        tvAssetPrice,
-                        tvValueAssetPrice,
-                        tvDeposit,
-                        tvDepositFee,
-                        tvValueDeposit,
-                        tvValueDepositFee
-                    ).gone()
-
-                  /*  tvAmount.text =
-                        "${viewModel.assetAmount.commaFormatted} ${viewModel.exchangeAssetTo?.id?.uppercase()}"
-*/
-                 /*   tvNestedAmount.text =
-                        "${viewModel.exchangeAssetFrom?.fullName?.capitalize()} Price"*/
-                    /*tvNestedAmountValue.text =
-                        "${viewModel.exchangeAssetFrom?.euro_amount.commaFormatted} ${Constants.EURO}"
-                    TODO */
-                   /* tvExchangeFromValue.text =
-                        "${viewModel.amount.commaFormatted} ${viewModel.exchangeAssetFrom?.id?.uppercase()}"
-                    tvExchangeToValue.text =
-                        "${viewModel.assetAmount.commaFormatted} ${viewModel.exchangeAssetTo?.id?.uppercase()}"
-
-*/
-                  //  tvValueTotal.text = "${viewModel.assetAmount.commaFormatted} ${viewModel.exchangeAssetTo?.id?.uppercase()}"
-
-                    btnConfirmInvestment.text = getString(R.string.confirm_exchange)
-                    title.text = getString(R.string.confirm_exchange)
-
-                }
 
             }
 
@@ -296,31 +149,4 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
     }
 
 
-    private fun showDialog(logo: String, amount: String, assetSymbol: String) {
-        Dialog(requireActivity(), R.style.DialogTheme).apply {
-            ConfirmationDialogBinding.inflate(layoutInflater).let {
-                requestWindowFeature(Window.FEATURE_NO_TITLE)
-                setCancelable(false)
-                setCanceledOnTouchOutside(true)
-                setContentView(it.root)
-
-                 it.ivAsset.loadCircleCrop(logo)
-
-                it.tvAssetAmount.text = amount.commaFormatted
-
-                it.tvMessage.text =
-                    getString(R.string.you_now_own, assetSymbol.uppercase(), amount.commaFormatted)
-
-                it.root.setOnClickListener {
-                    dismiss()
-                }
-
-                setOnDismissListener {
-                    requireActivity().clearBackStack()
-                }
-
-                show()
-            }
-        }
-    }
 }

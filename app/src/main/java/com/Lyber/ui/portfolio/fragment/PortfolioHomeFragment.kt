@@ -20,10 +20,21 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.Lyber.models.AnalyticsData
+import com.Lyber.models.AssetBaseData
+import com.Lyber.models.Balance
+import com.Lyber.models.GetAssetsResponseItem
+import com.Lyber.models.Investment
+import com.Lyber.models.PriceServiceResume
+import com.Lyber.utils.ActivityCallbacks
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
 import com.Lyber.R
 import com.Lyber.databinding.FragmentPortfolioHomeBinding
 import com.Lyber.databinding.LoaderViewBinding
 import com.Lyber.models.*
+import com.Lyber.ui.activities.BaseActivity
+import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.ui.adapters.*
 import com.Lyber.ui.fragments.BaseFragment
 import com.Lyber.ui.fragments.bottomsheetfragments.InvestBottomSheet
@@ -39,9 +50,12 @@ import com.Lyber.utils.CommonMethods.Companion.fadeOut
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.px
 import com.Lyber.utils.CommonMethods.Companion.roundFloat
+import com.Lyber.utils.CommonMethods.Companion.setProfile
 import com.Lyber.utils.CommonMethods.Companion.toMilli
 import com.Lyber.utils.CommonMethods.Companion.visibleFromLeft
 import com.Lyber.utils.CommonMethods.Companion.zoomIn
+import com.Lyber.utils.Constants
+import com.Lyber.utils.ItemOffsetDecoration
 import com.google.android.material.tabs.TabLayout
 
 
@@ -60,7 +74,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
     private lateinit var viewModel: PortfolioViewModel
     private var apiStarted = false
-    private lateinit var navController : NavController
+    private lateinit var navController: NavController
     override fun bind() = FragmentPortfolioHomeBinding.inflate(layoutInflater)
 
     @SuppressLint("SetTextI18n")
@@ -73,18 +87,20 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         com.Lyber.ui.activities.SplashActivity.activityCallbacks = this
         App.prefsManager.savedScreen = javaClass.name
 
-        val navHostFragment =  requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment =
+            requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
         requireActivity().window.statusBarColor =
             getColor(requireContext(), android.R.color.transparent)
 
         /* initializing adapters for recycler views */
 
-        adapterBalance = BalanceAdapter(::assetClicked)
+        adapterBalance = BalanceAdapter(false, ::assetClicked)
         adapterAllAsset = AvailableAssetAdapter(::availableAssetClicked)
-        adapterRecurring = RecurringInvestmentAdapter(::recurringInvestmentClicked,requireActivity())
+        adapterRecurring =
+            RecurringInvestmentAdapter(::recurringInvestmentClicked, requireActivity())
         resourcesAdapter = ResourcesAdapter()
-        assetBreakdownAdapter = BalanceAdapter(isAssetBreakdown = true)
+        assetBreakdownAdapter = BalanceAdapter()
 
         /* setting up recycler views */
         binding.apply {
@@ -136,17 +152,11 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         }
 
         /* onclick listeners */
-//        binding.ivTopAction.setOnClickListener(this)
-//        binding.includedMyAsset.root.setOnClickListener(this)
         binding.tvViewAll.setOnClickListener(this)
         binding.llThreeDot.setOnClickListener(this)
         binding.btnPlaceOrder.setOnClickListener(this)
         binding.ivProfile.setOnClickListener(this)
         binding.screenContent.setOnClickListener(this)
-//        binding.includedEuro.root.setOnClickListener(this)
-//        binding.tvAssetName.setOnClickListener(this)
-
-        // to retain the state of this fragment
 
         /* pop up initialization */
         assetPopUpWindow = ListPopupWindow(requireContext()).apply {
@@ -157,12 +167,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             height = 420.px
             setOnItemClickListener { _, _, position, _ ->
                 assetPopupAdapter.getItemAt(position)?.let {
-                   // binding.tvAssetName.text = "${it.asset_name} (${it.symbol.uppercase()})"
                     dismiss()
-                    /*checkInternet(requireContext()) {
-                        showProgressDialog(requireContext())
-                        viewModel.getAssetDetail(it.asset_id)
-                    }*/
                 }
             }
         }
@@ -170,8 +175,8 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         binding.lineChart.clearYAxis()
         binding.lineChart.timeSeries = getLineData(viewModel.totalPortfolio)
 
-        binding.tvInvestMoney.text = "Invest Money"
-        binding.tvPortfolioAssetPrice.text = "Portfolio"
+        binding.tvInvestMoney.text = getString(R.string.invest_money)
+        binding.tvPortfolioAssetPrice.text = getString(R.string.portfolio)
         binding.tvValuePortfolioAndAssetPrice.text =
             "${viewModel.totalPortfolio.commaFormatted}${Constants.EURO}"
 
@@ -182,6 +187,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 viewModel.getPrice(viewModel.chosenAssets?.id ?: "btc")
                 viewModel.getNews(viewModel.chosenAssets?.id ?: "btc")
             }
+            CommonMethods.showProgressDialog(requireActivity())
             viewModel.getUser()
             viewModel.getAllAssets()
 
@@ -204,7 +210,6 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         //}
 
 
-
     }
 
     private fun addObservers() {
@@ -218,20 +223,23 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
         viewModel.allAssets.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                dismissProgressDialog()
                 com.Lyber.ui.activities.BaseActivity.assets = it.data as ArrayList<AssetBaseData>
             }
         }
 
         viewModel.priceServiceResumes.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                dismissProgressDialog()
                 com.Lyber.ui.activities.BaseActivity.balanceResume.clear()
                 com.Lyber.ui.activities.BaseActivity.balanceResume.addAll(it)
                 adapterAllAsset.setList(it.subList(0, 6))
             }
         }
 
-        viewModel.balanceResponse.observe(viewLifecycleOwner){
+        viewModel.balanceResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                dismissProgressDialog()
                 val balanceDataDict = it.data
                 val balances = ArrayList<Balance>()
                 balanceDataDict?.forEach {
@@ -294,7 +302,10 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
     }
 
-    private fun getLineData(value: Double, straightLine: Boolean = false): MutableList<List<Double>> {
+    private fun getLineData(
+        value: Double,
+        straightLine: Boolean = false
+    ): MutableList<List<Double>> {
         val list = mutableListOf<List<Double>>()
         if (!straightLine) list.add(listOf(System.currentTimeMillis().toDouble(), 0.0))
         for (i in 0..8) list.add(listOf(System.currentTimeMillis().toDouble(), value))
@@ -342,12 +353,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
             "withdraw" -> {
                 viewModel.selectedOption = Constants.USING_WITHDRAW
-                if (viewModel.screenCount == 0) {
-                   navController.navigate(R.id.swapWithdrawFromFragment)
-                } else {
-                    viewModel.withdrawAsset = viewModel.selectedAsset
-                    navController.navigate(R.id.addAmountFragment)
-                }
+                navController.navigate(R.id.swapWithdrawFromFragment)
             }
 
             "deposit" -> {
@@ -361,7 +367,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
             "sell" -> {
                 viewModel.selectedOption = Constants.USING_SELL
-               navController.navigate(R.id.addAmountFragment)
+                navController.navigate(R.id.addAmountFragment)
             }
         }
     }
@@ -377,16 +383,17 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
             llPortfolio.visibleFromLeft()
 
-            tvInvestMoney.text = "Invest Money"
-            tvPortfolioAssetPrice.text = "Portfolio"
-            "${viewModel.totalPortfolio.commaFormatted} ${Constants.EURO}".also { tvValuePortfolioAndAssetPrice.text = it }
+            tvInvestMoney.text = getString(R.string.invest_money)
+            tvPortfolioAssetPrice.text = getString(R.string.portfolio)
+            "${viewModel.totalPortfolio.commaFormatted} ${Constants.EURO}".also {
+                tvValuePortfolioAndAssetPrice.text = it
+            }
 
             zoomIn(llThreeDot)
             zoomIn(btnPlaceOrder)
 
         }
     }
-
 
 
     //Analytics data
@@ -399,7 +406,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
     override fun onBackPressed(): Boolean {
         apiStarted = false
-       return false
+        return false
     }
 
     override fun onDestroyView() {
@@ -415,40 +422,27 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
 
                 btnPlaceOrder -> {
-                    when (viewModel.screenCount) {
+                    InvestBottomSheet(
+                        ::investMoneyClicked
+                    ).show(childFragmentManager, "")
+                    // Create a transparent color view
+                    _fragmentPortfolio = this@PortfolioHomeFragment
+                    val transparentView = View(context)
+                    transparentView.setBackgroundColor(getColor(requireContext(), R.color.semi_transparent_dark))
 
-                        1 -> {
+                    // Set layout parameters for the transparent view
+                    val viewParams = RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.MATCH_PARENT
+                    )
 
-                            viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
-                            viewModel.selectedAsset
-                           navController.navigate(R.id.addAmountFragment)
-
-                        }
-                        else -> {
-                            InvestBottomSheet(
-                                ::investMoneyClicked
-                            ).show(childFragmentManager, "")
-                            // Create a transparent color view
-                            _fragmentPortfolio = this@PortfolioHomeFragment
-                            val transparentView = View(context)
-                            transparentView.setBackgroundColor(getColor(requireContext(), R.color.semi_transparent_dark))
-
-                            // Set layout parameters for the transparent view
-                            val viewParams = RelativeLayout.LayoutParams(
-                                RelativeLayout.LayoutParams.MATCH_PARENT,
-                                RelativeLayout.LayoutParams.MATCH_PARENT
-                            )
-
-                            // Add the transparent view to the RelativeLayout
-                            screenContent.addView(transparentView, viewParams)
+                    // Add the transparent view to the RelativeLayout
+                    screenContent.addView(transparentView, viewParams)
 
 
-                        }
-
-
-                    }
                 }
 
+                ivProfile -> navController.navigate(R.id.profileFragment)
                 ivProfile -> navController.navigate(R.id.profileFragment)
 
                 llThreeDot -> {
@@ -476,15 +470,13 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 rvMyAssets -> {
                     requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
                 }
-//                    if (assetPopupAdapter.hasNoData()) {
-//                        assetPopupAdapter.addProgress()
-//                        assetPopUpWindow.show()
-//                    } else
-//                        if (assetPopUpWindow.isShowing)
-//                            assetPopUpWindow.dismiss()
-//                        else assetPopUpWindow.show()
             }
         }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        binding.ivProfile.setProfile
     }
 
 

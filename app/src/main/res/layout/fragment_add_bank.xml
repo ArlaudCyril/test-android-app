@@ -60,7 +60,7 @@
             android:background="@drawable/edit_text_background"
             android:digits="0123456789"
             android:drawablePadding="12dp"
-            android:hint="BIC number"
+            android:hint="@string/bic_number"
             android:imeOptions="actionNext"
             android:inputType="number"
             android:paddingHorizontal="12dp"
@@ -74,7 +74,7 @@
             android:layout_marginHorizontal="24dp"
             android:layout_marginTop="32dp"
             android:background="@drawable/button_purple_500"
-            android:text="Add"
+            android:text="@string/add"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             app:layout_constraintTop_toBottomOf="@id/etBicNumber" />
 

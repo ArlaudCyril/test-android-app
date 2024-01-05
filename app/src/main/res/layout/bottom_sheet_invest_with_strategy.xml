@@ -1,0 +1,274 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/top_curved_layout"
+    android:backgroundTint="@color/purple_gray_00"
+    android:padding="16dp">
+
+    <ImageView
+        android:id="@+id/ivTopAction"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="-8dp"
+        android:backgroundTint="@color/purple_gray_50"
+        android:padding="12dp"
+        android:src="@drawable/ic_close"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/purple_gray_800" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        style="@style/SubheadMabry"
+        android:gravity="center"
+        android:text="@string/invest_with_strategies"
+        android:textColor="#423D33"
+        app:layout_constraintBottom_toBottomOf="@id/ivTopAction"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ivTopAction" />
+
+    <ImageView
+        android:id="@+id/ivOneTime"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/circle_drawable"
+        android:backgroundTint="@color/purple_gray_50"
+        android:padding="4dp"
+        app:tint="@color/purple_500"
+        android:src="@drawable/vector"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivTopAction" />
+
+    <TextView
+        android:id="@+id/tvOneTime"
+        style="@style/SubheadMabry"
+        android:layout_width="0dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="36dp"
+        android:text="@string/one_time_investment"
+        android:textColor="@color/purple_gray_700"
+        app:layout_constraintEnd_toStartOf="@+id/ivRightArrowInvestInStrategy"
+        app:layout_constraintStart_toEndOf="@id/ivOneTime"
+        app:layout_constraintTop_toBottomOf="@id/ivTopAction" />
+
+    <TextView
+        android:id="@+id/tvSubTitleOneTime"
+        style="@style/BodyMabry"
+        android:layout_width="0dp"
+        android:layout_marginStart="12dp"
+        android:text="@string/execute_a_strategy_a_single_time"
+        android:textColor="@color/purple_gray_500"
+        app:layout_constraintEnd_toStartOf="@+id/ivRightArrowInvestInStrategy"
+        app:layout_constraintStart_toEndOf="@id/ivOneTime"
+        app:layout_constraintTop_toBottomOf="@id/tvOneTime" />
+
+    <ImageView
+        android:id="@+id/ivRightArrowInvestInStrategy"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:src="@drawable/ic_right_arrow_grey"
+        app:layout_constraintBottom_toBottomOf="@id/tvSubTitleOneTime"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvOneTime" />
+
+
+    <ImageView
+        android:id="@+id/ivAdjust"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/circle_drawable"
+        android:backgroundTint="@color/purple_gray_50"
+        android:padding="4dp"
+        android:src="@drawable/ic_repeat"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivOneTime"
+        app:tint="@color/purple_500" />
+
+    <TextView
+        android:id="@+id/tvTitleAdjust"
+        style="@style/SubheadMabry"
+        android:layout_width="0dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="36dp"
+        android:text="@string/recurrent_investment"
+        android:textColor="@color/purple_gray_700"
+        app:layout_constraintStart_toEndOf="@id/ivAdjust"
+        app:layout_constraintTop_toBottomOf="@id/ivOneTime" />
+
+    <TextView
+        android:id="@+id/tvSubTitleAdjust"
+        style="@style/BodyMabry"
+        android:layout_width="0dp"
+        android:layout_marginStart="12dp"
+        android:text="@string/execute_a_strategy_on_a_regular_basis"
+        android:textColor="@color/purple_gray_500"
+        app:layout_constraintStart_toEndOf="@id/ivAdjust"
+        app:layout_constraintTop_toBottomOf="@id/tvTitleAdjust" />
+
+    <ImageView
+        android:id="@+id/ivRightArrowAdjust"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:src="@drawable/ic_right_arrow_grey"
+        app:layout_constraintBottom_toBottomOf="@id/tvSubTitleAdjust"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvTitleAdjust" />
+
+    <ImageView
+        android:id="@+id/ivAdjustNew"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/circle_drawable"
+        android:backgroundTint="@color/purple_gray_50"
+        android:padding="4dp"
+        android:src="@drawable/pencil"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivAdjust"
+        app:tint="@color/purple_500" />
+
+    <TextView
+        android:id="@+id/tvTitleAdjustNew"
+        style="@style/SubheadMabry"
+        android:layout_width="0dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="36dp"
+        android:text="@string/adjust_investment"
+        android:textColor="@color/purple_gray_700"
+        app:layout_constraintStart_toEndOf="@id/ivAdjustNew"
+        app:layout_constraintTop_toBottomOf="@id/ivAdjust" />
+
+    <TextView
+        android:id="@+id/tvSubTitleAdjustNew"
+        style="@style/BodyMabry"
+        android:layout_width="0dp"
+        android:layout_marginStart="12dp"
+        android:text="@string/change_frequency_and_amount"
+        android:textColor="@color/purple_gray_500"
+        app:layout_constraintStart_toEndOf="@id/ivAdjustNew"
+        app:layout_constraintTop_toBottomOf="@id/tvTitleAdjustNew" />
+
+    <ImageView
+        android:id="@+id/ivRightArrowAdjustNew"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:src="@drawable/ic_right_arrow_grey"
+        app:layout_constraintBottom_toBottomOf="@id/tvSubTitleAdjustNew"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvTitleAdjustNew" />
+
+    <ImageView
+        android:id="@+id/ivTailor"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/circle_drawable"
+        android:backgroundTint="@color/purple_gray_50"
+        android:padding="4dp"
+        android:src="@drawable/ic_invest_single_assets"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivAdjustNew"
+        app:tint="@color/purple_500" />
+
+    <TextView
+        android:id="@+id/tvTitleTailor"
+        style="@style/SubheadMabry"
+        android:layout_width="0dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="36dp"
+        android:text="@string/tailor_strategy"
+        android:textColor="@color/purple_gray_700"
+        app:layout_constraintStart_toEndOf="@id/ivTailor"
+        app:layout_constraintTop_toBottomOf="@id/ivAdjustNew" />
+
+    <TextView
+        android:id="@+id/tvSubTitleTailor"
+        style="@style/BodyMabry"
+        android:layout_width="0dp"
+        android:layout_marginStart="12dp"
+        android:text="@string/change_asset_repartition"
+        android:textColor="@color/purple_gray_500"
+        app:layout_constraintStart_toEndOf="@id/ivTailor"
+        app:layout_constraintTop_toBottomOf="@id/tvTitleTailor" />
+
+    <ImageView
+        android:id="@+id/ivRightArrowTailor"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:src="@drawable/ic_right_arrow_grey"
+        app:layout_constraintBottom_toBottomOf="@id/tvSubTitleTailor"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvTitleTailor" />
+
+    <ImageView
+        android:id="@+id/ivDelete"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/circle_drawable"
+        android:backgroundTint="@color/purple_gray_50"
+        android:padding="4dp"
+        android:src="@drawable/delete_holo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivTailor"
+        app:tint="@color/purple_500" />
+
+    <TextView
+        android:id="@+id/tvTitleDelete"
+        style="@style/SubheadMabry"
+        android:layout_width="0dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="42dp"
+        android:text="@string/delete_strategy"
+        android:textColor="@color/purple_gray_700"
+        app:layout_constraintStart_toEndOf="@id/ivDelete"
+        app:layout_constraintTop_toBottomOf="@id/ivTailor" />
+
+
+    <ImageView
+        android:id="@+id/ivRightArrowDelete"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:src="@drawable/ic_right_arrow_grey"
+        app:layout_constraintBottom_toBottomOf="@id/tvTitleDelete"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvTitleDelete" />
+    <ImageView
+        android:id="@+id/ivPAuse"
+        android:layout_width="32dp"
+        android:layout_height="32dp"
+        android:layout_marginTop="40dp"
+        android:background="@drawable/circle_drawable"
+        android:backgroundTint="@color/purple_gray_50"
+        android:padding="4dp"
+        android:src="@drawable/pause"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivDelete"
+         />
+
+    <TextView
+        android:id="@+id/tvTitlePAuse"
+        style="@style/SubheadMabry"
+        android:layout_width="0dp"
+        android:layout_marginStart="12dp"
+        android:layout_marginTop="42dp"
+        android:text="@string/pause_strategy"
+        android:textColor="@color/purple_gray_700"
+        app:layout_constraintStart_toEndOf="@id/ivPAuse"
+        app:layout_constraintTop_toBottomOf="@id/ivDelete" />
+
+
+    <ImageView
+        android:id="@+id/ivRightArrowPAuse"
+        android:layout_width="wrap_content"
+        android:layout_height="0dp"
+        android:src="@drawable/ic_right_arrow_grey"
+        app:layout_constraintBottom_toBottomOf="@id/tvTitlePAuse"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvTitleDelete" />
+</androidx.constraintlayout.widget.ConstraintLayout>

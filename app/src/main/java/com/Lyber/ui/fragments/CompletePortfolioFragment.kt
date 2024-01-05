@@ -5,19 +5,17 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.FragmentCompletePortfolioBinding
 import com.Lyber.ui.fragments.bottomsheetfragments.BottomSheetDialog
+import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.strikeText
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
-import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
 
 class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>(),
     View.OnClickListener {
@@ -38,10 +36,8 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
 
         binding.btnInvestMoney.setOnClickListener(this)
         binding.tvFillPersonalData.setOnClickListener(this)
+        binding.tvCreateAnAccount.setOnClickListener(this)
         binding.btnMenu.setOnClickListener(this)
-
-//        binding.tvEditPersonalData.setOnClickListener(this)
-//        binding.tvVerifyYourIdentity.setOnClickListener(this)
 
         Log.d(TAG, "onViewCreated: ")
         setUpUi(App.prefsManager.portfolioCompletionStep)
@@ -52,22 +48,63 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
         Log.d(TAG, "setUpUi: $state")
 
         when (state) {
+            Constants.ACCOUNT_CREATING -> {
+                accountCreationFilled(false,true)
+            personalDataFilled(personalDataFilled = false, false)
+            }
             Constants.ACCOUNT_CREATED -> {
+                accountCreationFilled(true,false)
                 personalDataFilled(personalDataFilled = false, true)
             }
             Constants.PERSONAL_DATA_FILLED -> { // focussed verify identity
                 personalDataFilled(true)
+                accountCreationFilled(true,false)
                 verifyIdentityFocussed(true)
             }
-            Constants.KYC_COMPLETED -> { // verified
+            Constants.KYC_COMPLETED -> {
+                accountCreationFilled(true,false)// verified
                 personalDataFilled(true)
                 identityVerified()
-//                makeYourFirstPayment()
             }
             else -> {
                 personalDataFilled(true)
+                accountCreationFilled(true,false)
                 identityVerified()
-//                makeYourFirstPayment()
+            }
+        }
+    }
+
+    private fun accountCreationFilled(personalDataFilled: Boolean, showProgress: Boolean = false) {
+        binding.apply {
+            if (personalDataFilled) {
+
+                if (showProgress)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        progressSteps.setProgress(60, true)
+                    } else
+                        progressSteps.progress = 60
+
+                tvStepsCompleted.text = getString(R.string._2_3_steps_completed)
+
+                tvNumFillCreateAccount.gone()
+                tvNumFillCreateAccount.setOnClickListener(null)
+                ivCreateAccount.setImageResource(R.drawable.drawable_circle_checked)
+                tvCreateAnAccount.strikeText()
+                tvCreateAnAccount.setCompoundDrawables(null, null, null, null)
+                tvCreateAnAccount.setTextColor(requireContext().getColor(R.color.purple_gray_600))
+            } else {
+                if (showProgress)
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                        progressSteps.setProgress(0, true)
+                    } else
+                        progressSteps.progress = 0
+                tvNumFillCreateAccount.gone()
+                tvNumFillCreateAccount.visible()
+                tvCreateAnAccount.setOnClickListener(this@CompletePortfolioFragment)
+                ivCreateAccount.setBackgroundResource(R.drawable.circle_drawable_purple_500)
+                tvNumFillCreateAccount.text = "1"
+                tvNumFillCreateAccount.setTextColor(requireContext().getColor(R.color.white))
+                tvCreateAnAccount.setTextColor(requireContext().getColor(R.color.purple_500))
             }
         }
     }
@@ -91,19 +128,27 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
                 tvFillPersonalData.setCompoundDrawables(null, null, null, null)
                 tvFillPersonalData.setTextColor(requireContext().getColor(R.color.purple_gray_600))
             } else {
-                if (showProgress)
+                if (showProgress) {
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                         progressSteps.setProgress(30, true)
                     } else
                         progressSteps.progress = 30
-
-                tvNumFillPersonalData.visible()
-                tvFillPersonalData.setOnClickListener(this@CompletePortfolioFragment)
-                ivFillPersonalData.setBackgroundResource(R.drawable.circle_drawable_purple_500)
-                tvNumFillPersonalData.text = getString(R.string._2)
-                tvNumFillPersonalData.setTextColor(requireContext().getColor(R.color.white))
-                tvFillPersonalData.text = getString(R.string.fill_personal_data)
-                tvFillPersonalData.setTextColor(requireContext().getColor(R.color.purple_500))
+                    tvNumFillCreateAccount.gone()
+                    tvNumFillPersonalData.visible()
+                    tvFillPersonalData.setOnClickListener(this@CompletePortfolioFragment)
+                    ivFillPersonalData.setBackgroundResource(R.drawable.circle_drawable_purple_500)
+                    tvNumFillPersonalData.text = getString(R.string._2)
+                    tvNumFillPersonalData.setTextColor(requireContext().getColor(R.color.white))
+                    tvFillPersonalData.text = getString(R.string.fill_personal_data)
+                    tvFillPersonalData.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_right_arrow_purple, 0)
+                    tvFillPersonalData.setTextColor(requireContext().getColor(R.color.purple_500))
+                }else{
+                    ivFillPersonalData.setBackgroundResource(R.drawable.circle_drawable)
+                    tvNumFillPersonalData.text = getString(R.string._2)
+                    tvNumFillPersonalData.setTextColor(requireContext().getColor(R.color.purple_gray_600))
+                    tvFillPersonalData.text = getString(R.string.fill_personal_data)
+                    tvFillPersonalData.setTextColor(requireContext().getColor(R.color.purple_gray_600))
+                }
             }
         }
     }
@@ -131,28 +176,11 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
                 ),
                 null
             )
-//            tvEditPersonalData.visible()
             tvVerifyYourIdentity.visible()
             llVerificationOnGoing.gone()
         }
     }
 
-    /* private fun identityVerificationInitiated() {
-         binding.apply {
-             tvNumVerifyYourIdentity.text = ""
-             tvVerifyYourIdentity.setOnClickListener(null)
- //            tvEditPersonalData.visible()
-             tvVerifyYourIdentity.gone()
-             llVerificationOnGoing.visible()
-             ivVerifyYourIdentity.setImageResource(R.drawable.progress_drawable)
-             postDelay(2000) {
-                 identityVerified()
-                 makeYourFirstPayment()
-                 portfolioViewModel.identityVerified = true
-             }
-         }
-     }
- */
 
     private fun identityVerified(showProgress: Boolean = false) {
         binding.apply {
@@ -172,49 +200,11 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
             tvVerifyYourIdentity.visibility = View.VISIBLE
             llVerificationOnGoing.visibility = View.GONE
             tvVerifyYourIdentity.strikeText()
-//            tvEditPersonalData.gone()
             tvVerifyYourIdentity.setTextColor(requireContext().getColor(R.color.purple_gray_600))
         }
     }
 
-    /*@SuppressLint("UseCompatLoadingForDrawables", "ResourceAsColor")
-    private fun makeYourFirstPayment() {
-        binding.apply {
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                progressSteps.setProgress(75, true)
-            } else progressSteps.progress = 75
-
-            tvStepsCompleted.text = "3/4 steps completed"
-
-            ivMakeFirstInvestment.setImageResource(R.drawable.circle_drawable_purple_500)
-
-            btnInvestMoney.setOnClickListener(this@CompletePortfolioFragment)
-
-            tvInvestMoney.setTextColor(requireContext().getColor(R.color.white))
-            ivInvestMoney.background =
-                AppCompatResources.getDrawable(
-                    requireContext(),
-                    R.drawable.ic_invest_money_white
-                )
-
-            btnInvestMoney.setBackgroundTint(R.color.purple_500)
-
-            tvNumMakeFirstInvestment.setTextColor(requireContext().getColor(R.color.white))
-            tvNumMakeFirstInvestment.text = "4"
-
-
-            tvMakeFirstInvestment.setCompoundDrawablesWithIntrinsicBounds(
-                null, null, AppCompatResources.getDrawable(
-                    requireContext(),
-                    R.drawable.ic_right_arrow_purple
-                ), null
-            )
-            tvMakeFirstInvestment.setTextColor(requireContext().getColor(R.color.purple_500))
-            tvMakeFirstInvestment.setOnClickListener(this@CompletePortfolioFragment)
-
-        }
-    }*/
 
     override fun onClick(v: View?) {
         binding.apply {
@@ -222,23 +212,44 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
 
                 btnMenu -> BottomSheetDialog().show(
                     requireActivity().supportFragmentManager,
-                    BottomSheetDialog.SheetType.COMPLETE_ACCOUNT.title
+                    BottomSheetDialog.SheetType.COMPLETE_ACCOUNT.title(requireContext())
                 )
 
-                /*tvMakeFirstInvestment*/
                 btnInvestMoney -> {
 
                     if (App.prefsManager.portfolioCompletionStep == Constants.KYC_COMPLETED) {
-//                        requireActivity().clearBackStack()
                         findNavController().navigate(R.id.educationStrategyHolderFragment)
                     }
                 }
-
-//                tvEditPersonalData,
+                tvCreateAnAccount->{
+                    clickCreateAccount()
+                }
                 tvFillPersonalData -> findNavController().navigate(R.id.fillDetailFragment)
 
                 tvVerifyYourIdentity -> findNavController().navigate(R.id.verifyYourIdentityFragment)
 
+
+            }
+        }
+    }
+
+    private fun clickCreateAccount() {
+        when(App.prefsManager.accountCreationSteps) {
+            Constants.Account_CREATION_STEP_PHONE -> {
+                val bundle = Bundle().apply {
+                    putBoolean(Constants.FOR_LOGIN, false)
+                }
+                findNavController().navigate(R.id.emailAddressFragment,bundle)
+            }
+
+            Constants.Account_CREATION_STEP_EMAIL -> {
+                val bundle = Bundle().apply {
+                    putBoolean(Constants.FOR_LOGIN, false)
+                }
+                App.prefsManager.accountCreationSteps= Constants.Account_CREATION_STEP_PHONE
+                findNavController().navigate(R.id.createPinFragment,bundle)
+            }
+            else->{
 
             }
         }

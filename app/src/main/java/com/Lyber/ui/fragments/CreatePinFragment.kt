@@ -16,8 +16,10 @@ import com.Lyber.databinding.FragmentCreatePinBinding
 import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.replace
 import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
+import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.utils.OnTextChange
 import com.Lyber.viewmodels.SignUpViewModel
@@ -38,7 +40,7 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
         super.onViewCreated(view, savedInstanceState)
         App.prefsManager.savedScreen = javaClass.name
         viewModel = getViewModel(requireParentFragment())
-        viewModel.forLogin = requireArguments().getBoolean(Constants.FOR_LOGIN,false)
+        viewModel.forLogin = requireArguments().getBoolean(Constants.FOR_LOGIN, false)
         binding.etCreatePin.addTextChangedListener(onTextChange)
         binding.ivTopAction.setOnClickListener {
             requireActivity().onBackPressed()
@@ -46,8 +48,22 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
         binding.tvTopAction.setOnClickListener {
             showLogoutDialog()
         }
+        if (requireArguments().containsKey(Constants.IS_CHANGE_PIN)
+            && requireArguments().getBoolean(Constants.IS_CHANGE_PIN)
+        ) {
+            binding.ivTopAction.visible()
+            binding.llIndicators.gone()
+            binding.tvTopAction.gone()
+        } else {
+            binding.llIndicators.visible()
+            binding.tvTopAction.gone()
+        }
+        binding.ivTopAction.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
 
     }
+
     private fun showLogoutDialog() {
 
         Dialog(requireActivity(), R.style.DialogTheme).apply {
@@ -61,8 +77,8 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
 
                 it.tvTitle.text = getString(R.string.log_out)
                 it.tvMessage.text = getString(R.string.logout_message)
-                it.tvNegativeButton.text = getString(R.string.no)
-                it.tvPositiveButton.text = getString(R.string.yes)
+                it.tvNegativeButton.text = getString(R.string.no_t)
+                it.tvPositiveButton.text = getString(R.string.yes_t)
 
                 it.tvNegativeButton.setOnClickListener { dismiss() }
 
@@ -70,8 +86,10 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
                     dismiss()
                     App.prefsManager.logout()
                     requireActivity().finishAffinity()
-                    startActivity(Intent(requireActivity(), com.Lyber.ui.activities.SplashActivity::class.java)
-                        .putExtra(Constants.FOR_LOGOUT, Constants.FOR_LOGOUT))
+                    startActivity(
+                        Intent(requireActivity(), com.Lyber.ui.activities.SplashActivity::class.java)
+                            .putExtra(Constants.FOR_LOGOUT, Constants.FOR_LOGOUT)
+                    )
                 }
 
                 show()
@@ -110,10 +128,15 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
             if (pinCount == 4) {
                 val bundle = Bundle().apply {
                     putBoolean(Constants.FOR_LOGIN, viewModel.forLogin)
+                    if (requireArguments().containsKey(Constants.IS_CHANGE_PIN))
+                        putBoolean(
+                            Constants.IS_CHANGE_PIN,
+                            requireArguments().getBoolean(Constants.IS_CHANGE_PIN)
+                        )
                 }
                 Handler(Looper.getMainLooper()).postDelayed({
                     viewModel.createPin = pin
-                    findNavController().navigate(R.id.confirmPinFragment,bundle)
+                    findNavController().navigate(R.id.confirmPinFragment, bundle)
 
                     /*App.prefsManager.user?.let {
                     if (it.login_pin_set) {

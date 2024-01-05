@@ -57,20 +57,23 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/llFiatWallet"
         android:src="@drawable/ic_euro" />
-
+<androidx.appcompat.widget.LinearLayoutCompat
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:gravity="center_vertical"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintStart_toEndOf="@+id/ivAssetIcon"
+    app:layout_constraintTop_toBottomOf="@+id/llFiatWallet"
+    app:layout_constraintVertical_bias="0.7"
+    android:orientation="vertical">
 
     <TextView
         android:id="@+id/tvAssetName"
         style="@style/SubheadMabry"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="13dp"
         android:gravity="center_vertical"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/ivAssetIcon"
-        app:layout_constraintTop_toBottomOf="@+id/llFiatWallet"
-        app:layout_constraintVertical_bias="0.0"
-        android:text="Euro" />
+        android:text="@string/euro" />
 
     <TextView
         android:id="@+id/tvAssetNameCode"
@@ -80,9 +83,10 @@
         android:visibility="gone"
         android:layout_toEndOf="@id/ivAssetIcon"
         android:textColor="@color/purple_gray_500"
-        app:layout_constraintStart_toEndOf="@id/ivAssetIcon"
-        app:layout_constraintTop_toBottomOf="@+id/tvAssetName"
         android:text="@string/deactivated" />
+</androidx.appcompat.widget.LinearLayoutCompat>
+
+
     <TextView
         android:id="@+id/tvAssetAmount"
         style="@style/SubheadMabry"
