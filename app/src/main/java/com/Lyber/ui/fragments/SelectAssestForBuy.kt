@@ -12,7 +12,6 @@ import com.Lyber.R
 import com.Lyber.databinding.CustomDialogLayoutBinding
 import com.Lyber.databinding.FragmentAllAssetsBinding
 import com.Lyber.models.PriceServiceResume
-import com.Lyber.ui.activities.BaseActivity
 import com.Lyber.ui.adapters.AllAssetAdapter
 import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.Lyber.utils.App

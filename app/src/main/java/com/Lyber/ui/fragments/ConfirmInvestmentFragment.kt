@@ -3,6 +3,7 @@ package com.Lyber.ui.fragments
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.Window
 import androidx.lifecycle.Lifecycle
@@ -53,7 +54,15 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
             }
         }
 
-
+        viewModel.oneTimeStrategyDataResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                dismissProgressDialog()
+               Log.d("dataa","${it.data.id}")
+                val bundle = Bundle()
+                bundle.putString("executionId", it.data.id)
+                findNavController().navigate(R.id.orderStrategyExecutionFragment,bundle)
+            }
+        }
     }
 
     override fun onClick(v: View?) {
@@ -73,9 +82,18 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                                         "Once"-> null     //"now"
                                         "Daily"-> "1d"
                                         "Weekly"-> "1w"
+                                        "none"-> "none"
                                         else -> "1m"
                                     }
+
+//                                    showProgressDialog(requireContext())
+                                    if(freq=="none"){
+                                         viewModel.oneTimeOrderStrategy(
+                                            viewModel.selectedStrategy!!.name, viewModel.amount.toFloat().toDouble(),it.ownerUuid,)
+                                    } else
+
                                     showProgressDialog(requireContext())
+
 
                                     viewModel.investStrategy(
                                         it.ownerUuid,
@@ -101,7 +119,6 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
     @SuppressLint("SetTextI18n")
     private fun prepareView() {
         binding.apply {
-
             val buyValue = (viewModel.amount.toFloat().toInt() * (0.08)).toFloat()
             tvNestedAmountValue.text =
                 viewModel.amount.decimalPoint().commaFormatted + " USDT"
@@ -136,11 +153,26 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                         tvValueDeposit,
                         tvValueDepositFee
                     ).gone()
+                    //changed fee to 1 percent of the amount
+                    val fee = (viewModel.amount.toFloat() / (100.0))
 
+                    if(viewModel.selectedFrequency=="none")
+                    tvValueFrequency.text = getString(R.string.immediate)
+                    else
                     tvValueFrequency.text = viewModel.selectedFrequency
 
+                    tvNestedAmountValue.text =(viewModel.amount.toFloat() - fee).toString()
+                        .decimalPoint().commaFormatted + " USDT"
+                        viewModel.amount.decimalPoint().commaFormatted + " USDT"
+                    tvValueTotal.text =
+                        (viewModel.amount.toFloat()).toString()
+                            .decimalPoint().commaFormatted + " USDT"
+                    tvValueLyberFee.text =
+                        fee.toString().decimalPoint() + " USDT"
+
+
                     tvAmount.text =
-                        (viewModel.amount.toFloat() + buyValue).toString()+" USDT"
+                        (viewModel.amount.toFloat()).toString()+" USDT"
 
                 }
 

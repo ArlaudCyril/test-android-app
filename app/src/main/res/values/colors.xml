@@ -53,5 +53,7 @@
     <color name="shibColor">#EC442D</color>
     <color name="dotColor">#E6007A</color>
     <color name="usdcColor">#2775CA</color>
+    <color name="greenBackColor">#4AC27A</color>
+    <color name="orangeBackColor">#FFC043</color>
 
 </resources>

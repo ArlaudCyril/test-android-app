@@ -261,6 +261,11 @@ open class NetworkViewModel : ViewModel() {
     private val _getOrderResponse = MutableLiveData<OrderResponseData>()
     val orderResponse get() = _getOrderResponse
 
+    private var _oneTimeStrategyDataResponse = MutableLiveData<OneTimeStrategyData>()
+    val oneTimeStrategyDataResponse get() = _oneTimeStrategyDataResponse
+    private var _strategyExecutionResponse = MutableLiveData<StrategyExecution>()
+    val strategyExecutionResponse get() = _strategyExecutionResponse
+
     fun cancelJob() {
 
     }
@@ -1148,6 +1153,31 @@ open class NetworkViewModel : ViewModel() {
             if (res.isSuccessful)
                 _getOrderResponse.postValue(res.body())
             else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun oneTimeOrderStrategy(strategyName: String,amount: Double,ownerUuid: String){
+        viewModelScope.launch(exceptionHandler){
+            val map = HashMap<String,Any>()
+            map["strategyName"] = strategyName
+            map["amount"] = amount
+            map["ownerUuid"] = ownerUuid
+            val res = RestClient.get(Constants.NEW_BASE_URL).oneTimeStrategyExecution(map)
+            if (res.isSuccessful){
+                _oneTimeStrategyDataResponse.postValue(res.body())
+            }else{
+                listener!!.onRetrofitError(res.errorBody())
+            }
+        }
+    }
+    fun strategyStatus(executionId: String){
+        viewModelScope.launch(exceptionHandler){
+            val res = RestClient.get(Constants.NEW_BASE_URL).checkStrategyStatus(executionId)
+            if (res.isSuccessful){
+                _strategyExecutionResponse.postValue(res.body())
+            }else{
+                listener!!.onRetrofitError(res.errorBody())
+            }
         }
     }
 }

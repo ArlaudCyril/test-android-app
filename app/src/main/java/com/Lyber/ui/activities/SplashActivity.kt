@@ -12,7 +12,7 @@ import com.Lyber.utils.ActivityCallbacks
 import com.Lyber.utils.Constants
 
 @SuppressLint("CustomSplashScreen")
-class SplashActivity : com.Lyber.ui.activities.BaseActivity<ActivitySplashBinding>() {
+class SplashActivity : BaseActivity<ActivitySplashBinding>() {
 
     private val TAG = "CompletePortfolioFragme"
     override fun bind() = ActivitySplashBinding.inflate(layoutInflater)
@@ -52,6 +52,8 @@ class SplashActivity : com.Lyber.ui.activities.BaseActivity<ActivitySplashBindin
                 com.Lyber.ui.activities.SplashActivity.Companion._activityCallbacks = value
             }
     }
+
+
 
 }
 
