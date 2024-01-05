@@ -12,7 +12,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.Lyber.databinding.AppItemLayoutBinding
 import com.Lyber.databinding.FragmentSearchAssetsBinding
 import com.Lyber.databinding.LoaderViewBinding
-import com.Lyber.models.AssetBaseData
 import com.Lyber.models.GetAssetsResponseItem
 import com.Lyber.ui.adapters.BaseAdapter
 import com.Lyber.utils.CommonMethods.Companion.checkInternet

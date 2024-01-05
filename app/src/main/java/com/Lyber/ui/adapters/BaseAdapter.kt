@@ -4,6 +4,7 @@ import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.Lyber.R
 import com.Lyber.databinding.LoaderViewBinding
+import com.Lyber.models.SuccessfulBundleEntry
 
 abstract class BaseAdapter<items> :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {

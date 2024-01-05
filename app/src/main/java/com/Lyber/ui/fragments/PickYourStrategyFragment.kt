@@ -17,7 +17,6 @@ import com.Lyber.models.MessageResponse
 import com.Lyber.models.StrategiesResponse
 import com.Lyber.ui.adapters.PickStrategyFragmentAdapter
 import com.Lyber.ui.fragments.bottomsheetfragments.InvestWithStrategyBottomSheet
-import com.Lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet
 import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
@@ -78,8 +77,8 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
             viewModel.getStrategies()
         }
 
-        viewModel.pauseStrategyResponse.observe(viewLifecycleOwner){
-            if (lifecycle.currentState == Lifecycle.State.RESUMED){
+        viewModel.pauseStrategyResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 checkInternet(requireContext()) {
                     showProgressDialog(requireContext())
                     viewModel.getStrategies()
@@ -116,7 +115,7 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
         }
     }
 
-    private fun itemClicked(position: Int,currentView:StrategyView) {
+    private fun itemClicked(position: Int, currentView: StrategyView) {
 
         when (previousPosition) {
             -1 -> { // no one is selected yet
@@ -128,6 +127,7 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
                 previousPosition = position
                 viewModel.strategyPositionSelected.postValue(previousPosition)
             }
+
             position -> { // previous
                 if (currentView.isStrategySelected) { // unselected the item
                     currentView.isStrategySelected = false
@@ -148,10 +148,11 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
                     viewModel.strategyPositionSelected.postValue(previousPosition)
                 }
             }
+
             else -> {
                 try {
                     val previousView = (layoutManager.getChildAt(previousPosition) as StrategyView)
-                    if (previousView!=null) {
+                    if (previousView != null) {
                         previousView.isStrategySelected = false
                         currentView.isStrategySelected = true
                         currentView.background = getDrawable(
@@ -165,7 +166,7 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
                         previousView.radioButton.setImageResource(R.drawable.radio_unselect)
 
                     }
-                }catch (e:Exception){
+                } catch (e: Exception) {
                     e.printStackTrace()
                 }
                 previousPosition = position
@@ -187,7 +188,7 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
             RelativeLayout.LayoutParams.MATCH_PARENT
         )
 
-        val vc  = InvestWithStrategyBottomSheet(::clicked)
+        val vc = InvestWithStrategyBottomSheet(::clicked)
         vc.viewToDelete = transparentView
         vc.mainView = getView()?.rootView as ViewGroup
         vc.viewModel = viewModel
@@ -202,24 +203,37 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
     }
 
     private fun clicked(type: Int) {
-        when(type){
-            0->{findNavController().navigate(R.id.investAddMoneyFragment)}
-            1->{
-                checkInternet(requireActivity()){
+        when (type) {
+            0 -> {
+                findNavController().navigate(R.id.investAddMoneyFragment)
+            }
+
+            1 -> {
+                checkInternet(requireActivity()) {
                     CommonMethods.showProgressDialog(requireActivity())
-                    viewModel.pauseStrategy(viewModel.selectedStrategy!!.ownerUuid,viewModel.selectedStrategy!!.name)
+                    viewModel.pauseStrategy(
+                        viewModel.selectedStrategy!!.ownerUuid,
+                        viewModel.selectedStrategy!!.name
+                    )
                 }
             }
-            2->{
-                checkInternet(requireActivity()){
+
+            2 -> {
+                checkInternet(requireActivity()) {
                     CommonMethods.showProgressDialog(requireActivity())
                     viewModel.deleteStrategy(viewModel.selectedStrategy!!.name)
                 }
             }
-            3->{
+
+            3 -> {
                 val bundle = Bundle()
-                bundle.putBoolean(Constants.ID,true)
-                findNavController().navigate(R.id.buildStrategyFragment,bundle)
+                bundle.putBoolean(Constants.ID, true)
+                findNavController().navigate(R.id.buildStrategyFragment, bundle)
+            }
+            4->{
+                val bundle = Bundle()
+                bundle.putBoolean(Constants.ONE_TIME, true)
+                findNavController().navigate(R.id.investAddMoneyFragment,bundle)
             }
         }
     }

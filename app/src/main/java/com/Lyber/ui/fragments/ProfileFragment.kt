@@ -27,9 +27,7 @@ import com.Lyber.databinding.CustomDialogLayoutBinding
 import com.Lyber.databinding.FragmentProfileBinding
 import com.Lyber.databinding.ItemMyAssetBinding
 import com.Lyber.models.Transaction
-import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.ui.adapters.BaseAdapter
-import com.Lyber.ui.fragments.bottomsheetfragments.ProfileBottomSheet
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.checkPermission
@@ -44,7 +42,6 @@ import com.Lyber.utils.CommonMethods.Companion.setProfile
 import com.Lyber.utils.CommonMethods.Companion.shouldShowPermission
 import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.showToast
-import com.Lyber.utils.CommonMethods.Companion.toDateFormatTwo
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel

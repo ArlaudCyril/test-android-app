@@ -7,6 +7,7 @@ import androidx.viewbinding.ViewBinding
 import com.Lyber.models.AssetBaseData
 import com.Lyber.models.Balance
 import com.Lyber.models.PriceServiceResume
+import com.Lyber.ui.fragments.OrderStrategyExecutionFragment
 import com.stripe.android.PaymentConfiguration
 
 abstract class BaseActivity<viewBinding : ViewBinding> : AppCompatActivity() {
@@ -42,5 +43,6 @@ abstract class BaseActivity<viewBinding : ViewBinding> : AppCompatActivity() {
         super.onDestroy()
         _binding = null
     }
+
 
 }

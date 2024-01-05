@@ -18,7 +18,6 @@ import com.Lyber.databinding.LayoutAddAnAssetBinding
 import com.Lyber.databinding.LoaderViewBinding
 import com.Lyber.models.AddedAsset
 import com.Lyber.models.PriceServiceResume
-import com.Lyber.ui.activities.BaseActivity
 import com.Lyber.ui.adapters.BaseAdapter
 import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
@@ -29,7 +28,6 @@ import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
 import com.Lyber.utils.CommonMethods.Companion.loadImage
 import com.Lyber.utils.CommonMethods.Companion.roundFloat
-import com.Lyber.utils.Constants
 import com.Lyber.utils.OnTextChange
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.tabs.TabLayout

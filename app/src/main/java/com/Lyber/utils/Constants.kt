@@ -99,6 +99,7 @@ object Constants {
 
     const val SCAN_COMPLETE = "scan-complete"
     const val SCANNED_ADDRESS = "scanned-address"
+    const val ONE_TIME = "oneTime"
 
 
     val defaults = mutableListOf<Int>().apply {

@@ -17,7 +17,7 @@ import com.Lyber.utils.Constants
 class InvestAddMoneyFragment: BaseFragment<FragmentInvestAddMoneyBinding>(),View.OnClickListener{
     private var selectedFrequency:String =""
     private var mCurrency: String = " USDT"
-    private var minInvestPerAsset = 20f
+    private var minInvestPerAsset = 10f
     private var requiredAmount =0f
     private lateinit var viewModel: PortfolioViewModel
     private val amount get() = binding.etAmount.text.trim().toString()
@@ -25,6 +25,10 @@ class InvestAddMoneyFragment: BaseFragment<FragmentInvestAddMoneyBinding>(),View
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = CommonMethods.getViewModel(requireActivity())
+        if(arguments!=null) {
+            binding.btnAddFrequency.visibility = View.GONE
+            selectedFrequency="none"
+        }
         prepareView()
         binding.tvBackArrow.setOnClickListener(this)
         binding.tvDot.setOnClickListener(this)
