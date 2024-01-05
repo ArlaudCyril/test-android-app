@@ -282,6 +282,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
         viewModel.getAssetDetail.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                Log.d("data","${it.data}")
                 viewModel.selectedAsset?.imageUrl?.let { it1 ->
                     binding.includedMyAsset.ivAssetIcon.loadCircleCrop(
                         it1
@@ -290,6 +291,10 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 viewModel.selectedAssetDetail = it.data
                 binding.includedMyAsset.tvAssetName.text = viewModel.selectedAssetDetail?.fullName
                 binding.tvValueAbout.text = viewModel.selectedAssetDetail?.about?.en
+//                binding.tvValueMarketCap.text = viewModel.selectedAssetDetail?.marketCap
+//                binding.tvValueVolume.text = viewModel.selectedAssetDetail?.volume24h
+//                binding.tvValueCirculatingSupply.text = viewModel.selectedAssetDetail?.circulatingSupply
+//                binding.tvValuePopularity.text = "#"+viewModel.selectedAssetDetail?.marketRank.toString()
                 //
             }
         }

@@ -90,16 +90,17 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                                     if(freq=="none"){
                                          viewModel.oneTimeOrderStrategy(
                                             viewModel.selectedStrategy!!.name, viewModel.amount.toFloat().toDouble(),it.ownerUuid,)
-                                    } else
+                                    } else {
+                                        showProgressDialog(requireContext())
 
-                                    showProgressDialog(requireContext())
 
-
-                                    viewModel.investStrategy(
-                                        it.ownerUuid,
-                                        freq,
-                                        viewModel.amount.toFloat().toInt()
-                                    ,viewModel.selectedStrategy!!.name)
+                                        viewModel.investStrategy(
+                                            it.ownerUuid,
+                                            freq,
+                                            viewModel.amount.toFloat().toInt(),
+                                            viewModel.selectedStrategy!!.name
+                                        )
+                                    }
                                 }
                             }
                         }

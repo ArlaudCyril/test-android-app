@@ -525,7 +525,11 @@ data class AssetDetailBaseData(
     val isStablecoin: Boolean,
     val isDepositActive: Boolean,
     val isWithdrawalActive: Boolean,
-    val networks: MutableList<NetworkDeposit>
+    val networks: MutableList<NetworkDeposit>,
+    val marketCap: String,
+    val circulatingSupply: String,
+    val volume24h: String,
+    val decimals: String
 )
 
 data class NetworkDeposit(
