@@ -67,6 +67,7 @@ import java.io.FileOutputStream
 import java.math.RoundingMode
 import java.text.DateFormat
 import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.abs
@@ -179,8 +180,17 @@ class CommonMethods {
             return DecimalFormat(string.toString()).format(toDouble())
         }
 
+
         fun String.roundFloat(): String {
-            return String.format("%.2f", this.toFloat())
+            try {
+                var value=this
+                if(value.contains(","))
+                    value=this.replace(",","")
+                return String.format(Locale.US,"%.2f", value.toFloat())
+            }catch (ex:NumberFormatException){
+                return ""
+            }
+
         }
 
         fun isBiometricReady(context: Context) =
@@ -753,12 +763,11 @@ class CommonMethods {
 
         val <T> T.commaFormatted: String
             get() = when (this) {
-                is Number -> this.commaFormatted
-                is String -> toDoubleOrNull().commaFormatted
+                is Number -> String.format(Locale.US, "%,d", this.toLong())
+                is String -> toDoubleOrNull()?.let { String.format(Locale.US, "%,.2f", it) } ?: "0"
                 is Char -> this.toString()
                 else -> "0"
             }
-
         private val Number.commaFormatted: String
             get() = when (this) {
 
@@ -785,89 +794,101 @@ class CommonMethods {
 
         val String.currencyFormatted: SpannableString
             get() = kotlin.run {
-                if(this.isEmpty()){
-                    SpannableString("0.00"+ Constants.EURO)
-                }else{
-                    val value: Double = this.toDouble()
-                    var numberZerosLeft = 0 // we count also the coma
-                    var formatter = DecimalFormat()
-                    if (value > 10000) {
-                        formatter.maximumFractionDigits = 0
-                        formatter.minimumFractionDigits = 0
-                    } else if (value > 1000) {
-                        formatter.maximumFractionDigits = 1
-                        formatter.minimumFractionDigits = 1
-                    } else if (value > 1) {
-                        formatter.maximumFractionDigits = 2
-                        formatter.minimumFractionDigits = 2
-                    } else if (value > 0.1) {
-                        numberZerosLeft = 2
-                        formatter.maximumFractionDigits = 3
-                        formatter.minimumFractionDigits = 3
-                    } else if (value > 0.01) {
-                        numberZerosLeft = 3
-                        formatter.maximumFractionDigits = 4
-                        formatter.minimumFractionDigits = 4
-                    } else if (value > 0.001) {
-                        numberZerosLeft = 4
-                        formatter.maximumFractionDigits = 5
-                        formatter.minimumFractionDigits = 5
-                    } else if (value > 0.0001) {
-                        numberZerosLeft = 5
-                        formatter.maximumFractionDigits = 6
-                        formatter.minimumFractionDigits = 6
-                    } else if (value > 0.00001) {
-                        numberZerosLeft = 6
-                        formatter.maximumFractionDigits = 7
-                        formatter.minimumFractionDigits = 7
-                    } else if (value > 0.000001) {
-                        numberZerosLeft = 7
-                        formatter.maximumFractionDigits = 8
-                        formatter.minimumFractionDigits = 8
-                    } else if (value > 0.0000001) {
-                        numberZerosLeft = 8
-                        formatter.maximumFractionDigits = 9
-                        formatter.minimumFractionDigits = 9
-                    } else if (value > 0.00000001) {
-                        numberZerosLeft = 9
-                        formatter.maximumFractionDigits = 10
-                        formatter.minimumFractionDigits = 10
-                    }
+                if (this.isEmpty()) {
+                    SpannableString("0.00" + Constants.EURO)
+                } else {
+                    try {
+                        var value: Double = 0.0
+                        if (this.contains(","))
+                            value = this.replace(",", "").toDouble()
+                        else
+                            value = this.toDouble()
+                        var numberZerosLeft = 0 // we count also the coma
+                        var formatter = DecimalFormat()
+                        if (value > 10000) {
+                            formatter.maximumFractionDigits = 0
+                            formatter.minimumFractionDigits = 0
+                        } else if (value > 1000) {
+                            formatter.maximumFractionDigits = 1
+                            formatter.minimumFractionDigits = 1
+                        } else if (value > 1) {
+                            formatter.maximumFractionDigits = 2
+                            formatter.minimumFractionDigits = 2
+                        } else if (value > 0.1) {
+                            numberZerosLeft = 2
+                            formatter.maximumFractionDigits = 3
+                            formatter.minimumFractionDigits = 3
+                        } else if (value > 0.01) {
+                            numberZerosLeft = 3
+                            formatter.maximumFractionDigits = 4
+                            formatter.minimumFractionDigits = 4
+                        } else if (value > 0.001) {
+                            numberZerosLeft = 4
+                            formatter.maximumFractionDigits = 5
+                            formatter.minimumFractionDigits = 5
+                        } else if (value > 0.0001) {
+                            numberZerosLeft = 5
+                            formatter.maximumFractionDigits = 6
+                            formatter.minimumFractionDigits = 6
+                        } else if (value > 0.00001) {
+                            numberZerosLeft = 6
+                            formatter.maximumFractionDigits = 7
+                            formatter.minimumFractionDigits = 7
+                        } else if (value > 0.000001) {
+                            numberZerosLeft = 7
+                            formatter.maximumFractionDigits = 8
+                            formatter.minimumFractionDigits = 8
+                        } else if (value > 0.0000001) {
+                            numberZerosLeft = 8
+                            formatter.maximumFractionDigits = 9
+                            formatter.minimumFractionDigits = 9
+                        } else if (value > 0.00000001) {
+                            numberZerosLeft = 9
+                            formatter.maximumFractionDigits = 10
+                            formatter.minimumFractionDigits = 10
+                        }
 
-                    val stringFormatted = formatter.format(value)+ Constants.EURO
-                    val ss1 = SpannableString(stringFormatted)
-                    ss1.setSpan(RelativeSizeSpan(0.8f), 0, numberZerosLeft, 0) // set size
-                    ss1
+                        val symbols = DecimalFormatSymbols(Locale.US)
+                        formatter.decimalFormatSymbols = symbols
+                        val stringFormatted = formatter.format(value) + Constants.EURO
+                        val ss1 = SpannableString(stringFormatted)
+                        ss1.setSpan(RelativeSizeSpan(0.8f), 0, numberZerosLeft, 0) // set size
+                        ss1
+                    } catch (ex: NumberFormatException) {
+                        SpannableString("0.00" + Constants.EURO)
+                    }
                 }
             }
+
 
         fun String.formattedAsset(price: Double?, rounding : RoundingMode): String {
             var priceFinal = price
             if (this == "" || priceFinal == null || priceFinal == 0.0 || priceFinal.isNaN()) {
                 priceFinal= 1.026
-             }
+            }
 
-             val formatter = DecimalFormat()
+            val formatter = DecimalFormat()
 
-             // Pour trouver la précision, ici X
-             // Prix * 10e-X >= 0.01 (centimes)
-             // => X >= -log(0,01/Prix)
-             val precision = ceil(-log10(0.01 / priceFinal)).toInt()
-             if (precision > 0) {
-                 formatter.maximumFractionDigits = precision
-                 formatter.minimumFractionDigits = precision
-             } else {
-                 formatter.maximumFractionDigits = 0
-                 formatter.minimumFractionDigits = 0
-             }
+            // Pour trouver la précision, ici X
+            // Prix * 10e-X >= 0.01 (centimes)
+            // => X >= -log(0,01/Prix)
+            val precision = ceil(-log10(0.01 / priceFinal)).toInt()
+            if (precision > 0) {
+                formatter.maximumFractionDigits = precision
+                formatter.minimumFractionDigits = precision
+            } else {
+                formatter.maximumFractionDigits = 0
+                formatter.minimumFractionDigits = 0
+            }
 
-             formatter.roundingMode = rounding
+            formatter.roundingMode = rounding
 
-             val valueFormatted = formatter.format(this.toDouble() ?: 0.0)
+            val symbols = DecimalFormatSymbols(Locale.US)
+            formatter.decimalFormatSymbols = symbols
+            val valueFormatted = formatter.format(this.toDouble() ?: 0.0)
 
-             return valueFormatted.toString()
-         }
-
+            return valueFormatted.toString()
+        }
 
 
 
