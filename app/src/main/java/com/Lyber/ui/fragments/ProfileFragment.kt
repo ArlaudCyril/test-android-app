@@ -208,7 +208,13 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 binding.ivProfile.setProfile
             }
         }
-
+if(App.prefsManager.user?.strongAuthentification!=null)
+{
+            binding.tvStatusStrongAuth.text =
+            if (App.prefsManager.user?.strongAuthentification!!)
+                getString(R.string.enabled)
+                else getString(R.string.disabled)
+}
 
 //        binding.tvStatusStrongAuth.text =
 //            if (App.prefsManager.isStrongAuth()) "Enabled" else "Disabled"

@@ -705,5 +705,6 @@
     <string name="enter_your_new_pass">Entrez votre nouveau mot de passe</string>
     <string name="save_my_new_pass">Enregistrer mon nouveau mot de passe</string>
     <string name="pass_valid_msg">Le mot de passe doit comporter au moins 10 caractères, 1 caractère spécial, 1 minuscule et 1 majuscule.</string>
+    <string name="toCaps">To</string>
 
 </resources>
