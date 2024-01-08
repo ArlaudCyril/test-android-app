@@ -94,7 +94,7 @@ class TransactionDetailsBottomSheetFragment :
                 binding.tvOrderId.text = transactionData.id
                 binding.tvStatusValue.text =
                     transactionData.status.lowercase().replaceFirstChar(Char::uppercase)
-                binding.tvFrom.text = getString(R.string.to)
+                binding.tvFrom.text = getString(R.string.toCaps)
                 binding.tvFromValue.text = transactionData.toAddress
                 binding.tvTo.text = getString(R.string.amount)
                 binding.tvToValue.text =

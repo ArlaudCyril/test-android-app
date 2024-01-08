@@ -69,7 +69,7 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
                 PaginationListener.NestedScrollPaginationListener() {
                 override fun loadMoreItems() {
                     binding.rvTransactions.post {
-                        offset = offset + limit
+                        offset = offset + limit+1
                         isLoading = true
                         adapter.addProgress()
                         CommonMethods.checkInternet(requireContext()) {
@@ -107,7 +107,6 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
                 isLastPage = it.data.count() < limit
 
                 if (offset == 0) {
-
                     Log.d(TAG, "notificationResponse: Success  page == 1")
                     if (it.data.isNotEmpty()) {
                         Log.d(TAG, "notificationResponse: page == 1 setList")
