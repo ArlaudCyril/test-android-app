@@ -563,8 +563,8 @@
     <string name="high">High</string>
     <string name="oops">Oops!</string>
     <string name="deadline_confirming_purchase_passed">The deadline for confirming your purchase has passed. Would you like to receive a new proposal?</string>
-    <string name="close_account_message">Are you sure you want to close your account? All your data, including saved preferences, transaction history and personal information will be retained for 5 years from the date of account closure. If you are sure, please confirm below.
-    Make sure to withdraw all the money you have in your account before closing it.</string>
+    <string name="close_account_message">Are you sure you want to close your account? All your data, including saved preferences, transaction history and personal information will be retained for 5 years from the date of account closure. If you are sure, please confirm below.\n\n
+    Make sure to withdraw all the money you have in your account before\n closing it.</string>
     <string name="make_sure_withdraw">Make sure to withdraw all the money you have in your account before closing it.</string>
     <string name="minimum_investment">Min Invest</string>
     <string name="invest">Invest</string>
@@ -707,5 +707,6 @@
     <string name="save_my_new_pass">Save my new password</string>
     <string name="pass_valid_msg">The password must have at least 10 characters, 1 special character, 1 lower case and 1 upper case.</string>
     <string name="toCaps">To</string>
+    <string name="close_account">Close account</string>
 
 </resources>
