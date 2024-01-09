@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -66,7 +67,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
     private var option = 1 // 1 -> camera option 2-> gallery option
     val limit = 5 // as on this screen we have to show max 3 enteries
     var offset = 0
-    private lateinit var navController : NavController
+    private lateinit var navController: NavController
     override fun bind() = FragmentProfileBinding.inflate(layoutInflater)
 
     @SuppressLint("ClickableViewAccessibility")
@@ -75,8 +76,9 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 
         viewModel = getViewModel(requireActivity())
         viewModel.listener = this
-      
-        val navHostFragment =  requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+
+        val navHostFragment =
+            requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
 //        viewModel.transactionResponse.observe(viewLifecycleOwner) {
 //            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
@@ -105,10 +107,9 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 //        }
 
 
-
         CommonMethods.checkInternet(requireContext()) {
-           binding.progressImage.animation =
-            AnimationUtils.loadAnimation(context, R.anim.rotate_drawable)
+            binding.progressImage.animation =
+                AnimationUtils.loadAnimation(context, R.anim.rotate_drawable)
             viewModel.getTransactions(limit, offset)
         }
         viewModel.getTransactionListingResponse.observe(viewLifecycleOwner) {
@@ -116,18 +117,20 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 dismissProgressDialog()
                 binding.tvNoTransaction.setBackgroundResource(0)
                 binding.progressImage.clearAnimation()
-                binding.progressImage.visibility=View.GONE
+                binding.progressImage.visibility = View.GONE
                 when {
                     it.data.isEmpty() -> {
                         binding.tvNoTransaction.visible()
                         binding.rvTransactions.gone()
                         binding.tvViewAllTransaction.gone()
                     }
+
                     it.data.count() in 1..3 -> {
                         adapter.setList(it.data)
                         binding.tvViewAllTransaction.visible()
                         binding.tvNoTransaction.gone()
                     }
+
                     else -> {
                         adapter.setList(it.data.subList(0, 3))
                         binding.tvViewAllTransaction.visible()
@@ -171,10 +174,14 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         viewModel.logoutResponse.observe(viewLifecycleOwner) {
             dismissProgressDialog()
             App.prefsManager.logout()
-            startActivity(Intent(requireActivity(), com.Lyber.ui.activities.SplashActivity::class.java).apply {
-                putExtra("fromLogout", "fromLogout")
-                addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-            })
+            startActivity(
+                Intent(
+                    requireActivity(),
+                    com.Lyber.ui.activities.SplashActivity::class.java
+                ).apply {
+                    putExtra("fromLogout", "fromLogout")
+                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                })
         }
 
         viewModel.otpPinChangeResponse.observe(viewLifecycleOwner) {
@@ -208,13 +215,12 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 binding.ivProfile.setProfile
             }
         }
-if(App.prefsManager.user?.strongAuthentification!=null)
-{
+        if (App.prefsManager.user?.strongAuthentification != null) {
             binding.tvStatusStrongAuth.text =
-            if (App.prefsManager.user?.strongAuthentification!!)
-                getString(R.string.enabled)
+                if (App.prefsManager.user?.strongAuthentification!!)
+                    getString(R.string.enabled)
                 else getString(R.string.disabled)
-}
+        }
 
 //        binding.tvStatusStrongAuth.text =
 //            if (App.prefsManager.isStrongAuth()) "Enabled" else "Disabled"
@@ -243,6 +249,7 @@ if(App.prefsManager.user?.strongAuthentification!=null)
         binding.rlExport.setOnClickListener(this)
 
         binding.llContactUS.setOnClickListener(this)
+        binding.llCloseAccount.setOnClickListener(this)
 
 
         binding.switchFaceId.setOnCheckedChangeListener { button, isChecked ->
@@ -321,15 +328,45 @@ if(App.prefsManager.user?.strongAuthentification!=null)
                 it.tvPositiveButton.setOnClickListener {
 
                     App.prefsManager.logout()
-                    startActivity(Intent(requireActivity(), com.Lyber.ui.activities.SplashActivity::class.java).apply {
-                        putExtra("fromLogout", "fromLogout")
-                        addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                    })
+                    startActivity(
+                        Intent(
+                            requireActivity(),
+                            com.Lyber.ui.activities.SplashActivity::class.java
+                        ).apply {
+                            putExtra("fromLogout", "fromLogout")
+                            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        })
                     /*checkInternet(requireContext()) {
                         dismiss()
                         showProgressDialog(requireContext())
                         viewModel.logout(getDeviceId(requireActivity().contentResolver))
                     }*/
+                }
+                show()
+            }
+        }
+    }
+
+    private fun showCloseAccountDialog() {
+        Dialog(requireActivity(), R.style.DialogTheme).apply {
+            CustomDialogLayoutBinding.inflate(layoutInflater).let {
+                requestWindowFeature(Window.FEATURE_NO_TITLE)
+//                setCancelable(false)
+//                setCanceledOnTouchOutside(false)
+                setContentView(it.root)
+                it.tvTitle.text = getString(R.string.close_account)
+                it.tvMessage.text = getString(R.string.close_account_message)
+                it.tvNegativeButton.text = getString(R.string.cancel)
+                it.tvPositiveButton.text = getString(R.string.confirm)
+                it.tvNegativeButton.setOnClickListener {
+                    dismiss()
+                }
+                it.tvPositiveButton.setOnClickListener {
+                    Log.d("amount", "${viewModel.totalPortfolio}")
+//                    if(viewModel.totalPortfolio>=1) {
+//                        getString(R.string.make_sure_withdraw).showToast(requireContext())
+//                        dismiss()
+//                    }
                 }
                 show()
             }
@@ -382,10 +419,11 @@ if(App.prefsManager.user?.strongAuthentification!=null)
 
                     findNavController().navigate(R.id.chooseLanguageFragment)
                 }
-                rlExport-> navController.navigate(R.id.exportOperationsFragment)
 
-                llContactUS->navController.navigate(R.id.contactUsFragment)
+                rlExport -> navController.navigate(R.id.exportOperationsFragment)
 
+                llContactUS -> navController.navigate(R.id.contactUsFragment)
+                llCloseAccount -> showCloseAccountDialog()
             }
         }
     }
@@ -412,7 +450,7 @@ if(App.prefsManager.user?.strongAuthentification!=null)
                             tvStartTitle.text = "Exchange"
                             tvStartSubTitle.text =
                                 "${it.fromAsset.uppercase()} -> ${it.toAsset.uppercase()}"
-                            var roundedNumber=BigDecimal(it.fromAmount)
+                            var roundedNumber = BigDecimal(it.fromAmount)
                             try {
                                 val originalNumber = BigDecimal(it.fromAmount)
                                 val scale = originalNumber.scale()
@@ -420,14 +458,14 @@ if(App.prefsManager.user?.strongAuthentification!=null)
                                     originalNumber.setScale(8, RoundingMode.HALF_UP)
                                 } else
                                     originalNumber
-                            }catch (_:Exception){
+                            } catch (_: Exception) {
 
                             }
                             tvEndTitle.text = "-${roundedNumber} ${it.fromAsset.uppercase()}"
 //                            tvEndTitle.text = "-${it.fromAmount} ${it.fromAsset.uppercase()}"
                             var amount = it.toAmount
                             try {
-                                amount = String.format(Locale.US,"%.10f", it.toAmount.toFloat())
+                                amount = String.format(Locale.US, "%.10f", it.toAmount.toFloat())
                             } catch (ex: java.lang.Exception) {
 
                             }
@@ -446,7 +484,11 @@ if(App.prefsManager.user?.strongAuthentification!=null)
                                 if (it.successfulBundleEntries.isNotEmpty()) {
                                     try {
                                         tvEndTitleCenter.text =
-                                            "${it.successfulBundleEntries[0].assetAmount} ${it.successfulBundleEntries[0].asset.uppercase(Locale.US)}"
+                                            "${it.successfulBundleEntries[0].assetAmount} ${
+                                                it.successfulBundleEntries[0].asset.uppercase(
+                                                    Locale.US
+                                                )
+                                            }"
 
                                     } catch (ex: java.lang.Exception) {
 
