@@ -13,7 +13,6 @@ import com.Lyber.databinding.FragmentWithdrawAmountBinding
 import com.Lyber.models.Balance
 import com.Lyber.models.BalanceData
 import com.Lyber.models.WithdrawAddress
-import com.Lyber.ui.activities.BaseActivity
 import com.Lyber.ui.fragments.bottomsheetfragments.WithdrawalAddressBottomSheet
 import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
@@ -26,6 +25,8 @@ import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.utils.OnTextChange
 import java.math.RoundingMode
+import java.util.Collections
+
 
 class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), View.OnClickListener {
     override fun bind() = FragmentWithdrawAmountBinding.inflate(layoutInflater)
@@ -80,8 +81,11 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                     }
                 }
                 if (addresses.size > 0) {
+                   val addressList = addresses.sortedByDescending { it.creationDate }
+
                     binding.includedAsset.apply {
-                        val withdrawAddress = addresses[0]
+//                        val withdrawAddress = addresses[0]
+                        val withdrawAddress = addressList[0]
                         viewModel.withdrawAddress = withdrawAddress
                         tvAssetName.text = withdrawAddress.name
                         tvAssetNameCode.text = withdrawAddress.address
@@ -160,13 +164,11 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
             else amount.replace(mConversionCurrency, "").pointFormat.toDouble()
 
         if (focusedData.currency.contains(mCurrency)) {
-            val priceCoin = valueAmount.toDouble()
-                .div(assetAmount.toDouble())
+            val priceCoin = valueAmount.toDouble().div(assetAmount.toDouble())
             binding.tvAssetConversion.text =
                 "~${assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN)} $mConversionCurrency"
         } else {
-            val priceCoin = assetAmount.toDouble()
-                .div(valueAmount.toDouble())
+            val priceCoin = assetAmount.toDouble().div(valueAmount.toDouble())
             binding.tvAssetConversion.text =
                 "~${assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN)} $mCurrency"
         }
@@ -185,12 +187,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
         viewModel.withdrawAddress = null
         binding.apply {
             listOf(
-                tvTitle,
-                tvSubTitle,
-                etAmount,
-                tvAssetConversion,
-                ivMax,
-                ivRepeat
+                tvTitle, tvSubTitle, etAmount, tvAssetConversion, ivMax, ivRepeat
             ).visible()
             binding.etAmount.text = "0 €"
             includedAsset.ivAssetIcon.setImageResource(R.drawable.addaddressicon)
@@ -218,11 +215,12 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                 } ${it.id.uppercase()} Available".also { tvSubTitle.text = it }
                 valueConversion =
                     (balance.balanceData.balance.toDouble() / balance.balanceData.euroBalance.toDouble())
-                if (balance.balanceData.balance=="0"){
+                if (balance.balanceData.balance == "0") {
                     val balanceResume =
                         com.Lyber.ui.activities.BaseActivity.balanceResume.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
 
-                    valueConversion = 1.0/balanceResume!!.priceServiceResumeData.lastPrice.toDouble()
+                    valueConversion =
+                        1.0 / balanceResume!!.priceServiceResumeData.lastPrice.toDouble()
                 }
                 setAssesstAmount("0.0")
             }
@@ -244,8 +242,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                 if (maxValue < 0) {
                     maxValue = 0.0
                 }
-                minAmount =
-                    it.withdrawMin.toString().formattedAsset(priceCoin, RoundingMode.DOWN)
+                minAmount = it.withdrawMin.toString().formattedAsset(priceCoin, RoundingMode.DOWN)
                 (getString(R.string.minimum_withdrawl) + ": " + minAmount + " " + balance!!.id.uppercase()).also {
                     tvMinAmount.text = it
                 }
@@ -282,9 +279,9 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                     val balance =
                         com.Lyber.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
 
-                    if (balance == null){
+                    if (balance == null) {
                         getString(R.string.you_do_not_have_this_asset).showToast(requireActivity())
-                    }else {
+                    } else {
                         if (maxValue >= amountFinal.toDouble()) {
                             if (viewModel.withdrawAddress != null) {
                                 val bundle = Bundle().apply {
@@ -307,17 +304,15 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
 
     private fun openAddressSheet() {
         if (addresses.size == 0) {
-            val bundle =Bundle().apply {
-                putBoolean(Constants.ACTION_WITHDRAW,true)
-                putString(Constants.ID,viewModel.selectedNetworkDeposit!!.id)
+            val bundle = Bundle().apply {
+                putBoolean(Constants.ACTION_WITHDRAW, true)
+                putString(Constants.ID, viewModel.selectedNetworkDeposit!!.id)
             }
-            findNavController().navigate(R.id.addCryptoAddress,bundle)
+            findNavController().navigate(R.id.addCryptoAddress, bundle)
         } else {
 
             WithdrawalAddressBottomSheet(
-                addresses,
-                viewModel.selectedNetworkDeposit!!.id,
-                ::handle
+                addresses, viewModel.selectedNetworkDeposit!!.id, ::handle
             ).show(childFragmentManager, "")
         }
     }
@@ -343,11 +338,10 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
         if (focusedData.currency.contains(mCurrency)) {
             if (maxValue > 0) {
                 val maxinEuro = maxValue / valueConversion
-                var priceCoin = balance!!.balanceData.euroBalance.toDouble()
-                    .div(maxinEuro)
+                var priceCoin = balance!!.balanceData.euroBalance.toDouble().div(maxinEuro)
 
-                binding.etAmount.text = maxinEuro.toString()
-                    .formattedAsset(priceCoin, RoundingMode.DOWN) + mCurrency
+                binding.etAmount.text =
+                    maxinEuro.toString().formattedAsset(priceCoin, RoundingMode.DOWN) + mCurrency
             } else {
                 binding.etAmount.text = "0" + mCurrency
             }
@@ -372,9 +366,8 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
         try {
             val builder = StringBuilder()
 
-            val value =
-                if (amount.contains(mCurrency)) amount.replace(mCurrency, "").pointFormat
-                else amount.replace(mConversionCurrency, "").pointFormat
+            val value = if (amount.contains(mCurrency)) amount.replace(mCurrency, "").pointFormat
+            else amount.replace(mConversionCurrency, "").pointFormat
 
             builder.append(value.dropLast(1))
             if (builder.toString().isEmpty()) {
@@ -445,8 +438,8 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
             focusedData.currency = unfocusedData.currency
             unfocusedData.currency = currency
             val valueOne = amount.replace(mConversionCurrency, "").pointFormat.decimalPoint()
-            val valueTwo = assetConversion.replace(mCurrency, "")
-                .replace("~", "").pointFormat.decimalPoint()
+            val valueTwo =
+                assetConversion.replace(mCurrency, "").replace("~", "").pointFormat.decimalPoint()
 
             binding.etAmount.text = ("${valueTwo}$mCurrency")
 
