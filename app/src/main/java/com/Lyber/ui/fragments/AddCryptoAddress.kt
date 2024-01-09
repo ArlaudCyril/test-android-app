@@ -28,6 +28,7 @@ import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.addressMatched
 import com.Lyber.utils.CommonMethods.Companion.checkFormat
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
+import com.Lyber.utils.CommonMethods.Companion.clearBackStack
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.fadeIn
 import com.Lyber.utils.CommonMethods.Companion.fadeOut
@@ -179,7 +180,10 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
         viewModel.addWhitelistResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
-                requireActivity().onBackPressedDispatcher.onBackPressed()
+                if (isFromWithdraw)
+                    WithdrawAmountFragment.newAddress=true
+
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
                 //infoBottomSheet.dismiss()
             }
         }

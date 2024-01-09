@@ -41,6 +41,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
     private var mConversionCurrency: String = ""
     private val addresses: MutableList<WithdrawAddress> = mutableListOf()
     private val amount get() = binding.etAmount.text.trim().toString()
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = CommonMethods.getViewModel(requireActivity())
@@ -68,6 +69,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
             CommonMethods.showProgressDialog(requireActivity())
             viewModel.getWithdrawalAddresses()
         }
+//        if(newAddress)
     }
 
     private fun setObservers() {
@@ -81,10 +83,13 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                     }
                 }
                 if (addresses.size > 0) {
-                   val addressList = addresses.sortedByDescending { it.creationDate }
-
+                    var addressList = addresses
+                    if(newAddress) {
+                        addressList =
+                            addresses.sortedByDescending { it.creationDate }.toMutableList()
+                        newAddress=false
+                    }
                     binding.includedAsset.apply {
-//                        val withdrawAddress = addresses[0]
                         val withdrawAddress = addressList[0]
                         viewModel.withdrawAddress = withdrawAddress
                         tvAssetName.text = withdrawAddress.name
@@ -451,8 +456,14 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
 
     companion object {
         private const val TAG = "WithdrawAmountFragment"
+        var newAddress=false
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        if(isAdded)
+            newAddress=false
+    }
     private val String.pointFormat
         get() = replace(",", "", true)
 
