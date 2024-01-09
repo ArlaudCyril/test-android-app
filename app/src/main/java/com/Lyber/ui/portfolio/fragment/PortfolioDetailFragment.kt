@@ -304,11 +304,18 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         }
         viewModel.orderResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                if (it.data.orderStatus == "VALIDATED")
+
+                if(it.data.orderStatus=="PENDING"){
+                    viewModel.getOrderApi(requireArguments().getString(Constants.ORDER_ID, ""))
+                }
+                else if (it.data.orderStatus == "VALIDATED")
                     Handler(Looper.getMainLooper()).postDelayed({
                         viewModel.getBalance()
                     }, 4000)
-
+                else  //TODO for now
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        viewModel.getBalance()
+                    }, 4000)
             }
         }
     }
