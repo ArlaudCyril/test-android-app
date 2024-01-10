@@ -17,7 +17,9 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.animation.AnimationUtils
+import android.widget.RelativeLayout
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
@@ -31,7 +33,9 @@ import com.Lyber.databinding.FragmentProfileBinding
 import com.Lyber.databinding.ItemTransactionBinding
 import com.Lyber.models.TransactionData
 import com.Lyber.ui.adapters.BaseAdapter
+import com.Lyber.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
 import com.Lyber.ui.fragments.bottomsheetfragments.TransactionDetailsBottomSheetFragment
+import com.Lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet2FA
 import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
@@ -288,9 +292,39 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 //
 //            binding.rvTransactions.startLayoutAnimation()
 //        }
+        viewModel.commonResponse.observe(viewLifecycleOwner){
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                CommonMethods.dismissProgressDialog()
+                openOtpScreen()
+            }
+        }
+    }
+    private fun openOtpScreen() {
+        val transparentView = View(context)
+        transparentView.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.semi_transparent_dark
+            )
+        )
+        val viewParams = RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.MATCH_PARENT,
+            RelativeLayout.LayoutParams.MATCH_PARENT
+        )
 
+        val vc  = VerificationBottomSheet2FA(::handle)
+        vc.viewToDelete = transparentView
+        vc.mainView = getView()?.rootView as ViewGroup
+        vc.show(childFragmentManager, Constants.ACTION_CLOSE_ACCOUNT)
+
+        // Add the transparent view to the RelativeLayout
+        val mainView = getView()?.rootView as ViewGroup
+        mainView.addView(transparentView, viewParams)
     }
 
+    private fun handle(code:String) {
+
+    }
     override fun onResume() {
         super.onResume()
         binding.ivProfile.setProfile
@@ -363,10 +397,15 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 }
                 it.tvPositiveButton.setOnClickListener {
                     Log.d("amount", "${viewModel.totalPortfolio}")
-//                    if(viewModel.totalPortfolio>=1) {
-//                        getString(R.string.make_sure_withdraw).showToast(requireContext())
-//                        dismiss()
-//                    }
+                    if(com.Lyber.ui.activities.BaseActivity.balances.size>=1) {
+                        getString(R.string.make_sure_withdraw).showToast(requireContext())
+                        dismiss()
+                    }
+                    else{
+                        CommonMethods.showProgressDialog(requireContext())
+                        dismiss()
+                        viewModel.getOtpForWithdraw(Constants.ACTION_CLOSE_ACCOUNT,null)
+                    }
                 }
                 show()
             }

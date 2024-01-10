@@ -11,7 +11,6 @@ import androidx.lifecycle.Lifecycle
 import com.Lyber.R
 import com.Lyber.databinding.FragmentConfirmInvestmentBinding
 import com.Lyber.network.RestClient
-import com.Lyber.ui.activities.BaseActivity
 import com.Lyber.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
 import com.Lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet2FA
 import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
