@@ -49,10 +49,11 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
     override fun bind() = FragmentMyPurchaseBinding.inflate(layoutInflater)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        PaymentConfiguration.init(
+      PaymentConfiguration.init(
             requireActivity(),
             "pk_test_51NVVY7F2A3romcuHdC3JDD9evsFhQvyZ5cYS6wpy9OznXgmYzLvWTG81Zfj2nWGQFZ2zs8RboA3uMLCNPpPV08Zk00McUdiPAt"
         )
+
 
         viewModel = CommonMethods.getViewModel(requireActivity())
         binding.ivTopAction.setOnClickListener(this)
@@ -95,7 +96,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
         when (result) {
             GooglePayLauncher.Result.Completed -> {
                 Log.d("GooglePayLauncher","$isGpayHit")
-                isGpayHit=true
+//                isGpayHit=true
                 stopTimer()
                 viewModel.selectedAsset = CommonMethods.getAsset("usdt")
                 val bundle = Bundle().apply {
@@ -107,13 +108,13 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
                 )
             }
             GooglePayLauncher.Result.Canceled -> {
-                isGpayHit=false
+//                isGpayHit=false
                 // User canceled the operation
                 Log.d("isGpayReady", "Cancelled")
             }
 
             is GooglePayLauncher.Result.Failed -> {
-                isGpayHit=false
+//                isGpayHit=false
                 // Operation failed; inspect `result.error` for the exception
                 Log.d("isGpayReady", "${result.error}")
                 result.error.showToast(requireContext())
@@ -150,7 +151,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
 //                        )
 //                    )
                         if(isGpayInstalled) {
-                            isGpayHit = true
+//                            isGpayHit = true
                             googlePayLauncher.presentForPaymentIntent(clientSecret)
                         }
                     else
@@ -230,8 +231,9 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
 
     private val runnable = Runnable {
         isTimerRunning = true
-        if (timer == 0 && !isGpayHit) {
+        if (timer == 0) {
             try {
+//                googlePayLauncher.dismiss()
                 ErrorBottomSheet(::dismissList).show(childFragmentManager, "")
             } catch (_: Exception) {
 
