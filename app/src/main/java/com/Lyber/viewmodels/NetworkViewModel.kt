@@ -9,7 +9,6 @@ import com.Lyber.network.RestClient
 import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.Lyber.utils.App
 import com.Lyber.utils.Constants
-import com.google.android.datatransport.runtime.Destination
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -1112,10 +1111,11 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun getOtpForWithdraw(action: String, details: String) {
+    fun getOtpForWithdraw(action: String, details: String?) {
         viewModelScope.launch(exceptionHandler) {
             val map = HashMap<String, Any>()
             map["action"] = action
+            if(details!=null)
             map["details"] = details
             val res = RestClient.get(Constants.NEW_BASE_URL).getOtpForWithdraw(map)
             if (res.isSuccessful) {
@@ -1262,4 +1262,13 @@ open class NetworkViewModel : ViewModel() {
 
             }
         }
+    fun closeAccount(hash: HashMap<String, Any>) {
+        viewModelScope.launch(exceptionHandler) {
+
+            val res = RestClient.get(Constants.NEW_BASE_URL).closeAccount(hash)
+            if (res.isSuccessful)
+                _booleanResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
 }
