@@ -277,7 +277,12 @@ class VerificationBottomSheet() :
                                         viewModel.updateAuthentication(hash)
                                     }
                                 }
-                            } else if (viewModel.forLogin) {
+                            }
+//                            else if(typeVerification!=null && typeVerification==Constants.CHANGE_PASSWORD){
+//                                dismiss()
+//                                viewModel.verify2FA(code = getCode())
+//                            }
+                            else if (viewModel.forLogin) {
                                 dismiss()
                                 viewModel.verify2FA(code = getCode())
                             } else {

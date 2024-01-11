@@ -1277,4 +1277,18 @@ open class NetworkViewModel : ViewModel() {
 
             }
         }
+
+    fun changePassword(hash: HashMap<String, Any>) {
+        try {
+            viewModelScope.launch(exceptionHandler) {
+                val res = RestClient.get().changePassword(hash)
+                if (res.isSuccessful)
+                    _booleanResponse.postValue(res.body())
+                else listener?.onRetrofitError(res.errorBody())
+            }
+        } catch (e: Exception) {
+            listener?.onError()
+
+        }
+    }
 }
