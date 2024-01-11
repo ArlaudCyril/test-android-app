@@ -386,4 +386,6 @@ interface Api {
     @POST("user-service/password")
     suspend fun changePassword(@Body hashMap: HashMap<String, Any>):Response<BooleanResponse>
 
+    @POST("user-service/verify-password-change")
+    suspend fun verifyPasswordChange(@Body hashMap: HashMap<String, Any>): Response<ExportResponse>
 }

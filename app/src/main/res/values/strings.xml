@@ -710,5 +710,6 @@
     <string name="change_password">Change password</string>
     <string name="enter_your_old_pass">Enter your old password</string>
     <string name="new_pass_cannot_be_same_as_old">New password cannot be the same as the old one.</string>
+    <string name="pass_changed_success">Password changed successfully</string>
 
 </resources>

@@ -66,7 +66,7 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
                     RelativeLayout.LayoutParams.MATCH_PARENT
                 )
 
-                val vc  = VerificationBottomSheet()
+                val vc = VerificationBottomSheet()
                 vc.typeVerification = Constants.CHANGE_PASSWORD
                 vc.viewToDelete = transparentView
                 vc.mainView = getView()?.rootView as ViewGroup
@@ -79,9 +79,15 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
 
             }
         }
+        viewModel.exportOperationResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                CommonMethods.dismissProgressDialog()
+                getString(R.string.pass_changed_success).showToast(requireContext())
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+        }
         viewModel.changePasswordData.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-//                CommonMethods.dismissProgressDialog()
                 client = SRP6ClientSession()
                 client.xRoutine = XRoutineWithUserIdentity()
                 client.step1(
