@@ -598,7 +598,7 @@
     <string name="department">Department</string>
     <string name="your_monthly_income">Your monthly income</string>
     <string name="i_have_never_invested">I have never invested</string>
-<!--    <string name="what_your_source_of_income">What\'s your main source of income?</string>-->
+    <!--    <string name="what_your_source_of_income">What\'s your main source of income?</string>-->
     <string name="what_your_source_of_income">What’s your source of income ?</string>
     <string name="salary">Salary</string>
     <string name="investments">Investments</string>
@@ -707,5 +707,8 @@
     <string name="save_my_new_pass">Save my new password</string>
     <string name="pass_valid_msg">The password must have at least 10 characters, 1 special character, 1 lower case and 1 upper case.</string>
     <string name="toCaps">To</string>
+    <string name="change_password">Change password</string>
+    <string name="enter_your_old_pass">Enter your old password</string>
+    <string name="new_pass_cannot_be_same_as_old">New password cannot be the same as the old one.</string>
 
 </resources>

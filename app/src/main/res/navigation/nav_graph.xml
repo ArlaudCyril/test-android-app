@@ -367,6 +367,11 @@
         android:id="@+id/resetPasswordFragment"
         android:name="com.Lyber.ui.fragments.ResetPasswordFragment"
         android:label="ResetPasswordFragment" />
+
+    <fragment
+        android:id="@+id/changePasswordFragment"
+        android:name="com.Lyber.ui.fragments.ChangePasswordFragment"
+        android:label="ChangePasswordFragment" />
     <dialog
         android:id="@+id/portfolioThreeDots"
         android:name="com.Lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDots"

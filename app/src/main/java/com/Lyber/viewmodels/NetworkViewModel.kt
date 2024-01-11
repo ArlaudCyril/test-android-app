@@ -244,6 +244,8 @@ open class NetworkViewModel : ViewModel() {
 
     private var _resetPassResponse: MutableLiveData<res> = MutableLiveData()
     val resetPasswordResponse get() = _resetPassResponse
+    private var _changePassResponse: MutableLiveData<ChangePasswordData> = MutableLiveData()
+    val changePasswordData get() = _changePassResponse
     fun cancelJob() {
 
     }
@@ -1255,6 +1257,19 @@ open class NetworkViewModel : ViewModel() {
                     val res = RestClient.get().getResetPassword()
                     if (res.isSuccessful)
                         _resetPassResponse.postValue(res.body())
+                    else listener?.onRetrofitError(res.errorBody())
+                }
+            } catch (e: Exception) {
+                listener?.onError()
+
+            }
+        }
+    fun getPasswordChangeChallenge() {
+           try {
+                viewModelScope.launch(exceptionHandler) {
+                    val res = RestClient.get().getPasswordChangeChallenge()
+                    if (res.isSuccessful)
+                        _changePassResponse.postValue(res.body())
                     else listener?.onRetrofitError(res.errorBody())
                 }
             } catch (e: Exception) {

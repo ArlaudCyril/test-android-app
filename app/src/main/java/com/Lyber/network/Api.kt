@@ -379,4 +379,7 @@ interface Api {
     suspend fun forgotPassword(@Body hashMap: HashMap<String, Any>):Response<BooleanResponse>
     @GET("user-service/reset-password-identifiers")
     suspend fun getResetPassword(): Response<res>
+
+    @GET("user-service/password-change-challenge")
+    suspend fun getPasswordChangeChallenge(): Response<ChangePasswordData>
 }
