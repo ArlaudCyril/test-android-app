@@ -382,4 +382,8 @@ interface Api {
 
     @GET("user-service/password-change-challenge")
     suspend fun getPasswordChangeChallenge(): Response<ChangePasswordData>
+
+    @POST("user-service/password")
+    suspend fun changePassword(@Body hashMap: HashMap<String, Any>):Response<BooleanResponse>
+
 }
