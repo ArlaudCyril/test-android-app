@@ -278,10 +278,11 @@ class VerificationBottomSheet() :
                                     }
                                 }
                             }
-//                            else if(typeVerification!=null && typeVerification==Constants.CHANGE_PASSWORD){
-//                                dismiss()
-//                                viewModel.verify2FA(code = getCode())
-//                            }
+                            else if(typeVerification!=null && typeVerification==Constants.CHANGE_PASSWORD){
+                                dismiss()
+                                CommonMethods.showProgressDialog(requireContext())
+                                viewModel.verifyPasswordChange(code = getCode())
+                            }
                             else if (viewModel.forLogin) {
                                 dismiss()
                                 viewModel.verify2FA(code = getCode())
