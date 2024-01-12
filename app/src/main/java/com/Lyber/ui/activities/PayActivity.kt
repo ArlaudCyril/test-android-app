@@ -1,30 +1,30 @@
-package com.Lyber.ui.fragments
+package com.Lyber.ui.activities
 
 import android.annotation.SuppressLint
-import android.app.Dialog
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
-import android.view.Window
+import com.google.android.material.snackbar.Snackbar
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.ui.AppBarConfiguration
+import androidx.navigation.ui.navigateUp
+import androidx.navigation.ui.setupActionBarWithNavController
 import com.Lyber.R
-import com.Lyber.databinding.CustomDialogLayoutBinding
-import com.Lyber.databinding.FragmentMyPurchaseBinding
+import com.Lyber.databinding.ActivityPayBinding
+import com.Lyber.databinding.ActivityWebViewBinding
 import com.Lyber.models.Balance
 import com.Lyber.models.BalanceData
 import com.Lyber.models.DataQuote
 import com.Lyber.network.RestClient
-import com.Lyber.ui.activities.BaseActivity
+import com.Lyber.ui.fragments.PreviewMyPurchaseFragment
 import com.Lyber.ui.fragments.bottomsheetfragments.ErrorBottomSheet
 import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
-import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
-import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.formattedAsset
 import com.Lyber.utils.CommonMethods.Companion.formattedAssetForInverseRatio
 import com.Lyber.utils.CommonMethods.Companion.gone
@@ -35,11 +35,14 @@ import com.google.gson.Gson
 import com.stripe.android.PaymentConfiguration
 import com.stripe.android.googlepaylauncher.GooglePayEnvironment
 import com.stripe.android.googlepaylauncher.GooglePayLauncher
+import okhttp3.ResponseBody
 import java.math.RoundingMode
 import java.util.Locale
 
-class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
+class PayActivity : com.Lyber.ui.activities.BaseActivity<ActivityPayBinding>(),
     View.OnClickListener, RestClient.OnRetrofitError {
+    override fun bind() = ActivityPayBinding.inflate(layoutInflater)
+
     private var timer = 25
     private var isExpand = false
     private lateinit var clientSecret: String
@@ -48,24 +51,24 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
     private lateinit var viewModel: PortfolioViewModel
     private var isTimerRunning = false
     private lateinit var handler: Handler
-    private var isGpayInstalled=false
-    var isGpayHit=false
-    override fun bind() = FragmentMyPurchaseBinding.inflate(layoutInflater)
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-      PaymentConfiguration.init(
-            requireActivity(),
+    private var isGpayInstalled = false
+    var isGpayHit = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        PaymentConfiguration.init(
+            this,
             "pk_test_51NVVY7F2A3romcuHdC3JDD9evsFhQvyZ5cYS6wpy9OznXgmYzLvWTG81Zfj2nWGQFZ2zs8RboA3uMLCNPpPV08Zk00McUdiPAt"
         )
-
-        viewModel = CommonMethods.getViewModel(requireActivity())
-        viewModel.listener=this
+//if(intent.getStringExtra("clientSecret"))
+        clientSecret = intent.getStringExtra("clientSecret").toString()
+        viewModel = CommonMethods.getViewModel(this)
         binding.ivTopAction.setOnClickListener(this)
         binding.tvMoreDetails.setOnClickListener(this)
         binding.btnConfirmInvestment.setOnClickListener(this)
         handler = Handler(Looper.getMainLooper())
         googlePayLauncher = GooglePayLauncher(
-            fragment = this@PreviewMyPurchaseFragment,
+            activity = this,
             config = GooglePayLauncher.Config(
                 environment = GooglePayEnvironment.Test,
                 merchantCountryCode = "FR",
@@ -75,53 +78,55 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
             readyCallback = ::onGooglePayReady,
             resultCallback = ::onGooglePayResult
         )
-        viewModel.getQuoteResponse.observe(viewLifecycleOwner) {
-            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                CommonMethods.dismissProgressDialog()
-                val bundle = Bundle().apply {
-                    putString(Constants.DATA_SELECTED, Gson().toJson(it.data))
-                }
-                this.arguments = bundle
-                getData()
-            }
-        }
-        getData()
+//        viewModel.getQuoteResponse.observe(viewLifecycleOwner) {
+//            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+//                CommonMethods.dismissProgressDialog()
+//                val bundle = Bundle().apply {
+//                    putString(Constants.DATA_SELECTED, Gson().toJson(it.data))
+//                }
+//               arguments = bundle
+//                getData()
+//            }
+//        }
+//        getData()
+        startTimer()
     }
 
     private fun onGooglePayReady(isReady: Boolean) {
         //   binding.btnConfirmInvestment.isEnabled = isReady
         // implemented below
         Log.d("isGpayReady", "$isReady")
-        if(isReady)
-            isGpayInstalled=true
+        if (isReady)
+            isGpayInstalled = true
     }
 
     private fun onGooglePayResult(result: GooglePayLauncher.Result) {
         when (result) {
             GooglePayLauncher.Result.Completed -> {
-                Log.d("GooglePayLauncher","$isGpayHit")
+                Log.d("GooglePayLauncher", "$isGpayHit")
+                isGpayHit = false
                 stopTimer()
-                isGpayHit=false
-                viewModel.selectedAsset = CommonMethods.getAsset("usdt")
-                val bundle = Bundle().apply {
-                    putString(Constants.ORDER_ID, orderId)
-                    putString(Constants.FROM_SWAP, PreviewMyPurchaseFragment::class.java.name)
-                }
-                findNavController().navigate(
-                    R.id.action_preview_my_purchase_to_detail_fragment, bundle
-                )
+//                viewModel.selectedAsset = CommonMethods.getAsset("usdt")
+//                val bundle = Bundle().apply {
+//                    putString(Constants.ORDER_ID, orderId)
+//                    putString(Constants.FROM_SWAP, PreviewMyPurchaseFragment::class.java.name)
+//                }
+//                findNavController().navigate(
+//                    R.id.action_preview_my_purchase_to_detail_fragment, bundle
+//                )
             }
+
             GooglePayLauncher.Result.Canceled -> {
+                isGpayHit = false
                 // User canceled the operation
-                isGpayHit=false
                 Log.d("isGpayReady", "Cancelled")
             }
 
             is GooglePayLauncher.Result.Failed -> {
-               // Operation failed; inspect `result.error` for the exception
-                isGpayHit=false
+                isGpayHit = false
+                // Operation failed; inspect `result.error` for the exception
                 Log.d("isGpayReady", "${result.error}")
-                result.error.showToast(requireContext())
+                result.error.showToast(this)
             }
         }
     }
@@ -130,13 +135,13 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
     private fun getData() {
 
 
-        if (arguments != null && requireArguments().containsKey(Constants.DATA_SELECTED)) {
-            val data = Gson().fromJson(
-                requireArguments().getString(Constants.DATA_SELECTED),
-                DataQuote::class.java
-            )
-            prepareView(data)
-        }
+//        if (arguments != null && requireArguments().containsKey(Constants.DATA_SELECTED)) {
+//            val data = Gson().fromJson(
+//                requireArguments().getString(Constants.DATA_SELECTED),
+//                DataQuote::class.java
+//            )
+//            prepareView(data)
+//        }
 
     }
 
@@ -145,16 +150,20 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
             when (v!!) {
                 ivTopAction -> {
                     stopTimer()
-                    requireActivity().onBackPressedDispatcher.onBackPressed()
+//                    requireActivity().onBackPressedDispatcher.onBackPressed()
                 }
 
                 btnConfirmInvestment -> {
-                        if(isGpayInstalled) {
-                            isGpayHit = true
-                            googlePayLauncher.presentForPaymentIntent(clientSecret)
-                        }
-                    else
-                        getString(R.string.you_must_install_gpay).showToast(requireContext())
+//                    if (CommonMethods.isAppInstalled(
+//                            requireActivity(),
+//                            "com.google.android.apps.nbu.paisa.user"
+//                        )
+//                    )
+                    if (isGpayInstalled) {
+                        isGpayHit = true
+                        googlePayLauncher.presentForPaymentIntent(clientSecret)
+                    } else
+                        getString(R.string.you_must_install_gpay).showToast(this@PayActivity)
                 }
 
                 tvMoreDetails -> {
@@ -230,18 +239,21 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
 
     private val runnable = Runnable {
         isTimerRunning = true
-        if ( timer == 0) {
+        if (!isGpayHit && timer == 0) {
             try {
-                if(isGpayHit)
-                ErrorBottomSheet(::dismissList).show(childFragmentManager, "GpaySheet")
-                else
-                ErrorBottomSheet(::dismissList).show(childFragmentManager, "")
+                ErrorBottomSheet(::dismissList).show(supportFragmentManager, "")
             } catch (_: Exception) {
 
             }
         } else {
             timer -= 1
-              if (timer > 0) {
+            if (isGpayHit && timer == 1) {
+//                CommonMethods.showProgressDialog(this)
+                "The purchase has expired, we will redirect you to a new one".showToast(this)
+                stopTimer()
+                finish()
+//                dismissList(true)
+            } else if (timer > 0) {
                 binding.tvTimer.text =
                     getString(R.string.you_have_seconds_to_confirm_this_purchase, timer.toString())
             } else {
@@ -264,19 +276,27 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
 
     private fun dismissList(clicked: Boolean) {
         if (clicked) {
-            checkInternet(requireActivity()) {
-                val data = Gson().fromJson(
-                    requireArguments().getString(Constants.DATA_SELECTED),
-                    DataQuote::class.java
-                )
-                CommonMethods.showProgressDialog(requireActivity())
-                viewModel.getQuote(
-                    "eur",
-                    "usdt",
-                    data.fromAmount
-                )
-            }
+//            CommonMethods.checkInternet(requireActivity()) {
+//                val data = Gson().fromJson(
+//                    requireArguments().getString(Constants.DATA_SELECTED),
+//                    DataQuote::class.java
+//                )
+//                CommonMethods.showProgressDialog(requireActivity())
+//                viewModel.getQuote(
+//                    "eur",
+//                    "usdt",
+//                    data.fromAmount
+//                )
+//            }
         }
+    }
+
+    override fun onRetrofitError(responseBody: ResponseBody?) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onError() {
+        TODO("Not yet implemented")
     }
 
 }

@@ -306,7 +306,15 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
 
                 if(it.data.orderStatus=="PENDING"){
-                    viewModel.getOrderApi(requireArguments().getString(Constants.ORDER_ID, ""))
+                    showLottieProgressDialog(requireActivity(), Constants.LOADING_FAILURE)
+                    Handler().postDelayed({
+                        dismissProgressDialog()
+                        if (confetti != null) {
+                            confetti!!.terminate()
+                        }
+                    }, 100)
+
+//                    viewModel.getOrderApi(requireArguments().getString(Constants.ORDER_ID, ""))
                 }
                 else if (it.data.orderStatus == "VALIDATED")
                     Handler(Looper.getMainLooper()).postDelayed({

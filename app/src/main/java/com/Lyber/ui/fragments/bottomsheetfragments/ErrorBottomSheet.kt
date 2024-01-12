@@ -48,9 +48,9 @@ class ErrorBottomSheet(val clickListener: (Boolean) -> Unit) :
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        if (!goBackToHome) {
+        if (tag!!.isEmpty() && !goBackToHome) {
             clearBackStack1()
-            findNavController().navigate(R.id.portfolioHomeFragment)
+            findNavController().navigate(R.id.portfolioDetailFragment)
         }
     }
 

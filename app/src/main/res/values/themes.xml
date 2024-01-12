@@ -26,8 +26,6 @@
     </style>
 
 
-
-
     <style name="CountryPickerStyle" parent="Theme.AppCompat.Dialog">
         <item name="windowMinWidthMajor">80pt</item>
         <item name="windowMinWidthMinor">80pt</item>
@@ -209,4 +207,9 @@
     <style name="Theme.Lyber.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="Theme.Lyber.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+    <!-- Base application theme. -->
+    <style name="Base.Theme.Lyber" parent="Theme.Material3.DayNight.NoActionBar">
+        <!-- Customize your light theme here. -->
+        <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
+    </style>
 </resources>
