@@ -1,7 +1,6 @@
 package com.Lyber.ui.fragments
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.util.Log
@@ -15,12 +14,8 @@ import com.Lyber.databinding.FragmentBuyUsdtBinding
 import com.Lyber.models.Balance
 import com.Lyber.models.BalanceData
 import com.Lyber.network.RestClient
-import com.Lyber.ui.activities.BarCodeActivity
-import com.Lyber.ui.activities.BaseActivity
-import com.Lyber.ui.activities.PayActivity
 import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
-import com.Lyber.utils.CommonMethods.Companion.commaFormatted
 import com.Lyber.utils.CommonMethods.Companion.decimalPoint
 import com.Lyber.utils.CommonMethods.Companion.formattedAsset
 import com.Lyber.utils.CommonMethods.Companion.gone
