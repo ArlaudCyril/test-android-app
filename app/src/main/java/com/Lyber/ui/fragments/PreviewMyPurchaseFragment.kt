@@ -228,6 +228,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
         }
     }
 
+    @SuppressLint("SuspiciousIndentation")
     private val runnable = Runnable {
         isTimerRunning = true
         if ( timer == 0) {
