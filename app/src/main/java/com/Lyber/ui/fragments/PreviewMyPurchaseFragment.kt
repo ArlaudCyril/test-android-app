@@ -75,6 +75,9 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
             readyCallback = ::onGooglePayReady,
             resultCallback = ::onGooglePayResult
         )
+
+
+
         viewModel.getQuoteResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 CommonMethods.dismissProgressDialog()
@@ -110,6 +113,8 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
                 findNavController().navigate(
                     R.id.action_preview_my_purchase_to_detail_fragment, bundle
                 )
+//                result.
+//                val paymentMethodId = result.paymentMethod.id
             }
             GooglePayLauncher.Result.Canceled -> {
                 // User canceled the operation
@@ -120,8 +125,9 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
             is GooglePayLauncher.Result.Failed -> {
                // Operation failed; inspect `result.error` for the exception
                 isGpayHit=false
+//                val paymentMethodId = result.paymentMethod.id
                 Log.d("isGpayReady", "${result.error}")
-                result.error.showToast(requireContext())
+//                result.error.showToast(requireContext())
             }
         }
     }
