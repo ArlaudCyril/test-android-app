@@ -711,5 +711,6 @@
     <string name="enter_your_old_pass">Enter your old password</string>
     <string name="new_pass_cannot_be_same_as_old">New password cannot be the same as the old one.</string>
     <string name="pass_changed_success">Password changed successfully</string>
-
+    <string name="confirm_your_new_pass">Confirm your new password</string>
+    <string name="pass_should_be_same">Your password should be the same in the fields \"Enter your new password\" and \"Confirm your new password\".</string>
 </resources>
