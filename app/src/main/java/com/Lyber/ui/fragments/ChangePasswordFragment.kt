@@ -3,13 +3,19 @@ package com.Lyber.ui.fragments
 import android.content.res.ColorStateList
 import android.graphics.PorterDuff
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.Gravity
+import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import com.Lyber.R
@@ -21,6 +27,8 @@ import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.NetworkViewModel
 import com.Lyber.viewmodels.SignUpViewModel
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 import com.nimbusds.srp6.SRP6ClientSession
 import com.nimbusds.srp6.SRP6CryptoParams
 import com.nimbusds.srp6.SRP6VerifierGenerator
@@ -49,6 +57,7 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
         binding.btnSendResetLink.setOnClickListener(this)
         binding.etPasswordOld.addTextChangedListener(onTextChange)
         binding.etPassword.addTextChangedListener(onTextChange)
+        binding.etPasswordConfirm.addTextChangedListener(onTextChange)
         viewModel.booleanResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 CommonMethods.dismissProgressDialog()
@@ -92,7 +101,7 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
                 client.xRoutine = XRoutineWithUserIdentity()
                 client.step1(
                     App.prefsManager.user?.email,
-                    binding.etPasswordOld.text.toString()
+                    binding.etPasswordOld.text.trim().toString()
                 )
                 val creds =
                     client.step2(config, it.data.salt.toBigInteger(), it.data.B.toBigInteger())
@@ -129,10 +138,14 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             if (binding.etPasswordOld.text.trim().toString().isNotEmpty() &&
-                binding.etPassword.text.trim().toString().isNotEmpty()
+                binding.etPassword.text.trim().toString().isNotEmpty() &&
+                binding.etPasswordConfirm.text.trim().toString().isNotEmpty()
             ) {
                 if (CommonMethods.isValidPassword(binding.etPasswordOld.text.trim().toString())
                     && CommonMethods.isValidPassword(binding.etPassword.text.trim().toString())
+                    && CommonMethods.isValidPassword(
+                        binding.etPasswordConfirm.text.trim().toString()
+                    )
                 ) {
 
                     val colorStateList =
@@ -162,6 +175,7 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
                             )
                         )
                     binding.btnSendResetLink.backgroundTintList = colorStateList
+                    binding.tvPassValidMsg.text = getString(R.string.pass_valid_msg)
                     binding.tvPassValidMsg.setTextColor(
                         ContextCompat.getColor(
                             requireContext(),
@@ -185,14 +199,35 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
             when (v) {
                 ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
                 btnSendResetLink -> {
+                    val snackbar = Snackbar.make(binding.root, "", Snackbar.LENGTH_LONG)
+                    val params = snackbar.view.layoutParams as FrameLayout.LayoutParams
+                    params.gravity = Gravity.TOP
+                    params.setMargins(0, 0, 0, 0)
+                    snackbar.view.layoutParams = params
+
+                    snackbar.animationMode = BaseTransientBottomBar.ANIMATION_MODE_FADE
+                    val layout = snackbar.view as Snackbar.SnackbarLayout
+                    val textView =
+                        layout.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+                    textView.visibility = View.INVISIBLE
+                    val snackView =
+                        LayoutInflater.from(context).inflate(R.layout.custom_snackbar, null)
+                    val textViewMsg = snackView.findViewById<TextView>(R.id.tvMsg)
+                    layout.setPadding(0, 0, 0, 0)
+                    layout.addView(snackView, 0)
                     if (buttonClicked) {
-                        if (binding.etPasswordOld.text.toString()
-                                .equals(binding.etPassword.text.toString())
+                        if (binding.etPasswordOld.text.trim().toString()
+                                .equals(binding.etPassword.text.trim().toString())
                         ) {
-                            getString(R.string.new_pass_cannot_be_same_as_old).showToast(
-                                requireContext()
-                            )
-                        } else {
+                            textViewMsg.text= getString(R.string.new_pass_cannot_be_same_as_old)
+                            snackbar.show()
+                        } else if (!binding.etPassword.text.trim().toString()
+                                .equals(binding.etPasswordConfirm.text.trim().toString())
+                        ) {
+                            textViewMsg.text= getString(R.string.pass_should_be_same)
+                            snackbar.show()
+                        }
+                        else {
                             CommonMethods.checkInternet(requireActivity()) {
                                 CommonMethods.showProgressDialog(requireContext())
                                 viewModel.getPasswordChangeChallenge()

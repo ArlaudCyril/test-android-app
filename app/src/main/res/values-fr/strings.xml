@@ -710,4 +710,7 @@
     <string name="enter_your_old_pass">Entrez votre ancien mot de passe</string>
     <string name="new_pass_cannot_be_same_as_old">Le nouveau mot de passe ne peut pas être le même que l\'ancien.</string>
     <string name="pass_changed_success">Le mot de passe a été changé avec succès</string>
+    <string name="confirm_your_new_pass">Confirmez votre nouveau mot de passe</string>
+    <string name="pass_should_be_same">Votre mot de passe doit être le même dans les champs \"Entrez votre nouveau mot de passe\" et \"Confirmez votre nouveau mot de passe\".</string>
+
 </resources>
