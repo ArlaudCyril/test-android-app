@@ -15,6 +15,7 @@ import com.Lyber.R
 import com.Lyber.databinding.FragmentPickYourStrategyBinding
 import com.Lyber.models.MessageResponse
 import com.Lyber.models.StrategiesResponse
+import com.Lyber.models.Strategy
 import com.Lyber.ui.adapters.PickStrategyFragmentAdapter
 import com.Lyber.ui.fragments.bottomsheetfragments.InvestWithStrategyBottomSheet
 import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
@@ -37,7 +38,7 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
 
     /* previous item clicked */
     private var previousPosition: Int = -1
-
+    lateinit  var strategyList:List<Strategy>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         dismissProgressDialog()
@@ -90,7 +91,9 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
 
     private val getStrategies = Observer<StrategiesResponse> {
         dismissProgressDialog()
-        adapter.setList(it.data)
+        strategyList=it.data
+//        adapter.setList(it.data)
+        adapter.setList(strategyList)
         binding.recyclerViewStrategies.startLayoutAnimation()
     }
 
@@ -117,62 +120,63 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
 
     private fun itemClicked(position: Int, currentView: StrategyView) {
 
-        when (previousPosition) {
-            -1 -> { // no one is selected yet
-                currentView.isStrategySelected = true
-                currentView.background = getDrawable(
-                    requireContext(),
-                    R.drawable.round_stroke_purple_500
-                )
-                previousPosition = position
-                viewModel.strategyPositionSelected.postValue(previousPosition)
-            }
-
-            position -> { // previous
-                if (currentView.isStrategySelected) { // unselected the item
-                    currentView.isStrategySelected = false
-                    currentView.background = getDrawable(
-                        requireContext(),
-                        R.drawable.round_stroke_gray_100
-                    )
-                    currentView.radioButton.setImageResource(R.drawable.radio_unselect)
-                    previousPosition = -1
-                    viewModel.strategyPositionSelected.postValue(previousPosition)
-                } else { // select the item
-                    currentView.isStrategySelected = true
-                    currentView.background = getDrawable(
-                        requireContext(),
-                        R.drawable.round_stroke_purple_500
-                    )
-                    previousPosition = position
-                    viewModel.strategyPositionSelected.postValue(previousPosition)
-                }
-            }
-
-            else -> {
-                try {
-                    val previousView = (layoutManager.getChildAt(previousPosition) as StrategyView)
-                    if (previousView != null) {
-                        previousView.isStrategySelected = false
-                        currentView.isStrategySelected = true
-                        currentView.background = getDrawable(
-                            requireContext(),
-                            R.drawable.round_stroke_purple_500
-                        )
-                        previousView.background = getDrawable(
-                            requireContext(),
-                            R.drawable.round_stroke_gray_100
-                        )
-                        previousView.radioButton.setImageResource(R.drawable.radio_unselect)
-
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-                previousPosition = position
-                viewModel.strategyPositionSelected.postValue(previousPosition)
-            }
-        }
+//        when (previousPosition) {
+//            -1 -> { // no one is selected yet
+//                currentView.isStrategySelected = true
+//                currentView.background = getDrawable(
+//                    requireContext(),
+//                    R.drawable.round_stroke_purple_500
+//                )
+//                previousPosition = position
+//                viewModel.strategyPositionSelected.postValue(previousPosition)
+//            }
+//
+//            position -> { // previous
+//                if (currentView.isStrategySelected) { // unselected the item
+//                    currentView.isStrategySelected = false
+//                    currentView.background = getDrawable(
+//                        requireContext(),
+//                        R.drawable.round_stroke_gray_100
+//                    )
+//                    currentView.radioButton.setImageResource(R.drawable.radio_unselect)
+//                    previousPosition = -1
+//                    viewModel.strategyPositionSelected.postValue(previousPosition)
+//                } else { // select the item
+//                    currentView.isStrategySelected = true
+//                    currentView.background = getDrawable(
+//                        requireContext(),
+//                        R.drawable.round_stroke_purple_500
+//                    )
+//                    previousPosition = position
+//                    viewModel.strategyPositionSelected.postValue(previousPosition)
+//                }
+//            }
+//
+//            else -> {
+//                try {
+//                    val previousView = (layoutManager.getChildAt(previousPosition) as StrategyView)
+//                    if (previousView != null) {
+//                        previousView.isStrategySelected = false
+//                        currentView.isStrategySelected = true
+//                        currentView.background = getDrawable(
+//                            requireContext(),
+//                            R.drawable.round_stroke_purple_500
+//                        )
+//
+//                        previousView.background = getDrawable(
+//                            requireContext(),
+//                            R.drawable.round_stroke_gray_100
+//                        )
+//                        previousView.radioButton.setImageResource(R.drawable.radio_unselect)
+//
+//                    }
+//                } catch (e: Exception) {
+//                    e.printStackTrace()
+//                }
+//                previousPosition = position
+//                viewModel.strategyPositionSelected.postValue(previousPosition)
+//            }
+//        }
         viewModel.selectedStrategy = adapter.getItem(position)
         val transparentView = View(context)
         transparentView.setBackgroundColor(
@@ -230,10 +234,11 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
                 bundle.putBoolean(Constants.ID, true)
                 findNavController().navigate(R.id.buildStrategyFragment, bundle)
             }
-            4->{
+
+            4 -> {
                 val bundle = Bundle()
                 bundle.putBoolean(Constants.ONE_TIME, true)
-                findNavController().navigate(R.id.investAddMoneyFragment,bundle)
+                findNavController().navigate(R.id.investAddMoneyFragment, bundle)
             }
         }
     }

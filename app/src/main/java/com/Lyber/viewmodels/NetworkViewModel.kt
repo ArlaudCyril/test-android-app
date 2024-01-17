@@ -266,6 +266,10 @@ open class NetworkViewModel : ViewModel() {
     private var _strategyExecutionResponse = MutableLiveData<StrategyExecution>()
     val strategyExecutionResponse get() = _strategyExecutionResponse
 
+
+    private var _booleanResponse: MutableLiveData<BooleanResponse> = MutableLiveData()
+    val booleanResponse get() = _booleanResponse
+
     fun cancelJob() {
 
     }
@@ -1175,6 +1179,16 @@ open class NetworkViewModel : ViewModel() {
             val res = RestClient.get(Constants.NEW_BASE_URL).checkStrategyStatus(executionId)
             if (res.isSuccessful){
                 _strategyExecutionResponse.postValue(res.body())
+            }else{
+                listener!!.onRetrofitError(res.errorBody())
+            }
+        }
+    }
+    fun cancelQuote(hashMap: HashMap<String,Any>){
+        viewModelScope.launch(exceptionHandler){
+            val res = RestClient.get(Constants.NEW_BASE_URL).cancelQuote(hashMap)
+            if (res.isSuccessful){
+                _booleanResponse.postValue(res.body())
             }else{
                 listener!!.onRetrofitError(res.errorBody())
             }
