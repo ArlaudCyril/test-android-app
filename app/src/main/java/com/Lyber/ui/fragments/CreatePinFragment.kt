@@ -7,8 +7,6 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.view.Window
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.CustomDialogLayoutBinding
@@ -86,6 +84,7 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
                     dismiss()
                     App.prefsManager.logout()
                     requireActivity().finishAffinity()
+
                     startActivity(
                         Intent(requireActivity(), com.Lyber.ui.activities.SplashActivity::class.java)
                             .putExtra(Constants.FOR_LOGOUT, Constants.FOR_LOGOUT)

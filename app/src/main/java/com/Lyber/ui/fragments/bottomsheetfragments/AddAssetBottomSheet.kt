@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -255,7 +257,7 @@ class AddAssetBottomSheet(private val clickListener: (PriceServiceResume) -> Uni
                         com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull{ item -> item.takeIf {item.id == id}}
                             ?.let {
                                     it1 -> ivAsset.loadCircleCrop(it1.imageUrl); tvAssetName.text = it1.fullName
-                                    }
+                            }
 
                         val context = ivAsset.context
                         tvAssetValue.typeface = context.resources.getFont(R.font.mabry_pro_medium)

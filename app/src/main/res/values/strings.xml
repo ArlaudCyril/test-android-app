@@ -713,4 +713,6 @@
     <string name="pass_changed_success">Password changed successfully</string>
     <string name="confirm_your_new_pass">Confirm your new password</string>
     <string name="pass_should_be_same">Your password should be the same in the fields \"Enter your new password\" and \"Confirm your new password\".</string>
+    <string name="selcted_24h">A 24h delay is required before you can withdraw to any address newly added to your address book.</string>
+    <string name="selcted_72h">A 72h delay is required before you can withdraw to any address newly added to your address book.</string>
 </resources>

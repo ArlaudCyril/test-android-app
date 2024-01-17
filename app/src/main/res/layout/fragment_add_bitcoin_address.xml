@@ -134,6 +134,8 @@
                     app:hintEnabled="false"
                     app:helperTextTextColor="@color/red_500"
                     android:layout_marginHorizontal="20dp"
+                    app:boxStrokeWidth="0dp"
+                    app:boxStrokeWidthFocused="0dp"
                     android:layout_height="wrap_content">
 
                     <com.google.android.material.textfield.TextInputEditText
@@ -145,6 +147,8 @@
                         android:hint="@string/enter_or_scan_an_address"
                         android:drawableEnd="@drawable/ic_code_scanner"
                         android:drawablePadding="12dp"
+                        android:paddingTop="0dp"
+                        android:paddingBottom="0dp"
                         android:paddingHorizontal="16dp"
                         android:singleLine="true" />
 

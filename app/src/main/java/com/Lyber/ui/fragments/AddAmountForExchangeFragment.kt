@@ -38,7 +38,6 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
 
     /* display conversion */
     private val amount get() = binding.etAmount.text!!.trim().toString()
-    private val assetConversion get() = binding.tvAssetConversion.text.trim().toString()
 
     private var selectedFrequency: String = ""
     private var canPreview: Boolean = false
@@ -136,12 +135,12 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
             llSwapLayout.visible()
             val balance = com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
             mCurrency = " "+balance!!.id.uppercase()
-            tvTitle.text = "${requireContext().getString(R.string.exchange)} ${balance.id.uppercase()}"
+            tvTitle.text = "Exchange ${balance.id.uppercase()}"
             val priceCoin =balance.balanceData.euroBalance.toDouble()
                 .div(balance.balanceData.balance.toDouble())
             tvSubTitle.text = "${
                 balance.balanceData.balance.formattedAsset(priceCoin, RoundingMode.DOWN)
-            } ${balance.id.uppercase()} ${requireContext().getString(R.string.available)}"
+            } ${balance.id.uppercase()} Available"
             val currency = com.Lyber.ui.activities.BaseActivity.assets.find { it1 -> it1.id ==balance.id }
             ivAssetSwapFrom.loadCircleCrop(currency!!.imageUrl)
             tvSwapAssetFrom.text = balance.id.uppercase()
@@ -447,4 +446,3 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
     }
 
 }
-

@@ -8,11 +8,8 @@ import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.CustomDialogLayoutBinding
 import com.Lyber.databinding.FragmentConfirmPinBinding
-import com.Lyber.ui.portfolio.fragment.PortfolioHomeFragment
 import com.Lyber.utils.App
-import com.Lyber.utils.CommonMethods.Companion.clearBackStack
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.utils.CommonMethods.Companion.replaceFragment
 import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.Constants

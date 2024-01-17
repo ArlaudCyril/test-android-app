@@ -12,7 +12,6 @@ import com.Lyber.R
 import com.Lyber.databinding.FragmentConfirmInvestmentBinding
 import com.Lyber.models.DataQuote
 import com.Lyber.network.RestClient
-import com.Lyber.ui.activities.BaseActivity
 import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.formattedAsset

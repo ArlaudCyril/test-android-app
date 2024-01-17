@@ -21,14 +21,11 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.airbnb.lottie.LottieAnimationView
 import com.Lyber.R
 import com.Lyber.databinding.FragmentPortfolioDetailBinding
 import com.Lyber.databinding.LottieViewBinding
 import com.Lyber.models.Balance
 import com.Lyber.models.Duration
-import com.Lyber.ui.activities.BaseActivity
-import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.ui.adapters.BalanceAdapter
 import com.Lyber.ui.adapters.ResourcesAdapter
 import com.Lyber.ui.fragments.AddAmountFragment
@@ -36,7 +33,6 @@ import com.Lyber.ui.fragments.BaseFragment
 import com.Lyber.ui.fragments.PickYourStrategyFragment
 import com.Lyber.ui.fragments.SearchAssetsFragment
 import com.Lyber.ui.fragments.SelectAnAssetFragment
-import com.Lyber.ui.fragments.SwapWithdrawFromFragment
 import com.Lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDots
 import com.Lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDotsDismissListener
 import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
@@ -53,6 +49,7 @@ import com.Lyber.utils.CommonMethods.Companion.toMilli
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.utils.ItemOffsetDecoration
+import com.airbnb.lottie.LottieAnimationView
 import com.github.jinatonic.confetti.CommonConfetti
 import com.github.jinatonic.confetti.ConfettiManager
 import com.google.android.material.tabs.TabLayout

@@ -5,7 +5,6 @@ import android.view.View
 import androidx.lifecycle.Lifecycle
 import com.Lyber.R
 import com.Lyber.databinding.FragmentAddBankBinding
-import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.getViewModel

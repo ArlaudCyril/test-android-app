@@ -11,7 +11,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.Lyber.R
 import com.Lyber.databinding.FragmentListingBinding
-import com.Lyber.databinding.ItemMyAssetBinding
 import com.Lyber.databinding.ItemNetworkBinding
 import com.Lyber.models.NetworkDeposit
 import com.Lyber.ui.adapters.BaseAdapter

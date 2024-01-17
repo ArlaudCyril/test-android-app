@@ -1,6 +1,5 @@
 package com.Lyber.utils
 
-import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Color
@@ -10,12 +9,9 @@ import android.text.SpannableString
 import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
-import android.text.style.ForegroundColorSpan
 import android.util.AttributeSet
-import android.util.Log
 import android.view.View
 import android.widget.TextView
-import androidx.core.content.ContextCompat
 import com.Lyber.R
 
 @SuppressLint("AppCompatCustomView")

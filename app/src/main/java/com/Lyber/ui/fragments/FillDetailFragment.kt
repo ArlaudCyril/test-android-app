@@ -4,20 +4,15 @@ import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.view.ViewGroup
 import android.view.Window
 import android.widget.ImageView
-import android.widget.RelativeLayout
-import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.CustomDialogLayoutBinding
 import com.Lyber.databinding.FragmentTestFillDetailBinding
-import com.Lyber.models.JWTPayload
 import com.Lyber.ui.activities.SplashActivity
-import com.Lyber.ui.fragments.bottomsheetfragments.EmailVerificationBottomSheet
 import com.Lyber.utils.ActivityCallbacks
 import com.Lyber.utils.App.Companion.prefsManager
 import com.Lyber.utils.CommonMethods
@@ -31,12 +26,9 @@ import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.PersonalDataViewModel
-import com.google.gson.Gson
-import com.nimbusds.jwt.JWTParser
 import com.nimbusds.srp6.SRP6CryptoParams
 import com.nimbusds.srp6.SRP6VerifierGenerator
 import com.nimbusds.srp6.XRoutineWithUserIdentity
-import java.math.BigInteger
 
 class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.OnClickListener,
     ActivityCallbacks {
@@ -133,10 +125,10 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
         binding.ivTopAction.setOnClickListener(this)
         binding.btnCommon.setOnClickListener(this)
 
-        if (arguments!=null && requireArguments().containsKey(Constants.IS_REVIEW)){
+        if (arguments != null && requireArguments().containsKey(Constants.IS_REVIEW)) {
             position = 0
             viewModel.isReview = true
-        }else {/*
+        } else {/*
             position = 0
             viewModel.isReview = true*/
             position =
@@ -149,7 +141,6 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
                 }
         }
         add(R.id.flFillPersonalData, fragmentList[position])
-
 
 
     }
@@ -176,7 +167,7 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
 
         /* button text view */
         binding.btnCommon.text = when (position) {
-            3-> getString(R.string.send_to_lyber)
+            3 -> getString(R.string.send_to_lyber)
             else -> getString(R.string.next)
         }
 
@@ -194,6 +185,7 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
                     }
                     replace(R.id.flFillPersonalData, fragmentList[position])
                 }
+
                 in 0..3 -> {
                     position++
                     replace(R.id.flFillPersonalData, fragmentList[position])
@@ -250,15 +242,28 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
             when (v!!) {
                 btnCommon -> buttonClicked(position)
                 ivTopAction -> {
+                    if (position == 0) {
+                        requireActivity().finishAffinity()
+                        startActivity(
+                            Intent(
+                                requireActivity(),
+                                com.Lyber.ui.activities.SplashActivity::class.java
+                            )
+                                .putExtra(Constants.FOR_LOGOUT, Constants.FOR_LOGOUT)
+                        )
+                    } else {
                         requireActivity().onBackPressed()
                     }
-                ivTopActionClear->{
+                }
+
+                ivTopActionClear -> {
                     showLogoutDialog()
 
                 }
             }
         }
     }
+
     private fun showLogoutDialog() {
 
         Dialog(requireActivity(), R.style.DialogTheme).apply {
@@ -283,7 +288,7 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
                     requireActivity().supportFragmentManager.popBackStack()
 
 
-                 CommonMethods.checkInternet(requireContext()) {
+                    CommonMethods.checkInternet(requireContext()) {
                         dismiss()
                         CommonMethods.showProgressDialog(requireContext())
                         viewModel.logout(CommonMethods.getDeviceId(requireActivity().contentResolver))
@@ -388,6 +393,6 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
         super.onDestroyView()
         com.Lyber.ui.activities.SplashActivity.activityCallbacks = null
     }
-
 }
+
 

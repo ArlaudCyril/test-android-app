@@ -1,7 +1,6 @@
 package com.Lyber.utils
 
 import android.content.Context
-import android.graphics.Canvas
 import android.graphics.Color
 import android.util.AttributeSet
 import androidx.core.content.ContextCompat
