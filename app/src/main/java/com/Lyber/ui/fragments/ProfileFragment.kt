@@ -243,6 +243,7 @@ if(App.prefsManager.user?.strongAuthentification!=null)
         binding.rlExport.setOnClickListener(this)
 
         binding.llContactUS.setOnClickListener(this)
+        binding.llChangePassword.setOnClickListener(this)
 
 
         binding.switchFaceId.setOnCheckedChangeListener { button, isChecked ->
@@ -385,6 +386,7 @@ if(App.prefsManager.user?.strongAuthentification!=null)
                 rlExport-> navController.navigate(R.id.exportOperationsFragment)
 
                 llContactUS->navController.navigate(R.id.contactUsFragment)
+                llChangePassword->navController.navigate(R.id.changePasswordFragment)
 
             }
         }

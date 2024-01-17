@@ -705,8 +705,13 @@
     <string name="enter_your_new_pass">Entrez votre nouveau mot de passe</string>
     <string name="save_my_new_pass">Enregistrer mon nouveau mot de passe</string>
     <string name="pass_valid_msg">Le mot de passe doit comporter au moins 10 caractères, 1 caractère spécial, 1 minuscule et 1 majuscule.</string>
-    <string name="toCaps">To</string>
+    <string name="toCaps">À</string>
+    <string name="change_password">Changer le mot de passe</string>
+    <string name="enter_your_old_pass">Entrez votre ancien mot de passe</string>
+    <string name="new_pass_cannot_be_same_as_old">Le nouveau mot de passe ne peut pas être le même que l\'ancien.</string>
+    <string name="pass_changed_success">Le mot de passe a été changé avec succès</string>
+    <string name="confirm_your_new_pass">Confirmez votre nouveau mot de passe</string>
+    <string name="pass_should_be_same">Votre mot de passe doit être le même dans les champs \"Entrez votre nouveau mot de passe\" et \"Confirmez votre nouveau mot de passe\".</string>
     <string name="selcted_24h">Un délai de 24h est requis avant de pouvoir effectuer un retrait vers une adresse nouvellement ajoutée à votre carnet d\'adresses.</string>
     <string name="selcted_72h">Un délai de 72h est requis avant de pouvoir effectuer un retrait vers toute adresse nouvellement ajoutée à votre carnet d\'adresses.</string>
-
 </resources>

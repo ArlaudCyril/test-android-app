@@ -392,6 +392,31 @@
                 </RelativeLayout>
 
                 <LinearLayout
+                    android:id="@+id/llChangePassword"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="16dp">
+
+                    <TextView
+                        android:id="@+id/tvChangePass"
+                        style="@style/SubheadMabry"
+                        android:text="@string/change_password"
+                        android:textColor="@color/purple_gray_700"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:src="@drawable/ic_right_arrow_grey" />
+                </LinearLayout>
+                <LinearLayout
                     android:id="@+id/llChangePin"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

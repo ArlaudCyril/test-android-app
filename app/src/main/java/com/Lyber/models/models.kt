@@ -761,3 +761,11 @@ data class ResetPasswordResponse(
 data class res(
     val `data`: ResetPasswordResponse
 )
+data class ChangePasswordData(
+    val `data`: ChangePasswordDataResponse
+)
+
+data class ChangePasswordDataResponse(
+    val B: String,
+    val salt: String
+)
