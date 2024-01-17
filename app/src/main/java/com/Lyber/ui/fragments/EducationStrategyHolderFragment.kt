@@ -10,7 +10,6 @@ import androidx.viewpager2.widget.ViewPager2
 import com.Lyber.R
 import com.Lyber.databinding.FragmentEducationStrategyHolderBinding
 import com.Lyber.models.MessageResponse
-import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.utils.ActivityCallbacks
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods.Companion.checkInternet

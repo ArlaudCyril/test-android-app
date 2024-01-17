@@ -2,7 +2,6 @@ package com.Lyber.ui.fragments
 
 import android.os.Bundle
 import android.view.View
-import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import com.Lyber.R
 import com.Lyber.databinding.FragmentConfirmPinBinding
 import com.Lyber.utils.CommonMethods

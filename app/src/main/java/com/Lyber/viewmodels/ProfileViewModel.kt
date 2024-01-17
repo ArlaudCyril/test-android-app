@@ -1,6 +1,4 @@
 package com.Lyber.viewmodels
-
-import com.Lyber.models.Whitelistings
 import com.Lyber.models.WithdrawAddress
 
 

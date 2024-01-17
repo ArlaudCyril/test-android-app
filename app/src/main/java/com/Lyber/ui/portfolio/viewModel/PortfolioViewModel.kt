@@ -10,7 +10,6 @@ import com.Lyber.models.PersonalDataResponse
 import com.Lyber.models.PriceServiceResume
 import com.Lyber.models.Strategy
 import com.Lyber.models.WithdrawAddress
-import com.Lyber.models.*
 import com.Lyber.viewmodels.NetworkViewModel
 
 class PortfolioViewModel : NetworkViewModel() {

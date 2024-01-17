@@ -27,8 +27,7 @@ class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
 
         binding.btnThanks.setOnClickListener {
             dismiss()
-//            findNavController().navigate(R.id.portfolioHomeFragment)
-        }
+     }
         if(tag!!.isNotEmpty()){
             binding.tvInfoOne.text = getString(R.string.we_have_sent_an_email)
             binding.tvInfoTwo.visibility=View.GONE
@@ -47,14 +46,15 @@ class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
                         getString(R.string.your_investment_has_been_taken_into_account)
                 }
             }
-
-
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
-    }
+        }
+
+
+
 
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        if(tag!!.isNotEmpty())
+     if(tag!!.isNotEmpty())
         requireActivity().clearBackStack()
         else   if (viewModel.selectedOption != "" && viewModel.selectedOption == Constants.EXPORT_DONE) {
             viewModel.selectedOption = ""
@@ -63,6 +63,8 @@ class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
 //            findNavController().navigate(R.id.portfolioHomeFragment)
             findNavController().popBackStack(R.id.portfolioHomeFragment,false)
         }
-    }
+//        requireActivity().clearBackStack()
+//        findNavController().navigate(R.id.portfolioHomeFragment)
+  }
 
 }

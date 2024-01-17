@@ -2,7 +2,6 @@ package com.Lyber.utils
 
 import android.accounts.Account
 import com.Lyber.R
-import okhttp3.internal.connection.Exchange
 
 object Constants {
 

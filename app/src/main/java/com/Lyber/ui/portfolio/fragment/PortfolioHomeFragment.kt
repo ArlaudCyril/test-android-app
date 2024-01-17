@@ -20,21 +20,10 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.Lyber.models.AnalyticsData
-import com.Lyber.models.AssetBaseData
-import com.Lyber.models.Balance
-import com.Lyber.models.GetAssetsResponseItem
-import com.Lyber.models.Investment
-import com.Lyber.models.PriceServiceResume
-import com.Lyber.utils.ActivityCallbacks
-import com.Lyber.utils.App
-import com.Lyber.utils.CommonMethods
 import com.Lyber.R
 import com.Lyber.databinding.FragmentPortfolioHomeBinding
 import com.Lyber.databinding.LoaderViewBinding
 import com.Lyber.models.*
-import com.Lyber.ui.activities.BaseActivity
-import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.ui.adapters.*
 import com.Lyber.ui.fragments.BaseFragment
 import com.Lyber.ui.fragments.bottomsheetfragments.InvestBottomSheet
@@ -54,8 +43,6 @@ import com.Lyber.utils.CommonMethods.Companion.setProfile
 import com.Lyber.utils.CommonMethods.Companion.toMilli
 import com.Lyber.utils.CommonMethods.Companion.visibleFromLeft
 import com.Lyber.utils.CommonMethods.Companion.zoomIn
-import com.Lyber.utils.Constants
-import com.Lyber.utils.ItemOffsetDecoration
 import com.google.android.material.tabs.TabLayout
 
 
@@ -193,18 +180,18 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
 
         }
-       // if (viewModel.screenCount == 0) {
-            //My assets Part (waiting API)
-            viewModel.getBalance()
+        // if (viewModel.screenCount == 0) {
+        //My assets Part (waiting API)
+        viewModel.getBalance()
 
-            //Analytics Part (waiting API)
-
-
-            // Recurring Investment Part (waiting API)
+        //Analytics Part (waiting API)
 
 
-            // All assets available part
-            viewModel.getAllPriceResume()
+        // Recurring Investment Part (waiting API)
+
+
+        // All assets available part
+        viewModel.getAllPriceResume()
 
 
         //}
@@ -357,7 +344,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             }
 
             "deposit" -> {
-            navController.navigate(R.id.selectAssestForDepositFragment)
+                navController.navigate(R.id.selectAssestForDepositFragment)
             }
 
             "exchange" -> {
@@ -428,7 +415,12 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                     // Create a transparent color view
                     _fragmentPortfolio = this@PortfolioHomeFragment
                     val transparentView = View(context)
-                    transparentView.setBackgroundColor(getColor(requireContext(), R.color.semi_transparent_dark))
+                    transparentView.setBackgroundColor(
+                        getColor(
+                            requireContext(),
+                            R.color.semi_transparent_dark
+                        )
+                    )
 
                     // Set layout parameters for the transparent view
                     val viewParams = RelativeLayout.LayoutParams(
@@ -453,7 +445,12 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                     // Create a transparent color view
                     _fragmentPortfolio = this@PortfolioHomeFragment
                     val transparentView = View(context)
-                    transparentView.setBackgroundColor(getColor(requireContext(), R.color.semi_transparent_dark))
+                    transparentView.setBackgroundColor(
+                        getColor(
+                            requireContext(),
+                            R.color.semi_transparent_dark
+                        )
+                    )
 
                     // Set layout parameters for the transparent view
                     val viewParams = RelativeLayout.LayoutParams(
@@ -465,7 +462,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                     screenContent.addView(transparentView, viewParams)
                 }
 
-                tvViewAll ->  navController.navigate(R.id.allAssetFragment)
+                tvViewAll -> navController.navigate(R.id.allAssetFragment)
 
                 rvMyAssets -> {
                     requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
@@ -547,6 +544,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
         }
     }
+
     companion object {
         private const val TAG = "PortfolioHomeFragment"
 

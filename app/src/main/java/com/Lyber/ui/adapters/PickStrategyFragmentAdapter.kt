@@ -117,3 +117,4 @@ class PickStrategyFragmentAdapter(val itemClicked: (position: Int) -> Unit) :
 
 
 }
+

@@ -153,7 +153,6 @@ data class Strategy(
     var isSelected: Boolean = false,
     var activeStrategy: ActiveStrategy?=null
 )
-
 class ActiveStrategy {
     @SerializedName("amount")
     @Expose
@@ -164,10 +163,13 @@ class ActiveStrategy {
     var frequency: String? = null
 }
 
+
 data class InvestmentStrategyAsset(
     val share: Float,
     val asset: String
 )
+
+
 
 
 data class AddedAsset(
