@@ -22,8 +22,8 @@ import com.Lyber.databinding.BottomSheetSpinnerBinding
 import com.Lyber.databinding.CustomDialogLayoutBinding
 import com.Lyber.databinding.FragmentBuildStrategyBinding
 import com.Lyber.models.AddedAsset
+import com.Lyber.models.Data
 import com.Lyber.models.PriceServiceResume
-import com.Lyber.ui.activities.BaseActivity
 import com.Lyber.ui.adapters.BuildStrategyAdapter
 import com.Lyber.ui.fragments.bottomsheetfragments.AddAssetBottomSheet
 import com.Lyber.ui.fragments.bottomsheetfragments.BaseBottomSheet
@@ -38,7 +38,6 @@ import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.CommonMethods.Companion.toPx
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
-
 
 class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View.OnClickListener {
 

@@ -1,13 +1,10 @@
 package com.Lyber.ui.fragments
 
+
 import android.annotation.SuppressLint
-import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
-import android.util.Base64
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
@@ -22,11 +19,9 @@ import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.encodeToBase64
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.SignUpViewModel
 import okhttp3.ResponseBody
-import java.net.MalformedURLException
 
 class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBinding>(),
     View.OnClickListener {

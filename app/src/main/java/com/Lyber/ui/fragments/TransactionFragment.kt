@@ -12,12 +12,6 @@ import androidx.core.view.updatePadding
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.gson.GsonBuilder
-import java.math.BigDecimal
-import java.math.RoundingMode
-import java.text.SimpleDateFormat
-import java.util.Locale
-import java.util.TimeZone
 import com.Lyber.R
 import com.Lyber.databinding.FragmentTransactionBinding
 import com.Lyber.databinding.ItemTransactionBinding
@@ -25,15 +19,21 @@ import com.Lyber.databinding.LoaderViewBinding
 import com.Lyber.models.TransactionData
 import com.Lyber.ui.adapters.BaseAdapter
 import com.Lyber.ui.fragments.bottomsheetfragments.TransactionDetailsBottomSheetFragment
+import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
+import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.px
 import com.Lyber.utils.CommonMethods.Companion.toDateFormat
 import com.Lyber.utils.CommonMethods.Companion.toDateFormatTwo
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
-import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
-import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.PaginationListener
+import com.google.gson.GsonBuilder
+import java.math.BigDecimal
+import java.math.RoundingMode
+import java.text.SimpleDateFormat
+import java.util.Locale
+import java.util.TimeZone
 
 class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
 

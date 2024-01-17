@@ -1,6 +1,5 @@
 package com.Lyber.ui.fragments.bottomsheetfragments
 
-import android.app.Application
 import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -14,11 +13,11 @@ import com.Lyber.databinding.BottomSheetWithdrawExchangeBinding
 import com.Lyber.models.AssetBaseData
 import com.Lyber.models.DataBottomSheet
 import com.Lyber.ui.adapters.BottomSheetAdapter
+import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.toPx
 import com.Lyber.utils.Constants.LYBER_ASSETS
-import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
@@ -186,28 +185,32 @@ open class BottomSheetDialog(
                 withdrawBinding.ivTopAction.setOnClickListener { dismiss() }
 
                 val withdraw = View.OnClickListener {
-                    listenItemClicked(tag ?: "", DataBottomSheet(1,requireContext().getString(R.string.withdraw))
-                        )
+                    listenItemClicked(
+                        tag ?: "", DataBottomSheet(1, requireContext().getString(R.string.withdraw))
+                    )
                     dismiss()
                 }
 
                 val exchange = View.OnClickListener {
-                    listenItemClicked(tag ?: "",
-                        DataBottomSheet(1,requireContext().getString(R.string.exchange))
+                    listenItemClicked(
+                        tag ?: "",
+                        DataBottomSheet(1, requireContext().getString(R.string.exchange))
                     )
                     dismiss()
                 }
 
                 val deposit = View.OnClickListener {
-                    listenItemClicked(tag ?: "",
-                        DataBottomSheet(1,requireContext().getString(R.string.deposit))
+                    listenItemClicked(
+                        tag ?: "",
+                        DataBottomSheet(1, requireContext().getString(R.string.deposit))
                     )
                     dismiss()
                 }
 
                 val depositAsset = View.OnClickListener {
                     listenItemClicked(
-                        tag ?: "", DataBottomSheet(1,requireContext().getString(R.string.deposit_an_asset))
+                        tag ?: "",
+                        DataBottomSheet(1, requireContext().getString(R.string.deposit_an_asset))
                     )
                     dismiss()
                 }
@@ -275,11 +278,36 @@ open class BottomSheetDialog(
         },
         CRYPTO_EXP {
             override fun getData(context: Context) = mutableListOf<DataBottomSheet>().apply {
-                add(DataBottomSheet(R.string.i_have_never_invested, context.getString(R.string.i_have_never_invested)))
-                add(DataBottomSheet(R.string.less_than_1000, context.getString(R.string.less_than_1000)))
-                add(DataBottomSheet(R.string.between_1000_and_9999, context.getString(R.string.between_1000_and_9999)))
-                add(DataBottomSheet(R.string.between_10000_and_99999, context.getString(R.string.between_10000_and_99999)))
-                add(DataBottomSheet(R.string.greater_than_100000, context.getString(R.string.greater_than_100000)))
+                add(
+                    DataBottomSheet(
+                        R.string.i_have_never_invested,
+                        context.getString(R.string.i_have_never_invested)
+                    )
+                )
+                add(
+                    DataBottomSheet(
+                        R.string.less_than_1000,
+                        context.getString(R.string.less_than_1000)
+                    )
+                )
+                add(
+                    DataBottomSheet(
+                        R.string.between_1000_and_9999,
+                        context.getString(R.string.between_1000_and_9999)
+                    )
+                )
+                add(
+                    DataBottomSheet(
+                        R.string.between_10000_and_99999,
+                        context.getString(R.string.between_10000_and_99999)
+                    )
+                )
+                add(
+                    DataBottomSheet(
+                        R.string.greater_than_100000,
+                        context.getString(R.string.greater_than_100000)
+                    )
+                )
             }
 
             override fun title(context: Context): String {
@@ -295,7 +323,12 @@ open class BottomSheetDialog(
                 add(DataBottomSheet(R.string.savings, context.getString(R.string.savings)))
                 add(DataBottomSheet(R.string.inheritance, context.getString(R.string.inheritance)))
                 add(DataBottomSheet(R.string.credit_loan, context.getString(R.string.credit_loan)))
-                add(DataBottomSheet(R.string.family_others, context.getString(R.string.family_others)))
+                add(
+                    DataBottomSheet(
+                        R.string.family_others,
+                        context.getString(R.string.family_others)
+                    )
+                )
             }
 
             override fun title(context: Context): String {
@@ -308,21 +341,56 @@ open class BottomSheetDialog(
             override fun getData(context: Context) = mutableListOf<DataBottomSheet>().apply {
                 add(DataBottomSheet(R.string.agriculture, context.getString(R.string.agriculture)))
                 add(DataBottomSheet(R.string.arts_media, context.getString(R.string.arts_media)))
-                add(DataBottomSheet(R.string.banking_finance_insurance, context.getString(R.string.banking_finance_insurance)))
-                add(DataBottomSheet(R.string.business_services_consulting, context.getString(R.string.business_services_consulting)))
+                add(
+                    DataBottomSheet(
+                        R.string.banking_finance_insurance,
+                        context.getString(R.string.banking_finance_insurance)
+                    )
+                )
+                add(
+                    DataBottomSheet(
+                        R.string.business_services_consulting,
+                        context.getString(R.string.business_services_consulting)
+                    )
+                )
                 add(DataBottomSheet(R.string.building, context.getString(R.string.building)))
-                add(DataBottomSheet(R.string.education_training_research, context.getString(R.string.education_training_research)))
-                add(DataBottomSheet(R.string.energy_environment, context.getString(R.string.energy_environment)))
+                add(
+                    DataBottomSheet(
+                        R.string.education_training_research,
+                        context.getString(R.string.education_training_research)
+                    )
+                )
+                add(
+                    DataBottomSheet(
+                        R.string.energy_environment,
+                        context.getString(R.string.energy_environment)
+                    )
+                )
                 add(
                     DataBottomSheet(
                         19,
                         context.getString(R.string.government_administration_social)
                     )
                 )
-                add(DataBottomSheet(R.string.health_medical_pharmaceutical, context.getString(R.string.health_medical_pharmaceutical)))
-                add(DataBottomSheet(R.string.hospitality_tourism_catering, context.getString(R.string.hospitality_tourism_catering)))
+                add(
+                    DataBottomSheet(
+                        R.string.health_medical_pharmaceutical,
+                        context.getString(R.string.health_medical_pharmaceutical)
+                    )
+                )
+                add(
+                    DataBottomSheet(
+                        R.string.hospitality_tourism_catering,
+                        context.getString(R.string.hospitality_tourism_catering)
+                    )
+                )
                 add(DataBottomSheet(R.string.it, context.getString(R.string.it)))
-                add(DataBottomSheet(R.string.manufacturing_mettalurgy, context.getString(R.string.manufacturing_mettalurgy)))
+                add(
+                    DataBottomSheet(
+                        R.string.manufacturing_mettalurgy,
+                        context.getString(R.string.manufacturing_mettalurgy)
+                    )
+                )
                 add(
                     DataBottomSheet(
                         24,
@@ -335,10 +403,30 @@ open class BottomSheetDialog(
                         context.getString(R.string.real_estate_property_management)
                     )
                 )
-                add(DataBottomSheet(R.string.retail_ecommerce, context.getString(R.string.retail_ecommerce)))
-                add(DataBottomSheet(R.string.sports_leisure_entertainment, context.getString(R.string.sports_leisure_entertainment)))
-                add(DataBottomSheet(R.string.textile_fashion_apparel, context.getString(R.string.textile_fashion_apparel)))
-                add(DataBottomSheet(R.string.transport_logistics_wholesale, context.getString(R.string.transport_logistics_wholesale)))
+                add(
+                    DataBottomSheet(
+                        R.string.retail_ecommerce,
+                        context.getString(R.string.retail_ecommerce)
+                    )
+                )
+                add(
+                    DataBottomSheet(
+                        R.string.sports_leisure_entertainment,
+                        context.getString(R.string.sports_leisure_entertainment)
+                    )
+                )
+                add(
+                    DataBottomSheet(
+                        R.string.textile_fashion_apparel,
+                        context.getString(R.string.textile_fashion_apparel)
+                    )
+                )
+                add(
+                    DataBottomSheet(
+                        R.string.transport_logistics_wholesale,
+                        context.getString(R.string.transport_logistics_wholesale)
+                    )
+                )
             }
 
             override fun title(context: Context): String {
@@ -349,7 +437,12 @@ open class BottomSheetDialog(
         },
         ANNUAL_INCOME {
             override fun getData(context: Context) = mutableListOf<DataBottomSheet>().apply {
-                add(DataBottomSheet(R.string.less_than_500, context.getString(R.string.less_than_500)))
+                add(
+                    DataBottomSheet(
+                        R.string.less_than_500,
+                        context.getString(R.string.less_than_500)
+                    )
+                )
                 add(DataBottomSheet(R.string.five00_1000, context.getString(R.string.five00_1000)))
                 add(DataBottomSheet(R.string.one001_1500, context.getString(R.string.one001_1500)))
                 add(DataBottomSheet(R.string.one501_2000, context.getString(R.string.one501_2000)))
@@ -382,12 +475,42 @@ open class BottomSheetDialog(
         PERSONAL_ASSETS {
             override fun getData(context: Context): List<DataBottomSheet> =
                 mutableListOf<DataBottomSheet>().apply {
-                    add(DataBottomSheet(R.string.two_assets, context.getString(R.string.two_assets)))
-                    add(DataBottomSheet(R.string.two2_assets, context.getString(R.string.two2_assets)))
-                    add(DataBottomSheet(R.string.one28_assets, context.getString(R.string.one28_assets)))
-                    add(DataBottomSheet(R.string.three19_assets, context.getString(R.string.three19_assets)))
-                    add(DataBottomSheet(R.string.four64_assets, context.getString(R.string.four64_assets)))
-                    add(DataBottomSheet(R.string.four65_assets, context.getString(R.string.four65_assets)))
+                    add(
+                        DataBottomSheet(
+                            R.string.two_assets,
+                            context.getString(R.string.two_assets)
+                        )
+                    )
+                    add(
+                        DataBottomSheet(
+                            R.string.two2_assets,
+                            context.getString(R.string.two2_assets)
+                        )
+                    )
+                    add(
+                        DataBottomSheet(
+                            R.string.one28_assets,
+                            context.getString(R.string.one28_assets)
+                        )
+                    )
+                    add(
+                        DataBottomSheet(
+                            R.string.three19_assets,
+                            context.getString(R.string.three19_assets)
+                        )
+                    )
+                    add(
+                        DataBottomSheet(
+                            R.string.four64_assets,
+                            context.getString(R.string.four64_assets)
+                        )
+                    )
+                    add(
+                        DataBottomSheet(
+                            R.string.four65_assets,
+                            context.getString(R.string.four65_assets)
+                        )
+                    )
                 }
 
             override fun title(context: Context): String {
@@ -399,9 +522,24 @@ open class BottomSheetDialog(
         YOUR_ACTIVITY_ON_LYBER {
             override fun getData(context: Context): List<DataBottomSheet> =
                 mutableListOf<DataBottomSheet>().apply {
-                    add(DataBottomSheet(R.string.buy_sell_digital_assets, context.getString(R.string.buy_sell_digital_assets)))
-                    add(DataBottomSheet(R.string.save_money, context.getString(R.string.save_money)))
-                    add(DataBottomSheet(R.string.store_my_digital_assets, context.getString(R.string.store_my_digital_assets)))
+                    add(
+                        DataBottomSheet(
+                            R.string.buy_sell_digital_assets,
+                            context.getString(R.string.buy_sell_digital_assets)
+                        )
+                    )
+                    add(
+                        DataBottomSheet(
+                            R.string.save_money,
+                            context.getString(R.string.save_money)
+                        )
+                    )
+                    add(
+                        DataBottomSheet(
+                            R.string.store_my_digital_assets,
+                            context.getString(R.string.store_my_digital_assets)
+                        )
+                    )
                 }
 
             override fun title(context: Context): String {

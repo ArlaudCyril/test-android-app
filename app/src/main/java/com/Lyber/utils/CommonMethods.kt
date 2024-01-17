@@ -56,8 +56,6 @@ import com.Lyber.models.AssetBaseData
 import com.Lyber.models.Balance
 import com.Lyber.models.ErrorResponse
 import com.Lyber.network.RestClient
-import com.Lyber.ui.activities.BaseActivity
-import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.utils.App.Companion.prefsManager
 import com.Lyber.utils.Constants.CAP_RANGE
 import com.Lyber.utils.Constants.SMALL_RANGE
@@ -70,7 +68,6 @@ import okhttp3.ResponseBody
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
-import java.lang.NumberFormatException
 import java.math.RoundingMode
 import java.text.DateFormat
 import java.text.DecimalFormat
@@ -199,6 +196,7 @@ class CommonMethods {
             return DecimalFormat(string.toString()).format(toDouble())
         }
 
+
         fun String.roundFloat(): String {
             try {
                 var value=this
@@ -321,7 +319,7 @@ class CommonMethods {
             else "Please check your internet connection".showToast(context)
         }
 
-        @SuppressLint("NewApi")
+        @SuppressLint("NewApi", "MissingPermission")
         private fun isNetworkConnected(context: Context): Boolean {
             var result = false
             val connectivityManager =
@@ -371,7 +369,7 @@ class CommonMethods {
             if (errorRes?.error == "UNAUTHORIZED" || errorRes?.error == "Unauthorized") {
 
                 prefsManager.logout()
-                val intent = Intent(context, SplashActivity::class.java).apply {
+                val intent = Intent(context, com.Lyber.ui.activities.SplashActivity::class.java).apply {
                     putExtra(Constants.IS_LOGOUT, true).flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or
                             Intent.FLAG_ACTIVITY_CLEAR_TASK or
                             Intent.FLAG_ACTIVITY_NEW_TASK
@@ -897,23 +895,23 @@ class CommonMethods {
             var priceFinal = price
             if (this == "" || priceFinal == null || priceFinal == 0.0 || priceFinal.isNaN()) {
                 priceFinal= 1.026
-             }
+            }
 
-             val formatter = DecimalFormat()
+            val formatter = DecimalFormat()
 
-             // Pour trouver la précision, ici X
-             // Prix * 10e-X >= 0.01 (centimes)
-             // => X >= -log(0,01/Prix)
-             val precision = ceil(-log10(0.01 / priceFinal)).toInt()
-             if (precision > 0) {
-                 formatter.maximumFractionDigits = precision
-                 formatter.minimumFractionDigits = precision
-             } else {
-                 formatter.maximumFractionDigits = 0
-                 formatter.minimumFractionDigits = 0
-             }
+            // Pour trouver la précision, ici X
+            // Prix * 10e-X >= 0.01 (centimes)
+            // => X >= -log(0,01/Prix)
+            val precision = ceil(-log10(0.01 / priceFinal)).toInt()
+            if (precision > 0) {
+                formatter.maximumFractionDigits = precision
+                formatter.minimumFractionDigits = precision
+            } else {
+                formatter.maximumFractionDigits = 0
+                formatter.minimumFractionDigits = 0
+            }
 
-             formatter.roundingMode = rounding
+            formatter.roundingMode = rounding
 
             val symbols = DecimalFormatSymbols(Locale.US)
             formatter.decimalFormatSymbols = symbols
@@ -921,7 +919,6 @@ class CommonMethods {
 
              return valueFormatted.toString()
          }
-
 
 
         fun TextView.expandWith(string: String) {
@@ -1317,11 +1314,11 @@ class CommonMethods {
         }
         fun getAsset(id: String): AssetBaseData
         {
-            return BaseActivity.assets.first { it.id == id }
+            return com.Lyber.ui.activities.BaseActivity.assets.first { it.id == id }
         }
         fun getBalance(id: String): Balance?
         {
-            return BaseActivity.balances.firstOrNull { it.id == id }
+            return com.Lyber.ui.activities.BaseActivity.balances.firstOrNull { it.id == id }
         }
 
         @RequiresApi(Build.VERSION_CODES.O)

@@ -1,6 +1,5 @@
 package com.Lyber.ui.fragments
 
-import android.content.Intent
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Lifecycle
@@ -9,7 +8,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.Lyber.R
 import com.Lyber.databinding.FragmentSwapFromBinding
 import com.Lyber.models.Balance
-import com.Lyber.ui.activities.BaseActivity
 import com.Lyber.ui.adapters.BalanceAdapter
 import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.Lyber.utils.CommonMethods

@@ -1,7 +1,6 @@
 package com.Lyber.ui.fragments
 
 import android.annotation.SuppressLint
-import android.content.Intent
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
@@ -9,13 +8,11 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.RelativeLayout
-import android.widget.ScrollView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
-import com.au.countrycodepicker.CountryPicker
 import com.Lyber.R
 import com.Lyber.databinding.FragmentCreateAccountBinding
 import com.Lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet
@@ -33,6 +30,7 @@ import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.SignUpViewModel
+import com.au.countrycodepicker.CountryPicker
 import com.nimbusds.srp6.SRP6ClientSession
 import com.nimbusds.srp6.SRP6CryptoParams
 import com.nimbusds.srp6.SRP6VerifierGenerator

@@ -8,21 +8,18 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.Lyber.R
 import com.Lyber.databinding.FragmentAllAssetsBinding
-import com.Lyber.models.Data
 import com.Lyber.models.PriceServiceResume
-import com.Lyber.ui.activities.BaseActivity
 import com.Lyber.ui.adapters.AllAssetAdapter
+import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
+import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.utils.CommonMethods.Companion.replaceFragment
+import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.utils.OnTextChange
-import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
-import com.Lyber.utils.CommonMethods
-import com.Lyber.utils.CommonMethods.Companion.gone
-import com.Lyber.utils.CommonMethods.Companion.visible
 import com.google.android.material.tabs.TabLayout
 
 class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickListener {

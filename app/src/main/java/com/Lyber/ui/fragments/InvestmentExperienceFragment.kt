@@ -1,5 +1,6 @@
 package com.Lyber.ui.fragments
 
+
 import android.content.Context
 import android.content.res.Configuration
 import android.os.Bundle
@@ -182,7 +183,7 @@ class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceB
         val config =
             Configuration(resources.configuration)
         config.setLocale(requestedLocale)
-               result = createConfigurationContext(config).getText(resourceId).toString()
+        result = createConfigurationContext(config).getText(resourceId).toString()
         if(App.prefsManager.getLanguage().isNotEmpty())
             config.setLocale(Locale(App.prefsManager.getLanguage()))
         return result

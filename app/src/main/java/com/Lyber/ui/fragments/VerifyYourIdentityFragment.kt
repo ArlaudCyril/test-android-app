@@ -17,7 +17,6 @@ import com.Lyber.network.RestClient
 import com.Lyber.ui.activities.WebViewActivity
 import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.Lyber.utils.App
-import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
@@ -72,7 +71,7 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
         }
         portfolioViewModel.kycResponse.observe(viewLifecycleOwner){
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-               dismissAnimation()
+                dismissAnimation()
                 resultLauncher.launch(Intent(requireActivity(),WebViewActivity::class.java)
                     .putExtra(Constants.URL,it.data.url))
             }
