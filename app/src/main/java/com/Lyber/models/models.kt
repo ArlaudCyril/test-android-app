@@ -322,7 +322,8 @@ data class DataQuote(
     val orderId: String,
     val fromAsset: String,
     val toAsset: String,
-    val clientSecret:String
+    val clientSecret:String,
+    val paymentIntentId:String
 )
 
 data class Data(
@@ -734,4 +735,8 @@ data class BalanceStrategyData(
     val stableAmount: String,
     val assetAmount: String,
     var success:Boolean=false
+)
+
+data class BooleanResponse(
+    val success:Boolean
 )

@@ -35,6 +35,7 @@ import com.google.gson.Gson
 import com.stripe.android.PaymentConfiguration
 import com.stripe.android.googlepaylauncher.GooglePayEnvironment
 import com.stripe.android.googlepaylauncher.GooglePayLauncher
+import okhttp3.ResponseBody
 import java.math.RoundingMode
 import java.util.Locale
 
@@ -48,18 +49,21 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
     private lateinit var viewModel: PortfolioViewModel
     private var isTimerRunning = false
     private lateinit var handler: Handler
-    private var isGpayInstalled=false
-    var isGpayHit=false
+    private var isGpayInstalled = false
+    var isGpayHit = false
+    var isApiHit = false
+    val hashMap: HashMap<String, Any> = hashMapOf()
+
     override fun bind() = FragmentMyPurchaseBinding.inflate(layoutInflater)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-      PaymentConfiguration.init(
+        PaymentConfiguration.init(
             requireActivity(),
             "pk_test_51NVVY7F2A3romcuHdC3JDD9evsFhQvyZ5cYS6wpy9OznXgmYzLvWTG81Zfj2nWGQFZ2zs8RboA3uMLCNPpPV08Zk00McUdiPAt"
         )
 
         viewModel = CommonMethods.getViewModel(requireActivity())
-        viewModel.listener=this
+        viewModel.listener = this
         binding.ivTopAction.setOnClickListener(this)
         binding.tvMoreDetails.setOnClickListener(this)
         binding.btnConfirmInvestment.setOnClickListener(this)
@@ -88,6 +92,13 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
                 getData()
             }
         }
+        viewModel.booleanResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                isApiHit = false
+                CommonMethods.dismissProgressDialog()
+            }
+        }
+
         getData()
     }
 
@@ -95,16 +106,16 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
         //   binding.btnConfirmInvestment.isEnabled = isReady
         // implemented below
         Log.d("isGpayReady", "$isReady")
-        if(isReady)
-            isGpayInstalled=true
+        if (isReady)
+            isGpayInstalled = true
     }
 
     private fun onGooglePayResult(result: GooglePayLauncher.Result) {
         when (result) {
             GooglePayLauncher.Result.Completed -> {
-                Log.d("GooglePayLauncher","$isGpayHit")
+                Log.d("GooglePayLauncher", "$isGpayHit")
                 stopTimer()
-                isGpayHit=false
+                isGpayHit = false
                 viewModel.selectedAsset = CommonMethods.getAsset("usdt")
                 val bundle = Bundle().apply {
                     putString(Constants.ORDER_ID, orderId)
@@ -116,15 +127,16 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
 //                result.
 //                val paymentMethodId = result.paymentMethod.id
             }
+
             GooglePayLauncher.Result.Canceled -> {
                 // User canceled the operation
-                isGpayHit=false
+                isGpayHit = false
                 Log.d("isGpayReady", "Cancelled")
             }
 
             is GooglePayLauncher.Result.Failed -> {
-               // Operation failed; inspect `result.error` for the exception
-                isGpayHit=false
+                // Operation failed; inspect `result.error` for the exception
+                isGpayHit = false
 //                val paymentMethodId = result.paymentMethod.id
                 Log.d("isGpayReady", "${result.error}")
 //                result.error.showToast(requireContext())
@@ -142,6 +154,10 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
                 DataQuote::class.java
             )
             prepareView(data)
+            hashMap.clear()
+            hashMap["paymentIntentId"] = data.paymentIntentId
+            hashMap["orderId"] = data.orderId
+            hashMap["userUuid"] = App.prefsManager.user?.uuid.toString()
         }
 
     }
@@ -155,11 +171,10 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
                 }
 
                 btnConfirmInvestment -> {
-                        if(isGpayInstalled) {
-                            isGpayHit = true
-                            googlePayLauncher.presentForPaymentIntent(clientSecret)
-                        }
-                    else
+                    if (isGpayInstalled) {
+                        isGpayHit = true
+                        googlePayLauncher.presentForPaymentIntent(clientSecret)
+                    } else
                         getString(R.string.you_must_install_gpay).showToast(requireContext())
                 }
 
@@ -237,18 +252,28 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
     @SuppressLint("SuspiciousIndentation")
     private val runnable = Runnable {
         isTimerRunning = true
-        if ( timer == 0) {
+        if (timer == 0) {
             try {
-                if(isGpayHit)
-                ErrorBottomSheet(::dismissList).show(childFragmentManager, "GpaySheet")
+                if (isGpayHit)
+                    ErrorBottomSheet(::dismissList).show(childFragmentManager, "GpaySheet")
                 else
-                ErrorBottomSheet(::dismissList).show(childFragmentManager, "")
+                    ErrorBottomSheet(::dismissList).show(childFragmentManager, "")
             } catch (_: Exception) {
 
             }
         } else {
             timer -= 1
-              if (timer > 0) {
+//            Log.d("timer", "$timer")
+            if (timer < 2) {
+                if (!isApiHit) {
+                    CommonMethods.checkInternet(requireContext()) {
+                        isApiHit = true
+//                        CommonMethods.showProgressDialog(requireActivity())
+                        viewModel.cancelQuote(hashMap)
+                    }
+                }
+            }
+            if (timer > 0) {
                 binding.tvTimer.text =
                     getString(R.string.you_have_seconds_to_confirm_this_purchase, timer.toString())
             } else {
@@ -286,4 +311,11 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
         }
     }
 
+    override fun onRetrofitError(responseBody: ResponseBody?) {
+        super.onRetrofitError(responseBody)
+        if (isApiHit)
+            isApiHit = false
+        CommonMethods.dismissProgressDialog()
+        CommonMethods.showErrorMessage(requireContext(), responseBody)
+    }
 }

@@ -362,5 +362,7 @@ interface Api {
 
     @GET("strategy-service/strategy-execution")
     suspend fun checkStrategyStatus(@Query("executionId") executionId: String): Response<StrategyExecution>
+    @POST("order-service/cancel-quote")
+    suspend fun cancelQuote(@Body hashMap: HashMap<String, Any>): Response<BooleanResponse>
 
 }
