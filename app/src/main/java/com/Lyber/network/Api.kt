@@ -1,47 +1,7 @@
 package com.Lyber.network
 
-import com.Lyber.models.AssetBaseDataResponse
-import com.Lyber.models.AssetDetailBaseDataResponse
-import com.Lyber.models.BalanceResponse
-import com.Lyber.models.BooleanResponse
-import com.Lyber.models.CoinsResponse
-import com.Lyber.models.CommonResponse
-import com.Lyber.models.CommonResponseVerfiy
-import com.Lyber.models.EnterPhoneResponse
-import com.Lyber.models.ExchangeListingResponse
-import com.Lyber.models.ExportResponse
-import com.Lyber.models.GetAddress
-import com.Lyber.models.GetAssetsResponse
-import com.Lyber.models.GetQuoteResponse
-import com.Lyber.models.GetUserResponse
-import com.Lyber.models.InitiateKycResponse
-import com.Lyber.models.KYCResponse
-import com.Lyber.models.KycStatusResponse
-import com.Lyber.models.MessageResponse
-import com.Lyber.models.MessageResponsePause
-import com.Lyber.models.MyAssetResponse
-import com.Lyber.models.NetworkResponse
-import com.Lyber.models.NetworksResponse
-import com.Lyber.models.NewsResponse
-import com.Lyber.models.PriceGraphResponse
-import com.Lyber.models.PriceResponse
-import com.Lyber.models.PriceServiceResumeResponse
-import com.Lyber.models.QrCodeResponse
-import com.Lyber.models.RecurringInvestmentDetailResponse
-import com.Lyber.models.RecurringInvestmentResponse
-import com.Lyber.models.SetPhoneResponse
-import com.Lyber.models.StrategiesResponse
-import com.Lyber.models.TransactionResponse
-import com.Lyber.models.UpdateAuthenticateResponse
-import com.Lyber.models.UploadResponse
-import com.Lyber.models.User
-import com.Lyber.models.UserChallengeResponse
-import com.Lyber.models.UserLoginResponse
-import com.Lyber.models.WhitelistingResponse
-import com.Lyber.models.WithdrawalAddress
 import com.Lyber.models.*
 import okhttp3.MultipartBody
-import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
 
@@ -86,7 +46,7 @@ interface Api {
     suspend fun getPersonalInfo(): Response<User>
 
     @POST("kyc-service/kyc")
-    suspend fun startKyc():Response<KYCResponse>
+    suspend fun startKyc(): Response<KYCResponse>
 
     @GET("treezor/kyc-liveness")
     suspend fun initiateKyc(): Response<InitiateKycResponse>
@@ -131,6 +91,7 @@ interface Api {
 
     @POST("user/verify/pin")
     suspend fun verifyPin(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
+
     @POST("order-service/quote")
     suspend fun getQuote(@Body hashMap: HashMap<String, Any>): Response<GetQuoteResponse>
 
@@ -145,11 +106,13 @@ interface Api {
 
     @POST("user/invest-on-asset")
     suspend fun investOnSingleAsset(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
+
     @PATCH("strategy-service/strategy")
     suspend fun editStrategy(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
 
     @POST("strategy-service/active-strategy")
     suspend fun investOnStrategy(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
+
     @HTTP(method = "DELETE", path = "strategy-service/active-strategy", hasBody = true)
     suspend fun pauseStrategy(@Body hashMap: HashMap<String, Any>): Response<MessageResponsePause>
 
@@ -234,8 +197,10 @@ interface Api {
 
     @POST("wallet-service/withdrawal-address")
     suspend fun addWhitelistingAddress(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
+
     @PATCH("user-service/user")
     suspend fun updateUserInfo(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
+
     @HTTP(method = "DELETE", path = "wallet-service/withdrawal-address", hasBody = true)
     suspend fun deleteWhiteListing(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
 
@@ -261,10 +226,16 @@ interface Api {
     suspend fun getAssetDetail(@Query("id") id: String): Response<AssetDetailBaseDataResponse>
 
     @GET("asset-service/asset")
-    suspend fun getAssetDetail(@Query("id") id: String,@Query("include_networks") include_networks: String): Response<AssetDetailBaseDataResponse>
+    suspend fun getAssetDetail(
+        @Query("id") id: String,
+        @Query("include_networks") include_networks: String
+    ): Response<AssetDetailBaseDataResponse>
 
     @GET("wallet-service/address")
-    suspend fun getAddress(@Query("network") network: String,@Query("asset") asset: String): Response<GetAddress>
+    suspend fun getAddress(
+        @Query("network") network: String,
+        @Query("asset") asset: String
+    ): Response<GetAddress>
 
     @GET("user/investment")
     suspend fun getRecurringInvestmentDetail(@Query("id") id: String): Response<RecurringInvestmentDetailResponse>
@@ -314,6 +285,7 @@ interface Api {
 
     @POST("user-service/finish-registration")
     suspend fun finishRegistration(): Response<UserLoginResponse>
+
     @GET("user-service/2fa-otp")
     suspend fun getOtpForWithdraw(@QueryMap hashMap: HashMap<String, Any>): Response<CommonResponse>
 
@@ -330,7 +302,8 @@ interface Api {
     suspend fun getBalance(): Response<BalanceResponse>
 
     @GET("wallet-service/withdrawal-address")
-    suspend fun getWithdrawalAddress():Response<WithdrawalAddress>
+    suspend fun getWithdrawalAddress(): Response<WithdrawalAddress>
+
     @POST("user-service/verify-2FA")
     suspend fun verify2FA(@Body hashMap: HashMap<String, Any>): Response<UserLoginResponse>
 
@@ -348,7 +321,7 @@ interface Api {
 
 
     @PATCH("user-service/user")
-    suspend fun updateUserAuthentication( @Body hashMap: HashMap<String, Any>): Response<UpdateAuthenticateResponse>
+    suspend fun updateUserAuthentication(@Body hashMap: HashMap<String, Any>): Response<UpdateAuthenticateResponse>
 
     @GET("user-service/2fa-otp")
     suspend fun switchOffAuthentication(
@@ -357,15 +330,17 @@ interface Api {
     ): Response<BooleanResponse>
 
     @GET("user-service/google-otp")
-    suspend fun getQrUrl():Response<QrCodeResponse>
+    suspend fun getQrUrl(): Response<QrCodeResponse>
 
 
     @POST("user-service/verify-2FA")
     suspend fun verify2FAWithdraw(@Body hashMap: HashMap<String, Any>): Response<CommonResponseVerfiy>
+
     @POST("wallet-service/withdraw")
     suspend fun createWithdrawalRequest(@Body hashMap: HashMap<String, Any>): Response<CommonResponse>
+
     @GET("network-service/network")
-    suspend fun getNetworkById(@Query("id")id: String): Response<NetworkResponse>
+    suspend fun getNetworkById(@Query("id") id: String): Response<NetworkResponse>
 
     @GET("user-service/transactions")
     suspend fun getTransactionsList(
@@ -374,9 +349,11 @@ interface Api {
     ): Response<TransactionList>
 
     @POST("user-service/reset-password")
-    suspend fun resetNewPassword(@Body hashMap: HashMap<String, Any>):Response<BooleanResponse>
+    suspend fun resetNewPassword(@Body hashMap: HashMap<String, Any>): Response<BooleanResponse>
+
     @POST("user-service/forgot")
-    suspend fun forgotPassword(@Body hashMap: HashMap<String, Any>):Response<BooleanResponse>
+    suspend fun forgotPassword(@Body hashMap: HashMap<String, Any>): Response<BooleanResponse>
+
     @GET("user-service/reset-password-identifiers")
     suspend fun getResetPassword(): Response<res>
 }

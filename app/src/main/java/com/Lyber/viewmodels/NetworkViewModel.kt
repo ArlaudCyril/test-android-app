@@ -5,6 +5,39 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.Lyber.models.*
+import com.Lyber.models.AddedAsset
+import com.Lyber.models.AssetBaseData
+import com.Lyber.models.AssetBaseDataResponse
+import com.Lyber.models.AssetDetailBaseDataResponse
+import com.Lyber.models.BalanceResponse
+import com.Lyber.models.CoinsResponse
+import com.Lyber.models.CommonResponse
+import com.Lyber.models.CommonResponseVerfiy
+import com.Lyber.models.Duration
+import com.Lyber.models.ExchangeListingResponse
+import com.Lyber.models.GetAddress
+import com.Lyber.models.GetAssetsResponse
+import com.Lyber.models.GetQuoteResponse
+import com.Lyber.models.GetUserResponse
+import com.Lyber.models.MessageResponse
+import com.Lyber.models.MyAssetResponse
+import com.Lyber.models.NetworkResponse
+import com.Lyber.models.NetworksResponse
+import com.Lyber.models.NewsResponse
+import com.Lyber.models.PriceGraphResponse
+import com.Lyber.models.PriceResponse
+import com.Lyber.models.PriceServiceResume
+import com.Lyber.models.RecurringInvestmentDetailResponse
+import com.Lyber.models.RecurringInvestmentResponse
+import com.Lyber.models.SetPhoneResponse
+import com.Lyber.models.StrategiesResponse
+import com.Lyber.models.Strategy
+import com.Lyber.models.TransactionResponse
+import com.Lyber.models.UploadResponse
+import com.Lyber.models.UserChallengeResponse
+import com.Lyber.models.UserLoginResponse
+import com.Lyber.models.WhitelistingResponse
+import com.Lyber.models.WithdrawalAddress
 import com.Lyber.network.RestClient
 import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.Lyber.utils.App
@@ -652,7 +685,7 @@ open class NetworkViewModel : ViewModel() {
             hashMap["network"] = network
             hashMap["address"] = address
             hashMap["origin"] = origin.lowercase()
-            if (exchange.isNotEmpty())
+            if (origin.lowercase() == "exchange")
                 hashMap["exchange"] = exchange
             val res = RestClient.get().addWhitelistingAddress(hashMap)
             if (res.isSuccessful)

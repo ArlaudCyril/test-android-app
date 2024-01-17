@@ -54,7 +54,7 @@ class AddAddressInfoBottomSheet(
             binding.tvValueNetwork.text = it.network!!.uppercase()
             binding.tvValueAddressOrigin.text = it.origin
             binding.tvValueDateAdded.text = it.creationDate!!.toFormat("yyyy-MM-dd'T'hh:mm:ss","dd MMM yyyy")/*2023-09-05T11:04:31.348Z*/
-        }
+      }
     }
 
 

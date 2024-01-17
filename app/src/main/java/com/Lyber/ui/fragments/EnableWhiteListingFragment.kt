@@ -5,7 +5,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getColor
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -17,7 +16,6 @@ import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.utils.CommonMethods.Companion.setBackgroundTint
 import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.NetworkViewModel
@@ -58,12 +56,11 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
             else -> 2
         }
         when(selectedPosition){
-            1->{binding.tvSecurityText.text =
-                getString(R.string.a_24h_delay_is_required_before_you_can_withdraw_to_any_address_newly_added_to_your_address_book).also { binding.tvSecurityText.text = it }
+            1->{binding.tvSecurityText.text =   getString(R.string.selcted_24h).also { binding.tvSecurityText.text = it }
             }
             0->{
                 binding.tvSecurityText.text =
-                    getString(R.string.a_delay_of_72_hours_will_be_required_before_you_can_withdraw_to_any_address_newly_added_to_your_address_book)
+                    getString(R.string.selcted_72h)
             }
             2->{
                 binding.tvSecurityText.text = getString(R.string.you_can_immediately_withdraw_to_any_address_newly_added_to_your_address_book)

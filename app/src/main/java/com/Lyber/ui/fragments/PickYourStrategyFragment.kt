@@ -74,8 +74,8 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
             viewModel.getStrategies()
         }
 
-        viewModel.pauseStrategyResponse.observe(viewLifecycleOwner){
-            if (lifecycle.currentState == Lifecycle.State.RESUMED){
+        viewModel.pauseStrategyResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 checkInternet(requireContext()) {
                     showProgressDialog(requireContext())
                     viewModel.getStrategies()
@@ -130,7 +130,7 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
             RelativeLayout.LayoutParams.MATCH_PARENT
         )
 
-        val vc  = InvestWithStrategyBottomSheet(::clicked)
+        val vc = InvestWithStrategyBottomSheet(::clicked)
         vc.viewToDelete = transparentView
         vc.mainView = view?.rootView as ViewGroup
         vc.viewModel = viewModel
@@ -144,27 +144,36 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
     }
 
     private fun clicked(type: Int) {
-        when(type){
-            -1->{
+        when (type) {
+            -1 -> {
                 adapter.markSelected(-1)
             }
-            0->{findNavController().navigate(R.id.investAddMoneyFragment)}
-            1->{
-                checkInternet(requireActivity()){
+
+            0 -> {
+                findNavController().navigate(R.id.investAddMoneyFragment)
+            }
+
+            1 -> {
+                checkInternet(requireActivity()) {
                     showProgressDialog(requireActivity())
-                    viewModel.pauseStrategy(viewModel.selectedStrategy!!.ownerUuid,viewModel.selectedStrategy!!.name)
+                    viewModel.pauseStrategy(
+                        viewModel.selectedStrategy!!.ownerUuid,
+                        viewModel.selectedStrategy!!.name
+                    )
                 }
             }
-            2->{
-                checkInternet(requireActivity()){
+
+            2 -> {
+                checkInternet(requireActivity()) {
                     showProgressDialog(requireActivity())
                     viewModel.deleteStrategy(viewModel.selectedStrategy!!.name)
                 }
             }
-            3->{
+
+            3 -> {
                 val bundle = Bundle()
-                bundle.putBoolean(Constants.ID,true)
-                findNavController().navigate(R.id.buildStrategyFragment,bundle)
+                bundle.putBoolean(Constants.ID, true)
+                findNavController().navigate(R.id.buildStrategyFragment, bundle)
             }
         }
     }
@@ -180,7 +189,6 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
             }
         }
     }
-
 
 
     override fun onDestroyView() {

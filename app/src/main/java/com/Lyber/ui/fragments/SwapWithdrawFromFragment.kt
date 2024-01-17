@@ -8,7 +8,6 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.Lyber.R
 import com.Lyber.databinding.FragmentSwapFromBinding
 import com.Lyber.models.Balance
-import com.Lyber.ui.activities.BaseActivity
 import com.Lyber.ui.adapters.BalanceAdapter
 import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
@@ -16,7 +15,6 @@ import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.commaFormatted
 import com.Lyber.utils.CommonMethods.Companion.currencyFormatted
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
-import com.Lyber.utils.CommonMethods.Companion.formattedAsset
 import com.Lyber.utils.CommonMethods.Companion.replaceFragment
 import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.visible

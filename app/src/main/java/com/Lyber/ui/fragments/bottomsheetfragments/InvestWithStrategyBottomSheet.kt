@@ -43,7 +43,7 @@ class InvestWithStrategyBottomSheet (val clickListener: (Int) -> Unit) :
                 ivPAuse.visible()
                 tvTitlePAuse.visible()
                 ivRightArrowPAuse.visible()
-                    //
+                //
                 tvTitleAdjust.gone()
                 ivAdjust.gone()
                 ivRightArrowAdjust.gone()

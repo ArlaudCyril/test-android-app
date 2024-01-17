@@ -234,7 +234,7 @@ if(App.prefsManager.user?.strongAuthentification!=null)
         binding.tvLogout.setOnClickListener(this)
 
         binding.llStrongAuthentication.setOnClickListener(this)
-//        binding.rlAddressBook.setOnClickListener(this)
+        binding.rlAddressBook.setOnClickListener(this)
 
         binding.ivProfile.setOnClickListener(this)
 //        binding.llNotification.setOnClickListener(this)

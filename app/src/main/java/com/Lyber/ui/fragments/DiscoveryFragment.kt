@@ -3,9 +3,6 @@ package com.Lyber.ui.fragments
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.navigation.NavController
-import androidx.navigation.NavOptions
-import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.FragmentDiscoveryBinding

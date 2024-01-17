@@ -3,7 +3,6 @@ package com.Lyber.ui.fragments
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.au.countrycodepicker.CountryPicker
 import com.Lyber.R
 import com.Lyber.databinding.FragmentAddressBinding
 import com.Lyber.models.AddressDataLocal
@@ -12,8 +11,8 @@ import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.CommonMethods.Companion.takesAlphabetOnly
-import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.PersonalDataViewModel
+import com.au.countrycodepicker.CountryPicker
 
 class AddressFragment : BaseFragment<FragmentAddressBinding>() {
 

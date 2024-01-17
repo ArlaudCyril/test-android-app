@@ -706,5 +706,7 @@
     <string name="save_my_new_pass">Enregistrer mon nouveau mot de passe</string>
     <string name="pass_valid_msg">Le mot de passe doit comporter au moins 10 caractères, 1 caractère spécial, 1 minuscule et 1 majuscule.</string>
     <string name="toCaps">To</string>
+    <string name="selcted_24h">Un délai de 24h est requis avant de pouvoir effectuer un retrait vers une adresse nouvellement ajoutée à votre carnet d\'adresses.</string>
+    <string name="selcted_72h">Un délai de 72h est requis avant de pouvoir effectuer un retrait vers toute adresse nouvellement ajoutée à votre carnet d\'adresses.</string>
 
 </resources>

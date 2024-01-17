@@ -18,7 +18,6 @@ import java.util.Locale
 
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : BaseActivity<ActivitySplashBinding>() {
-
     private val TAG = "CompletePortfolioFragme"
     override fun bind() = ActivitySplashBinding.inflate(layoutInflater)
 
@@ -38,7 +37,12 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
                     if (navHostFragment.childFragmentManager.backStackEntryCount > 2) {
                         navController.popBackStack()
                     } else {
-                        finishAffinity()
+
+                        if (navHostFragment.childFragmentManager.backStackEntryCount > 2) {
+                            navController.popBackStack()
+                        } else {
+                            finishAffinity()
+                        }
                     }
                 }
             })
@@ -52,7 +56,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
             resources.updateConfiguration(config, resources.displayMetrics)
 
         }
-        if(intent.data!=null && App.prefsManager.userPin.isEmpty()) {
+        if (intent.data != null && App.prefsManager.userPin.isEmpty()) {
             val uriString = intent.data?.toString()
             if (uriString != null && uriString.contains("reset?token")) {
                 Log.d("URI Data", "$uriString")
@@ -69,8 +73,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
                     Log.d("Token not found in the URI", "")
                 }
             }
-        }
-        else  if ((intent?.extras?.getString(Constants.FOR_LOGOUT, "") ?: "").isNotEmpty())
+        } else if ((intent?.extras?.getString(Constants.FOR_LOGOUT, "") ?: "").isNotEmpty())
             navController.navigate(R.id.discoveryFragment)
         else navController.navigate(R.id.splashFragment)
     }
