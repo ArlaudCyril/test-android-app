@@ -277,6 +277,8 @@ open class NetworkViewModel : ViewModel() {
 
     private var _resetPassResponse: MutableLiveData<res> = MutableLiveData()
     val resetPasswordResponse get() = _resetPassResponse
+    private var _changePassResponse: MutableLiveData<ChangePasswordData> = MutableLiveData()
+    val changePasswordData get() = _changePassResponse
     fun cancelJob() {
 
     }
@@ -1283,16 +1285,60 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun getResetPass() {
-           try {
-                viewModelScope.launch(exceptionHandler) {
-                    val res = RestClient.get().getResetPassword()
-                    if (res.isSuccessful)
-                        _resetPassResponse.postValue(res.body())
-                    else listener?.onRetrofitError(res.errorBody())
-                }
-            } catch (e: Exception) {
-                listener?.onError()
-
+        try {
+            viewModelScope.launch(exceptionHandler) {
+                val res = RestClient.get().getResetPassword()
+                if (res.isSuccessful)
+                    _resetPassResponse.postValue(res.body())
+                else listener?.onRetrofitError(res.errorBody())
             }
+        } catch (e: Exception) {
+            listener?.onError()
+
         }
+    }
+
+    fun getPasswordChangeChallenge() {
+        try {
+            viewModelScope.launch(exceptionHandler) {
+                val res = RestClient.get().getPasswordChangeChallenge()
+                if (res.isSuccessful)
+                    _changePassResponse.postValue(res.body())
+                else listener?.onRetrofitError(res.errorBody())
+            }
+        } catch (e: Exception) {
+            listener?.onError()
+
+        }
+    }
+
+    fun changePassword(hash: HashMap<String, Any>) {
+        try {
+            viewModelScope.launch(exceptionHandler) {
+                val res = RestClient.get().changePassword(hash)
+                if (res.isSuccessful)
+                    _booleanResponse.postValue(res.body())
+                else listener?.onRetrofitError(res.errorBody())
+            }
+        } catch (e: Exception) {
+            listener?.onError()
+
+        }
+    }
+
+    fun verifyPasswordChange(code: String) {
+        try {
+            viewModelScope.launch(exceptionHandler) {
+                val hash = hashMapOf<String, Any>()
+                hash["code"] = code
+                val res = RestClient.get().verifyPasswordChange(hash)
+                if (res.isSuccessful)
+                    _exportOperationResponse.postValue(res.body())
+                else listener?.onRetrofitError(res.errorBody())
+            }
+        } catch (e: Exception) {
+            listener?.onError()
+
+        }
+    }
 }

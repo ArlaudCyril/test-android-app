@@ -356,4 +356,13 @@ interface Api {
 
     @GET("user-service/reset-password-identifiers")
     suspend fun getResetPassword(): Response<res>
+
+    @GET("user-service/password-change-challenge")
+    suspend fun getPasswordChangeChallenge(): Response<ChangePasswordData>
+
+    @POST("user-service/password")
+    suspend fun changePassword(@Body hashMap: HashMap<String, Any>):Response<BooleanResponse>
+
+    @POST("user-service/verify-password-change")
+    suspend fun verifyPasswordChange(@Body hashMap: HashMap<String, Any>): Response<ExportResponse>
 }
