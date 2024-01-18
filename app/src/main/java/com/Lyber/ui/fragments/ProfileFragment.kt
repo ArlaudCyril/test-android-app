@@ -38,6 +38,7 @@ import com.Lyber.databinding.FragmentProfileBinding
 import com.Lyber.databinding.ItemTransactionBinding
 import com.Lyber.models.Balance
 import com.Lyber.models.TransactionData
+import com.Lyber.ui.activities.BaseActivity
 import com.Lyber.ui.adapters.BaseAdapter
 import com.Lyber.ui.fragments.bottomsheetfragments.TransactionDetailsBottomSheetFragment
 import com.Lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet2FA
