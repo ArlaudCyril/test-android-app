@@ -14,6 +14,7 @@ abstract class BaseActivity<viewBinding : ViewBinding> : AppCompatActivity() {
         var assets = ArrayList<AssetBaseData>()
         var balances = ArrayList<Balance>()
         var balanceResume = ArrayList<PriceServiceResume>()
+        var selectedLanguage=""
 
     }
 

@@ -204,7 +204,7 @@ object Constants {
     const val STRATEGY="strategy"
     const val DEPOSIT="deposit"
     const val SELECTED_LANGUAGE="selectedLanguage"
-    const val FRENCH="fr"
-    const val ENGLISH="en"
+    const val FRENCH="FR"
+    const val ENGLISH="EN"
     const val ACTION_CLOSE_ACCOUNT = "close-account"
 }

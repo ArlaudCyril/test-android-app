@@ -660,12 +660,12 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun updateWithdrawalLock(
-        lock: String
+    fun updateUserInfo(
+        hashMap: HashMap<String, Any>
     ) {
         viewModelScope.launch(exceptionHandler) {
-            val hashMap: HashMap<String, Any> = hashMapOf()
-            hashMap["withdrawalLock"] = lock
+//            val hashMap: HashMap<String, Any> = hashMapOf()
+//            hashMap["withdrawalLock"] = lock
             val res = RestClient.get().updateUserInfo(hashMap)
             if (res.isSuccessful)
                 _updateUserInfoResponse.postValue(res.body())
