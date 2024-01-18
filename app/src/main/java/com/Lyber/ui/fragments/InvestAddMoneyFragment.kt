@@ -7,26 +7,28 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.FragmentInvestAddMoneyBinding
-import com.Lyber.ui.activities.BaseActivity
 import com.Lyber.ui.fragments.bottomsheetfragments.FrequencyModel
 import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
-import com.Lyber.utils.CommonMethods.Companion.commaFormatted
 import com.Lyber.utils.CommonMethods.Companion.setBackgroundTint
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.Constants
 
-class InvestAddMoneyFragment: BaseFragment<FragmentInvestAddMoneyBinding>(),View.OnClickListener{
-    private var selectedFrequency:String =""
+class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), View.OnClickListener {
+    private var selectedFrequency: String = ""
     private var mCurrency: String = " USDT"
-    private var minInvestPerAsset = 20f
-    private var requiredAmount =0f
+    private var minInvestPerAsset = 10f
+    private var requiredAmount = 0f
     private lateinit var viewModel: PortfolioViewModel
     private val amount get() = binding.etAmount.text.trim().toString()
-    override fun bind()= FragmentInvestAddMoneyBinding.inflate(layoutInflater)
+    override fun bind() = FragmentInvestAddMoneyBinding.inflate(layoutInflater)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = CommonMethods.getViewModel(requireActivity())
+        if (arguments != null) {
+            binding.btnAddFrequency.visibility = View.GONE
+            selectedFrequency = "none"
+        }
         prepareView()
         binding.tvBackArrow.setOnClickListener(this)
         binding.tvDot.setOnClickListener(this)
@@ -50,14 +52,15 @@ class InvestAddMoneyFragment: BaseFragment<FragmentInvestAddMoneyBinding>(),View
     }
 
     private fun prepareView() {
-        for (asset in viewModel.selectedStrategy?.bundle!!){
-            val newAmount = minInvestPerAsset / (asset.share/100)
-            if(newAmount > requiredAmount){
+        for (asset in viewModel.selectedStrategy?.bundle!!) {
+            val newAmount = minInvestPerAsset / (asset.share / 100)
+            if (newAmount > requiredAmount) {
                 requiredAmount = newAmount
             }
         }
         binding.etAmount.text = "0$mCurrency"
     }
+
     override fun onClick(v: View?) {
         binding.apply {
             when (v) {
@@ -74,38 +77,44 @@ class InvestAddMoneyFragment: BaseFragment<FragmentInvestAddMoneyBinding>(),View
                 tvEight -> type('8')
                 tvNine -> type('9')
                 tvZero -> type('0')
-                btnPreviewInvestment-> investment()
+                btnPreviewInvestment -> investment()
             }
         }
     }
+
     private fun activateButton(activate: Boolean) {
         binding.btnPreviewInvestment.background = ContextCompat.getDrawable(
             requireContext(),
             if (activate) R.drawable.button_purple_500 else R.drawable.button_purple_400
         )
     }
+
     private fun investment() {
-        val finalAmount = amount.replace(mCurrency,"").pointFormat
+        val finalAmount = amount.replace(mCurrency, "").pointFormat
         val balance = com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == "usdt" }
-       val aount :Float= balance?.balanceData?.balance?.toFloat() ?: 0f
-        if (finalAmount.toFloat()< requiredAmount){
+        val amount: Float = balance?.balanceData?.balance?.toFloat() ?: 0f
+
+        if (finalAmount.toFloat() < requiredAmount) {
             getString(
                 R.string.you_need_to_invest_at_least_per_asset_in_the_strategy,
                 requiredAmount.toString(),
                 mCurrency.uppercase()
             ).showToast(requireActivity())
-        }else if (finalAmount.toFloat() > aount){
-            getString(R.string.you_don_t_have_enough_to_perform_this_action, mCurrency.uppercase()).showToast(requireActivity())
-        }else if (selectedFrequency.trim().isEmpty()){
+        } else if (finalAmount.toFloat() > amount) {
+            getString(
+                R.string.you_don_t_have_enough_to_perform_this_action,
+                mCurrency.uppercase()
+            ).showToast(requireActivity())
+        } else if (selectedFrequency.trim().isEmpty()) {
             getString(R.string.please_select_the_frequency).showToast(requireActivity())
-        }else{
+        } else {
             viewModel.amount = finalAmount
             viewModel.selectedFrequency = selectedFrequency
             val bundle = Bundle()
-            bundle.putString(Constants.AMOUNT,finalAmount)
-            bundle.putString(Constants.FREQUENCY,selectedFrequency)
+            bundle.putString(Constants.AMOUNT, finalAmount)
+            bundle.putString(Constants.FREQUENCY, selectedFrequency)
             viewModel.selectedOption = Constants.USING_STRATEGY
-            findNavController().navigate(R.id.confirmInvestmentFragment,bundle)
+            findNavController().navigate(R.id.confirmInvestmentFragment, bundle)
         }
     }
 
@@ -114,7 +123,7 @@ class InvestAddMoneyFragment: BaseFragment<FragmentInvestAddMoneyBinding>(),View
 
         activateButton(true)
         binding.apply {
-            val currency =  mCurrency
+            val currency = mCurrency
             when {
 
                 amount.length == (currency.length + 1) && amount[0] == '0' -> {
@@ -131,10 +140,10 @@ class InvestAddMoneyFragment: BaseFragment<FragmentInvestAddMoneyBinding>(),View
                         if (char != '.') etAmount.text = "$string$char${currency}"
                     } else {
                         if (char == '.') etAmount.text = ("${
-                            string.pointFormat.toDouble().toInt().commaFormatted
+                            string.pointFormat
                         }.${currency}")
-                        else etAmount.text = ((string.pointFormat.toDouble().toInt()
-                            .toString() + char).commaFormatted + currency)
+                        else etAmount.text = ((string.pointFormat
+                            .toString() + char) + currency)
                     }
                 }
 
@@ -143,6 +152,7 @@ class InvestAddMoneyFragment: BaseFragment<FragmentInvestAddMoneyBinding>(),View
 
 
     }
+
     private val String.pointFormat
         get() = replace(",", "", true)
 
@@ -152,7 +162,7 @@ class InvestAddMoneyFragment: BaseFragment<FragmentInvestAddMoneyBinding>(),View
             val builder = StringBuilder()
 
             val value =
-                amount.replace(mCurrency,"").pointFormat
+                amount.replace(mCurrency, "").pointFormat
 
 
             builder.append(value.dropLast(1))
@@ -166,9 +176,10 @@ class InvestAddMoneyFragment: BaseFragment<FragmentInvestAddMoneyBinding>(),View
 
 
         } catch (e: Exception) {
-           e.printStackTrace()
+            e.printStackTrace()
         }
     }
+
     private fun frequencySelected(
         frequency: String
     ) {
@@ -187,7 +198,10 @@ class InvestAddMoneyFragment: BaseFragment<FragmentInvestAddMoneyBinding>(),View
                     requireContext(), R.color.purple_gray_800
                 )
             )
-            tvAddFrequency.text = frequency
+            if (frequency == "none")
+                tvAddFrequency.text = getString(R.string.once)
+            else
+                tvAddFrequency.text = frequency
             selectedFrequency = frequency
         }
     }

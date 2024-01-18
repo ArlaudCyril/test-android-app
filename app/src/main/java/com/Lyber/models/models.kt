@@ -323,7 +323,9 @@ data class DataQuote(
     val fees: String,
     val orderId: String,
     val fromAsset: String,
-    val toAsset: String
+    val toAsset: String,
+    val clientSecret:String,
+    val paymentIntentId:String
 )
 
 data class Data(
@@ -526,7 +528,11 @@ data class AssetDetailBaseData(
     val isStablecoin: Boolean,
     val isDepositActive: Boolean,
     val isWithdrawalActive: Boolean,
-    val networks: MutableList<NetworkDeposit>
+    val networks: MutableList<NetworkDeposit>,
+    val marketCap: String,
+    val circulatingSupply: String,
+    val volume24h: String,
+    val decimals: String
 )
 
 data class NetworkDeposit(
@@ -743,9 +749,39 @@ val amount: String,
 val nextExecution: String?
 )
 
-data class FailedBundleEntry(
-    val asset: String,
-    val share: Int
+
+
+data class OrderResponseData(
+    val `data`: OrderResponse
+)
+
+data class OrderResponse(
+    val fromAmount: String,
+    val fromAsset: String,
+    val orderId: String,
+    val orderStatus: String,
+    val toAmount: String,
+    val toAsset: String,
+    val validated: String
+)
+
+data class OneTimeStrategyData(
+    val `data`:OneTimeStrategyDataResponse
+)
+data class OneTimeStrategyDataResponse(
+    val id: String
+)
+
+data class StrategyExecution(
+    val `data`: StrategyExecutionResponse
+)
+
+data class StrategyExecutionResponse(
+    val failedBundleEntries: List<FailedBundleEntry>,
+    val status: String,
+    val successfulBundleEntries: List<SuccessfulBundleEntry>,
+    val totalFeeSpent: String,
+    val totalStableAmountSpent: String
 )
 
 data class SuccessfulBundleEntry(
@@ -768,4 +804,20 @@ data class ChangePasswordData(
 data class ChangePasswordDataResponse(
     val B: String,
     val salt: String
+)
+data class FailedBundleEntry(
+    val asset: String,
+    val assetAmount: String,
+    val share: Int,
+    val stableAmount: String
+)
+
+data class BalanceStrategy(
+    val id: String,
+    val balanceData: BalanceStrategyData
+)
+data class BalanceStrategyData(
+    val stableAmount: String,
+    val assetAmount: String,
+    var success:Boolean=false
 )

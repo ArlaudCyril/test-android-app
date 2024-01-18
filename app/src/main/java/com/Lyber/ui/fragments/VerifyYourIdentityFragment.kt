@@ -27,8 +27,8 @@ import okhttp3.ResponseBody
 
 
 class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBinding>(),
-    View.OnClickListener, RestClient.OnRetrofitError  {
-    private lateinit var navController : NavController
+    View.OnClickListener, RestClient.OnRetrofitError {
+    private lateinit var navController: NavController
     private lateinit var verifyIdentityViewModel: VerifyIdentityViewModel
     private lateinit var portfolioViewModel: PortfolioViewModel
     override fun bind() = FragmentVerifyYourIdentityBinding.inflate(layoutInflater)
@@ -36,7 +36,8 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val navHostFragment =  requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+        val navHostFragment =
+            requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
         //optional
         binding.btnContinue.setOnClickListener(this)
@@ -69,11 +70,13 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
                 requireActivity().onBackPressed()
             }
         }
-        portfolioViewModel.kycResponse.observe(viewLifecycleOwner){
+        portfolioViewModel.kycResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissAnimation()
-                resultLauncher.launch(Intent(requireActivity(),WebViewActivity::class.java)
-                    .putExtra(Constants.URL,it.data.url))
+                resultLauncher.launch(
+                    Intent(requireActivity(), WebViewActivity::class.java)
+                        .putExtra(Constants.URL, it.data.url)
+                )
             }
         }
     }
@@ -83,21 +86,24 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
     }
 
     override fun onClick(v: View?) {
-        when(v){
-            binding.ivTopAction->{
+        when (v) {
+            binding.ivTopAction -> {
                 requireActivity().onBackPressedDispatcher.onBackPressed()
             }
-            binding.btnContinue->{
+
+            binding.btnContinue -> {
                 hitAcpi()
             }
-            binding.btnReviewMyInformations->{
+
+            binding.btnReviewMyInformations -> {
                 val bundle = Bundle().apply {
-                    putBoolean(Constants.IS_REVIEW,true)
+                    putBoolean(Constants.IS_REVIEW, true)
                 }
-                findNavController().navigate(R.id.fillDetailFragment,bundle)
+                findNavController().navigate(R.id.fillDetailFragment, bundle)
             }
         }
     }
+
     override fun onRetrofitError(responseBody: ResponseBody?) {
         super.onRetrofitError(responseBody)
         dismissAnimation()
@@ -108,20 +114,21 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
         binding.progress.visibility = View.GONE
         binding.btnContinue.text = getString(R.string.start_identity_verifications)
     }
+
     private var resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_FIRST_USER) {
                 val bundle = Bundle().apply {
-                    putBoolean(Constants.IS_REVIEW,true)
+                    putBoolean(Constants.IS_REVIEW, true)
                 }
-                findNavController().navigate(R.id.fillDetailFragment,bundle)
-            }else if (result.resultCode == Activity.RESULT_OK){
+                findNavController().navigate(R.id.fillDetailFragment, bundle)
+            } else if (result.resultCode == Activity.RESULT_OK) {
                 portfolioViewModel.finishRegistration()
             }
         }
 
     private fun hitAcpi() {
-        checkInternet(requireActivity()){
+        checkInternet(requireActivity()) {
             binding.progress.visible()
             binding.progress.animation =
                 AnimationUtils.loadAnimation(requireActivity(), R.anim.rotate_drawable)

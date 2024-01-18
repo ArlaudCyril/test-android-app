@@ -12,7 +12,6 @@ import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.CustomDialogLayoutBinding
 import com.Lyber.databinding.FragmentTestFillDetailBinding
-import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.utils.ActivityCallbacks
 import com.Lyber.utils.App.Companion.prefsManager
 import com.Lyber.utils.CommonMethods

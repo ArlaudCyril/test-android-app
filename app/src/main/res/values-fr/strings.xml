@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Lyber</string>
     <string name="lyber_investments_reinvented">Lyber, la crypto à portée de main.</string>
     <string name="diversified_regular_simple">L’investissement simple, sécurisé et diversifié</string>
@@ -714,4 +714,15 @@
     <string name="pass_should_be_same">Votre mot de passe doit être le même dans les champs \"Entrez votre nouveau mot de passe\" et \"Confirmez votre nouveau mot de passe\".</string>
     <string name="selcted_24h">Un délai de 24h est requis avant de pouvoir effectuer un retrait vers une adresse nouvellement ajoutée à votre carnet d\'adresses.</string>
     <string name="selcted_72h">Un délai de 72h est requis avant de pouvoir effectuer un retrait vers toute adresse nouvellement ajoutée à votre carnet d\'adresses.</string>
+    <string name="buy_assets_with_usdt">Acheter des actifs avec USDT</string>
+    <string name="buy__with_usdt">Achetez %1$s avec USDT</string>
+    <string name="buy_usdt_with_euro">Acheter des USDT avec des euros</string>
+    <string name="usdt_error" tools:ignore="ExtraTranslation">Pour investir dans un actif, vous devez d\'abord acheter de l\'USDT, puis utiliser l\'USDT acheté et l\'échanger contre l\'actif souhaité.</string>
+    <string name="pay">Payer</string>
+    <string name="purchase_error">La date limite pour confirmer votre achat est dépassée. Souhaitez-vous recevoir une nouvelle proposition?</string>
+    <string name="you_have_seconds_to_confirm_this_purchase">Vous disposez de %1$s secondes pour confirmer cet achat.</string>
+     <string name="you_must_install_gpay">Vous devez d\'abord installer Google Pay</string>
+    <string name="usdt_price">USDT Prix</string>
+    <string name="fee">Frais</string>
+    <string name="previous">Previous</string>
 </resources>

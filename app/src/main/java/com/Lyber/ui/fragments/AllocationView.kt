@@ -60,6 +60,8 @@ class AllocationView : LinearLayout {
 
 
     fun setAssetsList(list: List<InvestmentStrategyAsset>) {
+        binding.llProgressBar.removeAllViews()
+
         for (pos in 0 until list.count()) {
 
             val view = View(context)
@@ -100,6 +102,7 @@ class AllocationView : LinearLayout {
 
 
         fun setList(list: List<InvestmentStrategyAsset>) {
+            this.list.clear()
             val start = this.list.count()
             this.list.clear()
             this.list.addAll(list)
@@ -123,6 +126,11 @@ class AllocationView : LinearLayout {
                     ivColor.setBackgroundTint(colors[position])
                     tvAssetsName.text = it.asset.uppercase()
                     tvAssetPercent.text = "${it.share.roundToInt()}%"
+                    try {
+                        ivColor.setBackgroundTint(colors[position])
+                        tvAssetsName.text = it.asset.uppercase()
+                        tvAssetPercent.text = "${it.share.roundToInt()}%"
+                    }catch (_:Exception){}
                 }
             }
         }

@@ -67,6 +67,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/includedAsset"
         app:tabBackground="@drawable/tab__indcator"
+        android:background="@color/white"
         app:tabIndicator="@null"
         app:tabMode="auto"
         app:tabSelectedTextColor="@color/purple_500"

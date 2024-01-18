@@ -98,6 +98,7 @@ class CommonMethods {
             }
             return false
         }
+
         @JvmStatic
         fun getScreenWidth(activity: Context?): Int {
             val w = activity!!.getSystemService(Context.WINDOW_SERVICE) as WindowManager
@@ -132,25 +133,28 @@ class CommonMethods {
             }
 
         }
-        fun String.toFormat(format: String,convertFormat:String): String {
+
+        fun String.toFormat(format: String, convertFormat: String): String {
             try {
                 var result = ""
-                val formatter: DateFormat = SimpleDateFormat(format,Locale.getDefault())
+                val formatter: DateFormat = SimpleDateFormat(format, Locale.getDefault())
                 formatter.timeZone = TimeZone.getTimeZone("UTC")
-                val outputFormatter: DateFormat = SimpleDateFormat(convertFormat,Locale.getDefault())
+                val outputFormatter: DateFormat =
+                    SimpleDateFormat(convertFormat, Locale.getDefault())
                 outputFormatter.timeZone = TimeZone.getDefault()
                 formatter.parse(this)?.let { result = outputFormatter.format(it) }
 
                 return result
-            }catch (e:Exception){
+            } catch (e: Exception) {
                 return this
             }
         }
+
         fun dismissProgressDialog() {
             dialog?.let {
                 try {
                     it.findViewById<ImageView>(R.id.progressImage).clearAnimation()
-                }catch (e:Exception){
+                } catch (e: Exception) {
                     e.printStackTrace()
                 }
                 it.dismiss()
@@ -186,7 +190,8 @@ class CommonMethods {
         }
 
         fun String.decimalPoint(): String {
-            return DecimalFormat("#.######").format(toDouble())
+            val decimalFormat = DecimalFormat("#.######", DecimalFormatSymbols(Locale.ENGLISH))
+            return decimalFormat.format(toDouble())
         }
 
         fun String.decimalPoints(points: Int): String {
@@ -199,14 +204,13 @@ class CommonMethods {
 
         fun String.roundFloat(): String {
             try {
-                var value=this
-                if(value.contains(","))
-                    value=this.replace(",","")
-                return String.format(Locale.US,"%.2f", value.toFloat())
-            }catch (ex:NumberFormatException){
+                var value = this
+                if (value.contains(","))
+                    value = this.replace(",", "")
+                return String.format(Locale.US, "%.2f", value.toFloat())
+            } catch (ex: NumberFormatException) {
                 return ""
             }
-
         }
 
         fun isBiometricReady(context: Context) =
@@ -256,9 +260,9 @@ class CommonMethods {
         }
 
         fun ImageView.loadCircleCrop(any: Any, placeHolderRes: Int? = -1) {
-            if (any.toString().contains("btc")){
+            if (any.toString().contains("btc")) {
                 this.setImageResource(R.drawable.ic_bitcoin)
-            }else {
+            } else {
                 var res = any
                 val requestBuilder: RequestBuilder<PictureDrawable> =
                     Glide.with(this).`as`(PictureDrawable::class.java)
@@ -355,6 +359,7 @@ class CommonMethods {
                 when (errorRes?.error) {
                     "Invalid UpdateExpression: Syntax error; token: \"0\", near: \", 0)\"" ->
                         "Invalid OTP".showToast(context)
+
                     "Email already verified" -> "Email already exists".showToast(context)
                     "Bad client credentials" -> "Invalid credentials".showToast(context)
                     "No user registerd with this email" -> "Invalid credentials".showToast(context)
@@ -369,11 +374,13 @@ class CommonMethods {
             if (errorRes?.error == "UNAUTHORIZED" || errorRes?.error == "Unauthorized") {
 
                 prefsManager.logout()
-                val intent = Intent(context, com.Lyber.ui.activities.SplashActivity::class.java).apply {
-                    putExtra(Constants.IS_LOGOUT, true).flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or
-                            Intent.FLAG_ACTIVITY_CLEAR_TASK or
-                            Intent.FLAG_ACTIVITY_NEW_TASK
-                }
+                val intent =
+                    Intent(context, com.Lyber.ui.activities.SplashActivity::class.java).apply {
+                        putExtra(Constants.IS_LOGOUT, true).flags =
+                            Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                                    Intent.FLAG_ACTIVITY_CLEAR_TASK or
+                                    Intent.FLAG_ACTIVITY_NEW_TASK
+                    }
 
                 ContextCompat.startActivity(context, intent, null)
 
@@ -618,6 +625,7 @@ class CommonMethods {
         fun View.visible() {
             visibility = View.VISIBLE
         }
+
         fun View.invisible() {
             visibility = View.INVISIBLE
         }
@@ -637,6 +645,7 @@ class CommonMethods {
         fun FragmentActivity.clearBackStack() {
             supportFragmentManager.popBackStack(null, FragmentManager.POP_BACK_STACK_INCLUSIVE)
         }
+
 
         inline fun <reified T : ViewModel> getViewModel(owner: ViewModelStoreOwner): T {
             return ViewModelProvider(owner)[T::class.java]
@@ -784,7 +793,7 @@ class CommonMethods {
             }
         }
 
-//        val <T> T.commaFormatted: String
+        //        val <T> T.commaFormatted: String
 //            get() = when (this) {
 //                is Number -> this.commaFormatted
 //                is String -> toDoubleOrNull().commaFormatted
@@ -807,16 +816,20 @@ class CommonMethods {
                         val split = toString().split(".")[1]
                         if (split.toFloat() > 0)
                             when (split.length) {
-                                1 -> String.format("%,.1f", this)
-                                else -> String.format("%,.2f", this)
+                                1 -> String.format(Locale.US, "%,.1f", this)
+                                else -> String.format(Locale.US, "%,.2f", this)
                             }
-                        else String.format("%,d", toString().split(".")[0].toInt()) //+ ".00"
+                        else String.format(
+                            Locale.US,
+                            "%,d",
+                            toString().split(".")[0].toInt()
+                        ) //+ ".00"
 
-                    } else String.format("%,2f", this) //+ ".00"
+                    } else String.format(Locale.US, "%,2f", this) //+ ".00"
 
                 }
 
-                is Long, is Int -> String.format("%,d", this) //+ ".00"
+                is Long, is Int -> String.format(Locale.US, "%,d", this) //+ ".00"
 
                 else -> toString()
 
@@ -891,10 +904,10 @@ class CommonMethods {
             }
 
 
-        fun String.formattedAsset(price: Double?, rounding : RoundingMode): String {
+        fun String.formattedAsset(price: Double?, rounding: RoundingMode): String {
             var priceFinal = price
             if (this == "" || priceFinal == null || priceFinal == 0.0 || priceFinal.isNaN()) {
-                priceFinal= 1.026
+                priceFinal = 1.026
             }
 
             val formatter = DecimalFormat()
@@ -915,11 +928,10 @@ class CommonMethods {
 
             val symbols = DecimalFormatSymbols(Locale.US)
             formatter.decimalFormatSymbols = symbols
-             val valueFormatted = formatter.format(this.toDouble() ?: 0.0)
+            val valueFormatted = formatter.format(this.toDouble() ?: 0.0)
 
-             return valueFormatted.toString()
-         }
-
+            return valueFormatted.toString()
+        }
 
         fun TextView.expandWith(string: String) {
 
@@ -1203,19 +1215,23 @@ class CommonMethods {
                         Log.d("isHexadecimalFormat", ": $i")
                         return false
                     }
+
                     in CAP_RANGE -> {
                         Log.d("isHexadecimalFormat", ": $i")
                         return false
                     }
+
                     else -> {}
                 }
             }
 
             return true
         }
-       fun String.addressMatched(format :String):Boolean{
+
+        fun String.addressMatched(format: String): Boolean {
             return this.matches(format.toRegex())
         }
+
         fun String.checkFormat(type: String): Boolean {
 
             return when (type) {
@@ -1244,6 +1260,7 @@ class CommonMethods {
                 "BTC" ->
                     ((length in 27..37) &&
                             (startsWith('1') || startsWith('3') || startsWith("bc1")))
+
                 "BCH" ->
                     ((length in 27..34) && (startsWith('q') || startsWith("bitcoincash")))
 
@@ -1312,12 +1329,12 @@ class CommonMethods {
 
             }
         }
-        fun getAsset(id: String): AssetBaseData
-        {
+
+        fun getAsset(id: String): AssetBaseData {
             return com.Lyber.ui.activities.BaseActivity.assets.first { it.id == id }
         }
-        fun getBalance(id: String): Balance?
-        {
+
+        fun getBalance(id: String): Balance? {
             return com.Lyber.ui.activities.BaseActivity.balances.firstOrNull { it.id == id }
         }
 
@@ -1326,8 +1343,6 @@ class CommonMethods {
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
             val startDateTime = LocalDate.parse(startDate, formatter)
             val endDateTime = LocalDate.parse(endDate, formatter)
-
-
 
 
             val period = Period.between(startDateTime, endDateTime)
@@ -1339,12 +1354,17 @@ class CommonMethods {
 
             var currentDate = startDateTime
             for (i in 0..days) {
-                result.add("${currentDate.month.toString().lowercase().replaceFirstChar { it.uppercase() }} ${currentDate.year}")
+                result.add(
+                    "${
+                        currentDate.month.toString().lowercase().replaceFirstChar { it.uppercase() }
+                    } ${currentDate.year}"
+                )
                 currentDate = currentDate.plusDays(1)
             }
 
             return result.distinct()
         }
+
         fun getMonthsAndYearsBetween(startDate: String, endDate: String): List<String> {
             val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
             val startDateTime = Calendar.getInstance()
@@ -1357,34 +1377,44 @@ class CommonMethods {
 
             while (startDateTime.before(endDateTime) || startDateTime == endDateTime) {
                 result.add(
-                    "${startDateTime.getDisplayName(Calendar.MONTH, Calendar.LONG, Locale.getDefault()).lowercase().replaceFirstChar { it.uppercase() }} ${startDateTime.get(Calendar.YEAR)}"
+                    "${
+                        startDateTime.getDisplayName(
+                            Calendar.MONTH,
+                            Calendar.LONG,
+                            Locale.getDefault()
+                        ).lowercase().replaceFirstChar { it.uppercase() }
+                    } ${startDateTime.get(Calendar.YEAR)}"
                 )
                 startDateTime.add(Calendar.MONTH, 1)
             }
             return result
         }
+
         fun getCurrentDateTime(): String {
             val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
-            sdf.timeZone = TimeZone.getTimeZone("UTC") // Set the time zone to UTC to get the desired format
+            sdf.timeZone =
+                TimeZone.getTimeZone("UTC") // Set the time zone to UTC to get the desired format
 
             val currentDate = Calendar.getInstance().time
             return sdf.format(currentDate)
         }
+
         @RequiresApi(Build.VERSION_CODES.O)
         fun convertToYearMonthVersion26(inputDate: String): String {
-                val inputFormat = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH)
+            val inputFormat = DateTimeFormatter.ofPattern("MMMM yyyy", Locale.ENGLISH)
 
-                try {
-                    val temporalAccessor = inputFormat.parse(inputDate)
-                    val yearMonth = YearMonth.from(temporalAccessor)
+            try {
+                val temporalAccessor = inputFormat.parse(inputDate)
+                val yearMonth = YearMonth.from(temporalAccessor)
 
-                    return yearMonth.format(DateTimeFormatter.ofPattern("yyyy-MM", Locale.ENGLISH))
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    // Handle parsing exception if needed
-                    return ""
-                }
+                return yearMonth.format(DateTimeFormatter.ofPattern("yyyy-MM", Locale.ENGLISH))
+            } catch (e: Exception) {
+                e.printStackTrace()
+                // Handle parsing exception if needed
+                return ""
+            }
         }
+
         fun convertToYearMonth(inputDate: String): String {
             val inputFormat = SimpleDateFormat("MMMM yyyy", Locale.ENGLISH)
             val outputFormat = SimpleDateFormat("yyyy-MM", Locale.ENGLISH)
@@ -1398,18 +1428,71 @@ class CommonMethods {
                 return ""
             }
         }
+
         fun encodeToBase64(input: String): String {
             val bytes = input.toByteArray(Charsets.UTF_8)
             val base64 = Base64.encodeToString(bytes, Base64.NO_WRAP)
             return base64
         }
+
         fun isValidPassword(password: String): Boolean {
-            val passwordRegex = Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@=#\$%^&*(),.?\":{}|<>])(?=\\S+\$).{10,}\$")
+            val passwordRegex =
+                Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@=#\$%^&*(),.?\":{}|<>])(?=\\S+\$).{10,}\$")
             return passwordRegex.matches(password)
         }
+
+        @SuppressLint("NewApi")
+        fun isAppInstalled(context: FragmentActivity, packageName: String): Boolean {
+            try {
+                val packageInfo = context.packageManager.getPackageInfo(
+                    packageName,
+                    PackageManager.MATCH_UNINSTALLED_PACKAGES
+                )
+                // Check if the packageInfo is not null, indicating the app is installed
+                return packageInfo != null
+            } catch (e: PackageManager.NameNotFoundException) {
+                // Package not found
+                return false
+            }
+        }
+
+        fun String.formattedAssetForInverseRatio(price: Double?, rounding: RoundingMode): String {
+            var priceFinal = price
+            if (this == "" || priceFinal == null || priceFinal == 0.0 || priceFinal.isNaN()) {
+                priceFinal = 1.026
+            }
+
+            val formatter = DecimalFormat()
+
+            // Pour trouver la précision, ici X
+            // Prix * 10e-X >= 0.01 (centimes)
+            // => X >= -log(0,01/Prix)
+            //changed it for showing the required result
+            val precision = 8 //ceil(-log10(0.01 / priceFinal)).toInt()
+            if (precision > 0) {
+                formatter.maximumFractionDigits = precision
+                formatter.minimumFractionDigits = precision
+            } else {
+                formatter.maximumFractionDigits = 0
+                formatter.minimumFractionDigits = 0
+            }
+
+            formatter.roundingMode = rounding
+
+            val symbols = DecimalFormatSymbols(Locale.US)
+            formatter.decimalFormatSymbols = symbols
+            val valueFormatted = formatter.format(this.toDouble() ?: 0.0)
+
+            return valueFormatted.toString()
+        }
+
+        fun String.decimalPointUptoTwoPlaces(): String {
+            val decimalFormat = DecimalFormat("#.##", DecimalFormatSymbols(Locale.ENGLISH))
+            return decimalFormat.format(toDouble())
+        }
+
+
     }
-
-
 }
 
 

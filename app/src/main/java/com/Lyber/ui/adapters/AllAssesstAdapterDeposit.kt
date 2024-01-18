@@ -10,8 +10,9 @@ import com.Lyber.databinding.ItemAllAssestBinding
 import com.Lyber.models.AssetBaseData
 import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
 
-class AllAssesstAdapterDeposit (
-    private val clickListener: (AssetBaseData) -> Unit = { _ -> }, private val context: Context) :
+class AllAssesstAdapterDeposit(
+    private val clickListener: (AssetBaseData) -> Unit = { _ -> }, private val context: Context
+) :
     BaseAdapter<AssetBaseData>() {
 
     override fun onCreateViewHolder(
@@ -32,15 +33,16 @@ class AllAssesstAdapterDeposit (
             (holder as AvailableAssetViewHolder).binding.apply {
                 itemList[position]?.let { it ->
                     val id = it.id
-                    val currency : AssetBaseData? = com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull{ item -> item.takeIf {item.id == id}}
+                    val currency: AssetBaseData? =
+                        com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == id } }
                     if (currency != null) {
                         ivAsset.loadCircleCrop(currency.imageUrl)
                     }
 
                     tvAssetName.text = it.fullName
-                    if (it.isDepositActive){
+                    if (it.isDepositActive) {
                         tvAssetNameCode.visibility = View.GONE
-                    }else{
+                    } else {
                         tvAssetNameCode.visibility = View.VISIBLE
                         tvAssetNameCode.text = context.getString(R.string.deactivated)
                     }

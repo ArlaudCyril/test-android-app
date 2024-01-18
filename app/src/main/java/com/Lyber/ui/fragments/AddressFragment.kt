@@ -45,7 +45,7 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
 
             binding.etCountry.setText(country)
         }
-        if (personalDataViewModel.isReview){
+        if (personalDataViewModel.isReview) {
             App.prefsManager.addressDataLocal.let {
                 binding.apply {
                     etStreetNumber.setText(it!!.streetNumber)
@@ -75,17 +75,17 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
 
     fun checkData(): Boolean {
         when {
-       /*     streetHouseNumber.isEmpty() -> {
-                getString(R.string.please_enter_street_number).showToast(requireContext())
-                binding.etStreetNumber.requestKeyboard()
-            }
-*/
-         /*   buildingFloor.isEmpty() -> {
-                getString(R.string.please_enter_building_name_or_floor_name).showToast(
-                    requireContext()
-                )
-                binding.etBuildingNumberFloor.requestKeyboard()
-            }*/
+            /*     streetHouseNumber.isEmpty() -> {
+                     getString(R.string.please_enter_street_number).showToast(requireContext())
+                     binding.etStreetNumber.requestKeyboard()
+                 }
+     */
+            /*   buildingFloor.isEmpty() -> {
+                   getString(R.string.please_enter_building_name_or_floor_name).showToast(
+                       requireContext()
+                   )
+                   binding.etBuildingNumberFloor.requestKeyboard()
+               }*/
 
             city.isEmpty() -> {
                 getString(R.string.please_enter_city_name).showToast(requireContext())
@@ -107,8 +107,10 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
             )
 
             else -> {
-                val addressDataLocal = AddressDataLocal(streetNumber = streetHouseNumber, buildingFloorName =
-                buildingFloor, city = city,zipCode = zipCode,country= country,state = state)
+                val addressDataLocal = AddressDataLocal(
+                    streetNumber = streetHouseNumber, buildingFloorName =
+                    buildingFloor, city = city, zipCode = zipCode, country = country, state = state
+                )
                 App.prefsManager.addressDataLocal = addressDataLocal
                 personalDataViewModel.let {
                     it.streetNumber = streetHouseNumber

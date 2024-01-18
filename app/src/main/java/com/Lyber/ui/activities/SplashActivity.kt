@@ -16,6 +16,7 @@ import com.Lyber.utils.App
 import com.Lyber.utils.Constants
 import java.util.Locale
 
+
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : BaseActivity<ActivitySplashBinding>() {
     private val TAG = "CompletePortfolioFragme"
@@ -89,6 +90,8 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
     }
 
 }
+
+
 
 
 

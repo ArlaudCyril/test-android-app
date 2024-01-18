@@ -9,6 +9,7 @@ import com.Lyber.models.Balance
 import com.Lyber.models.PriceServiceResume
 
 abstract class BaseActivity<viewBinding : ViewBinding> : AppCompatActivity() {
+
     //Global variables
     companion object {
         var assets = ArrayList<AssetBaseData>()
@@ -26,6 +27,7 @@ abstract class BaseActivity<viewBinding : ViewBinding> : AppCompatActivity() {
         super.onCreate(savedInstanceState, persistentState)
         _binding = bind()
         setContentView(binding.root)
+
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,5 +41,6 @@ abstract class BaseActivity<viewBinding : ViewBinding> : AppCompatActivity() {
         super.onDestroy()
         _binding = null
     }
+
 
 }

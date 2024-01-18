@@ -304,10 +304,10 @@ class SelectAnAssetFragment : BaseFragment<FragmentSelectAnAssetBinding>() {
         inner class ViewHolder(val bind: ItemAssetBinding) : RecyclerView.ViewHolder(bind.root) {
             init {
                 bind.root.setOnClickListener {
-                    itemList[adapterPosition]?.let { it1 -> clickListener(it1) }
+                    itemList[absoluteAdapterPosition]?.let { it1 -> clickListener(it1) }
                 }
                 bind.lineChart.setOnClickListener {
-                    itemList[adapterPosition]?.let { it1 -> clickListener(it1) }
+                    itemList[absoluteAdapterPosition]?.let { it1 -> clickListener(it1) }
                 }
             }
         }
@@ -361,8 +361,8 @@ class SelectAnAssetFragment : BaseFragment<FragmentSelectAnAssetBinding>() {
         override fun onViewAttachedToWindow(holder: RecyclerView.ViewHolder) {
             super.onViewAttachedToWindow(holder)
 
-            if (holder.adapterPosition != RecyclerView.NO_POSITION) {
-                itemList[holder.adapterPosition]?.let {
+            if (holder.absoluteAdapterPosition != RecyclerView.NO_POSITION) {
+                itemList[holder.absoluteAdapterPosition]?.let {
                     (holder as ViewHolder).bind.root.animation =
                         AnimationUtils.loadAnimation(
                             holder.bind.root.context,
@@ -375,8 +375,8 @@ class SelectAnAssetFragment : BaseFragment<FragmentSelectAnAssetBinding>() {
 
         override fun onViewDetachedFromWindow(holder: RecyclerView.ViewHolder) {
             super.onViewDetachedFromWindow(holder)
-            if (holder.adapterPosition != RecyclerView.NO_POSITION)
-                itemList[holder.adapterPosition]?.let {
+            if (holder.absoluteAdapterPosition != RecyclerView.NO_POSITION)
+                itemList[holder.absoluteAdapterPosition]?.let {
                     (holder as ViewHolder).bind.root.clearAnimation()
                 }
         }
