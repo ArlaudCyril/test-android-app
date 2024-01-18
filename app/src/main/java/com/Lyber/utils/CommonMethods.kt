@@ -1410,6 +1410,17 @@ class CommonMethods {
             val passwordRegex = Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@=#\$%^&*(),.?\":{}|<>])(?=\\S+\$).{10,}\$")
             return passwordRegex.matches(password)
         }
+
+        fun getDeviceLocale(context: Context): String {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                return context.resources.configuration.locales[0].country
+            } else {
+                @Suppress("DEPRECATION")
+                return ""
+            }
+        }
+
+
     }
 
 
