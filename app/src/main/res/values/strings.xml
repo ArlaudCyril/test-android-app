@@ -1,4 +1,4 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Lyber</string>
     <string name="lyber_investments_reinvented">Lyber, crypto at your fingertips.</string>
     <string name="diversified_regular_simple">Simple, secure and diversified investment.</string>
@@ -570,7 +570,7 @@
     <string name="invest">Invest</string>
     <string name="immediate">Immediate</string>
     <string name="executing_your_strategy">We are executing your strategy, which may take a few seconds.</string>
-    <string name="execution_in_progress">Execution in progress</string>
+<string name="execution_in_progress">Execution in progress</string>
     <string name="single_execution">Single execution</string>
     <string name="strategy_rejected">Strategy rejected</string>
     <string name="strategy_executed">Strategy executed</string>
@@ -715,4 +715,16 @@
     <string name="pass_should_be_same">Your password should be the same in the fields \"Enter your new password\" and \"Confirm your new password\".</string>
     <string name="selcted_24h">A 24h delay is required before you can withdraw to any address newly added to your address book.</string>
     <string name="selcted_72h">A 72h delay is required before you can withdraw to any address newly added to your address book.</string>
+    <string name="buy_assets_with_usdt">Buy assest with USDT</string>
+    <string name="buy__with_usdt">Buy %1$s with USDT</string>
+    <string name="buy_usdt_with_euro">Buy USDT with Euros</string>
+    <string name="usdt_error" tools:ignore="ExtraTranslation">To invest in an asset, you must first buy USDT, then use the purchased USDT and exchange it for the desired asset.</string>
+    <string name="pay">Pay</string>
+    <string name="purchase_error">The deadline for confirming your purchase has passed. Would you like to receive a new proposal?</string>
+    <string name="you_have_seconds_to_confirm_this_purchase">You have %1$s seconds to confirm this purchase.</string>
+    <string name="you_must_install_gpay">You must first install Google Pay</string>
+    <string name="usdt_price">USDT Price</string>
+    <string name="fee">Fees</string>
+    <string name="previous">Previous</string>
+
 </resources>

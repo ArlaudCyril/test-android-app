@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/white"
+    android:fitsSystemWindows="true">
+
+    <ImageView
+        android:id="@+id/ivTopAction"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="12dp"
+        android:background="@drawable/gray_purple_50"
+        android:padding="12dp"
+        android:src="@drawable/ic_back"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:tint="@color/purple_gray_800" />
+
+    <TextView
+        android:id="@+id/tvTitle"
+        style="@style/SubheadMabry"
+        android:text="@string/buy_usdt"
+        android:textColor="#423D33"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/ivTopAction"
+        app:layout_constraintVertical_chainStyle="packed" />
+
+
+
+
+
+    <TextView
+        app:layout_constraintBottom_toTopOf="@id/tvAssetConversion"
+        app:layout_constraintTop_toBottomOf="@id/ivTopAction"
+        app:layout_constraintVertical_chainStyle="packed"
+        android:id="@+id/etAmount"
+        android:textStyle="bold"
+        android:layout_marginTop="64dp"
+        android:textColor="@color/purple_500"
+        android:layout_width="match_parent"
+        android:gravity="center"
+        android:fontFamily="@font/mabry_pro_bold"
+        android:layout_height="60dp"
+        app:autoSizeMinTextSize="12sp"
+        app:autoSizeMaxTextSize="60sp"
+        app:autoSizeStepGranularity="2sp"
+        app:autoSizeTextType="uniform"
+        android:maxLines="1"
+        />
+
+    <TextView
+        android:id="@+id/tvAssetConversion"
+        style="@style/SubheadMabry"
+        android:text="0.0BTC"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/purple_gray_500"
+        android:visibility="visible"
+        app:layout_constraintBottom_toTopOf="@id/etAmount"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etAmount" />
+
+
+
+
+
+
+
+    <!-- swap fragment -->
+
+
+    <ImageView
+        android:id="@+id/ivRepeat"
+        android:layout_width="36dp"
+        android:layout_height="36dp"
+        android:layout_marginEnd="24dp"
+        android:background="@drawable/curved_button"
+        android:backgroundTint="@color/purple_gray_50"
+        android:gravity="center"
+        android:padding="8dp"
+        android:src="@drawable/ic_repeat"
+        android:visibility="visible"
+        app:layout_constraintBottom_toBottomOf="@+id/tvAssetConversion"
+        app:layout_constraintEnd_toEndOf="parent" />
+
+
+
+
+    <!-- Buttons -->
+
+
+    <TextView
+        android:id="@+id/tvOne"
+        style="@style/HeadingStyle"
+        android:layout_width="77dp"
+        android:layout_height="48dp"
+        android:layout_margin="24dp"
+        android:gravity="center"
+        android:text="1"
+        app:layout_constraintBottom_toTopOf="@id/tvFour"
+        app:layout_constraintEnd_toStartOf="@id/tvTwo"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvTwo"
+        style="@style/HeadingStyle"
+        android:layout_width="77dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="24dp"
+        android:gravity="center"
+        android:text="2"
+        app:layout_constraintBottom_toTopOf="@id/tvFive"
+        app:layout_constraintEnd_toStartOf="@id/tvThree"
+        app:layout_constraintStart_toEndOf="@id/tvOne" />
+
+    <TextView
+        android:id="@+id/tvThree"
+        style="@style/HeadingStyle"
+        android:layout_width="77dp"
+        android:layout_height="48dp"
+        android:layout_margin="24dp"
+        android:gravity="center"
+        android:src="@drawable/ic_back"
+        android:text="3"
+        app:layout_constraintBottom_toTopOf="@id/tvSix"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tvTwo" />
+
+
+    <TextView
+        android:id="@+id/tvFour"
+        style="@style/HeadingStyle"
+        android:layout_width="77dp"
+        android:layout_height="48dp"
+        android:layout_margin="24dp"
+        android:gravity="center"
+        android:text="4"
+        app:layout_constraintBottom_toTopOf="@id/tvSeven"
+        app:layout_constraintEnd_toStartOf="@id/tvFive"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvFive"
+        style="@style/HeadingStyle"
+        android:layout_width="77dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="24dp"
+        android:gravity="center"
+        android:text="5"
+        app:layout_constraintBottom_toTopOf="@id/tvEight"
+        app:layout_constraintEnd_toStartOf="@id/tvSix"
+        app:layout_constraintStart_toEndOf="@id/tvFour" />
+
+    <TextView
+        android:id="@+id/tvSix"
+        style="@style/HeadingStyle"
+        android:layout_width="77dp"
+        android:layout_height="48dp"
+        android:layout_margin="24dp"
+        android:gravity="center"
+        android:src="@drawable/ic_back"
+        android:text="6"
+        app:layout_constraintBottom_toTopOf="@id/tvNine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tvFive" />
+
+
+    <TextView
+        android:id="@+id/tvSeven"
+        style="@style/HeadingStyle"
+        android:layout_width="77dp"
+        android:layout_height="48dp"
+        android:layout_margin="24dp"
+        android:gravity="center"
+        android:text="7"
+        app:layout_constraintBottom_toTopOf="@id/tvDot"
+        app:layout_constraintEnd_toStartOf="@id/tvEight"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvEight"
+        style="@style/HeadingStyle"
+        android:layout_width="77dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="24dp"
+        android:gravity="center"
+        android:text="8"
+        app:layout_constraintBottom_toTopOf="@id/tvZero"
+        app:layout_constraintEnd_toStartOf="@id/tvNine"
+        app:layout_constraintStart_toEndOf="@id/tvSeven" />
+
+    <TextView
+        android:id="@+id/tvNine"
+        style="@style/HeadingStyle"
+        android:layout_width="77dp"
+        android:layout_height="48dp"
+        android:layout_margin="24dp"
+        android:gravity="center"
+        android:src="@drawable/ic_back"
+        android:text="9"
+        app:layout_constraintBottom_toTopOf="@id/tvBackArrow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tvEight" />
+
+
+    <TextView
+        android:id="@+id/tvDot"
+        style="@style/HeadingStyle"
+        android:layout_width="77dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:text="."
+        app:layout_constraintBottom_toTopOf="@id/llBottom"
+        app:layout_constraintEnd_toStartOf="@id/tvZero"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        app:layout_constraintStart_toStartOf="parent" />
+
+    <TextView
+        android:id="@+id/tvZero"
+        style="@style/HeadingStyle"
+        android:layout_width="77dp"
+        android:layout_height="48dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:text="0"
+        app:layout_constraintBottom_toTopOf="@id/llBottom"
+        app:layout_constraintEnd_toStartOf="@id/tvBackArrow"
+        app:layout_constraintStart_toEndOf="@id/tvDot" />
+
+    <ImageView
+        android:id="@+id/tvBackArrow"
+        style="@style/HeadingStyle"
+        android:layout_width="77dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="24dp"
+        android:layout_marginEnd="24dp"
+        android:layout_marginBottom="16dp"
+        android:gravity="center"
+        android:src="@drawable/ic_back"
+        app:layout_constraintBottom_toTopOf="@id/llBottom"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/tvZero" />
+
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/groupWithdrawAllPortfolio"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="groupDigits" />
+
+    <androidx.constraintlayout.widget.Group
+        android:id="@+id/groupDigits"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:constraint_referenced_ids="tvOne,tvTwo,tvThree,tvFour,tvFive,tvSix,tvSeven,tvEight,tvNine,tvZero,tvDot,tvBackArrow" />
+
+    <RelativeLayout
+        android:id="@+id/llBottom"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_width="match_parent"
+        android:layout_height="44dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginBottom="16dp">
+
+        <TextView
+            android:id="@+id/btnPreviewInvestment"
+            style="@style/ButtonStyle"
+            android:layout_width="match_parent"
+            android:background="@drawable/button_purple_400"
+            android:gravity="center"
+            android:text="@string/preview_my_purchase"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+        <ImageView
+            android:id="@+id/progress"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:layout_centerInParent="true"
+            android:elevation="12dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_progress_small"
+            android:visibility="gone" />
+    </RelativeLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

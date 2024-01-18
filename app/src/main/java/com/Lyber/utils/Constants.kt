@@ -5,6 +5,7 @@ import com.Lyber.R
 
 object Constants {
 
+    const val USING_BUY: String ="buy"
     const val IS_CHANGE_PIN: String = "changePin"
     const val FREQUENCY: String = "frequency"
     const val AMOUNT: String = "amount"
@@ -98,6 +99,7 @@ object Constants {
 
     const val SCAN_COMPLETE = "scan-complete"
     const val SCANNED_ADDRESS = "scanned-address"
+    const val ONE_TIME = "oneTime"
 
 
     val defaults = mutableListOf<Int>().apply {

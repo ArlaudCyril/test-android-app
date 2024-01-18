@@ -16,6 +16,7 @@ import com.Lyber.databinding.FragmentAddAmountBinding
 import com.Lyber.models.Whitelistings
 import com.Lyber.ui.fragments.bottomsheetfragments.FrequencyModel
 import com.Lyber.ui.fragments.bottomsheetfragments.PayWithModel
+import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.clearBackStack
 import com.Lyber.utils.CommonMethods.Companion.commaFormatted
@@ -26,14 +27,12 @@ import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
 import com.Lyber.utils.CommonMethods.Companion.replaceFragment
-import com.Lyber.utils.CommonMethods.Companion.roundFloat
 import com.Lyber.utils.CommonMethods.Companion.setBackgroundTint
 import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.utils.OnTextChange
-import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
 
 class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClickListener {
 
@@ -159,7 +158,8 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                     rlCardInfo.gone()
                     ivRepeat.visible()
 
-                    tvAddFrequency.text = requireContext().getString(R.string.add_a_frequency_optional)
+                    tvAddFrequency.text =
+                        requireContext().getString(R.string.add_a_frequency_optional)
 
                     mCurrency = Constants.EURO
                     mConversionCurrency = viewModel.selectedAsset?.id?.uppercase() ?: ""
@@ -167,7 +167,8 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
 //                    maxValue = App.prefsManager.getBalance().toDouble()
 
-                    tvTitle.text = getString(R.string.invest_in) + viewModel.selectedAsset?.id?.uppercase()
+                    tvTitle.text =
+                        getString(R.string.invest_in) + viewModel.selectedAsset?.id?.uppercase()
                     tvAssetConversion.text =
                         "0.00 ${viewModel.selectedAsset?.id?.uppercase()}"
 
@@ -193,13 +194,13 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                         tvTitle.text = "Exchange ${it.id.uppercase()}"
 */
 
-                       /* tvSubTitle.text = "${
-                            it.total_balance.toString().roundFloat().commaFormatted
-                        } ${it.id.uppercase()} Available"TODO*/
+                        /* tvSubTitle.text = "${
+                             it.total_balance.toString().roundFloat().commaFormatted
+                         } ${it.id.uppercase()} Available"TODO*/
 
-                       //  ivAssetSwapFrom.loadCircleCrop(it.imageUrl?:"")
+                        //  ivAssetSwapFrom.loadCircleCrop(it.imageUrl?:"")
 
-                      //  tvSwapAssetFrom.text = it.id.uppercase()
+                        //  tvSwapAssetFrom.text = it.id.uppercase()
 
                         //maxValue = it.total_balance TODO
                     }
@@ -208,10 +209,10 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
                         /*tvAssetConversion.text =
                             it.euro_amount.toString().roundFloat().commaFormatted TODO*/
-                     //   mConversionCurrency = it.id.uppercase()
+                        //   mConversionCurrency = it.id.uppercase()
 
                         // ivAssetSwapTo.loadCircleCrop(it.imageUrl?:"")
-                      //  tvSwapAssetTo.text = it.id.uppercase()
+                        //  tvSwapAssetTo.text = it.id.uppercase()
                     }
 
                     /*valueConversion = viewModel.exchangeAssetTo?.euro_amount.toString()
@@ -271,10 +272,17 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
                         //valueConversion = (viewModel.withdrawAsset?.euro_amount ?: 1).toDouble() TODO
 
-                       /* maxValue =
-                            (viewModel.withdrawAsset?.total_balance!!) * (viewModel.withdrawAsset?.euro_amount!!)
-                        TODO */
-                        tvTitle.text = getString(R.string.withdraw_from)+" ${viewModel.withdrawAsset?.id?.uppercase()}"
+
+                        /* maxValue =
+                             (viewModel.withdrawAsset?.total_balance!!) * (viewModel.withdrawAsset?.euro_amount!!)
+                         TODO */
+                        tvTitle.text =
+                            getString(R.string.withdraw_from) + " ${viewModel.withdrawAsset?.id?.uppercase()}"
+
+                        /* maxValue =
+                             (viewModel.withdrawAsset?.total_balance!!) * (viewModel.withdrawAsset?.euro_amount!!)
+                         TODO */
+
                         /*tvSubTitle.text = "${
                             viewModel.withdrawAsset?.total_balance.toString().commaFormatted
                         } " + "${viewModel.withdrawAsset?.id?.uppercase()} Available"
@@ -303,7 +311,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                     mConversionCurrency = Constants.EURO
                     valueConversion = 1.0
 //                    maxValue = App.prefsManager.getBalance().toDouble()
-                    tvTitle.text = getString(R.string.withdraw_from)+" Fiat"
+                    tvTitle.text = getString(R.string.withdraw_from) + " Fiat"
 //                    tvSubTitle.text = "${App.prefsManager.getBalance().commaFormatted} Available"
 
                     tvAssetConversion.text = "0.00${Constants.EURO}"
@@ -321,11 +329,11 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
                     mConversionCurrency = viewModel.selectedAsset?.id?.uppercase() ?: ""
 
-                   // valueConversion = (viewModel.selectedAsset?.euro_amount ?: 1).toDouble() TODO
+                    // valueConversion = (viewModel.selectedAsset?.euro_amount ?: 1).toDouble() TODO
 
-                   /* maxValue =
-                        (viewModel.selectedAsset?.total_balance!!) * (viewModel.selectedAsset?.euro_amount!!)
-                    */ //TODO
+                    /* maxValue =
+                         (viewModel.selectedAsset?.total_balance!!) * (viewModel.selectedAsset?.euro_amount!!)
+                     */ //TODO
                     tvAssetConversion.text = "0.00${viewModel.selectedAsset?.id?.uppercase()}"
 
                     btnPreviewInvestment.text =
@@ -399,7 +407,9 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
                             Constants.USING_STRATEGY -> {
                                 if (selectedFrequency.isEmpty()) {
-                                    getString(R.string.please_select_frequency).showToast(requireContext())
+                                    getString(R.string.please_select_frequency).showToast(
+                                        requireContext()
+                                    )
                                     return
                                 } else viewModel.selectedFrequency = selectedFrequency
                             }
@@ -420,6 +430,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                                 }
                             }*/
                             }
+
                             Constants.USING_WITHDRAW -> {
 
                                 if (viewModel.allMyPortfolio.isNotEmpty()) {
@@ -458,6 +469,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                             }
 
                         }
+
 
                         requireActivity().replaceFragment(
                             R.id.flSplashActivity, ConfirmInvestmentFragment()
@@ -535,27 +547,30 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
                 amount.length == (focusedData.currency.length + 1) && amount[0] == '0' -> {
                     if (char == '.') {
-                        if (!amount.contains('.')) etAmount.setText(("0$char${focusedData.currency}"))
-                    } else etAmount.setText((char + focusedData.currency))
+                        if (!amount.contains('.')) etAmount.text = ("0$char${focusedData.currency}")
+                    } else etAmount.text = (char + focusedData.currency)
                 }
 
                 else -> {
+                    try {
+                        val string =
+                            amount.substring(0, amount.count() - focusedData.currency.length)
 
-                    val string = amount.substring(0, amount.count() - focusedData.currency.length)
-
-                    if (string.contains('.')) {
-                        if (char != '.') etAmount.setText("$string$char${focusedData.currency}")
-                    } else {
-                        if (char == '.') etAmount.setText(
-                            ("${
-                                string.pointFormat.toDouble().toInt().commaFormatted
+                        if (string.contains('.')) {
+                            if (char != '.') etAmount.text = "$string$char${focusedData.currency}"
+                        } else {
+                            if (char == '.') etAmount.text = ("${
+                                string.pointFormat
                             }.${focusedData.currency}")
-                        )
-                        else etAmount.setText(
-                            ((string.pointFormat.toDouble().toInt()
-                                .toString() + char).commaFormatted + focusedData.currency)
-                        )
+                            else etAmount.text = ((string.pointFormat
+                                .toString() + char) + focusedData.currency)
+                        }
+
+
+                    } catch (_: Exception) {
+
                     }
+
                 }
 
             }
@@ -711,8 +726,9 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                 Constants.USING_EXCHANGE -> {
                     valueOne = 0.00.toString()
                     valueTwo = 0.00.toString()
-                   // maxValue = viewModel.exchangeAssetTo?.total_balance ?: 1.0 TODO
+                    // maxValue = viewModel.exchangeAssetTo?.total_balance ?: 1.0 TODO
                 }
+
                 Constants.USING_SELL -> {}
 
             }
@@ -733,13 +749,13 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
 //                    maxValue = to.total_balance
 
-                  // binding.ivAssetSwapFrom.loadCircleCrop(to.imageUrl ?: "")
+                    // binding.ivAssetSwapFrom.loadCircleCrop(to.imageUrl ?: "")
 
                     //binding.tvSwapAssetFrom.text = to.id.uppercase()
 
-                   // binding.ivAssetSwapTo.loadCircleCrop(from.imageUrl ?: "")
+                    // binding.ivAssetSwapTo.loadCircleCrop(from.imageUrl ?: "")
 
-                  //  binding.tvSwapAssetTo.text = from.id.uppercase()
+                    //  binding.tvSwapAssetTo.text = from.id.uppercase()
 
 
                 }
@@ -764,6 +780,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                     valueTwo = 0.00.toString()
                     //maxValue = viewModel.exchangeAssetFrom?.total_balance!! TODO
                 }
+
                 Constants.USING_SELL -> {}
             }
 
@@ -778,13 +795,13 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
 //                    maxValue = from.total_balance
 
-                     //binding.ivAssetSwapFrom.loadCircleCrop(from.imageUrl ?: "")
+                    //binding.ivAssetSwapFrom.loadCircleCrop(from.imageUrl ?: "")
 
-                  //  binding.tvSwapAssetFrom.text = from.id.uppercase()
+                    //  binding.tvSwapAssetFrom.text = from.id.uppercase()
 
-                     //binding.ivAssetSwapTo.loadCircleCrop(to.imageUrl ?: "")
+                    //binding.ivAssetSwapTo.loadCircleCrop(to.imageUrl ?: "")
 
-                  //  binding.tvSwapAssetTo.text = to.id.uppercase()
+                    //  binding.tvSwapAssetTo.text = to.id.uppercase()
 
                 }
             }
@@ -802,9 +819,9 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
             Constants.USING_EXCHANGE -> {
 
-                if(amount.contains(focusedData.currency)){
+                if (amount.contains(focusedData.currency)) {
                     binding.etAmount.setText("${maxValue.commaFormatted}${focusedData.currency}")
-                }else{
+                } else {
                     binding.etAmount.setText("${maxValue.commaFormatted}${unfocusedData.currency}")
                 }
 //                if (focusedData.currency == mCurrency) binding.etAmount.setText("${maxValue.commaFormatted}$mCurrency")
@@ -812,9 +829,9 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
             }
 
             Constants.USING_SELL -> {
-                if(amount.contains(focusedData.currency)){
+                if (amount.contains(focusedData.currency)) {
                     binding.etAmount.setText("${maxValue.commaFormatted}${focusedData.currency}")
-                }else{
+                } else {
                     binding.etAmount.setText("${maxValue.commaFormatted}${unfocusedData.currency}")
                 }
 //                binding.etAmount.setText("${maxValue.commaFormatted}${Constants.EURO}")
@@ -832,9 +849,9 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
             Constants.USING_SINGULAR_ASSET -> {
 
-                if(amount.contains(focusedData.currency)){
+                if (amount.contains(focusedData.currency)) {
                     binding.etAmount.setText("${maxValue.commaFormatted}${focusedData.currency}")
-                }else{
+                } else {
                     binding.etAmount.setText("${maxValue.commaFormatted}${unfocusedData.currency}")
                 }
 

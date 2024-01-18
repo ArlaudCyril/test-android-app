@@ -35,6 +35,9 @@
     <include
         android:id="@+id/llWithdraw"
         layout="@layout/app_item_layout" />
+    <include
+        android:id="@+id/llBuy"
+        layout="@layout/app_item_layout" />
 
     <include
         android:id="@+id/llExchange"

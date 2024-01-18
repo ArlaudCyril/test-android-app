@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="deploymentTargetDropDown">
+<<<<<<< HEAD
     <runningDeviceTargetsSelectedWithDialog>
       <Target>
         <type value="RUNNING_DEVICE_TARGET" />
@@ -12,5 +13,12 @@
         </deviceKey>
       </Target>
     </runningDeviceTargetsSelectedWithDialog>
+=======
+    <value>
+      <entry key="app">
+        <State />
+      </entry>
+    </value>
+>>>>>>> BuyCrypto
   </component>
 </project>

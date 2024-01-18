@@ -9,6 +9,7 @@ import android.graphics.drawable.ColorDrawable
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -22,6 +23,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.Lyber.R
+import com.Lyber.databinding.CustomDialogLayoutBinding
 import com.Lyber.databinding.FragmentPortfolioDetailBinding
 import com.Lyber.databinding.LottieViewBinding
 import com.Lyber.models.Balance
@@ -68,7 +70,7 @@ import java.util.TimerTask
 
 class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
     View.OnClickListener, PortfolioThreeDotsDismissListener {
-    private var confetti: ConfettiManager?=null
+    private var confetti: ConfettiManager? = null
     private var dialog: Dialog? = null
 
     /* adapters */
@@ -121,7 +123,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 it.addItemDecoration(ItemOffsetDecoration(8))
             }
 
-           setData()
+            setData()
 
             viewModel.selectedAsset?.id?.let { viewModel.getAssetDetail(it) }
 
@@ -133,7 +135,8 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 ContextCompat.getDrawable(requireContext(), R.drawable.curved_button)
             includedMyAsset.root.setBackgroundTint(R.color.purple_gray_50)
 
-            tvInvestMoney.text = "${getString(R.string.invest_in)} ${viewModel.selectedAsset?.id?.uppercase()}"
+            tvInvestMoney.text =
+                "${getString(R.string.invest_in)} ${viewModel.selectedAsset?.id?.uppercase()}"
             tvAssetName.text = "${viewModel.selectedAsset?.fullName}"
             tvAssetName.typeface = context?.resources?.getFont(R.font.mabry_pro_medium)
 
@@ -220,13 +223,13 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
     private fun addObservers() {
         viewModel.exchangeResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-              Handler().postDelayed({
-                  viewModel.getBalance()
-              },4000)
+                Handler().postDelayed({
+                    viewModel.getBalance()
+                }, 4000)
 
             }
         }
-        viewModel.balanceResponse.observe(viewLifecycleOwner){
+        viewModel.balanceResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 val balanceDataDict = it.data
                 val balances = ArrayList<Balance>()
@@ -239,10 +242,10 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 showLottieProgressDialog(requireActivity(), Constants.LOADING_SUCCESS)
                 Handler().postDelayed({
                     dismissProgressDialog()
-                    if (confetti!=null){
+                    if (confetti != null) {
                         confetti!!.terminate()
                     }
-                        setData()
+                    setData()
                 }, 2000)
             }
         }
@@ -270,13 +273,17 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 this.setTimer("1h")// le code ne s'exécute pas
 
                 if (arguments != null && requireArguments().containsKey(Constants.ORDER_ID)) {
-                    viewModel.confirmOrder(requireArguments().getString(Constants.ORDER_ID, ""))
+                    if (requireArguments().containsKey(Constants.FROM_SWAP))
+                        viewModel.getOrderApi(requireArguments().getString(Constants.ORDER_ID, ""))
+                    else
+                        viewModel.confirmOrder(requireArguments().getString(Constants.ORDER_ID, ""))
                 }
             }
         }
 
         viewModel.getAssetDetail.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                Log.d("data", "${it.data}")
                 viewModel.selectedAsset?.imageUrl?.let { it1 ->
                     binding.includedMyAsset.ivAssetIcon.loadCircleCrop(
                         it1
@@ -285,18 +292,49 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 viewModel.selectedAssetDetail = it.data
                 binding.includedMyAsset.tvAssetName.text = viewModel.selectedAssetDetail?.fullName
                 binding.tvValueAbout.text = viewModel.selectedAssetDetail?.about?.en
-                //
+                binding.tvValueMarketCap.text =
+                    viewModel.selectedAssetDetail?.marketCap + Constants.EURO
+                binding.tvValueVolume.text =
+                    viewModel.selectedAssetDetail?.volume24h + Constants.EURO
+                binding.tvValueCirculatingSupply.text =
+                    viewModel.selectedAssetDetail?.circulatingSupply + " " + viewModel.selectedAssetDetail?.id!!.uppercase()
+                binding.tvValuePopularity.text =
+                    "#" + viewModel.selectedAssetDetail?.marketRank.toString()
+
             }
         }
+        viewModel.orderResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
 
+                if (it.data.orderStatus == "PENDING") {
+//                    showLottieProgressDialog(requireActivity(), Constants.LOADING_FAILURE)
+//                    Handler().postDelayed({
+//                        dismissProgressDialog()
+//                        if (confetti != null) {
+//                            confetti!!.terminate()
+//                        }
+//                    }, 100)
+
+                    viewModel.getOrderApi(requireArguments().getString(Constants.ORDER_ID, ""))
+                } else if (it.data.orderStatus == "VALIDATED")
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        viewModel.getBalance()
+                    }, 4000)
+                else  //TODO for now
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        viewModel.getBalance()
+                    }, 4000)
+            }
+        }
     }
 
     private fun setData() {
         binding.apply {
             includedMyAsset.let {
-                val balance = com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.selectedAsset!!.id }
+                val balance =
+                    com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.selectedAsset!!.id }
                 viewModel.selectedBalance = balance
-                val priceCoin =balance?.balanceData?.euroBalance?.toDouble()
+                val priceCoin = balance?.balanceData?.euroBalance?.toDouble()
                     ?.div(balance.balanceData.balance.toDouble() ?: 1.0)
                 it.tvAssetAmount.text =
                     balance?.balanceData?.euroBalance?.currencyFormatted
@@ -359,12 +397,24 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 viewModel.selectedOption = Constants.USING_WITHDRAW
                 val currency = viewModel.selectedAsset
                 //if (currency!!.isWithdrawalActive){
-                    val bundle = Bundle()
-                    bundle.putString(Constants.ID, currency!!.id)
-                    findNavController().navigate(R.id.withdrawlNetworksFragment, bundle)
-              //  }else{
-                 //   getString(R.string.withdrawal_is_deactivated_on_this_asset).showToast(requireActivity())
-              //  }
+                val bundle = Bundle()
+                bundle.putString(Constants.ID, currency!!.id)
+                findNavController().navigate(R.id.withdrawlNetworksFragment, bundle)
+                //  }else{
+                //   getString(R.string.withdrawal_is_deactivated_on_this_asset).showToast(requireActivity())
+                //  }
+            }
+
+            "buy" -> {
+                val balance =
+                    com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == "usdt" }
+                if (balance != null) {
+                    viewModel.exchangeAssetTo = viewModel.selectedAsset!!.id
+                    viewModel.exchangeAssetFrom = "usdt"
+                    findNavController().navigate(R.id.addAmountForExchangeFragment)
+                } else {
+                    showDialog()
+                }
             }
 
             "deposit" -> {
@@ -396,6 +446,31 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         }
     }
 
+    private fun showDialog() {
+        Dialog(requireActivity(), R.style.DialogTheme).apply {
+            CustomDialogLayoutBinding.inflate(layoutInflater).let {
+                requestWindowFeature(Window.FEATURE_NO_TITLE)
+                setCancelable(false)
+                setCanceledOnTouchOutside(false)
+                App.prefsManager.accountCreationSteps = Constants.Account_CREATION_STEP_PHONE
+                setContentView(it.root)
+                it.tvTitle.text = getString(R.string.buy_usdt)
+                it.tvMessage.text =
+                    getString(R.string.usdt_error)
+                it.tvNegativeButton.text = getString(R.string.cancel)
+                it.tvPositiveButton.text = getString(R.string.buy_usdt)
+                it.tvNegativeButton.setOnClickListener {
+                    dismiss()
+                }
+                it.tvPositiveButton.setOnClickListener {
+                    dismiss()
+                    findNavController().navigate(R.id.buyUsdt)
+
+                }
+            }
+        }
+    }
+
 
     @SuppressLint("InflateParams")
     override fun onClick(v: View?) {
@@ -404,19 +479,29 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
                 btnPlaceOrder -> {
                     viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
-                    viewModel.selectedAsset
-                    requireActivity().replaceFragment(
-                        R.id.flSplashActivity, AddAmountFragment()
-                    )
+                    if (viewModel.selectedAsset!!.id == "usdt") {
+                        findNavController().navigate(R.id.buyUsdt)
+                    } else {
+                        val balance =
+                            com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == "usdt" }
+                        if (balance != null) {
+                            viewModel.exchangeAssetTo = viewModel.selectedAsset!!.id
+                            viewModel.exchangeAssetFrom = "usdt"
+                            findNavController().navigate(R.id.addAmountForExchangeFragment)
+                        } else {
+                            showDialog()
+                        }
+                    }
+
                 }
 
 
                 llThreeDot -> {
                     val portfolioThreeDotsFragment = PortfolioThreeDots(::menuOptionSelected)
                     portfolioThreeDotsFragment.dismissListener = this@PortfolioDetailFragment
-                    if (CommonMethods.getBalance(viewModel.selectedAsset!!.id!!) != null){
+                    if (CommonMethods.getBalance(viewModel.selectedAsset!!.id!!) != null) {
                         portfolioThreeDotsFragment.typePopUp = "AssetPopUpWithdraw"
-                    }else{
+                    } else {
                         portfolioThreeDotsFragment.typePopUp = "AssetPopUpWithdraw"
                     }
 

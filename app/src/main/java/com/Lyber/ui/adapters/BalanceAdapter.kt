@@ -1,5 +1,6 @@
 package com.Lyber.ui.adapters
 
+
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -62,6 +63,37 @@ class BalanceAdapter(
                             rounding = RoundingMode.DOWN
                         )
 
+                    try {
+                        val balanceId = it.id
+                        val currency = com.Lyber.ui.activities.BaseActivity.assets.find { it.id == balanceId }
+                        ivAssetIcon.loadCircleCrop(currency?.imageUrl ?: "")
+                        tvAssetName.visible()
+                        tvAssetName.text = currency?.fullName
+                        val balance = it.balanceData
+                        val priceCoin = balance.euroBalance.toDouble()
+                            .div(balance.balance.toDouble() ?: 1.0)
+                        if (isFromWithdraw){
+                            if (currency!!.isWithdrawalActive) {
+                                tvAssetNameCode.gone()
+                            } else {
+                                tvAssetNameCode.visible()
+                            }
+                        }else {
+                            if (currency!=null && currency!!.isTradeActive) {
+                                tvAssetNameCode.gone()
+                            } else {
+                                tvAssetNameCode.visible()
+                            }
+                        }
+                        tvAssetAmount.text = balance.euroBalance.commaFormatted.currencyFormatted
+                        tvAssetAmountInCrypto.text =
+                            balance.balance.formattedAsset(
+                                priceCoin,
+                                rounding = RoundingMode.DOWN
+                            )
+                    }catch (_:Exception){
+
+                    }
                 }
             }
     }

@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.webkit.PermissionRequest" />
@@ -10,10 +9,13 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.USE_BIOMETRIC" />
-
     <uses-permission android:name="android.permission.GET_PACKAGE_SIZE" />
-    <uses-permission android:name="android.permission.QUERY_ALL_PACKAGES"
+    <uses-permission
+        android:name="android.permission.QUERY_ALL_PACKAGES"
         tools:ignore="QueryAllPackagesPermission" />
+
+    <uses-permission android:name="android.permission.VIDEO_CAPTURE" />
+    <uses-permission android:name="android.permission.AUDIO_CAPTURE" />
 
     <uses-feature
         android:name="android.hardware.camera"
@@ -22,16 +24,20 @@
         android:name="android.hardware.camera.front"
         android:required="true" />
 
+    <uses-permission android:name="android.permission.GET_PACKAGE_SIZE" />
+    <uses-permission
+        android:name="android.permission.QUERY_ALL_PACKAGES"
+        tools:ignore="QueryAllPackagesPermission" />
     <uses-permission
         android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         tools:ignore="ScopedStorage" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
-        />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
 
     <application
         android:name="com.Lyber.utils.App"
         android:allowBackup="false"
         android:dataExtractionRules="@xml/data_extraction_rules"
+        android:enableOnBackInvokedCallback="true"
         android:fullBackupContent="@xml/backup_rules"
         android:hardwareAccelerated="true"
         android:icon="@mipmap/ic_launcher"
@@ -41,21 +47,18 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.Lyber"
         android:usesCleartextTraffic="true"
-        tools:targetApi="33"
-        android:enableOnBackInvokedCallback="true">
-
+        tools:targetApi="33">
         <activity
             android:name="com.Lyber.ui.activities.SplashActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustPan"
             tools:ignore="LockedOrientationActivity">
-
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
             <intent-filter android:autoVerify="true">
 
                 <action android:name="android.intent.action.VIEW" />
@@ -68,40 +71,36 @@
                 <data android:host="www.lyber.com" />
 
             </intent-filter>
-
         </activity>
         <activity
             android:name="com.Lyber.ui.activities.BarCodeActivity"
             android:exported="true"
-
-
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateVisible"
-            tools:ignore="LockedOrientationActivity"/>
+            tools:ignore="LockedOrientationActivity" />
         <activity
             android:name=".ui.activities.WebViewActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize|stateVisible"
-            tools:ignore="LockedOrientationActivity"/>
-
+            tools:ignore="LockedOrientationActivity" />
 
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.provider"
             android:exported="false"
             android:grantUriPermissions="true">
-
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
-
         </provider>
 
-
+        <meta-data
+            android:name="com.google.android.gms.wallet.api.enabled"
+            android:value="true" />
     </application>
-<!--    <queries>-->
-<!--        <package android:name="otpauth://totp/"/>-->
-<!--    </queries>-->
+    <!--    <queries>-->
+    <!--        <package android:name="otpauth://totp/"/>-->
+    <!--    </queries>-->
 
 </manifest>

@@ -1,15 +1,17 @@
 package com.Lyber.ui.fragments
+
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.View
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
-import com.au.countrycodepicker.CountryPicker
 import com.Lyber.R
+import com.au.countrycodepicker.CountryPicker
 import com.Lyber.databinding.FragmentPersonalDataBinding
 import com.Lyber.models.PersonalDataLocal
 import com.Lyber.ui.fragments.dialogs.DateTimePicker
 import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
 import com.Lyber.utils.CommonMethods.Companion.showToast
@@ -55,7 +57,10 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding>(), View.O
         specifiedUsPersonAdapter = ArrayAdapter(
             requireContext(),
             android.R.layout.simple_list_item_1,
-            listOf(requireContext().getString(R.string.yes_t),requireContext().getString(R.string.no_t))
+            listOf(
+                requireContext().getString(R.string.yes_t),
+                requireContext().getString(R.string.no_t)
+            )
         )
 
         viewModel = getViewModel(requireParentFragment())
@@ -107,11 +112,11 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding>(), View.O
             firstName.isEmpty() -> {
                 binding.etFirstName.requestKeyboard()
                 getString(com.Lyber.R.string.please_enter_your_first_name).showToast(requireContext())
-          }
+            }
 
             lastName.isEmpty() -> {
                 binding.etLastName.requestKeyboard()
-              getString(com.Lyber.R.string.please_enter_your_last_name).showToast(
+                getString(com.Lyber.R.string.please_enter_your_last_name).showToast(
                     requireContext()
                 )
             }
@@ -134,14 +139,25 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding>(), View.O
             nationality.isEmpty() -> getString(com.Lyber.R.string.please_enter_your_nationality).showToast(
                 requireContext()
             )
-            birthDate.isEmpty() -> getString(com.Lyber.R.string.please_enter_your_birth_date).showToast(requireContext())
+
+            birthDate.isEmpty() -> getString(com.Lyber.R.string.please_enter_your_birth_date).showToast(
+                requireContext()
+            )
+
             birthPlace.isEmpty() -> {
                 binding.etBirthPlace.requestKeyboard()
                 getString(com.Lyber.R.string.please_enter_your_birth_place).showToast(requireContext())
             }
-            birthCountry.isEmpty() -> getString(com.Lyber.R.string.please_select_your_birth_country).showToast(requireContext())
-            nationality.isEmpty() -> getString(com.Lyber.R.string.please_enter_your_nationality).showToast(requireContext())
-          specifiedUsPerson.isEmpty() -> getString(com.Lyber.R.string.please_tell_us_that_you_have_us_citizenship_or_not).showToast(
+
+            birthCountry.isEmpty() -> getString(com.Lyber.R.string.please_select_your_birth_country).showToast(
+                requireContext()
+            )
+
+            nationality.isEmpty() -> getString(com.Lyber.R.string.please_enter_your_nationality).showToast(
+                requireContext()
+            )
+
+            specifiedUsPerson.isEmpty() -> getString(com.Lyber.R.string.please_tell_us_that_you_have_us_citizenship_or_not).showToast(
                 requireContext()
             )
 
@@ -166,7 +182,8 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding>(), View.O
                     it.birthPlace = birthPlace
                     it.birthCountry = birthCountry
                     it.nationality = nationality
-                    it.specifiedUsPerson = if (specifiedUsPerson == requireContext().getString(R.string.yes_t)) 1 else 0
+                    it.specifiedUsPerson =
+                        if (specifiedUsPerson == requireContext().getString(R.string.yes_t)) 1 else 0
                 }
                 return true
             }
@@ -191,6 +208,7 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding>(), View.O
         }).show()
 
     }
+
     override fun onClick(v: View?) {
         binding.apply {
             when (v!!) {
@@ -215,7 +233,7 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding>(), View.O
             .listener {
                 binding.etBirthCountry.setText(it.name)
                 birthCountry = it.code
-          birthCountryLocal = it.name
+                birthCountryLocal = it.name
 
             }.style(com.Lyber.R.style.CountryPickerStyle)
             .sortBy(CountryPicker.SORT_BY_NAME)

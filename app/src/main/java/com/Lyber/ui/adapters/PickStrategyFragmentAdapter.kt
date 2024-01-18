@@ -1,9 +1,8 @@
 package com.Lyber.ui.adapters
 
-import android.util.Log
+
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.recyclerview.widget.RecyclerView
 import com.Lyber.R
 import com.Lyber.databinding.LoaderViewBinding
@@ -12,7 +11,8 @@ import com.Lyber.ui.fragments.StrategyView
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.visible
 
-class PickStrategyFragmentAdapter(val itemClicked: (position: Int) -> Unit) :
+
+class PickStrategyFragmentAdapter(val itemClicked: (position: Int, view: StrategyView) -> Unit) :
     BaseAdapter<Strategy>() {
 
 
@@ -25,20 +25,22 @@ class PickStrategyFragmentAdapter(val itemClicked: (position: Int) -> Unit) :
             }
 
             strategyView.rootView.setOnClickListener {
-                Log.d("positionAdapter", adapterPosition.toString())
-                itemClicked(adapterPosition)
+//                Log.d("dataaa", "${itemList[absoluteAdapterPosition]!!.isSelected}")
+//                Log.d("dataaa", "${!itemList[absoluteAdapterPosition]!!.isSelected}")
+//                itemList[absoluteAdapterPosition]!!.isSelected =
+//                    !itemList[absoluteAdapterPosition]!!.isSelected
+//                Log.d("dataaa", "${itemList[absoluteAdapterPosition]!!.isSelected}")
+                for (i in 0..itemList.size-1) {
+                    if (itemList[absoluteAdapterPosition]!!.name.equals(itemList[i]!!.name))
+                        itemList[i]!!.isSelected = !itemList[i]!!.isSelected
+                    else
+                        itemList[i]!!.isSelected = false
+                }
+                itemClicked(adapterPosition,strategyView)
+                notifyDataSetChanged()
             }
 
         }
-    }
-
-    fun markSelected(position: Int) {
-        for (item in itemList) {
-            item!!.isSelected = false
-        }
-        if (position >= 0)
-            itemList[position]!!.isSelected = true
-        notifyDataSetChanged()
     }
 
     override fun getItemViewType(position: Int): Int {
@@ -65,15 +67,19 @@ class PickStrategyFragmentAdapter(val itemClicked: (position: Int) -> Unit) :
             ORDINARY_VIEW -> {
                 (holder as ViewHolder).strategyView.apply {
                     itemList[position]?.let {
-                        background = if (it.isSelected) {
-                            isStrategySelected = true
-                            radioButton.setImageResource(R.drawable.radio_select)
-                            getDrawable(context, R.drawable.round_stroke_purple_500)
-                        } else {
-                            isStrategySelected = false
-                            radioButton.setImageResource(R.drawable.radio_unselect)
-                            getDrawable(context, R.drawable.round_stroke_gray_100)
-                        }
+                        if (itemList[position]!!.isSelected)
+                            (holder as ViewHolder).strategyView.setBackgroundResource(R.drawable.round_stroke_purple_500)
+                        else
+                            (holder as ViewHolder).strategyView.setBackgroundResource(R.drawable.round_stroke_gray_100)
+//                        background = if (false) {
+//                            isStrategySelected = true
+////                            radioButton.setImageResource(R.drawable.radio_select)
+//                            getDrawable(context, R.drawable.round_stroke_purple_500)
+//                        } else {
+//                            isStrategySelected = false
+//                            radioButton.setImageResource(R.drawable.radio_unselect)
+//                            getDrawable(context, R.drawable.round_stroke_gray_100)
+//                        }
                         radioButton.gone()
                         topText = it.name ?: ""
                         if (it.expectedYield != null) {

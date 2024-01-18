@@ -1,5 +1,42 @@
 package com.Lyber.network
 
+
+import com.Lyber.models.AssetBaseDataResponse
+import com.Lyber.models.AssetDetailBaseDataResponse
+import com.Lyber.models.BalanceResponse
+import com.Lyber.models.CoinsResponse
+import com.Lyber.models.CommonResponse
+import com.Lyber.models.CommonResponseVerfiy
+import com.Lyber.models.EnterPhoneResponse
+import com.Lyber.models.ExchangeListingResponse
+import com.Lyber.models.GetAddress
+import com.Lyber.models.GetAssetsResponse
+import com.Lyber.models.GetQuoteResponse
+import com.Lyber.models.GetUserResponse
+import com.Lyber.models.InitiateKycResponse
+import com.Lyber.models.KYCResponse
+import com.Lyber.models.KycStatusResponse
+import com.Lyber.models.MessageResponse
+import com.Lyber.models.MessageResponsePause
+import com.Lyber.models.MyAssetResponse
+import com.Lyber.models.NetworkResponse
+import com.Lyber.models.NetworksResponse
+import com.Lyber.models.NewsResponse
+import com.Lyber.models.OrderResponseData
+import com.Lyber.models.PriceGraphResponse
+import com.Lyber.models.PriceResponse
+import com.Lyber.models.PriceServiceResumeResponse
+import com.Lyber.models.RecurringInvestmentDetailResponse
+import com.Lyber.models.RecurringInvestmentResponse
+import com.Lyber.models.SetPhoneResponse
+import com.Lyber.models.StrategiesResponse
+import com.Lyber.models.TransactionResponse
+import com.Lyber.models.UploadResponse
+import com.Lyber.models.User
+import com.Lyber.models.UserChallengeResponse
+import com.Lyber.models.UserLoginResponse
+import com.Lyber.models.WhitelistingResponse
+import com.Lyber.models.WithdrawalAddress
 import com.Lyber.models.*
 import okhttp3.MultipartBody
 import retrofit2.Response
@@ -342,6 +379,7 @@ interface Api {
     @GET("network-service/network")
     suspend fun getNetworkById(@Query("id") id: String): Response<NetworkResponse>
 
+
     @GET("user-service/transactions")
     suspend fun getTransactionsList(
         @Query("limit") limit: Int,
@@ -365,4 +403,18 @@ interface Api {
 
     @POST("user-service/verify-password-change")
     suspend fun verifyPasswordChange(@Body hashMap: HashMap<String, Any>): Response<ExportResponse>
+
+    @GET("order-service/order")
+    suspend fun getOrder(
+        @Query("orderId") orderId: String
+    ): Response<OrderResponseData>
+
+    @POST("strategy-service/strategy-execution")
+    suspend fun oneTimeStrategyExecution(@Body hashMap: HashMap<String, Any>): Response<OneTimeStrategyData>
+
+    @GET("strategy-service/strategy-execution")
+    suspend fun checkStrategyStatus(@Query("executionId") executionId: String): Response<StrategyExecution>
+    @POST("order-service/cancel-quote")
+    suspend fun cancelQuote(@Body hashMap: HashMap<String, Any>): Response<BooleanResponse>
+
 }

@@ -65,9 +65,9 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
                 com.Lyber.ui.activities.BaseActivity.balanceResume.clear()
                 com.Lyber.ui.activities.BaseActivity.balanceResume.addAll(it)
                 assets.addAll(it)
-                if (type == Constants.Exchange){
-                    for (asset in it){
-                        if (asset.id == viewModel.exchangeAssetFrom){
+                if (type == Constants.Exchange) {
+                    for (asset in it) {
+                        if (asset.id == viewModel.exchangeAssetFrom) {
                             assets.remove(asset)
                         }
                     }
@@ -101,19 +101,21 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
 
             /* tab layout */
             it.tabLayout.addTab(it.tabLayout.newTab().apply { text = getString(R.string.trending) })
-            it.tabLayout.addTab(it.tabLayout.newTab().apply { text = getString(R.string.top_gainers) })
-            it.tabLayout.addTab(it.tabLayout.newTab().apply { text = getString(R.string.top_losers) })
+            it.tabLayout.addTab(
+                it.tabLayout.newTab().apply { text = getString(R.string.top_gainers) })
+            it.tabLayout.addTab(
+                it.tabLayout.newTab().apply { text = getString(R.string.top_losers) })
             it.tabLayout.addTab(it.tabLayout.newTab().apply { text = getString(R.string.stable) })
             it.tabLayout.addOnTabSelectedListener(tabSelectedListener)
 
-            adapter = AllAssetAdapter(::assetClicked,type == Constants.Exchange)
+            adapter = AllAssetAdapter(::assetClicked, type == Constants.Exchange)
             layoutManager = LinearLayoutManager(requireContext())
 
             it.rvAddAsset.adapter = adapter
             it.rvAddAsset.layoutManager = layoutManager
             it.rvAddAsset.itemAnimator = null
             it.tvTitle.text = getString(R.string.all_assets)
-            if (type == Constants.Exchange){
+            if (type == Constants.Exchange) {
                 it.tvTitle.text = getString(R.string.exchange_to)
                 it.includedAsset.root.visible()
                 it.includedAsset.ivDropIcon.gone()
@@ -129,28 +131,52 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
                     when (binding.tabLayout.selectedTabPosition) {
                         0 -> {
                             if (searchText.isNotEmpty())
-                                adapter.setList(assets.filter { it.id.startsWith(searchText, true)
-                                        || CommonMethods.getAsset(it.id).fullName.startsWith(searchText, true)})
+                                adapter.setList(assets.filter {
+                                    it.id.startsWith(searchText, true)
+                                            || CommonMethods.getAsset(it.id).fullName.startsWith(
+                                        searchText,
+                                        true
+                                    )
+                                })
                             else adapter.setList(trendings)
                         }
+
                         1 -> {
                             if (searchText.isNotEmpty())
-                                adapter.setList(assets.filter { it.id.startsWith(searchText, true)
-                                        || CommonMethods.getAsset(it.id).fullName.startsWith(searchText, true)})
+                                adapter.setList(assets.filter {
+                                    it.id.startsWith(searchText, true)
+                                            || CommonMethods.getAsset(it.id).fullName.startsWith(
+                                        searchText,
+                                        true
+                                    )
+                                })
                             else adapter.setList(topGainers)
                         }
+
                         2 -> {
                             if (searchText.isNotEmpty())
-                                adapter.setList(assets.filter { it.id.startsWith(searchText, true)
-                                        || CommonMethods.getAsset(it.id).fullName.startsWith(searchText, true)})
+                                adapter.setList(assets.filter {
+                                    it.id.startsWith(searchText, true)
+                                            || CommonMethods.getAsset(it.id).fullName.startsWith(
+                                        searchText,
+                                        true
+                                    )
+                                })
                             else adapter.setList(topLosers)
                         }
+
                         3 -> {
                             if (searchText.isNotEmpty())
-                                adapter.setList(assets.filter { it.id.startsWith(searchText, true)
-                                        || CommonMethods.getAsset(it.id).fullName.startsWith(searchText, true)})
+                                adapter.setList(assets.filter {
+                                    it.id.startsWith(searchText, true)
+                                            || CommonMethods.getAsset(it.id).fullName.startsWith(
+                                        searchText,
+                                        true
+                                    )
+                                })
                             else adapter.setList(stables)
                         }
+
                         else -> {
 
                         }
@@ -212,7 +238,6 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
         }
 
     }
-
 
 
     override fun onClick(v: View?) {

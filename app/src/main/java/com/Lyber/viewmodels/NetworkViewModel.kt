@@ -4,45 +4,55 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.Lyber.models.*
 import com.Lyber.models.AddedAsset
 import com.Lyber.models.AssetBaseData
 import com.Lyber.models.AssetBaseDataResponse
 import com.Lyber.models.AssetDetailBaseDataResponse
 import com.Lyber.models.BalanceResponse
+import com.Lyber.models.BooleanResponse
+import com.Lyber.models.ChangePasswordData
 import com.Lyber.models.CoinsResponse
 import com.Lyber.models.CommonResponse
 import com.Lyber.models.CommonResponseVerfiy
 import com.Lyber.models.Duration
 import com.Lyber.models.ExchangeListingResponse
+import com.Lyber.models.ExportResponse
 import com.Lyber.models.GetAddress
 import com.Lyber.models.GetAssetsResponse
 import com.Lyber.models.GetQuoteResponse
 import com.Lyber.models.GetUserResponse
+import com.Lyber.models.KYCResponse
 import com.Lyber.models.MessageResponse
+import com.Lyber.models.MessageResponsePause
 import com.Lyber.models.MyAssetResponse
 import com.Lyber.models.NetworkResponse
 import com.Lyber.models.NetworksResponse
 import com.Lyber.models.NewsResponse
+import com.Lyber.models.OneTimeStrategyData
+import com.Lyber.models.OrderResponseData
 import com.Lyber.models.PriceGraphResponse
 import com.Lyber.models.PriceResponse
 import com.Lyber.models.PriceServiceResume
+import com.Lyber.models.QrCodeResponse
 import com.Lyber.models.RecurringInvestmentDetailResponse
 import com.Lyber.models.RecurringInvestmentResponse
 import com.Lyber.models.SetPhoneResponse
 import com.Lyber.models.StrategiesResponse
 import com.Lyber.models.Strategy
+import com.Lyber.models.StrategyExecution
+import com.Lyber.models.TransactionList
 import com.Lyber.models.TransactionResponse
+import com.Lyber.models.UpdateAuthenticateResponse
 import com.Lyber.models.UploadResponse
 import com.Lyber.models.UserChallengeResponse
 import com.Lyber.models.UserLoginResponse
 import com.Lyber.models.WhitelistingResponse
 import com.Lyber.models.WithdrawalAddress
+import com.Lyber.models.res
 import com.Lyber.network.RestClient
 import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.Lyber.utils.App
 import com.Lyber.utils.Constants
-import com.google.android.datatransport.runtime.Destination
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
@@ -256,8 +266,17 @@ open class NetworkViewModel : ViewModel() {
     private val _kycResponse = MutableLiveData<KYCResponse>()
     val kycResponse get() = _kycResponse
 
+
     private var _msgResponse: MutableLiveData<BooleanResponse> = MutableLiveData()
     val msgResponse get() = _msgResponse
+
+    private val _getOrderResponse = MutableLiveData<OrderResponseData>()
+    val orderResponse get() = _getOrderResponse
+
+    private var _oneTimeStrategyDataResponse = MutableLiveData<OneTimeStrategyData>()
+    val oneTimeStrategyDataResponse get() = _oneTimeStrategyDataResponse
+    private var _strategyExecutionResponse = MutableLiveData<StrategyExecution>()
+    val strategyExecutionResponse get() = _strategyExecutionResponse
 
     private var _booleanResponse: MutableLiveData<BooleanResponse> = MutableLiveData()
     val booleanResponse get() = _booleanResponse
@@ -279,6 +298,7 @@ open class NetworkViewModel : ViewModel() {
     val resetPasswordResponse get() = _resetPassResponse
     private var _changePassResponse: MutableLiveData<ChangePasswordData> = MutableLiveData()
     val changePasswordData get() = _changePassResponse
+
     fun cancelJob() {
 
     }
@@ -418,16 +438,22 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun investStrategy(strategyId: String, frequency: String, amount: Int, strateggyName: String) {
+
+    fun investStrategy(
+        strategyId: String,
+        frequency: String?,
+        amount: Int,
+        strateggyName: String
+    ) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().investOnStrategy(
-                hashMapOf(
-                    "strategyName" to strateggyName,
-                    "ownerUuid" to strategyId,
-                    "frequency" to frequency,
-                    "amount" to amount
-                )
-            )
+            val hash = hashMapOf<String, Any>()
+            hash["strategyName"] = strateggyName
+            hash["ownerUuid"] = strategyId
+            if (frequency != null)
+                hash["frequency"] = frequency
+            hash["amount"] = amount
+            Log.d("logData", "$hash")
+            val res = RestClient.get().investOnStrategy(hash)
             if (res.isSuccessful)
                 _investStrategyResponse.postValue(res.body())
             else listener?.onRetrofitError(res.errorBody())
@@ -623,7 +649,8 @@ open class NetworkViewModel : ViewModel() {
 
     fun verifyStrongAuthentication(otp: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().verifyStrongAuthentication(hashMapOf("otp" to otp.toInt()))
+            val res =
+                RestClient.get().verifyStrongAuthentication(hashMapOf("otp" to otp.toInt()))
             if (res.isSuccessful)
                 _verifyStrongAuthentication.postValue(res.body())
             else listener?.onRetrofitError(res.errorBody())
@@ -861,7 +888,8 @@ open class NetworkViewModel : ViewModel() {
 
     fun cancelRecurringInvestment(investmentId: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().cancelRecurringInvestment(hashMapOf("id" to investmentId))
+            val res =
+                RestClient.get().cancelRecurringInvestment(hashMapOf("id" to investmentId))
             if (res.isSuccessful) _cancelRecurringInvestment.postValue(res.body())
             else listener?.onRetrofitError(res.errorBody())
         }
@@ -891,7 +919,8 @@ open class NetworkViewModel : ViewModel() {
             if (phone.isNotEmpty()) phoneNumber = phone.substring(1)//remove the "+"
             val param = phoneNumber.ifEmpty { email }
             val key = if (phone.isEmpty()) "email" else "phoneNo"
-            val res = RestClient.get(Constants.NEW_BASE_URL).userChallenge(hashMapOf(key to param))
+            val res =
+                RestClient.get(Constants.NEW_BASE_URL).userChallenge(hashMapOf(key to param))
             if (res.isSuccessful)
                 _userChallengeResponse.postValue(res.body())
             else listener?.onRetrofitError(res.errorBody())
@@ -1181,6 +1210,15 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
+    fun getOrderApi(id: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).getOrder(id)
+            if (res.isSuccessful)
+                _getOrderResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
     fun updateAuthentication(hash: HashMap<String, Any>) {
         viewModelScope.launch(exceptionHandler) {
 
@@ -1193,7 +1231,8 @@ open class NetworkViewModel : ViewModel() {
 
     fun switchOffAuthentication(detail: String, scope: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get(Constants.NEW_BASE_URL).switchOffAuthentication(detail, scope)
+            val res =
+                RestClient.get(Constants.NEW_BASE_URL).switchOffAuthentication(detail, scope)
             if (res.isSuccessful)
                 _booleanResponse.postValue(res.body())
             else listener?.onRetrofitError(res.errorBody())
@@ -1338,7 +1377,45 @@ open class NetworkViewModel : ViewModel() {
             }
         } catch (e: Exception) {
             listener?.onError()
+        }
+    }
 
+    fun oneTimeOrderStrategy(strategyName: String, amount: Double, ownerUuid: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val map = HashMap<String, Any>()
+            map["strategyName"] = strategyName
+            map["amount"] = amount
+            map["ownerUuid"] = ownerUuid
+            val res =
+                RestClient.get(Constants.NEW_BASE_URL).oneTimeStrategyExecution(map)
+            if (res.isSuccessful) {
+                _oneTimeStrategyDataResponse.postValue(res.body())
+            } else {
+                listener!!.onRetrofitError(res.errorBody())
+            }
+        }
+    }
+
+    fun strategyStatus(executionId: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val res =
+                RestClient.get(Constants.NEW_BASE_URL).checkStrategyStatus(executionId)
+            if (res.isSuccessful) {
+                _strategyExecutionResponse.postValue(res.body())
+            } else {
+                listener!!.onRetrofitError(res.errorBody())
+            }
+        }
+    }
+
+    fun cancelQuote(hashMap: HashMap<String, Any>) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).cancelQuote(hashMap)
+            if (res.isSuccessful) {
+                _booleanResponse.postValue(res.body())
+            } else {
+                listener!!.onRetrofitError(res.errorBody())
+            }
         }
     }
 }
