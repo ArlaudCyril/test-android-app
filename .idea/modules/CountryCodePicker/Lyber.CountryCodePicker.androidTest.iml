@@ -145,8 +145,6 @@
     <content url="file://$MODULE_DIR$/../../../CountryCodePicker/build/generated/source/buildConfig/androidTest/debug" />
     <content url="file://$MODULE_DIR$/../../../CountryCodePicker/src/androidTest">
       <sourceFolder url="file://$MODULE_DIR$/../../../CountryCodePicker/src/androidTest/java" isTestSource="true" />
-    </content>
-    <content url="file://$MODULE_DIR$/../../../CountryCodePicker/src/androidTest">
       <sourceFolder url="file://$MODULE_DIR$/../../../CountryCodePicker/src/androidTest/java" isTestSource="true" />
     </content>
     <content url="file://$MODULE_DIR$/../../../CountryCodePicker/src/androidTestDebug" />

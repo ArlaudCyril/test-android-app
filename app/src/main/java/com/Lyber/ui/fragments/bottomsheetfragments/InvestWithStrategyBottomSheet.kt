@@ -1,5 +1,6 @@
 package com.Lyber.ui.fragments.bottomsheetfragments
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
@@ -13,6 +14,7 @@ class InvestWithStrategyBottomSheet (val clickListener: (Int) -> Unit) :
     lateinit var viewToDelete: View
     lateinit var mainView: ViewGroup
     lateinit var viewModel: PortfolioViewModel
+    var clickVal=-1
     override fun bind() = BottomSheetInvestWithStrategyBinding.inflate(layoutInflater)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -89,33 +91,37 @@ class InvestWithStrategyBottomSheet (val clickListener: (Int) -> Unit) :
             when (v!!) {
 
                 ivTopAction -> {
-                    clickListener(-1)
-                    dismiss()
+                    clickVal=-1
+                     dismiss()
                 }
                 tvSubTitleAdjust, tvTitleAdjust, ivAdjust -> {
-                    clickListener(0)
+                    clickVal=0
                     dismiss()
                 }
                 ivPAuse, tvTitlePAuse, ivRightArrowPAuse -> {
-                    clickListener(1)
+                   clickVal=1
                     dismiss()
                 }
                 ivDelete, tvTitleDelete, ivRightArrowDelete -> {
-                    clickListener(2)
+                    clickVal=2
                     dismiss()
                 }
                 tvSubTitleTailor, tvTitleTailor, ivTailor -> {
-                    clickListener(3)
+                   clickVal=3
                     dismiss()
                 }
                 tvSubTitleOneTime, tvOneTime, ivOneTime -> {
-                    clickListener(4)
+                   clickVal=4
                     dismiss()
                 }
             }
         }
     }
 
+    override fun onDismiss(dialog: DialogInterface) {
+        super.onDismiss(dialog)
+        clickListener(clickVal)
+    }
     override fun onDestroyView() {
         super.onDestroyView()
         this.mainView.removeView(this.viewToDelete)

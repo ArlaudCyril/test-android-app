@@ -1,6 +1,8 @@
 package com.Lyber.ui.fragments
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +13,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import com.Lyber.R
 import com.Lyber.databinding.FragmentPickYourStrategyBinding
 import com.Lyber.models.MessageResponse
@@ -24,10 +27,13 @@ import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.replaceFragment
 import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.utils.ItemOffsetDecoration
+
 
 class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>(),
     View.OnClickListener {
@@ -38,7 +44,7 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
 
     /* previous item clicked */
     private var previousPosition: Int = -1
-    lateinit  var strategyList:List<Strategy>
+    lateinit var strategyList: List<Strategy>
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         dismissProgressDialog()
@@ -91,7 +97,7 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
 
     private val getStrategies = Observer<StrategiesResponse> {
         dismissProgressDialog()
-        strategyList=it.data
+        strategyList = it.data
 //        adapter.setList(it.data)
         adapter.setList(strategyList)
         binding.recyclerViewStrategies.startLayoutAnimation()
@@ -178,6 +184,14 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
 //            }
 //        }
         viewModel.selectedStrategy = adapter.getItem(position)
+        layoutManager.scrollToPositionWithOffset(position, 0)
+        if (currentView.topText.equals("Advanced"))
+            binding.viewGap.visible()
+//            Handler(Looper.getMainLooper()).postDelayed({
+//                binding.viewGap.visible()
+//            }, 50)
+
+
         val transparentView = View(context)
         transparentView.setBackgroundColor(
             ContextCompat.getColor(
@@ -207,6 +221,11 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
     }
 
     private fun clicked(type: Int) {
+        binding.viewGap.gone()
+        for (i in 0..strategyList.size - 1) {
+            strategyList[i].isSelected = false
+        }
+        adapter.notifyDataSetChanged()
         when (type) {
             0 -> {
                 findNavController().navigate(R.id.investAddMoneyFragment)
