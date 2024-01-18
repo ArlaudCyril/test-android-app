@@ -165,7 +165,12 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 binding.tvLanguage.text = getString(R.string.french)
             else
                 binding.tvLanguage.text = getString(R.string.english)
-
+        }else{
+            val ln = CommonMethods.getDeviceLocale(requireContext())
+            if (ln == Constants.FRENCH)
+                binding.tvLanguage.text = getString(R.string.french)
+            else
+                binding.tvLanguage.text = getString(R.string.english)
         }
 
         viewModel.logoutResponse.observe(viewLifecycleOwner) {

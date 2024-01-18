@@ -88,15 +88,6 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
     }
 
 
-    fun getDeviceLocale(context: Context): Locale {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            return context.resources.configuration.locales[0]
-        } else {
-            @Suppress("DEPRECATION")
-            return context.resources.configuration.locale
-        }
-    }
-
     companion object {
         private var _activityCallbacks: ActivityCallbacks? = null
         var activityCallbacks: ActivityCallbacks?

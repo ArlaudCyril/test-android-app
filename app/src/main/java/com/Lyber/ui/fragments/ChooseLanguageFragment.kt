@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.View
 import android.view.View.OnClickListener
 import androidx.lifecycle.Lifecycle
+import com.Lyber.R
 import com.Lyber.databinding.FragmentChooseLanguageBinding
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
@@ -65,6 +66,15 @@ class ChooseLanguageFragment : BaseFragment<FragmentChooseLanguageBinding>(), On
                 binding.ivFrench.visibility = View.INVISIBLE
             }
 
+        }else{
+            val ln = CommonMethods.getDeviceLocale(requireContext())
+            if (ln == Constants.FRENCH) {
+                binding.ivFrench.visibility = View.VISIBLE
+                binding.ivEnglish.visibility = View.INVISIBLE
+            } else {
+                binding.ivEnglish.visibility = View.VISIBLE
+                binding.ivFrench.visibility = View.INVISIBLE
+            }
         }
         binding.ivTopAction.setOnClickListener(this)
         binding.rlEnglish.setOnClickListener(this)
