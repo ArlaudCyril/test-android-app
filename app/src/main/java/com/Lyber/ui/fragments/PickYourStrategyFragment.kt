@@ -1,6 +1,8 @@
 package com.Lyber.ui.fragments
 
+import android.content.Context
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -31,6 +33,7 @@ import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.utils.ItemOffsetDecoration
+import java.lang.Math.abs
 
 
 class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>(),
@@ -184,17 +187,20 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
         viewModel.selectedStrategy = adapter.getItem(position)
 //        layoutManager.scrollToPositionWithOffset(position, 0)
 
-        val smoothScroller: LinearSmoothScroller = object : LinearSmoothScroller(context) {
-            override fun getVerticalSnapPreference(): Int {
-                return SNAP_TO_START // or SNAP_TO_END or SNAP_TO_ANY
-            }
-        }
+//        val smoothScroller: LinearSmoothScroller = object : LinearSmoothScroller(context) {
+//            override fun getVerticalSnapPreference(): Int {
+//                return SNAP_TO_START // or SNAP_TO_END or SNAP_TO_ANY
+//            }
+//        }
+//        smoothScroller.targetPosition = position
+//        layoutManager.startSmoothScroll(smoothScroller)
 
-// Set the target position
-        smoothScroller.targetPosition = position
+        val slowScroller = SlowLinearSmoothScroller(requireContext())
+        slowScroller.targetPosition = position
+        layoutManager.startSmoothScroll(slowScroller)
 
-// Start smooth scrolling
-        layoutManager.startSmoothScroll(smoothScroller)
+
+
 
         if (currentView.topText.equals("Advanced"))
             binding.viewGap.visible()
@@ -292,6 +298,43 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
     override fun onDestroyView() {
         super.onDestroyView()
         viewModelStore.clear()
+    }
+
+    class SlowLinearSmoothScroller(context: Context) : LinearSmoothScroller(context) {
+
+//        companion object {
+//            private const val MILLISECONDS_PER_INCH = 1000f // Adjust as needed
+//        }
+//        private  val MILLISECONDS_PER_INCH = 50f // Adjust as needed
+//        private  val MAX_SCROLL_ON_FLING_DURATION = 500 // Adjust as needed
+//
+//
+//        override fun calculateSpeedPerPixel(displayMetrics: DisplayMetrics): Float {
+//            return MILLISECONDS_PER_INCH / displayMetrics.densityDpi
+//        }
+        companion object {
+            private const val SCROLL_DURATION = 300 // Adjust as needed (make it smaller for faster scrolling)
+        }
+
+        override fun calculateTimeForScrolling(dx: Int): Int {
+            val proportion = abs(dx) / targetPosition.toFloat()
+            val extraSmoothTime = super.calculateTimeForScrolling(dx)
+            val duration = (extraSmoothTime * proportion).toInt()
+
+            // Ensure the scroll duration doesn't exceed the maximum
+            return if (duration > SCROLL_DURATION) SCROLL_DURATION else duration
+        }
+//        override fun calculateTimeForScrolling(dx: Int): Int {
+//            val proportion = abs(dx) / targetPosition.toFloat()
+//            val extraSmoothTime = super.calculateTimeForScrolling(dx)
+//            val duration = (extraSmoothTime * proportion).toInt()
+//            return if (duration > MAX_SCROLL_ON_FLING_DURATION) MAX_SCROLL_ON_FLING_DURATION else duration
+//
+//        }
+
+        override fun getVerticalSnapPreference(): Int {
+            return SNAP_TO_START // or SNAP_TO_END or SNAP_TO_ANY
+        }
     }
 
 
