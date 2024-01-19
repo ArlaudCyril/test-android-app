@@ -1,8 +1,6 @@
 package com.Lyber.ui.fragments
 
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -13,7 +11,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
+import androidx.recyclerview.widget.LinearSmoothScroller
 import com.Lyber.R
 import com.Lyber.databinding.FragmentPickYourStrategyBinding
 import com.Lyber.models.MessageResponse
@@ -184,7 +182,20 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
 //            }
 //        }
         viewModel.selectedStrategy = adapter.getItem(position)
-        layoutManager.scrollToPositionWithOffset(position, 0)
+//        layoutManager.scrollToPositionWithOffset(position, 0)
+
+        val smoothScroller: LinearSmoothScroller = object : LinearSmoothScroller(context) {
+            override fun getVerticalSnapPreference(): Int {
+                return SNAP_TO_START // or SNAP_TO_END or SNAP_TO_ANY
+            }
+        }
+
+// Set the target position
+        smoothScroller.targetPosition = position
+
+// Start smooth scrolling
+        layoutManager.startSmoothScroll(smoothScroller)
+
         if (currentView.topText.equals("Advanced"))
             binding.viewGap.visible()
 //            Handler(Looper.getMainLooper()).postDelayed({
