@@ -395,6 +395,7 @@ interface Api {
     @GET("user-service/reset-password-identifiers")
     suspend fun getResetPassword(): Response<res>
 
+
     @GET("user-service/password-change-challenge")
     suspend fun getPasswordChangeChallenge(): Response<ChangePasswordData>
 
@@ -416,5 +417,8 @@ interface Api {
     suspend fun checkStrategyStatus(@Query("executionId") executionId: String): Response<StrategyExecution>
     @POST("order-service/cancel-quote")
     suspend fun cancelQuote(@Body hashMap: HashMap<String, Any>): Response<BooleanResponse>
+
+    @PATCH("user-service/close-account")
+    suspend fun closeAccount( @Body hashMap: HashMap<String, Any>): Response<BooleanResponse>
 
 }

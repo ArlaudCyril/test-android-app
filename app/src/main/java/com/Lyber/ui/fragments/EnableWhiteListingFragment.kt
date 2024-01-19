@@ -43,7 +43,7 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
                     1 -> Constants.HOURS_24
                     else -> Constants.NO_EXTRA_SECURITY
                 }
-               App.prefsManager.withdrawalLockSecurity = security
+                App.prefsManager.withdrawalLockSecurity = security
                 requireActivity().onBackPressed()
             }
         }
@@ -55,15 +55,25 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
             Constants.HOURS_24 -> 1
             else -> 2
         }
-        when(selectedPosition){
-            1->{binding.tvSecurityText.text =   getString(R.string.selcted_24h).also { binding.tvSecurityText.text = it }
+
+
+        when (selectedPosition) {
+            1 -> {
+                binding.tvSecurityText.text =
+                    getString(R.string.a_24h_delay_is_required_before_you_can_withdraw_to_any_address_newly_added_to_your_address_book).also {
+                        binding.tvSecurityText.text = it
+                    }
+
             }
-            0->{
+
+            0 -> {
                 binding.tvSecurityText.text =
                     getString(R.string.selcted_72h)
             }
-            2->{
-                binding.tvSecurityText.text = getString(R.string.you_can_immediately_withdraw_to_any_address_newly_added_to_your_address_book)
+
+            2 -> {
+                binding.tvSecurityText.text =
+                    getString(R.string.you_can_immediately_withdraw_to_any_address_newly_added_to_your_address_book)
             }
         }
 
@@ -79,16 +89,20 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
         binding.ivtopAction.setOnClickListener { requireActivity().onBackPressed() }
 
         binding.btnEnableWhitelisting.setOnClickListener {
-
+            val hashMap = HashMap<String, Any>()
+            when (selectedPosition) {
+                0 -> hashMap["withdrawalLock"] = Constants.HOURS_72
+                1 -> hashMap["withdrawalLock"] = Constants.HOURS_24
+                else -> hashMap["withdrawalLock"] = Constants.NO_EXTRA_SECURITY
+            }
+//            when (selectedPosition) {
+//                0 -> Constants.HOURS_72
+//                1 -> Constants.HOURS_24
+//                else -> Constants.NO_EXTRA_SECURITY
+//            }
             checkInternet(requireContext()) {
                 showProgressDialog(requireContext())
-                viewModel.updateWithdrawalLock(
-                    when (selectedPosition) {
-                        0 -> Constants.HOURS_72
-                        1 -> Constants.HOURS_24
-                        else -> Constants.NO_EXTRA_SECURITY
-                    }
-                )
+                viewModel.updateUserInfo(hashMap)
             }
         }
     }
@@ -115,18 +129,22 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
             adapter.getItem(position)?.let {
                 it.isSelected = true
                 selectedPosition = position
-                when(selectedPosition){
-                    1->{
+                when (selectedPosition) {
+                    1 -> {
                         binding.tvSecurityText.text =
-                            getString(R.string.a_24h_delay_is_required_before_you_can_withdraw_to_any_address_newly_added_to_your_address_book) }
-                    0->{
+                            getString(R.string.a_24h_delay_is_required_before_you_can_withdraw_to_any_address_newly_added_to_your_address_book)
+                    }
+
+                    0 -> {
                         binding.tvSecurityText.text =
                             getString(R.string.a_delay_of_72_hours_will_be_required_before_you_can_withdraw_to_any_address_newly_added_to_your_address_book)
                     }
-                    2->{
+
+                    2 -> {
                         binding.tvSecurityText.text = getString(R.string.shifting_no_security)
                     }
-                    else->{
+
+                    else -> {
                         binding.tvSecurityText.text = getString(R.string.shifting)
 
                     }
@@ -185,7 +203,7 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
             init {
                 binding.root.setOnClickListener {
 //                    if (!App.prefsManager.isWhitelisting())
-                        itemClicked(adapterPosition)
+                    itemClicked(adapterPosition)
                 }
             }
         }

@@ -650,7 +650,7 @@ data class User(
     val city: String,
     val country: String,
     val isBlocked: Boolean,
-    val language: String,
+    var language: String,
     val registeredAt: String,
     val scope2FA: List<String>,
     val street: String,

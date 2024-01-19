@@ -1,6 +1,8 @@
 package com.Lyber.ui.portfolio.fragment
 
 import android.annotation.SuppressLint
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.Bundle
 import android.util.Log
 import android.view.Gravity
@@ -44,6 +46,7 @@ import com.Lyber.utils.CommonMethods.Companion.toMilli
 import com.Lyber.utils.CommonMethods.Companion.visibleFromLeft
 import com.Lyber.utils.CommonMethods.Companion.zoomIn
 import com.google.android.material.tabs.TabLayout
+import java.util.Locale
 
 
 class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), ActivityCallbacks,
@@ -255,6 +258,15 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
                 App.prefsManager.user = it.data
+                if (it.data.language.isNotEmpty()) {
+                    App.prefsManager.setLanguage(it.data.language)
+                    val locale = Locale(it.data.language)
+                    Locale.setDefault(locale)
+                    val resources: Resources = resources
+                    val config: Configuration = resources.configuration
+                    config.setLocale(locale)
+                    resources.updateConfiguration(config, resources.displayMetrics)
+                }
             }
         }
 
