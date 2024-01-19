@@ -821,3 +821,11 @@ data class BalanceStrategyData(
     val assetAmount: String,
     var success:Boolean=false
 )
+data class ActivityLogs(
+    val `data`: List<ActivityLogsData>
+)
+
+data class ActivityLogsData(
+    val date: String,
+    val log: String
+)

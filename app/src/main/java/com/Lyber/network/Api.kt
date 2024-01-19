@@ -416,5 +416,9 @@ interface Api {
     suspend fun checkStrategyStatus(@Query("executionId") executionId: String): Response<StrategyExecution>
     @POST("order-service/cancel-quote")
     suspend fun cancelQuote(@Body hashMap: HashMap<String, Any>): Response<BooleanResponse>
-
+    @GET("notification-service/notifications")
+    suspend fun getActivityLogsList(
+        @Query("limit") limit: Int,
+        @Query("offset") page: Int
+    ): Response<ActivityLogs>
 }

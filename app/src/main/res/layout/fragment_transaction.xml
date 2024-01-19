@@ -27,7 +27,7 @@
             app:expandedTitleTextColor="@android:color/transparent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:statusBarScrim="@color/purple_gray_00"
-            app:title="Operation"
+            app:title="@string/operations"
             app:titleCollapseMode="scale"
             app:toolbarId="@+id/toolbar">
 

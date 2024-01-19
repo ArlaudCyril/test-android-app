@@ -405,6 +405,10 @@
         android:name="com.Lyber.ui.fragments.OrderStrategyExecutionFragment"
         android:label="OrderStrategyExecutionFragment" />
 
+    <fragment
+        android:id="@+id/activityLogsFragment"
+        android:name="com.Lyber.ui.fragments.ActivityLogsFragment"
+        android:label="ActivityLogsFragment"/>
     <dialog
         android:id="@+id/portfolioThreeDots"
         android:name="com.Lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDots"
