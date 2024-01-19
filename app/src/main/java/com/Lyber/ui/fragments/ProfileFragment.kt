@@ -242,7 +242,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         binding.rlAddressBook.setOnClickListener(this)
 
         binding.ivProfile.setOnClickListener(this)
-//        binding.llNotification.setOnClickListener(this)
+        binding.rlActivityLogs.setOnClickListener(this)
         binding.rlLanguage.setOnClickListener(this)
 
         binding.rlExport.setOnClickListener(this)
@@ -363,14 +363,16 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 
                 ivTopAction -> requireActivity().onBackPressed()
 
-                llNotification -> requireActivity().replaceFragment(
-                    R.id.flSplashActivity,
-                    NotificationFragment(),
-                    topBottom = true
-                )
+//                llNotification -> requireActivity().replaceFragment(
+//                    R.id.flSplashActivity,
+//                    NotificationFragment(),
+//                    topBottom = true
+//                )
+                rlActivityLogs ->findNavController().navigate(R.id.activityLogsFragment)
 
+                    tvLogout
 
-                tvLogout -> showLogoutDialog()
+                -> showLogoutDialog()
 
                 tvAddPaymentMethod -> requireActivity().replaceFragment(
                     R.id.flSplashActivity,
