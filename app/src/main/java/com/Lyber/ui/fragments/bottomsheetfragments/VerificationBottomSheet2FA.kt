@@ -1,8 +1,10 @@
 package com.Lyber.ui.fragments.bottomsheetfragments
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
@@ -12,6 +14,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.BottomSheetVerificationBinding
+import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
@@ -38,6 +41,7 @@ class VerificationBottomSheet2FA(private val handle: (String) -> Unit) :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = CommonMethods.getViewModel(this)
+        viewModel.listener=this
         setUpView()
         this.binding.etCodeOne.requestFocus()
         binding.etCodeOne.requestKeyboard()
@@ -62,6 +66,22 @@ class VerificationBottomSheet2FA(private val handle: (String) -> Unit) :
 
             }
         }
+        viewModel.booleanResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                CommonMethods.dismissProgressDialog()
+                if(it.success){
+                    App.prefsManager.logout()
+                    startActivity(
+                        Intent(
+                            requireActivity(),
+                            SplashActivity::class.java
+                        ).apply {
+                            putExtra("fromLogout", "fromLogout")
+                            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        })
+                }
+            }
+        }
 
         binding.btnCancel.setOnClickListener {
             dismiss()
@@ -77,11 +97,18 @@ class VerificationBottomSheet2FA(private val handle: (String) -> Unit) :
             } else {
                 subtitle.text = getString(R.string.enter_the_code_displayed_on_your_sms)
             }
-
-            subtitle.text = getString(R.string.enter_the_code_displayed_on_your_email)
+            if (App.prefsManager.user!=null && App.prefsManager.user?.type2FA!=null) {
+                var type = App.prefsManager.user?.type2FA
+                if (type == Constants.EMAIL)
+                    subtitle.text = getString(R.string.enter_the_code_received_by_email)
+                else if (type == Constants.PHONE)
+                    subtitle.text = getString(R.string.enter_the_code_received_by_sms)
+                else subtitle.text =
+                    getString(R.string.enter_the_code_displayed_by_google_authenticator)
+            }
 
             fieldToVerify.text = ""
-            btnCancel.text = getString(R.string.cancel)
+            btnCancel.text = getString(R.string.back)
 
             // Usage example
             val editTextArray: List<EditText> = listOf(
@@ -200,15 +227,24 @@ class VerificationBottomSheet2FA(private val handle: (String) -> Unit) :
 
                     binding.etCodeSix -> {
                         if (getCode().length == 6) {
-                            if (viewModel.forLogin) {
+                            if(tag!=null && tag==Constants.ACTION_CLOSE_ACCOUNT){
+                                CommonMethods.showProgressDialog(requireContext())
+                                val hash = hashMapOf<String, Any>()
+                                hash["otp"] = getCode()
+                                Log.d("hash", "$hash")
+                                viewModel.closeAccount(hash)
+                            }
+                         else   {
+                                 if (viewModel.forLogin) {
                                 CommonMethods.showProgressDialog(requireContext())
                                 viewModel.verify2FA(code = getCode())
                             } else {
                                 dismiss()
                                 viewModel.verifyPhone(getCode())
                             }
-                            dismiss()
-                            handle.invoke(getCode())
+                                dismiss()
+                                handle.invoke(getCode())
+                            }
                             //  viewModel.verify2FAWithdraw(code = getCode())
 
                         }

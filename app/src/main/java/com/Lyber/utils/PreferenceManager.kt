@@ -7,6 +7,7 @@ import com.Lyber.models.AssetBaseDataResponse
 import com.Lyber.models.InvestmentExperienceLocal
 import com.Lyber.models.PersonalDataLocal
 import com.Lyber.models.User
+import com.Lyber.ui.activities.BaseActivity
 import com.google.gson.Gson
 
 class PreferenceManager(context: Context) {
@@ -65,7 +66,10 @@ class PreferenceManager(context: Context) {
     var assetBaseDataResponse: AssetBaseDataResponse?
         get() =
             if ((mSharedPreferences.getString("AssetBaseDataResponse", "") ?: "").isNotEmpty()) {
-                Gson().fromJson((mSharedPreferences.getString("AssetBaseDataResponse", "") ?: ""), AssetBaseDataResponse::class.java)
+                Gson().fromJson(
+                    (mSharedPreferences.getString("AssetBaseDataResponse", "") ?: ""),
+                    AssetBaseDataResponse::class.java
+                )
             } else null
         set(value) {
             mEditor.putString("AssetBaseDataResponse", Gson().toJson(value).toString())
@@ -105,36 +109,45 @@ class PreferenceManager(context: Context) {
         }
 
 
-    var personalDataLocal : PersonalDataLocal?
+    var personalDataLocal: PersonalDataLocal?
         get() =
             if ((mSharedPreferences.getString("PersonalDataLocal", "") ?: "").isNotEmpty()) {
-                Gson().fromJson((mSharedPreferences.getString("PersonalDataLocal", "") ?: ""), PersonalDataLocal::class.java)
+                Gson().fromJson(
+                    (mSharedPreferences.getString("PersonalDataLocal", "") ?: ""),
+                    PersonalDataLocal::class.java
+                )
             } else null
         set(value) {
             mEditor.putString("PersonalDataLocal", Gson().toJson(value).toString())
             mEditor.apply()
         }
 
-    var addressDataLocal : AddressDataLocal?
+    var addressDataLocal: AddressDataLocal?
         get() =
             if ((mSharedPreferences.getString("AddressDataLocal", "") ?: "").isNotEmpty()) {
-                Gson().fromJson((mSharedPreferences.getString("AddressDataLocal", "") ?: ""), AddressDataLocal::class.java)
+                Gson().fromJson(
+                    (mSharedPreferences.getString("AddressDataLocal", "") ?: ""),
+                    AddressDataLocal::class.java
+                )
             } else null
         set(value) {
             mEditor.putString("AddressDataLocal", Gson().toJson(value).toString())
             mEditor.apply()
         }
-    var investmentExperienceLocal : InvestmentExperienceLocal?
+    var investmentExperienceLocal: InvestmentExperienceLocal?
         get() =
-            if ((mSharedPreferences.getString("InvestmentExperienceLocal", "") ?: "").isNotEmpty()) {
-                Gson().fromJson((mSharedPreferences.getString("InvestmentExperienceLocal", "") ?: ""), InvestmentExperienceLocal::class.java)
+            if ((mSharedPreferences.getString("InvestmentExperienceLocal", "")
+                    ?: "").isNotEmpty()
+            ) {
+                Gson().fromJson(
+                    (mSharedPreferences.getString("InvestmentExperienceLocal", "") ?: ""),
+                    InvestmentExperienceLocal::class.java
+                )
             } else null
         set(value) {
             mEditor.putString("InvestmentExperienceLocal", Gson().toJson(value).toString())
             mEditor.apply()
         }
-
-
 
 
     var portfolioCompletionStep: Int
@@ -151,6 +164,7 @@ class PreferenceManager(context: Context) {
         return mSharedPreferences.getString("phone", "") ?: ""
 
     }
+
     fun setLanguage(language: String) {
         mEditor.putString("language", language)
         mEditor.apply()
@@ -160,9 +174,29 @@ class PreferenceManager(context: Context) {
         return mSharedPreferences.getString("language", "") ?: ""
 
     }
+
     fun logout() {
-        mEditor.clear()
-        mEditor.apply()
+//        mEditor.clear()
+//        mEditor.apply()
+        setPhone("")
+        portfolioCompletionStep = -1
+        addressDataLocal = null
+        investmentExperienceLocal = null
+        addressDataLocal = null
+        personalDataLocal = null
+        accountCreationSteps = 0
+        tokenSavedAt = 0L
+        refreshTokenSavedAt = 0L
+        userPin = ""
+        defaultImage = 0
+        refreshToken = ""
+        withdrawalLockSecurity = ""
+        accessToken = ""
+        user = null
+        assetBaseDataResponse = null
+        savedScreen = ""
+        personalDataSteps = 0
+//        setLanguage(BaseActivity.selectedLanguage)
     }
 
 }

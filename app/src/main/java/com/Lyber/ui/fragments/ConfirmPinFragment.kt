@@ -1,9 +1,12 @@
 package com.Lyber.ui.fragments
 
 import android.app.Dialog
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.Bundle
 import android.view.View
 import android.view.Window
+import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.CustomDialogLayoutBinding
@@ -15,6 +18,7 @@ import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.Constants
 import com.Lyber.utils.OnTextChange
 import com.Lyber.viewmodels.SignUpViewModel
+import java.util.Locale
 
 class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
 
@@ -28,7 +32,7 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
 
 
         viewModel = getViewModel(requireParentFragment())
-        viewModel.forLogin = requireArguments().getBoolean(Constants.FOR_LOGIN,false)
+        viewModel.forLogin = requireArguments().getBoolean(Constants.FOR_LOGIN, false)
         viewModel.listener = this
         binding.ivTopAction.setOnClickListener {
             requireActivity().onBackPressed()
@@ -37,11 +41,26 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
         binding.etConfirmPin.addTextChangedListener(onTextChange)
         binding.etConfirmPin.requestKeyboard()
         if (requireArguments().containsKey(Constants.IS_CHANGE_PIN)
-            && requireArguments().getBoolean(Constants.IS_CHANGE_PIN)){
+            && requireArguments().getBoolean(Constants.IS_CHANGE_PIN)
+        ) {
             binding.llIndicators.visibility = View.GONE
         }
+        if (viewModel.forLogin)
+            viewModel.getUser()
+        viewModel.getUserResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                if (it.data.language.isNotEmpty()) {
+                    App.prefsManager.setLanguage(it.data.language)
+                    val locale = Locale(it.data.language)
+                    Locale.setDefault(locale)
+                    val resources: Resources = resources
+                    val config: Configuration = resources.configuration
+                    config.setLocale(locale)
+                    resources.updateConfiguration(config, resources.displayMetrics)
+                }
+            }
+        }
     }
-
 
 
     /* On Text Change */
@@ -81,8 +100,9 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
                     if (viewModel.forLogin) {
 
                         findNavController().navigate(R.id.portfolioHomeFragment)
-                    }else if (requireArguments().containsKey(Constants.IS_CHANGE_PIN)
-                        && requireArguments().getBoolean(Constants.IS_CHANGE_PIN)){
+                    } else if (requireArguments().containsKey(Constants.IS_CHANGE_PIN)
+                        && requireArguments().getBoolean(Constants.IS_CHANGE_PIN)
+                    ) {
                         findNavController().navigate(R.id.action_confirmPinFragment_to_profile)
                     } else showDialog()
 
@@ -101,6 +121,7 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
             }
         }
     }
+
     fun showDialog() {
         App.prefsManager.portfolioCompletionStep = Constants.ACCOUNT_CREATED
         Dialog(requireActivity(), R.style.DialogTheme).apply {
@@ -108,7 +129,7 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
                 requestWindowFeature(Window.FEATURE_NO_TITLE)
                 setCancelable(false)
                 setCanceledOnTouchOutside(false)
-                App.prefsManager.accountCreationSteps= Constants.Account_CREATION_STEP_PHONE
+                App.prefsManager.accountCreationSteps = Constants.Account_CREATION_STEP_PHONE
                 setContentView(it.root)
                 it.tvTitle.text = getString(R.string.activate_face_id)
                 it.tvMessage.text = getString(R.string.activate_face_message)
