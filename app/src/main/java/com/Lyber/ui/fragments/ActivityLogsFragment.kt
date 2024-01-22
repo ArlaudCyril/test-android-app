@@ -36,7 +36,9 @@ import java.util.Calendar
 import java.util.Locale
 import java.util.TimeZone
 
-
+/*
+    **fragment for showing activity Logs
+ */
 class ActivityLogsFragment : BaseFragment<FragmentActivityLogsBinding>() {
     private lateinit var adapter: ActivityLogAdapter
     private val viewModel: PortfolioViewModel by viewModels()
@@ -65,7 +67,7 @@ class ActivityLogsFragment : BaseFragment<FragmentActivityLogsBinding>() {
                 PaginationListener.NestedScrollPaginationListener() {
                 override fun loadMoreItems() {
                     binding.rvActivityLogs.post {
-                        offset = offset + limit + 1
+                        offset += limit + 1
                         isLoading = true
                         adapter.addProgress()
                         CommonMethods.checkInternet(requireContext()) {
@@ -83,7 +85,7 @@ class ActivityLogsFragment : BaseFragment<FragmentActivityLogsBinding>() {
 
 
         binding.toolbar.setNavigationOnClickListener {
-            requireActivity().onBackPressed()
+            requireActivity().onBackPressedDispatcher.onBackPressed()
         }
         binding.rvRefresh.setOnRefreshListener {
             binding.rvRefresh.isRefreshing = true
@@ -103,9 +105,7 @@ class ActivityLogsFragment : BaseFragment<FragmentActivityLogsBinding>() {
                 isLastPage = it.data.count() < limit
 
                 if (offset == 0) {
-                    Log.d(ContentValues.TAG, "notificationResponse: Success  page == 1")
                     if (it.data.isNotEmpty()) {
-                        Log.d(ContentValues.TAG, "notificationResponse: page == 1 setList")
                         adapter.setList(it.data)
 
                     }
@@ -122,34 +122,7 @@ class ActivityLogsFragment : BaseFragment<FragmentActivityLogsBinding>() {
     inner class ActivityLogAdapter : BaseAdapter<ActivityLogsData>() {
         private var date = ""
 
-//        fun String.toMillis(): Long {
-//            val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
-//            dateFormat.timeZone = TimeZone.getTimeZone("UTC")
-//
-//            return try {
-//                dateFormat.parse(this)?.time ?: 0
-//            } catch (e: Exception) {
-//                e.printStackTrace()
-//                0
-//            }
-//        }
-//
-//
-//        fun calculatePositions(list: List<ActivityLogsData>) {
-//            if (positionList.isEmpty()) {
-//                date = list[0].date.toMillis().toLong().toDateFormatTwo()
-//                positionList.add(list[0].date)
-//            }
-//            for (i in 0 until list.count()) {
-//                val currentValue = list[i].date.toMillis().toLong().toDateFormatTwo()
-//                if (date.split("/")[0] != currentValue.split("/")[0]) {
-//                    positionList.add(list[i].date)
-//                    date = currentValue
-//                }
-//            }
-//        }
-
-        fun String.toMillis(): Long {
+        private fun String.toMillis(): Long {
             val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US)
             dateFormat.timeZone = TimeZone.getTimeZone("UTC")
 
