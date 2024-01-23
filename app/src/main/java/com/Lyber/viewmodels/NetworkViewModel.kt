@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.Lyber.models.ActivityLogs
 import com.Lyber.models.AddedAsset
 import com.Lyber.models.AssetBaseData
 import com.Lyber.models.AssetBaseDataResponse
@@ -299,6 +300,8 @@ open class NetworkViewModel : ViewModel() {
     private var _changePassResponse: MutableLiveData<ChangePasswordData> = MutableLiveData()
     val changePasswordData get() = _changePassResponse
 
+    private var _getActivityLogsListing = MutableLiveData<ActivityLogs>()
+    val getActivityLogsListingResponse get() = _getActivityLogsListing
     fun cancelJob() {
 
     }
@@ -1416,8 +1419,19 @@ open class NetworkViewModel : ViewModel() {
                 _booleanResponse.postValue(res.body())
             } else {
                 listener!!.onRetrofitError(res.errorBody())
-            }}}
+            }
+        }
+    }
 
+    fun getActivityLogs(limit: Int, offset: Int) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().getActivityLogsList(limit, offset)
+            if (res.isSuccessful)
+                _getActivityLogsListing.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+    
     fun closeAccount(hash: HashMap<String, Any>) {
         viewModelScope.launch(exceptionHandler) {
 
@@ -1426,6 +1440,7 @@ open class NetworkViewModel : ViewModel() {
                 _booleanResponse.postValue(res.body())
             else listener?.onRetrofitError(res.errorBody())
 
-        }}
+        }
+    }
 
 }

@@ -27,7 +27,7 @@
             app:expandedTitleTextColor="@android:color/transparent"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
             app:statusBarScrim="@color/purple_gray_00"
-            app:title="@string/operations"
+            app:title="@string/activity_logs"
             app:titleCollapseMode="scale"
             app:toolbarId="@+id/toolbar">
 
@@ -46,16 +46,9 @@
                     style="@style/HeadingStyle"
                     android:layout_marginStart="24dp"
                     android:layout_marginTop="20dp"
-                    android:text="@string/operations"
+                    android:text="@string/activity_logs"
                     android:textSize="24sp" />
 
-                <TextView
-                    android:id="@+id/tvSubTitleTransaction"
-                    style="@style/SubheadMabry"
-                    android:layout_marginHorizontal="24dp"
-                    android:lineSpacingExtra="8sp"
-                    android:text="@string/list_of_all_operations_purchase_exchange_or_withdrawal_made_on_your_account"
-                    android:textColor="@color/purple_gray_500" />
 
             </LinearLayout>
 
@@ -80,28 +73,26 @@
         android:layout_height="match_parent"
         android:background="@color/purple_gray_00"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nsv"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="@color/purple_gray_00"
-      >
-       <LinearLayout
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nsv"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginHorizontal="24dp"
-            android:orientation="vertical">
-
-            <androidx.recyclerview.widget.RecyclerView
-                android:id="@+id/rvTransactions"
+            >
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layoutAnimation="@anim/recycler_view_item_animation"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="24dp"
-                android:nestedScrollingEnabled="false" />
+                android:layout_height="match_parent"
+                android:orientation="vertical">
 
-        </LinearLayout>
-    </androidx.core.widget.NestedScrollView>
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/rvActivityLogs"
+                    android:layout_width="match_parent"
+                    android:layoutAnimation="@anim/recycler_view_item_animation"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="24dp"
+                    android:nestedScrollingEnabled="false" />
+
+            </LinearLayout>
+        </androidx.core.widget.NestedScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 

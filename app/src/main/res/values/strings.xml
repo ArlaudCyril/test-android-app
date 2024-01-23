@@ -570,7 +570,7 @@
     <string name="invest">Invest</string>
     <string name="immediate">Immediate</string>
     <string name="executing_your_strategy">We are executing your strategy, which may take a few seconds.</string>
-<string name="execution_in_progress">Execution in progress</string>
+    <string name="execution_in_progress">Execution in progress</string>
     <string name="single_execution">Single execution</string>
     <string name="strategy_rejected">Strategy rejected</string>
     <string name="strategy_executed">Strategy executed</string>
@@ -726,6 +726,9 @@
     <string name="usdt_price">USDT Price</string>
     <string name="fee">Fees</string>
     <string name="previous">Previous</string>
+    <string name="activity_logs">Activity logs</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
     <string name="close_account">Close account</string>
 
