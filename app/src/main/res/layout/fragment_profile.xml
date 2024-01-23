@@ -220,8 +220,7 @@
                 android:background="@drawable/curved_button"
                 android:backgroundTint="@color/purple_gray_50"
                 android:orientation="vertical"
-                android:paddingHorizontal="12dp"
-                android:paddingVertical="16dp">
+                android:paddingHorizontal="12dp">
 
                 <RelativeLayout
                     android:id="@+id/rlActivityLogs"
