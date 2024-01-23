@@ -1,9 +1,11 @@
 package com.Lyber.ui.activities
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.OnBackPressedCallback
@@ -47,16 +49,26 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
                     }
                 }
             })
-        if (App.prefsManager.getLanguage().isNotEmpty()) {
-            var code = App.prefsManager.getLanguage()
+
+        if (App.prefsManager != null && App.prefsManager.user != null && !App.prefsManager.user?.language.isNullOrEmpty()) {
+            App.prefsManager.setLanguage(App.prefsManager.user?.language!!)
+            val code = App.prefsManager.getLanguage()
             val locale = Locale(code)
             Locale.setDefault(locale)
             val resources: Resources = resources
             val config: Configuration = resources.configuration
             config.setLocale(locale)
             resources.updateConfiguration(config, resources.displayMetrics)
-
+        } else if (App.prefsManager.getLanguage().isNotEmpty()) {
+            val code = App.prefsManager.getLanguage()
+            val locale = Locale(code)
+            Locale.setDefault(locale)
+            val resources: Resources = resources
+            val config: Configuration = resources.configuration
+            config.setLocale(locale)
+            resources.updateConfiguration(config, resources.displayMetrics)
         }
+
         if (intent.data != null && App.prefsManager.userPin.isEmpty()) {
             val uriString = intent.data?.toString()
             if (uriString != null && uriString.contains("reset?token")) {

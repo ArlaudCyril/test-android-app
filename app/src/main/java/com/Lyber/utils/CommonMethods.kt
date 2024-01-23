@@ -1490,8 +1490,14 @@ class CommonMethods {
             val decimalFormat = DecimalFormat("#.##", DecimalFormatSymbols(Locale.ENGLISH))
             return decimalFormat.format(toDouble())
         }
-
-
+        fun getDeviceLocale(context: Context): String {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                return context.resources.configuration.locales[0].country
+            } else {
+                @Suppress("DEPRECATION")
+                return ""
+            }
+        }
     }
 }
 
