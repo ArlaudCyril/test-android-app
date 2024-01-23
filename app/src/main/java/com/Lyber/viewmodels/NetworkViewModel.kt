@@ -726,12 +726,12 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun updateWithdrawalLock(
-        lock: String
+    fun updateUserInfo(
+        hashMap: HashMap<String, Any>
     ) {
         viewModelScope.launch(exceptionHandler) {
-            val hashMap: HashMap<String, Any> = hashMapOf()
-            hashMap["withdrawalLock"] = lock
+//            val hashMap: HashMap<String, Any> = hashMapOf()
+//            hashMap["withdrawalLock"] = lock
             val res = RestClient.get().updateUserInfo(hashMap)
             if (res.isSuccessful)
                 _updateUserInfoResponse.postValue(res.body())
@@ -1179,10 +1179,11 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun getOtpForWithdraw(action: String, details: String) {
+    fun getOtpForWithdraw(action: String, details: String?) {
         viewModelScope.launch(exceptionHandler) {
             val map = HashMap<String, Any>()
             map["action"] = action
+            if(details!=null)
             map["details"] = details
             val res = RestClient.get(Constants.NEW_BASE_URL).getOtpForWithdraw(map)
             if (res.isSuccessful) {
@@ -1430,4 +1431,16 @@ open class NetworkViewModel : ViewModel() {
             else listener?.onRetrofitError(res.errorBody())
         }
     }
+    
+    fun closeAccount(hash: HashMap<String, Any>) {
+        viewModelScope.launch(exceptionHandler) {
+
+            val res = RestClient.get(Constants.NEW_BASE_URL).closeAccount(hash)
+            if (res.isSuccessful)
+                _booleanResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+
+        }
+    }
+
 }

@@ -395,6 +395,7 @@ interface Api {
     @GET("user-service/reset-password-identifiers")
     suspend fun getResetPassword(): Response<res>
 
+
     @GET("user-service/password-change-challenge")
     suspend fun getPasswordChangeChallenge(): Response<ChangePasswordData>
 
@@ -421,4 +422,7 @@ interface Api {
         @Query("limit") limit: Int,
         @Query("offset") page: Int
     ): Response<ActivityLogs>
+
+    @PATCH("user-service/close-account")
+    suspend fun closeAccount( @Body hashMap: HashMap<String, Any>): Response<BooleanResponse>
 }

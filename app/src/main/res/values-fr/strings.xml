@@ -551,8 +551,8 @@
     <string name="high">Elevé</string>
     <string name="oops">Oups !</string>
     <string name="deadline_confirming_purchase_passed">Le délai pour confirmer votre achat est dépassé. Souhaitez vous obtenir une nouvelle proposition ?</string>
-    <string name="close_account_message">Êtes-vous sûr de vouloir fermer votre compte ? Toutes vos données, y compris les préférences enregistrées, l’historique des transactions et les informations personnelles seront conservées pendant 5 ans à partir de la date de fermeture de votre compte. Si vous êtes certain, veuillez confirmer ci-dessous.
-        Veillez à bien retirer tout l’argent que vous avez sur votre compte avant de le clôturer.</string>
+    <string name="close_account_message">Êtes-vous sûr de vouloir fermer votre compte ? Toutes vos données, y compris les préférences enregistrées, l’historique des transactions et les informations personnelles seront conservées pendant 5 ans à partir de la date de fermeture de votre compte. Si vous êtes certain, veuillez confirmer ci-dessous.\n\n
+        Veillez à bien retirer tout l’argent que vous avez sur votre compte avant de\n le clôturer.</string>
     <string name="make_sure_withdraw">Veillez à bien retirer tout l’argent que vous avez sur votre compte avant de le clôturer.</string>
     <string name="minimum_investment">Invest min</string>
     <string name="invest">Investir</string>
@@ -726,4 +726,6 @@
     <string name="fee">Frais</string>
     <string name="previous">Previous</string>
     <string name="activity_logs">Journaux d\'activité</string>
+    <string name="close_account">Fermeture du compte</string>
+
 </resources>

@@ -494,7 +494,27 @@
                         app:track="@drawable/custom_track" />
 
                 </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/llCloseAccount"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="12dp"
+                    android:paddingVertical="16dp">
 
+                    <TextView
+                        android:id="@+id/tvCloseAccount"
+                        style="@style/SubheadMabry"
+                        android:text="@string/close_account"
+                        android:textColor="@color/red_500"
+                        android:textStyle="bold" />
+
+                    <View
+                        android:layout_width="0dp"
+                        android:layout_height="1dp"
+                        android:layout_weight="1" />
+
+                </LinearLayout>
             </LinearLayout>
 
             <TextView

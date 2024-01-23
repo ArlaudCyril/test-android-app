@@ -11,12 +11,17 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.provider.Settings
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.animation.AnimationUtils
+import android.widget.FrameLayout
+import android.widget.RelativeLayout
+import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
@@ -24,14 +29,15 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.Lyber.BuildConfig
 import com.Lyber.R
 import com.Lyber.databinding.CustomDialogLayoutBinding
 import com.Lyber.databinding.FragmentProfileBinding
 import com.Lyber.databinding.ItemTransactionBinding
+import com.Lyber.models.Balance
 import com.Lyber.models.TransactionData
 import com.Lyber.ui.adapters.BaseAdapter
 import com.Lyber.ui.fragments.bottomsheetfragments.TransactionDetailsBottomSheetFragment
+import com.Lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet2FA
 import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
@@ -49,6 +55,8 @@ import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
+import com.caverock.androidsvg.BuildConfig
+import com.google.android.material.snackbar.Snackbar
 import com.google.gson.GsonBuilder
 import java.io.File
 import java.math.BigDecimal
@@ -79,38 +87,25 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         val navHostFragment =
             requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
-//        viewModel.transactionResponse.observe(viewLifecycleOwner) {
-//            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-//                dismissProgressDialog()
-//                when {
-//                    it.transactions.isEmpty() -> {
-//                        binding.tvNoTransaction.visible()
-//                        binding.rvTransactions.gone()
-//                        binding.tvViewAllTransaction.gone()
-//                    }
-//
-//                    it.transactions.count() in 1..3 -> {
-//                        adapter.setList(it.transactions)
-//                        binding.tvViewAllTransaction.visible()
-//                        binding.tvNoTransaction.gone()
-//                    }
-//
-//                    else -> {
-//                        adapter.setList(it.transactions.subList(0, 3))
-//                        binding.tvViewAllTransaction.visible()
-//                        binding.tvNoTransaction.gone()
-//                    }
-//                }
-//                binding.rvTransactions.startLayoutAnimation()
-//            }
-//        }
-
 
         CommonMethods.checkInternet(requireContext()) {
             binding.progressImage.animation =
                 AnimationUtils.loadAnimation(context, R.anim.rotate_drawable)
             viewModel.getTransactions(limit, offset)
         }
+        viewModel.balanceResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                dismissProgressDialog()
+                val balanceDataDict = it.data
+                val balances = ArrayList<Balance>()
+                balanceDataDict?.forEach {
+                    val balance = Balance(id = it.key, balanceData = it.value)
+                    balances.add(balance)
+                }
+                com.Lyber.ui.activities.BaseActivity.balances = balances
+            }
+        }
+
         viewModel.getTransactionListingResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
@@ -167,7 +162,12 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 binding.tvLanguage.text = getString(R.string.french)
             else
                 binding.tvLanguage.text = getString(R.string.english)
-
+        } else {
+            val ln = CommonMethods.getDeviceLocale(requireContext())
+            if (ln == Constants.FRENCH)
+                binding.tvLanguage.text = getString(R.string.french)
+            else
+                binding.tvLanguage.text = getString(R.string.english)
         }
 
         viewModel.logoutResponse.observe(viewLifecycleOwner) {
@@ -248,45 +248,58 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         binding.rlExport.setOnClickListener(this)
 
         binding.llContactUS.setOnClickListener(this)
+
         binding.llChangePassword.setOnClickListener(this)
+
+        binding.llCloseAccount.setOnClickListener(this)
+
 
 
         binding.switchFaceId.setOnCheckedChangeListener { button, isChecked ->
             if (button.isPressed) {
                 checkInternet(requireContext()) {
                     showProgressDialog(requireContext())
-                    viewModel.setFaceId(getDeviceId(requireActivity().contentResolver), isChecked)
+                    viewModel.setFaceId(
+                        getDeviceId(requireActivity().contentResolver),
+                        isChecked
+                    )
                 }
             } else {
 
             }
         }
+        viewModel.commonResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                CommonMethods.dismissProgressDialog()
+                openOtpScreen()
+            }
+        }
+    }
 
-//        viewModel.transactionResponse.value?.let {
-//            dismissProgressDialog()
-//
-//            when {
-//                it.transactions.isEmpty() -> {
-//                    binding.tvNoTransaction.visible()
-//                    binding.rvTransactions.gone()
-//                    binding.tvViewAllTransaction.gone()
-//                }
-//
-//                it.transactions.count() in 1..3 -> {
-//                    adapter.setList(it.transactions)
-//                    binding.tvViewAllTransaction.visible()
-//                    binding.tvNoTransaction.gone()
-//                }
-//
-//                else -> {
-//                    adapter.setList(it.transactions.subList(0, 3))
-//                    binding.tvViewAllTransaction.visible()
-//                    binding.tvNoTransaction.gone()
-//                }
-//            }
-//
-//            binding.rvTransactions.startLayoutAnimation()
-//        }
+    private fun openOtpScreen() {
+        val transparentView = View(context)
+        transparentView.setBackgroundColor(
+            ContextCompat.getColor(
+                requireContext(),
+                R.color.semi_transparent_dark
+            )
+        )
+        val viewParams = RelativeLayout.LayoutParams(
+            RelativeLayout.LayoutParams.MATCH_PARENT,
+            RelativeLayout.LayoutParams.MATCH_PARENT
+        )
+
+        val vc = VerificationBottomSheet2FA(::handle)
+        vc.viewToDelete = transparentView
+        vc.mainView = getView()?.rootView as ViewGroup
+        vc.show(childFragmentManager, Constants.ACTION_CLOSE_ACCOUNT)
+
+        // Add the transparent view to the RelativeLayout
+        val mainView = getView()?.rootView as ViewGroup
+        mainView.addView(transparentView, viewParams)
+    }
+
+    private fun handle(code: String) {
 
     }
 
@@ -346,6 +359,51 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         }
     }
 
+    private fun showCloseAccountDialog() {
+        if (com.Lyber.ui.activities.BaseActivity.balances.size == 0)
+            viewModel.getBalance()
+        Dialog(requireActivity(), R.style.DialogTheme).apply {
+            CustomDialogLayoutBinding.inflate(layoutInflater).let {
+                requestWindowFeature(Window.FEATURE_NO_TITLE)
+//                setCancelable(false)
+//                setCanceledOnTouchOutside(false)
+                setContentView(it.root)
+                it.tvTitle.text = getString(R.string.close_account)
+                it.tvMessage.text = getString(R.string.close_account_message)
+                it.tvNegativeButton.text = getString(R.string.cancel)
+                it.tvPositiveButton.text = getString(R.string.confirm)
+                it.tvNegativeButton.setOnClickListener {
+                    dismiss()
+                }
+                it.tvPositiveButton.setOnClickListener {
+                    if (com.Lyber.ui.activities.BaseActivity.balances.size >= 1) {
+//                        getString(R.string.make_sure_withdraw).showToast(requireContext())
+                        val snackbar = Snackbar.make(binding.root, "", Snackbar.LENGTH_LONG)
+                        val params = snackbar.view.layoutParams as FrameLayout.LayoutParams
+                        params.gravity = Gravity.TOP
+                        params.setMargins(0, 0, 0, 0)
+                        snackbar.view.layoutParams = params
+                        val layout = snackbar.view as Snackbar.SnackbarLayout
+                        val textView =
+                            layout.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+                        textView.visibility = View.INVISIBLE
+                        val snackView =
+                            LayoutInflater.from(context).inflate(R.layout.custom_snackbar, null)
+                        layout.setPadding(0, 0, 0, 0)
+                        layout.addView(snackView, 0)
+                        snackbar.show()
+                        dismiss()
+                    } else {
+                        CommonMethods.showProgressDialog(requireContext())
+                        dismiss()
+                        viewModel.getOtpForWithdraw(Constants.ACTION_CLOSE_ACCOUNT, null)
+                    }
+                }
+                show()
+            }
+        }
+    }
+
 
     override fun onClick(v: View?) {
         binding.apply {
@@ -356,10 +414,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 rlAddressBook -> findNavController().navigate(R.id.addAddressBookFragment)
 
                 llStrongAuthentication -> findNavController().navigate(R.id.strongAuthentication)
-//                    requireActivity().replaceFragment(
-//                    R.id.flSplashActivity,
-//                    StrongAuthenticationFragment()
-//                )
+
 
                 ivTopAction -> requireActivity().onBackPressed()
 
@@ -397,16 +452,23 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 
                 rlExport -> navController.navigate(R.id.exportOperationsFragment)
 
+
                 llContactUS -> navController.navigate(R.id.contactUsFragment)
                 llChangePassword -> navController.navigate(R.id.changePasswordFragment)
 
+                llContactUS -> navController.navigate(R.id.contactUsFragment)
+                llCloseAccount -> showCloseAccountDialog()
             }
         }
     }
 
-    inner class TransactionAdapter(private val context: Context) : BaseAdapter<TransactionData>() {
+    inner class TransactionAdapter(private val context: Context) :
+        BaseAdapter<TransactionData>() {
 
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        override fun onCreateViewHolder(
+            parent: ViewGroup,
+            viewType: Int
+        ): RecyclerView.ViewHolder {
             return TransactionViewHolder(
                 ItemTransactionBinding.inflate(
                     LayoutInflater.from(parent.context),
@@ -441,7 +503,8 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 //                            tvEndTitle.text = "-${it.fromAmount} ${it.fromAsset.uppercase()}"
                             var amount = it.toAmount
                             try {
-                                amount = String.format(Locale.US, "%.10f", it.toAmount.toFloat())
+                                amount =
+                                    String.format(Locale.US, "%.10f", it.toAmount.toFloat())
                             } catch (ex: java.lang.Exception) {
 
                             }
@@ -561,7 +624,8 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                                         uri
                                     )
 
-                                    imageFile = saveImageToExternalStorage(bitmap, requireContext())
+                                    imageFile =
+                                        saveImageToExternalStorage(bitmap, requireContext())
 
                                     checkInternet(requireContext()) {
                                         showProgressDialog(requireContext())
