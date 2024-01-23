@@ -725,6 +725,7 @@
     <string name="usdt_price">USDT Prix</string>
     <string name="fee">Frais</string>
     <string name="previous">Previous</string>
+    <string name="activity_logs">Journaux d\'activité</string>
     <string name="close_account">Fermeture du compte</string>
 
 </resources>
