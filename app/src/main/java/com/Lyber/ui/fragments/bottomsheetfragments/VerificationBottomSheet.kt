@@ -275,7 +275,7 @@ class VerificationBottomSheet() :
                                     }
                                 }
                             }
-                            else if(typeVerification!=null && typeVerification==Constants.CHANGE_PASSWORD){
+                            else if(::typeVerification.isInitialized && typeVerification!=null && typeVerification==Constants.CHANGE_PASSWORD){
                                 dismiss()
                                 CommonMethods.showProgressDialog(requireContext())
                                 viewModel.verifyPasswordChange(code = getCode())
