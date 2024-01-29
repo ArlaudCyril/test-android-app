@@ -5,6 +5,7 @@ import android.content.SharedPreferences
 import com.Lyber.models.AddressDataLocal
 import com.Lyber.models.AssetBaseDataResponse
 import com.Lyber.models.InvestmentExperienceLocal
+import com.Lyber.models.InvestmentExperienceLocalIds
 import com.Lyber.models.PersonalDataLocal
 import com.Lyber.models.User
 import com.Lyber.ui.activities.BaseActivity
@@ -149,7 +150,6 @@ class PreferenceManager(context: Context) {
             mEditor.apply()
         }
 
-
     var portfolioCompletionStep: Int
         get() = mSharedPreferences.getInt("portfolioCompletionStep", -1)
         set(value) = mEditor.putInt("portfolioCompletionStep", value).apply()
@@ -198,5 +198,18 @@ class PreferenceManager(context: Context) {
         personalDataSteps = 0
 //        setLanguage(BaseActivity.selectedLanguage)
     }
-
+    var investmentExperienceLocalIds: InvestmentExperienceLocalIds?
+        get() =
+            if ((mSharedPreferences.getString("InvestmentExperienceLocalIds", "")
+                    ?: "").isNotEmpty()
+            ) {
+                Gson().fromJson(
+                    (mSharedPreferences.getString("InvestmentExperienceLocalIds", "") ?: ""),
+                    InvestmentExperienceLocalIds::class.java
+                )
+            } else null
+        set(value) {
+            mEditor.putString("InvestmentExperienceLocalIds", Gson().toJson(value).toString())
+            mEditor.apply()
+        }
 }

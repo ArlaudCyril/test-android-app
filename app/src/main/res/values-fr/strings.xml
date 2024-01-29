@@ -133,7 +133,7 @@
     <string name="make_investment">Faire un investissement</string>
     <string name="birth_place">Lieu de naissance</string>
     <string name="birth_country">Pays de naissance</string>
-    <string name="specified_us_person">Personne US précise</string>
+    <string name="specified_us_person">Êtes-vous un citoyen américain?</string>
     <string name="hint_state">État</string>
     <string name="hint_personal_assets">Votre patrimoine personnel</string>
     <string name="edit"><b><u>Editer</u></b></string>
@@ -508,8 +508,8 @@
     <string name="edit_address">Modifier l\'adresse</string>
     <string name="choose_an_operation">Choisissez une opération</string>
     <string name="you_do_not_have_this_asset">Vous n\'avez pas cet atout</string>
-    <string name="verification_text">Pour finaliser votre inscription, nous devons vérifier votre identité. A l\'étape suivante, vous devrez fournir une signature électronique et une photographie d\'une pièce d\'identité.</string>
-    <string name="start_identity_verifications">Démarrer la vérification d\'identité</string>
+    <string name="verification_text">Pour finaliser votre inscription, nous devons vérifier votre identité via notre partenaire Onfido. Vous devrez fournir une signature électronique et une photographie d’une pièce d’identité.</string>
+    <string name="start_identity_verifications">Commencer la vérification</string>
     <string name="review_my_informations">Revoir mes informations</string>
     <string name="change_my_informations">Changer mes informations</string>
     <string name="password_warning">Le mot de passe doit comporter au moins 10 caractères, 1 caractère spécial, 1 minuscule et 1 majuscule.</string>
@@ -621,8 +621,8 @@
     <string name="edit_personal_data">Modifier les données personnelles</string>
     <string name="verification_in_progress">Vérification en cours</string>
     <string name="start_verification">Commencer la vérification</string>
-    <string name="label_cgu_conditions">J\'ai lu et j\'accepte les Conditions Générales de Vente</string>
-    <string name="label_privacy_policy">J\'ai lu et j\'accepte la politique de confidentialité</string>
+    <string name="label_cgu_conditions">J\'ai lu et j\'accepte les <u>Conditions Générales\et Conditions de Vente</u></string>
+    <string name="label_privacy_policy">J\'ai lu et j\'accepte la <u>politique de confidentialité</u></string>
     <string name="cgu_conditions">Conditions Générales de Vente</string>
     <string name="privacy_policy">politique de confidentialité</string>
     <string name="preview_my_purchase">Prévisualiser mon achat</string>

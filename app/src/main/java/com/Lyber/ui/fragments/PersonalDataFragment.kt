@@ -6,17 +6,16 @@ import android.view.View
 import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import com.Lyber.R
-import com.au.countrycodepicker.CountryPicker
 import com.Lyber.databinding.FragmentPersonalDataBinding
 import com.Lyber.models.PersonalDataLocal
 import com.Lyber.ui.fragments.dialogs.DateTimePicker
 import com.Lyber.utils.App
-import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.CommonMethods.Companion.takesAlphabetOnly
 import com.Lyber.viewmodels.PersonalDataViewModel
+import com.au.countrycodepicker.CountryPicker
 import java.text.SimpleDateFormat
 import java.util.*
 

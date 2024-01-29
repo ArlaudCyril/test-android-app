@@ -94,7 +94,19 @@
             android:hint="@string/hint_country"
             android:paddingHorizontal="12dp"
             android:paddingVertical="16dp" />
-
+        <AutoCompleteTextView
+            android:id="@+id/etSpecifiedUsPerson"
+            style="@style/EditTextTheme"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/edit_text_background"
+            android:cursorVisible="false"
+            android:drawableEnd="@drawable/ic_drop_down"
+            android:drawablePadding="16dp"
+            android:focusableInTouchMode="false"
+            android:hint="@string/specified_us_person"
+            android:maxLines="1"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="16dp" />
 
     </LinearLayout>
 

@@ -10,6 +10,7 @@ import com.Lyber.R
 import com.Lyber.databinding.FragmentInvenstmentExperienceBinding
 import com.Lyber.models.DataBottomSheet
 import com.Lyber.models.InvestmentExperienceLocal
+import com.Lyber.models.InvestmentExperienceLocalIds
 import com.Lyber.ui.fragments.bottomsheetfragments.BottomSheetDialog
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
@@ -39,8 +40,8 @@ class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceB
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (requireParentFragment() as FillDetailFragment).position = 2
-        (requireParentFragment() as FillDetailFragment).setUpViews(2)
+        (requireParentFragment() as FillDetailFragment).position = 1
+        (requireParentFragment() as FillDetailFragment).setUpViews(1)
 
         viewModel = CommonMethods.getViewModel(requireParentFragment())
 
@@ -59,6 +60,11 @@ class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceB
         binding.etSourceIncome.text.clear()
         binding.etYourActivity.text.clear()
         if (viewModel.isReview) {
+            cryptoExpID=App.prefsManager.investmentExperienceLocalIds!!.investmentExperience
+            sourceIncomeID=App.prefsManager.investmentExperienceLocalIds!!.sourceOfIncome
+            workIndustryID=App.prefsManager.investmentExperienceLocalIds!!.workIndustry
+            annualIncomeID=App.prefsManager.investmentExperienceLocalIds!!.annualIncome
+            personalAssetsID=App.prefsManager.investmentExperienceLocalIds!!.activity
             App.prefsManager.investmentExperienceLocal.let {
                 binding.apply {
                     etCryptoExp.setText(it!!.investmentExperience)
@@ -137,9 +143,9 @@ class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceB
             }
 
             else -> {
-//                var tx = requireContext().getLocaleStringResource(Locale("en"), cryptoExpID)
+
                 val investmentExperienceLocal = InvestmentExperienceLocal(
-                    investmentExperience = requireContext().getLocaleStringResource(
+                    investmentExperience =requireContext().getLocaleStringResource(
                         Locale("en"),
                         cryptoExpID
                     ),
@@ -160,14 +166,27 @@ class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceB
                         personalAssetsID
                     )
                 )
-                Log.d("data", "$investmentExperienceLocal")
-                App.prefsManager.investmentExperienceLocal = investmentExperienceLocal
+                val investmentExperienceLocalids = InvestmentExperienceLocalIds(
+                    investmentExperience =cryptoExpID,
+                    sourceOfIncome = sourceIncomeID,
+                    workIndustry = workIndustryID,
+                    annualIncome = annualIncomeID,
+                    activity = personalAssetsID
+                )
+                 App.prefsManager.investmentExperienceLocal = InvestmentExperienceLocal(
+                    investmentExperience =cryptoExp,
+                    sourceOfIncome = sourceIncome,
+                    workIndustry = workIndustry,
+                    annualIncome = annualIncome,
+                    activity = binding.etYourActivity.text.toString().trim()
+                )
+                App.prefsManager.investmentExperienceLocalIds = investmentExperienceLocalids
                 viewModel.let {
-                    it.cryptoExp = cryptoExp
-                    it.sourceOfIncome = sourceIncome
-                    it.workIndustry = workIndustry
-                    it.annualIncome = annualIncome
-                    it.personalAssets = personalAssets
+                    it.cryptoExp =investmentExperienceLocal.investmentExperience
+                    it.sourceOfIncome = investmentExperienceLocal.sourceOfIncome
+                    it.workIndustry = investmentExperienceLocal.workIndustry
+                    it.annualIncome = investmentExperienceLocal.annualIncome
+                    it.personalAssets = investmentExperienceLocal.activity
                 }
                 return true
             }
