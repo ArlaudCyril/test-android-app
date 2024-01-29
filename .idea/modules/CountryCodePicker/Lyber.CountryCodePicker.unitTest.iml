@@ -30,7 +30,7 @@
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/6508064d1da6236b0615014ef8e98ffd/transformed/navigation-runtime-2.5.3-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/59967bce796a734f550df5851893d409/transformed/activity-ktx-1.6.0-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/cf6ec9613001ecab8ad14f799667ef05/transformed/activity-1.6.0-api.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/transforms-3/81a03a0353bc43c0963866543b30dd52/transformed/core-ktx-1.13.0-alpha03-api.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/transforms-3/da7c6ea630a3bb4183fd6a99eb37a13b/transformed/core-ktx-1.13.0-alpha04-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/690dc381db67ef021f58b894f1048d65/transformed/appcompat-resources-1.6.1-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/3783f36f69383ea9865ed02570878d0e/transformed/drawerlayout-1.1.1-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/cbded4ba3082776e29c7ddcc987fe331/transformed/coordinatorlayout-1.1.0-api.jar</arg>
@@ -44,7 +44,7 @@
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/5d3aa837b464ea0dcd7f26cfa9742743/transformed/customview-1.1.0-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/f6e45f29090f1eb2844065076b552d3d/transformed/legacy-support-core-utils-1.0.0-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/726c037109fa52e46d50a99965a24774/transformed/loader-1.0.0-api.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/transforms-3/00ac8177a61d8c2a74a6602e6c050d32/transformed/core-1.13.0-alpha03-api.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/transforms-3/6dd15ba78c92a50c44b8735fabfba73d/transformed/core-1.13.0-alpha04-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/c9a451d0da2224fd0c8f40ba28279276/transformed/navigation-common-ktx-2.5.3-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/8fda45776ef2b4fb10637a95a125b803/transformed/navigation-common-2.5.3-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/acff0984f7f644e130d503593d779d9a/transformed/lifecycle-livedata-2.6.2-api.jar</arg>
@@ -64,7 +64,7 @@
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk7/1.8.0/3c91271347f678c239607abb676d4032a7898427/kotlin-stdlib-jdk7-1.8.0.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/5ca53a0c3bd75be9d5f586d6b8d01e13/transformed/savedstate-ktx-1.2.1-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/b1e0f7b88b5d735f8642c0cd99153af6/transformed/savedstate-1.2.1-api.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/transforms-3/e3946e2a0f0a59bddced737a46caea71/transformed/annotation-experimental-1.3.0-api.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/transforms-3/9e2180058939864762880bcfd7f743e9/transformed/annotation-experimental-1.4.0-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/6372fda4cfcfdeadfa55d04ac2c108e5/transformed/cursoradapter-1.0.0-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/baa6b21699a861620813e89cc35d4031/transformed/cardview-1.0.0-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/10d09dff462ba3cce4d63f7b2a7a9c18/transformed/versionedparcelable-1.1.1-api.jar</arg>
@@ -126,9 +126,6 @@
     <content url="file://$MODULE_DIR$/../../../CountryCodePicker/src/test">
       <sourceFolder url="file://$MODULE_DIR$/../../../CountryCodePicker/src/test/java" isTestSource="true" />
     </content>
-    <content url="file://$MODULE_DIR$/../../../CountryCodePicker/src/test">
-      <sourceFolder url="file://$MODULE_DIR$/../../../CountryCodePicker/src/test/java" isTestSource="true" />
-    </content>
     <content url="file://$MODULE_DIR$/../../../CountryCodePicker/src/testDebug" />
     <content url="file://$MODULE_DIR$/../../../CountryCodePicker/src/testDebug" />
     <orderEntry type="jdk" jdkName="Android API 33, extension level 3 Platform" jdkType="Android SDK" />
@@ -139,13 +136,13 @@
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.fragment:fragment-ktx:1.5.4@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.activity:activity-ktx:1.6.0@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.activity:activity:1.6.0@aar" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: androidx.core:core:1.13.0-alpha03@aar" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: androidx.annotation:annotation-experimental:1.3.0@aar" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: androidx.core:core:1.13.0-alpha04@aar" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: androidx.annotation:annotation-experimental:1.4.0@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.lifecycle:lifecycle-runtime:2.6.2@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.versionedparcelable:versionedparcelable:1.1.1@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.lifecycle:lifecycle-viewmodel:2.6.2@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.lifecycle:lifecycle-viewmodel-savedstate:2.6.2@aar" level="project" />
-    <orderEntry type="library" scope="TEST" name="Gradle: androidx.core:core-ktx:1.13.0-alpha03@aar" level="project" />
+    <orderEntry type="library" scope="TEST" name="Gradle: androidx.core:core-ktx:1.13.0-alpha04@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.lifecycle:lifecycle-livedata-core:2.6.2@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.savedstate:savedstate:1.2.1@aar" level="project" />
     <orderEntry type="library" scope="TEST" name="Gradle: androidx.lifecycle:lifecycle-runtime-ktx:2.6.2@aar" level="project" />

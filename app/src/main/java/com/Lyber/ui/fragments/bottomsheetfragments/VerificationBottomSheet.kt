@@ -78,7 +78,16 @@ class VerificationBottomSheet() :
                     else subtitle.text =
                         getString(R.string.enter_the_code_displayed_by_google_authenticator)
                 }
-            } else if (viewModel.forLogin) {
+            }
+            else if(::typeVerification.isInitialized && !typeVerification.isNullOrEmpty()){
+                if (typeVerification == Constants.EMAIL)
+                    subtitle.text = getString(R.string.enter_the_code_received_by_email)
+                else if (typeVerification == Constants.PHONE)
+                    subtitle.text = getString(R.string.enter_the_code_received_by_sms)
+                else subtitle.text =
+                    getString(R.string.enter_the_code_displayed_by_google_authenticator)
+            }
+            else if (viewModel.forLogin) {
                 subtitle.text = getString(R.string.enter_the_code_displayed_on_your_email)
             } else {
                 subtitle.text = getString(R.string.enter_the_code_displayed_on_your_sms)

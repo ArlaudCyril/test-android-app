@@ -12,7 +12,7 @@ import com.Lyber.databinding.ActivityWebViewBinding
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.Constants
 
-class WebViewActivity : com.Lyber.ui.activities.BaseActivity<ActivityWebViewBinding>() {
+class WebViewActivity : BaseActivity<ActivityWebViewBinding>() {
     override fun bind() = ActivityWebViewBinding.inflate(layoutInflater)
     private val TAG = "WebViewFragment"
     override fun onCreate(savedInstanceState: Bundle?) {
