@@ -2,10 +2,12 @@ package com.Lyber.ui.fragments
 
 import android.app.Activity
 import android.content.Intent
+import android.content.res.ColorStateList
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
@@ -20,6 +22,7 @@ import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.replaceFragment
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.VerifyIdentityViewModel
@@ -31,6 +34,9 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
     private lateinit var navController: NavController
     private lateinit var verifyIdentityViewModel: VerifyIdentityViewModel
     private lateinit var portfolioViewModel: PortfolioViewModel
+    private var conditionsSelected = false
+    private var privacySelected = false
+    private var isVerificationEnabled = false
     override fun bind() = FragmentVerifyYourIdentityBinding.inflate(layoutInflater)
 
 
@@ -52,6 +58,10 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
             dismissProgressDialog()
         }
         setObserver()
+        binding.radioBtn.setOnClickListener(this)
+        binding.radioBtn2.setOnClickListener(this)
+        binding.tvGeneralTerms.setOnClickListener(this)
+        binding.tvPrivacyPolicy.setOnClickListener(this)
     }
 
     private fun setObserver() {
@@ -92,6 +102,7 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
             }
 
             binding.btnContinue -> {
+                if(isVerificationEnabled)
                 hitAcpi()
             }
 
@@ -100,6 +111,34 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
                     putBoolean(Constants.IS_REVIEW, true)
                 }
                 findNavController().navigate(R.id.fillDetailFragment, bundle)
+            }
+
+            binding.radioBtn -> {
+                if (conditionsSelected)
+                    binding.radioBtn.setImageResource(R.drawable.circle_stroke_profile)
+                else
+                    binding.radioBtn.setImageResource(R.drawable.purple_checkbox)
+                conditionsSelected = !conditionsSelected
+                isVerificationEnabled()
+            }
+
+            binding.radioBtn2 -> {
+                if (privacySelected)
+                    binding.radioBtn2.setImageResource(R.drawable.circle_stroke_profile)
+                else
+                    binding.radioBtn2.setImageResource(R.drawable.purple_checkbox)
+                privacySelected = !privacySelected
+                isVerificationEnabled()
+            }
+            binding.tvGeneralTerms->{
+                val bundle = Bundle()
+                bundle.putString("url", Constants.GENERAL_TERMS_CONDITIONS)
+                navController.navigate(R.id.webViewFragment,bundle)
+            }
+            binding.tvPrivacyPolicy->{
+                val bundle = Bundle()
+                bundle.putString("url", Constants.PRIVACY_URL)
+                navController.navigate(R.id.webViewFragment,bundle)
             }
         }
     }
@@ -136,5 +175,22 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
             portfolioViewModel.startKyc()
         }
 
+    }
+
+    private fun isVerificationEnabled() {
+        if (privacySelected && conditionsSelected) {
+            binding.btnContinue.backgroundTintList =
+                ColorStateList.valueOf(ContextCompat.getColor(requireContext(), R.color.purple_500))
+            isVerificationEnabled = true
+        } else {
+            binding.btnContinue.backgroundTintList =
+                ColorStateList.valueOf(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.purple_gray_500
+                    )
+                )
+            isVerificationEnabled = false
+        }
     }
 }

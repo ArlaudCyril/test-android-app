@@ -1078,7 +1078,8 @@ open class NetworkViewModel : ViewModel() {
         city: String,
         stateOrProvince: String,
         zipCode: String,
-        country: String
+        country: String,
+        isUSCitizen: Boolean
     ) {
         viewModelScope.launch(exceptionHandler) {
             val hash = hashMapOf<String, Any>()
@@ -1090,6 +1091,7 @@ open class NetworkViewModel : ViewModel() {
             hash["stateOrProvince"] = stateOrProvince
             hash["zipCode"] = zipCode
             hash["country"] = country
+            hash["isUSCitizen"] = isUSCitizen
 
             val res = RestClient.get(Constants.NEW_BASE_URL).setUserAddress(hash)
             if (res.isSuccessful)

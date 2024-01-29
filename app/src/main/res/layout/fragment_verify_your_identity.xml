@@ -11,16 +11,27 @@
         android:id="@+id/ivTopAction"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_margin="16dp"
-        android:background="@drawable/curved_button"
-        android:padding="12dp"
-        android:backgroundTint="@color/purple_gray_100"
-        android:src="@drawable/ic_close"
         android:layout_alignParentEnd="true"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginEnd="16dp"
+        android:layout_marginBottom="16dp"
+        android:background="@drawable/curved_button"
+        android:backgroundTint="@color/purple_gray_100"
+        android:padding="12dp"
+        android:src="@drawable/ic_close"
         app:tint="@color/purple_gray_800" />
+    <ScrollView
+        android:layout_below="@id/ivTopAction"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:fillViewport="true">
+<RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
     <TextView
         android:id="@+id/tvTitle"
-        android:layout_below="@+id/ivTopAction"
         style="@style/TitleText"
         android:layout_width="match_parent"
         android:layout_marginHorizontal="24dp"
@@ -28,35 +39,119 @@
         android:text="@string/identity_verification"
         />
     <TextView
+        android:id="@+id/tvDetail"
         android:layout_marginEnd="16dp"
         android:textSize="16sp"
-        android:fontFamily="@font/mabry_pro_medium"
+        android:fontFamily="@font/mabry_pro"
         android:lineSpacingExtra="4dp"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:gravity="center_vertical"
         android:layout_below="@+id/tvTitle"
         android:text="@string/verification_text"
         android:textColor="@color/purple_gray_600"
          />
+    <TextView
+        android:id="@+id/tvSubTitle"
+        android:layout_below="@+id/tvDetail"
+        style="@style/TitleText"
+        android:layout_width="match_parent"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="20dp"
+        android:text="@string/disclaimer"
+        />
+    <TextView
+        android:id="@+id/tvDetails"
+        android:layout_marginEnd="16dp"
+        android:textSize="16sp"
+        android:fontFamily="@font/mabry_pro"
+        android:lineSpacingExtra="4dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
+        android:layout_marginTop="10dp"
+        android:gravity="center_vertical"
+        android:layout_below="@+id/tvSubTitle"
+        android:text="@string/information_provided_application_not_investment_advice"
+        android:textColor="@color/purple_gray_600"
+         />
     <RelativeLayout
-        android:id="@+id/btnStartKyc"
+        android:id="@+id/rlRadio"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginHorizontal="24dp"
-        android:layout_marginBottom="24dp"
-        android:layout_alignParentBottom="true">
+        android:layout_marginTop="32dp"
+        android:layout_below="@id/tvDetails">
+        <ImageView
+            android:id="@+id/radioBtn"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_centerVertical="true"
+            android:src="@drawable/circle_stroke_profile"/>
+        <TextView
+            android:id="@+id/tvGeneralTerms"
+            android:layout_toEndOf="@id/radioBtn"
+            style="@style/SubheadMabry"
+            android:layout_marginStart="16dp"
+            android:layout_centerVertical="true"
+            android:textColor="@color/purple_500"
+            android:text="@string/label_cgu_conditions"/>
+    </RelativeLayout>
+    <RelativeLayout
+        android:id="@+id/rlPrivacy"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_below="@id/rlRadio">
+        <ImageView
+            android:id="@+id/radioBtn2"
+            android:layout_width="24dp"
+            android:layout_centerVertical="true"
+            android:layout_height="24dp"
+            android:src="@drawable/circle_stroke_profile"/>
+        <TextView
+            android:id="@+id/tvPrivacyPolicy"
+            android:layout_toEndOf="@id/radioBtn2"
+            style="@style/SubheadMabry"
+            android:layout_marginStart="16dp"
+            android:textColor="@color/purple_500"
+            android:layout_centerVertical="true"
+            android:text="@string/label_privacy_policy"/>
+    </RelativeLayout>
+    <Button
+        android:id="@+id/btnReviewMyInformations"
+        style="@style/ButtonStyle"
+        android:layout_below="@id/rlPrivacy"
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="24dp"
+        android:layout_height="56dp"
+        android:backgroundTint="@color/purple_500"
+        android:text="@string/review_my_informations"
+        android:textColor="@color/white"/>
+    <RelativeLayout
+        android:id="@+id/btnStartKyc"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="16dp"
+        android:layout_marginBottom="28dp"
+        android:layout_below="@id/btnReviewMyInformations">
+
         <Button
             android:id="@+id/btnContinue"
             style="@style/ButtonStyle"
             android:layout_width="match_parent"
-
-            android:backgroundTint="@color/purple_500"
+            android:layout_height="56dp"
+            android:backgroundTint="@color/purple_gray_500"
             android:text="@string/start_identity_verifications"
-            android:textColor="@color/white"
-            />
+            android:textColor="@color/white" />
         <ImageView
             android:id="@+id/progress"
             android:layout_width="28dp"
@@ -68,22 +163,12 @@
             android:visibility="gone" />
     </RelativeLayout>
 
-
-    <Button
-        android:id="@+id/btnReviewMyInformations"
-        style="@style/ButtonStyle"
-        android:layout_above="@+id/btnStartKyc"
-        android:layout_width="match_parent"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginBottom="24dp"
-        android:backgroundTint="@color/purple_500"
-        android:text="@string/review_my_informations"
-        android:textColor="@color/white"/>
-
     <androidx.constraintlayout.widget.Guideline
         android:id="@+id/topGuide"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         app:layout_constraintGuide_percent="0.10" />
+</RelativeLayout>
+    </ScrollView>
 </RelativeLayout>
