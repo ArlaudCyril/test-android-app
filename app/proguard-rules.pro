@@ -19,3 +19,36 @@
 # If you keep the line number information, uncomment this to
 # hide the original source file name.
 #-renamesourcefileattribute SourceFile
+#-dontwarn retrofit2.Platform$Java8
+#-keep class okhttp3.** { *; }
+#-dontwarn okhttp3.internal.platform.*
+#-dontwarn okio.**
+#-dontwarn javax.annotation.**
+#-dontwarn io.card.**
+## Application classes that will be serialized/deserialized over Gson
+#-keep class com.Lyber.network.** { *; }
+#-keep class com.Lyber.viewmodels.** { *; }
+-keep class com.Lyber.models.** { *; }
+
+
+ # With R8 full mode generic signatures are stripped for classes that are not
+ # kept. Suspend functions are wrapped in continuations where the type argument
+ # is used.
+ -keep,allowobfuscation,allowshrinking class kotlin.coroutines.Continuation
+
+ # R8 full mode strips generic signatures from return types if not kept.
+ -if interface * { @retrofit2.http.* public *** *(...); }
+ -keep,allowoptimization,allowshrinking,allowobfuscation class <3>
+
+ # With R8 full mode generic signatures are stripped for classes that are not kept.
+ -keep,allowobfuscation,allowshrinking class retrofit2.Response
+
+
+-dontwarn com.oracle.svm.core.annotate.Delete
+-dontwarn com.oracle.svm.core.annotate.Substitute
+-dontwarn com.oracle.svm.core.annotate.TargetClass
+
+-dontwarn kotlin.**
+-assumenosideeffects class kotlin.jvm.internal.Intrinsics {
+    static void checkParameterIsNotNull(java.lang.Object, java.lang.String);
+}
