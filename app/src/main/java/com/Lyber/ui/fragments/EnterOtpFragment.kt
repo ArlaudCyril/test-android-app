@@ -69,10 +69,10 @@ class EnterOtpFragment : BaseFragment<FragmentEnterOtpBinding>() {
             etCodeThree.addTextChangedListener(onTextChange)
             etCodeFour.addTextChangedListener(onTextChange)
 
-            etCodeOne.setOnKeyListener(key)
-            etCodeTwo.setOnKeyListener(key)
-            etCodeThree.setOnKeyListener(key)
-            etCodeFour.setOnKeyListener(key)
+            etCodeOne.setOnKeyListener(key.jks)
+            etCodeTwo.setOnKeyListener(key.jks)
+            etCodeThree.setOnKeyListener(key.jks)
+            etCodeFour.setOnKeyListener(key.jks)
 
 
 
@@ -128,7 +128,7 @@ class EnterOtpFragment : BaseFragment<FragmentEnterOtpBinding>() {
     fun getCode() = codeOne + codeTwo + codeThree + codeFour
 
 
-    private val key = View.OnKeyListener { v, keyCode, event ->
+    private val key.jks = View.OnKeyListener { v, keyCode, event ->
 
         val delPressed = event.action == KeyEvent.ACTION_DOWN
                 && keyCode == KeyEvent.KEYCODE_DEL
