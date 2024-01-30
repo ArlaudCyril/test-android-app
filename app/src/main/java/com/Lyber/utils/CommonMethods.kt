@@ -13,6 +13,7 @@ import android.graphics.*
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.PictureDrawable
+import android.media.ExifInterface
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
@@ -68,6 +69,7 @@ import okhttp3.ResponseBody
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 import java.math.RoundingMode
 import java.text.DateFormat
 import java.text.DecimalFormat
@@ -1498,6 +1500,58 @@ class CommonMethods {
                 return ""
             }
         }
+        fun getfile(imgPath: String?): Bitmap? {
+            val mOrientation: Int
+            var bMapRotate: Bitmap? = null
+            try {
+                if (imgPath != null) {
+                    val exif = ExifInterface(imgPath)
+                    mOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1)
+
+                    val options = BitmapFactory.Options()
+                    options.inJustDecodeBounds = true
+                    BitmapFactory.decodeFile(imgPath, options)
+                    options.inSampleSize = calculateInSampleSize(options, 400, 400)
+                    options.inJustDecodeBounds = false
+                    bMapRotate = BitmapFactory.decodeFile(imgPath, options)
+                    if (mOrientation == 6) {
+                        val matrix = Matrix()
+                        matrix.postRotate(90f)
+                        bMapRotate = Bitmap.createBitmap(
+                            bMapRotate!!, 0, 0,
+                            bMapRotate.width, bMapRotate.height,
+                            matrix, true
+                        )
+                    } else if (mOrientation == 8) {
+                        val matrix = Matrix()
+                        matrix.postRotate(270f)
+                        bMapRotate = Bitmap.createBitmap(
+                            bMapRotate!!, 0, 0,
+                            bMapRotate.width, bMapRotate.height,
+                            matrix, true
+                        )
+                    } else if (mOrientation == 3) {
+                        val matrix = Matrix()
+                        matrix.postRotate(180f)
+                        bMapRotate = Bitmap.createBitmap(
+                            bMapRotate!!, 0, 0,
+                            bMapRotate.width, bMapRotate.height,
+                            matrix, true
+                        )
+                    }
+                }
+            } catch (e: OutOfMemoryError) {
+                bMapRotate = null
+                e.printStackTrace()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            } catch (e: Exception) {
+                bMapRotate = null
+                e.printStackTrace()
+            }
+            return bMapRotate
+        }
+
     }
 }
 

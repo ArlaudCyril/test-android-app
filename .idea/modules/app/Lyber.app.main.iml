@@ -73,7 +73,7 @@
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/7e2ef298e0215c925f95add00e6a1f41/transformed/lifecycle-livedata-core-2.7.0-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/e3f5498252416d49d0ab694aece8dc49/transformed/lifecycle-livedata-core-ktx-2.7.0-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/6b4b5facac547d965f4ea48ba7d2736a/transformed/lifecycle-viewmodel-savedstate-2.7.0-api.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/transforms-3/81a03a0353bc43c0963866543b30dd52/transformed/core-ktx-1.13.0-alpha03-api.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/transforms-3/da7c6ea630a3bb4183fd6a99eb37a13b/transformed/core-ktx-1.13.0-alpha04-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/5ba581284b00fd423a10e04e107dd0c4/transformed/swiperefreshlayout-1.2.0-alpha01-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/690dc381db67ef021f58b894f1048d65/transformed/appcompat-resources-1.6.1-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/3783f36f69383ea9865ed02570878d0e/transformed/drawerlayout-1.1.1-api.jar</arg>
@@ -85,7 +85,7 @@
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/53d4acf0df6a0b0ee83ffa424f23a6f1/transformed/viewpager-1.0.0-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/416dc9f03e586d6f25fe9baca5c6fd4c/transformed/slidingpanelayout-1.2.0-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/5d3aa837b464ea0dcd7f26cfa9742743/transformed/customview-1.1.0-api.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/transforms-3/00ac8177a61d8c2a74a6602e6c050d32/transformed/core-1.13.0-alpha03-api.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/transforms-3/6dd15ba78c92a50c44b8735fabfba73d/transformed/core-1.13.0-alpha04-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/84e7699c008b48a04ba3043fae02f6bb/transformed/lifecycle-runtime-2.7.0-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.lifecycle/lifecycle-common/2.7.0/85334205d65cca70ed0109c3acbd29e22a2d9cb1/lifecycle-common-2.7.0.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlinx/kotlinx-coroutines-core-jvm/1.7.1/63a0779cf668e2a47d13fda7c3b0c4f8dc7762f4/kotlinx-coroutines-core-jvm-1.7.1.jar</arg>
@@ -136,7 +136,7 @@
                 <arg>$USER_HOME$/.gradle/caches/transforms-3/9bb36d26434582b0324f95cdf07ebe19/transformed/print-1.0.0-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/androidx.annotation/annotation-jvm/1.6.0/a7257339a052df0f91433cf9651231bbb802b502/annotation-jvm-1.6.0.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-jdk7/1.9.0/f320478990d05e0cfaadd74f9619fd6027adbf37/kotlin-stdlib-jdk7-1.9.0.jar</arg>
-                <arg>$USER_HOME$/.gradle/caches/transforms-3/e3946e2a0f0a59bddced737a46caea71/transformed/annotation-experimental-1.3.0-api.jar</arg>
+                <arg>$USER_HOME$/.gradle/caches/transforms-3/9e2180058939864762880bcfd7f743e9/transformed/annotation-experimental-1.4.0-api.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib/1.9.0/8ee15ef0c67dc83d874f412d84378d7f0eb50b63/kotlin-stdlib-1.9.0.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains.kotlin/kotlin-stdlib-common/1.9.0/cd65c21cfd1eec4d44ef09f9f52b6d9f8a720636/kotlin-stdlib-common-1.9.0.jar</arg>
                 <arg>$USER_HOME$/.gradle/caches/modules-2/files-2.1/org.jetbrains/annotations/23.0.0/8cc20c07506ec18e0834947b84a864bfc094484e/annotations-23.0.0.jar</arg>
@@ -210,9 +210,9 @@
     <orderEntry type="module" module-name="Lyber.CountryCodePicker.main" />
     <orderEntry type="library" name="Gradle: androidx.databinding:viewbinding:8.2.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: com.github.PhilJay:MPAndroidChart:v3.1.0@aar" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.core:core-ktx:1.13.0-alpha03@aar" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.core:core:1.13.0-alpha03@aar" level="project" />
-    <orderEntry type="library" name="Gradle: androidx.annotation:annotation-experimental:1.3.0@aar" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.core:core-ktx:1.13.0-alpha04@aar" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.core:core:1.13.0-alpha04@aar" level="project" />
+    <orderEntry type="library" name="Gradle: androidx.annotation:annotation-experimental:1.4.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.lifecycle:lifecycle-runtime:2.7.0@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.versionedparcelable:versionedparcelable:1.1.1@aar" level="project" />
     <orderEntry type="library" name="Gradle: androidx.appcompat:appcompat:1.6.1@aar" level="project" />
