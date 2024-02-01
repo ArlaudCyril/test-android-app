@@ -1,5 +1,7 @@
 package com.Lyber.viewmodels
 
+import android.content.Context
+import android.os.Build
 import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -53,6 +55,7 @@ import com.Lyber.models.res
 import com.Lyber.network.RestClient
 import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.Constants
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
@@ -1001,28 +1004,21 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun setUserInfo(
-        firstName: String,
-        lastName: String,
-        birthPlace: String,
-        birthDate: String,
-        birthCountry: String,
-        nationality: String,
-        isUSCitizen: Boolean
+    fun setUserInfo(context: Context
     ) {
         viewModelScope.launch(exceptionHandler) {
 
             val hashMap = hashMapOf<String, Any>()
-            hashMap["firstName"] = firstName
-            hashMap["lastName"] = lastName
-            hashMap["birthPlace"] = birthPlace
-            hashMap["birthDate"] = birthDate
-            hashMap["birthCountry"] = birthCountry
-            hashMap["nationality"] = nationality
-            hashMap["language"] = "EN"
-            hashMap["isUSCitizen"] = isUSCitizen
-
-
+            val configuration = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                context.resources.configuration.locales[0]
+            } else {
+                @Suppress("DEPRECATION")
+                context.resources.configuration.locale
+            }
+            if(configuration.language.uppercase()==Constants.FRENCH)
+                hashMap["language"] = Constants.FRENCH
+                else
+               hashMap["language"] = Constants.ENGLISH
             val res = RestClient.get(Constants.NEW_BASE_URL).setUserInfo(hashMap)
             if (res.isSuccessful)
                 _setUserInfoResponse.postValue(res.body())

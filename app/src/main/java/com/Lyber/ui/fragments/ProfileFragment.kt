@@ -56,6 +56,7 @@ import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.caverock.androidsvg.BuildConfig
+import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.google.gson.GsonBuilder
 import java.io.File
@@ -383,6 +384,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                         params.gravity = Gravity.TOP
                         params.setMargins(0, 0, 0, 0)
                         snackbar.view.layoutParams = params
+                        snackbar.animationMode = BaseTransientBottomBar.ANIMATION_MODE_FADE
                         val layout = snackbar.view as Snackbar.SnackbarLayout
                         val textView =
                             layout.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)

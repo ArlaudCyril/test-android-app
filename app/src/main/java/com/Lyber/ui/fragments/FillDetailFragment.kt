@@ -76,7 +76,7 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
 //                prefsManager.personalDataSteps = Constants.PERSONAL_DATA
-                moveToNext()
+//                moveToNext()
             }
         }
 
@@ -210,16 +210,6 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
                 replace(R.id.flFillPersonalData, fragmentList[position], false)
             }
 
-//            2 -> {
-//
-//                position++
-//                childFragmentManager.popBackStack(
-//                    null, FragmentManager.POP_BACK_STACK_INCLUSIVE
-//                )
-//                replace(R.id.flFillPersonalData, fragmentList[position], false)
-//
-//            }
-
             2 -> {
 
                 position++
@@ -228,10 +218,11 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
             }
 
             3 -> {
-                checkInternet(requireContext()) {
-                    showProgressDialog(requireContext())
-                    viewModel.finishRegistration()
-                }
+                //TODO check if in use ornot
+//                checkInternet(requireContext()) {
+//                    showProgressDialog(requireContext())
+//                    viewModel.finishRegistration()
+//                }
             }
 
         }
@@ -309,49 +300,12 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
         val fragment = childFragmentManager.findFragmentById(R.id.flFillPersonalData)
 
         when (position) {
-
-//            0 -> (fragment as PersonalDataFragment).let {
-//                if (it.checkData()) {
-//                    dismissProgressDialog()
-////                    prefsManager.personalDataSteps = Constants.PERSONAL_DATA
-//                    moveToNext()
-////                    if (toEdit.isEmpty()) {
-////                        checkInternet(requireContext()) {
-////                            showProgressDialog(requireContext())
-////                            viewModel.setUserInfo(
-////                                viewModel.firstName,
-////                                viewModel.lastName,
-////                                viewModel.birthPlace,
-////                                viewModel.birthDate,
-////                                viewModel.birthCountry,
-////                                viewModel.nationality,
-////                                viewModel.specifiedUsPerson == 1
-////                            )
-////
-////                        }
-////                    } else {
-////                        checkInternet(requireContext()) {
-////                            showProgressDialog(requireContext())
-////                            viewModel.setUserInfo(
-////                                viewModel.firstName,
-////                                viewModel.lastName,
-////                                viewModel.birthPlace,
-////                                viewModel.birthDate,
-////                                viewModel.birthCountry,
-////                                viewModel.nationality,
-////                                viewModel.specifiedUsPerson == 1
-////                            )
-////                        }
-////                    }
-//                }
-//            }
-
-
             0 -> (fragment as AddressFragment).let {
                 if (it.checkData()) {
 
                     checkInternet(requireContext()) {
                         showProgressDialog(requireContext())
+                        viewModel.setUserInfo(requireContext())
                         viewModel.setUserAddress(
                             viewModel.streetNumber,
                             viewModel.buildingFloorName,

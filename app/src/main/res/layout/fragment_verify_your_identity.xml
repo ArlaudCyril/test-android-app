@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -21,154 +20,165 @@
         android:padding="12dp"
         android:src="@drawable/ic_close"
         app:tint="@color/purple_gray_800" />
+
     <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
         android:layout_below="@id/ivTopAction"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:fillViewport="true">
-<RelativeLayout
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
 
-    <TextView
-        android:id="@+id/tvTitle"
-        style="@style/TitleText"
-        android:layout_width="match_parent"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="20dp"
-        android:text="@string/identity_verification"
-        />
-    <TextView
-        android:id="@+id/tvDetail"
-        android:layout_marginEnd="16dp"
-        android:textSize="16sp"
-        android:fontFamily="@font/mabry_pro"
-        android:lineSpacingExtra="4dp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="10dp"
-        android:gravity="center_vertical"
-        android:layout_below="@+id/tvTitle"
-        android:text="@string/verification_text"
-        android:textColor="@color/purple_gray_600"
-         />
-    <TextView
-        android:id="@+id/tvSubTitle"
-        android:layout_below="@+id/tvDetail"
-        style="@style/TitleText"
-        android:layout_width="match_parent"
-        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="20dp"
-        android:text="@string/disclaimer"
-        />
-    <TextView
-        android:id="@+id/tvDetails"
-        android:layout_marginEnd="16dp"
-        android:textSize="16sp"
-        android:fontFamily="@font/mabry_pro"
-        android:lineSpacingExtra="4dp"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="10dp"
-        android:gravity="center_vertical"
-        android:layout_below="@+id/tvSubTitle"
-        android:text="@string/information_provided_application_not_investment_advice"
-        android:textColor="@color/purple_gray_600"
-         />
-    <RelativeLayout
-        android:id="@+id/rlRadio"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="32dp"
-        android:layout_below="@id/tvDetails">
-        <ImageView
-            android:id="@+id/radioBtn"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
-            android:layout_centerVertical="true"
-            android:src="@drawable/circle_stroke_profile"/>
-        <TextView
-            android:id="@+id/tvGeneralTerms"
-            android:layout_toEndOf="@id/radioBtn"
-            style="@style/SubheadMabry"
-            android:layout_marginStart="16dp"
-            android:layout_centerVertical="true"
-            android:textColor="@color/purple_500"
-            android:text="@string/label_cgu_conditions"/>
-    </RelativeLayout>
-    <RelativeLayout
-        android:id="@+id/rlPrivacy"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="16dp"
-        android:layout_below="@id/rlRadio">
-        <ImageView
-            android:id="@+id/radioBtn2"
-            android:layout_width="24dp"
-            android:layout_centerVertical="true"
-            android:layout_height="24dp"
-            android:src="@drawable/circle_stroke_profile"/>
-        <TextView
-            android:id="@+id/tvPrivacyPolicy"
-            android:layout_toEndOf="@id/radioBtn2"
-            style="@style/SubheadMabry"
-            android:layout_marginStart="16dp"
-            android:textColor="@color/purple_500"
-            android:layout_centerVertical="true"
-            android:text="@string/label_privacy_policy"/>
-    </RelativeLayout>
-    <Button
-        android:id="@+id/btnReviewMyInformations"
-        style="@style/ButtonStyle"
-        android:layout_below="@id/rlPrivacy"
-        android:layout_width="match_parent"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="24dp"
-        android:layout_height="56dp"
-        android:backgroundTint="@color/purple_500"
-        android:text="@string/review_my_informations"
-        android:textColor="@color/white"/>
-    <RelativeLayout
-        android:id="@+id/btnStartKyc"
-        android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:layout_marginHorizontal="24dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginBottom="28dp"
-        android:layout_below="@id/btnReviewMyInformations">
-
-        <Button
-            android:id="@+id/btnContinue"
-            style="@style/ButtonStyle"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:backgroundTint="@color/purple_gray_500"
-            android:text="@string/start_identity_verifications"
-            android:textColor="@color/white" />
-        <ImageView
-            android:id="@+id/progress"
-            android:layout_width="28dp"
-            android:layout_height="28dp"
-            android:layout_centerInParent="true"
-            android:elevation="12dp"
-            android:scaleType="centerCrop"
-            android:src="@drawable/ic_progress_small"
-            android:visibility="gone" />
-    </RelativeLayout>
+            android:layout_height="wrap_content">
 
-    <androidx.constraintlayout.widget.Guideline
-        android:id="@+id/topGuide"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.10" />
-</RelativeLayout>
+
+            <TextView
+                android:id="@+id/tvTitle"
+                style="@style/TitleText"
+                android:layout_width="match_parent"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/identity_verification" />
+
+            <TextView
+                android:id="@+id/tvDetail"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvTitle"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="@font/mabry_pro"
+                android:gravity="center_vertical"
+                android:lineSpacingExtra="4dp"
+                android:text="@string/verification_text"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:textColor="@color/purple_gray_600"
+                android:textSize="16sp" />
+
+            <TextView
+                android:id="@+id/tvSubTitle"
+                style="@style/TitleText"
+                android:layout_width="match_parent"
+                android:layout_below="@+id/tvDetail"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="20dp"
+                android:text="@string/disclaimer"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
+            <TextView
+                android:id="@+id/tvDetails"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@+id/tvSubTitle"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="10dp"
+                android:layout_marginEnd="16dp"
+                android:fontFamily="@font/mabry_pro"
+                android:gravity="center_vertical"
+                android:lineSpacingExtra="4dp"
+                android:text="@string/information_provided_application_not_investment_advice"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:textColor="@color/purple_gray_600"
+                android:textSize="16sp" />
+
+            <RelativeLayout
+                android:id="@+id/rlRadio"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvDetails"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="32dp">
+
+                <ImageView
+                    android:id="@+id/radioBtn"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/circle_stroke_profile" />
+
+                <TextView
+                    android:id="@+id/tvGeneralTerms"
+                    style="@style/SubheadMabry"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="16dp"
+                    android:layout_toEndOf="@id/radioBtn"
+                    android:text="@string/label_cgu_conditions"
+                    android:textColor="@color/purple_500" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/rlPrivacy"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/rlRadio"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="16dp">
+
+                <ImageView
+                    android:id="@+id/radioBtn2"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:layout_centerVertical="true"
+                    android:src="@drawable/circle_stroke_profile" />
+
+                <TextView
+                    android:id="@+id/tvPrivacyPolicy"
+                    style="@style/SubheadMabry"
+                    android:layout_centerVertical="true"
+                    android:layout_marginStart="16dp"
+                    android:layout_toEndOf="@id/radioBtn2"
+                    android:text="@string/label_privacy_policy"
+                    android:textColor="@color/purple_500" />
+            </RelativeLayout>
+
+            <Button
+                android:id="@+id/btnReviewMyInformations"
+                style="@style/ButtonStyle"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_below="@id/rlPrivacy"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="24dp"
+                android:backgroundTint="@color/purple_500"
+                android:text="@string/review_my_informations"
+                android:textColor="@color/white" />
+
+            <RelativeLayout
+                android:id="@+id/btnStartKyc"
+                android:layout_width="match_parent"
+                android:layout_height="56dp"
+                android:layout_below="@id/btnReviewMyInformations"
+                android:layout_marginHorizontal="24dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="28dp">
+
+                <Button
+                    android:id="@+id/btnContinue"
+                    style="@style/ButtonStyle"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:backgroundTint="@color/purple_gray_500"
+                    android:text="@string/start_identity_verifications"
+                    android:textColor="@color/white" />
+
+                <ImageView
+                    android:id="@+id/progress"
+                    android:layout_width="28dp"
+                    android:layout_height="28dp"
+                    android:layout_centerInParent="true"
+                    android:elevation="12dp"
+                    android:scaleType="centerCrop"
+                    android:src="@drawable/ic_progress_small"
+                    android:visibility="gone" />
+            </RelativeLayout>
+
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/topGuide"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.10" />
+        </RelativeLayout>
     </ScrollView>
 </RelativeLayout>

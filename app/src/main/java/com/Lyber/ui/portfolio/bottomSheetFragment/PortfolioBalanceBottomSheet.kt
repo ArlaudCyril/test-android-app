@@ -15,10 +15,13 @@ import com.Lyber.databinding.BottomSheetBalanceDetailBinding
 import com.Lyber.databinding.ItemBalanceDetailPortfolioBinding
 import com.Lyber.databinding.ItemBalancePortfolioHistoryBinding
 import com.Lyber.databinding.LoaderViewBinding
+import com.Lyber.models.ErrorResponse
 import com.Lyber.models.Transaction
+import com.Lyber.network.RestClient
 import com.Lyber.ui.adapters.BaseAdapter
 import com.Lyber.ui.fragments.bottomsheetfragments.BaseBottomSheet
 import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
+import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.decimalPoints
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
@@ -275,5 +278,16 @@ class PortfolioBalanceBottomSheet(private val clickListener: (BalanceInfo) -> Un
     override fun onRetrofitError(responseBody: ResponseBody?) {
         super.onRetrofitError(responseBody)
         dismissProgress()
+//        val errorConverter = RestClient.getRetrofitInstance()
+//            .responseBodyConverter<ErrorResponse>(
+//                ErrorResponse::class.java,
+//                arrayOfNulls<Annotation>(0)
+//            )
+//        val errorRes: ErrorResponse? = errorConverter.convert(responseBody!!)
+//        if (errorRes?.code == 7023 || errorRes?.code == 10041 || errorRes?.code == 7025 || errorRes?.code == 10043) {
+//            customDialog(errorRes.code)
+//        } else if (errorRes?.code == 7024 || errorRes?.code == 10042) {
+//            CommonMethods.showSnackBar(binding.root,requireContext())
+//        }
     }
 }
