@@ -727,5 +727,9 @@
     <string name="previous">Previous</string>
     <string name="activity_logs">Journaux d\'activité</string>
     <string name="close_account">Fermeture du compte</string>
-
+    <string name="sign_my_contract">Signer mon contrat</string>
+    <string name="contract_has_not_signed">Votre contrat n\'a pas été signé.\nVeuillez le signer avant de pouvoir continuer.</string>
+    <string name="validate_kyc">Valider mon kyc</string>
+    <string name="please_validate_kyc">Votre kyc a été refusé. Veuillez valider votre kyc pour pouvoir effectuer l\'opération.</string>
+    <string name="kyc_under_verification">Votre kyc est en cours de vérification. Veuillez réessayer dans cinq minutes.</string>
 </resources>

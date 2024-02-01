@@ -5,15 +5,22 @@ import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
+import android.content.ContentResolver
+import android.content.ContentValues
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
+import android.graphics.BitmapFactory
+import android.graphics.Matrix
+import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
+import android.os.Handler
+import android.os.Looper
 import android.os.Message
 import android.os.Parcelable
 import android.provider.MediaStore
@@ -40,7 +47,12 @@ import com.Lyber.R
 import com.Lyber.databinding.ActivityWebViewBinding
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.Constants
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.CenterCrop
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
+import com.bumptech.glide.request.RequestOptions
 import java.io.File
+import java.io.FileOutputStream
 import java.io.IOException
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -48,10 +60,11 @@ import java.util.Locale
 
 class WebViewActivity : BaseActivity<ActivityWebViewBinding>() {
     override fun bind() = ActivityWebViewBinding.inflate(layoutInflater)
-    private val TAG = "WebViewActivity"
+    private var mFilePathCallback: ValueCallback<Array<Uri>>? = null
+    private var mImagePath = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-checkAndRequest()
+        checkAndRequest()
         val webSettings = binding.webView!!.settings
         webSettings.domStorageEnabled = true
         webSettings.javaScriptCanOpenWindowsAutomatically = true
@@ -63,8 +76,6 @@ checkAndRequest()
         webSettings.setSupportMultipleWindows(true)
         webSettings.setAllowFileAccess(true)
         webSettings.setAllowContentAccess(true)
-        webSettings.setAllowFileAccessFromFileURLs(true)
-        webSettings.setAllowUniversalAccessFromFileURLs(true)
         webSettings.javaScriptCanOpenWindowsAutomatically = true
         webSettings.cacheMode = WebSettings.LOAD_NO_CACHE
         webSettings.allowContentAccess = true
@@ -76,40 +87,10 @@ checkAndRequest()
         webSettings.setSupportMultipleWindows(true)
 
         webSettings.loadWithOverviewMode = true
-      if (Build.VERSION.SDK_INT >= 21) {
-            webSettings.mixedContentMode = 0
-            binding.webView!!.setLayerType(View.LAYER_TYPE_HARDWARE, null)
-        } else if (Build.VERSION.SDK_INT >= 19) {
-            binding.webView!!.setLayerType(View.LAYER_TYPE_HARDWARE, null)
-        } else if (Build.VERSION.SDK_INT < 19) {
-            binding.webView!!.setLayerType(View.LAYER_TYPE_SOFTWARE, null)
-        }
-
-        binding.webView!!.webChromeClient = object : WebChromeClient() {
-            override fun onProgressChanged(view: WebView, progress: Int) {
-                setProgress(progress * 100)
-            }
-        }
-        binding.webView!!.webViewClient = object : WebViewClient() {
-            override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                if (url.endsWith(".pdf")) {
-                    startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(url)))
-                    return true
-                }
-                return false
-            }
-        }
-        binding.webView!!.webViewClient = object : WebViewClient() {
-            override fun onReceivedError(
-                view: WebView,
-                errorCode: Int,
-                description: String,
-                failingUrl: String
-            ) {
-            }
-        }
-        binding.webView?.webChromeClient=MyWebChromeClient();
-        binding.webView?.webViewClient=MyBrowser()
+        webSettings.mixedContentMode = 0
+        binding.webView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
+        binding.webView?.webChromeClient = MyWebChromeClient();
+        binding.webView?.webViewClient = MyBrowser()
 
         binding.webView.loadUrl(intent.getStringExtra(Constants.URL)!!)
         //dummyUrl
@@ -117,8 +98,6 @@ checkAndRequest()
     }
 
     private fun checkAndRequest() {
-
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             if (ActivityCompat.checkSelfPermission(
                     applicationContext, android.Manifest.permission.CAMERA
@@ -212,7 +191,6 @@ checkAndRequest()
             }
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-
                 if (permissions[android.Manifest.permission.CAMERA] == true
                     && permissions[android.Manifest.permission.READ_MEDIA_IMAGES] == true
                     && permissions[android.Manifest.permission.READ_MEDIA_VIDEO] == true
@@ -248,7 +226,7 @@ checkAndRequest()
                         ) {
                         } else permissionsDenied()
 
-                    }else if (permissions[android.Manifest.permission.MODIFY_AUDIO_SETTINGS] == false) {
+                    } else if (permissions[android.Manifest.permission.MODIFY_AUDIO_SETTINGS] == false) {
 
                         if (!ActivityCompat.shouldShowRequestPermissionRationale(
                                 this,
@@ -257,7 +235,7 @@ checkAndRequest()
                         ) {
                         } else permissionsDenied()
 
-                    }else if (permissions[android.Manifest.permission.RECORD_AUDIO] == false) {
+                    } else if (permissions[android.Manifest.permission.RECORD_AUDIO] == false) {
 
                         if (!ActivityCompat.shouldShowRequestPermissionRationale(
                                 this,
@@ -277,7 +255,8 @@ checkAndRequest()
                 if (permissions[android.Manifest.permission.CAMERA] == true && permissions[android.Manifest.permission.WRITE_EXTERNAL_STORAGE] == true
                     && permissions[android.Manifest.permission.READ_EXTERNAL_STORAGE] == true
                     && permissions[android.Manifest.permission.MODIFY_AUDIO_SETTINGS] == true
-                    && permissions[android.Manifest.permission.RECORD_AUDIO] == true) {
+                    && permissions[android.Manifest.permission.RECORD_AUDIO] == true
+                ) {
                     Log.d("requestMultiplePermissions", "Permission granted")
                     // isPermissionGranted=true
 
@@ -310,7 +289,7 @@ checkAndRequest()
 
                             permissionsDenied()
                         }
-                    }else if (permissions[android.Manifest.permission.MODIFY_AUDIO_SETTINGS] == false
+                    } else if (permissions[android.Manifest.permission.MODIFY_AUDIO_SETTINGS] == false
                         && permissions[android.Manifest.permission.RECORD_AUDIO] == false
                     ) {
                         if (!ActivityCompat.shouldShowRequestPermissionRationale(
@@ -359,7 +338,6 @@ checkAndRequest()
                     )
                 )
                 intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-//                activityResult.launch(intent)
             }
             .setNegativeButton(
                 "Cancel"
@@ -392,21 +370,23 @@ checkAndRequest()
         override fun onPageFinished(view: WebView?, url: String?) {
             super.onPageFinished(view, url)
             val PageURL = view?.url
-            if (PageURL!!.contains("KYCSuccess")) {
+            Log.d("Url", url!!)
+            if (PageURL!!.equals("https://www.lyber.com/kyc-finished")) {
+                setResult(Activity.RESULT_OK)
+                finish()
+            } else if (PageURL!!.equals("https://lyber.com/sign-finished")) {
 
             }
         }
 
     }
 
-    private var mCapturedImageURI: Uri? = null
-    private var mFilePathCallback: ValueCallback<Array<Uri>>? = null
-    private var mCameraPhotoPath: String? = null
-    private var mUploadMessage: ValueCallback<Uri?>? = null
-    companion object {
-        private const val INPUT_FILE_REQUEST_CODE = 100
-        private const val FILECHOOSER_RESULTCODE = 100
+    override fun onDestroy() {
+        super.onDestroy()
+        if (ImageUri != null)
+            deleteImageFromMediaStore(ImageUri!!)
     }
+
     private inner class MyWebChromeClient : WebChromeClient() {
         override fun onCreateWindow(
             view: WebView?,
@@ -454,190 +434,65 @@ checkAndRequest()
                 mFilePathCallback!!.onReceiveValue(null)
             }
             mFilePathCallback = filePath
-            var takePictureIntent: Intent? = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            if (takePictureIntent!!.resolveActivity(packageManager) != null) {
-                // Create the File where the photo should go
-                var photoFile: File? = null
-                try {
-                    photoFile = createImageFile()
-                    takePictureIntent.putExtra("PhotoPath", mCameraPhotoPath)
-                } catch (ex: IOException) {
-                    // Error occurred while creating the File
-//                    Log.e(TAG, "Unable to create Image File", ex);
-                }
-                // Continue only if the File was successfully created
-                if (photoFile != null) {
-                    mCameraPhotoPath = "file:" + photoFile.absolutePath
-                    takePictureIntent.putExtra(
-                        MediaStore.EXTRA_OUTPUT,
-                        Uri.fromFile(photoFile)
-                    )
-                } else {
-                    takePictureIntent = null
-                }
+            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+            var f: File? = null
+            try {
+                f = setUpPhotoFile(this@WebViewActivity)
+                mImagePath = f!!.absolutePath
+                val imageUri = FileProvider.getUriForFile(
+                    this@WebViewActivity,
+                    this@WebViewActivity.packageName.toString() + ".provider",  //(use your app signature + ".provider" )
+                    f
+                )
+                intent.putExtra(
+                    MediaStore.EXTRA_OUTPUT,
+                    imageUri
+                )
+            } catch (e: IOException) {
+                e.printStackTrace()
+                f = null
+                mImagePath = null!!
             }
-            val contentSelectionIntent = Intent(Intent.ACTION_GET_CONTENT)
-            contentSelectionIntent.addCategory(Intent.CATEGORY_OPENABLE)
-            contentSelectionIntent.type = "image/*"
-            val intentArray: Array<Intent?>
-            intentArray = takePictureIntent?.let { arrayOf(it) } ?: arrayOfNulls(0)
-            var chooserIntent = Intent(Intent.ACTION_CHOOSER)
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-                val data = fileChooserParams.acceptTypes
-                if (data.size > 0) {
-                    val takePictureIntent2 = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-                    // Intent intent = fileChooserParams.createIntent();
-                    chooserIntent = Intent(Intent.ACTION_CHOOSER)
-                    val contentSelectionIntent2 = Intent(Intent.ACTION_GET_CONTENT)
-                    contentSelectionIntent2.addCategory(Intent.CATEGORY_OPENABLE)
-                    contentSelectionIntent2.type = "*/*"
-                    val intentArray2 = arrayOf(takePictureIntent2)
-                    chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent2)
-                    chooserIntent.putExtra(Intent.EXTRA_TITLE, "Choose an action")
-                    chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray2)
-                } else if (data[0].contains("video")) {
-                    val takeVideoIntent2 = Intent(MediaStore.ACTION_VIDEO_CAPTURE)
-                    //Intent intent = fileChooserParams.createIntent();
-                    chooserIntent = Intent(Intent.ACTION_CHOOSER)
-                    val contentSelectionIntent2 = Intent(Intent.ACTION_GET_CONTENT)
-                    contentSelectionIntent2.addCategory(Intent.CATEGORY_OPENABLE)
-                    contentSelectionIntent2.type = "*/*"
-                    val intentArray2 = arrayOf(takeVideoIntent2)
-                    chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent2)
-                    chooserIntent.putExtra(Intent.EXTRA_TITLE, "Choose an action")
-                    chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray2)
-                }
-            }
-
-//            chooserIntent.putExtra(Intent.EXTRA_INTENT, contentSelectionIntent);
-//            chooserIntent.putExtra(Intent.EXTRA_TITLE, "Image Chooser");
-//            chooserIntent.putExtra(Intent.EXTRA_INITIAL_INTENTS, intentArray);
-            startActivityForResult(chooserIntent, INPUT_FILE_REQUEST_CODE)
+            resultLauncher.launch(intent)
             return true
         }
 
-        @JvmOverloads
-        fun openFileChooser(uploadMsg: ValueCallback<Uri?>?, acceptType: String? = "") {
-            mUploadMessage = uploadMsg
-            // Create AndroidExampleFolder at sdcard
-            // Create AndroidExampleFolder at sdcard
-            val imageStorageDir = File(
-                Environment.getExternalStoragePublicDirectory(
-                    Environment.DIRECTORY_PICTURES
-                ), "AndroidExampleFolder"
-            )
-            if (!imageStorageDir.exists()) {
-                // Create AndroidExampleFolder at sdcard
-                imageStorageDir.mkdirs()
-            }
-            // Create camera captured image file path and name
-            val file = File(
-                imageStorageDir.toString() + File.separator + "IMG_"
-                        + System.currentTimeMillis().toString() + ".jpg"
-            )
-            mCapturedImageURI = Uri.fromFile(file)
-            // Camera capture image intent
-            val captureIntent = Intent(
-                MediaStore.ACTION_IMAGE_CAPTURE
-            )
-            captureIntent.putExtra(MediaStore.EXTRA_OUTPUT, mCapturedImageURI)
-            val i = Intent(Intent.ACTION_GET_CONTENT)
-            i.addCategory(Intent.CATEGORY_OPENABLE)
-            i.type = "image/*"
-            // Create file chooser intent
-            val chooserIntent = Intent.createChooser(i, "Image Chooser")
-            // Set camera intent to file chooser
-            chooserIntent.putExtra(
-                Intent.EXTRA_INITIAL_INTENTS, arrayOf<Parcelable>(captureIntent)
-            )
-            // On select image call onActivityResult method of activity
-            startActivityForResult(chooserIntent, FILECHOOSER_RESULTCODE)
-        }
-
-        //openFileChooser for other Android versions
-        fun openFileChooser(
-            uploadMsg: ValueCallback<Uri?>?,
-            acceptType: String?,
-            capture: String?
-        ) {
-            openFileChooser(uploadMsg, acceptType)
-        }
-        //openFileChooser for other Android versions
-
         @RequiresApi(Build.VERSION_CODES.LOLLIPOP)
         override fun onPermissionRequest(request: PermissionRequest?) {
-//            super.onPermissionRequest(request)
             request?.grant(request.resources)
         }
 
     }
 
-//    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
-//        super.onActivityResult(requestCode, resultCode, intent)
-//        var results: Array<Uri>? = null
-//        //Check if response is positive
-//        if (resultCode == RESULT_OK) {
-//
-//            if (requestCode == INPUT_FILE_REQUEST_CODE) {
-//                if (null == mFilePathCallback) {
-//                    return
-//                }
-//                //camera selected
-//                //Capture Photo if no image available
-//                if (mCameraPhotoPath != null) {
-//                    val imageFile = CommonMethods.saveImageToExternalStorage(
-//                        CommonMethods.getfile(mCameraPhotoPath)!!
-//                        ,this@WebViewActivity)
-//                    Log.d("imageFi", imageFile!!.absolutePath)
-//
-//                    results = arrayOf(Uri.parse(mCameraPhotoPath!!))
-//                } else {
-//                    //gallery selected
-//                    val dataString = intent!!.dataString
-//                    if (dataString != null) {
-//                        results = arrayOf(Uri.parse(dataString))
-//                    }
-//                }
-//            }
-//        }
-//        mFilePathCallback!!.onReceiveValue(results)
-//        mFilePathCallback = null
-//    }
-    override fun onActivityResult(requestCode: Int, resultCode: Int, intent: Intent?) {
-        super.onActivityResult(requestCode, resultCode, intent)
-            if (requestCode != INPUT_FILE_REQUEST_CODE || mFilePathCallback == null) {
-                super.onActivityResult(requestCode, resultCode, intent)
-                return
-            }
+    private var ImageUri: Uri? = null
+
+    private var resultLauncher =
+        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+            ImageUri = null
             var results: Array<Uri>? = null
-            // Check that the response is a good one
-            if (resultCode == RESULT_OK) {
-                    // If there is not data, then we may have taken a photo
-                    if (mCameraPhotoPath != null) {
-                        results = arrayOf(Uri.parse(mCameraPhotoPath))
-                    }
+            if (result.resultCode == RESULT_OK) {
+                    ImageUri = saveImageToMediaStore(
+                        getFile(mImagePath)!!, this
+                    )
+                    Log.d("imageFi", ImageUri.toString())
+                    results = arrayOf(ImageUri!!)
+
             }
             mFilePathCallback!!.onReceiveValue(results)
             mFilePathCallback = null
+            }
+    
+
+  private  fun deleteImageFromMediaStore(imageUri: Uri) {
+        try {
+            val contentResolver: ContentResolver = contentResolver
+            contentResolver.delete(imageUri, null, null)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
 
-
-    @Throws(IOException::class)
-    private fun createImageFile(): File {
-        // Create an image file name
-        val timeStamp =
-            SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        val imageFileName = "JPEG_" + timeStamp + "_"
-        val storageDir = Environment.getExternalStoragePublicDirectory(
-            Environment.DIRECTORY_PICTURES
-        )
-        return File.createTempFile(
-            imageFileName,  /* prefix */
-            ".jpg",  /* suffix */
-            storageDir /* directory */
-        )
-    }
-    fun setUpPhotoFile(mContext: Context): File? {
+    private fun setUpPhotoFile(mContext: Context): File? {
 
         var imageF: File? = null
         val directoryPath =
@@ -671,5 +526,117 @@ checkAndRequest()
             e.printStackTrace()
         }
         return imageF
+    }
+
+    private fun getFile(imgPath: String?): Bitmap? {
+        val mOrientation: Int
+        var bMapRotate: Bitmap? = null
+        try {
+            if (imgPath != null) {
+                val exif = ExifInterface(imgPath)
+                mOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1)
+
+                val options = BitmapFactory.Options()
+                options.inJustDecodeBounds = true
+                BitmapFactory.decodeFile(imgPath, options)
+                options.inSampleSize = calculateInSampleSize(options, 400, 400)
+                options.inJustDecodeBounds = false
+                bMapRotate = BitmapFactory.decodeFile(imgPath, options)
+                if (mOrientation == 6) {
+                    val matrix = Matrix()
+                    matrix.postRotate(90f)
+                    bMapRotate = Bitmap.createBitmap(
+                        bMapRotate!!, 0, 0,
+                        bMapRotate.width, bMapRotate.height,
+                        matrix, true
+                    )
+                } else if (mOrientation == 8) {
+                    val matrix = Matrix()
+                    matrix.postRotate(270f)
+                    bMapRotate = Bitmap.createBitmap(
+                        bMapRotate!!, 0, 0,
+                        bMapRotate.width, bMapRotate.height,
+                        matrix, true
+                    )
+                } else if (mOrientation == 3) {
+                    val matrix = Matrix()
+                    matrix.postRotate(180f)
+                    bMapRotate = Bitmap.createBitmap(
+                        bMapRotate!!, 0, 0,
+                        bMapRotate.width, bMapRotate.height,
+                        matrix, true
+                    )
+                }
+            }
+        } catch (e: OutOfMemoryError) {
+            bMapRotate = null
+            e.printStackTrace()
+        } catch (e: IOException) {
+            e.printStackTrace()
+        } catch (e: Exception) {
+            bMapRotate = null
+            e.printStackTrace()
+        }
+        return bMapRotate
+    }
+
+    private fun calculateInSampleSize(
+        options: BitmapFactory.Options, reqWidth: Int, reqHeight: Int
+    ): Int {
+        try {
+            val height = options.outHeight
+            val width = options.outWidth
+            var inSampleSize = 1
+            if (height > reqHeight || width > reqWidth) {
+                val halfHeight = height / 2
+                val halfWidth = width / 2
+                while (halfHeight / inSampleSize > reqHeight && halfWidth / inSampleSize > reqWidth) {
+                    inSampleSize *= 2
+                }
+            }
+            return inSampleSize
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+        return 0
+    }
+
+   private fun saveImageToMediaStore(finalBitmap: Bitmap, context: Context): Uri? {
+        val contentResolver: ContentResolver = context.contentResolver
+
+        // Create a ContentValues object to store metadata about the image
+        val contentValues = ContentValues().apply {
+            put(MediaStore.Images.Media.DISPLAY_NAME, "IMG_${System.currentTimeMillis()}")
+            put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg")
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                put(
+                    MediaStore.Images.Media.IS_PENDING,
+                    1
+                ) // Mark the image as pending to allow writing
+            }
+        }
+
+        // Get the collection Uri based on the content type (Images in this case)
+        val collection = MediaStore.Images.Media.getContentUri(MediaStore.VOLUME_EXTERNAL_PRIMARY)
+
+        // Insert the new image into MediaStore
+        val imageUri = contentResolver.insert(collection, contentValues)
+
+        // Open an OutputStream to write the bitmap data to the content Uri
+        imageUri?.let { uri ->
+            contentResolver.openOutputStream(uri).use { outputStream ->
+                finalBitmap.compress(Bitmap.CompressFormat.JPEG, 100, outputStream!!)
+            }
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                // Mark the image as not pending to make it visible to other apps
+                contentValues.clear()
+                contentValues.put(MediaStore.Images.Media.IS_PENDING, 0)
+                contentResolver.update(uri, contentValues, null, null)
+            }
+
+            return uri
+        }
+        // If something goes wrong, return null
+        return null
     }
 }

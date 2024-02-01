@@ -727,8 +727,11 @@
     <string name="fee">Fees</string>
     <string name="previous">Previous</string>
     <string name="activity_logs">Activity logs</string>
-
     <string name="close_account">Close account</string>
-
+    <string name="sign_my_contract">Sign my contract</string>
+    <string name="contract_has_not_signed">Your contract has not been signed.\nPlease sign it before you can proceed.</string>
+    <string name="validate_kyc">Validate my kyc</string>
+    <string name="please_validate_kyc">Your kyc has been refused. Please validate your kyc to be able to carry out the operation.</string>
+<string name="kyc_under_verification">Your kyc is under verification. Please try again in five minutes.</string>
 
 </resources>

@@ -258,6 +258,11 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
                 App.prefsManager.user = it.data
+                if(it.data.kycStatus!="NOT_STARTED"){
+
+                }else  if(it.data.yousignStatus!="SIGNED"){
+
+                }
                 if (it.data.language.isNotEmpty()) {
                     App.prefsManager.setLanguage(it.data.language)
                     val locale = Locale(it.data.language)
