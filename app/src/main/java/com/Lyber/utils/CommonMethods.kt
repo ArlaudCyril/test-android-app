@@ -1441,20 +1441,6 @@ class CommonMethods {
             return passwordRegex.matches(password)
         }
 
-        @SuppressLint("NewApi")
-        fun isAppInstalled(context: FragmentActivity, packageName: String): Boolean {
-            try {
-                val packageInfo = context.packageManager.getPackageInfo(
-                    packageName,
-                    PackageManager.MATCH_UNINSTALLED_PACKAGES
-                )
-                // Check if the packageInfo is not null, indicating the app is installed
-                return packageInfo != null
-            } catch (e: PackageManager.NameNotFoundException) {
-                // Package not found
-                return false
-            }
-        }
 
         fun String.formattedAssetForInverseRatio(price: Double?, rounding: RoundingMode): String {
             var priceFinal = price
