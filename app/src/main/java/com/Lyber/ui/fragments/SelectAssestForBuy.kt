@@ -10,6 +10,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.Lyber.R
 import com.Lyber.databinding.CustomDialogLayoutBinding
+import com.Lyber.databinding.CustomDialogVerticalLayoutBinding
 import com.Lyber.databinding.FragmentAllAssetsBinding
 import com.Lyber.models.PriceServiceResume
 import com.Lyber.ui.adapters.AllAssetAdapter
@@ -18,6 +19,7 @@ import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.Constants
 import com.Lyber.utils.OnTextChange
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.tabs.TabLayout
 
 class SelectAssestForBuy : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickListener {
@@ -232,8 +234,8 @@ class SelectAssestForBuy : BaseFragment<FragmentAllAssetsBinding>(), View.OnClic
     }
 
     private fun showDialog() {
-        Dialog(requireActivity(), R.style.DialogTheme).apply {
-            CustomDialogLayoutBinding.inflate(layoutInflater).let {
+        BottomSheetDialog(requireContext(), R.style.CustomDialogBottomSheet).apply {
+            CustomDialogVerticalLayoutBinding.inflate(layoutInflater).let {
                 requestWindowFeature(Window.FEATURE_NO_TITLE)
                 setCancelable(false)
                 setCanceledOnTouchOutside(false)

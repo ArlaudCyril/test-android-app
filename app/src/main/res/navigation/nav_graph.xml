@@ -413,6 +413,10 @@
         android:id="@+id/webViewFragment"
         android:name="com.Lyber.ui.fragments.WebViewFragment"
         android:label="WebViewFragment"/>
+    <fragment
+        android:id="@+id/underMaintenanceFragment"
+        android:name="com.Lyber.ui.fragments.UnderMaintenanceFragment"
+        android:label="UnderMaintenanceFragment" />
     <dialog
         android:id="@+id/portfolioThreeDots"
         android:name="com.Lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDots"

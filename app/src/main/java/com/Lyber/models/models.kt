@@ -833,3 +833,10 @@ data class ActivityLogsData(
     val date: String,
     val log: String
 )
+data class SignURlResponse(
+    val `data`: SignURl
+)
+
+data class SignURl(
+    val url: String
+)

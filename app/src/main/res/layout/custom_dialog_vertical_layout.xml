@@ -4,76 +4,75 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
+    android:background="@drawable/top_curved_layout"
+    android:backgroundTint="@color/purple_gray_00"
     android:paddingTop="12dp">
 
-    <RelativeLayout
-        android:id="@+id/rlCustom"
+    <LinearLayout
+        android:id="@+id/llCustom"
+        android:orientation="vertical"
+        android:gravity="center"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
         <TextView
             android:id="@+id/tvTitle"
             style="@style/DialogTitle"
-            android:layout_centerHorizontal="true"
             android:padding="2dp"
             android:textStyle="bold"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:textColor="@color/purple_gray_800"
             tools:text="@string/sign_my_contract" />
 
         <TextView
             android:id="@+id/tvMessage"
             style="@style/DialogMessage"
-            android:layout_below="@id/tvTitle"
-            android:layout_centerHorizontal="true"
             android:layout_marginHorizontal="16dp"
             android:gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             android:lineSpacingExtra="5sp"
+            android:textColor="@color/purple_gray_600"
             android:padding="2dp"
             tools:text="@string/contract_has_not_signed" />
-
-
-        <View
-            android:id="@+id/viewDivider"
-            android:layout_width="match_parent"
-            android:layout_height="1dp"
-            android:layout_below="@id/tvMessage"
-            android:layout_marginTop="16dp"
-            android:alpha="0.4"
-            android:background="#DFDDDD"  />
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_below="@id/viewDivider"
-            android:orientation="vertical"
-            android:weightSum="2">
+            android:layout_marginVertical="24dp"
+            android:layout_marginHorizontal="16dp"
+            android:orientation="horizontal"
+           >
 
-            <TextView
+            <Button
                 android:id="@+id/tvNegativeButton"
-                style="@style/DialogNegativeButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingVertical="12dp"
-                tools:text="@string/cancel" />
-
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:alpha="0.4"
-                android:background="#DFDDDD"  />
-
-            <TextView
+                style="@style/ButtonStyle"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_gravity="bottom"
+                android:background="@drawable/curved_button"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:backgroundTint="@color/purple_gray_50"
+                android:text="@string/cancel"
+                android:textAllCaps="false"
+                android:layout_marginEnd="6dp"
+                android:textColor="@color/purple_gray_800" />
+            <Button
                 android:id="@+id/tvPositiveButton"
-                style="@style/DialogNegativeButton"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:gravity="center"
-                android:paddingVertical="12dp"
-                tools:text="@string/sign_my_contract" />
+                style="@style/ButtonStyle"
+                android:layout_gravity="bottom"
+                android:layout_width="0dp"
+                android:layout_weight="1"
+                android:layout_marginStart="6dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:background="@drawable/curved_button"
+                android:backgroundTint="@color/purple_500"
+                android:text="@string/sign_my_contract"
+                android:textAllCaps="false"
+                android:textColor="@color/white" />
 
         </LinearLayout>
-    </RelativeLayout>
+    </LinearLayout>
 
 
 </LinearLayout>

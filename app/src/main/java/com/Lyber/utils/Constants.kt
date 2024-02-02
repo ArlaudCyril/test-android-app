@@ -214,4 +214,6 @@ object Constants {
 
     const val GENERAL_TERMS_CONDITIONS="https://www.lyber.com/terms-conditions"
     const val PRIVACY_URL="https://www.lyber.com/privacy"
+
+    const val API_VERSION = "0.1"
 }

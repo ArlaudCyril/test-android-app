@@ -732,4 +732,6 @@
     <string name="validate_kyc">Valider mon kyc</string>
     <string name="please_validate_kyc">Votre kyc a été refusé. Veuillez valider votre kyc pour pouvoir effectuer l\'opération.</string>
     <string name="kyc_under_verification">Votre kyc est en cours de vérification. Veuillez réessayer dans cinq minutes.</string>
+    <string name="doc_being_verified">Votre document est en cours de vérification.</string>
+    <string name="under_maintenance">Lyber est en\nmaintenance.\nRevenez plus tard !</string>
 </resources>
