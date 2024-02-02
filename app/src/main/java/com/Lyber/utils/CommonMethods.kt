@@ -52,6 +52,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.navigation.Navigation.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.CustomDialogVerticalLayoutBinding
 import com.Lyber.databinding.ProgressBarBinding
@@ -360,8 +361,10 @@ class CommonMethods {
                 )
 
             val errorRes: ErrorResponse? = errorConverter.convert(responseBody!!)
-
-            if (errorRes?.code == 7023 || errorRes?.code == 10041 || errorRes?.code == 7025 || errorRes?.code == 10043) {
+            if (errorRes?.code == 19002 || errorRes?.code == 19003) {
+                findNavController(root).navigate(R.id.underMaintenanceFragment)
+            }
+           else if (errorRes?.code == 7023 || errorRes?.code == 10041 || errorRes?.code == 7025 || errorRes?.code == 10043) {
                 return errorRes?.code
             } else if (errorRes?.code == 7024 || errorRes?.code == 10042) {
                 showSnackBar(root,context)

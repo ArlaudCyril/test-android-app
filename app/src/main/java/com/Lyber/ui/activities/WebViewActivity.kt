@@ -70,9 +70,9 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>() {
         webSettings.javaScriptCanOpenWindowsAutomatically = true
         webSettings.javaScriptEnabled = true
         webSettings.javaScriptCanOpenWindowsAutomatically = true
-        webSettings.builtInZoomControls = true
+        webSettings.builtInZoomControls = false
         webSettings.allowFileAccess = true
-        webSettings.setSupportZoom(true)
+//        webSettings.setSupportZoom(true)
         webSettings.setSupportMultipleWindows(true)
         webSettings.setAllowFileAccess(true)
         webSettings.setAllowContentAccess(true)
@@ -374,8 +374,9 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>() {
             if (PageURL!!.equals("https://www.lyber.com/kyc-finished")) {
                 setResult(Activity.RESULT_OK)
                 finish()
-            } else if (PageURL!!.equals("https://lyber.com/sign-finished")) {
-
+            } else if (PageURL!!.contains("https://www.lyber.com/sign-finished")) {
+                setResult(Activity.RESULT_OK)
+                finish()
             }
         }
 
@@ -398,8 +399,8 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>() {
             redirectWebView.settings.javaScriptEnabled = true
             redirectWebView.settings.allowContentAccess = true
             redirectWebView.settings.setEnableSmoothTransition(true)
-            redirectWebView.settings.setSupportZoom(true)
-            redirectWebView.settings.builtInZoomControls = true
+//            redirectWebView.settings.setSupportZoom(true)
+            redirectWebView.settings.builtInZoomControls = false
             redirectWebView.settings.pluginState = WebSettings.PluginState.ON
             redirectWebView.settings.setSupportMultipleWindows(true)
             redirectWebView.settings.mediaPlaybackRequiresUserGesture = false

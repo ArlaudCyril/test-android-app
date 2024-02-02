@@ -40,6 +40,7 @@ import com.Lyber.models.QrCodeResponse
 import com.Lyber.models.RecurringInvestmentDetailResponse
 import com.Lyber.models.RecurringInvestmentResponse
 import com.Lyber.models.SetPhoneResponse
+import com.Lyber.models.SignURlResponse
 import com.Lyber.models.StrategiesResponse
 import com.Lyber.models.Strategy
 import com.Lyber.models.StrategyExecution
@@ -305,6 +306,9 @@ open class NetworkViewModel : ViewModel() {
 
     private var _getActivityLogsListing = MutableLiveData<ActivityLogs>()
     val getActivityLogsListingResponse get() = _getActivityLogsListing
+
+    private val _signUrlResponse = MutableLiveData<SignURlResponse>()
+    val signUrlResponse get() = _signUrlResponse
     fun cancelJob() {
 
     }
@@ -1441,4 +1445,14 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
+    fun startSignUrl() {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).startSignUrl()
+            if (res.isSuccessful) {
+                _signUrlResponse.postValue(res.body())
+            } else {
+                _listener?.onRetrofitError(res.errorBody())
+            }
+        }
+    }
 }

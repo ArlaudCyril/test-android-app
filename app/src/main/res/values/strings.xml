@@ -732,6 +732,7 @@
     <string name="contract_has_not_signed">Your contract has not been signed.\nPlease sign it before you can proceed.</string>
     <string name="validate_kyc">Validate my kyc</string>
     <string name="please_validate_kyc">Your kyc has been refused. Please validate your kyc to be able to carry out the operation.</string>
-<string name="kyc_under_verification">Your kyc is under verification. Please try again in five minutes.</string>
-
+    <string name="kyc_under_verification">Your kyc is under verification. Please try again in five minutes.</string>
+    <string name="doc_being_verified">Your document is being verified.</string>
+    <string name="under_maintenance">Lyber is under\nmaintenance.\nCome back later!</string>
 </resources>
