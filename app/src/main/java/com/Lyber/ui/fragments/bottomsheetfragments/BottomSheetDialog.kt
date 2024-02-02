@@ -368,7 +368,7 @@ open class BottomSheetDialog(
                 )
                 add(
                     DataBottomSheet(
-                        19,
+                        (R.string.government_administration_social),
                         context.getString(R.string.government_administration_social)
                     )
                 )
