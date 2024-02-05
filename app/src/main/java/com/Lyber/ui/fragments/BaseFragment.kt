@@ -22,6 +22,7 @@ import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.Lyber.R
@@ -97,6 +98,7 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 if (isSign) {
+                    findNavController().popBackStack(R.id.portfolioHomeFragment,false)
                     showDocumentDialog(requireActivity(), Constants.LOADING)
                     Handler(Looper.getMainLooper()).postDelayed({
                         showDocumentDialog(requireActivity(), Constants.LOADING_SUCCESS)
