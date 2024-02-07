@@ -72,7 +72,9 @@
             android:focusableInTouchMode="false"
             android:hint="@string/hint_choose"
             android:paddingHorizontal="12dp"
-            android:paddingVertical="16dp" />
+            android:paddingVertical="16dp"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize"/>
 
         <TextView
             style="@style/SubTitleText"
@@ -108,7 +110,9 @@
             android:focusableInTouchMode="false"
             android:hint="@string/hint_choose"
             android:paddingHorizontal="12dp"
-            android:paddingVertical="16dp" />
+            android:paddingVertical="16dp"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize" />
 
     </LinearLayout>
 

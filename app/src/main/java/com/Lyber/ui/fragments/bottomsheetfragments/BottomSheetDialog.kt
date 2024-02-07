@@ -543,7 +543,7 @@ open class BottomSheetDialog(
                 }
 
             override fun title(context: Context): String {
-                return "What do you plan to mainly do?"
+                return context.getString(R.string.what_do_you_plan_to_do)
             }
 //            override val title: String
 //            get() = "What do you plan to mainly do?"

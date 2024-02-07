@@ -20,7 +20,7 @@ class WebViewTwoActivity : BaseActivity<ActivityWebViewBinding>() {
         super.onCreate(savedInstanceState)
         binding.webView.webViewClient = WebClient()
         binding.webView.webChromeClient = ChromeClient(this)
-        binding.btnReviewMyInformations.gone()
+//        binding.btnReviewMyInformations.gone()
         with(binding.webView.settings) {
             javaScriptEnabled = true
             javaScriptCanOpenWindowsAutomatically = true
@@ -30,10 +30,10 @@ class WebViewTwoActivity : BaseActivity<ActivityWebViewBinding>() {
             allowFileAccess = true
             setSupportZoom(true)
         }
-        binding.btnReviewMyInformations.setOnClickListener {
-            setResult(Activity.RESULT_FIRST_USER)
-            finish()
-        }
+//        binding.btnReviewMyInformations.setOnClickListener {
+//            setResult(Activity.RESULT_FIRST_USER)
+//            finish()
+//        }
         binding.webView.loadUrl(intent.getStringExtra(Constants.URL)!!)
     }
     inner class WebClient : WebViewClient() {
@@ -43,7 +43,7 @@ class WebViewTwoActivity : BaseActivity<ActivityWebViewBinding>() {
 
             Log.d(TAG, "onPageStarted: $url")
             if (url!!.startsWith("https://test.contralia.fr/Contralia/events/ID360?validationToken=")){
-                binding.btnReviewMyInformations.gone()
+//                binding.btnReviewMyInformations.gone()
                 finish()
               //  checkAndRequest()
             }

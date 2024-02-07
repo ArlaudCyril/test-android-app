@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Lyber</string>
     <string name="lyber_investments_reinvented">Lyber, la crypto à portée de main.</string>
-    <string name="diversified_regular_simple">L’investissement simple, sécurisé et diversifié</string>
+    <string name="diversified_regular_simple">L’investissement simple, sécurisé et diversifié.</string>
     <string name="sign_up">S\'inscrire</string>
     <string name="log_in">Se connecter</string>
     <string name="your_phone_number">Votre numéro de téléphone</string>
@@ -68,7 +68,7 @@
     <string name="hint_street_and_number">Numéro de rue</string>
     <string name="hint_building_floor">Bâtiment, étage</string>
     <string name="hint_city">Ville</string>
-    <string name="hint_zip_code">Code postale</string>
+    <string name="hint_zip_code">Code postal</string>
     <string name="hint_country">Pays</string>
     <string name="investment_experience">Expérience en matière d\'investissement</string>
     <string name="subtitle_investment_exp">Vous devez répondre à ces questions dans le cadre juridique des réglementations internationales en matière d\'investissement.</string>
@@ -166,7 +166,7 @@
     <string name="back_button">Bouton Retour</string>
     <string name="deactivated">Désactivé</string>
     <string name="assets">%1$s - %2$s Actifs</string>
-    <string name="k_month">%1$s - %2$s€/month</string>
+    <string name="k_month">%1$s - %2$s€/mois</string>
     <string name="upcoming_payment_august_27">Paiement à venir le 27 août</string>
     <string name="delete">Supprimer</string>
     <string name="confirm">Confirmer</string>
@@ -580,7 +580,7 @@
     <string name="for_legal_reasons">Pour que Lyber puisse garder un niveau de sécurité maximal pour votre compte, nous avons besoin de quelques informations de votre part.</string>
     <string name="card_holder_name">Nom du titulaire de la carte</string>
     <string name="are_you_US_citizen">Êtes-vous citoyen américain ?</string>
-    <string name="postal_address">Adresse postale</string>
+    <string name="postal_address">Adresse postal</string>
     <string name="need_informations_legal">Nous avons besoin de ces informations pour des raisons juridiques.</string>
     <string name="street_name">Nom de la rue</string>
     <string name="department">Département</string>
@@ -591,7 +591,7 @@
     <string name="investments">Placements</string>
     <string name="savings">Epargne</string>
     <string name="inheritance">Héritage</string>
-    <string name="credit_loan">rédit/emprunt</string>
+    <string name="credit_loan">Crédit/emprunt</string>
     <string name="family_others">Famille ou autres</string>
     <string name="whats_your_work_industry">Quel est votre secteur d\'activité ?</string>
     <string name="agriculture">Agriculture, Agroalimentaire et Ressources Naturelles</string>
@@ -734,4 +734,5 @@
     <string name="kyc_under_verification">Votre kyc est en cours de vérification. Veuillez réessayer dans cinq minutes.</string>
     <string name="doc_being_verified">Votre document est en cours de vérification.</string>
     <string name="under_maintenance">Lyber est en\nmaintenance.\nRevenez plus tard !</string>
+    <string name="what_do_you_plan_to_do">Que comptez-vous faire principalement ?</string>
 </resources>
