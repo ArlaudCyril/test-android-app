@@ -735,4 +735,5 @@
     <string name="kyc_under_verification">Your kyc is under verification. Please try again in five minutes.</string>
     <string name="doc_being_verified">Your document is being verified.</string>
     <string name="under_maintenance">Lyber is under\nmaintenance.\nCome back later!</string>
+    <string name="what_do_you_plan_to_do">What do you plan to mainly do?</string>
 </resources>

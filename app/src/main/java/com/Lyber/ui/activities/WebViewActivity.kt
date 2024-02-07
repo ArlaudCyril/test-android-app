@@ -1,14 +1,11 @@
 package com.Lyber.ui.activities
 
-import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
@@ -19,25 +16,18 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.os.Handler
-import android.os.Looper
 import android.os.Message
-import android.os.Parcelable
 import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
 import android.view.View
-import android.webkit.ConsoleMessage
-import android.webkit.GeolocationPermissions
 import android.webkit.PermissionRequest
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
-import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebSettings
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
@@ -45,18 +35,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import com.Lyber.R
 import com.Lyber.databinding.ActivityWebViewBinding
-import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.Constants
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.resource.bitmap.CenterCrop
-import com.bumptech.glide.load.resource.bitmap.RoundedCorners
-import com.bumptech.glide.request.RequestOptions
 import java.io.File
-import java.io.FileOutputStream
 import java.io.IOException
-import java.text.SimpleDateFormat
-import java.util.Date
-import java.util.Locale
 
 class WebViewActivity : BaseActivity<ActivityWebViewBinding>() {
     override fun bind() = ActivityWebViewBinding.inflate(layoutInflater)
@@ -65,34 +46,33 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         checkAndRequest()
-        val webSettings = binding.webView!!.settings
-        webSettings.domStorageEnabled = true
-        webSettings.javaScriptCanOpenWindowsAutomatically = true
-        webSettings.javaScriptEnabled = true
-        webSettings.javaScriptCanOpenWindowsAutomatically = true
-        webSettings.builtInZoomControls = false
-        webSettings.allowFileAccess = true
-//        webSettings.setSupportZoom(true)
-        webSettings.setSupportMultipleWindows(true)
-        webSettings.setAllowFileAccess(true)
-        webSettings.setAllowContentAccess(true)
-        webSettings.javaScriptCanOpenWindowsAutomatically = true
-        webSettings.cacheMode = WebSettings.LOAD_NO_CACHE
-        webSettings.allowContentAccess = true
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            webSettings.safeBrowsingEnabled = true
+        binding.webView.settings.apply {
+            domStorageEnabled = true
+            javaScriptCanOpenWindowsAutomatically = true
+            javaScriptEnabled = true
+            javaScriptCanOpenWindowsAutomatically = true
+            builtInZoomControls = false
+            allowFileAccess = true
+            setSupportMultipleWindows(true)
+            allowFileAccess = true
+            allowContentAccess = true
+            javaScriptCanOpenWindowsAutomatically = true
+            cacheMode = WebSettings.LOAD_NO_CACHE
+            allowContentAccess = true
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                safeBrowsingEnabled = true
+            }
+            mediaPlaybackRequiresUserGesture = false
+            pluginState = WebSettings.PluginState.ON
+            setSupportMultipleWindows(true)
+            mixedContentMode = 0
         }
-        webSettings.mediaPlaybackRequiresUserGesture = false
-        webSettings.pluginState = WebSettings.PluginState.ON
-        webSettings.setSupportMultipleWindows(true)
-
-        webSettings.loadWithOverviewMode = true
-        webSettings.mixedContentMode = 0
-        binding.webView.setLayerType(View.LAYER_TYPE_HARDWARE, null)
-        binding.webView?.webChromeClient = MyWebChromeClient();
-        binding.webView?.webViewClient = MyBrowser()
-
-        binding.webView.loadUrl(intent.getStringExtra(Constants.URL)!!)
+        binding.webView.apply {
+            setLayerType(View.LAYER_TYPE_HARDWARE, null)
+            webChromeClient = MyWebChromeClient()
+            webViewClient = MyBrowser()
+            loadUrl(intent.getStringExtra(Constants.URL)!!)
+        }
         //dummyUrl
 //        binding.webView.loadUrl("https://marcusbelcher.github.io/wasm-asm-camera-webgl-test/index.html")
     }
@@ -472,19 +452,19 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>() {
             ImageUri = null
             var results: Array<Uri>? = null
             if (result.resultCode == RESULT_OK) {
-                    ImageUri = saveImageToMediaStore(
-                        getFile(mImagePath)!!, this
-                    )
-                    Log.d("imageFi", ImageUri.toString())
-                    results = arrayOf(ImageUri!!)
+                ImageUri = saveImageToMediaStore(
+                    getFile(mImagePath)!!, this
+                )
+                Log.d("imageFi", ImageUri.toString())
+                results = arrayOf(ImageUri!!)
 
             }
             mFilePathCallback!!.onReceiveValue(results)
             mFilePathCallback = null
-            }
-    
+        }
 
-  private  fun deleteImageFromMediaStore(imageUri: Uri) {
+
+    private fun deleteImageFromMediaStore(imageUri: Uri) {
         try {
             val contentResolver: ContentResolver = contentResolver
             contentResolver.delete(imageUri, null, null)
@@ -602,7 +582,7 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>() {
         return 0
     }
 
-   private fun saveImageToMediaStore(finalBitmap: Bitmap, context: Context): Uri? {
+    private fun saveImageToMediaStore(finalBitmap: Bitmap, context: Context): Uri? {
         val contentResolver: ContentResolver = context.contentResolver
 
         // Create a ContentValues object to store metadata about the image

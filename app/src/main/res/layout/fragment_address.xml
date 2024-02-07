@@ -104,9 +104,10 @@
             android:drawablePadding="16dp"
             android:focusableInTouchMode="false"
             android:hint="@string/specified_us_person"
-            android:maxLines="1"
             android:paddingHorizontal="12dp"
-            android:paddingVertical="16dp" />
+            android:paddingVertical="16dp"
+            android:layout_height="wrap_content"
+            android:minHeight="?attr/actionBarSize" />
 
     </LinearLayout>
 
