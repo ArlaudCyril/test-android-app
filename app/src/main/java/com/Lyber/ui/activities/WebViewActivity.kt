@@ -2,7 +2,6 @@ package com.Lyber.ui.activities
 
 import android.app.Activity
 import android.app.AlertDialog
-import android.app.Dialog
 import android.content.ContentResolver
 import android.content.ContentValues
 import android.content.Context
@@ -16,7 +15,6 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Environment
-import android.os.Message
 import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
@@ -339,8 +337,17 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>() {
             view: WebView?,
             request: WebResourceRequest?
         ): Boolean {
+            val url = request?.url.toString()
+            // Check if the URL matches the completion URL for login
+            if (url == "https://www.lyber.com/kyc-finished" || url=="https://lyber.com/kyc-finished") {
+                // Perform actions to indicate that login is finished
+                setResult(Activity.RESULT_OK)
+                finish()
+                overridePendingTransition(0, 0)
+                return true
+            }
+            // For all other URLs, allow the WebView to handle the loading normally
             return super.shouldOverrideUrlLoading(view, request)
-
         }
 
         override fun onPageStarted(view: WebView?, url: String?, favicon: Bitmap?) {
@@ -351,10 +358,11 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>() {
             super.onPageFinished(view, url)
             val PageURL = view?.url
             Log.d("Url", url!!)
-            if (PageURL!!.equals("https://www.lyber.com/kyc-finished")) {
+            if (PageURL!!.equals("https://www.lyber.com/kyc-finished") || PageURL.equals("https://lyber.com/kyc-finished")) {
                 setResult(Activity.RESULT_OK)
                 finish()
-            } else if (PageURL!!.contains("https://www.lyber.com/sign-finished")) {
+                overridePendingTransition(0, 0)
+            } else if (PageURL.contains("https://www.lyber.com/sign-finished")) {
                 setResult(Activity.RESULT_OK)
                 finish()
             }
@@ -369,40 +377,6 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>() {
     }
 
     private inner class MyWebChromeClient : WebChromeClient() {
-        override fun onCreateWindow(
-            view: WebView?,
-            isDialog: Boolean,
-            isUserGesture: Boolean,
-            resultMsg: Message
-        ): Boolean {
-            val redirectWebView = WebView(this@WebViewActivity)
-            redirectWebView.settings.javaScriptEnabled = true
-            redirectWebView.settings.allowContentAccess = true
-            redirectWebView.settings.setEnableSmoothTransition(true)
-//            redirectWebView.settings.setSupportZoom(true)
-            redirectWebView.settings.builtInZoomControls = false
-            redirectWebView.settings.pluginState = WebSettings.PluginState.ON
-            redirectWebView.settings.setSupportMultipleWindows(true)
-            redirectWebView.settings.mediaPlaybackRequiresUserGesture = false
-            redirectWebView.settings.allowFileAccess = true
-
-
-            val dialog = Dialog(this@WebViewActivity)
-            dialog.setContentView(redirectWebView)
-            dialog.show()
-            val transport = resultMsg.obj as WebView.WebViewTransport
-            transport.webView = redirectWebView
-            resultMsg.sendToTarget()
-
-            redirectWebView.webViewClient = object : android.webkit.WebViewClient() {
-                override fun shouldOverrideUrlLoading(view: WebView, url: String): Boolean {
-                    view.loadUrl(url)
-                    return true
-                }
-            }
-            return true
-        }
-
 
         // For Android 5.0
         override fun onShowFileChooser(

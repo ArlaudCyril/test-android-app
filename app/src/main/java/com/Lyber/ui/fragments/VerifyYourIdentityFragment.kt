@@ -74,6 +74,7 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
         portfolioViewModel = getViewModel(requireActivity())
 
         verifyIdentityViewModel.listener = this
+        portfolioViewModel.listener = this
         verifyIdentityViewModel.uploadResponse.observe(viewLifecycleOwner) {
             dismissProgressDialog()
         }
@@ -100,7 +101,7 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
                 navController.navigate(R.id.portfolioHomeFragment)
             }
         }
-        portfolioViewModel.kycResponse.observe(viewLifecycleOwner) {
+        portfolioViewModel.kycResponseIdentity.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissAnimation()
                 resultLauncher.launch(
@@ -194,7 +195,7 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
             binding.progress.animation =
                 AnimationUtils.loadAnimation(requireActivity(), R.anim.rotate_drawable)
             binding.btnContinue.text = ""
-            portfolioViewModel.startKyc()
+            portfolioViewModel.startKYCIdentity()
         }
 
     }
