@@ -271,6 +271,9 @@ open class NetworkViewModel : ViewModel() {
     private val _kycResponse = MutableLiveData<KYCResponse>()
     val kycResponse get() = _kycResponse
 
+    private val _kycResponseIdentity= MutableLiveData<KYCResponse>()
+    val kycResponseIdentity get() = _kycResponseIdentity
+
 
     private var _msgResponse: MutableLiveData<BooleanResponse> = MutableLiveData()
     val msgResponse get() = _msgResponse
@@ -1450,6 +1453,17 @@ open class NetworkViewModel : ViewModel() {
             val res = RestClient.get(Constants.NEW_BASE_URL).startSignUrl()
             if (res.isSuccessful) {
                 _signUrlResponse.postValue(res.body())
+            } else {
+                _listener?.onRetrofitError(res.errorBody())
+            }
+        }
+    }
+
+    fun startKYCIdentity() {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).startKyc()
+            if (res.isSuccessful) {
+                _kycResponseIdentity.postValue(res.body())
             } else {
                 _listener?.onRetrofitError(res.errorBody())
             }

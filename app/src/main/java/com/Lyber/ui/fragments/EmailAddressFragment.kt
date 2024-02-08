@@ -34,7 +34,6 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
     private val password: String get() = binding.etPassword.text.trim().toString()
 
     private lateinit var viewModel: PersonalDataViewModel
-    val textPattern: Pattern = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d).+$")
 
     private val passwordRegex = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{10,}$")
     private var isPasswordOk = false
@@ -44,6 +43,7 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = CommonMethods.getViewModel(requireParentFragment())
+        viewModel.listener=this
         config = SRP6CryptoParams.getInstance(2048, "SHA-512")
         generator = SRP6VerifierGenerator(config)
         generator.xRoutine = XRoutineWithUserIdentity()
