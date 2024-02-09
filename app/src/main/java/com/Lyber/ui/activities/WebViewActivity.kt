@@ -1,5 +1,6 @@
 package com.Lyber.ui.activities
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.ContentResolver
@@ -19,6 +20,8 @@ import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
 import android.view.View
+import android.view.ViewTreeObserver
+import android.view.inputmethod.InputMethodManager
 import android.webkit.PermissionRequest
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
@@ -37,10 +40,12 @@ import com.Lyber.utils.Constants
 import java.io.File
 import java.io.IOException
 
+
 class WebViewActivity : BaseActivity<ActivityWebViewBinding>() {
     override fun bind() = ActivityWebViewBinding.inflate(layoutInflater)
     private var mFilePathCallback: ValueCallback<Array<Uri>>? = null
     private var mImagePath = ""
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         checkAndRequest()
@@ -53,6 +58,8 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>() {
             allowFileAccess = true
             setSupportMultipleWindows(true)
             allowFileAccess = true
+            setUseWideViewPort(true)
+            setLoadWithOverviewMode(true)
             allowContentAccess = true
             javaScriptCanOpenWindowsAutomatically = true
             cacheMode = WebSettings.LOAD_NO_CACHE
@@ -367,7 +374,6 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>() {
                 finish()
             }
         }
-
     }
 
     override fun onDestroy() {
@@ -448,7 +454,6 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>() {
     }
 
     private fun setUpPhotoFile(mContext: Context): File? {
-
         var imageF: File? = null
         val directoryPath =
             mContext.getExternalFilesDir(null)!!.absolutePath + File.separator + "PICS"
@@ -594,4 +599,5 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>() {
         // If something goes wrong, return null
         return null
     }
+
 }
