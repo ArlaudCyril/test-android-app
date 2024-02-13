@@ -84,7 +84,7 @@
             tools:ignore="LockedOrientationActivity" />
         <activity
             android:name="com.Lyber.ui.activities.WebViewActivity"
-            android:exported="true"
+            android:exported="false"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="adjustResize"
             tools:ignore="LockedOrientationActivity" />
@@ -98,7 +98,8 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-
+        <meta-data android:name="android.webkit.WebView.EnableSafeBrowsing"
+            android:value="true" />
         <meta-data
             android:name="com.google.android.gms.wallet.api.enabled"
             android:value="true" />

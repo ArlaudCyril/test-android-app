@@ -1446,8 +1446,7 @@ class CommonMethods {
         }
 
         fun isValidPassword(password: String): Boolean {
-            val passwordRegex =
-                Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@=#\$%^&*(),.?\":{}|<>])(?=\\S+\$).{10,}\$")
+    val passwordRegex = Regex("(?=.*[a-z])(?=.*[A-Z])(?=.*[^\\w]).{10,}")
             return passwordRegex.matches(password)
         }
 

@@ -34,10 +34,10 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
         super.onViewCreated(view, savedInstanceState)
         portfolioViewModel = getViewModel(requireActivity())
 
-        binding.btnInvestMoney.setOnClickListener(this)
+//        binding.btnInvestMoney.setOnClickListener(this)
         binding.tvFillPersonalData.setOnClickListener(this)
         binding.tvCreateAnAccount.setOnClickListener(this)
-        binding.btnMenu.setOnClickListener(this)
+//        binding.btnMenu.setOnClickListener(this)
 
         Log.d(TAG, "onViewCreated: ")
         setUpUi(App.prefsManager.portfolioCompletionStep)
@@ -48,6 +48,10 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
         Log.d(TAG, "setUpUi: $state")
 
         when (state) {
+            -1->{
+                binding.tvFillPersonalData.setOnClickListener(null)
+
+            }
             Constants.ACCOUNT_CREATING -> {
                 accountCreationFilled(false,true)
             personalDataFilled(personalDataFilled = false, false)
@@ -250,7 +254,10 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
                 findNavController().navigate(R.id.createPinFragment,bundle)
             }
             else->{
-
+                val bundle = Bundle().apply {
+                    putBoolean(Constants.FOR_LOGIN, false)
+                }
+                findNavController().navigate(R.id.createAccountFragment, bundle)
             }
         }
     }

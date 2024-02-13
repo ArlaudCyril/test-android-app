@@ -338,7 +338,7 @@
     <string name="crypto_asset_deposit">Crypto asset deposit</string>
     <string name="asset">Asset</string>
     <string name="_1_3_step_completed">⅓ step completed</string>
-    <string name="_0_3_step_completed">0 step completed</string>
+    <string name="_0_3_step_completed">0/3 steps completed</string>
     <string name="exchange_to">Exchange → To</string>
     <string name="exchange_to_">Exchange To</string>
     <string name="frequency">Frequency</string>
@@ -736,4 +736,5 @@
     <string name="doc_being_verified">Your document is being verified.</string>
     <string name="under_maintenance">Lyber is under\nmaintenance.\nCome back later!</string>
     <string name="what_do_you_plan_to_do">What do you plan to mainly do?</string>
+    <string name="registration">Registration</string>
 </resources>

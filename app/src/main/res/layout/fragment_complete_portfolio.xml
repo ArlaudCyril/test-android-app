@@ -13,22 +13,26 @@
         android:id="@+id/tvPortfolio"
         style="@style/SubTitleText"
         android:layout_marginStart="24dp"
-        android:text="@string/portfolio"
-        app:layout_constraintBottom_toTopOf="@id/tvPortfolioAmount"
+        android:text="@string/registration"
+        android:textColor="@color/purple_gray_800"
+        android:textStyle="bold"
+        android:layout_marginTop="68dp"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
-
-    <TextView
-        android:id="@+id/tvPortfolioAmount"
+    <ImageView
+        android:id="@+id/tvBackArrow"
         style="@style/HeadingStyle"
-        android:layout_marginStart="24dp"
-        android:gravity="top"
-        android:text="0.00€"
-        android:textSize="40sp"
-        app:layout_constraintBottom_toTopOf="@id/topGuide"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvPortfolio" />
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:padding="8dp"
+        android:src="@drawable/ic_back"
+        app:layout_constraintTop_toTopOf="@id/tvPortfolio"
+        app:layout_constraintBottom_toBottomOf="@id/tvPortfolio"
+        app:layout_constraintStart_toStartOf="parent" />
+
 
     <ImageView
         android:id="@+id/ivProfile"
@@ -115,8 +119,8 @@
                         android:layout_marginStart="12dp"
                         android:layout_marginTop="16dp"
                         android:background="@drawable/circle_drawable"
-                        android:backgroundTint="@color/purple_500"
-                         />
+                        android:backgroundTint="@color/purple_500" />
+
                     <TextView
                         android:id="@+id/tvNumFillCreateAccount"
                         style="@style/SubTitleText"
@@ -126,8 +130,9 @@
                         android:layout_marginStart="12dp"
                         android:layout_marginTop="16dp"
                         android:gravity="center"
-                        android:textColor="@color/white"
-                        android:text="1" />
+                        android:text="1"
+                        android:textColor="@color/white" />
+
                     <TextView
                         android:id="@+id/tvCreateAnAccount"
                         style="@style/SubTitleText"
@@ -135,11 +140,11 @@
                         android:layout_alignBottom="@id/ivCreateAccount"
                         android:layout_alignParentEnd="true"
                         android:layout_marginStart="12dp"
-                        android:textColor="@color/purple_500"
-                        app:drawableEndCompat="@drawable/ic_right_arrow_purple"
                         android:layout_toEndOf="@id/ivCreateAccount"
                         android:gravity="center_vertical"
-                        android:text="@string/create_an_account" />
+                        android:text="@string/create_an_account"
+                        android:textColor="@color/purple_500"
+                        app:drawableEndCompat="@drawable/ic_right_arrow_purple" />
 
 
                     <ImageView
@@ -151,11 +156,9 @@
                         android:layout_alignParentStart="true"
                         android:layout_marginVertical="36dp"
                         android:layout_marginStart="12dp"
-                        android:gravity="center"
-                        android:textColor="@color/black"
-                        tools:background="@drawable/circle_drawable"
-                        tools:backgroundTint="@color/white"
-                        tools:text="@string/_2" />
+                        android:background="@drawable/circle_drawable"
+                        android:backgroundTint="@color/white"
+                        android:gravity="center" />
 
 
                     <TextView
@@ -168,8 +171,8 @@
                         android:layout_marginVertical="36dp"
                         android:layout_marginStart="12dp"
                         android:gravity="center"
-                        android:textColor="@color/purple_gray_500"
-                        tools:text="@string/_2" />
+                        android:text="@string/_2"
+                        android:textColor="@color/purple_gray_500" />
 
                     <TextView
                         android:id="@+id/tvFillPersonalData"
@@ -181,22 +184,7 @@
                         android:layout_toEndOf="@id/ivFillPersonalData"
                         android:gravity="center_vertical"
                         android:text="@string/fill_personal_data"
-                        android:textColor="@color/purple_gray_500"
-                        />
-
-                    <!--                    <TextView-->
-                    <!--                        android:id="@+id/tvEditPersonalData"-->
-                    <!--                        android:visibility="gone"-->
-                    <!--                        style="@style/SubheadMabry"-->
-                    <!--                        android:layout_height="wrap_content"-->
-                    <!--                        android:layout_alignTop="@id/tvFillPersonalData"-->
-                    <!--                        android:layout_alignEnd="@id/tvFillPersonalData"-->
-                    <!--                        android:layout_alignBottom="@id/tvFillPersonalData"-->
-                    <!--                        android:gravity="center"-->
-                    <!--                        android:paddingHorizontal="4dp"-->
-                    <!--                        android:text="@string/edit"-->
-                    <!--                        android:textAppearance="@style/TextAppearance.AppCompat.Caption"-->
-                    <!--                        android:textColor="@color/purple_500" />-->
+                        android:textColor="@color/purple_gray_500" />
 
                     <ImageView
                         android:id="@+id/ivVerifyYourIdentity"
@@ -264,46 +252,18 @@
 
                     </LinearLayout>
 
-                    <!--<ImageView
-                        android:id="@+id/ivMakeFirstInvestment"
-                        style="@style/SubTitleText"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_below="@id/ivVerifyYourIdentity"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginStart="12dp"
-                        android:layout_marginBottom="20dp"
-                        android:background="@drawable/circle_drawable"
-                        android:backgroundTint="@color/white"
-                        android:gravity="center"
-                        android:text="@string/_4"
-                        android:textColor="@color/purple_gray_500" />
-
-                    <TextView
-                        android:id="@+id/tvNumMakeFirstInvestment"
-                        style="@style/SubTitleText"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_below="@id/ivVerifyYourIdentity"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginStart="12dp"
-                        android:layout_marginBottom="20dp"
-                        android:gravity="center"
-                        android:text="@string/_4"
-                        android:textColor="@color/purple_gray_500" />
-
-                    <TextView
-                        android:id="@+id/tvMakeFirstInvestment"
-                        style="@style/SubTitleText"
-                        android:layout_alignTop="@id/ivMakeFirstInvestment"
-                        android:layout_alignBottom="@id/ivMakeFirstInvestment"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginHorizontal="12dp"
-                        android:layout_toEndOf="@id/ivVerifyYourIdentity"
-                        android:gravity="center_vertical"
-                        android:text="@string/make_your_first_investment" />-->
 
                 </RelativeLayout>
+
+                <TextView
+                    android:id="@+id/tvBottomText"
+                    style="@style/SubheadMabry"
+                    android:layout_below="@id/rlStepCount"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="32dp"
+                    android:text="@string/progress_registration_saved_each_stage"
+                    android:textColor="@color/purple_gray_500" />
+
 
 
                 <ImageButton
@@ -367,6 +327,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_percent="0.20" />
+        app:layout_constraintGuide_percent="0.15" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

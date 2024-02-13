@@ -35,7 +35,8 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
 
     private lateinit var viewModel: PersonalDataViewModel
 
-    private val passwordRegex = Pattern.compile("^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[@$!%*?&])[A-Za-z\\d@$!%*?&]{10,}$")
+    private val passwordRegex = Pattern.compile("(?=.*[a-z])(?=.*[A-Z])(?=.*[^\\w]).{10,}")
+
     private var isPasswordOk = false
     override fun bind() = FragmentEmailAddressBinding.inflate(layoutInflater)
 
