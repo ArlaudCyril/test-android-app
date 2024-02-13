@@ -54,9 +54,9 @@ class WebViewFragment : BaseFragment<FragmentWebViewBinding>() {
             javaScriptCanOpenWindowsAutomatically = true
             mediaPlaybackRequiresUserGesture = false
             domStorageEnabled = true
-            builtInZoomControls = true
-            allowFileAccess = true
-            setSupportZoom(true)
+            builtInZoomControls = false
+            allowFileAccess = false
+            setSupportZoom(false)
         }
         binding.webView.loadUrl(url)
 
