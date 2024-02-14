@@ -13,6 +13,7 @@ import android.graphics.*
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.PictureDrawable
+import android.media.ExifInterface
 import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
@@ -33,6 +34,7 @@ import android.view.*
 import android.view.animation.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -50,7 +52,9 @@ import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
+import androidx.navigation.Navigation.findNavController
 import com.Lyber.R
+import com.Lyber.databinding.CustomDialogVerticalLayoutBinding
 import com.Lyber.databinding.ProgressBarBinding
 import com.Lyber.models.AssetBaseData
 import com.Lyber.models.Balance
@@ -64,10 +68,13 @@ import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.request.RequestOptions
 import com.github.mikephil.charting.data.Entry
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
 import okhttp3.ResponseBody
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
+import java.io.IOException
 import java.math.RoundingMode
 import java.text.DateFormat
 import java.text.DecimalFormat
@@ -345,7 +352,7 @@ class CommonMethods {
             return Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
         }
 
-        fun showErrorMessage(context: Context, responseBody: ResponseBody?) {
+        fun showErrorMessage(context: Context, responseBody: ResponseBody?, root: View) :Int{
 
             val errorConverter = RestClient.getRetrofitInstance()
                 .responseBodyConverter<ErrorResponse>(
@@ -354,8 +361,16 @@ class CommonMethods {
                 )
 
             val errorRes: ErrorResponse? = errorConverter.convert(responseBody!!)
-
-            if ((errorRes?.error ?: "").isNotEmpty()) {
+            if (errorRes?.code == 19002 || errorRes?.code == 19003) {
+                findNavController(root).navigate(R.id.underMaintenanceFragment)
+            }
+           else if (errorRes?.code == 7023 || errorRes?.code == 10041 || errorRes?.code == 7025 || errorRes?.code == 10043) {
+                return errorRes?.code
+            } else if (errorRes?.code == 7024 || errorRes?.code == 10042) {
+                showSnackBar(root,context)
+                return errorRes.code
+            } else
+                if ((errorRes?.error ?: "").isNotEmpty()) {
                 when (errorRes?.error) {
                     "Invalid UpdateExpression: Syntax error; token: \"0\", near: \", 0)\"" ->
                         "Invalid OTP".showToast(context)
@@ -366,11 +381,6 @@ class CommonMethods {
                     else -> errorRes?.error?.showToast(context)
                 }
             }
-
-//            if (errorRes?.message?.isNotEmpty() == true)
-//                errorRes.message.toString().showToast(context)
-//            else (errorRes?.error ?: "").showToast(context)
-
             if (errorRes?.error == "UNAUTHORIZED" || errorRes?.error == "Unauthorized") {
 
                 prefsManager.logout()
@@ -383,8 +393,8 @@ class CommonMethods {
                     }
 
                 ContextCompat.startActivity(context, intent, null)
-
             }
+            return 0
         }
 
         fun Long.is1DayOld(): Boolean {
@@ -1436,8 +1446,7 @@ class CommonMethods {
         }
 
         fun isValidPassword(password: String): Boolean {
-            val passwordRegex =
-                Regex("^(?=.*[a-z])(?=.*[A-Z])(?=.*[!@=#\$%^&*(),.?\":{}|<>])(?=\\S+\$).{10,}\$")
+    val passwordRegex = Regex("(?=.*[a-z])(?=.*[A-Z])(?=.*[^\\w]).{10,}")
             return passwordRegex.matches(password)
         }
 
@@ -1476,6 +1485,7 @@ class CommonMethods {
             val decimalFormat = DecimalFormat("#.##", DecimalFormatSymbols(Locale.ENGLISH))
             return decimalFormat.format(toDouble())
         }
+
         fun getDeviceLocale(context: Context): String {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 return context.resources.configuration.locales[0].country
@@ -1484,6 +1494,78 @@ class CommonMethods {
                 return ""
             }
         }
+
+        fun getfile(imgPath: String?): Bitmap? {
+            val mOrientation: Int
+            var bMapRotate: Bitmap? = null
+            try {
+                if (imgPath != null) {
+                    val exif = ExifInterface(imgPath)
+                    mOrientation = exif.getAttributeInt(ExifInterface.TAG_ORIENTATION, 1)
+
+                    val options = BitmapFactory.Options()
+                    options.inJustDecodeBounds = true
+                    BitmapFactory.decodeFile(imgPath, options)
+                    options.inSampleSize = calculateInSampleSize(options, 400, 400)
+                    options.inJustDecodeBounds = false
+                    bMapRotate = BitmapFactory.decodeFile(imgPath, options)
+                    if (mOrientation == 6) {
+                        val matrix = Matrix()
+                        matrix.postRotate(90f)
+                        bMapRotate = Bitmap.createBitmap(
+                            bMapRotate!!, 0, 0,
+                            bMapRotate.width, bMapRotate.height,
+                            matrix, true
+                        )
+                    } else if (mOrientation == 8) {
+                        val matrix = Matrix()
+                        matrix.postRotate(270f)
+                        bMapRotate = Bitmap.createBitmap(
+                            bMapRotate!!, 0, 0,
+                            bMapRotate.width, bMapRotate.height,
+                            matrix, true
+                        )
+                    } else if (mOrientation == 3) {
+                        val matrix = Matrix()
+                        matrix.postRotate(180f)
+                        bMapRotate = Bitmap.createBitmap(
+                            bMapRotate!!, 0, 0,
+                            bMapRotate.width, bMapRotate.height,
+                            matrix, true
+                        )
+                    }
+                }
+            } catch (e: OutOfMemoryError) {
+                bMapRotate = null
+                e.printStackTrace()
+            } catch (e: IOException) {
+                e.printStackTrace()
+            } catch (e: Exception) {
+                bMapRotate = null
+                e.printStackTrace()
+            }
+            return bMapRotate
+        }
+ fun showSnackBar(root: View,context: Context){
+     val snackbar = Snackbar.make(root, "", Snackbar.LENGTH_LONG)
+     val params = snackbar.view.layoutParams as FrameLayout.LayoutParams
+     params.gravity = Gravity.TOP
+     params.setMargins(0, 0, 0, 0)
+     snackbar.view.layoutParams = params
+     snackbar.animationMode = BaseTransientBottomBar.ANIMATION_MODE_FADE
+     val layout = snackbar.view as Snackbar.SnackbarLayout
+     val textView =
+         layout.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+     textView.visibility = View.INVISIBLE
+     val snackView =
+         LayoutInflater.from(context).inflate(R.layout.custom_snackbar, null)
+     val textViewMsg = snackView.findViewById<TextView>(R.id.tvMsg)
+     textViewMsg.text = context.getString(R.string.kyc_under_verification)
+     layout.setPadding(0, 0, 0, 0)
+     layout.addView(snackView, 0)
+     snackbar.show()
+ }
+
     }
 }
 

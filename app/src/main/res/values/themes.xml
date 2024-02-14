@@ -106,8 +106,7 @@
     <style name="TitleText">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
-        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Headline5
-        </item>
+        <item name="android:textAppearance">@style/TextAppearance.MaterialComponents.Headline5</item>
         <item name="fontFamily">@font/atypdisplay_medium</item>
         <item name="android:textColor">@color/purple_gray_900</item>
     </style>

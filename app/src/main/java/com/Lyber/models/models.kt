@@ -13,7 +13,8 @@ data class ErrorResponse(
     val success: String,
     val error: String,
     val message: String,
-    val type: String
+    val type: String,
+    val code: Int
 )
 
 data class CommonResponse(val success: String, val message: String, val withdrawalId: String)
@@ -658,7 +659,10 @@ data class User(
     val type2FA: String,
     val verified: Boolean,
     val withdrawalLock: String,
-    val zipCode: String
+    val zipCode: String,
+    val binanceAccountId: String,
+    val kycStatus: String,
+    val yousignStatus: String
 )
 
 data class JWTPayload(
@@ -828,4 +832,11 @@ data class ActivityLogs(
 data class ActivityLogsData(
     val date: String,
     val log: String
+)
+data class SignURlResponse(
+    val `data`: SignURl
+)
+
+data class SignURl(
+    val url: String
 )

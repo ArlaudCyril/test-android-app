@@ -20,7 +20,7 @@ object Constants {
 
     /* steps fill personal data */
     const val ACCOUNT_INITIALIZATION = 0
-    const val PERSONAL_DATA = 1
+//    const val PERSONAL_DATA = 1
     const val EMAIL_ADDRESS = 2
     const val EMAIL_VERIFIED = 3
     const val ADDRESS = 4
@@ -212,4 +212,8 @@ object Constants {
     const val ENGLISH="EN"
     const val ACTION_CLOSE_ACCOUNT = "close-account"
 
+    const val GENERAL_TERMS_CONDITIONS="https://www.lyber.com/terms-conditions"
+    const val PRIVACY_URL="https://www.lyber.com/privacy"
+
+    const val API_VERSION = "0.1"
 }

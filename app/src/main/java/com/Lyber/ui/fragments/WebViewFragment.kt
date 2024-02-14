@@ -7,8 +7,6 @@ import android.content.Intent
 import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.provider.Settings
 import android.util.Log
 import android.view.View
@@ -22,8 +20,6 @@ import androidx.fragment.app.FragmentActivity
 import com.Lyber.R
 import com.Lyber.databinding.CustomDialogLayoutBinding
 import com.Lyber.databinding.FragmentWebViewBinding
-import com.Lyber.ui.activities.SplashActivity
-import com.Lyber.utils.ActivityCallbacks
 import com.Lyber.utils.CommonMethods.Companion.checkPermission
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
@@ -31,7 +27,7 @@ import com.Lyber.utils.CommonMethods.Companion.postDelay
 import com.Lyber.utils.CommonMethods.Companion.shouldShowPermission
 import com.Lyber.viewmodels.VerifyIdentityViewModel
 
-class WebViewFragment : BaseFragment<FragmentWebViewBinding>(), ActivityCallbacks {
+class WebViewFragment : BaseFragment<FragmentWebViewBinding>() {
 
     private var url: String = ""
     private lateinit var viewModel: VerifyIdentityViewModel
@@ -50,23 +46,17 @@ class WebViewFragment : BaseFragment<FragmentWebViewBinding>(), ActivityCallback
         super.onViewCreated(view, savedInstanceState)
         viewModel = getViewModel(this)
         viewModel.listener = this
-
-        viewModel.treezorStatusResponse.observe(viewLifecycleOwner) {
-            dismissProgressDialog()
-            requireActivity().supportFragmentManager.popBackStack()
-        }
-
-        com.Lyber.ui.activities.SplashActivity.activityCallbacks = this
         binding.webView.webViewClient = WebClient()
         binding.webView.webChromeClient = ChromeClient(requireActivity())
+
         with(binding.webView.settings) {
             javaScriptEnabled = true
             javaScriptCanOpenWindowsAutomatically = true
             mediaPlaybackRequiresUserGesture = false
             domStorageEnabled = true
-            builtInZoomControls = true
-            allowFileAccess = true
-            setSupportZoom(true)
+            builtInZoomControls = false
+            allowFileAccess = false
+            setSupportZoom(false)
         }
         binding.webView.loadUrl(url)
 
@@ -244,16 +234,15 @@ class WebViewFragment : BaseFragment<FragmentWebViewBinding>(), ActivityCallback
         }
     }
 
-    override fun onBackPressed(): Boolean {
-        return if (binding.webView.canGoBack()) {
-            binding.webView.goBack()
-            false
-        } else true
-    }
+//    override fun onBackPressed(): Boolean {
+//        return if (binding.webView.canGoBack()) {
+//            binding.webView.goBack()
+//            false
+//        } else true
+//    }
 
     override fun onDestroyView() {
         super.onDestroyView()
-        com.Lyber.ui.activities.SplashActivity.activityCallbacks = null
     }
 
 }

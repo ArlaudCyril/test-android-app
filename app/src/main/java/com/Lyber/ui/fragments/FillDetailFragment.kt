@@ -13,6 +13,7 @@ import com.Lyber.R
 import com.Lyber.databinding.CustomDialogLayoutBinding
 import com.Lyber.databinding.FragmentTestFillDetailBinding
 import com.Lyber.utils.ActivityCallbacks
+import com.Lyber.utils.App
 import com.Lyber.utils.App.Companion.prefsManager
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.add
@@ -36,7 +37,7 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
 
     private val fragmentList
         get() = listOf(
-            PersonalDataFragment(),
+//            PersonalDataFragment(),
             AddressFragment(),
             InvestmentExperienceFragment()
         )
@@ -74,8 +75,8 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
         viewModel.setUserInfoResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
-                prefsManager.personalDataSteps = Constants.PERSONAL_DATA
-                moveToNext()
+//                prefsManager.personalDataSteps = Constants.PERSONAL_DATA
+//                moveToNext()
             }
         }
 
@@ -133,9 +134,9 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
             position =
                 when (prefsManager.personalDataSteps) {
                     Constants.ACCOUNT_INITIALIZATION -> 0
-                    Constants.PERSONAL_DATA -> 1
-                    Constants.ADDRESS -> 2
-                    Constants.INVESTMENT_EXP -> 3
+//                    Constants.PERSONAL_DATA -> 1
+                    Constants.ADDRESS -> 1
+                    Constants.INVESTMENT_EXP -> 2
                     else -> 0
                 }
         }
@@ -144,20 +145,20 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
 
     }
 
-    fun setUpViews(position: Int) {
+    fun setUpViews(pos: Int) {
 
         /* indicators */
         binding.llIndicators.let {
             for (i in 0 until it.childCount) {
                 val child: ImageView = it.getChildAt(i) as ImageView
-                if (position == i) child.setImageResource(R.drawable.page_selected_indicator)
+                if (pos == i) child.setImageResource(R.drawable.page_selected_indicator)
                 else child.setImageResource(R.drawable.indicator_unselected)
             }
         }
 
         /* top action image */
 
-        when (position) {
+        when (pos) {
             0 -> binding.ivTopAction.gone()
             else -> {
                 binding.ivTopAction.visible()
@@ -165,7 +166,7 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
         }
 
         /* button text view */
-        binding.btnCommon.text = when (position) {
+        binding.btnCommon.text = when (pos) {
             3 -> getString(R.string.send_to_lyber)
             else -> getString(R.string.next)
         }
@@ -177,15 +178,15 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
         if (toEdit.isNotEmpty()) {
 
             when (position) {
-                2 -> {
+                1 -> {
                     position++
-                    if (childFragmentManager.backStackEntryCount == 2) {
+                    if (childFragmentManager.backStackEntryCount == 1) {
                         childFragmentManager.popBackStack()
                     }
                     replace(R.id.flFillPersonalData, fragmentList[position])
                 }
 
-                in 0..3 -> {
+                in 0..2 -> {
                     position++
                     replace(R.id.flFillPersonalData, fragmentList[position])
                 }
@@ -212,25 +213,16 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
             2 -> {
 
                 position++
-                childFragmentManager.popBackStack(
-                    null, FragmentManager.POP_BACK_STACK_INCLUSIVE
-                )
-                replace(R.id.flFillPersonalData, fragmentList[position], false)
-
-            }
-
-            3 -> {
-
-                position++
                 replace(R.id.flFillPersonalData, fragmentList[position], true)
 
             }
 
-            4 -> {
-                checkInternet(requireContext()) {
-                    showProgressDialog(requireContext())
-                    viewModel.finishRegistration()
-                }
+            3 -> {
+                //TODO check if in use ornot
+//                checkInternet(requireContext()) {
+//                    showProgressDialog(requireContext())
+//                    viewModel.finishRegistration()
+//                }
             }
 
         }
@@ -308,62 +300,27 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
         val fragment = childFragmentManager.findFragmentById(R.id.flFillPersonalData)
 
         when (position) {
-
-            0 -> (fragment as PersonalDataFragment).let {
-                if (it.checkData()) {
-                    if (toEdit.isEmpty()) {
-                        checkInternet(requireContext()) {
-                            showProgressDialog(requireContext())
-                            viewModel.setUserInfo(
-                                viewModel.firstName,
-                                viewModel.lastName,
-                                viewModel.birthPlace,
-                                viewModel.birthDate,
-                                viewModel.birthCountry,
-                                viewModel.nationality,
-                                viewModel.specifiedUsPerson == 1
-                            )
-
-                        }
-                    } else {
-                        checkInternet(requireContext()) {
-                            showProgressDialog(requireContext())
-                            viewModel.setUserInfo(
-                                viewModel.firstName,
-                                viewModel.lastName,
-                                viewModel.birthPlace,
-                                viewModel.birthDate,
-                                viewModel.birthCountry,
-                                viewModel.nationality,
-                                viewModel.specifiedUsPerson == 1
-                            )
-                        }
-                    }
-                }
-            }
-
-
-            1 -> (fragment as AddressFragment).let {
-
+            0 -> (fragment as AddressFragment).let {
                 if (it.checkData()) {
 
                     checkInternet(requireContext()) {
                         showProgressDialog(requireContext())
+                        viewModel.setUserInfo(requireContext())
                         viewModel.setUserAddress(
                             viewModel.streetNumber,
                             viewModel.buildingFloorName,
                             viewModel.city,
                             viewModel.state,
                             viewModel.zipCode,
-                            viewModel.country
+                            viewModel.country,false
                         )
                     }
 
                 }
             }
 
-            2 -> (fragment as InvestmentExperienceFragment).let {
-                if (it.checkData()) {
+            1 -> (fragment as InvestmentExperienceFragment).let {
+               if (it.checkData()) {
                     checkInternet(requireContext()) {
                         showProgressDialog(requireContext())
                         viewModel.setInvestmentExp(
