@@ -802,7 +802,7 @@ class CommonMethods {
 //            }
         val <T> T.commaFormatted: String
             get() = when (this) {
-                is Number -> String.format(Locale.US, "%,d", this.toLong())
+                is Number ->  String.format(Locale.US, "%,.2f", this)
                 is String -> toDoubleOrNull()?.let { String.format(Locale.US, "%,.2f", it) } ?: "0"
                 is Char -> this.toString()
                 else -> "0"
@@ -1181,7 +1181,12 @@ class CommonMethods {
 
         val ImageView.setProfile: Unit
             get() = kotlin.run {
-                setImageResource(Constants.defaults[prefsManager.defaultImage])
+                val matchingAvatar = Constants.defaults.find { it.avatar_name == prefsManager.defaultImage }
+                matchingAvatar?.let {
+                    val drawableResId = it.avatar_is
+                    setImageResource(drawableResId)
+                }
+//                setImageResource(Constants.defaults[prefsManager.defaultImage])
             }
 
         val List<List<Double>>.lineData: MutableList<Float>

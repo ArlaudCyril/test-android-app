@@ -232,11 +232,19 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 dismissProgressDialog()
                 val balanceDataDict = it.data
                 val balances = ArrayList<Balance>()
-                balanceDataDict?.forEach {
+                val forEach = balanceDataDict?.forEach {
                     val balance = Balance(id = it.key, balanceData = it.value)
                     balances.add(balance)
                 }
+                var totalBalance = 0.0
+                for (i in it.data)
+                    totalBalance += i.value.euroBalance.toDoubleOrNull()!!
+                viewModel.totalPortfolio = totalBalance
+                binding.tvValuePortfolioAndAssetPrice.text =
+                    "${totalBalance.commaFormatted}${Constants.EURO}"
+                binding.lineChart.timeSeries = getLineData(viewModel.totalPortfolio)
                 com.Lyber.ui.activities.BaseActivity.balances = balances
+                balances.sortByDescending { it.balanceData.euroBalance.toDoubleOrNull() }
                 adapterBalance.setList(balances)
             }
         }
@@ -258,6 +266,8 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
                 App.prefsManager.user = it.data
+                App.prefsManager.defaultImage=it.data.avatar
+                binding.ivProfile.setProfile
                 if (it.data.language.isNotEmpty()) {
                     App.prefsManager.setLanguage(it.data.language)
                     val locale = Locale(it.data.language)

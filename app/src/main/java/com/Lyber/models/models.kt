@@ -829,3 +829,7 @@ data class ActivityLogsData(
     val date: String,
     val log: String
 )
+data class AvatarData(
+    val avatar_name: String,
+    val avatar_is: Int
+)
