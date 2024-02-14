@@ -88,6 +88,7 @@ object RestClient {
                 "Bearer " + prefsManager.accessToken
 //                prefs.getUserProfile().data.access_token
             )
+                .header("x-api-version", Constants.API_VERSION)
             val build = header.build()
             chain.proceed(build)
         }

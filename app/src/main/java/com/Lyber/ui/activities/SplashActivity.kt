@@ -1,7 +1,6 @@
 package com.Lyber.ui.activities
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.net.Uri

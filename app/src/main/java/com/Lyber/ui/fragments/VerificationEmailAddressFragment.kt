@@ -14,7 +14,9 @@ import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.viewmodels.PersonalDataViewModel
-
+/*
+    **Not in use right not
+ */
 class VerificationEmailAddressFragment : BaseFragment<FragmentVerificationEmailBinding>() {
 
     private lateinit var viewModel: PersonalDataViewModel

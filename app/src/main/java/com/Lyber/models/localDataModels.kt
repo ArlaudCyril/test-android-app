@@ -15,7 +15,10 @@ data class AddressDataLocal(var streetNumber:String,
                              var city :String,
                              val zipCode : String,
                              val country : String,
-                             val state :String)
+                             val state :String,
+                             val specifiedUsPerson :String)
 
 data class InvestmentExperienceLocal(val investmentExperience:String,val sourceOfIncome:String,val workIndustry:String,
     val annualIncome:String,val activity:String)
+data class InvestmentExperienceLocalIds(val investmentExperience:Int,val sourceOfIncome:Int,val workIndustry:Int,
+    val annualIncome:Int,val activity:Int)

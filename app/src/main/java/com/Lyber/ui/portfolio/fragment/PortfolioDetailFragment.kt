@@ -17,6 +17,7 @@ import android.view.Window
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
+import android.widget.LinearLayout
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
@@ -24,6 +25,8 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.Lyber.R
 import com.Lyber.databinding.CustomDialogLayoutBinding
+import com.Lyber.databinding.CustomDialogVerticalLayoutBinding
+import com.Lyber.databinding.DocumentBeingVerifiedBinding
 import com.Lyber.databinding.FragmentPortfolioDetailBinding
 import com.Lyber.databinding.LottieViewBinding
 import com.Lyber.models.Balance
@@ -43,6 +46,7 @@ import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.commaFormatted
 import com.Lyber.utils.CommonMethods.Companion.currencyFormatted
 import com.Lyber.utils.CommonMethods.Companion.formattedAsset
+import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
 import com.Lyber.utils.CommonMethods.Companion.replaceFragment
 import com.Lyber.utils.CommonMethods.Companion.setBackgroundTint
@@ -54,6 +58,7 @@ import com.Lyber.utils.ItemOffsetDecoration
 import com.airbnb.lottie.LottieAnimationView
 import com.github.jinatonic.confetti.CommonConfetti
 import com.github.jinatonic.confetti.ConfettiManager
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.tabs.TabLayout
 import okhttp3.OkHttpClient
 import okhttp3.Request
@@ -194,7 +199,6 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             "${viewModel.totalPortfolio.commaFormatted}${Constants.EURO}"
 
         addObservers()
-
         CommonMethods.checkInternet(requireContext()) {
 
             if (arguments != null && requireArguments().containsKey(Constants.ORDER_ID)) {
@@ -447,8 +451,8 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
     }
 
     private fun showDialog() {
-        Dialog(requireActivity(), R.style.DialogTheme).apply {
-            CustomDialogLayoutBinding.inflate(layoutInflater).let {
+        BottomSheetDialog(requireContext(), R.style.CustomDialogBottomSheet).apply {
+            CustomDialogVerticalLayoutBinding.inflate(layoutInflater).let {
                 requestWindowFeature(Window.FEATURE_NO_TITLE)
                 setCancelable(false)
                 setCanceledOnTouchOutside(false)
@@ -723,4 +727,5 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         // Code to remove the overlay view from the parent fragment's layout
         binding.screenContent.removeView(grayOverlay)
     }
+
 }
