@@ -49,7 +49,7 @@
                     android:layout_alignBottom="@id/tvValuePortfolioAndAssetPrice"
                     android:layout_alignParentEnd="true"
                     android:background="@drawable/circle_stroke_profile"
-                    android:padding="4dp" />
+                    android:padding="8dp" />
 
             </RelativeLayout>
 

@@ -115,7 +115,7 @@ class PortfolioViewModel : NetworkViewModel() {
 
 
 
-    private var _totalPortfolio: Double = 100.0
+    private var _totalPortfolio: Double = 0.0
     var totalPortfolio
         get() = _totalPortfolio
         set(value) {

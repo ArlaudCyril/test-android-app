@@ -67,7 +67,7 @@
                     android:layout_alignParentEnd="true"
                     android:layout_centerVertical="true"
                     android:background="@drawable/circle_stroke_profile"
-                    android:padding="4dp" />
+                    android:padding="8dp" />
 
 
             </RelativeLayout>

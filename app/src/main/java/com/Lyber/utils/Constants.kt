@@ -2,17 +2,18 @@ package com.Lyber.utils
 
 import android.accounts.Account
 import com.Lyber.R
+import com.Lyber.models.AvatarData
 
 object Constants {
 
-    const val USING_BUY: String ="buy"
+    const val USING_BUY: String = "buy"
     const val IS_CHANGE_PIN: String = "changePin"
     const val FREQUENCY: String = "frequency"
     const val AMOUNT: String = "amount"
-    const val URL: String="KYCURL"
+    const val URL: String = "KYCURL"
     const val IS_REVIEW: String = "isReview"
     const val ORDER_ID: String = "order_id"
-    const val ID: String ="ID"
+    const val ID: String = "ID"
     const val LOADING: Int = 0
     const val LOADING_SUCCESS: Int = 1
     const val LOADING_FAILURE: Int = 2
@@ -102,56 +103,56 @@ object Constants {
     const val ONE_TIME = "oneTime"
 
 
-    val defaults = mutableListOf<Int>().apply {
-        add(R.drawable.one)
-        add(R.drawable.two)
-        add(R.drawable.three)
-        add(R.drawable.four)
-        add(R.drawable.five)
-        add(R.drawable.six)
-        add(R.drawable.seven)
-        add(R.drawable.eight)
-        add(R.drawable.nine)
-        add(R.drawable.ten)
-        add(R.drawable.eleven)
-        add(R.drawable.twelve)
-        add(R.drawable.thirteen)
-        add(R.drawable.fourteen)
-        add(R.drawable.fifteen)
-        add(R.drawable.sixteen)
-        add(R.drawable.seventeen)
-        add(R.drawable.eighteen)
-        add(R.drawable.nineteen)
-        add(R.drawable.twenty)
-        add(R.drawable.twenty_one)
-        add(R.drawable.twenty_two)
-        add(R.drawable.twenty_three)
-        add(R.drawable.twenty_four)
-        add(R.drawable.twenty_five)
-        add(R.drawable.twenty_six)
-        add(R.drawable.twenty_seven)
-        add(R.drawable.twenty_eight)
-        add(R.drawable.twenty_nine)
-        add(R.drawable.thirty)
-        add(R.drawable.thirty_one)
-        add(R.drawable.thirty_two)
-        add(R.drawable.thirty_three)
-        add(R.drawable.thirty_four)
-        add(R.drawable.thirty_five)
-        add(R.drawable.thirty_six)
-        add(R.drawable.thirty_seven)
-        add(R.drawable.thirty_eight)
-        add(R.drawable.thirty_nine)
-        add(R.drawable.fourty)
+    val defaults = mutableListOf<AvatarData>().apply {
+        add(AvatarData(CHIMPANZEE, R.drawable.one))
+        add(AvatarData(MONKEY, R.drawable.two))
+        add(AvatarData(GORILLA, R.drawable.three))
+        add(AvatarData(ORANGUTAN, R.drawable.four))
+        add(AvatarData(DOG, R.drawable.five))
+        add(AvatarData(SHIBA, R.drawable.six))
+        add(AvatarData(POODLE, R.drawable.seven))
+        add(AvatarData(WOLF, R.drawable.eight))
+        add(AvatarData(FOX, R.drawable.nine))
+        add(AvatarData(RACCOON, R.drawable.ten))
+        add(AvatarData(CAT, R.drawable.eleven))
+        add(AvatarData(TIGER_CAT, R.drawable.twelve))
+        add(AvatarData(LEO, R.drawable.thirteen))
+        add(AvatarData(CHEETAH, R.drawable.fourteen))
+        add(AvatarData(UNICORN, R.drawable.fifteen))
+        add(AvatarData(COW_HEAD, R.drawable.sixteen))
+        add(AvatarData(COW, R.drawable.seventeen))
+        add(AvatarData(PIG, R.drawable.eighteen))
+        add(AvatarData(BOAR, R.drawable.nineteen))
+        add(AvatarData(GIRAFFE, R.drawable.twenty))
+        add(AvatarData(ELEPHANT, R.drawable.twenty_one))
+        add(AvatarData(MOUSE, R.drawable.twenty_two))
+        add(AvatarData(HAMSTER, R.drawable.twenty_three))
+        add(AvatarData(RABBIT_HEAD, R.drawable.twenty_four))
+        add(AvatarData(RABBIT, R.drawable.twenty_five))
+        add(AvatarData(SQUIRREL, R.drawable.twenty_six))
+        add(AvatarData(HEDGEHOG, R.drawable.twenty_seven))
+        add(AvatarData(BAT, R.drawable.twenty_eight))
+        add(AvatarData(BEAR_HEAD, R.drawable.twenty_nine))
+        add(AvatarData(SLOTH, R.drawable.thirty))
+        add(AvatarData(PANDA, R.drawable.thirty_one))
+        add(AvatarData(KANGAROO, R.drawable.thirty_two))
+        add(AvatarData(BADGER, R.drawable.thirty_three))
+        add(AvatarData(CHICKEN, R.drawable.thirty_four))
+        add(AvatarData(CHICK_EGG, R.drawable.thirty_five))
+        add(AvatarData(CHICK_HEAD, R.drawable.thirty_six))
+        add(AvatarData(CHICK, R.drawable.thirty_seven))
+        add(AvatarData(PINGUIN, R.drawable.thirty_eight))
+        add(AvatarData(OWL, R.drawable.thirty_nine))
+        add(AvatarData(FROG, R.drawable.fourty))
     }
 
     val colors = mutableListOf<Int>().apply {
         add(R.color.purple_800)
-       add(R.color.purple_700)
+        add(R.color.purple_700)
         add(R.color.purple_600)
         add(R.color.purple_500)
         add(R.color.purple_400)
-       add(R.color.purple_300)
+        add(R.color.purple_300)
         add(R.color.purple_200)
         add(R.color.purple_100)
         add(R.color.purple_00)
@@ -191,25 +192,66 @@ object Constants {
     const val CAP_RANGE = "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
     const val POPUP_HEIGHT = 400
 
-    const val LOGIN="login"
-    const val WITHDRAWAL="withdrawal"
-    const val WHITELISTING="whitelisting"
-    const val GOOGLE="google"
-    const val PHONE="phone"
-    const val EMAIL="email"
-    const val SCOPE="scope"
-    const val WITHDRAW="withdraw"
+    const val LOGIN = "login"
+    const val WITHDRAWAL = "withdrawal"
+    const val WHITELISTING = "whitelisting"
+    const val GOOGLE = "google"
+    const val PHONE = "phone"
+    const val EMAIL = "email"
+    const val SCOPE = "scope"
+    const val WITHDRAW = "withdraw"
 
-    const val FAILURE="FAILURE"
-    const val ORDER="order"
-    const val STRATEGY="strategy"
-    const val DEPOSIT="deposit"
-    const val SELECTED_LANGUAGE="selectedLanguage"
+    const val FAILURE = "FAILURE"
+    const val ORDER = "order"
+    const val STRATEGY = "strategy"
+    const val DEPOSIT = "deposit"
+    const val SELECTED_LANGUAGE = "selectedLanguage"
 
-    const val CHANGE_PASSWORD="changePassword"
+    const val CHANGE_PASSWORD = "changePassword"
 
-    const val FRENCH="FR"
-    const val ENGLISH="EN"
+    const val FRENCH = "FR"
+    const val ENGLISH = "EN"
     const val ACTION_CLOSE_ACCOUNT = "close-account"
+
+    const val BADGER = "badger"
+    const val BAT = "bat"
+    const val BEAR_HEAD = "bear_head"
+    const val BOAR = "boar"
+    const val CAT = "cat"
+    const val CHEETAH = "cheetah"
+    const val CHICK_EGG = "chick_egg"
+    const val CHICK_HEAD = "chick_head"
+    const val CHICK = "chick"
+    const val CHICKEN = "chicken"
+    const val CHIMPANZEE = "chimpanzee"
+    const val COW_HEAD = "cow_head"
+    const val COW = "cow"
+    const val DOG = "dog"
+    const val ELEPHANT = "elephant"
+    const val FOX = "fox"
+    const val FROG = "frog"
+    const val GIRAFFE = "giraffe"
+    const val GORILLA = "gorilla"
+    const val HAMSTER = "hamster"
+    const val HEDGEHOG = "hedgehog"
+    const val KANGAROO = "kangaroo"
+    const val LEO = "leo"
+    const val MONKEY = "monkey"
+    const val MOUSE = "mouse"
+    const val ORANGUTAN = "orangutan"
+    const val OWL = "owl"
+    const val PANDA = "panda"
+    const val PIG = "pig"
+    const val PINGUIN = "pinguin"
+    const val POODLE = "poodle"
+    const val RABBIT_HEAD = "rabbit_head"
+    const val RABBIT = "rabbit"
+    const val RACCOON = "raccoon"
+    const val SHIBA = "shiba"
+    const val SLOTH = "sloth"
+    const val SQUIRREL = "squirrel"
+    const val TIGER_CAT = "tiger_cat"
+    const val UNICORN = "unicorn"
+    const val WOLF = "wolf"
 
 }

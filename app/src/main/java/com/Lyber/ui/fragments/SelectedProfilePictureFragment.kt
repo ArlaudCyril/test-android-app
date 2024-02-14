@@ -11,21 +11,31 @@ import com.Lyber.utils.Constants
 
 class SelectedProfilePictureFragment : BaseFragment<FragmentSelectedProfilePictureBinding>() {
 
-    private var profilePIc: Int = 0
+    private var profilePIc: String = ""
     private lateinit var viewModel: PortfolioViewModel
     override fun bind() = FragmentSelectedProfilePictureBinding.inflate(layoutInflater)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
-            profilePIc = it.getInt(PROFILE_PIC, 0)
+            profilePIc = it.getString(PROFILE_PIC, "")
         }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = CommonMethods.getViewModel(requireActivity())
-        binding.ivProfile.setImageResource(Constants.defaults[profilePIc])
+        val matchingAvatar = Constants.defaults.find { it.avatar_name == profilePIc }
+
+// If matchingAvatar is not null, set the drawable
+        matchingAvatar?.let {
+            // Use the drawable resource ID
+            val drawableResId = it.avatar_is
+
+            binding.ivProfile.setImageResource(drawableResId)
+            // Now you can set the drawable wherever needed
+        }
+//        binding.ivProfile.setImageResource(Constants.defaults[profilePIc])
         binding.ivTopAction.setOnClickListener {
             requireActivity().supportFragmentManager.popBackStack()
             //requireActivity().supportFragmentManager.popBackStack()
@@ -53,10 +63,10 @@ class SelectedProfilePictureFragment : BaseFragment<FragmentSelectedProfilePictu
 
         private const val PROFILE_PIC = "profilePic"
 
-        fun get(profilePic: Int): SelectedProfilePictureFragment {
+        fun get(profilePic: String): SelectedProfilePictureFragment {
             return SelectedProfilePictureFragment().apply {
                 arguments = Bundle().apply {
-                    putInt(PROFILE_PIC, profilePic)
+                    putString(PROFILE_PIC, profilePic)
                 }
             }
         }

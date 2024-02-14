@@ -12,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.Lyber.R
 import com.Lyber.databinding.FragmentDefaultPicBinding
 import com.Lyber.databinding.LoaderViewBinding
+import com.Lyber.models.AvatarData
 import com.Lyber.ui.adapters.BaseAdapter
 import com.Lyber.utils.CommonMethods.Companion.replaceFragment
 import com.Lyber.utils.Constants
@@ -47,9 +48,9 @@ class DefaultImagesFragment : BaseFragment<FragmentDefaultPicBinding>() {
         }
     }
 
-    private fun itemClicked(imageRes: Int) {
+    private fun itemClicked(imageRes: String) {
         val bundle = Bundle().apply {
-            putInt("profilePic",imageRes)
+            putString("profilePic",imageRes)
         }
         findNavController().navigate(R.id.selectedProfilePictureFragment,bundle)
         /*requireActivity().replaceFragment(
@@ -58,8 +59,8 @@ class DefaultImagesFragment : BaseFragment<FragmentDefaultPicBinding>() {
         )*/
     }
 
-    private class ImageAdapter(private val itemClicked: (Int) -> Unit = { _ -> }) :
-        BaseAdapter<Int>() {
+    private class ImageAdapter(private val itemClicked: (String) -> Unit = { _ -> }) :
+        BaseAdapter<AvatarData>() {
 
         override fun getItemViewType(position: Int): Int {
             return if (itemList[position] == null) LOADER_VIEW else ORDINARY_VIEW
@@ -69,7 +70,7 @@ class DefaultImagesFragment : BaseFragment<FragmentDefaultPicBinding>() {
             RecyclerView.ViewHolder(imageView) {
             init {
                 imageView.setOnClickListener {
-                    itemClicked(adapterPosition)
+                    itemClicked(itemList[absoluteAdapterPosition]!!.avatar_name)
                 }
             }
         }
@@ -93,7 +94,7 @@ class DefaultImagesFragment : BaseFragment<FragmentDefaultPicBinding>() {
                 LOADER_VIEW -> {}
                 else -> {
                     itemList[position]?.let {
-                        (holder as ImageViewHolder).imageView.setImageResource(it)
+                        (holder as ImageViewHolder).imageView.setImageResource(it.avatar_is)
                     }
                 }
             }
