@@ -34,10 +34,11 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
         super.onViewCreated(view, savedInstanceState)
         portfolioViewModel = getViewModel(requireActivity())
 
-        binding.btnInvestMoney.setOnClickListener(this)
+//        binding.btnInvestMoney.setOnClickListener(this)
         binding.tvFillPersonalData.setOnClickListener(this)
         binding.tvCreateAnAccount.setOnClickListener(this)
-        binding.btnMenu.setOnClickListener(this)
+        binding.tvBackArrow.setOnClickListener(this)
+//        binding.btnMenu.setOnClickListener(this)
 
         Log.d(TAG, "onViewCreated: ")
         setUpUi(App.prefsManager.portfolioCompletionStep)
@@ -48,6 +49,10 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
         Log.d(TAG, "setUpUi: $state")
 
         when (state) {
+            -1->{
+                binding.tvFillPersonalData.setOnClickListener(null)
+
+            }
             Constants.ACCOUNT_CREATING -> {
                 accountCreationFilled(false,true)
             personalDataFilled(personalDataFilled = false, false)
@@ -84,10 +89,11 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
                     } else
                         progressSteps.progress = 60
 
-                tvStepsCompleted.text = getString(R.string._2_3_steps_completed)
+                tvStepsCompleted.text = getString(R.string._1_3_steps_completed)
 
                 tvNumFillCreateAccount.gone()
                 tvNumFillCreateAccount.setOnClickListener(null)
+                tvCreateAnAccount.setOnClickListener(null)
                 ivCreateAccount.setImageResource(R.drawable.drawable_circle_checked)
                 tvCreateAnAccount.strikeText()
                 tvCreateAnAccount.setCompoundDrawables(null, null, null, null)
@@ -135,6 +141,7 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
                         progressSteps.progress = 30
                     tvNumFillCreateAccount.gone()
                     tvNumFillPersonalData.visible()
+                    tvCreateAnAccount.setOnClickListener(null)
                     tvFillPersonalData.setOnClickListener(this@CompletePortfolioFragment)
                     ivFillPersonalData.setBackgroundResource(R.drawable.circle_drawable_purple_500)
                     tvNumFillPersonalData.text = getString(R.string._2)
@@ -160,12 +167,14 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
                     progressSteps.setProgress(60, true)
                 } else
                     progressSteps.progress = 60
+            tvStepsCompleted.text = getString(R.string._2_3_steps_completed)
 
             ivVerifyYourIdentity.setImageResource(R.drawable.circle_drawable_purple_500)
             tvNumVerifyYourIdentity.setTextColor(requireContext().getColor(R.color.white))
             tvNumVerifyYourIdentity.text = getString(R.string._3)
 
             tvVerifyYourIdentity.setTextColor(requireContext().getColor(R.color.purple_500))
+            tvCreateAnAccount.setOnClickListener(null)
             tvVerifyYourIdentity.setOnClickListener(this@CompletePortfolioFragment)
             tvVerifyYourIdentity.setCompoundDrawablesWithIntrinsicBounds(
                 null,
@@ -227,7 +236,7 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
                 tvFillPersonalData -> findNavController().navigate(R.id.fillDetailFragment)
 
                 tvVerifyYourIdentity -> findNavController().navigate(R.id.verifyYourIdentityFragment)
-
+                tvBackArrow->requireActivity().onBackPressedDispatcher.onBackPressed()
 
             }
         }
@@ -250,7 +259,10 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
                 findNavController().navigate(R.id.createPinFragment,bundle)
             }
             else->{
-
+                val bundle = Bundle().apply {
+                    putBoolean(Constants.FOR_LOGIN, false)
+                }
+                findNavController().navigate(R.id.createAccountFragment, bundle)
             }
         }
     }

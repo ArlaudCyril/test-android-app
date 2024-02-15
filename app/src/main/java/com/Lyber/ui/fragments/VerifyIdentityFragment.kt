@@ -21,7 +21,9 @@ import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.Lyber.viewmodels.VerifyIdentityViewModel
-
+/*
+    ** not in use
+ */
 class VerifyIdentityFragment : BaseFragment<FragmentVerifyIdentityBinding>() {
 
     private lateinit var verifyIdentityViewModel: VerifyIdentityViewModel

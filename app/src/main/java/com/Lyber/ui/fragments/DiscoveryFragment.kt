@@ -22,7 +22,8 @@ class DiscoveryFragment : BaseFragment<FragmentDiscoveryBinding>() {
             if ( App.prefsManager.portfolioCompletionStep !=-1) {
                 findNavController().navigate(R.id.completePortfolioFragment)
             } else {
-                findNavController().navigate(R.id.createAccountFragment, bundle)
+//                findNavController().navigate(R.id.createAccountFragment, bundle)
+                findNavController().navigate(R.id.completePortfolioFragment)
             }
         }
 

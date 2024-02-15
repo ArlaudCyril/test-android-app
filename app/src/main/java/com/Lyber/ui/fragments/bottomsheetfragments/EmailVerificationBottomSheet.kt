@@ -1,12 +1,15 @@
 package com.Lyber.ui.fragments.bottomsheetfragments
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import androidx.fragment.app.DialogFragment
 import com.Lyber.R
 import com.Lyber.databinding.BottomSheetVerificationBinding
 import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
@@ -29,16 +32,21 @@ class EmailVerificationBottomSheet () :
     lateinit var viewModel: PersonalDataViewModel
 
     override fun bind() = BottomSheetVerificationBinding.inflate(layoutInflater)
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setStyle(DialogFragment.STYLE_NORMAL, R.style.DialogStyle)
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpView()
-        this.binding.etCodeOne.requestFocus()
+        binding.etCodeOne.requestFocus()
         binding.etCodeOne.requestKeyboard()
         binding.btnCancel.setOnClickListener {
+            val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+            imm?.hideSoftInputFromWindow(view?.windowToken, 0)
+
             dismiss()
         }
-
     }
 
     private fun setUpView(){

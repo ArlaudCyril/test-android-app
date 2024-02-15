@@ -425,4 +425,7 @@ interface Api {
 
     @PATCH("user-service/close-account")
     suspend fun closeAccount( @Body hashMap: HashMap<String, Any>): Response<BooleanResponse>
+
+    @GET("kyc-service/sign-url")
+    suspend fun startSignUrl(): Response<SignURlResponse>
 }

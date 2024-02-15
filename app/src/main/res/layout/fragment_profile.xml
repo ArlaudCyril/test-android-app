@@ -140,12 +140,14 @@
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="32dp"
                 android:text="@string/payment_method"
+                android:visibility="gone"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 android:textColor="@color/purple_gray_900" />
 
             <LinearLayout
                 android:id="@+id/llPaymentMethods"
                 android:layout_width="match_parent"
+                android:visibility="gone"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="24dp"
