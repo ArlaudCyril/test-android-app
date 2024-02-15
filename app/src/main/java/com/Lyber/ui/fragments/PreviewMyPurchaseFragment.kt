@@ -1,25 +1,19 @@
 package com.Lyber.ui.fragments
 
 import android.annotation.SuppressLint
-import android.app.Dialog
-import android.content.Intent
-import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
-import android.view.Window
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.Lyber.R
-import com.Lyber.databinding.CustomDialogLayoutBinding
 import com.Lyber.databinding.FragmentMyPurchaseBinding
 import com.Lyber.models.Balance
 import com.Lyber.models.BalanceData
 import com.Lyber.models.DataQuote
 import com.Lyber.network.RestClient
-import com.Lyber.ui.activities.BaseActivity
 import com.Lyber.ui.fragments.bottomsheetfragments.ErrorBottomSheet
 import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.Lyber.utils.App
@@ -316,6 +310,9 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
         if (isApiHit)
             isApiHit = false
         CommonMethods.dismissProgressDialog()
-        CommonMethods.showErrorMessage(requireContext(), responseBody)
+        var code=  CommonMethods.showErrorMessage(requireContext(), responseBody, binding.root)
+        Log.d("errorCode","$code")
+//        if(code==7023 || code == 10041)
+//            customDialog(code)
     }
 }

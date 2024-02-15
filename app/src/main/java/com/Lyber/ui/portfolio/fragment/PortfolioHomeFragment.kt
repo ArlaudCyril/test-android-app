@@ -259,6 +259,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
                 binding.lineChart.timeSeries =
                     it.data.prices.toTimeSeries(it.data.lastUpdate, timeFrame)
+
             }
         }
 
@@ -268,6 +269,11 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 App.prefsManager.user = it.data
                 App.prefsManager.defaultImage=it.data.avatar
                 binding.ivProfile.setProfile
+                if(it.data.kycStatus!="NOT_STARTED"){
+
+                }else  if(it.data.yousignStatus!="SIGNED"){
+
+                }
                 if (it.data.language.isNotEmpty()) {
                     App.prefsManager.setLanguage(it.data.language)
                     val locale = Locale(it.data.language)

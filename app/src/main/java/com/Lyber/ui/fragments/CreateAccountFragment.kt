@@ -13,7 +13,6 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
-import com.Lyber.R
 import com.Lyber.databinding.FragmentCreateAccountBinding
 import com.Lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet
 import com.Lyber.utils.App
@@ -35,6 +34,7 @@ import com.nimbusds.srp6.SRP6ClientSession
 import com.nimbusds.srp6.SRP6CryptoParams
 import com.nimbusds.srp6.SRP6VerifierGenerator
 import com.nimbusds.srp6.XRoutineWithUserIdentity
+import com.Lyber.R
 
 class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View.OnClickListener {
 
@@ -61,7 +61,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        App.prefsManager.accessToken = ""
+//        App.prefsManager.accessToken = ""
         viewModel = getViewModel(this)
         viewModel.forLogin = requireArguments().getBoolean(Constants.FOR_LOGIN,false)
         viewModel.listener = this
@@ -272,7 +272,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
 
                     // login case
                     if (viewModel.forLogin) {
-
+                        App.prefsManager.accessToken = ""
                         client =
                             SRP6ClientSession()
                         client.xRoutine =
@@ -338,6 +338,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
 
                 }
                 tvForgotPassword->{
+                    App.prefsManager.accessToken = ""
                     findNavController().navigate(R.id.forgotPasswordFragment)
                 }
 

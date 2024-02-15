@@ -100,7 +100,9 @@ class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>(), OnCl
 
     override fun onRetrofitError(responseBody: ResponseBody?) {
         CommonMethods.dismissProgressDialog()
-        CommonMethods.showErrorMessage(requireContext(), responseBody)
+         CommonMethods.showErrorMessage(requireContext(), responseBody, binding.root)
+//        if(code==7023 || code == 10041)
+//            customDialog(code)
     }
 
     private val onTextChange = object : TextWatcher {

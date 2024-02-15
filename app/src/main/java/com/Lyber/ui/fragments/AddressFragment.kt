@@ -2,6 +2,7 @@ package com.Lyber.ui.fragments
 
 import android.os.Bundle
 import android.view.View
+import android.widget.ArrayAdapter
 import androidx.appcompat.app.AppCompatActivity
 import com.Lyber.R
 import com.Lyber.databinding.FragmentAddressBinding
@@ -24,7 +25,8 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
     private val country: String get() = binding.etCountry.text.trim().toString()
     private val state: String get() = binding.etState.text.trim().toString()
 
-
+    private val specifiedUsPerson: String get() = binding.etSpecifiedUsPerson.text.trim().toString()
+    private lateinit var specifiedUsPersonAdapter: ArrayAdapter<String>
     private lateinit var personalDataViewModel: PersonalDataViewModel
 
     override fun bind() = FragmentAddressBinding.inflate(layoutInflater)
@@ -32,12 +34,19 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        (requireParentFragment() as FillDetailFragment).position = 1
-        (requireParentFragment() as FillDetailFragment).setUpViews(1)
+        (requireParentFragment() as FillDetailFragment).position = 0
+        (requireParentFragment() as FillDetailFragment).setUpViews(0)
         (requireParentFragment() as FillDetailFragment).binding.ivTopAction.setBackgroundResource(
             R.drawable.ic_close
         )
-
+        specifiedUsPersonAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_list_item_1,
+            listOf(
+                requireContext().getString(R.string.yes_t),
+                requireContext().getString(R.string.no_t)
+            )
+        )
         personalDataViewModel = CommonMethods.getViewModel(requireParentFragment())
         binding.etCountry.setOnClickListener { openCountryPicker() }
 
@@ -54,6 +63,7 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
                     etState.setText(it.state)
                     etZipCode.setText(it.zipCode)
                     etCountry.setText(it.country)
+                    etSpecifiedUsPerson.setText(it.specifiedUsPerson)
 
                 }
             }
@@ -63,6 +73,11 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
         binding.etState.takesAlphabetOnly()
 
         binding.etStreetNumber.requestKeyboard()
+        binding.etSpecifiedUsPerson.setAdapter(specifiedUsPersonAdapter)
+        binding.etSpecifiedUsPerson.setOnClickListener {
+
+               binding.etSpecifiedUsPerson.showDropDown()
+        }
     }
 
     private fun openCountryPicker() {
@@ -105,11 +120,14 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
             country.isEmpty() -> getString(R.string.please_enter_country_name).showToast(
                 requireContext()
             )
-
+            specifiedUsPerson.isEmpty() -> getString(R.string.please_tell_us_that_you_have_us_citizenship_or_not).showToast(
+                requireContext()
+            )
             else -> {
                 val addressDataLocal = AddressDataLocal(
                     streetNumber = streetHouseNumber, buildingFloorName =
-                    buildingFloor, city = city, zipCode = zipCode, country = country, state = state
+                    buildingFloor, city = city, zipCode = zipCode, country = country, state = state,
+                            specifiedUsPerson = specifiedUsPerson
                 )
                 App.prefsManager.addressDataLocal = addressDataLocal
                 personalDataViewModel.let {
@@ -121,6 +139,9 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
                     it.state = state
                     it.completeAddress =
                         "$streetHouseNumber,$buildingFloor,$city,$state,$country,$zipCode"
+                    it.specifiedUsPerson =
+                        if (specifiedUsPerson == requireContext().getString(R.string.yes_t)) 1 else 0
+
                     return true
                 }
             }

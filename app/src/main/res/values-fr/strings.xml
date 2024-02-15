@@ -1,7 +1,7 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Lyber</string>
     <string name="lyber_investments_reinvented">Lyber, la crypto à portée de main.</string>
-    <string name="diversified_regular_simple">L’investissement simple, sécurisé et diversifié</string>
+    <string name="diversified_regular_simple">L’investissement simple, sécurisé et diversifié.</string>
     <string name="sign_up">S\'inscrire</string>
     <string name="log_in">Se connecter</string>
     <string name="your_phone_number">Votre numéro de téléphone</string>
@@ -68,7 +68,7 @@
     <string name="hint_street_and_number">Numéro de rue</string>
     <string name="hint_building_floor">Bâtiment, étage</string>
     <string name="hint_city">Ville</string>
-    <string name="hint_zip_code">Code postale</string>
+    <string name="hint_zip_code">Code postal</string>
     <string name="hint_country">Pays</string>
     <string name="investment_experience">Expérience en matière d\'investissement</string>
     <string name="subtitle_investment_exp">Vous devez répondre à ces questions dans le cadre juridique des réglementations internationales en matière d\'investissement.</string>
@@ -133,7 +133,7 @@
     <string name="make_investment">Faire un investissement</string>
     <string name="birth_place">Lieu de naissance</string>
     <string name="birth_country">Pays de naissance</string>
-    <string name="specified_us_person">Personne US précise</string>
+    <string name="specified_us_person">Êtes-vous un citoyen américain?</string>
     <string name="hint_state">État</string>
     <string name="hint_personal_assets">Votre patrimoine personnel</string>
     <string name="edit"><b><u>Editer</u></b></string>
@@ -166,7 +166,7 @@
     <string name="back_button">Bouton Retour</string>
     <string name="deactivated">Désactivé</string>
     <string name="assets">%1$s - %2$s Actifs</string>
-    <string name="k_month">%1$s - %2$s€/month</string>
+    <string name="k_month">%1$s - %2$s€/mois</string>
     <string name="upcoming_payment_august_27">Paiement à venir le 27 août</string>
     <string name="delete">Supprimer</string>
     <string name="confirm">Confirmer</string>
@@ -338,7 +338,7 @@
     <string name="crypto_asset_deposit">Dépôt de crypto-actifs</string>
     <string name="asset">Actif</string>
     <string name="_1_3_step_completed">⅓  étape terminée</string>
-    <string name="_0_3_step_completed">0 étape terminée</string>
+    <string name="_0_3_step_completed">0/3 étapes terminée</string>
     <string name="exchange_to">Échange → Vers</string>
     <string name="exchange_to_">Echange pour</string>
     <string name="frequency">Fréquence</string>
@@ -508,8 +508,8 @@
     <string name="edit_address">Modifier l\'adresse</string>
     <string name="choose_an_operation">Choisissez une opération</string>
     <string name="you_do_not_have_this_asset">Vous n\'avez pas cet atout</string>
-    <string name="verification_text">Pour finaliser votre inscription, nous devons vérifier votre identité. A l\'étape suivante, vous devrez fournir une signature électronique et une photographie d\'une pièce d\'identité.</string>
-    <string name="start_identity_verifications">Démarrer la vérification d\'identité</string>
+    <string name="verification_text">Pour finaliser votre inscription, nous devons vérifier votre identité via notre partenaire Onfido. Vous devrez fournir une signature électronique et une photographie d’une pièce d’identité.</string>
+    <string name="start_identity_verifications">Commencer la vérification</string>
     <string name="review_my_informations">Revoir mes informations</string>
     <string name="change_my_informations">Changer mes informations</string>
     <string name="password_warning">Le mot de passe doit comporter au moins 10 caractères, 1 caractère spécial, 1 minuscule et 1 majuscule.</string>
@@ -580,7 +580,7 @@
     <string name="for_legal_reasons">Pour que Lyber puisse garder un niveau de sécurité maximal pour votre compte, nous avons besoin de quelques informations de votre part.</string>
     <string name="card_holder_name">Nom du titulaire de la carte</string>
     <string name="are_you_US_citizen">Êtes-vous citoyen américain ?</string>
-    <string name="postal_address">Adresse postale</string>
+    <string name="postal_address">Adresse postal</string>
     <string name="need_informations_legal">Nous avons besoin de ces informations pour des raisons juridiques.</string>
     <string name="street_name">Nom de la rue</string>
     <string name="department">Département</string>
@@ -591,7 +591,7 @@
     <string name="investments">Placements</string>
     <string name="savings">Epargne</string>
     <string name="inheritance">Héritage</string>
-    <string name="credit_loan">rédit/emprunt</string>
+    <string name="credit_loan">Crédit/emprunt</string>
     <string name="family_others">Famille ou autres</string>
     <string name="whats_your_work_industry">Quel est votre secteur d\'activité ?</string>
     <string name="agriculture">Agriculture, Agroalimentaire et Ressources Naturelles</string>
@@ -621,8 +621,8 @@
     <string name="edit_personal_data">Modifier les données personnelles</string>
     <string name="verification_in_progress">Vérification en cours</string>
     <string name="start_verification">Commencer la vérification</string>
-    <string name="label_cgu_conditions">J\'ai lu et j\'accepte les Conditions Générales de Vente</string>
-    <string name="label_privacy_policy">J\'ai lu et j\'accepte la politique de confidentialité</string>
+    <string name="label_cgu_conditions">J\'ai lu et j\'accepte les <u>Conditions Générales\et Conditions de Vente</u></string>
+    <string name="label_privacy_policy">J\'ai lu et j\'accepte la <u>politique de confidentialité</u></string>
     <string name="cgu_conditions">Conditions Générales de Vente</string>
     <string name="privacy_policy">politique de confidentialité</string>
     <string name="preview_my_purchase">Prévisualiser mon achat</string>
@@ -727,5 +727,13 @@
     <string name="previous">Previous</string>
     <string name="activity_logs">Journaux d\'activité</string>
     <string name="close_account">Fermeture du compte</string>
-
+    <string name="sign_my_contract">Signer mon contrat</string>
+    <string name="contract_has_not_signed">Votre contrat n\'a pas été signé.\nVeuillez le signer avant de pouvoir continuer.</string>
+    <string name="validate_kyc">Valider mon kyc</string>
+    <string name="please_validate_kyc">Votre kyc a été refusé. Veuillez valider votre kyc pour pouvoir effectuer l\'opération.</string>
+    <string name="kyc_under_verification">Votre kyc est en cours de vérification. Veuillez réessayer dans cinq minutes.</string>
+    <string name="doc_being_verified">Votre document est en cours de vérification.</string>
+    <string name="under_maintenance">Lyber est en\nmaintenance.\nRevenez plus tard !</string>
+    <string name="what_do_you_plan_to_do">Que comptez-vous faire principalement ?</string>
+    <string name="registration">Inscription</string>
 </resources>

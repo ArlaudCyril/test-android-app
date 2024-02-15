@@ -133,7 +133,7 @@
     <string name="make_investment">Make investment</string>
     <string name="birth_place">Birth Place</string>
     <string name="birth_country">Birth Country</string>
-    <string name="specified_us_person">Specified US Person</string>
+    <string name="specified_us_person">Are you an American citizen?</string>
     <string name="hint_state">State</string>
     <string name="hint_personal_assets">Your personal assets</string>
     <string name="edit"><b><u>Edit</u></b></string>
@@ -338,7 +338,7 @@
     <string name="crypto_asset_deposit">Crypto asset deposit</string>
     <string name="asset">Asset</string>
     <string name="_1_3_step_completed">⅓ step completed</string>
-    <string name="_0_3_step_completed">0 step completed</string>
+    <string name="_0_3_step_completed">0/3 steps completed</string>
     <string name="exchange_to">Exchange → To</string>
     <string name="exchange_to_">Exchange To</string>
     <string name="frequency">Frequency</string>
@@ -508,8 +508,8 @@
     <string name="edit_address">Edit Address</string>
     <string name="choose_an_operation">Choose an operation</string>
     <string name="you_do_not_have_this_asset">You do not have this asset</string>
-    <string name="verification_text">To finalise your registration, we need to verify your identity. In the next step, you will need to provide an electronic signature and a photograph of an identity document.</string>
-    <string name="start_identity_verifications">Start Identity Verification</string>
+    <string name="verification_text">To complete your registration, we need to verify your identity through our partner Onfido. You will need to provide an electronic signature and a photograph of an identity document.</string>
+    <string name="start_identity_verifications">Start verification</string>
     <string name="review_my_informations">Review my informations</string>
     <string name="change_my_informations">Change my informations</string>
     <string name="password_warning">The password must have at least 10 characters, 1 special character, 1 lower case and 1 upper case.</string>
@@ -635,8 +635,8 @@
     <string name="edit_personal_data">Edit Personal Data</string>
     <string name="verification_in_progress">Verification in progress</string>
     <string name="start_verification">Start verification</string>
-    <string name="label_cgu_conditions">I have read and accept the General Terms and Conditions of Sale</string>
-    <string name="label_privacy_policy">I have read and accept the privacy policy</string>
+    <string name="label_cgu_conditions">I have read and accept the <u>General Terms\nand Conditions of Sale</u></string>
+    <string name="label_privacy_policy">I have read and accept the <u>privacy policy</u></string>
     <string name="cgu_conditions">General Terms and Conditions of Sale</string>
     <string name="privacy_policy">privacy policy</string>
     <string name="preview_my_purchase">Preview my purchase</string>
@@ -727,10 +727,14 @@
     <string name="fee">Fees</string>
     <string name="previous">Previous</string>
     <string name="activity_logs">Activity logs</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
     <string name="close_account">Close account</string>
-
-
+    <string name="sign_my_contract">Sign my contract</string>
+    <string name="contract_has_not_signed">Your contract has not been signed.\nPlease sign it before you can proceed.</string>
+    <string name="validate_kyc">Validate my kyc</string>
+    <string name="please_validate_kyc">Your kyc has been refused. Please validate your kyc to be able to carry out the operation.</string>
+    <string name="kyc_under_verification">Your kyc is under verification. Please try again in five minutes.</string>
+    <string name="doc_being_verified">Your document is being verified.</string>
+    <string name="under_maintenance">Lyber is under\nmaintenance.\nCome back later!</string>
+    <string name="what_do_you_plan_to_do">What do you plan to mainly do?</string>
+    <string name="registration">Registration</string>
 </resources>

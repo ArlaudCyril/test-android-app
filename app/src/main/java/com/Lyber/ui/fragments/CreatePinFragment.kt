@@ -7,12 +7,14 @@ import android.os.Handler
 import android.os.Looper
 import android.view.View
 import android.view.Window
+import androidx.activity.addCallback
 import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.CustomDialogLayoutBinding
 import com.Lyber.databinding.FragmentCreatePinBinding
 import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.replace
@@ -40,21 +42,34 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
         viewModel = getViewModel(requireParentFragment())
         viewModel.forLogin = requireArguments().getBoolean(Constants.FOR_LOGIN, false)
         binding.etCreatePin.addTextChangedListener(onTextChange)
-        binding.ivTopAction.setOnClickListener {
-            requireActivity().onBackPressed()
-        }
-        binding.tvTopAction.setOnClickListener {
-            showLogoutDialog()
-        }
         if (requireArguments().containsKey(Constants.IS_CHANGE_PIN)
             && requireArguments().getBoolean(Constants.IS_CHANGE_PIN)
         ) {
             binding.ivTopAction.visible()
             binding.llIndicators.gone()
             binding.tvTopAction.gone()
-        } else {
+        }
+      else  if (arguments != null && requireArguments().containsKey(Constants.FOR_LOGIN) && !requireArguments().getBoolean(
+                Constants.FOR_LOGIN
+            )){
+            binding.llIndicators.visible()
+            binding.ivTopClose.visible()
+            binding.tvTopAction.gone()
+            binding.ivTopAction.gone()
+            requireActivity().onBackPressedDispatcher.addCallback(this) {
+               stopRegistrationDialog()
+            }
+        }
+        else {
             binding.llIndicators.visible()
             binding.tvTopAction.gone()
+        }
+        binding.ivTopClose.setOnClickListener {
+            stopRegistrationDialog()
+        }
+
+        binding.tvTopAction.setOnClickListener {
+            showLogoutDialog()
         }
         binding.ivTopAction.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
@@ -62,6 +77,39 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
 
     }
 
+    private fun stopRegistrationDialog() {
+        Dialog(requireActivity(), R.style.DialogTheme).apply {
+
+            CustomDialogLayoutBinding.inflate(layoutInflater).let {
+
+                requestWindowFeature(Window.FEATURE_NO_TITLE)
+                setCancelable(false)
+                setCanceledOnTouchOutside(false)
+                setContentView(it.root)
+
+                it.tvTitle.text = getString(R.string.stop_reg)
+                it.tvMessage.text = getString(R.string.reg_message)
+                it.tvNegativeButton.text = getString(R.string.cancel)
+                it.tvPositiveButton.text = getString(R.string.ok)
+
+                it.tvNegativeButton.setOnClickListener { dismiss() }
+
+                it.tvPositiveButton.setOnClickListener {
+                    dismiss()
+                    App.prefsManager.logout()
+                    findNavController().popBackStack()
+                    findNavController().navigate(R.id.discoveryFragment)
+                    CommonMethods.checkInternet(requireContext()) {
+                        dismiss()
+                        CommonMethods.showProgressDialog(requireContext())
+                        viewModel.logout(CommonMethods.getDeviceId(requireActivity().contentResolver))
+                    }
+                }
+
+                show()
+            }
+        }
+    }
     private fun showLogoutDialog() {
 
         Dialog(requireActivity(), R.style.DialogTheme).apply {

@@ -22,6 +22,20 @@
         app:layout_constraintBottom_toTopOf="@id/topGuide"
         app:layout_constraintStart_toStartOf="parent"
         app:tint="@color/black" />
+    <ImageView
+        android:id="@+id/ivTopClose"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="12dp"
+        android:background="@drawable/white_back"
+        android:paddingHorizontal="12dp"
+        android:paddingVertical="12dp"
+        android:src="@drawable/ic_close"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@id/topGuide"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:tint="@color/black" />
 
     <TextView
         android:id="@+id/tvTopAction"
@@ -33,7 +47,7 @@
         android:src="@drawable/ic_close"
         android:text="@string/logout"
         android:textColor="@color/purple_500"
-        android:visibility="visible"
+        android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/topGuide"
         app:layout_constraintStart_toStartOf="parent"
         app:tint="@color/black" />
