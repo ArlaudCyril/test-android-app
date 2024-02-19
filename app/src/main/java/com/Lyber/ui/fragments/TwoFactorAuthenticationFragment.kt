@@ -2,15 +2,10 @@ package com.Lyber.ui.fragments
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
-import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
@@ -36,9 +31,10 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
     override fun bind() = FragmentTwoFactorAuthenticationBinding.inflate(layoutInflater)
     var qrCodeUrl = ""
 
-    companion object{
-        var showOtp=true
+    companion object {
+        var showOtp = true
     }
+
     private lateinit var viewModel: SignUpViewModel
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -46,8 +42,7 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
         viewModel.listener = this
         if (arguments != null && requireArguments().containsKey("QrCode")) {
             var url = requireArguments().getString("QrCode")
-            if(url!!.isNotEmpty())
-            {
+            if (url!!.isNotEmpty()) {
 //                qrCodeUrl = url.removePrefix("otpauth:")
                 qrCodeUrl = url
                 binding.ivQrCode.setImageBitmap(
@@ -56,7 +51,7 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
                         768
                     )
                 )
-            }else{
+            } else {
                 viewModel.qrCodeUrl()
 
             }
@@ -74,7 +69,7 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
         }
         viewModel.updateAuthenticateResponse.observe(viewLifecycleOwner) {
             if (Lifecycle.State.RESUMED == lifecycle.currentState) {
-                showOtp=false
+                showOtp = false
                 viewModel.getUser()
 
             }
@@ -83,36 +78,37 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 CommonMethods.dismissProgressDialog()
                 App.prefsManager.user = it.data
-              requireActivity().onBackPressed()
+                requireActivity().onBackPressed()
 
             }
         }
         binding.tvAddGoogleAuthenticator.setOnClickListener(this)
         binding.btnVerify.setOnClickListener(this)
+        binding.ivTopAction.setOnClickListener(this)
         viewModel.booleanResponse.observe(viewLifecycleOwner) {
             if (Lifecycle.State.RESUMED == lifecycle.currentState) {
-                   val transparentView = View(context)
-                    transparentView.setBackgroundColor(
-                        ContextCompat.getColor(
-                            requireContext(), R.color.semi_transparent_dark
-                        )
+                val transparentView = View(context)
+                transparentView.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(), R.color.semi_transparent_dark
                     )
-                    CommonMethods.dismissProgressDialog()
-                    // Set layout parameters for the transparent view
-                    val viewParams = RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.MATCH_PARENT,
-                        RelativeLayout.LayoutParams.MATCH_PARENT
-                    )
-                    val vc = VerificationBottomSheet()
-                    vc.viewToDelete = transparentView
-                    vc.mainView = getView()?.rootView as ViewGroup
-                    vc.viewModel = viewModel
-                    vc.arguments = Bundle().apply {
-                        putString(Constants.TYPE, Constants.GOOGLE)
-                    }
-                    vc.show(childFragmentManager, App.prefsManager.user?.type2FA)
-                    val mainView = getView()?.rootView as ViewGroup
-                    mainView.addView(transparentView, viewParams)
+                )
+                CommonMethods.dismissProgressDialog()
+                // Set layout parameters for the transparent view
+                val viewParams = RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT
+                )
+                val vc = VerificationBottomSheet()
+                vc.viewToDelete = transparentView
+                vc.mainView = getView()?.rootView as ViewGroup
+                vc.viewModel = viewModel
+                vc.arguments = Bundle().apply {
+                    putString(Constants.TYPE, Constants.GOOGLE)
+                }
+                vc.show(childFragmentManager, App.prefsManager.user?.type2FA)
+                val mainView = getView()?.rootView as ViewGroup
+                mainView.addView(transparentView, viewParams)
 
             }
         }
@@ -134,8 +130,8 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
 
     override fun onRetrofitError(responseBody: ResponseBody?) {
         super.onRetrofitError(responseBody)
-        if(showOtp) {
-            showOtp=false
+        if (showOtp) {
+            showOtp = false
             val transparentView = View(context)
             transparentView.setBackgroundColor(
                 ContextCompat.getColor(
@@ -164,16 +160,17 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
 
 
     fun isAuthenticatorAppInstalled(): Boolean {
-           val intent = Intent(Intent.ACTION_VIEW, Uri.parse("otpauth://"))
-            val activities = requireActivity().packageManager.queryIntentActivities(intent, 0)
-            return activities.isNotEmpty()
+        val intent = Intent(Intent.ACTION_VIEW, Uri.parse("otpauth://"))
+        val activities = requireActivity().packageManager.queryIntentActivities(intent, 0)
+        return activities.isNotEmpty()
 
     }
+
     override fun onClick(v: View?) {
         binding.apply {
             when (v!!) {
                 tvAddGoogleAuthenticator -> {
-                    if(isAuthenticatorAppInstalled()){
+                    if (isAuthenticatorAppInstalled()) {
                         qrCodeUrl.let { urlString ->
                             try {
                                 val uriString = urlString
@@ -189,19 +186,21 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
                                 e.printStackTrace()
                             }
                         }
-                    }else
+                    } else
                         getString(R.string.you_must_install_authenticator).showToast(requireContext())
 
                 }
-                btnVerify->{
+
+                btnVerify -> {
                     CommonMethods.checkInternet(requireContext()) {
-                        showOtp=false
-                       CommonMethods.showProgressDialog(requireContext())
-                        var  json = """{"type2FA" : "google"}""".trimMargin()
+                        showOtp = false
+                        CommonMethods.showProgressDialog(requireContext())
+                        var json = """{"type2FA" : "google"}""".trimMargin()
                         val detail = CommonMethods.encodeToBase64(json)
                         viewModel.switchOffAuthentication(detail, Constants.TYPE)
                     }
                 }
+                ivTopAction->{ requireActivity().onBackPressedDispatcher.onBackPressed()}
             }
         }
     }

@@ -1,12 +1,14 @@
 package com.Lyber.ui.fragments
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
+import android.view.Window
 import android.widget.RelativeLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -35,6 +37,7 @@ import com.nimbusds.srp6.SRP6CryptoParams
 import com.nimbusds.srp6.SRP6VerifierGenerator
 import com.nimbusds.srp6.XRoutineWithUserIdentity
 import com.Lyber.R
+import com.Lyber.databinding.CustomDialogLayoutBinding
 
 class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View.OnClickListener {
 
@@ -68,7 +71,10 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         binding.tvCountryCode.text = viewModel.countryCode
         Log.d("clickSignupFinalQ1",viewModel.forLogin.toString())
         binding.ivTopAction.setOnClickListener {
+            if (viewModel.forLogin)
             requireActivity().onBackPressed()
+            else
+                stopRegistrationDialog()
         }
         if (viewModel.forLogin) {
 
@@ -446,6 +452,40 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
 
             }
         }
+    }
+    private fun stopRegistrationDialog() {
+
+        Dialog(requireActivity(), R.style.DialogTheme).apply {
+
+            CustomDialogLayoutBinding.inflate(layoutInflater).let {
+
+                requestWindowFeature(Window.FEATURE_NO_TITLE)
+                setCancelable(false)
+                setCanceledOnTouchOutside(false)
+                setContentView(it.root)
+
+                it.tvTitle.text = getString(R.string.stop_reg)
+                it.tvMessage.text = getString(R.string.reg_message)
+                it.tvNegativeButton.text = getString(R.string.cancel)
+                it.tvPositiveButton.text = getString(R.string.ok)
+
+                it.tvNegativeButton.setOnClickListener { dismiss() }
+
+                it.tvPositiveButton.setOnClickListener {
+                    dismiss()
+                    App.prefsManager.logout()
+                    findNavController().popBackStack()
+                    findNavController().navigate(R.id.discoveryFragment)
+                    CommonMethods.checkInternet(requireContext()) {
+                        dismiss()
+                        viewModel.logout(CommonMethods.getDeviceId(requireActivity().contentResolver))
+                    }
+                }
+
+                show()
+            }
+        }
+
     }
 
 }

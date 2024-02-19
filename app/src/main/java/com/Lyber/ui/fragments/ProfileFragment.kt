@@ -156,6 +156,11 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 //                binding.tvBic.text = "${it.bic}"
 //                binding.tvAddPaymentMethod.gone()
 //            }
+            if (it.withdrawalLock == "none")
+                binding.tvStatusAddressBook.text = getString(R.string.whitelisting_disabled)
+            else
+                binding.tvStatusAddressBook.text = getString(R.string.whitelisting_enabled)
+
         }
         if (App.prefsManager.getLanguage().isNotEmpty()) {
             val ln = App.prefsManager.getLanguage()
@@ -215,23 +220,13 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 binding.ivProfile.setProfile
             }
         }
-        if (App.prefsManager.user?.strongAuthentification != null) {
-            binding.tvStatusStrongAuth.text =
-                if (App.prefsManager.user?.strongAuthentification!!)
-                    getString(R.string.enabled)
-                else getString(R.string.disabled)
-        }
+//        if (App.prefsManager.user?.strongAuthentification != null) {
+//            binding.tvStatusStrongAuth.text =
+//                if (App.prefsManager.user?.strongAuthentification!!)
+//                    getString(R.string.enabled)
+//                else getString(R.string.disabled)
+//        }
 
-//        binding.tvStatusStrongAuth.text =
-//            if (App.prefsManager.isStrongAuth()) "Enabled" else "Disabled"
-
-
-        binding.tvStatusAddressBook.gone()
-        binding.tvStatusAddressBook.text = when (App.prefsManager.withdrawalLockSecurity) {
-            Constants.HOURS_72 -> "72H"
-            Constants.HOURS_24 -> "24H"
-            else -> getString(R.string.no_security)
-        }
         binding.ivTopAction.setOnClickListener(this)
         binding.llChangePin.setOnClickListener(this)
         binding.tvViewAllTransaction.setOnClickListener(this)
@@ -425,9 +420,9 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 //                    NotificationFragment(),
 //                    topBottom = true
 //                )
-                rlActivityLogs ->findNavController().navigate(R.id.activityLogsFragment)
+                rlActivityLogs -> findNavController().navigate(R.id.activityLogsFragment)
 
-                    tvLogout
+                tvLogout
 
                 -> showLogoutDialog()
 

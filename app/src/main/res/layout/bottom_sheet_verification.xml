@@ -176,7 +176,7 @@
         android:backgroundTint="@color/purple_gray_50"
         android:fitsSystemWindows="true"
         android:fontFamily="@font/mabry_pro"
-        android:text="@string/cancel"
+        android:text="@string/back"
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         android:textColor="@color/purple_gray_700" />
 

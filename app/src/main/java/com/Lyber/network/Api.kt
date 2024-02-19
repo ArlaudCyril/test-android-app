@@ -428,4 +428,14 @@ interface Api {
 
     @GET("kyc-service/sign-url")
     suspend fun startSignUrl(): Response<SignURlResponse>
+
+    @GET("wallet-service/history")
+    suspend fun getWalletHistory(
+        @Query("limit") limit: Int,
+        @Query("daily") daily: Boolean
+    ): Response<WalletHistoryResponse>
+
+    @GET("strategy-service/active-strategy")
+    suspend fun activeStrategies(): Response<MessageResponse>
+
 }

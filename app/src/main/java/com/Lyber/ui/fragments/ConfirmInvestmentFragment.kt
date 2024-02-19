@@ -38,6 +38,7 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = getViewModel(requireActivity())
+        viewModel.listener=this
         binding.ivTopAction.setOnClickListener(this)
         binding.btnConfirmInvestment.setOnClickListener(this)
         binding.allocationView.rvAllocation.isNestedScrollingEnabled = false
@@ -86,11 +87,11 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                                         else -> "1m"
                                     }
                                     showProgressDialog(requireContext())
-                                    viewModel.investStrategy(
-                                        it.ownerUuid,
-                                        freq,
-                                        viewModel.amount.toFloat().toInt()
-                                        ,viewModel.selectedStrategy!!.name)
+//                                    viewModel.investStrategy(
+//                                        it.ownerUuid,
+//                                        freq,
+//                                        viewModel.amount.toFloat().toInt()
+//                                        ,viewModel.selectedStrategy!!.name)
 
 
 //                                    showProgressDialog(requireContext())

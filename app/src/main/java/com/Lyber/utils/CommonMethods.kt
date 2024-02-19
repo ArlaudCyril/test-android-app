@@ -182,12 +182,20 @@ class CommonMethods {
             }
         }
 
+//        fun Long.toGraphTime(): String {
+//            SimpleDateFormat("MMM dd, HH:mm").let {
+//                return it.format(Date(this))
+//            }
+//        }
         fun Long.toGraphTime(): String {
-            SimpleDateFormat("MMM dd, HH:mm").let {
-                return it.format(Date(this))
+            val date = Date(this)
+            val dateFormat = if (SimpleDateFormat("HH:mm").format(date) == "00:00") {
+                SimpleDateFormat("MMM dd")
+            } else {
+                SimpleDateFormat("MMM dd, HH:mm")
             }
+            return dateFormat.format(date)
         }
-
         fun List<Double>.toTimeSeries(): List<List<Double>> {
 
             val list = mutableListOf<List<Double>>()
@@ -812,6 +820,7 @@ class CommonMethods {
 //            }
         val <T> T.commaFormatted: String
             get() = when (this) {
+                is Int-> String.format(Locale.US, "%,d", this.toLong())
                 is Number ->  String.format(Locale.US, "%,.2f", this)
                 is String -> toDoubleOrNull()?.let { String.format(Locale.US, "%,.2f", it) } ?: "0"
                 is Char -> this.toString()
@@ -1180,10 +1189,9 @@ class CommonMethods {
                 }
             }
         }
-
         @SuppressLint("SimpleDateFormat")
         fun String.toMilli(): Long {
-            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'").parse(this)?.let {
+            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",Locale.US).parse(this)?.let {
                 return it.time
             }
             return System.currentTimeMillis()
@@ -1570,6 +1578,15 @@ class CommonMethods {
      layout.addView(snackView, 0)
      snackbar.show()
  }
+
+
+        @SuppressLint("SimpleDateFormat")
+        fun String.toMilli1(): Long {
+            SimpleDateFormat("yyyy-MM-dd'T'HH:mm").parse(this)?.let {
+                return it.time
+            }
+            return System.currentTimeMillis()
+        }
 
     }
 }

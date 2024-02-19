@@ -71,7 +71,7 @@
                         <TextView
                             style="@style/SubheadMabry"
                             android:gravity="center_vertical"
-                            android:text="@string/whitelisting" />
+                            android:text="@string/withdrawal_security_settings" />
 
                         <LinearLayout
                             android:id="@+id/llDurationInfo"

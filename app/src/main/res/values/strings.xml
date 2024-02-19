@@ -56,7 +56,7 @@
     <string name="hint_birth_date">Birth Date</string>
     <string name="hint_nationality">Nationality</string>
     <string name="send_to_lyber">Send to Lyber</string>
-    <string name="adresse_email">Address email</string>
+    <string name="email_address">Email address</string>
     <string name="subtitle_email">This information will be used for security purposes and to confirm your transactions.</string>
     <string name="hint_email">Email</string>
     <string name="v_rification_email">Email verification</string>
@@ -402,7 +402,8 @@
     <string name="strong_authentication">Strong authentication</string>
     <string name="disabled">Disabled</string>
     <string name="crypto_address_book">Crypto address book</string>
-    <string name="whitelisting_disabled">Whitelisting: Disabled</string>
+    <string name="whitelisting_disabled">Whitelisting Disabled</string>
+    <string name="whitelisting_enabled">Whitelisting Enabled</string>
     <string name="change_pin">Change pin</string>
     <string name="face_id">Face ID</string>
     <string name="asset_name">Asset name</string>
@@ -485,7 +486,7 @@
     <string name="withdraw_to">withdraw → To</string>
     <string name="confirm_withdrawal">Confirm Withdrawal</string>
     <string name="save_settings">Save Settings</string>
-    <string name="security_of_your_notebook">Security of your notebook</string>
+    <string name="security_of_your_notebook">Address book security</string>
     <string name="active_during">Active during:</string>
     <string name="the_address_book_limits_your_withdrawals_and_deposits_to_the_addresses_in_your_address_book">The address book limits your withdrawals and deposits to the addresses in your address book.</string>
     <string name="you_can_immediately_withdraw_to_any_address_newly_added_to_your_address_book">You will be able to withdraw immediately to an address newly added to your address book.</string>
@@ -737,4 +738,7 @@
     <string name="under_maintenance">Lyber is under\nmaintenance.\nCome back later!</string>
     <string name="what_do_you_plan_to_do">What do you plan to mainly do?</string>
     <string name="registration">Registration</string>
+    <string name="withdrawal_security_settings">Withdrawal security settings</string>
+    <string name="you_donot_have_active_strategy">You do not have any active strategie yet</string>
+    <string name="activate_create"><u>Activate</u>/<u>create one now</u></string>
 </resources>

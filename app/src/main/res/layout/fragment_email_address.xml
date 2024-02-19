@@ -64,7 +64,7 @@
 
                 <TextView
                     style="@style/TitleText"
-                    android:text="@string/adresse_email" />
+                    android:text="@string/email_address" />
 
                 <TextView
                     style="@style/SubTitleText"

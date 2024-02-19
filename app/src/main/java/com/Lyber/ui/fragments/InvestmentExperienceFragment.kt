@@ -71,7 +71,8 @@ class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceB
                     etSourceIncome.setText(it.sourceOfIncome)
                     etChooseIndustry.setText(it.workIndustry)
                     annualIncome = it.annualIncome!!
-                    if (annualIncome == "<500>") binding.etAnnualIncome.setText("Less then 500k€/month")
+                    if (annualIncome == "<500") binding.etAnnualIncome.setText("${getString(R.string.less_than_500)}k€/${getString(R.string.month)}")
+                 else  if (annualIncome == "3001+") binding.etAnnualIncome.setText("${getString(R.string.over_3001)}k€/${getString(R.string.month)}")
                     else binding.etAnnualIncome.setText("${annualIncome}k€/month")
                     personalAssets = it.activity
                     etYourActivity.setText(it.activity)
@@ -102,7 +103,9 @@ class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceB
 
             BottomSheetDialog.SheetType.ANNUAL_INCOME.title(requireContext()) -> {
                 annualIncome =
-                    if (itemSelected.title == getString(R.string.less_than_500)) "<500" else itemSelected.title
+                    if (itemSelected.title == getString(R.string.less_than_500)) "<500"
+                    else if(itemSelected.title == getString(R.string.over_3001)) "3001+"
+                    else itemSelected.title
                 binding.etAnnualIncome.setText("${itemSelected.title}k€/${getString(R.string.month)}")
                 annualIncomeID = itemSelected.id
             }
@@ -185,7 +188,7 @@ class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceB
                     it.cryptoExp =investmentExperienceLocal.investmentExperience
                     it.sourceOfIncome = investmentExperienceLocal.sourceOfIncome
                     it.workIndustry = investmentExperienceLocal.workIndustry
-                    it.annualIncome = investmentExperienceLocal.annualIncome
+                    it.annualIncome = annualIncome
                     it.personalAssets = investmentExperienceLocal.activity
                 }
                 return true

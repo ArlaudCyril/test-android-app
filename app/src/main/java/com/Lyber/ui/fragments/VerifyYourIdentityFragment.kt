@@ -61,6 +61,7 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
     private var conditionsSelected = false
     private var privacySelected = false
     private var isVerificationEnabled = false
+    private var isApiHit = false
     override fun bind() = FragmentVerifyYourIdentityBinding.inflate(layoutInflater)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -92,7 +93,7 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
         portfolioViewModel.finishRegistrationResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
-
+                isApiHit = false
                 App.prefsManager.accessToken = it.data.access_token
                 App.prefsManager.refreshToken = it.data.refresh_token
                 App.prefsManager.personalDataSteps = 0
@@ -106,6 +107,7 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
         }
         portfolioViewModel.kycResponseIdentity.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                isApiHit = false
                 dismissAnimation()
                 resultLauncher.launch(
                     Intent(requireActivity(), WebViewActivity::class.java)
@@ -122,47 +124,60 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
     override fun onClick(v: View?) {
         when (v) {
             binding.ivTopAction -> {
-                stopRegistrationDialog()
+                if (!isApiHit)
+                    stopRegistrationDialog()
             }
 
             binding.btnContinue -> {
-                if(isVerificationEnabled)
-                hitAcpi()
+                if (isVerificationEnabled)
+                    hitAcpi()
             }
 
             binding.btnReviewMyInformations -> {
-                val bundle = Bundle().apply {
-                    putBoolean(Constants.IS_REVIEW, true)
+                if (!isApiHit) {
+                    val bundle = Bundle().apply {
+                        putBoolean(Constants.IS_REVIEW, true)
+                    }
+                    findNavController().navigate(R.id.fillDetailFragment, bundle)
                 }
-                findNavController().navigate(R.id.fillDetailFragment, bundle)
             }
 
             binding.radioBtn -> {
-                if (conditionsSelected)
-                    binding.radioBtn.setImageResource(R.drawable.circle_stroke_profile)
-                else
-                    binding.radioBtn.setImageResource(R.drawable.purple_checkbox)
-                conditionsSelected = !conditionsSelected
-                isVerificationEnabled()
+                if (!isApiHit) {
+                    if (conditionsSelected)
+                        binding.radioBtn.setImageResource(R.drawable.circle_stroke_profile)
+                    else
+                        binding.radioBtn.setImageResource(R.drawable.purple_checkbox)
+                    conditionsSelected = !conditionsSelected
+                    isVerificationEnabled()
+                }
             }
 
             binding.radioBtn2 -> {
-                if (privacySelected)
-                    binding.radioBtn2.setImageResource(R.drawable.circle_stroke_profile)
-                else
-                    binding.radioBtn2.setImageResource(R.drawable.purple_checkbox)
-                privacySelected = !privacySelected
-                isVerificationEnabled()
+                if (!isApiHit) {
+                    if (privacySelected)
+                        binding.radioBtn2.setImageResource(R.drawable.circle_stroke_profile)
+                    else
+                        binding.radioBtn2.setImageResource(R.drawable.purple_checkbox)
+                    privacySelected = !privacySelected
+                    isVerificationEnabled()
+                }
             }
-            binding.tvGeneralTerms->{
-                val bundle = Bundle()
-                bundle.putString("url", Constants.GENERAL_TERMS_CONDITIONS)
-                navController.navigate(R.id.webViewFragment,bundle)
+
+            binding.tvGeneralTerms -> {
+                if (!isApiHit) {
+                    val bundle = Bundle()
+                    bundle.putString("url", Constants.GENERAL_TERMS_CONDITIONS)
+                    navController.navigate(R.id.webViewFragment, bundle)
+                }
             }
-            binding.tvPrivacyPolicy->{
-                val bundle = Bundle()
-                bundle.putString("url", Constants.PRIVACY_URL)
-                navController.navigate(R.id.webViewFragment,bundle)
+
+            binding.tvPrivacyPolicy -> {
+                if (!isApiHit) {
+                    val bundle = Bundle()
+                    bundle.putString("url", Constants.PRIVACY_URL)
+                    navController.navigate(R.id.webViewFragment, bundle)
+                }
             }
         }
     }
@@ -170,6 +185,7 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
 
     override fun onRetrofitError(responseBody: ResponseBody?) {
         super.onRetrofitError(responseBody)
+        isApiHit = false
         dismissAnimation()
     }
 
@@ -194,6 +210,7 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
 
     private fun hitAcpi() {
         checkInternet(requireActivity()) {
+            isApiHit = true
             binding.progress.visible()
             binding.progress.animation =
                 AnimationUtils.loadAnimation(requireActivity(), R.anim.rotate_drawable)
@@ -202,6 +219,7 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
         }
 
     }
+
     private fun stopRegistrationDialog() {
 
         Dialog(requireActivity(), R.style.DialogTheme).apply {

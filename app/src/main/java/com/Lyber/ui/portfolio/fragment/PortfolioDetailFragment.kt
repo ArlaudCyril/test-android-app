@@ -270,7 +270,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
                 binding.lineChart.timeSeries =
                     it.data.prices.toTimeSeries(it.data.lastUpdate, timeFrame)
-
+                Log.d("timeSeries", "${it.data.prices.toTimeSeries(it.data.lastUpdate, timeFrame)}")
                 binding.tvValuePortfolioAndAssetPrice.text =
                     "${it.data.prices.last().currencyFormatted}"
 

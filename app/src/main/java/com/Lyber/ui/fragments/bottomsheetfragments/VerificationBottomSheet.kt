@@ -100,7 +100,7 @@ class VerificationBottomSheet() :
                 subtitle.text = getString(R.string.enter_the_code_displayed_on_your_sms)
             }
             fieldToVerify.text = ""
-            btnCancel.text = getString(R.string.cancel)
+            btnCancel.text = getString(R.string.back)
 
 
             // Usage example
@@ -301,6 +301,7 @@ class VerificationBottomSheet() :
                                 viewModel.verify2FA(code = getCode())
                             } else {
                                 dismiss()
+                                CommonMethods.showProgressDialog(requireContext())
                                 viewModel.verifyPhone(getCode())
                             }
                         }

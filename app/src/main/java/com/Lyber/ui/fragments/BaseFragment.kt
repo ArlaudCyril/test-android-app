@@ -31,6 +31,7 @@ import com.Lyber.databinding.DocumentBeingVerifiedBinding
 import com.Lyber.network.RestClient
 import com.Lyber.ui.activities.WebViewActivity
 import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
+import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.gone
@@ -98,12 +99,20 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
                 if (isSign) {
-                    findNavController().popBackStack(R.id.portfolioHomeFragment,false)
-                    showDocumentDialog(requireActivity(), Constants.LOADING)
-                    Handler(Looper.getMainLooper()).postDelayed({
-                        showDocumentDialog(requireActivity(), Constants.LOADING_SUCCESS)
-                    }, 1500)
+                    activity?.runOnUiThread {
+                        findNavController().popBackStack(R.id.portfolioHomeFragment,false)
+                        showDocumentDialog(App.appContext, Constants.LOADING)
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            showDocumentDialog(App.appContext, Constants.LOADING_SUCCESS)
+                        }, 1500)
+                    }
+//                    findNavController().popBackStack(R.id.portfolioHomeFragment,false)
+//                    showDocumentDialog(requireActivity(), Constants.LOADING)
+//                    Handler(Looper.getMainLooper()).postDelayed({
+//                        showDocumentDialog(requireActivity(), Constants.LOADING_SUCCESS)
+//                    }, 1500)
                 }
+
             }
         }
 
