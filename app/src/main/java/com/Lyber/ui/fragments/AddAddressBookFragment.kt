@@ -232,7 +232,7 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
 
                     itemList[position]?.let {
                         val id = it.network
-                        com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull{ item -> item.takeIf {item.id == id}}
+                        com.Lyber.ui.activities.BaseActivity.networkAddress.firstNotNullOfOrNull{ item -> item.takeIf {item.id == id}}
                             ?.let {
                                     it1 -> ivItem.loadCircleCrop(it1.imageUrl);
 

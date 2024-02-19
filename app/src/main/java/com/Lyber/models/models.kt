@@ -845,3 +845,12 @@ data class SignURlResponse(
 data class SignURl(
     val url: String
 )
+
+data class WalletHistoryResponse(
+    val `data`: List<WalletHistoryData>
+)
+
+data class WalletHistoryData(
+    val date: String,
+    val total: String
+)

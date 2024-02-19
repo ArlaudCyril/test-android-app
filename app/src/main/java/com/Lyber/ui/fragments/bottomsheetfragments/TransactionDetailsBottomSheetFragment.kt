@@ -45,7 +45,7 @@ class TransactionDetailsBottomSheetFragment :
                 binding.tvFeePaid.text =
                     "${transactionData.fees} ${transactionData.fromAsset.uppercase()}"
                 binding.tvDateValue.text =
-                    transactionData.date.toFormat("yyyy-MM-dd'T'hh:mm:ss", "dd MMMM yyyy")
+                    transactionData.date.toFormat("yyyy-MM-dd'T'hh:mm:ss", "dd MMMM yyyy HH:mm")
 
             }
 
@@ -101,7 +101,7 @@ class TransactionDetailsBottomSheetFragment :
                     "${transactionData.amount} ${transactionData.asset.uppercase()}"
                 binding.tvFee.text = getString(R.string.date)
                 binding.tvFeePaid.text =
-                    transactionData.date.toFormat("yyyy-MM-dd'T'hh:mm:ss", "dd MMMM yyyy")
+                    transactionData.date.toFormat("yyyy-MM-dd'T'hh:mm:ss", "dd MMMM yyyy HH:mm")
                 binding.tvDate.visibility = View.GONE
                 binding.tvDateValue.visibility = View.GONE
                 binding.ivTransactionHash.visibility = View.GONE

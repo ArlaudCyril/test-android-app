@@ -45,7 +45,7 @@
                     android:id="@+id/tvTitleTransaction"
                     style="@style/HeadingStyle"
                     android:layout_marginStart="24dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="30dp"
                     android:text="@string/operations"
                     android:textSize="24sp" />
 

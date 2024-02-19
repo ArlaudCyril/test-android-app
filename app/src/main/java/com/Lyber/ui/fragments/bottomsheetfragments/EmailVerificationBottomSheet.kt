@@ -12,6 +12,7 @@ import android.widget.EditText
 import androidx.fragment.app.DialogFragment
 import com.Lyber.R
 import com.Lyber.databinding.BottomSheetVerificationBinding
+import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
 import com.Lyber.viewmodels.PersonalDataViewModel
 import com.Lyber.viewmodels.SignUpViewModel
@@ -55,7 +56,7 @@ class EmailVerificationBottomSheet () :
             title.text = getString(R.string.verification)
             subtitle.text = getString(R.string.enter_the_code_displayed_on_your_email)
             fieldToVerify.text = ""
-            btnCancel.text = getString(R.string.cancel)
+            btnCancel.text = getString(R.string.back)
 
             // Usage example
             val editTextArray : List<EditText> = listOf(etCodeOne, etCodeTwo, etCodeThree,
@@ -161,6 +162,7 @@ class EmailVerificationBottomSheet () :
                     binding.etCodeSix -> {
                         if (getCode().length == 6) {
                             dismiss()
+                            CommonMethods.showProgressDialog(requireContext())
                                 viewModel.verifyEmail(getCode())
                         }
                     }

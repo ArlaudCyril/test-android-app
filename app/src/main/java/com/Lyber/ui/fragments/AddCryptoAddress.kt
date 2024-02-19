@@ -8,6 +8,7 @@ import android.content.IntentFilter
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
@@ -115,6 +116,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 val format = address.addressMatched(it.data.addressRegex)
                 if (format) {
+//                    Log.d("network","$network")
                     viewModel.addAddress(
                         addressName,
                         network?.id ?: "",
@@ -215,7 +217,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
 
                 // change ui
                 network = it
-
+Log.d("NetworkC","$it")
                 binding.tvTitle.fadeIn()
                 binding.ivNetwork.visible()
                 binding.etNetwork.updatePadding(0)

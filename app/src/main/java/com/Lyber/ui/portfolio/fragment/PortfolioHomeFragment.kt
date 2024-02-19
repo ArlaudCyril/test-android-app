@@ -39,13 +39,17 @@ import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.fadeIn
 import com.Lyber.utils.CommonMethods.Companion.fadeOut
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
 import com.Lyber.utils.CommonMethods.Companion.px
 import com.Lyber.utils.CommonMethods.Companion.roundFloat
 import com.Lyber.utils.CommonMethods.Companion.setProfile
-import com.Lyber.utils.CommonMethods.Companion.toMilli
+import com.Lyber.utils.CommonMethods.Companion.toMilli1
+import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.CommonMethods.Companion.visibleFromLeft
 import com.Lyber.utils.CommonMethods.Companion.zoomIn
 import com.google.android.material.tabs.TabLayout
+import java.text.ParseException
+import java.text.SimpleDateFormat
 import java.util.Locale
 
 
@@ -92,6 +96,14 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         resourcesAdapter = ResourcesAdapter()
         assetBreakdownAdapter = BalanceAdapter()
 
+        binding.rvRefresh.setOnRefreshListener {
+            binding.rvRefresh.isRefreshing = true
+            viewModel.getWalletHistoryPrice(false)
+            viewModel.getUser()
+            viewModel.getBalance()
+            viewModel.getAllPriceResume()
+        }
+
         /* setting up recycler views */
         binding.apply {
 
@@ -115,22 +127,24 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 it.addItemDecoration(ItemOffsetDecoration(8))
             }
         }
-
+        viewModel.getWalletHistoryPrice(true,7)
         /* setting up tabs */
         binding.tabLayout.let {
 
-            it.addTab(it.newTab().apply { text = "1H" })
-            it.addTab(it.newTab().apply { text = "4H" })
-            it.addTab(it.newTab().apply { text = "1D" })
+//            it.addTab(it.newTab().apply { text = "1D" })
             it.addTab(it.newTab().apply { text = "1W" })
             it.addTab(it.newTab().apply { text = "1M" })
             it.addTab(it.newTab().apply { text = "1Y" })
+            it.addTab(it.newTab().apply { text = "All" })
 
             it.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
                 override fun onTabSelected(tab: TabLayout.Tab?) {
-                    viewModel.chosenAssets?.let { asset ->
-                        viewModel.getPrice(asset.id, (tab?.text ?: "1h").toString().lowercase())
+                   when(tab?.text){
+                        "1W"->viewModel.getWalletHistoryPrice(true,7)
+                        "1M"->viewModel.getWalletHistoryPrice(true,30)
+                        "1Y"-> viewModel.getWalletHistoryPrice(true,365)
+                        else-> viewModel.getWalletHistoryPrice(true)
                     }
                 }
 
@@ -163,7 +177,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         }
 
         binding.lineChart.clearYAxis()
-        binding.lineChart.timeSeries = getLineData(viewModel.totalPortfolio)
+//        binding.lineChart.timeSeries = getLineData(viewModel.totalPortfolio)
 
         binding.tvInvestMoney.text = getString(R.string.invest_money)
         binding.tvPortfolioAssetPrice.text = getString(R.string.portfolio)
@@ -180,25 +194,13 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             CommonMethods.showProgressDialog(requireActivity())
             viewModel.getUser()
             viewModel.getAllAssets()
-
+            viewModel.getNetworks()
 
         }
-        // if (viewModel.screenCount == 0) {
-        //My assets Part (waiting API)
+
         viewModel.getBalance()
-
-        //Analytics Part (waiting API)
-
-
-        // Recurring Investment Part (waiting API)
-
-
         // All assets available part
         viewModel.getAllPriceResume()
-
-
-        //}
-
 
     }
 
@@ -213,6 +215,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
         viewModel.allAssets.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                binding.rvRefresh.isRefreshing = false
                 dismissProgressDialog()
                 com.Lyber.ui.activities.BaseActivity.assets = it.data as ArrayList<AssetBaseData>
             }
@@ -220,6 +223,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
         viewModel.priceServiceResumes.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                binding.rvRefresh.isRefreshing = false
                 dismissProgressDialog()
                 com.Lyber.ui.activities.BaseActivity.balanceResume.clear()
                 com.Lyber.ui.activities.BaseActivity.balanceResume.addAll(it)
@@ -230,9 +234,10 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         viewModel.balanceResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
+                binding.rvRefresh.isRefreshing = false
                 val balanceDataDict = it.data
                 val balances = ArrayList<Balance>()
-                val forEach = balanceDataDict?.forEach {
+                balanceDataDict?.forEach {
                     val balance = Balance(id = it.key, balanceData = it.value)
                     balances.add(balance)
                 }
@@ -242,23 +247,36 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 viewModel.totalPortfolio = totalBalance
                 binding.tvValuePortfolioAndAssetPrice.text =
                     "${totalBalance.commaFormatted}${Constants.EURO}"
-                binding.lineChart.timeSeries = getLineData(viewModel.totalPortfolio)
                 com.Lyber.ui.activities.BaseActivity.balances = balances
                 balances.sortByDescending { it.balanceData.euroBalance.toDoubleOrNull() }
                 adapterBalance.setList(balances)
             }
         }
 
-        viewModel.priceResponse.observe(viewLifecycleOwner) {
+        viewModel.walletHistoryResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                dismissProgressDialog()
+                CommonMethods.dismissProgressDialog()
+                binding.rvRefresh.isRefreshing = false
+                val dates = it.data.map { it.date }
 
-                val timeFrame =
-                    (binding.tabLayout.getTabAt(binding.tabLayout.selectedTabPosition)?.text
-                        ?: "1h").toString().lowercase()
 
-                binding.lineChart.timeSeries =
-                    it.data.prices.toTimeSeries(it.data.lastUpdate, timeFrame)
+                val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+
+
+                val timeSeries1 = dates.mapIndexed { index, dateString ->
+                    val totalValue =
+                        it.data[index].total.toDouble() // Get the total value from the corresponding index
+                    val dateInMillis = dateFormatter.parse(dateString).time.toDouble()
+                    listOf(dateInMillis, totalValue)
+                } as MutableList
+//                Log.d("timeseries", "$timeSeries")
+                Log.d("timeseries", "$timeSeries1")
+                binding.lineChart.timeSeries = timeSeries1
+//                val dates1=dates.toTimeSeries("2024-02-16T07:26:00.000Z")
+//                Log.d("timeseries","$dates1")
+
+//                binding.lineChart.timeSeries =(timeSeries)
+
 
             }
         }
@@ -266,12 +284,14 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         viewModel.getUserResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
+                binding.rvRefresh.isRefreshing = false
                 App.prefsManager.user = it.data
-                App.prefsManager.defaultImage=it.data.avatar
+                App.prefsManager.defaultImage = it.data.avatar
                 binding.ivProfile.setProfile
-                if(it.data.kycStatus!="NOT_STARTED"){
+                App.prefsManager.withdrawalLockSecurity = it.data.withdrawalLock
+                if (it.data.kycStatus != "NOT_STARTED") {
 
-                }else  if(it.data.yousignStatus!="SIGNED"){
+                } else if (it.data.yousignStatus != "SIGNED") {
 
                 }
                 if (it.data.language.isNotEmpty()) {
@@ -286,24 +306,39 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             }
         }
 
+        viewModel.networkResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                dismissProgressDialog()
+                com.Lyber.ui.activities.BaseActivity.networkAddress = it.data as ArrayList<Network>
+            }
+        }
+
+    }
+
+    private fun String.toMilliS(): Long {
+        val dateFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.getDefault())
+        val date =
+            dateFormatter.parse(this.replace("T", " ").substring(0, 16)) // Adjust format and length
+        return date?.time ?: 0L
     }
 
     private fun List<String>.toTimeSeries(
         lastUpdate: String, tf: String = "1h"
     ): MutableList<List<Double>> {
-        val last = lastUpdate.toMilli()
+        val last = lastUpdate.toMilliS()
         val timeSeries = mutableListOf<List<Double>>()
         val timeInterval = when (tf) {
-            "1h" -> 60 * 1000
-            "4h" -> 5 * 60 * 1000
-            "1d" -> 30 * 60 * 1000
-            "1w" -> 4 * 60 * 60 * 1000
-            "1m" -> 12 * 60 * 60 * 1000
-            else -> 7 * 24 * 60 * 60 * 1000
+            "1h" -> 60 * 60 * 1000L
+            "4h" -> 4 * 60 * 60 * 1000L
+            "1d" -> 24 * 60 * 60 * 1000L
+            "1w" -> 7 * 24 * 60 * 60 * 1000L
+            "1m" -> 30 * 24 * 60 * 60 * 1000L
+            else -> 7 * 24 * 60 * 60 * 1000L
         }
-        for (i in 0 until count()) {
-            val date = (last - (count() - i) * timeInterval).toDouble()
-            timeSeries.add(listOf(date, this[i].toDouble()))
+
+        for (i in indices) {
+            val date = last - (size - i) * timeInterval
+            timeSeries.add(listOf(date.toDouble(), this[i].toDouble()))
         }
         return timeSeries
     }

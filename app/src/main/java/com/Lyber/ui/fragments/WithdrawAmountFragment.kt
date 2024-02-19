@@ -94,8 +94,12 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                         tvAssetName.text = withdrawAddress.name
                         tvAssetNameCode.text = withdrawAddress.address
                         val assest =
-                            com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == withdrawAddress.network } }
-                        ivAssetIcon.load(assest!!.imageUrl)
+                            com.Lyber.ui.activities.BaseActivity.networkAddress.firstNotNullOfOrNull { item -> item.takeIf { item.id == withdrawAddress.network } }
+//                        val assest =
+//                            com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.fullName.lowercase() == withdrawAddress.network!!.lowercase() } }
+                        if (assest != null)
+                            ivAssetIcon.load(assest!!.imageUrl)
+
                     }
                 }
             }
@@ -327,7 +331,8 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
             tvAssetName.text = withdrawAddress!!.name
             tvAssetNameCode.text = withdrawAddress.address
             val assest =
-                com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == withdrawAddress.network } }
+                com.Lyber.ui.activities.BaseActivity.networkAddress.firstNotNullOfOrNull { item -> item.takeIf { item.id == withdrawAddress.network } }
+          if(assest!=null)
             ivAssetIcon.load(assest!!.imageUrl)
         }
     }

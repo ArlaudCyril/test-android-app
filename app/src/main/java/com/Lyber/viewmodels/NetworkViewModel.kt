@@ -50,6 +50,7 @@ import com.Lyber.models.UpdateAuthenticateResponse
 import com.Lyber.models.UploadResponse
 import com.Lyber.models.UserChallengeResponse
 import com.Lyber.models.UserLoginResponse
+import com.Lyber.models.WalletHistoryResponse
 import com.Lyber.models.WhitelistingResponse
 import com.Lyber.models.WithdrawalAddress
 import com.Lyber.models.res
@@ -312,6 +313,9 @@ open class NetworkViewModel : ViewModel() {
 
     private val _signUrlResponse = MutableLiveData<SignURlResponse>()
     val signUrlResponse get() = _signUrlResponse
+
+    private val _walletHistoryResponse = MutableLiveData<WalletHistoryResponse>()
+    val walletHistoryResponse get() = _walletHistoryResponse
     fun cancelJob() {
 
     }
@@ -1467,6 +1471,15 @@ open class NetworkViewModel : ViewModel() {
             } else {
                 _listener?.onRetrofitError(res.errorBody())
             }
+        }
+    }
+
+    fun getWalletHistoryPrice( daily: Boolean = true,limit: Int =500) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).getWalletHistory(limit, daily)
+            if (res.isSuccessful)
+                _walletHistoryResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
         }
     }
 }

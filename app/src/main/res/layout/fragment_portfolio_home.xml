@@ -8,6 +8,11 @@
     android:layout_height="match_parent"
     android:background="@drawable/splash_background"
     android:fitsSystemWindows="true">
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/rvRefresh"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
     <androidx.core.widget.NestedScrollView
         android:id="@+id/nestedScrollView"
@@ -142,6 +147,7 @@
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="40dp"
                         android:text="@string/analytics"
+                        android:visibility="gone"
                         android:textAppearance="@style/TextAppearance.AppCompat.Title"
                         android:textColor="@color/purple_gray_900" />
 
@@ -149,6 +155,7 @@
                         android:id="@+id/rvAnalytics"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
+                        android:visibility="gone"
                         android:layout_marginTop="24dp"
                         android:backgroundTint="@color/purple_gray_50"
                         android:layoutAnimation="@anim/recycler_view_item_animation" />
@@ -167,10 +174,34 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="24dp"
+                        android:visibility="gone"
                         android:background="@drawable/curved_button"
                         android:backgroundTint="@color/purple_gray_50"
                         android:layoutAnimation="@anim/recycler_view_item_animation" />
-
+<LinearLayout
+    android:id="@+id/llNoActiveStrategy"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_gravity="center"
+    android:gravity="center"
+    android:layout_marginTop="24dp"
+    android:paddingVertical="16dp"
+    android:background="@drawable/curved_button"
+    android:backgroundTint="@color/purple_gray_50"
+    android:orientation="vertical">
+    <TextView
+        style="@style/SubheadMabry"
+        android:text="@string/you_donot_have_active_strategy"
+        android:layout_marginBottom="1dp"
+        android:textStyle="bold"
+        android:textColor="@color/purple_gray_800" />
+    <TextView
+        style="@style/SubheadMabry"
+        android:text="@string/activate_create"
+        android:layout_marginTop="1dp"
+        android:textStyle="bold"
+        android:textColor="@color/purple_500" />
+</LinearLayout>
                     <TextView
                         style="@style/TitleText"
                         android:layout_marginStart="8dp"
@@ -207,7 +238,7 @@
 
 
     </androidx.core.widget.NestedScrollView>
-
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
     <LinearLayout
         android:id="@+id/btnPlaceOrder"
         style="@style/ButtonStyle"

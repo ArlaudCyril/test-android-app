@@ -56,7 +56,7 @@
     <string name="hint_birth_date">Date de naissance</string>
     <string name="hint_nationality">Nationalité</string>
     <string name="send_to_lyber">Envoyer à Lyber</string>
-    <string name="adresse_email">Adresse email</string>
+    <string name="email_address">Email adresse</string>
     <string name="subtitle_email">Ces informations seront utilisées à des fins de sécurité et pour confirmer vos transactions.</string>
     <string name="hint_email">Email</string>
     <string name="v_rification_email">Email Vérification</string>
@@ -402,7 +402,8 @@
     <string name="strong_authentication">Authentification forte</string>
     <string name="disabled">Désactivé</string>
     <string name="crypto_address_book">Carnet d’adresses</string>
-    <string name="whitelisting_disabled">Liste blanche : désactivée</string>
+    <string name="whitelisting_disabled">Liste blanche Désactivée</string>
+    <string name="whitelisting_enabled">Liste blanche Activée</string>
     <string name="change_pin">Changer de code PIN</string>
     <string name="face_id">Identification du visage</string>
     <string name="asset_name">Nom de l\'actif</string>
@@ -485,7 +486,7 @@
     <string name="withdraw_to">Retirer → Vers</string>
     <string name="confirm_withdrawal">Confirmer le retrait</string>
     <string name="save_settings">Enregistrer les paramètres</string>
-    <string name="security_of_your_notebook">Sécurité de votre ordinateur portable</string>
+    <string name="security_of_your_notebook">Sécurité du carnet d\'adresses</string>
     <string name="active_during">Actif durant:</string>
     <string name="the_address_book_limits_your_withdrawals_and_deposits_to_the_addresses_in_your_address_book">Le carnet d’adresse limite vos retraits et dépôts aux adresses figurant dans votre carnet.</string>
     <string name="you_can_immediately_withdraw_to_any_address_newly_added_to_your_address_book">Vous pourrez retirer immédiatement vers une adresse nouvellement ajoutée à votre carnet d\'adresse.</string>
@@ -736,4 +737,7 @@
     <string name="under_maintenance">Lyber est en\nmaintenance.\nRevenez plus tard !</string>
     <string name="what_do_you_plan_to_do">Que comptez-vous faire principalement ?</string>
     <string name="registration">Inscription</string>
+    <string name="withdrawal_security_settings">Paramètres de sécurité de retrait</string>
+    <string name="you_donot_have_active_strategy">Vous n\'avez pas encore de stratégie active</string>
+    <string name="activate_create"><u>Activer</u>/<u>créer un maintenant</u></string>
 </resources>

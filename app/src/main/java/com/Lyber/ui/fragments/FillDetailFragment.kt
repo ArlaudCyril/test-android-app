@@ -75,8 +75,6 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
         viewModel.setUserInfoResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
-//                prefsManager.personalDataSteps = Constants.PERSONAL_DATA
-//                moveToNext()
             }
         }
 
@@ -197,7 +195,7 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
             0 -> {
 
                 position++
-                replace(R.id.flFillPersonalData, fragmentList[position], false)
+                replace(R.id.flFillPersonalData, fragmentList[position], true)
 
             }
 
@@ -275,17 +273,14 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
 
                 it.tvPositiveButton.setOnClickListener {
                     dismiss()
-                    prefsManager.logout()
-                    requireActivity().supportFragmentManager.popBackStack()
-
-
+                    App.prefsManager.logout()
+                    findNavController().popBackStack()
+                    findNavController().navigate(R.id.discoveryFragment)
                     CommonMethods.checkInternet(requireContext()) {
                         dismiss()
-                        CommonMethods.showProgressDialog(requireContext())
+//                        CommonMethods.showProgressDialog(requireContext())
                         viewModel.logout(CommonMethods.getDeviceId(requireActivity().contentResolver))
                     }
-
-
                 }
 
                 show()
