@@ -36,7 +36,7 @@ class PickStrategyFragmentAdapter(val itemClicked: (position: Int, view: Strateg
                     else
                         itemList[i]!!.isSelected = false
                 }
-                itemClicked(adapterPosition,strategyView)
+                itemClicked(absoluteAdapterPosition,strategyView)
                 notifyDataSetChanged()
             }
 
@@ -106,6 +106,11 @@ class PickStrategyFragmentAdapter(val itemClicked: (position: Int, view: Strateg
                             binding.tvValueYield.gone()
                             yeild = ""
                         }
+                        binding.ivMinInvest.visible()
+                        binding.tvMinInvest.visible()
+                        binding.tvMinInvestValue.visible()
+                        binding.tvMinInvestValue.text="${it.minAmount} USDT"
+
                         allocationView.setAssetsList(it.bundle)
                         if (it.activeStrategy != null) {
                             binding.tvPriceStrategy.visible()

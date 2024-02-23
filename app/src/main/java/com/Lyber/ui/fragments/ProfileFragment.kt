@@ -162,6 +162,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 binding.tvStatusAddressBook.text = getString(R.string.whitelisting_enabled)
 
         }
+
         if (App.prefsManager.getLanguage().isNotEmpty()) {
             val ln = App.prefsManager.getLanguage()
             if (ln == Constants.FRENCH)

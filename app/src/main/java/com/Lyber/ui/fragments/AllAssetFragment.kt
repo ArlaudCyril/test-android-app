@@ -232,7 +232,15 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
             if (type == Constants.Exchange) {
                 viewModel.exchangeAssetTo = asset.id
                 findNavController().navigate(R.id.addAmountForExchangeFragment)
-            } else {
+            }
+            else if(type=="assets"){
+                findNavController().popBackStack()
+                viewModel.selectedAsset = CommonMethods.getAsset(asset.id)
+                viewModel.selectedBalance = CommonMethods.getBalance(asset.id)
+                findNavController().navigate(R.id.portfolioDetailFragment)
+            }
+
+            else {
                 requireActivity().onBackPressedDispatcher.onBackPressed()
             }
         }

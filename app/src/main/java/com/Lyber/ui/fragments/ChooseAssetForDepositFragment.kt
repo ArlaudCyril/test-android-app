@@ -46,6 +46,7 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = getViewModel(requireActivity())
+        viewModel.listener=this
         binding.ivScan.setOnClickListener {
             if (binding.etAddress.text.toString().isNotEmpty())
                 startActivity(Intent(requireActivity(), com.Lyber.ui.activities.BarCodeActivity::class.java)

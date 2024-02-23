@@ -6,12 +6,14 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.Lyber.R
 import com.Lyber.databinding.ItemRecurringInvestmentBinding
+import com.Lyber.models.ActiveStrategyData
 import com.Lyber.models.Investment
 import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
+import com.Lyber.utils.CommonMethods.Companion.toFormat
 import com.Lyber.utils.Constants
 
-class RecurringInvestmentAdapter(private val clickListener: (Investment) -> Unit = { _ -> }, private val context:Context) :
-    BaseAdapter<Investment>() {
+class RecurringInvestmentAdapter(private val clickListener: (ActiveStrategyData) -> Unit = { _ -> }, private val context:Context) :
+    BaseAdapter<ActiveStrategyData>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
         return RecurringViewHolder(
@@ -30,19 +32,27 @@ class RecurringInvestmentAdapter(private val clickListener: (Investment) -> Unit
 
                 itemList[position]?.let {
 
-                    tvInvestmentTitle.text = if (it.type == Constants.SINGULAR) it.asset_id.toString()
-                        .uppercase() else it.user_investment_strategy_id?.strategy_name ?: ""
+//                    tvInvestmentTitle.text = if (it.strategyType == Constants.STRATEGY_TYPE) it.asset_id.toString()
+//                        .uppercase() else it.user_investment_strategy_id?.strategy_name ?: ""
 
-                    if (it.type == "SINGULAR") {
+//                    if (it.strategyType == "SINGULAR") {
+//
+////                        ivInvestment.loadCircleCrop(it.logo)
+//
+//                    } else
+                        ivInvestment.setImageResource(R.drawable.ic_intermediate_strategy)
 
-                        ivInvestment.loadCircleCrop(it.logo)
-
-                    } else ivInvestment.setImageResource(R.drawable.ic_intermediate_strategy)
-
+                    tvInvestmentTitle.text=it.strategyName
                     tvInvestmentAmount.text = "${it.amount}${Constants.EURO}"
-                    tvInvestmentFrequency.text = it.frequency
-                    tvInvestmentUpcomingPayment.text =
-                        context.getString(R.string.upcoming_payment_august_27)
+                    when(it.frequency){
+                        "1d"->tvInvestmentFrequency.text=context.getString(R.string.daily)
+                        "1w"->tvInvestmentFrequency.text=context.getString(R.string.weekly)
+                        "1m"->tvInvestmentFrequency.text=context.getString(R.string.monthly)
+                        else -> tvInvestmentFrequency.text=it.frequency
+                    }
+//                    tvInvestmentFrequency.text = it.frequency
+                    tvInvestmentUpcomingPayment.text =  context.getString(R.string.upcoming_payment)+it.nextExecution.toFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'","MMMM dd")
+
 
                 }
             }

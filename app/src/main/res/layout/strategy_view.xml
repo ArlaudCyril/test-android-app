@@ -35,13 +35,48 @@
         android:text="@string/enabled"
         android:enabled="false"
         android:textColor="@color/solanaColor" />
+    <ImageView
+        android:id="@+id/ivMinInvest"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvTop"
+        android:visibility="gone"
+        android:layout_marginTop="18.29dp"
+        android:src="@drawable/min_investment" />
+
+    <TextView
+        android:id="@+id/tvMinInvest"
+        style="@style/SubTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvTop"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="16dp"
+        android:layout_toEndOf="@id/ivMinInvest"
+        android:text="@string/minimum_investment"
+        android:visibility="gone"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+
+    <TextView
+        android:id="@+id/tvMinInvestValue"
+        style="@style/DialogTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tvTop"
+        android:layout_marginStart="4dp"
+        android:layout_marginTop="16dp"
+        android:layout_toEndOf="@id/tvMinInvest"
+        android:visibility="gone"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+        tools:text="~10% APY" />
+
 
     <ImageView
         android:id="@+id/ivYield"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvTop"
-        android:layout_marginTop="18.29dp"
+        android:layout_below="@id/ivMinInvest"
+        android:layout_marginTop="12dp"
         android:src="@drawable/ic_risk" />
 
     <TextView
@@ -49,9 +84,9 @@
         style="@style/SubTitleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvTop"
+        android:layout_below="@id/ivMinInvest"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:layout_toEndOf="@id/ivYield"
         android:text="@string/risk"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
@@ -61,9 +96,9 @@
         style="@style/DialogTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvTop"
+        android:layout_below="@id/ivMinInvest"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:layout_toEndOf="@id/tvYield"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         tools:text="~10% APY" />
@@ -85,7 +120,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/ivYield"
-        android:layout_marginTop="16.29dp"
+        android:layout_marginTop="12dp"
         android:src="@drawable/ic_yield_chart" />
 
 
@@ -96,7 +131,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/ivYield"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="10dp"
         android:layout_toEndOf="@id/ivRisk"
         android:text="@string/yield"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
@@ -108,7 +143,7 @@
         android:layout_height="wrap_content"
         android:layout_below="@id/ivYield"
         android:layout_marginStart="4dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="10dp"
         android:layout_toEndOf="@id/tvRisk"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         tools:text="Medium" />
@@ -117,8 +152,7 @@
         android:id="@+id/allocationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/tvRisk"
-        android:layout_marginTop="12dp" />
+        android:layout_below="@id/tvRisk" />
 
     <TextView
         android:id="@+id/btnInvestUsingMyStrategy"

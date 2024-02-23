@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/top_curved_layout"
+    android:backgroundTint="@color/purple_gray_00"
+    android:paddingHorizontal="16dp"
+    android:paddingVertical="16dp">
+
+    <TextView
+        android:id="@+id/tvTitle"
+        style="@style/SubHeadlineStyle"
+        android:text="@string/withdraw_on_my_bank_account"
+        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+        android:textStyle="bold"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:textColor="@color/purple_gray_900"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        style="@style/SubheadMabry"
+        android:id="@+id/tvFollowBelowSteps"
+        android:text="@string/to_withdraw_follow_below_steps"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="18dp"
+        android:paddingHorizontal="8dp"
+        android:lineSpacingExtra="3sp"
+        android:gravity="start"
+        android:textColor="@color/purple_gray_600"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvTitle" />
+
+    <TextView
+        style="@style/SubheadMabry"
+        android:id="@+id/tvConvertAsset"
+        android:text="@string/convert_asset_you_wish_to_withdraw"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="14dp"
+        android:paddingHorizontal="8dp"
+        android:lineSpacingExtra="3sp"
+        android:gravity="start"
+        android:textColor="@color/purple_gray_600"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvFollowBelowSteps" />
+
+    <TextView
+        style="@style/SubheadMabry"
+        android:id="@+id/tvPleaseInclude"
+        android:text="@string/please_include"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="10dp"
+        android:layout_marginBottom="8dp"
+        android:paddingHorizontal="8dp"
+        android:lineSpacingExtra="3sp"
+        android:gravity="start"
+        android:textColor="@color/purple_gray_600"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/tvConvertAsset" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -121,7 +121,7 @@
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="32dp"
                         android:text="@string/my_assets"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="@color/purple_gray_900" />
 
                     <LinearLayout
@@ -166,7 +166,7 @@
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="40dp"
                         android:text="@string/recurring_investment"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="#423D33" />
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -174,7 +174,7 @@
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_marginTop="24dp"
-                        android:visibility="gone"
+                        android:visibility="visible"
                         android:background="@drawable/curved_button"
                         android:backgroundTint="@color/purple_gray_50"
                         android:layoutAnimation="@anim/recycler_view_item_animation" />
@@ -184,6 +184,7 @@
     android:layout_height="wrap_content"
     android:layout_gravity="center"
     android:gravity="center"
+    android:visibility="gone"
     android:layout_marginTop="24dp"
     android:paddingVertical="16dp"
     android:background="@drawable/curved_button"
@@ -196,6 +197,7 @@
         android:textStyle="bold"
         android:textColor="@color/purple_gray_800" />
     <TextView
+        android:id="@+id/tvActivateStrategy"
         style="@style/SubheadMabry"
         android:text="@string/activate_create"
         android:layout_marginTop="1dp"
@@ -207,7 +209,7 @@
                         android:layout_marginStart="8dp"
                         android:layout_marginTop="40dp"
                         android:text="@string/all_assets_available"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="#423D33" />
 
                     <androidx.recyclerview.widget.RecyclerView
@@ -226,7 +228,7 @@
                         android:layout_marginBottom="48dp"
                         android:gravity="center"
                         android:text="@string/view_all"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                         android:textColor="@color/purple_500" />
 
                 </LinearLayout>

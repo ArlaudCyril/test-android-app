@@ -15,7 +15,9 @@ import com.Lyber.databinding.LoaderViewBinding
 import com.Lyber.models.WithdrawAddress
 import com.Lyber.ui.activities.BaseActivity
 import com.Lyber.ui.adapters.BaseAdapter
+import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
+import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 
 class WithdrawalAddressBottomSheet (private val addresses: MutableList<WithdrawAddress>, private val selectedNetwork:String, private val handle: (WithdrawAddress?, String?) -> Unit = { _, _ -> }
@@ -105,7 +107,9 @@ class WithdrawalAddressBottomSheet (private val addresses: MutableList<WithdrawA
                             val assest = com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull{ item -> item.takeIf {item.id == data.network}}
                             ivItem.loadCircleCrop(assest!!.imageUrl)
                             tvStartTitle.text = it.name
-                            tvStartSubTitle.text = it.address
+                            tvStartSubTitle.gone()
+                            tvAddress.visible()
+                            tvAddress.text = it.address
 
                         }
                     }

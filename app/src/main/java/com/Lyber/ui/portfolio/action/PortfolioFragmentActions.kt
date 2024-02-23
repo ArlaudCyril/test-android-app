@@ -7,7 +7,7 @@ import com.Lyber.models.*
 
 interface PortfolioFragmentActions {
 
-    fun recurringInvestmentClicked(investment: Investment)
+    fun recurringInvestmentClicked(investment: ActiveStrategyData)
 
     fun investMoneyClicked(toStrategy: Boolean)
 

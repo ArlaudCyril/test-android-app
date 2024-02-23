@@ -90,7 +90,8 @@
     <string name="setting">Paramètres</string>
     <string name="cancel">Annuler</string>
     <string name="investment_strategies">Stratégies d\'investissement</string>
-    <string name="subtitle_investment_strategies">Les stratégies sont là pour vous aider à diversifier vos investissements sur plusieurs actifs.</string>
+    <string name="subtitle_investment_strategies">Les stratégies sont là pour vous aider à diversifier vos investissements sur plusieurs actifs.\n
+    Les stratégies proposées par Lyber ne constituent pas un conseil en investissement. Les utilisateurs sont seuls responsables de leur choix de stratégie.</string>
     <string name="build_my_own_strategy">Construire ma propre stratégie</string>
     <string name="choose_this_strategy">Choisir une stratégie</string>
     <string name="a_new_code_will_be_sent_in">Un nouveau code sera envoyé</string>
@@ -167,7 +168,7 @@
     <string name="deactivated">Désactivé</string>
     <string name="assets">%1$s - %2$s Actifs</string>
     <string name="k_month">%1$s - %2$s€/mois</string>
-    <string name="upcoming_payment_august_27">Paiement à venir le 27 août</string>
+    <string name="upcoming_payment">Paiement à venir: </string>
     <string name="delete">Supprimer</string>
     <string name="confirm">Confirmer</string>
     <string name="trending">Tendance</string>
@@ -425,9 +426,9 @@
     <string name="edit_personal_info">Modifier les informations personnelles</string>
     <string name="start">Démarrer</string>
     <string name="verification_is_in_process">La vérification est en cours</string>
-    <string name="everyday">Tous les jours</string>
-    <string name="every_thursday">Tous les jeudis</string>
-    <string name="every_21st_of_the_month">Tous les 21 du mois</string>
+    <string name="everyday">Tous les jours (07:00 UTC)</string>
+    <string name="every_thursday">Tous les jeudis (08:00 UTC)</string>
+    <string name="every_21st_of_the_month">Tous les 21 du mois (09:00 UTC)</string>
     <string name="bought_btc">Acheté BTC</string>
     <string name="fiat_wallet">Portefeuille FIAT</string>
     <string name="change_profile_picture">Modifier la photo de profil</string>
@@ -555,7 +556,7 @@
     <string name="close_account_message">Êtes-vous sûr de vouloir fermer votre compte ? Toutes vos données, y compris les préférences enregistrées, l’historique des transactions et les informations personnelles seront conservées pendant 5 ans à partir de la date de fermeture de votre compte. Si vous êtes certain, veuillez confirmer ci-dessous.\n\n
         Veillez à bien retirer tout l’argent que vous avez sur votre compte avant de\n le clôturer.</string>
     <string name="make_sure_withdraw">Veillez à bien retirer tout l’argent que vous avez sur votre compte avant de le clôturer.</string>
-    <string name="minimum_investment">Invest min</string>
+    <string name="minimum_investment">Invest min :</string>
     <string name="invest">Investir</string>
     <string name="immediate">Immédiat</string>
     <string name="executing_your_strategy">Nous exécutons votre stratégie, cela peut prendre quelques secondes.</string>
@@ -609,11 +610,11 @@
     <string name="manufacturing_mettalurgy">Industrie manufacturière &amp; Métallurgie</string>
     <string name="marketing_advertising_public_relations">Marketing, Publicité &amp; Relations Publiques</string>
     <string name="real_estate_property_management">Immobilier et Gestion Immobilière</string>
-    <string name= "retail_ecommerce">Commerce de Détail &amp; E-commerce</string>
+    <string name="retail_ecommerce">Commerce de Détail &amp; E-commerce</string>
     <string name="sports_leisure_entertainment">Sport, Loisirs &amp; Divertissement Interactif</string>
-    <string name= "textile_fashion_apparel">Textile, Mode &amp; Habillement</string>
+    <string name="textile_fashion_apparel">Textile, Mode &amp; Habillement</string>
     <string name="transport_logistics_wholesale">Transport, Logistique &amp; Vente en Gros</string>
-    <string name= "what_salary_range_you_fall_into">Dans quelle tranche de salaire vous situez-vous ?</string>
+    <string name="what_salary_range_you_fall_into">Dans quelle tranche de salaire vous situez-vous ?</string>
     <string name="disclaimer">Avertissement</string>
     <string name="information_provided_application_not_investment_advice">Les informations fournies sur l\'application ne doivent pas être considérées comme des conseils en investissement,
     des conseils financiers, des conseils en trading ou toute autre sorte de conseil et aucun contenu de l\'application ne
@@ -722,7 +723,7 @@
     <string name="pay">Payer</string>
     <string name="purchase_error">La date limite pour confirmer votre achat est dépassée. Souhaitez-vous recevoir une nouvelle proposition?</string>
     <string name="you_have_seconds_to_confirm_this_purchase">Vous disposez de %1$s secondes pour confirmer cet achat.</string>
-     <string name="you_must_install_gpay">Vous devez d\'abord installer Google Pay</string>
+    <string name="you_must_install_gpay">Vous devez d\'abord installer Google Pay</string>
     <string name="usdt_price">USDT Prix</string>
     <string name="fee">Frais</string>
     <string name="previous">Previous</string>
@@ -740,4 +741,13 @@
     <string name="withdrawal_security_settings">Paramètres de sécurité de retrait</string>
     <string name="you_donot_have_active_strategy">Vous n\'avez pas encore de stratégie active</string>
     <string name="activate_create"><u>Activer</u>/<u>créer un maintenant</u></string>
+    <string name="use_face_id">Utiliser Face Id</string>
+    <string name="on_my_crypto_wallet">Sur mon portefeuille crypto</string>
+    <string name="on_my_bank_account">Sur mon compte bancaire</string>
+    <string name="withdraw_on_my_bank_account">Retirer sur mon compte bancaire</string>
+    <string name="to_withdraw_follow_below_steps">Pour retirer vos investissements sur votre compte bancaire, veuillez suivre les étapes ci-dessous :</string>
+    <string name="convert_asset_you_wish_to_withdraw">1. Convertissez les actifs que vous souhaitez retirer en USDT.</string>
+    <string name="clicking_here">cliquant ici.</string>
+    <string name="please_include">2. Envoyez-nous un message en cliquant ici. Veuillez inclure les informations suivantes: le montant d\'USDT que vous souhaitez retirer, aainsi que votre IBAN, BIC et le nom du bénéficiaire (qui doit être le même que le nom avec lequel vous avez ouvert votre compte Lyber).\n\nNotre équipe d\'assistance vous répondra dans les plus brefs délais pour effectuer le retrait.</string>
+
 </resources>

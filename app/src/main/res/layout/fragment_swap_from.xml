@@ -103,7 +103,7 @@
                 style="@style/TitleText"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
-                android:text="@string/a_precise_asset"
+                android:text="@string/on_my_crypto_wallet"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 android:textColor="@color/purple_gray_900" />
 
@@ -117,6 +117,14 @@
                 android:nestedScrollingEnabled="false"
                 tools:itemCount="6"
                 tools:listitem="@layout/item_my_asset" />
+            <TextView
+                android:id="@+id/tvOnMyBank"
+                style="@style/TitleText"
+                android:layout_marginStart="24dp"
+                android:layout_marginTop="16dp"
+                android:text="@string/on_my_bank_account"
+                android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                android:textColor="@color/purple_gray_900" />
 
             <include
                 android:id="@+id/includedAsset"
