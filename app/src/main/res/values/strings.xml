@@ -90,7 +90,8 @@
     <string name="setting">Settings</string>
     <string name="cancel">Cancel</string>
     <string name="investment_strategies">Investment strategies</string>
-    <string name="subtitle_investment_strategies">The strategies are there to help you dilute your investments over several assets.</string>
+    <string name="subtitle_investment_strategies">The strategies are there to help you dilute your investments over several assets.\n
+    The strategies proposed by Lyber do not represent investment advice. Users are solely responsible for their choice of strategy.</string>
     <string name="build_my_own_strategy">Build my own strategy</string>
     <string name="choose_this_strategy">Choose this strategy</string>
     <string name="a_new_code_will_be_sent_in">A new code will be sent in</string>
@@ -167,7 +168,7 @@
     <string name="deactivated">Deactivated</string>
     <string name="assets">%1$s - %2$s assets</string>
     <string name="k_month">%1$s - %2$s€/month</string>
-    <string name="upcoming_payment_august_27">Upcoming Payment August 27</string>
+    <string name="upcoming_payment">Upcoming Payment: </string>
     <string name="delete">Delete</string>
     <string name="confirm">Confirm</string>
     <string name="trending">Trending</string>
@@ -425,9 +426,9 @@
     <string name="edit_personal_info">Edit personal info</string>
     <string name="start">Start</string>
     <string name="verification_is_in_process">Verification is in process</string>
-    <string name="everyday">Everyday</string>
-    <string name="every_thursday">Every thursday</string>
-    <string name="every_21st_of_the_month">Every 21st of the month</string>
+    <string name="everyday">Everyday (07:00 UTC)</string>
+    <string name="every_thursday">Every thursday (08:00 UTC)</string>
+    <string name="every_21st_of_the_month">Every 21st of the month (09:00 UTC)</string>
     <string name="bought_btc">Bought BTC</string>
     <string name="fiat_wallet">FIAT Wallet</string>
     <string name="change_profile_picture">Change Profile Picture</string>
@@ -567,7 +568,6 @@
     <string name="close_account_message">Are you sure you want to close your account? All your data, including saved preferences, transaction history and personal information will be retained for 5 years from the date of account closure. If you are sure, please confirm below.\n\n
     Make sure to withdraw all the money you have in your account before\n closing it.</string>
     <string name="make_sure_withdraw">Make sure to withdraw all the money you have in your account before closing it.</string>
-    <string name="minimum_investment">Min Invest</string>
     <string name="invest">Invest</string>
     <string name="immediate">Immediate</string>
     <string name="executing_your_strategy">We are executing your strategy, which may take a few seconds.</string>
@@ -741,4 +741,14 @@
     <string name="withdrawal_security_settings">Withdrawal security settings</string>
     <string name="you_donot_have_active_strategy">You do not have any active strategie yet</string>
     <string name="activate_create"><u>Activate</u>/<u>create one now</u></string>
+    <string name="use_face_id">Use face Id</string>
+    <string name="on_my_crypto_wallet">On my crypto wallet</string>
+    <string name="on_my_bank_account">On my bank account</string>
+    <string name="withdraw_on_my_bank_account">Withdraw on my bank account</string>
+    <string name="to_withdraw_follow_below_steps">To withdraw your investments on your bank account, please follow the steps below:</string>
+    <string name="convert_asset_you_wish_to_withdraw">1. Convert the assets you wish to withdraw into USDT.</string>
+    <string name="clicking_here">clicking here.</string>
+    <string name="please_include">2. Send us a message by clicking here. Please include the following information: the amount of USDT you wish to withdraw, as well as your IBAN, BIC and the name of the beneficiary (which must be the same as the name with which you opened your Lyber account).\n\nOur support team will get back to you as soon as possible to make the withdrawal.</string>
+    <string name="minimum_investment">Min Investment:</string>
+
 </resources>

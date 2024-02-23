@@ -40,6 +40,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.biometric.BiometricManager
+import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK
 import androidx.biometric.BiometricPrompt
 import androidx.core.app.ActivityCompat
@@ -182,7 +183,7 @@ class CommonMethods {
             }
         }
 
-//        fun Long.toGraphTime(): String {
+        //        fun Long.toGraphTime(): String {
 //            SimpleDateFormat("MMM dd, HH:mm").let {
 //                return it.format(Date(this))
 //            }
@@ -196,6 +197,7 @@ class CommonMethods {
             }
             return dateFormat.format(date)
         }
+
         fun List<Double>.toTimeSeries(): List<List<Double>> {
 
             val list = mutableListOf<List<Double>>()
@@ -360,7 +362,7 @@ class CommonMethods {
             return Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
         }
 
-        fun showErrorMessage(context: Context, responseBody: ResponseBody?, root: View) :Int{
+        fun showErrorMessage(context: Context, responseBody: ResponseBody?, root: View): Int {
 
             val errorConverter = RestClient.getRetrofitInstance()
                 .responseBodyConverter<ErrorResponse>(
@@ -371,24 +373,26 @@ class CommonMethods {
             val errorRes: ErrorResponse? = errorConverter.convert(responseBody!!)
             if (errorRes?.code == 19002 || errorRes?.code == 19003) {
                 findNavController(root).navigate(R.id.underMaintenanceFragment)
-            }
-           else if (errorRes?.code == 7023 || errorRes?.code == 10041 || errorRes?.code == 7025 || errorRes?.code == 10043) {
+            } else if (errorRes?.code == 7023 || errorRes?.code == 10041 || errorRes?.code == 7025 || errorRes?.code == 10043) {
                 return errorRes?.code
             } else if (errorRes?.code == 7024 || errorRes?.code == 10042) {
-                showSnackBar(root,context)
+                showSnackBar(root, context)
                 return errorRes.code
             } else
                 if ((errorRes?.error ?: "").isNotEmpty()) {
-                when (errorRes?.error) {
-                    "Invalid UpdateExpression: Syntax error; token: \"0\", near: \", 0)\"" ->
-                        "Invalid OTP".showToast(context)
+                    when (errorRes?.error) {
+                        "Invalid UpdateExpression: Syntax error; token: \"0\", near: \", 0)\"" ->
+                            "Invalid OTP".showToast(context)
 
-                    "Email already verified" -> "Email already exists".showToast(context)
-                    "Bad client credentials" -> "Invalid credentials".showToast(context)
-                    "No user registerd with this email" -> "Invalid credentials".showToast(context)
-                    else -> errorRes?.error?.showToast(context)
+                        "Email already verified" -> "Email already exists".showToast(context)
+                        "Bad client credentials" -> "Invalid credentials".showToast(context)
+                        "No user registerd with this email" -> "Invalid credentials".showToast(
+                            context
+                        )
+
+                        else -> errorRes?.error?.showToast(context)
+                    }
                 }
-            }
             if (errorRes?.error == "UNAUTHORIZED" || errorRes?.error == "Unauthorized") {
 
                 prefsManager.logout()
@@ -820,8 +824,8 @@ class CommonMethods {
 //            }
         val <T> T.commaFormatted: String
             get() = when (this) {
-                is Int-> String.format(Locale.US, "%,d", this.toLong())
-                is Number ->  String.format(Locale.US, "%,.2f", this)
+                is Int -> String.format(Locale.US, "%,d", this.toLong())
+                is Number -> String.format(Locale.US, "%,.2f", this)
                 is String -> toDoubleOrNull()?.let { String.format(Locale.US, "%,.2f", it) } ?: "0"
                 is Char -> this.toString()
                 else -> "0"
@@ -1189,9 +1193,10 @@ class CommonMethods {
                 }
             }
         }
+
         @SuppressLint("SimpleDateFormat")
         fun String.toMilli(): Long {
-            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",Locale.US).parse(this)?.let {
+            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).parse(this)?.let {
                 return it.time
             }
             return System.currentTimeMillis()
@@ -1199,7 +1204,8 @@ class CommonMethods {
 
         val ImageView.setProfile: Unit
             get() = kotlin.run {
-                val matchingAvatar = Constants.defaults.find { it.avatar_name == prefsManager.defaultImage }
+                val matchingAvatar =
+                    Constants.defaults.find { it.avatar_name == prefsManager.defaultImage }
                 matchingAvatar?.let {
                     val drawableResId = it.avatar_is
                     setImageResource(drawableResId)
@@ -1459,7 +1465,7 @@ class CommonMethods {
         }
 
         fun isValidPassword(password: String): Boolean {
-    val passwordRegex = Regex("(?=.*[a-z])(?=.*[A-Z])(?=.*[^\\w]).{10,}")
+            val passwordRegex = Regex("(?=.*[a-z])(?=.*[A-Z])(?=.*[^\\w]).{10,}")
             return passwordRegex.matches(password)
         }
 
@@ -1559,34 +1565,27 @@ class CommonMethods {
             }
             return bMapRotate
         }
- fun showSnackBar(root: View,context: Context){
-     val snackbar = Snackbar.make(root, "", Snackbar.LENGTH_LONG)
-     val params = snackbar.view.layoutParams as FrameLayout.LayoutParams
-     params.gravity = Gravity.TOP
-     params.setMargins(0, 0, 0, 0)
-     snackbar.view.layoutParams = params
-     snackbar.animationMode = BaseTransientBottomBar.ANIMATION_MODE_FADE
-     val layout = snackbar.view as Snackbar.SnackbarLayout
-     val textView =
-         layout.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-     textView.visibility = View.INVISIBLE
-     val snackView =
-         LayoutInflater.from(context).inflate(R.layout.custom_snackbar, null)
-     val textViewMsg = snackView.findViewById<TextView>(R.id.tvMsg)
-     textViewMsg.text = context.getString(R.string.kyc_under_verification)
-     layout.setPadding(0, 0, 0, 0)
-     layout.addView(snackView, 0)
-     snackbar.show()
- }
 
-
-        @SuppressLint("SimpleDateFormat")
-        fun String.toMilli1(): Long {
-            SimpleDateFormat("yyyy-MM-dd'T'HH:mm").parse(this)?.let {
-                return it.time
-            }
-            return System.currentTimeMillis()
+        fun showSnackBar(root: View, context: Context) {
+            val snackbar = Snackbar.make(root, "", Snackbar.LENGTH_LONG)
+            val params = snackbar.view.layoutParams as FrameLayout.LayoutParams
+            params.gravity = Gravity.TOP
+            params.setMargins(0, 0, 0, 0)
+            snackbar.view.layoutParams = params
+            snackbar.animationMode = BaseTransientBottomBar.ANIMATION_MODE_FADE
+            val layout = snackbar.view as Snackbar.SnackbarLayout
+            val textView =
+                layout.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+            textView.visibility = View.INVISIBLE
+            val snackView =
+                LayoutInflater.from(context).inflate(R.layout.custom_snackbar, null)
+            val textViewMsg = snackView.findViewById<TextView>(R.id.tvMsg)
+            textViewMsg.text = context.getString(R.string.kyc_under_verification)
+            layout.setPadding(0, 0, 0, 0)
+            layout.addView(snackView, 0)
+            snackbar.show()
         }
+
 
     }
 }

@@ -46,6 +46,12 @@ class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnCli
                         if (viewModel.exchangeAssetTo != balance.id){
                             balances.add(balance)
                         }
+                    }else if (arguments != null && requireArguments().getString(Constants.TYPE)
+                        == Constants.TO_SWAP
+                    ) {
+                        if (viewModel.exchangeAssetFrom != balance.id){
+                            balances.add(balance)
+                        }
                     } else {
                         balances.add(balance)
                     }
@@ -82,8 +88,10 @@ class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnCli
         binding.rlAllPortfolio.gone()
         binding.tvTitle.text = getString(R.string.exchange_from)
         binding.rlAllPortfolio.gone()
-        binding.includedAsset.root.visible()
-        binding.includedAsset.llFiatWallet.visible()
+        binding.tvLyberPortfolio.text=getString(R.string.lyber_portfolio)
+        binding.tvOnMyBank.gone()
+        binding.includedAsset.root.gone()
+        binding.includedAsset.llFiatWallet.gone()
         binding.includedAsset.ivAssetIcon.setImageResource(R.drawable.ic_euro)
         binding.includedAsset.ivDropIcon.setImageResource(R.drawable.ic_right_arrow_grey)
         binding.includedAsset.tvAssetName.text = getString(R.string.euro)
@@ -91,10 +99,17 @@ class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnCli
     }
 
     private fun itemClicked(myAsset: Balance) {
-        viewModel.exchangeAssetFrom = myAsset.id
+//        viewModel.exchangeAssetFrom = myAsset.id
         if (arguments!=null&& requireArguments().containsKey(Constants.TYPE)
             && requireArguments().getString(Constants.TYPE) == Constants.FROM_SWAP
         ) {
+            viewModel.exchangeAssetFrom = myAsset.id
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
+        else if (arguments!=null&& requireArguments().containsKey(Constants.TYPE)
+            && requireArguments().getString(Constants.TYPE) == Constants.TO_SWAP
+        ) {
+            viewModel.exchangeAssetTo = myAsset.id
             requireActivity().onBackPressedDispatcher.onBackPressed()
         } else {
             val bundle = Bundle()

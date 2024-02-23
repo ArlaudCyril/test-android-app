@@ -28,6 +28,7 @@
         android:layout_marginStart="4dp"
         android:layout_centerVertical="true"
         android:layout_toEndOf="@id/ivAssetIcon"
+        android:layout_toStartOf="@id/ivDropIcon"
         >
         <TextView
             android:id="@+id/tvAssetName"
@@ -55,6 +56,7 @@
         android:src="@drawable/ic_drop_down"
         android:layout_alignParentEnd="true"
         android:rotation="270"
+        android:padding="1dp"
         android:layout_centerVertical="true"/>
 
 </RelativeLayout>

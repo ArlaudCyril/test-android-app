@@ -6,6 +6,7 @@ import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.Lyber.models.ActiveStrategyResponse
 import com.Lyber.models.ActivityLogs
 import com.Lyber.models.AddedAsset
 import com.Lyber.models.AssetBaseData
@@ -35,7 +36,9 @@ import com.Lyber.models.OneTimeStrategyData
 import com.Lyber.models.OrderResponseData
 import com.Lyber.models.PriceGraphResponse
 import com.Lyber.models.PriceResponse
+import com.Lyber.models.PriceResumeByIdResponse
 import com.Lyber.models.PriceServiceResume
+import com.Lyber.models.PriceServiceResumeResponse
 import com.Lyber.models.QrCodeResponse
 import com.Lyber.models.RecurringInvestmentDetailResponse
 import com.Lyber.models.RecurringInvestmentResponse
@@ -316,6 +319,11 @@ open class NetworkViewModel : ViewModel() {
 
     private val _walletHistoryResponse = MutableLiveData<WalletHistoryResponse>()
     val walletHistoryResponse get() = _walletHistoryResponse
+
+    private val _activeStrategyResponse = MutableLiveData<ActiveStrategyResponse>()
+    val activeStrategyResponse get() = _activeStrategyResponse
+    private val _priceResumeIdResponse = MutableLiveData<PriceResumeByIdResponse>()
+    val priceResumeIdResponse get() = _priceResumeIdResponse
     fun cancelJob() {
 
     }
@@ -1479,6 +1487,23 @@ open class NetworkViewModel : ViewModel() {
             val res = RestClient.get(Constants.NEW_BASE_URL).getWalletHistory(limit, daily)
             if (res.isSuccessful)
                 _walletHistoryResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+    fun getActiveStrategies( ) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).activeStrategies()
+            if (res.isSuccessful)
+                _activeStrategyResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun getPriceResumeById(id:String ) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).getPriceResumeId(id)
+            if (res.isSuccessful)
+                _priceResumeIdResponse.postValue(res.body())
             else listener?.onRetrofitError(res.errorBody())
         }
     }

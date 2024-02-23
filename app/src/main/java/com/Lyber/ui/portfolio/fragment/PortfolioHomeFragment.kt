@@ -39,16 +39,14 @@ import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.fadeIn
 import com.Lyber.utils.CommonMethods.Companion.fadeOut
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
+import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.px
 import com.Lyber.utils.CommonMethods.Companion.roundFloat
 import com.Lyber.utils.CommonMethods.Companion.setProfile
-import com.Lyber.utils.CommonMethods.Companion.toMilli1
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.CommonMethods.Companion.visibleFromLeft
 import com.Lyber.utils.CommonMethods.Companion.zoomIn
 import com.google.android.material.tabs.TabLayout
-import java.text.ParseException
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -69,6 +67,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
     private lateinit var viewModel: PortfolioViewModel
     private var apiStarted = false
     private lateinit var navController: NavController
+    private  var limit=7
     override fun bind() = FragmentPortfolioHomeBinding.inflate(layoutInflater)
 
     @SuppressLint("SetTextI18n")
@@ -96,9 +95,9 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         resourcesAdapter = ResourcesAdapter()
         assetBreakdownAdapter = BalanceAdapter()
 
-        binding.rvRefresh.setOnRefreshListener {
+       binding.rvRefresh.setOnRefreshListener {
             binding.rvRefresh.isRefreshing = true
-            viewModel.getWalletHistoryPrice(false)
+            viewModel.getWalletHistoryPrice(true,limit)
             viewModel.getUser()
             viewModel.getBalance()
             viewModel.getAllPriceResume()
@@ -127,7 +126,6 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 it.addItemDecoration(ItemOffsetDecoration(8))
             }
         }
-        viewModel.getWalletHistoryPrice(true,7)
         /* setting up tabs */
         binding.tabLayout.let {
 
@@ -141,11 +139,12 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
                 override fun onTabSelected(tab: TabLayout.Tab?) {
                    when(tab?.text){
-                        "1W"->viewModel.getWalletHistoryPrice(true,7)
-                        "1M"->viewModel.getWalletHistoryPrice(true,30)
-                        "1Y"-> viewModel.getWalletHistoryPrice(true,365)
-                        else-> viewModel.getWalletHistoryPrice(true)
+                        "1W"->limit=7
+                        "1M"->limit=30
+                        "1Y"-> limit = 365
+                        else-> limit=500
                     }
+                    viewModel.getWalletHistoryPrice(true,limit)
                 }
 
                 override fun onTabUnselected(tab: TabLayout.Tab?) {}
@@ -161,6 +160,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         binding.btnPlaceOrder.setOnClickListener(this)
         binding.ivProfile.setOnClickListener(this)
         binding.screenContent.setOnClickListener(this)
+        binding.tvActivateStrategy.setOnClickListener(this)
 
         /* pop up initialization */
         assetPopUpWindow = ListPopupWindow(requireContext()).apply {
@@ -195,6 +195,8 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             viewModel.getUser()
             viewModel.getAllAssets()
             viewModel.getNetworks()
+            viewModel.getActiveStrategies()
+            viewModel.getWalletHistoryPrice(true,limit)
 
         }
 
@@ -312,6 +314,18 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 com.Lyber.ui.activities.BaseActivity.networkAddress = it.data as ArrayList<Network>
             }
         }
+        viewModel.activeStrategyResponse.observe(viewLifecycleOwner){
+            if(lifecycle.currentState==Lifecycle.State.RESUMED){
+                dismissProgressDialog()
+                if(it.data.isNotEmpty()){
+                    binding.llNoActiveStrategy.gone()
+                    adapterRecurring.setList(it.data)
+                }
+                else{
+                    binding.llNoActiveStrategy.visible()
+                }
+            }
+        }
 
     }
 
@@ -362,14 +376,10 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         return list
     }
 
-    override fun recurringInvestmentClicked(investment: Investment) {
-        /*requireActivity().replaceFragment(
-            R.id.flSplashActivity, InvestmentDetailFragment.get(investment._id)
-        )*/
-        val arguments = Bundle().apply {
-            putString("investmentId", investment._id)
-        }
-        navController.navigate(R.id.investmentDetailFragment, arguments)
+
+
+    override fun recurringInvestmentClicked(investment: ActiveStrategyData) {
+        navController.navigate(R.id.pickYourStrategyFragment)
     }
 
     override fun investMoneyClicked(toStrategy: Boolean) {
@@ -534,6 +544,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 rvMyAssets -> {
                     requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
                 }
+                tvActivateStrategy->{ navController.navigate(R.id.pickYourStrategyFragment)}
             }
         }
     }

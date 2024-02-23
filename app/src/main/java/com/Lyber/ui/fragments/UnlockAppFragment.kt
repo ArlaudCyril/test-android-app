@@ -1,5 +1,6 @@
 package com.Lyber.ui.fragments
 
+import android.content.Context
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -7,6 +8,7 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
+import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
@@ -16,13 +18,12 @@ import androidx.transition.Fade
 import com.Lyber.R
 import com.Lyber.databinding.FragmentUnlockAppBinding
 import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.is1DayOld
-import com.Lyber.utils.CommonMethods.Companion.isBiometricReady
-import com.Lyber.utils.CommonMethods.Companion.replaceFragment
 import com.Lyber.utils.CommonMethods.Companion.setBiometricPromptInfo
 import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.showToast
@@ -76,11 +77,25 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
         binding.tvZero.setOnClickListener(this)
         binding.tvBioMetric.setOnClickListener(this)
         binding.tvBackArrow.setOnClickListener(this)
+//        val biometricManager = BiometricManager.from(requireContext())
+//        when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK or BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
+//            BiometricManager.BIOMETRIC_SUCCESS ->
+//                ("Biometric authentication is available").showToast(requireContext())
+//
+//            BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE ->
+//                ("This device doesn't support biometric authentication").showToast(requireContext())
+//
+//            BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE ->
+//                ("Biometric authentication is currently unavailable").showToast(requireContext())
+//
+//            BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED ->
+//                ("No biometric credentials are enrolled").showToast(requireContext())
+//        }
     }
 
     override fun onResume() {
         super.onResume()
-        if (isBiometricReady(requireContext())) {
+        if (CommonMethods.isBiometricReady(requireActivity())) {
             binding.tvOr.visible()
             binding.tvBioMetric.visible()
         } else {
@@ -88,6 +103,12 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
             binding.tvBioMetric.gone()
         }
     }
+
+    private fun isFaceIdEnabled(context: Context): Boolean {
+        val biometricManager = BiometricManager.from(context)
+        return biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK) == BiometricManager.BIOMETRIC_SUCCESS
+    }
+
 
     private val onTextChange = object : OnTextChange {
         override fun onTextChange() {
@@ -109,8 +130,8 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
                     }
 
                     CompletePortfolioFragment::class.java.name -> {
-                    findNavController().navigate(R.id.completePortfolioFragment)
-                }
+                        findNavController().navigate(R.id.completePortfolioFragment)
+                    }
 
                     else -> findNavController().navigate(R.id.enableNotificationFragment)
 
@@ -150,6 +171,7 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
                     if (pin.isNotEmpty())
                         binding.etPin.setText(pin.substring(0 until pin.length - 1))
                 }
+
                 tvBioMetric -> {
                     initBiometricPrompt(requireActivity() as AppCompatActivity).authenticate(
                         setBiometricPromptInfo("Authentications", "", "", false)
@@ -224,6 +246,38 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
         // 3
         return BiometricPrompt(activity, executor, callback)
     }
+//    private fun initBiometricPrompt(activity: AppCompatActivity): BiometricPrompt {
+//        val executor = ContextCompat.getMainExecutor(activity)
+//
+//        val callback = object : BiometricPrompt.AuthenticationCallback() {
+//            override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
+//                super.onAuthenticationError(errorCode, errString)
+//                Log.d(TAG, "onAuthenticationError: $errorCode, $errString")
+//            }
+//
+//            override fun onAuthenticationFailed() {
+//                super.onAuthenticationFailed()
+//                Log.w(TAG, "Authentication failed")
+//            }
+//
+//            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
+//                super.onAuthenticationSucceeded(result)
+//                verified()
+//                Log.d(TAG, "Authentication succeeded")
+//                Log.d(TAG, "onAuthenticationSucceeded: ${result.cryptoObject}")
+//            }
+//        }
+//
+//        val promptInfo = BiometricPrompt.PromptInfo.Builder()
+//            .setTitle("Face Authentication")
+//            .setSubtitle("Use your face to unlock")
+//            .setNegativeButtonText("Cancel")
+//            .build()
+//
+//        return BiometricPrompt(activity, executor, callback).apply {
+//            authenticate(promptInfo)
+//        }
+//    }
 
 
     override fun onRetrofitError(responseBody: ResponseBody?) {

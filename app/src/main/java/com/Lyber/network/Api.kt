@@ -436,6 +436,9 @@ interface Api {
     ): Response<WalletHistoryResponse>
 
     @GET("strategy-service/active-strategy")
-    suspend fun activeStrategies(): Response<MessageResponse>
+    suspend fun activeStrategies(): Response<ActiveStrategyResponse>
+
+    @GET("price-service/resume")
+    suspend fun getPriceResumeId(@Query("id") id: String): Response<PriceResumeByIdResponse>
 
 }

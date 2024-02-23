@@ -42,7 +42,8 @@ class PortfolioThreeDots(private val listenItemClicked: (String, String) -> Unit
         viewModel = getViewModel(requireActivity())
 
         prepareView()
-
+        if (tag!!.isNotEmpty())
+            binding.llSell.root.gone()
         binding.llWithdraw.root.setOnClickListener(this)
         binding.llExchange.root.setOnClickListener(this)
         binding.llDepositFiat.root.setOnClickListener(this)
@@ -94,7 +95,7 @@ class PortfolioThreeDots(private val listenItemClicked: (String, String) -> Unit
             it.root.updatePadding(left = 0, right = 0)
             if (this.typePopUp == "AssetPopUp") it.root.gone()
             it.ivItem.setImageResource(R.drawable.euro)
-            it.tvStartTitle.text = getString(R.string.buy)
+            it.tvStartTitle.text = "${getString(R.string.buy)} ${viewModel.selectedAsset?.id?.uppercase()}"
             if (this.typePopUp == "AssetPopUp" || this.typePopUp == "AssetPopUpWithdraw") {
                 if (viewModel.selectedAsset!!.id!!.lowercase() == "usdt") {
                     it.tvStartSubTitle.text = getString(R.string.buy_usdt_with_euro)
@@ -160,7 +161,7 @@ class PortfolioThreeDots(private val listenItemClicked: (String, String) -> Unit
                 }
 
                 llBuy.root -> {
-                    if (typePopUp!="" && viewModel.selectedAsset!=null && viewModel.selectedAsset!!.id!!.lowercase() == "usdt")
+                    if (typePopUp != "" && viewModel.selectedAsset != null && viewModel.selectedAsset!!.id!!.lowercase() == "usdt")
                         findNavController().navigate(R.id.buyUsdt)
                     else
                         listenItemClicked(tag ?: "PortfolioThreeDots", "buy")

@@ -23,7 +23,7 @@
         android:src="@drawable/ic_euro" />
 
 
-   <androidx.appcompat.widget.LinearLayoutCompat
+   <RelativeLayout
        android:layout_width="0dp"
        android:layout_marginTop="12dp"
        android:layout_marginStart="12dp"
@@ -38,15 +38,29 @@
            android:textStyle="bold"
            android:text="@string/euro" />
 
+
        <TextView
-           android:id="@+id/tvAssetNameCode"
+           android:id="@+id/tvAssetAddress"
            style="@style/BodyMabry"
            android:layout_below="@id/tvAssetName"
            android:visibility="visible"
-           android:layout_toEndOf="@id/ivAssetIcon"
+           android:ellipsize="middle"
+           android:singleLine="true"
+           android:gravity="start"
+           android:layout_alignParentStart="true"
+           android:layout_toStartOf="@+id/ivCopy"
            android:textColor="@color/purple_gray_500"
-           android:text="H9LGrxGNtuZx4enf78efBg6skRRo1XhPYdEtiCQVWC" />
-   </androidx.appcompat.widget.LinearLayoutCompat>
+           android:text="H9LGrxGNtuZx4enf78e4567890-09876fBg6skRRo1XhtfdsPYdEtiCQVWC" />
+  <ImageView
+      android:id="@+id/ivCopy"
+      android:layout_width="wrap_content"
+      android:layout_height="wrap_content"
+      android:layout_below="@id/tvAssetName"
+      android:layout_alignParentEnd="true"
+      android:visibility="invisible"
+      android:src="@drawable/copy"
+      />
+   </RelativeLayout>
 
     <ImageView
         android:id="@+id/ivDropIcon"

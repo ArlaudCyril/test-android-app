@@ -43,6 +43,7 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
                     1 -> Constants.HOURS_24
                     else -> Constants.NO_EXTRA_SECURITY
                 }
+                App.prefsManager.user!!.withdrawalLock=security
                 App.prefsManager.withdrawalLockSecurity = security
                 requireActivity().onBackPressed()
             }

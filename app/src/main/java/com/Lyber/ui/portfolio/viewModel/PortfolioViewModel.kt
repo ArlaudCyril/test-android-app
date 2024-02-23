@@ -229,6 +229,6 @@ class PortfolioViewModel : NetworkViewModel() {
         sendMsgToSupport(msg)
     }
 
-    data class ChooseAssets(val asset_id: String, val allocation: Int)
+    data class ChooseAssets(val asset: String, val share: Int)
 
 }

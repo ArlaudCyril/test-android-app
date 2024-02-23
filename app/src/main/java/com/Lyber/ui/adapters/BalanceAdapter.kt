@@ -4,6 +4,7 @@ package com.Lyber.ui.adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.Lyber.R
 import com.Lyber.databinding.ItemMyAssetBinding
 import com.Lyber.models.Balance
 import com.Lyber.utils.CommonMethods.Companion.commaFormatted
@@ -61,7 +62,7 @@ class BalanceAdapter(
                         balance.balance.formattedAsset(
                             priceCoin,
                             rounding = RoundingMode.DOWN
-                        )
+                        )+" ${balanceId.uppercase()}"
 
                     try {
                         val balanceId = it.id
@@ -90,7 +91,7 @@ class BalanceAdapter(
                             balance.balance.formattedAsset(
                                 priceCoin,
                                 rounding = RoundingMode.DOWN
-                            )
+                            )+" ${balanceId.uppercase()}"
                     }catch (_:Exception){
 
                     }
@@ -102,7 +103,8 @@ class BalanceAdapter(
         RecyclerView.ViewHolder(binding.root) {
         init {
 
-            binding.ivDropIcon.gone()
+            binding.ivDropIcon.setImageResource(R.drawable.ic_right_arrow_grey)
+            binding.ivDropIcon.visible()
             binding.root.setOnClickListener {
                 itemList[adapterPosition]?.let { it1 ->
                     listener(it1)

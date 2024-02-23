@@ -86,7 +86,8 @@
         app:layout_constraintBottom_toTopOf="@id/btnAddFrequency"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tvAssetConversion" />
+        app:layout_constraintTop_toBottomOf="@id/tvAssetConversion"
+        tools:ignore="NotSibling" />
 
     <TextView
         android:id="@+id/tvMinAmount"
@@ -96,7 +97,7 @@
         android:layout_marginBottom="12dp"
         android:textColor="@color/purple_gray_500"
         android:visibility="visible"
-        app:layout_constraintBottom_toTopOf="@id/btnAddFrequency"
+        app:layout_constraintBottom_toTopOf="@id/llAddress"
         app:layout_constraintStart_toStartOf="parent" />
 
 
@@ -131,7 +132,7 @@
 
 
     <LinearLayout
-        android:id="@+id/btnAddFrequency"
+        android:id="@+id/llAddress"
         android:layout_height="wrap_content"
         android:layout_width="match_parent"
         android:layout_marginHorizontal="24dp"
@@ -315,7 +316,8 @@
         android:id="@+id/groupWithdrawAllPortfolio"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:constraint_referenced_ids="btnAddFrequency,groupDigits,tvSubTitle" />
+        app:constraint_referenced_ids="btnAddFrequency,groupDigits,tvSubTitle"
+        tools:ignore="NotSibling" />
 
     <androidx.constraintlayout.widget.Group
         android:id="@+id/groupDigits"

@@ -152,7 +152,8 @@ data class Strategy(
     val risk: String?,
     val expectedYield: String?,
     var isSelected: Boolean = false,
-    var activeStrategy: ActiveStrategy?=null
+    var activeStrategy: ActiveStrategy?=null,
+    val minAmount:Int?=0
 )
 class ActiveStrategy {
     @SerializedName("amount")
@@ -658,7 +659,7 @@ data class User(
     val streetNumber: String,
     val type2FA: String,
     val verified: Boolean,
-    val withdrawalLock: String,
+    var withdrawalLock: String,
     val zipCode: String,
     val binanceAccountId: String,
     val kycStatus: String,
@@ -853,4 +854,28 @@ data class WalletHistoryResponse(
 data class WalletHistoryData(
     val date: String,
     val total: String
+)
+
+data class ActiveStrategyResponse(
+    val `data`: List<ActiveStrategyData>
+)
+
+data class ActiveStrategyData(
+    val amount: Int,
+    val frequency: String,
+    val nextExecution: String,
+    val ownerUuid: String,
+    val strategyName: String,
+    val strategyType: String
+)
+
+data class PriceResumeByIdResponse(
+    val `data`: PriceResumeData
+)
+
+data class PriceResumeData(
+    val change: String,
+    val firstPrice: String,
+    val lastPrice: String,
+    val squiggleURL: String
 )

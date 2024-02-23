@@ -1,6 +1,9 @@
 package com.Lyber.ui.fragments
 
 import android.annotation.SuppressLint
+import android.content.ClipData
+import android.content.ClipboardManager
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.util.Log
@@ -19,6 +22,7 @@ import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.decimalPoint
 import com.Lyber.utils.CommonMethods.Companion.decimalPointUptoTwoPlaces
 import com.Lyber.utils.CommonMethods.Companion.formattedAsset
+import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.load
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.CommonMethods.Companion.visible
@@ -38,6 +42,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
     private val unfocusedData: ValueHolder = ValueHolder()
     private var mCurrency: String = ""
     private var mConversionCurrency: String = ""
+    private var addressId: String = ""
     private val addresses: MutableList<WithdrawAddress> = mutableListOf()
     private val amount get() = binding.etAmount.text.trim().toString()
 
@@ -58,7 +63,8 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
         binding.tvNine.setOnClickListener(this)
         binding.ivTopAction.setOnClickListener(this)
         binding.ivRepeat.setOnClickListener(this)
-        binding.btnAddFrequency.setOnClickListener(this)
+        binding.llAddress.setOnClickListener(this)
+        binding.includedAsset.ivCopy.setOnClickListener(this)
         binding.ivMax.setOnClickListener(this)
         binding.btnPreviewInvestment.setOnClickListener(this)
         prepareView()
@@ -92,7 +98,10 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                         val withdrawAddress = addressList[0]
                         viewModel.withdrawAddress = withdrawAddress
                         tvAssetName.text = withdrawAddress.name
-                        tvAssetNameCode.text = withdrawAddress.address
+                        tvAssetAddress.visible()
+                        ivCopy.visible()
+                        addressId= withdrawAddress.address.toString()
+                        tvAssetAddress.text = withdrawAddress.address
                         val assest =
                             com.Lyber.ui.activities.BaseActivity.networkAddress.firstNotNullOfOrNull { item -> item.takeIf { item.id == withdrawAddress.network } }
 //                        val assest =
@@ -200,8 +209,8 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
             binding.etAmount.text = "0€"
             includedAsset.ivAssetIcon.setImageResource(R.drawable.addaddressicon)
             includedAsset.tvAssetName.text = getString(R.string.add_an_address)
-            includedAsset.tvAssetNameCode.text = getString(R.string.unlimited_withdrawl)
-            includedAsset.tvAssetNameCode.visible()
+            includedAsset.tvAssetAddress.text = getString(R.string.unlimited_withdrawl)
+            includedAsset.tvAssetAddress.visible()
             viewModel.selectedAssetDetail.let {
                 mCurrency = Constants.EURO
                 mConversionCurrency = it!!.id.uppercase()
@@ -277,7 +286,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                 tvZero -> type('0')
                 ivMax -> setMaxValue()
                 ivRepeat -> swapConversion()
-                btnAddFrequency -> openAddressSheet()
+                llAddress -> openAddressSheet()
                 btnPreviewInvestment -> {
                     val amountFinal = if (focusedData.currency.contains(mCurrency)) {
                         assetConversion.replace(mConversionCurrency, "").replace("~", "")
@@ -306,6 +315,13 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                         }
                     }
                 }
+                includedAsset.ivCopy->{
+                    val clipMan =
+                        requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
+                    val clip = ClipData.newPlainText("label", addressId)
+                    clipMan?.setPrimaryClip(clip)
+                   getString(R.string.copied).showToast(requireContext())
+                }
             }
         }
     }
@@ -329,7 +345,10 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
         binding.includedAsset.apply {
             viewModel.withdrawAddress = withdrawAddress
             tvAssetName.text = withdrawAddress!!.name
-            tvAssetNameCode.text = withdrawAddress.address
+//            tvAssetNameCode.text = withdrawAddress.address
+            tvAssetAddress.text = withdrawAddress.address
+            addressId=withdrawAddress.address.toString()
+            ivCopy.visible()
             val assest =
                 com.Lyber.ui.activities.BaseActivity.networkAddress.firstNotNullOfOrNull { item -> item.takeIf { item.id == withdrawAddress.network } }
           if(assest!=null)

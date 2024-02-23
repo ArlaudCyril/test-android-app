@@ -68,10 +68,12 @@ import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import org.json.JSONObject
 import java.math.RoundingMode
+import java.net.URI
 import java.util.Calendar
 import java.util.Date
 import java.util.Timer
 import java.util.TimerTask
+import java.util.concurrent.TimeUnit
 
 class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
     View.OnClickListener, PortfolioThreeDotsDismissListener {
@@ -90,6 +92,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
     private val client = OkHttpClient()
     private var timer = Timer()
     private var grayOverlay: View? = null
+    private var firstPrice=0.0
     override fun bind() = FragmentPortfolioDetailBinding.inflate(layoutInflater)
 
     override fun onDestroyView() {
@@ -117,6 +120,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         adapterBalance = BalanceAdapter()
         resourcesAdapter = ResourcesAdapter()
         assetBreakdownAdapter = BalanceAdapter()
+        binding.btnSell.gone()
 
         binding.apply {
 
@@ -139,16 +143,22 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             includedMyAsset.root.background =
                 ContextCompat.getDrawable(requireContext(), R.drawable.curved_button)
             includedMyAsset.root.setBackgroundTint(R.color.purple_gray_50)
-
-            tvInvestMoney.text =
-                "${getString(R.string.invest_in)} ${viewModel.selectedAsset?.id?.uppercase()}"
+            includedMyAsset.ivDropIcon.gone()
             tvAssetName.text = "${viewModel.selectedAsset?.fullName}"
             tvAssetName.typeface = context?.resources?.getFont(R.font.mabry_pro_medium)
 
-            val request = Request.Builder().url(
-                Constants.SOCKET_BASE_URL
-                        + "${viewModel.selectedAsset?.id}eur"
-            ).build()
+//            val request = Request.Builder().url(
+//                Constants.SOCKET_BASE_URL
+//                        + "${viewModel.selectedAsset?.id}eur"
+//            ).build()
+
+            val request = Request.Builder()
+                .url(Constants.SOCKET_BASE_URL+ "${viewModel.selectedAsset?.id}eur")
+                .build()
+            val client = OkHttpClient.Builder()
+                .pingInterval(0, TimeUnit.MILLISECONDS) // Adjust if necessary
+                .build()
+
             webSocket = client.newWebSocket(request, PortfolioDetailWebSocketListener())
         }
 
@@ -181,20 +191,17 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
         /* onclick listeners */
         binding.ivTopAction.setOnClickListener(this)
-//        binding.includedMyAsset.root.setOnClickListener(this)
         binding.llThreeDot.setOnClickListener(this)
-        binding.btnPlaceOrder.setOnClickListener(this)
+        binding.btnSell.setOnClickListener(this)
         binding.screenContent.setOnClickListener(this)
-//        binding.includedEuro.root.setOnClickListener(this)
-//        binding.tvAssetName.setOnClickListener(this)
-
-        // to retain the state of this fragment
+        binding.tvAssetName.setOnClickListener(this)
+        binding.btnBuy.setOnClickListener(this)
 
         /* pop up initialization */
 
         binding.lineChart.timeSeries = getLineData(viewModel.totalPortfolio)
 
-        binding.tvInvestMoney.text = getString(R.string.invest_money)
+//        binding.tvInvestMoney.text = getString(R.string.invest_money)
         binding.tvValuePortfolioAndAssetPrice.text =
             "${viewModel.totalPortfolio.commaFormatted}${Constants.EURO}"
 
@@ -208,6 +215,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             }
             viewModel.getPrice(viewModel.selectedAsset?.id ?: "btc")
             viewModel.getNews(viewModel.selectedAsset?.id ?: "btc")
+//            viewModel.getPriceResumeById(viewModel.selectedAsset?.id ?: "btc")
         }
 
     }
@@ -277,7 +285,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 this.setTimer("1h")// le code ne s'exécute pas
 
                 if (arguments != null && requireArguments().containsKey(Constants.ORDER_ID)) {
-                    if (requireArguments().containsKey(Constants.FROM_SWAP))
+                    if (requireArguments().containsKey(Constants.FROM_SWAP) || requireArguments().containsKey(Constants.TO_SWAP))
                         viewModel.getOrderApi(requireArguments().getString(Constants.ORDER_ID, ""))
                     else
                         viewModel.confirmOrder(requireArguments().getString(Constants.ORDER_ID, ""))
@@ -330,6 +338,11 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                     }, 4000)
             }
         }
+        viewModel.priceResumeIdResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                firstPrice=it.data.firstPrice.toDouble()
+            }
+        }
     }
 
     private fun setData() {
@@ -347,6 +360,9 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                         price = priceCoin,
                         rounding = RoundingMode.DOWN
                     )
+                if (balance != null)
+                    btnSell.visible()
+
             }
         }
     }
@@ -390,13 +406,10 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         )
     }
 
-
     private fun menuOptionSelected(tag: String, option: String) {
-
         viewModel.selectedAsset
 
         when (option) {
-
             "withdraw" -> {
                 viewModel.selectedOption = Constants.USING_WITHDRAW
                 val currency = viewModel.selectedAsset
@@ -413,6 +426,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 val balance =
                     com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == "usdt" }
                 if (balance != null) {
+
                     viewModel.exchangeAssetTo = viewModel.selectedAsset!!.id
                     viewModel.exchangeAssetFrom = "usdt"
                     findNavController().navigate(R.id.addAmountForExchangeFragment)
@@ -481,16 +495,23 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         binding.apply {
             when (v!!) {
 
-                btnPlaceOrder -> {
+                btnSell -> {
                     viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
                     if (viewModel.selectedAsset!!.id == "usdt") {
-                        findNavController().navigate(R.id.buyUsdt)
+//                        findNavController().navigate(R.id.buyUsdt)
+                        val balance =
+                            com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == "usdt" }
+                        if (balance != null) {
+                            viewModel.exchangeAssetTo = "usdt"
+                            viewModel.exchangeAssetFrom = viewModel.selectedAsset!!.id
+                            findNavController().navigate(R.id.addAmountForExchangeFragment)
+                        }
                     } else {
                         val balance =
                             com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == "usdt" }
                         if (balance != null) {
-                            viewModel.exchangeAssetTo = viewModel.selectedAsset!!.id
-                            viewModel.exchangeAssetFrom = "usdt"
+                            viewModel.exchangeAssetTo = "usdt"
+                            viewModel.exchangeAssetFrom = viewModel.selectedAsset!!.id
                             findNavController().navigate(R.id.addAmountForExchangeFragment)
                         } else {
                             showDialog()
@@ -527,11 +548,29 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
 
                 tvAssetName -> {
-                    requireActivity().replaceFragment(
-                        R.id.flSplashActivity, SearchAssetsFragment(), topBottom = true
-                    )
+//                    findNavController().popBackStack(findNavController().graph.startDestinationId, false)
+// Navigate to the new fragment
+                    findNavController().popBackStack()
+                    val bundle = Bundle()
+                    bundle.putString(Constants.TYPE, "assets")
+                    findNavController().navigate(R.id.allAssetFragment, bundle)
 
+                }
 
+                btnBuy -> {
+                    val balance =
+                        com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == "usdt" }
+                    viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
+                    if (viewModel.selectedAsset!!.id == "usdt") {
+                        findNavController().navigate(R.id.buyUsdt)
+                    }
+                 else if (balance != null) {
+                        viewModel.exchangeAssetTo = viewModel.selectedAsset!!.id
+                        viewModel.exchangeAssetFrom = "usdt"
+                        findNavController().navigate(R.id.addAmountForExchangeFragment)
+                    } else {
+                        showDialog()
+                    }
                 }
             }
         }
@@ -560,9 +599,15 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                     val price = jsonObject.getString("Price")
                     binding.tvValuePortfolioAndAssetPrice.text = price.currencyFormatted
-                    binding.lineChart.updateValueLastPoint(price.toFloat())
+//                    binding.lineChart.updateValueLastPoint(price.toFloat())
+//                    var percentChange=price.toDouble()/(firstPrice-1)*100
+//                    Log.d("percentChange","$percentChange")
                 }
             }
+        }
+
+        override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
+            super.onFailure(webSocket, t, response)
         }
 
         override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {

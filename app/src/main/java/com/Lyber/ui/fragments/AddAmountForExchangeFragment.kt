@@ -201,7 +201,12 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                     findNavController().navigate(R.id.exchangeFromFragment, bundle)
                 }
 
-                rlSwapTo -> requireActivity().onBackPressedDispatcher.onBackPressed()
+                rlSwapTo ->{
+                    val bundle = Bundle()
+                    bundle.putString(Constants.TYPE, Constants.TO_SWAP)
+                    findNavController().navigate(R.id.exchangeFromFragment, bundle)
+                }
+//                    requireActivity().onBackPressedDispatcher.onBackPressed()
 
                 ivSwapBetween, ivRepeat -> {
                     if (CommonMethods.getBalance(viewModel.exchangeAssetTo!!) != null) {

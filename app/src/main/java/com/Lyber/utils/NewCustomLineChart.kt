@@ -210,6 +210,7 @@ class NewCustomLineChart : RelativeLayout {
         val max = lineData.max()
         val min = lineData.min()
 
+        if(lineData.count()>1)
         xUnit = (width - (horizontalPadding)) / (lineData.count() - 1)
 
         if ((max - min) > 0)
