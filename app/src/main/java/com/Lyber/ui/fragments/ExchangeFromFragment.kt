@@ -112,6 +112,7 @@ class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnCli
             viewModel.exchangeAssetTo = myAsset.id
             requireActivity().onBackPressedDispatcher.onBackPressed()
         } else {
+            viewModel.exchangeAssetFrom = myAsset.id
             val bundle = Bundle()
             bundle.putString(Constants.TYPE, Constants.Exchange)
             findNavController().navigate(R.id.allAssetFragment, bundle)

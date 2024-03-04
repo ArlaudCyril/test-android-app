@@ -67,7 +67,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
     private lateinit var viewModel: PortfolioViewModel
     private var apiStarted = false
     private lateinit var navController: NavController
-    private  var limit=7
+    private var limit = 7
     override fun bind() = FragmentPortfolioHomeBinding.inflate(layoutInflater)
 
     @SuppressLint("SetTextI18n")
@@ -95,9 +95,9 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         resourcesAdapter = ResourcesAdapter()
         assetBreakdownAdapter = BalanceAdapter()
 
-       binding.rvRefresh.setOnRefreshListener {
+        binding.rvRefresh.setOnRefreshListener {
             binding.rvRefresh.isRefreshing = true
-            viewModel.getWalletHistoryPrice(true,limit)
+            viewModel.getWalletHistoryPrice(true, limit)
             viewModel.getUser()
             viewModel.getBalance()
             viewModel.getAllPriceResume()
@@ -138,13 +138,13 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             it.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
                 override fun onTabSelected(tab: TabLayout.Tab?) {
-                   when(tab?.text){
-                        "1W"->limit=7
-                        "1M"->limit=30
-                        "1Y"-> limit = 365
-                        else-> limit=500
+                    when (tab?.text) {
+                        "1W" -> limit = 7
+                        "1M" -> limit = 30
+                        "1Y" -> limit = 365
+                        else -> limit = 500
                     }
-                    viewModel.getWalletHistoryPrice(true,limit)
+                    viewModel.getWalletHistoryPrice(true, limit)
                 }
 
                 override fun onTabUnselected(tab: TabLayout.Tab?) {}
@@ -196,7 +196,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             viewModel.getAllAssets()
             viewModel.getNetworks()
             viewModel.getActiveStrategies()
-            viewModel.getWalletHistoryPrice(true,limit)
+            viewModel.getWalletHistoryPrice(true, limit)
 
         }
 
@@ -219,9 +219,11 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 binding.rvRefresh.isRefreshing = false
                 dismissProgressDialog()
+                App.prefsManager.assetBaseDataResponse = it
                 com.Lyber.ui.activities.BaseActivity.assets = it.data as ArrayList<AssetBaseData>
             }
         }
+
 
         viewModel.priceServiceResumes.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
@@ -237,21 +239,25 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
                 binding.rvRefresh.isRefreshing = false
-                val balanceDataDict = it.data
-                val balances = ArrayList<Balance>()
-                balanceDataDict?.forEach {
-                    val balance = Balance(id = it.key, balanceData = it.value)
-                    balances.add(balance)
-                }
-                var totalBalance = 0.0
-                for (i in it.data)
-                    totalBalance += i.value.euroBalance.toDoubleOrNull()!!
-                viewModel.totalPortfolio = totalBalance
-                binding.tvValuePortfolioAndAssetPrice.text =
-                    "${totalBalance.commaFormatted}${Constants.EURO}"
-                com.Lyber.ui.activities.BaseActivity.balances = balances
-                balances.sortByDescending { it.balanceData.euroBalance.toDoubleOrNull() }
-                adapterBalance.setList(balances)
+                if (it.data.isNotEmpty()) {
+                    binding.tvNoAssets.gone()
+                    val balanceDataDict = it.data
+                    val balances = ArrayList<Balance>()
+                    balanceDataDict.forEach {
+                        val balance = Balance(id = it.key, balanceData = it.value)
+                        balances.add(balance)
+                    }
+                    var totalBalance = 0.0
+                    for (i in it.data)
+                        totalBalance += i.value.euroBalance.toDoubleOrNull()!!
+                    viewModel.totalPortfolio = totalBalance
+                    binding.tvValuePortfolioAndAssetPrice.text =
+                        "${totalBalance.commaFormatted}${Constants.EURO}"
+                    com.Lyber.ui.activities.BaseActivity.balances = balances
+                    balances.sortByDescending { it.balanceData.euroBalance.toDoubleOrNull() }
+                    adapterBalance.setList(balances)
+                } else
+                    binding.tvNoAssets.visible()
             }
         }
 
@@ -314,14 +320,13 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 com.Lyber.ui.activities.BaseActivity.networkAddress = it.data as ArrayList<Network>
             }
         }
-        viewModel.activeStrategyResponse.observe(viewLifecycleOwner){
-            if(lifecycle.currentState==Lifecycle.State.RESUMED){
+        viewModel.activeStrategyResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
-                if(it.data.isNotEmpty()){
+                if (it.data.isNotEmpty()) {
                     binding.llNoActiveStrategy.gone()
                     adapterRecurring.setList(it.data)
-                }
-                else{
+                } else {
                     binding.llNoActiveStrategy.visible()
                 }
             }
@@ -375,7 +380,6 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         for (i in 0..8) list.add(listOf(System.currentTimeMillis().toDouble(), value))
         return list
     }
-
 
 
     override fun recurringInvestmentClicked(investment: ActiveStrategyData) {
@@ -544,7 +548,10 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 rvMyAssets -> {
                     requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
                 }
-                tvActivateStrategy->{ navController.navigate(R.id.pickYourStrategyFragment)}
+
+                tvActivateStrategy -> {
+                    navController.navigate(R.id.pickYourStrategyFragment)
+                }
             }
         }
     }

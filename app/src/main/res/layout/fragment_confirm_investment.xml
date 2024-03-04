@@ -34,13 +34,31 @@
             android:layout_marginTop="20dp"
             android:orientation="vertical"
             app:layout_constraintTop_toBottomOf="@id/ivTopAction">
-
-
-            <RelativeLayout
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
-                android:orientation="horizontal">
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/tvTotalAmount"
+                    style="@style/HeadingStyle"
+                    android:layout_width="wrap_content"
+                    android:gravity="center"
+                    android:textColor="@color/purple_500"
+                    tools:text="100€" />
+
+                <ImageView
+                    android:id="@+id/ivSingleAsset"
+                    android:layout_width="32dp"
+                    android:layout_height="36dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="4dp"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginBottom="8dp"
+                    android:src="@drawable/title"
+                    android:visibility="visible" />
 
                 <TextView
                     android:id="@+id/tvAmount"
@@ -50,18 +68,8 @@
                     android:textColor="@color/purple_500"
                     tools:text="100€" />
 
-                <ImageView
-                    android:id="@+id/ivSingleAsset"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_toEndOf="@id/tvAmount"
-                    android:layout_alignTop="@id/tvAmount"
-                    android:layout_alignBottom="@id/tvAmount"
-                    android:layout_gravity="center_vertical"
-                    android:layout_marginStart="4dp"
-                    android:visibility="gone" />
+            </LinearLayout>
 
-            </RelativeLayout>
 
             <RelativeLayout
                 android:id="@+id/llInfo"
@@ -74,15 +82,29 @@
                 android:orientation="vertical"
                 android:paddingHorizontal="12dp">
 
+            <TextView
+                android:id="@+id/tvMoreDetails"
+                style="@style/SubheadMabry"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="16dp"
+                android:text="@string/more_details"
+                android:drawableStart="@drawable/ic_right_arrow_grey"
+                android:textColor="@color/purple_gray_500" />
 
-                <TextView
+            <RelativeLayout
+                android:id="@+id/zzInfor"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_below="@id/tvMoreDetails"
+                android:visibility="gone">
+
+            <TextView
                     android:id="@+id/tvAssetPrice"
                     style="@style/SubheadMabry"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
                     android:text="@string/btc_price"
                     android:textColor="@color/purple_gray_500" />
-
                 <TextView
                     android:id="@+id/tvValueAssetPrice"
                     style="@style/SubheadMabry"
@@ -91,7 +113,6 @@
                     android:layout_marginBottom="16dp"
                     android:textColor="@color/purple_gray_700"
                     android:textStyle="bold" />
-
                 <TextView
                     android:id="@+id/tvNestedAmount"
                     style="@style/SubheadMabry"
@@ -99,7 +120,6 @@
                     android:layout_marginTop="16dp"
                     android:text="@string/amount"
                     android:textColor="@color/purple_gray_500" />
-
                 <TextView
                     android:id="@+id/tvNestedAmountValue"
                     style="@style/SubheadMabry"
@@ -301,7 +321,7 @@
                     android:layout_height="wrap_content"
                     android:layout_below="@id/tvAllocation" />
 
-
+            </RelativeLayout>
             </RelativeLayout>
 
         </LinearLayout>

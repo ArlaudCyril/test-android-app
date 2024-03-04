@@ -19,6 +19,7 @@ object Constants {
     const val LOADING_FAILURE: Int = 2
     const val FROM_SWAP: String = "from_swap"
     const val TO_SWAP: String = "to_swap"
+    const val FROM: String = "from"
 
     /* steps fill personal data */
     const val ACCOUNT_INITIALIZATION = 0
@@ -260,5 +261,5 @@ object Constants {
     const val GENERAL_TERMS_CONDITIONS="https://www.lyber.com/terms-conditions"
     const val PRIVACY_URL="https://www.lyber.com/privacy"
 
-    const val API_VERSION = "0.1"
+    const val API_VERSION = "0.2"
 }

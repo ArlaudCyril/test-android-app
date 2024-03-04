@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
@@ -19,13 +20,16 @@ import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.google.gson.Gson
+import java.math.BigDecimal
 import java.math.RoundingMode
+import java.util.Locale
 
 
 class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>(),
     View.OnClickListener, RestClient.OnRetrofitError {
     private var timer = 25
 
+    private var isExpand = false
     private var orderId: String = ""
     private lateinit var viewModel: PortfolioViewModel
     override fun bind() = FragmentConfirmInvestmentBinding.inflate(layoutInflater)
@@ -33,6 +37,7 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
         super.onViewCreated(view, savedInstanceState)
         viewModel = CommonMethods.getViewModel(requireActivity())
         binding.ivTopAction.setOnClickListener(this)
+        binding.tvMoreDetails.setOnClickListener(this)
         binding.btnConfirmInvestment.setOnClickListener(this)
         binding.allocationView.rvAllocation.isNestedScrollingEnabled = false
 
@@ -64,7 +69,8 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
                 tvDeposit,
                 tvDepositFee,
                 tvValueDeposit,
-                tvValueDepositFee
+                tvValueDepositFee, tvLyberFee,
+                tvValueLyberFee
             ).gone()
         }
 
@@ -88,6 +94,27 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
                     findNavController().navigate(R.id.action_confirmExchangeFragment_to_deatil_fragment
                     ,bundle)
                 }
+                tvMoreDetails -> {
+                    if (isExpand) {
+                        zzInfor.gone()
+                        isExpand = false
+                        binding.tvMoreDetails.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                            R.drawable.ic_right_arrow_grey,
+                            0,
+                            0,
+                            0
+                        )
+                    } else {
+                        zzInfor.visible()
+                        isExpand = true
+                        binding.tvMoreDetails.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                            R.drawable.ic_drop_down,
+                            0,
+                            0,
+                            0
+                        )
+                    }
+                }
             }
         }
     }
@@ -104,11 +131,21 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
                 data.fees.formattedAsset(
                     priceCoin,
                     rounding = RoundingMode.DOWN
-                ) + data.fromAsset.uppercase()
+                ) +" "+ data.fromAsset.uppercase()
+            tvExchangeTo.text=getString(R.string.lyber_fees)
+
+            tvExchangeToValue.text ="~"+
+                data.fees.formattedAsset(
+                    priceCoin,
+                    rounding = RoundingMode.DOWN
+                ) +" "+ data.fromAsset.uppercase()
 
             orderId = data.orderId
+//            tvExchangeFromValue.text =
+//                "${data.fromAmount} ${data.fromAsset.uppercase()}"
             tvExchangeFromValue.text =
-                "${data.fromAmount} ${data.fromAsset.uppercase()}"
+                "~${(data.fromAmount.toDouble() - data.fees.toDouble())} ${data.fromAsset.uppercase()}"
+
             val balanceFrom = com.Lyber.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetFrom}
             val balanceTo = com.Lyber.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetTo}
             val balanceFromPrice = balanceFrom!!.priceServiceResumeData.lastPrice
@@ -117,17 +154,27 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
                 (if (data.fromAsset == viewModel.exchangeAssetTo!!) balanceToPrice else balanceFromPrice).toDouble()
             priceCoin = valuesInEurosToAsset
                 .div(data.toAmount.toDouble())
-            tvExchangeToValue.text =
-                "${data.toAmount.formattedAsset(
-                    price = priceCoin,
-                    rounding = RoundingMode.DOWN
-                )} ${data.toAsset.uppercase()}"
+//            tvExchangeTo.text=getString(R.string.lyber_fees)
+//
+//            tvExchangeToValue.text =
+//                "${data.toAmount.formattedAsset(
+//                    price = priceCoin,
+//                    rounding = RoundingMode.DOWN
+//                )} ${data.toAsset.uppercase()}"
+            Log.d("dataa","$data")
+            val number = BigDecimal(data.fromAmount)
+            val trimmedNumber = number.stripTrailingZeros()
+            tvTotalAmount.text =
+                "${trimmedNumber} ${data.fromAsset.uppercase()}"
+//                "${String.format(Locale.US, "%f", data.fromAmount.toFloat())} ${data.fromAsset.uppercase()}"
+
             tvAmount.text =
                 "${data.toAmount.formattedAsset(
                     price = priceCoin,
                     rounding = RoundingMode.DOWN
                 ) } ${data.toAsset.uppercase()}"
-            val valueTotal = data.fees.toDouble()+data.fromAmount.toDouble()
+//            val valueTotal = data.fees.toDouble()+data.fromAmount.toDouble()
+            val valueTotal = data.fromAmount.toDouble()
             tvValueTotal.text =
                 "${valueTotal.toString().formattedAsset(
                     price = priceCoin,

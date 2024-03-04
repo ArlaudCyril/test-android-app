@@ -37,6 +37,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
     private var minAmount: String = "0.0"
     private val assetConversion get() = binding.tvAssetConversion.text.trim().toString()
     private var maxValue: Double = 0.0
+    private var maxValueAsset: Double = 0.0
     private lateinit var viewModel: PortfolioViewModel
     private val focusedData: ValueHolder = ValueHolder()
     private val unfocusedData: ValueHolder = ValueHolder()
@@ -184,10 +185,16 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
             val priceCoin = valueAmount.toDouble().div(assetAmount.toDouble())
             binding.tvAssetConversion.text =
                 "~${assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN)} $mConversionCurrency"
+            maxValueAsset=assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN).toDouble()
+            Log.d("maxValueAsset","$maxValueAsset")
+
         } else {
             val priceCoin = assetAmount.toDouble().div(valueAmount.toDouble())
             binding.tvAssetConversion.text =
                 "~${assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN)} $mCurrency"
+            maxValueAsset=assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN).toDouble()
+            Log.d("maxValueAsset","$maxValueAsset")
+
         }
 
 
@@ -228,8 +235,8 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                     .div(balance.balanceData.balance.toDouble())
 
                 "${
-                    balance.balanceData.balance.formattedAsset(priceCoin, RoundingMode.DOWN)
-                } ${it.id.uppercase()} Available".also { tvSubTitle.text = it }
+                    balance.balanceData.balance.formattedAsset(priceCoin, RoundingMode.DOWN,6)
+                } Available".also { tvSubTitle.text = it }
                 valueConversion =
                     (balance.balanceData.balance.toDouble() / balance.balanceData.euroBalance.toDouble())
                 if (balance.balanceData.balance == "0") {
@@ -255,7 +262,8 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                 "${getString(R.string.fees)} ${it!!.withdrawFee} ${balance!!.id.uppercase()}".also {
                     tvAssetFees.text = it
                 }
-                maxValue = balance!!.balanceData.balance.toDouble() - it.withdrawFee.toDouble()
+//                maxValue = balance!!.balanceData.balance.toDouble()/valueConversion - it.withdrawFee.toDouble()
+                maxValue = balance!!.balanceData.balance.toDouble()/valueConversion
                 if (maxValue < 0) {
                     maxValue = 0.0
                 }
@@ -299,7 +307,10 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                     if (balance == null) {
                         getString(R.string.you_do_not_have_this_asset).showToast(requireActivity())
                     } else {
-                        if (maxValue >= amountFinal.toDouble()) {
+//                        if (maxValue >= amountFinal.toDouble()) {
+                        Log.d("maxValueAsset","$maxValueAsset")
+                        Log.d("balnace","${balance.balanceData.balance.toDouble()}")
+                        if (maxValueAsset <= balance.balanceData.balance.toDouble()) {
                             if (viewModel.withdrawAddress != null) {
                                 val bundle = Bundle().apply {
                                     putString(Constants.EURO, amountFinal)
@@ -366,10 +377,13 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
         if (focusedData.currency.contains(mCurrency)) {
             if (maxValue > 0) {
                 val maxinEuro = maxValue / valueConversion
-                var priceCoin = balance!!.balanceData.euroBalance.toDouble().div(maxinEuro)
+                var priceCoin = balance!!.balanceData.euroBalance.toDouble()
+                    .div(balance.balanceData.balance.toDouble())
 
-                binding.etAmount.text =
-                    maxinEuro.toString().formattedAsset(priceCoin, RoundingMode.DOWN) + mCurrency
+
+
+                binding.etAmount.text = "${maxValue.toString().formattedAsset(priceCoin, RoundingMode.DOWN)}"+mCurrency
+//                binding.etAmount.text =     maxinEuro.toString().formattedAsset(priceCoin, RoundingMode.DOWN) + mCurrency
             } else {
                 binding.etAmount.text = "0" + mCurrency
             }

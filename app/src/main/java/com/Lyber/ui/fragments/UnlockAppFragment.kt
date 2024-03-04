@@ -77,20 +77,20 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
         binding.tvZero.setOnClickListener(this)
         binding.tvBioMetric.setOnClickListener(this)
         binding.tvBackArrow.setOnClickListener(this)
-//        val biometricManager = BiometricManager.from(requireContext())
-//        when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK or BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
-//            BiometricManager.BIOMETRIC_SUCCESS ->
-//                ("Biometric authentication is available").showToast(requireContext())
-//
-//            BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE ->
-//                ("This device doesn't support biometric authentication").showToast(requireContext())
-//
-//            BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE ->
-//                ("Biometric authentication is currently unavailable").showToast(requireContext())
-//
-//            BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED ->
-//                ("No biometric credentials are enrolled").showToast(requireContext())
-//        }
+        val biometricManager = BiometricManager.from(requireContext())
+        when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK or BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
+            BiometricManager.BIOMETRIC_SUCCESS ->
+                ("Biometric authentication is available").showToast(requireContext())
+
+            BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE ->
+                ("This device doesn't support biometric authentication").showToast(requireContext())
+
+            BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE ->
+                ("Biometric authentication is currently unavailable").showToast(requireContext())
+
+            BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED ->
+                ("No biometric credentials are enrolled").showToast(requireContext())
+        }
     }
 
     override fun onResume() {
@@ -173,7 +173,7 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
                 }
 
                 tvBioMetric -> {
-                    initBiometricPrompt(requireActivity() as AppCompatActivity).authenticate(
+                   initBiometricPrompt(requireActivity() as AppCompatActivity).authenticate(
                         setBiometricPromptInfo("Authentications", "", "", false)
                     )
                 }
@@ -246,39 +246,6 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
         // 3
         return BiometricPrompt(activity, executor, callback)
     }
-//    private fun initBiometricPrompt(activity: AppCompatActivity): BiometricPrompt {
-//        val executor = ContextCompat.getMainExecutor(activity)
-//
-//        val callback = object : BiometricPrompt.AuthenticationCallback() {
-//            override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
-//                super.onAuthenticationError(errorCode, errString)
-//                Log.d(TAG, "onAuthenticationError: $errorCode, $errString")
-//            }
-//
-//            override fun onAuthenticationFailed() {
-//                super.onAuthenticationFailed()
-//                Log.w(TAG, "Authentication failed")
-//            }
-//
-//            override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {
-//                super.onAuthenticationSucceeded(result)
-//                verified()
-//                Log.d(TAG, "Authentication succeeded")
-//                Log.d(TAG, "onAuthenticationSucceeded: ${result.cryptoObject}")
-//            }
-//        }
-//
-//        val promptInfo = BiometricPrompt.PromptInfo.Builder()
-//            .setTitle("Face Authentication")
-//            .setSubtitle("Use your face to unlock")
-//            .setNegativeButtonText("Cancel")
-//            .build()
-//
-//        return BiometricPrompt(activity, executor, callback).apply {
-//            authenticate(promptInfo)
-//        }
-//    }
-
 
     override fun onRetrofitError(responseBody: ResponseBody?) {
         super.onRetrofitError(responseBody)

@@ -824,9 +824,9 @@ class CommonMethods {
 //            }
         val <T> T.commaFormatted: String
             get() = when (this) {
-                is Int -> String.format(Locale.US, "%,d", this.toLong())
-                is Number -> String.format(Locale.US, "%,.2f", this)
-                is String -> toDoubleOrNull()?.let { String.format(Locale.US, "%,.2f", it) } ?: "0"
+                is Int -> String.format(Locale.US, "%d", this.toLong())
+                is Number -> String.format(Locale.US, "%.2f", this)
+                is String -> toDoubleOrNull()?.let { String.format(Locale.US, "%.2f", it) } ?: "0"
                 is Char -> this.toString()
                 else -> "0"
             }
@@ -916,7 +916,7 @@ class CommonMethods {
 
                         val symbols = DecimalFormatSymbols(Locale.US)
                         formatter.decimalFormatSymbols = symbols
-                        val stringFormatted = formatter.format(value) + Constants.EURO
+                        val stringFormatted = formatter.format(value)+ Constants.EURO
                         val ss1 = SpannableString(stringFormatted)
                         ss1.setSpan(RelativeSizeSpan(0.8f), 0, numberZerosLeft, 0) // set size
                         ss1
@@ -927,7 +927,7 @@ class CommonMethods {
             }
 
 
-        fun String.formattedAsset(price: Double?, rounding: RoundingMode): String {
+        fun String.formattedAsset(price: Double?, rounding: RoundingMode,roundValue:Int=0): String {
             var priceFinal = price
             if (this == "" || priceFinal == null || priceFinal == 0.0 || priceFinal.isNaN()) {
                 priceFinal = 1.026
@@ -945,6 +945,10 @@ class CommonMethods {
             } else {
                 formatter.maximumFractionDigits = 0
                 formatter.minimumFractionDigits = 0
+            }
+            if(roundValue!=0){
+                formatter.maximumFractionDigits = roundValue
+                formatter.minimumFractionDigits = roundValue
             }
 
             formatter.roundingMode = rounding

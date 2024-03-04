@@ -172,8 +172,8 @@
     <string name="delete">Delete</string>
     <string name="confirm">Confirm</string>
     <string name="trending">Trending</string>
-    <string name="top_gainers">Top gainers</string>
-    <string name="top_losers">Top losers</string>
+    <string name="top_gainers">Gainers</string>
+    <string name="top_losers">Losers</string>
     <string name="stable">Stable</string>
     <string name="how_many_personal_asset_you_have">How many personal Assets Do you have ?</string>
     <string name="your_withdrawal_has_been_taken_into_account">Your withdrawal has been taken into account.</string>
@@ -298,7 +298,7 @@
     <string name="sell">Sell</string>
     <string name="sell_assets">Sell assets</string>
     <string name="we_ve_sent_you_a_confimation_code">We\'ve sent you a confimation code.</string>
-    <string name="invest_in_strategies_or_a_single_nasset">Invest in Strategies or a Single\nAsset</string>
+    <string name="invest_in_strategies_or_a_single_nasset">Invest in strategies or in a\n single asset</string>
     <string name="invest_in_strategies">Invest in strategies</string>
     <string name="build_your_own_strategy">Build your own strategy</string>
     <string name="invest_in_a_single_asset">Invest in a single asset</string>
@@ -443,7 +443,7 @@
     <string name="please_tell_us_what_do_you_plan_to_mainly_do">Please tell us  What do you plan to mainly do?</string>
     <string name="ratio">Ratio</string>
     <string name="_25_sec">%1$s (%2$s sec)</string>
-    <string name="you_don_t_have_balance_to_exchange">you don`t have balance to exchange</string>
+    <string name="you_don_t_have_balance_to_exchange">You don\'t have sufficient balance to exchange.</string>
     <string name="preview_exchange">Preview exchange</string>
     <string name="the_minimum_amount_to_be_exchanged">The minimum Amount to be exchanged</string>
     <string name="the_minimum_amount_to_be_exchanged_1">The minimum amount to be exchanged %1$s %2$s</string>
@@ -750,5 +750,7 @@
     <string name="clicking_here">clicking here.</string>
     <string name="please_include">2. Send us a message by clicking here. Please include the following information: the amount of USDT you wish to withdraw, as well as your IBAN, BIC and the name of the beneficiary (which must be the same as the name with which you opened your Lyber account).\n\nOur support team will get back to you as soon as possible to make the withdrawal.</string>
     <string name="minimum_investment">Min Investment:</string>
+    <string name="no_assets_available">No assets available</string>
+
 
 </resources>

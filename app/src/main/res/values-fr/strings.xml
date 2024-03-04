@@ -172,8 +172,8 @@
     <string name="delete">Supprimer</string>
     <string name="confirm">Confirmer</string>
     <string name="trending">Tendance</string>
-    <string name="top_gainers">Haut Hausses</string>
-    <string name="top_losers">Haut Baisses</string>
+    <string name="top_gainers">Hausses</string>
+    <string name="top_losers">Baisses</string>
     <string name="stable">Stable</string>
     <string name="how_many_personal_asset_you_have">Combien de biens personnels possédez-vous ?</string>
     <string name="your_withdrawal_has_been_taken_into_account">Votre retrait a été pris en compte.</string>
@@ -298,7 +298,7 @@
     <string name="sell">Vendre</string>
     <string name="sell_assets">Vendre actifs</string>
     <string name="we_ve_sent_you_a_confimation_code">Nous vous avons envoyé un code de confirmation.</string>
-    <string name="invest_in_strategies_or_a_single_nasset">Investir dans des stratégies ou dans un\n seul actif</string>
+    <string name="invest_in_strategies_or_a_single_nasset">Investir dans des stratégies ou dans\n un seul actif</string>
     <string name="invest_in_strategies">Investir dans des stratégies</string>
     <string name="build_your_own_strategy">Construire sa propre stratégie</string>
     <string name="invest_in_a_single_asset">Investir dans un seul actif</string>
@@ -443,7 +443,7 @@
     <string name="please_tell_us_what_do_you_plan_to_mainly_do">Dites-nous, s\'il vous plaît, que comptez-vous faire principalement ?</string>
     <string name="ratio">Ratio</string>
     <string name="_25_sec">%1$s (%2$s sec)</string>
-    <string name="you_don_t_have_balance_to_exchange">tu n\'as pas de solde à échanger</string>
+    <string name="you_don_t_have_balance_to_exchange">Vous n\'avez pas de solde suffisant pour échanger.</string>
     <string name="preview_exchange">Aperçu de l\'échange</string>
     <string name="the_minimum_amount_to_be_exchanged">Le montant minimum à échanger</string>
     <string name="the_minimum_amount_to_be_exchanged_1">Le montant minimum à échanger %1$s %2$s</string>
@@ -497,7 +497,7 @@
     <string name="you_will_be_able_to_withdraw_immediately_to_any_address_newly_added_to_your_address_book_these_changes_will_take_effect_after_24_hours">Vous pourrez vous retirer immédiatement à toute adresse nouvellement ajoutée à votre carnet d\'adresses. Ces modifications prendront effet après 24 heures.</string>
     <string name="assetpopup">ActifPopUp</string>
     <string name="shifting">Vous pourrez vous retirer immédiatement à toute adresse nouvellement ajoutée à votre carnet d\'adresses. Ces modifications prendront effet après 24 heures</string>
-    <string name="send_assets_to_your_bank_account">Envoyez des actifs sur votre compte bancaire</string>
+    <string name="send_assets_to_your_bank_account">Envoyez des actifs sur un autre compte</string>
     <string name="trade_one_asset_for_another">Échanger un actif contre un autre</string>
     <string name="deposit_">Déposer</string>
     <string name="add_on_lyber">Ajouter des %1$s sur Lyber</string>
@@ -727,7 +727,7 @@
     <string name="usdt_price">USDT Prix</string>
     <string name="fee">Frais</string>
     <string name="previous">Previous</string>
-    <string name="activity_logs">Journaux d\'activité</string>
+    <string name="activity_logs">Historique d\'activité</string>
     <string name="close_account">Fermeture du compte</string>
     <string name="sign_my_contract">Signer mon contrat</string>
     <string name="contract_has_not_signed">Votre contrat n\'a pas été signé.\nVeuillez le signer avant de pouvoir continuer.</string>
@@ -749,5 +749,5 @@
     <string name="convert_asset_you_wish_to_withdraw">1. Convertissez les actifs que vous souhaitez retirer en USDT.</string>
     <string name="clicking_here">cliquant ici.</string>
     <string name="please_include">2. Envoyez-nous un message en cliquant ici. Veuillez inclure les informations suivantes: le montant d\'USDT que vous souhaitez retirer, aainsi que votre IBAN, BIC et le nom du bénéficiaire (qui doit être le même que le nom avec lequel vous avez ouvert votre compte Lyber).\n\nNotre équipe d\'assistance vous répondra dans les plus brefs délais pour effectuer le retrait.</string>
-
+    <string name="no_assets_available">Aucun actif disponible</string>
 </resources>

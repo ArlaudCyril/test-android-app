@@ -16,6 +16,7 @@ import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.clearBackStack
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.SignUpViewModel
 
 class EnableNotificationFragment : BaseFragment<FragmentEnableNotificationsBinding>() {
@@ -53,6 +54,7 @@ class EnableNotificationFragment : BaseFragment<FragmentEnableNotificationsBindi
         }
         binding.btnEnableNotifications.setOnClickListener {
 
+            App.prefsManager.portfolioCompletionStep = Constants.ACCOUNT_CREATED
 
             navController.navigate(R.id.completePortfolioFragment)
 
@@ -64,6 +66,8 @@ class EnableNotificationFragment : BaseFragment<FragmentEnableNotificationsBindi
         }
 
         binding.tvNotNow.setOnClickListener {
+            App.prefsManager.portfolioCompletionStep = Constants.ACCOUNT_CREATED
+
             navController.navigate(R.id.completePortfolioFragment)
         }
         /*checkInternet(requireContext()) {
