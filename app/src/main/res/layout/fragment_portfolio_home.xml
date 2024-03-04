@@ -131,9 +131,18 @@
                         android:background="@drawable/curved_button"
                         android:backgroundTint="@color/purple_gray_50"
                         android:orientation="vertical">
-
+                        <TextView
+                            android:id="@+id/tvNoAssets"
+                            style="@style/SubheadMabry"
+                            android:text="@string/no_assets_available"
+                            android:textStyle="bold"
+                            android:visibility="gone"
+                            android:layout_gravity="center"
+                            android:layout_margin="16dp"
+                            android:textColor="@color/purple_gray_800" />
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rvMyAssets"
+                            android:visibility="visible"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layoutAnimation="@anim/recycler_view_item_animation"

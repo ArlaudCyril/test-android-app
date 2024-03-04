@@ -37,10 +37,10 @@
                     android:layout_alignParentStart="true"
                     android:layout_alignParentTop="true"
                     android:backgroundTint="@color/purple_gray_00"
+                    android:contentDescription="@string/back_button"
                     android:padding="12dp"
                     android:src="@drawable/ic_back"
-                    app:tint="@color/purple_gray_800"
-                    android:contentDescription="@string/back_button" />
+                    app:tint="@color/purple_gray_800" />
 
                 <TextView
                     android:id="@+id/tvAssetName"
@@ -82,7 +82,7 @@
                     style="@style/SubheadMabry"
                     android:layout_below="@id/tvValuePortfolioAndAssetPrice"
                     android:layout_marginTop="2dp"
-                    android:text="▲ + 2,87% (118,4€)"
+                    android:text="▲ + 0% (0€)"
                     android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                     android:textColor="@color/purple_gray_700"
                     android:visibility="visible" />
@@ -279,6 +279,7 @@
                             android:layout_marginTop="32dp"
                             android:text="@string/popularity"
                             android:textColor="@color/purple_gray_500" />
+
                         <TextView
                             android:id="@+id/tvValuePopularity"
                             style="@style/SubheadMabry"
@@ -289,12 +290,14 @@
                             android:textColor="@color/purple_gray_700"
                             android:textStyle="bold" />
                     </RelativeLayout>
+
                     <TextView
                         android:id="@+id/tvAbout"
                         style="@style/TitleText"
                         android:layout_marginTop="32dp"
                         android:text="@string/about"
                         android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
                     <com.Lyber.utils.ExpandableTextView
                         android:id="@+id/tvValueAbout"
                         style="@style/SubheadMabry"
@@ -308,11 +311,13 @@
                         android:paddingVertical="16dp"
                         tools:text="@string/about_value"
                         tools:visibility="visible" />
+
                     <TextView
                         style="@style/TitleText"
                         android:layout_marginTop="32dp"
                         android:text="@string/resources"
                         android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rvResources"
                         android:layout_width="match_parent"
@@ -323,45 +328,51 @@
             </RelativeLayout>
         </LinearLayout>
     </androidx.core.widget.NestedScrollView>
-    <LinearLayout
-        android:layout_width="wrap_content"
+     <androidx.cardview.widget.CardView
+        android:id="@+id/llThreeDot"
+        style="@style/ButtonStyle"
+       android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:gravity="center_vertical"
-        android:layout_marginEnd="24dp"
-        android:layout_marginBottom="24dp"
-        android:layout_alignParentBottom="true"
-        android:layout_alignParentEnd="true">
-        <androidx.cardview.widget.CardView
-            android:id="@+id/llThreeDot"
+        android:layout_marginEnd="12dp"
+         android:layout_toLeftOf="@+id/llButtons"
+         android:layout_marginBottom="4dp"
+         android:layout_above="@id/view1"
+        android:background="@drawable/curved_button"
+        android:backgroundTint="@color/purple_gray_00"
+        app:cardCornerRadius="12dp"
+        app:cardElevation="4dp">
+        <ImageView
             style="@style/ButtonStyle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            android:background="@drawable/curved_button"
-            android:backgroundTint="@color/purple_gray_00"
-            app:cardCornerRadius="12dp"
-            app:cardElevation="4dp">
-
-            <ImageView
-                style="@style/ButtonStyle"
-                android:layout_width="56dp"
-                android:layout_height="match_parent"
-                android:padding="16dp"
-                android:src="@drawable/ic_three_dots" />
-
-        </androidx.cardview.widget.CardView>
+            android:layout_width="56dp"
+            android:layout_height="match_parent"
+            android:padding="16dp"
+            android:layout_gravity="center"
+            android:src="@drawable/ic_three_dots" />
+    </androidx.cardview.widget.CardView>
+    <LinearLayout
+        android:id="@+id/llButtons"
+        android:layout_alignTop="@id/llThreeDot"
+        android:layout_alignBottom="@id/llThreeDot"
+       android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="12dp"
+        android:layout_alignParentEnd="true"
+        android:layout_above="@id/view1"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="horizontal">
         <LinearLayout
             android:id="@+id/btnBuy"
             style="@style/ButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minWidth="112dp"
             android:layout_marginEnd="12dp"
-            android:background="@drawable/button_purple_500"
+           android:background="@drawable/button_purple_500"
+            android:gravity="center"
             android:minHeight="?attr/actionBarSize"
             android:paddingHorizontal="20dp"
-            android:paddingVertical="16dp"
-            android:translationZ="4dp">
+            android:paddingVertical="16dp">
 
             <TextView
                 android:id="@+id/tvInvestMoney"
@@ -370,21 +381,22 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:drawablePadding="12dp"
-                android:paddingHorizontal="14dp"
                 android:text="@string/buy"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/purple_gray_00" />
         </LinearLayout>
+
         <LinearLayout
             android:id="@+id/btnSell"
             style="@style/ButtonStyle"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:minWidth="112dp"
             android:background="@drawable/button_purple_500"
+            android:gravity="center"
             android:minHeight="?attr/actionBarSize"
             android:paddingHorizontal="20dp"
-            android:paddingVertical="16dp"
-            android:translationZ="4dp">
+            android:paddingVertical="16dp">
 
             <TextView
                 style="@style/SubheadMabry"
@@ -392,14 +404,18 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:drawablePadding="12dp"
-                android:paddingHorizontal="14dp"
                 android:text="@string/sell"
                 android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/purple_gray_00" />
         </LinearLayout>
-
-
     </LinearLayout>
+    <View
+        android:id="@+id/view1"
+        android:layout_width="match_parent"
+        android:layout_height="24dp"
+        android:layout_alignParentBottom="true"/>
+
+<!--    </LinearLayout>-->
 
 
 </RelativeLayout>

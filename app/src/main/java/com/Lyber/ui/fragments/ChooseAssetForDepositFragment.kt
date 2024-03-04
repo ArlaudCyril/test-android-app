@@ -75,36 +75,42 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
         assetPopupNetwork.anchorView = binding.etNetwork
         assetPopup.setAdapter(assetAdapter)
         assetPopupNetwork.setAdapter(assetAdapterNetwork)
+       if(App.prefsManager.assetBaseDataResponse!=null)
         App.prefsManager.assetBaseDataResponse.let {
-            if (assetPopup.isShowing) {
-                assetAdapter.removeProgress()
-                assetAdapter.setData(it!!.data)
-                assetPopup.show()
-            } else {
-                assetAdapter.setData(it!!.data)
-            }
-            for (sa in it.data) {
-                if (sa.id == requireArguments().getString(Constants.DATA_SELECTED)) {
-                    network = sa
-
-                    binding.tvTitle.fadeIn()
-                    binding.ivNetwork.visible()
-                    binding.etAssets.updatePadding(0)
-
-                    binding.etAssets.setText("${sa.fullName.replaceFirstChar {
-                        if (it.isLowerCase()) it.titlecase(
-                            Locale.ROOT
-                        ) else it.toString()
-                    }} (${sa.id.uppercase()})")
-                    binding.ivNetwork.loadCircleCrop(sa.imageUrl)
-                    binding.btnAddUseAddress.text = "${getString(R.string.buy)} ${sa.fullName.capitalize()} ${getString(R.string.on)} Lyber"
-                    CommonMethods.showProgressDialog(requireActivity())
-                    viewModel.getAssetDetailIncludeNetworks(sa.id)
-                    break
+                if (assetPopup.isShowing) {
+                    assetAdapter.removeProgress()
+                    assetAdapter.setData(it!!.data)
+                    assetPopup.show()
+                } else {
+                    assetAdapter.setData(it!!.data)
                 }
-            }
+                for (sa in it.data) {
+                    if (sa.id == requireArguments().getString(Constants.DATA_SELECTED)) {
+                        network = sa
+
+                        binding.tvTitle.fadeIn()
+                        binding.ivNetwork.visible()
+                        binding.etAssets.updatePadding(0)
+
+                        binding.etAssets.setText(
+                            "${
+                                sa.fullName.replaceFirstChar {
+                                    if (it.isLowerCase()) it.titlecase(
+                                        Locale.ROOT
+                                    ) else it.toString()
+                                }
+                            } (${sa.id.uppercase()})"
+                        )
+                        binding.ivNetwork.loadCircleCrop(sa.imageUrl)
+                        binding.btnAddUseAddress.text =
+                            "${getString(R.string.buy)} ${sa.fullName.capitalize()} ${getString(R.string.on)} Lyber"
+                        CommonMethods.showProgressDialog(requireActivity())
+                        viewModel.getAssetDetailIncludeNetworks(sa.id)
+                        break
+                    }
+                }
         }
-        viewModel.getAddress.observe(viewLifecycleOwner){
+       viewModel.getAddress.observe(viewLifecycleOwner){
             if (lifecycle.currentState == Lifecycle.State.RESUMED){
                 CommonMethods.dismissProgressDialog()
                 binding.etAddress.text = it.data.address

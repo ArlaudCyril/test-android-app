@@ -158,6 +158,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                     } ${(count - 100).toInt()} %"
                     binding.btnSaveMyStrategy.background =
                         ContextCompat.getDrawable(requireContext(), R.drawable.button_purple_400)
+
                 }
 
                 count < 100 -> {
@@ -220,7 +221,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
 
                 ivTopAction -> requireActivity().onBackPressed()
                 btnSaveMyStrategy -> {
-                    if (isEdit) {
+                    if (isEdit && canBuildStrategy) {
                         checkInternet(requireContext()) {
                             showProgressDialog(requireContext())
                             checkInternet(requireContext()) {

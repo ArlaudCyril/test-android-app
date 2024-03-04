@@ -34,6 +34,7 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
     private var topGainers = mutableListOf<PriceServiceResume>()
     private var topLosers = mutableListOf<PriceServiceResume>()
     private var stables = mutableListOf<PriceServiceResume>()
+    private var fromAddAmount = false
 
     private val searchText get() = binding.etSearch.text.trim().toString()
 
@@ -42,6 +43,7 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
         super.onCreate(savedInstanceState)
         arguments?.let {
             type = it.getString(Constants.TYPE, "")
+            fromAddAmount = it.containsKey(Constants.FROM)
         }
     }
 
@@ -117,9 +119,9 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
             it.tvTitle.text = getString(R.string.all_assets)
             if (type == Constants.Exchange) {
                 it.tvTitle.text = getString(R.string.exchange_to)
-                it.includedAsset.root.visible()
-                it.includedAsset.ivDropIcon.gone()
-                it.tvTitleSec.visible()
+//                it.includedAsset.root.visible()
+//                it.includedAsset.ivDropIcon.gone()
+//                it.tvTitleSec.visible()
             }
             it.ivTopAction.setImageResource(R.drawable.ic_back)
             it.ivTopAction.setOnClickListener(this)
@@ -229,18 +231,20 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
             it.chosenAssets = asset
             it.screenCount = 1
             viewModel.selectedAsset = it.selectedAsset
-            if (type == Constants.Exchange) {
+            if (fromAddAmount) {
+                viewModel.exchangeAssetTo = asset.id
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            } else if (type == Constants.Exchange) {
+//                findNavController().popBackStack()
                 viewModel.exchangeAssetTo = asset.id
                 findNavController().navigate(R.id.addAmountForExchangeFragment)
-            }
-            else if(type=="assets"){
+
+            } else if (type == "assets") {
                 findNavController().popBackStack()
                 viewModel.selectedAsset = CommonMethods.getAsset(asset.id)
                 viewModel.selectedBalance = CommonMethods.getBalance(asset.id)
                 findNavController().navigate(R.id.portfolioDetailFragment)
-            }
-
-            else {
+            } else {
                 requireActivity().onBackPressedDispatcher.onBackPressed()
             }
         }

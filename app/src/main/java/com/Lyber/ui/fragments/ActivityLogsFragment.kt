@@ -98,6 +98,7 @@ class ActivityLogsFragment : BaseFragment<FragmentActivityLogsBinding>() {
                 // Process the response here
                 binding.rvRefresh.isRefreshing = false
                 CommonMethods.dismissProgressDialog()
+                if(it.data.isNotEmpty())
                 adapter.calculatePositions(it.data)
                 if (offset == 0)
                     binding.rvActivityLogs.startLayoutAnimation()

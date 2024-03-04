@@ -62,7 +62,6 @@
         app:autoSizeTextType="uniform"
         android:maxLines="1"
         />
-
     <TextView
         android:id="@+id/tvAssetConversion"
         style="@style/SubheadMabry"
@@ -74,8 +73,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/etAmount" />
-
-
     <TextView
         android:id="@+id/tvAssetFees"
         style="@style/SubheadMabry"
@@ -88,7 +85,6 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tvAssetConversion"
         tools:ignore="NotSibling" />
-
     <TextView
         android:id="@+id/tvMinAmount"
         style="@style/SubheadMabry"
@@ -99,10 +95,7 @@
         android:visibility="visible"
         app:layout_constraintBottom_toTopOf="@id/llAddress"
         app:layout_constraintStart_toStartOf="parent" />
-
-
     <!-- swap fragment -->
-
     <ImageView
         android:id="@+id/ivMax"
         android:layout_width="36dp"
@@ -115,7 +108,6 @@
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/tvAssetConversion"
         app:layout_constraintStart_toStartOf="parent" />
-
     <ImageView
         android:id="@+id/ivRepeat"
         android:layout_width="36dp"
@@ -129,8 +121,6 @@
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="@+id/tvAssetConversion"
         app:layout_constraintEnd_toEndOf="parent" />
-
-
     <LinearLayout
         android:id="@+id/llAddress"
         android:layout_height="wrap_content"

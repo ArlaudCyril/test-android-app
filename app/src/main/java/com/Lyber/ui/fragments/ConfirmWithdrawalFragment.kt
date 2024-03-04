@@ -28,14 +28,21 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
     View.OnClickListener, RestClient.OnRetrofitError {
     private lateinit var viewModel: PortfolioViewModel
     private  var valueTotal : Double =0.0
+    private var isExpand = false
     private var isOtpScreen = false
 
     override fun bind() = FragmentConfirmInvestmentBinding.inflate(layoutInflater)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = CommonMethods.getViewModel(requireActivity())
+        viewModel.listener=this
+        binding.tvTotalAmount.gone()
+        binding.ivSingleAsset.gone()
+        binding.tvMoreDetails.gone()
+        binding.zzInfor.visible()
         binding.ivTopAction.setOnClickListener(this)
         binding.btnConfirmInvestment.setOnClickListener(this)
+//        binding.tvMoreDetails.setOnClickListener(this)
         binding.allocationView.rvAllocation.isNestedScrollingEnabled = false
         prepareView()
         setObservers()
@@ -110,11 +117,6 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
             ,valueTotal,viewModel.withdrawAddress!!.address,viewModel.selectedNetworkDeposit!!.id)
         }*/
     }
-
-
-
-
-
     private fun prepareView() {
         binding.apply {
             listOf(
@@ -199,6 +201,27 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
             when(v!!){
                 ivTopAction->requireActivity().onBackPressedDispatcher.onBackPressed()
                 btnConfirmInvestment-> confirmButtonClick()
+                tvMoreDetails -> {
+                    if (isExpand) {
+                        zzInfor.gone()
+                        isExpand = false
+                        binding.tvMoreDetails.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                            R.drawable.ic_right_arrow_grey,
+                            0,
+                            0,
+                            0
+                        )
+                    } else {
+                        zzInfor.visible()
+                        isExpand = true
+                        binding.tvMoreDetails.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                            R.drawable.ic_drop_down,
+                            0,
+                            0,
+                            0
+                        )
+                    }
+                }
         }
         }
     }

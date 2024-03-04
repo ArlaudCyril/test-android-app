@@ -104,7 +104,7 @@ class WithdrawalAddressBottomSheet (private val addresses: MutableList<WithdrawA
                     itemList[position]?.let {
                         (holder as AddressViewHolder).binding.apply {
                             val data = it
-                            val assest = com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull{ item -> item.takeIf {item.id == data.network}}
+                            val assest = com.Lyber.ui.activities.BaseActivity.networkAddress.firstNotNullOfOrNull{ item -> item.takeIf {item.id == data.network}}
                             ivItem.loadCircleCrop(assest!!.imageUrl)
                             tvStartTitle.text = it.name
                             tvStartSubTitle.gone()

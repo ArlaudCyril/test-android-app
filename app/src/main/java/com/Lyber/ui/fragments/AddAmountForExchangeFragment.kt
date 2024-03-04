@@ -43,6 +43,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
     private var canPreview: Boolean = false
 
     private var minAmount: Double = 0.0
+    private var minPriceExchange: Double = 1.05
     private var mCurrency: String = ""
     private var mConversionCurrency: String = ""
     private var maxValue: String = "1.0"
@@ -95,9 +96,9 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                 binding.progress.clearAnimation()
                 binding.progress.gone()
                 val bundle = Bundle().apply {
-                    putString(Constants.DATA_SELECTED,Gson().toJson(it.data))
+                    putString(Constants.DATA_SELECTED, Gson().toJson(it.data))
                 }
-                findNavController().navigate(R.id.confirmExchangeFragment,bundle)
+                findNavController().navigate(R.id.confirmExchangeFragment, bundle)
 
             }
         }
@@ -130,33 +131,42 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
             btnAddFrequency.gone()
             ivMax.visible()
             tvAssetConversion.visible()
+            tvEuro.visible()
             rlCardInfo.gone()
             btnPreviewInvestment.text = getString(R.string.preview_exchange)
             llSwapLayout.visible()
-            val balance = com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
-            mCurrency = " "+balance!!.id.uppercase()
+            val balance =
+                com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
+            Log.d("Balance", "$balance")
+            mCurrency = " " + balance!!.id.uppercase()
             tvTitle.text = "Exchange ${balance.id.uppercase()}"
-            val priceCoin =balance.balanceData.euroBalance.toDouble()
+            val priceCoin = balance.balanceData.euroBalance.toDouble()
                 .div(balance.balanceData.balance.toDouble())
             tvSubTitle.text = "${
                 balance.balanceData.balance.formattedAsset(priceCoin, RoundingMode.DOWN)
             } ${balance.id.uppercase()} Available"
-            val currency = com.Lyber.ui.activities.BaseActivity.assets.find { it1 -> it1.id ==balance.id }
+            val currency =
+                com.Lyber.ui.activities.BaseActivity.assets.find { it1 -> it1.id == balance.id }
             ivAssetSwapFrom.loadCircleCrop(currency!!.imageUrl)
             tvSwapAssetFrom.text = balance.id.uppercase()
-            minAmount = (balance.balanceData.balance.toDouble() /balance.balanceData.euroBalance.toDouble())
+            val exchangeFromCoinPrice =
+                (balance.balanceData.euroBalance.toDouble() / balance.balanceData.balance.toDouble())
+//            minAmount = (balance.balanceData.balance.toDouble() /balance.balanceData.euroBalance.toDouble())
+            minAmount = minPriceExchange / (exchangeFromCoinPrice ?: 1.0)
             tvMinAmount.text = getString(
                 R.string.the_minimum_amount_to_be_exchanged_1,
                 minAmount.toString().decimalPoint(), balance.id.uppercase()
             )
-            val balanceTo = com.Lyber.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetTo }
+            val balanceTo =
+                com.Lyber.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetTo }
             tvAssetConversion.text = balanceTo!!.priceServiceResumeData
                 .lastPrice.commaFormatted
-            mConversionCurrency =" "+balanceTo.id.uppercase()
+            mConversionCurrency = " " + balanceTo.id.uppercase()
             val data =
-                com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.exchangeAssetTo} }
+                com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.exchangeAssetTo } }
+            Log.d("assetTo", "$data")
             ivAssetSwapTo.loadCircleCrop(data!!.imageUrl)
-            tvSwapAssetTo.text =balanceTo.id.uppercase()
+            tvSwapAssetTo.text = balanceTo.id.uppercase()
             maxValue = balance.balanceData.balance
             binding.etAmount.text = "${0.commaFormatted}$mCurrency"
             focusedData.currency = mCurrency
@@ -190,6 +200,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
 
                 btnPreviewInvestment -> {
 
+//                    if(etAmount.text.)
                     if (canPreview) {
                         hitAPi()
                     }
@@ -201,10 +212,14 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                     findNavController().navigate(R.id.exchangeFromFragment, bundle)
                 }
 
-                rlSwapTo ->{
+                rlSwapTo -> {
+//                    val bundle = Bundle()
+//                    bundle.putString(Constants.TYPE, Constants.TO_SWAP)
+//                    findNavController().navigate(R.id.exchangeFromFragment, bundle)
                     val bundle = Bundle()
-                    bundle.putString(Constants.TYPE, Constants.TO_SWAP)
-                    findNavController().navigate(R.id.exchangeFromFragment, bundle)
+                    bundle.putString(Constants.TYPE, Constants.Exchange)
+                    bundle.putString(Constants.FROM, AddAmountForExchangeFragment::class.java.name)
+                    findNavController().navigate(R.id.allAssetFragment, bundle)
                 }
 //                    requireActivity().onBackPressedDispatcher.onBackPressed()
 
@@ -217,6 +232,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                         )
                     }
                 }
+
                 ivMax -> setMaxValue()
 
             }
@@ -229,16 +245,34 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
         binding.progress.visibility = View.GONE
         binding.btnPreviewInvestment.text = getString(R.string.preview_exchange)
     }
+
     private fun hitAPi() {
-        binding.progress.visible()
-        binding.progress.animation =
-            AnimationUtils.loadAnimation(requireActivity(), R.anim.rotate_drawable)
-        binding.btnPreviewInvestment.text = ""
-        viewModel.getQuote(
-            focusedData.currency.lowercase(),
-            unfocusedData.currency.lowercase(),
-            amount.split(focusedData.currency)[0].pointFormat
-        )
+        val valueAmount =
+            if (amount.contains(focusedData.currency)) amount.split(focusedData.currency)[0].pointFormat.toDouble()
+            else amount.split(unfocusedData.currency)[0].pointFormat.toDouble()
+        val balance =
+            com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
+        Log.d("Balance", "$balance")
+
+        val priceCoin = balance!!.balanceData.euroBalance.toDouble()
+            .div(balance.balanceData.balance.toDouble())
+        val maxAmount= balance.balanceData.balance.formattedAsset(priceCoin, RoundingMode.DOWN)
+
+        if (valueAmount <= maxValue.toDouble()) {
+            binding.progress.visible()
+            binding.progress.animation =
+                AnimationUtils.loadAnimation(requireActivity(), R.anim.rotate_drawable)
+            binding.btnPreviewInvestment.text = ""
+            viewModel.getQuote(
+                focusedData.currency.lowercase(),
+                unfocusedData.currency.lowercase(),
+                amount.split(focusedData.currency)[0].pointFormat
+            )
+        } else {
+            getString(R.string.insufficient_balance).showToast(requireActivity())
+        }
+
+
 
 
     }
@@ -249,14 +283,16 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
         val valueAmount =
             if (amount.contains(focusedData.currency)) amount.split(focusedData.currency)[0].pointFormat.toDouble()
             else amount.split(unfocusedData.currency)[0].pointFormat.toDouble()
-        val balanceFromPrice =  com.Lyber.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
-        val balanceToPrice = com.Lyber.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetTo }
-        val valueInEurosFromAsset =balanceFromPrice!!.priceServiceResumeData.lastPrice.toDouble()
-        val valuesInEurosToAsset =balanceToPrice!!.priceServiceResumeData.lastPrice.toDouble()
+        val balanceFromPrice =
+            com.Lyber.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
+        val balanceToPrice =
+            com.Lyber.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetTo }
+        val valueInEurosFromAsset = balanceFromPrice!!.priceServiceResumeData.lastPrice.toDouble()
+        val valuesInEurosToAsset = balanceToPrice!!.priceServiceResumeData.lastPrice.toDouble()
         val numberToAssets = (valueAmount * valueInEurosFromAsset) / (valuesInEurosToAsset)
         val priceCoin = valuesInEurosToAsset
             .div(numberToAssets)
-        return numberToAssets.toString().formattedAsset(priceCoin,RoundingMode.DOWN)
+        return numberToAssets.toString().formattedAsset(priceCoin, RoundingMode.DOWN)
 
     }
 
@@ -344,14 +380,13 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
     }
 
     fun activateButton(activate: Boolean) {
-        if (activate) binding.tvMinAmount.invisible() else binding.tvMinAmount.visible()
+        if (activate) binding.tvMinAmount.gone() else binding.tvMinAmount.visible()
         binding.btnPreviewInvestment.background = ContextCompat.getDrawable(
             requireContext(),
             if (activate) R.drawable.button_purple_500 else R.drawable.button_purple_400
         )
         canPreview = activate
     }
-
 
 
     private val textOnTextChange = object : OnTextChange {
@@ -363,11 +398,11 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                 try {
                     if (amount.contains(focusedData.currency)) amount.split(focusedData.currency)[0].pointFormat.toDouble()
                     else amount.split(unfocusedData.currency)[0].pointFormat.toDouble()
-                }catch (e:Exception){
+                } catch (e: Exception) {
                     0.0
                 }
 
-            if (valueAmount > minAmount) {
+            if (valueAmount >= minAmount) {
                 activateButton(true)
             }
             when {
@@ -383,14 +418,24 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
 
                             binding.tvAssetConversion.text =
                                 "${assetAmount}$mConversionCurrency"
-
-
+                            val balanceFromPrice =
+                                com.Lyber.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
+                           binding.tvEuro.text = "${
+                                (valueAmount * balanceFromPrice!!.priceServiceResumeData.lastPrice.toDouble()).toString()
+                                    .formattedAsset(0.0, RoundingMode.DOWN,2)
+                            } ${Constants.EURO}"
                         }
 
                         else -> {
 
                             val convertedValue = conversionFormula()
                             binding.tvAssetConversion.text = "$convertedValue$mCurrency"
+                            val balanceFromPrice =
+                                com.Lyber.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
+                            binding.tvEuro.text = "${
+                                (valueAmount * balanceFromPrice!!.priceServiceResumeData.lastPrice.toDouble()).toString()
+                                    .formattedAsset(0.0, RoundingMode.DOWN,2)
+                            } ${Constants.EURO}"
                         }
 
                     }
@@ -431,7 +476,8 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
 
     @SuppressLint("SetTextI18n")
     private fun setMaxValue() {
-        val balance = com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetFrom!!}
+        val balance =
+            com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetFrom!! }
         val priceCoin = balance!!.balanceData.euroBalance.toDouble()
             .div(balance.balanceData.balance.toDouble())
         binding.etAmount.text = "${

@@ -107,6 +107,7 @@
         android:text="@string/invest_in_a_single_asset"
         android:textColor="@color/purple_gray_700"
         app:layout_constraintStart_toEndOf="@id/ivExchange"
+        app:layout_constraintEnd_toStartOf="@id/ivRightArrowSingleAsset"
         app:layout_constraintTop_toBottomOf="@id/ivWithdraw" />
 
     <TextView
@@ -117,6 +118,7 @@
         android:text="@string/choose_among_20_different_assets"
         android:textColor="@color/purple_gray_500"
         app:layout_constraintStart_toEndOf="@id/ivExchange"
+        app:layout_constraintEnd_toStartOf="@id/ivRightArrowSingleAsset"
         app:layout_constraintTop_toBottomOf="@id/tvTitleSingleAsset" />
 
     <ImageView

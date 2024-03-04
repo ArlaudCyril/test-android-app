@@ -123,13 +123,12 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
     }
 
     fun showDialog() {
-        App.prefsManager.portfolioCompletionStep = Constants.ACCOUNT_CREATED
-        Dialog(requireActivity(), R.style.DialogTheme).apply {
+       Dialog(requireActivity(), R.style.DialogTheme).apply {
             CustomDialogLayoutBinding.inflate(layoutInflater).let {
                 requestWindowFeature(Window.FEATURE_NO_TITLE)
                 setCancelable(false)
                 setCanceledOnTouchOutside(false)
-                App.prefsManager.accountCreationSteps = Constants.Account_CREATION_STEP_PHONE
+                App.prefsManager.accountCreationSteps = Constants.Account_CREATION_STEP_CREATE_PIN
                 setContentView(it.root)
                 it.tvTitle.text = getString(R.string.activate_face_id)
                 it.tvMessage.text = getString(R.string.activate_face_message)

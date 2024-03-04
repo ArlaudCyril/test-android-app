@@ -74,6 +74,7 @@ import java.util.Date
 import java.util.Timer
 import java.util.TimerTask
 import java.util.concurrent.TimeUnit
+import kotlin.math.absoluteValue
 
 class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
     View.OnClickListener, PortfolioThreeDotsDismissListener {
@@ -89,10 +90,10 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
     private lateinit var webSocket: WebSocket
     private var socketOpen = false
-    private val client = OkHttpClient()
     private var timer = Timer()
     private var grayOverlay: View? = null
-    private var firstPrice=0.0
+    private var firstPrice = 0.0
+    private var selectedTab="1h"
     override fun bind() = FragmentPortfolioDetailBinding.inflate(layoutInflater)
 
     override fun onDestroyView() {
@@ -147,13 +148,14 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             tvAssetName.text = "${viewModel.selectedAsset?.fullName}"
             tvAssetName.typeface = context?.resources?.getFont(R.font.mabry_pro_medium)
 
-//            val request = Request.Builder().url(
-//                Constants.SOCKET_BASE_URL
-//                        + "${viewModel.selectedAsset?.id}eur"
-//            ).build()
 
+            var customUrl = ""
+            if (viewModel.selectedAsset?.id == "usdt")
+                customUrl = Constants.SOCKET_BASE_URL + "eurusdt"
+            else
+                customUrl = Constants.SOCKET_BASE_URL + "${viewModel.selectedAsset?.id}eur"
             val request = Request.Builder()
-                .url(Constants.SOCKET_BASE_URL+ "${viewModel.selectedAsset?.id}eur")
+                .url(customUrl)
                 .build()
             val client = OkHttpClient.Builder()
                 .pingInterval(0, TimeUnit.MILLISECONDS) // Adjust if necessary
@@ -176,9 +178,10 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
                 override fun onTabSelected(tab: TabLayout.Tab?) {
                     viewModel.selectedAsset?.let { asset ->
+                        selectedTab= tab?.text.toString().lowercase()
                         viewModel.getPrice(asset.id, (tab?.text ?: "1h").toString().lowercase())
                         stopTimer()
-                        setTimer((tab?.text ?: "1h").toString().lowercase())
+//                        setTimer((tab?.text ?: "1h").toString().lowercase())
                     }
                 }
 
@@ -213,9 +216,9 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             } else {
                 CommonMethods.showProgressDialog(requireActivity())
             }
-            viewModel.getPrice(viewModel.selectedAsset?.id ?: "btc")
+            viewModel.getPrice(viewModel.selectedAsset?.id ?: "btc",selectedTab)
             viewModel.getNews(viewModel.selectedAsset?.id ?: "btc")
-//            viewModel.getPriceResumeById(viewModel.selectedAsset?.id ?: "btc")
+            viewModel.getPriceResumeById(viewModel.selectedAsset?.id ?: "btc")
         }
 
     }
@@ -282,10 +285,13 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 binding.tvValuePortfolioAndAssetPrice.text =
                     "${it.data.prices.last().currencyFormatted}"
 
-                this.setTimer("1h")// le code ne s'exécute pas
+//                this.setTimer("1h")// le code ne s'exécute pas
 
                 if (arguments != null && requireArguments().containsKey(Constants.ORDER_ID)) {
-                    if (requireArguments().containsKey(Constants.FROM_SWAP) || requireArguments().containsKey(Constants.TO_SWAP))
+                    if (requireArguments().containsKey(Constants.FROM_SWAP) || requireArguments().containsKey(
+                            Constants.TO_SWAP
+                        )
+                    )
                         viewModel.getOrderApi(requireArguments().getString(Constants.ORDER_ID, ""))
                     else
                         viewModel.confirmOrder(requireArguments().getString(Constants.ORDER_ID, ""))
@@ -319,14 +325,6 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
 
                 if (it.data.orderStatus == "PENDING") {
-//                    showLottieProgressDialog(requireActivity(), Constants.LOADING_FAILURE)
-//                    Handler().postDelayed({
-//                        dismissProgressDialog()
-//                        if (confetti != null) {
-//                            confetti!!.terminate()
-//                        }
-//                    }, 100)
-
                     viewModel.getOrderApi(requireArguments().getString(Constants.ORDER_ID, ""))
                 } else if (it.data.orderStatus == "VALIDATED")
                     Handler(Looper.getMainLooper()).postDelayed({
@@ -340,7 +338,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         }
         viewModel.priceResumeIdResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                firstPrice=it.data.firstPrice.toDouble()
+                firstPrice = it.data.firstPrice.toDouble()
             }
         }
     }
@@ -548,8 +546,6 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
 
                 tvAssetName -> {
-//                    findNavController().popBackStack(findNavController().graph.startDestinationId, false)
-// Navigate to the new fragment
                     findNavController().popBackStack()
                     val bundle = Bundle()
                     bundle.putString(Constants.TYPE, "assets")
@@ -563,8 +559,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                     viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
                     if (viewModel.selectedAsset!!.id == "usdt") {
                         findNavController().navigate(R.id.buyUsdt)
-                    }
-                 else if (balance != null) {
+                    } else if (balance != null) {
                         viewModel.exchangeAssetTo = viewModel.selectedAsset!!.id
                         viewModel.exchangeAssetFrom = "usdt"
                         findNavController().navigate(R.id.addAmountForExchangeFragment)
@@ -600,14 +595,42 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                     val price = jsonObject.getString("Price")
                     binding.tvValuePortfolioAndAssetPrice.text = price.currencyFormatted
 //                    binding.lineChart.updateValueLastPoint(price.toFloat())
-//                    var percentChange=price.toDouble()/(firstPrice-1)*100
-//                    Log.d("percentChange","$percentChange")
+                    if (firstPrice != 0.0) {
+                        val percentChange = ((price.toDouble() / firstPrice) - 1) * 100
+                        val euroChange = price.toDouble() - firstPrice
+
+                        if (percentChange >= 0.0) {
+                            binding.tvAssetVariation.text =
+                                "▲ + ${percentChange.absoluteValue.commaFormatted}% (${euroChange.commaFormatted}€)"
+                            binding.tvAssetVariation.setTextColor(
+                                ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.green_500
+                                )
+                            )
+
+                        } else {
+                            binding.tvAssetVariation.text =
+                                "▼ - ${percentChange.absoluteValue.commaFormatted}% (${euroChange.commaFormatted}€)"
+                            binding.tvAssetVariation.setTextColor(
+                                ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.red_500
+                                )
+                            )
+
+                        }
+                        Log.d("Price", "$price")
+                        Log.d("firstPrice", "$firstPrice")
+                        Log.d("percent", "${percentChange.commaFormatted}")
+                    }
                 }
             }
         }
 
         override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
             super.onFailure(webSocket, t, response)
+            Log.d("socket", "failed $response")
         }
 
         override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
@@ -684,7 +707,8 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         timer.schedule(object : TimerTask() {
             override fun run() {
                 requireActivity().runOnUiThread() {
-                    binding.lineChart.addPoint()
+                    if (isAdded)
+                        binding.lineChart.addPoint()
                 }
             }
         }, date, (interval * 1000).toLong())
@@ -727,8 +751,6 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                     imageView.setImageResource(R.drawable.baseline_clear_24)
                 }
             }
-
-
             /*(0f,.32f) for loader
             * (0f,.84f) for success
             * (0.84f,1f) for failure*/

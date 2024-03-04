@@ -169,7 +169,8 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
                 val bundle = Bundle().apply {
                     putBoolean(Constants.FOR_LOGIN, false)
                 }
-                App.prefsManager.accountCreationSteps = Constants.Account_CREATION_STEP_PHONE
+//                App.prefsManager.accountCreationSteps = Constants.Account_CREATION_STEP_PHONE
+                App.prefsManager.accountCreationSteps = Constants.Account_CREATION_STEP_EMAIL
                 findNavController().navigate(R.id.createPinFragment, bundle)
             }
         }

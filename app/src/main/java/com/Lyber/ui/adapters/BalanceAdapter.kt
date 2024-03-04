@@ -106,7 +106,7 @@ class BalanceAdapter(
             binding.ivDropIcon.setImageResource(R.drawable.ic_right_arrow_grey)
             binding.ivDropIcon.visible()
             binding.root.setOnClickListener {
-                itemList[adapterPosition]?.let { it1 ->
+                itemList[absoluteAdapterPosition]?.let { it1 ->
                     listener(it1)
                 }
             }

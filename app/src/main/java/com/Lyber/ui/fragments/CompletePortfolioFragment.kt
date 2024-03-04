@@ -255,8 +255,16 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
                 val bundle = Bundle().apply {
                     putBoolean(Constants.FOR_LOGIN, false)
                 }
-                App.prefsManager.accountCreationSteps= Constants.Account_CREATION_STEP_PHONE
+//                App.prefsManager.accountCreationSteps= Constants.Account_CREATION_STEP_PHONE
                 findNavController().navigate(R.id.createPinFragment,bundle)
+            }
+            Constants.Account_CREATION_STEP_CREATE_PIN -> {
+                val bundle = Bundle().apply {
+                    putBoolean(Constants.FOR_LOGIN, false)
+                }
+//                App.prefsManager.accountCreationSteps= Constants.Account_CREATION_STEP_PHONE
+//                findNavController().navigate(R.id.createPinFragment,bundle)
+                findNavController().navigate(R.id.enableNotificationFragment)
             }
             else->{
                 val bundle = Bundle().apply {
