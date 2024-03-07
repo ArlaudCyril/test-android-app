@@ -143,6 +143,7 @@
                         android:layout_marginHorizontal="4dp"
                         style="@style/EditTextTheme"
                         android:layout_width="match_parent"
+                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                         android:background="@drawable/edit_text_background"
                         android:hint="@string/enter_or_scan_an_address"
                         android:drawableEnd="@drawable/ic_code_scanner"
@@ -150,7 +151,7 @@
                         android:paddingTop="0dp"
                         android:paddingBottom="0dp"
                         android:paddingHorizontal="16dp"
-                        android:singleLine="true" />
+                        />
 
                 </com.google.android.material.textfield.TextInputLayout>
 

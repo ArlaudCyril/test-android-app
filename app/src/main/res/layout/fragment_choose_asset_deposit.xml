@@ -136,9 +136,10 @@
                     style="@style/EditTextTheme"
                     android:layout_width="0dp"
                     android:layout_weight="1"
+                    android:ellipsize="middle"
                     android:gravity="center_vertical"
                     android:background="@android:color/transparent"
-                    android:paddingHorizontal="16dp"
+                    android:paddingStart="16dp"
                     android:singleLine="true"
                     />
                 <ImageView

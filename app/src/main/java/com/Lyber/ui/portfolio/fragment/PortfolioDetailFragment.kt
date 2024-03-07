@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.ContentValues.TAG
 import android.content.Context
+import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
@@ -29,6 +30,7 @@ import com.Lyber.databinding.CustomDialogVerticalLayoutBinding
 import com.Lyber.databinding.DocumentBeingVerifiedBinding
 import com.Lyber.databinding.FragmentPortfolioDetailBinding
 import com.Lyber.databinding.LottieViewBinding
+import com.Lyber.databinding.ProgressBarNewBinding
 import com.Lyber.models.Balance
 import com.Lyber.models.Duration
 import com.Lyber.ui.adapters.BalanceAdapter
@@ -69,8 +71,10 @@ import okhttp3.WebSocketListener
 import org.json.JSONObject
 import java.math.RoundingMode
 import java.net.URI
+import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
+import java.util.Locale
 import java.util.Timer
 import java.util.TimerTask
 import java.util.concurrent.TimeUnit
@@ -93,7 +97,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
     private var timer = Timer()
     private var grayOverlay: View? = null
     private var firstPrice = 0.0
-    private var selectedTab="1h"
+    private var selectedTab = "1h"
     override fun bind() = FragmentPortfolioDetailBinding.inflate(layoutInflater)
 
     override fun onDestroyView() {
@@ -172,13 +176,13 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             it.addTab(it.newTab().apply { text = "1D" })
             it.addTab(it.newTab().apply { text = "1W" })
             it.addTab(it.newTab().apply { text = "1M" })
-            it.addTab(it.newTab().apply { text = "1Y" })
+//            it.addTab(it.newTab().apply { text = "1Y" })
 
             it.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
                 override fun onTabSelected(tab: TabLayout.Tab?) {
                     viewModel.selectedAsset?.let { asset ->
-                        selectedTab= tab?.text.toString().lowercase()
+                        selectedTab = tab?.text.toString().lowercase()
                         viewModel.getPrice(asset.id, (tab?.text ?: "1h").toString().lowercase())
                         stopTimer()
 //                        setTimer((tab?.text ?: "1h").toString().lowercase())
@@ -204,7 +208,6 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
         binding.lineChart.timeSeries = getLineData(viewModel.totalPortfolio)
 
-//        binding.tvInvestMoney.text = getString(R.string.invest_money)
         binding.tvValuePortfolioAndAssetPrice.text =
             "${viewModel.totalPortfolio.commaFormatted}${Constants.EURO}"
 
@@ -212,26 +215,27 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         CommonMethods.checkInternet(requireContext()) {
 
             if (arguments != null && requireArguments().containsKey(Constants.ORDER_ID)) {
-                showLottieProgressDialog(requireActivity(), Constants.LOADING)
+                showProgress(requireActivity())
             } else {
                 CommonMethods.showProgressDialog(requireActivity())
             }
-            viewModel.getPrice(viewModel.selectedAsset?.id ?: "btc",selectedTab)
+            viewModel.getPrice(viewModel.selectedAsset?.id ?: "btc", selectedTab)
             viewModel.getNews(viewModel.selectedAsset?.id ?: "btc")
             viewModel.getPriceResumeById(viewModel.selectedAsset?.id ?: "btc")
         }
-
     }
 
     private fun loadAnimation() {
-        val array = IntArray(2)
-        array[0] = R.color.purple_400
-        array[1] = R.color.white_transparent
+        val array = IntArray(4)
+        array[0] = R.color.purple_300
+        array[1] = R.color.purple_500
+        array[2] = R.color.purple_200
+        array[3] = R.color.white_transparent
         confetti = CommonConfetti.rainingConfetti(binding.root, array)
             .infinite()
-        confetti!!.setAccelerationY(500f)
-        confetti!!.setEmissionRate(500f)
-        confetti!!.setVelocityY(500f)
+        confetti!!.setAccelerationY(400f)
+        confetti!!.setEmissionRate(300f)
+        confetti!!.setVelocityY(400f)
             .animate()
     }
 
@@ -241,7 +245,6 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 Handler().postDelayed({
                     viewModel.getBalance()
                 }, 4000)
-
             }
         }
         viewModel.balanceResponse.observe(viewLifecycleOwner) {
@@ -254,14 +257,17 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 }
                 com.Lyber.ui.activities.BaseActivity.balances = balances
                 loadAnimation()
-                showLottieProgressDialog(requireActivity(), Constants.LOADING_SUCCESS)
+//                showLottieProgressDialog(requireActivity(), Constants.LOADING_SUCCESS)
+                dismissProgress()
                 Handler().postDelayed({
                     dismissProgressDialog()
-                    if (confetti != null) {
-                        confetti!!.terminate()
+                    if(isAdded) {
+                        if (confetti != null) {
+                            confetti!!.terminate()
+                        }
+                        setData()
                     }
-                    setData()
-                }, 2000)
+                }, 3000)
             }
         }
         viewModel.newsResponse.observe(viewLifecycleOwner) {
@@ -281,10 +287,12 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
                 binding.lineChart.timeSeries =
                     it.data.prices.toTimeSeries(it.data.lastUpdate, timeFrame)
-                Log.d("timeSeries", "${it.data.prices.toTimeSeries(it.data.lastUpdate, timeFrame)}")
+//                Log.d("timeSeries", "${it.data.prices.toTimeSeries(it.data.lastUpdate, timeFrame)}")
+
                 binding.tvValuePortfolioAndAssetPrice.text =
                     "${it.data.prices.last().currencyFormatted}"
-
+//                if (selectedTab != "1h")
+                firstPrice = it.data.prices.first().toDouble()
 //                this.setTimer("1h")// le code ne s'exécute pas
 
                 if (arguments != null && requireArguments().containsKey(Constants.ORDER_ID)) {
@@ -301,7 +309,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
         viewModel.getAssetDetail.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                Log.d("data", "${it.data}")
+//                Log.d("data", "${it.data}")
                 viewModel.selectedAsset?.imageUrl?.let { it1 ->
                     binding.includedMyAsset.ivAssetIcon.loadCircleCrop(
                         it1
@@ -375,13 +383,29 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             "4h" -> 5 * 60 * 1000
             "1d" -> 30 * 60 * 1000
             "1w" -> 4 * 60 * 60 * 1000
-            "1m" -> 12 * 60 * 60 * 1000
-            else -> 7 * 24 * 60 * 60 * 1000
+            "1m" -> 12 * 60 * 60 * 1000L
+            else -> 7 * 24 * 60 * 60 * 1000L
         }
-        for (i in 0 until count()) {
-            val date = (last - (count() - i) * timeInterval).toDouble()
-            timeSeries.add(listOf(date, this[i].toDouble()))
-        }
+//        if (tf == "1m") {
+//            val calendar = Calendar.getInstance()
+//            calendar.timeInMillis = last
+////            if (tf == "1m")
+////                calendar.add(Calendar.MONTH, -1)
+//            calendar.add(Calendar.MONTH, -1)
+//
+//            val startTime = calendar.timeInMillis
+//            // Iterate over prices and calculate dates based on the interval
+//            for (i in this.indices) {
+////                val date = startTime + (i * timeInterval1)
+//                val date = (last - (count() - i) * timeInterval).toDouble()
+//                timeSeries.add(listOf(date.toDouble(), this[i].toDouble()))
+//            }
+//            Log.d("time", "$timeSeries")
+//        } else
+            for (i in 0 until count()) {
+                val date = (last - (count() - i) * timeInterval).toDouble()
+                timeSeries.add(listOf(date, this[i].toDouble()))
+            }
         return timeSeries
     }
 
@@ -592,9 +616,13 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             requireActivity().runOnUiThread {
                 val jsonObject = JSONObject(text)
                 if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                    val price = jsonObject.getString("Price")
+                    var price = jsonObject.getString("Price")
+//                    Log.d("price", "$price")
+                    if (viewModel.selectedAsset?.id == "usdt")
+                        price = (1.0 / price.toFloat()).toString()
+//                    Log.d("price", "$price")
                     binding.tvValuePortfolioAndAssetPrice.text = price.currencyFormatted
-//                    binding.lineChart.updateValueLastPoint(price.toFloat())
+                    binding.lineChart.updateValueLastPoint(price.toFloat())
                     if (firstPrice != 0.0) {
                         val percentChange = ((price.toDouble() / firstPrice) - 1) * 100
                         val euroChange = price.toDouble() - firstPrice
@@ -620,9 +648,9 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                             )
 
                         }
-                        Log.d("Price", "$price")
-                        Log.d("firstPrice", "$firstPrice")
-                        Log.d("percent", "${percentChange.commaFormatted}")
+//                        Log.d("Price", "$price")
+//                        Log.d("firstPrice", "$firstPrice")
+//                        Log.d("percent", "${percentChange.commaFormatted}")
                     }
                 }
             }
@@ -731,7 +759,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             val height = resources.getDimension(R.dimen.px_200)
             val width = resources.getDimension(R.dimen.px_300)
             dialog!!.setContentView(LottieViewBinding.inflate(LayoutInflater.from(context)).root)
-            dialog!!.getWindow()!!.setLayout(width.toInt(), height.toInt());
+//            dialog!!.getWindow()!!.setLayout(width.toInt(), height.toInt());
         }
         try {
             val viewImage = dialog?.findViewById<LottieAnimationView>(R.id.animationView)
@@ -771,7 +799,8 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
     override fun onRetrofitError(responseBody: ResponseBody?) {
         super.onRetrofitError(responseBody)
         if (dialog != null) {
-            showLottieProgressDialog(requireActivity(), Constants.LOADING_FAILURE)
+//            showLottieProgressDialog(requireActivity(), Constants.LOADING_FAILURE)
+            dismissProgress()
             Handler().postDelayed({
                 dismissProgressDialog()
             }, 1000)
@@ -794,5 +823,38 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         // Code to remove the overlay view from the parent fragment's layout
         binding.screenContent.removeView(grayOverlay)
     }
+    fun showProgress(context: Context) {
 
+        if (dialog == null) {
+            dialog = Dialog(context)
+            dialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog!!.window!!.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+            dialog!!.window!!.setDimAmount(0.4F)
+            dialog!!.setCancelable(false)
+            dialog!!.setContentView(ProgressBarNewBinding.inflate(LayoutInflater.from(context)).root)
+        }
+        try {
+            dialog?.findViewById<ImageView>(R.id.progressImage)?.animation =
+                AnimationUtils.loadAnimation(context, R.anim.rotate_drawable)
+            dialog!!.show()
+        } catch (e: WindowManager.BadTokenException) {
+            Log.d("Exception", "showProgressDialog: ${e.message}")
+            dialog?.dismiss()
+            dialog = null
+        } catch (e: Exception) {
+            Log.d("Exception", "showProgressDialog: ${e.message}")
+        }
+
+    }
+    fun dismissProgress() {
+        dialog?.let {
+            try {
+                it.findViewById<ImageView>(R.id.progressImage).clearAnimation()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            it.dismiss()
+        }
+    }
 }

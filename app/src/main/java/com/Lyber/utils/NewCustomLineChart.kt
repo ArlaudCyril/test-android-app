@@ -28,8 +28,11 @@ import com.Lyber.utils.CommonMethods.Companion.currencyFormatted
 import com.Lyber.utils.CommonMethods.Companion.lineData
 import com.Lyber.utils.CommonMethods.Companion.toGraphTime
 import com.bumptech.glide.Glide
+import com.github.mikephil.charting.data.LineData
 import font.FontSize
+import java.math.BigDecimal
 import java.util.Date
+import java.util.Locale
 
 class NewCustomLineChart : RelativeLayout {
 
@@ -71,7 +74,7 @@ class NewCustomLineChart : RelativeLayout {
 
     private var animator: ValueAnimator? = null
 
-    private val binding: ItemHighlighterGraphBinding by lazy{
+    private val binding: ItemHighlighterGraphBinding by lazy {
         ItemHighlighterGraphBinding.inflate(LayoutInflater.from(context))
     }
 
@@ -106,6 +109,8 @@ class NewCustomLineChart : RelativeLayout {
             _timeSeries = value
             selectedPosition = value.count() - 1
             lineData = value.lineData
+            Log.d("value", "${value}")
+            Log.d("lineData", "${lineData}")
             postInvalidate()
         }
 
@@ -123,7 +128,8 @@ class NewCustomLineChart : RelativeLayout {
 
     var xUnit: Int = 0
     var textColor: Int = context.getColor(R.color.purple_500)
-    var textTypeface: Typeface = ResourcesCompat.getFont(context, R.font.mabry_pro) ?: Typeface.DEFAULT
+    var textTypeface: Typeface =
+        ResourcesCompat.getFont(context, R.font.mabry_pro) ?: Typeface.DEFAULT
     var textSize: Float = 25f
     var selectorLineColor: Int = context.getColor(R.color.purple_500)
 
@@ -180,6 +186,7 @@ class NewCustomLineChart : RelativeLayout {
                 return true
 
             }
+
             MotionEvent.ACTION_DOWN -> {
 
                 val position = ((eventX / xUnit).toInt())
@@ -210,8 +217,8 @@ class NewCustomLineChart : RelativeLayout {
         val max = lineData.max()
         val min = lineData.min()
 
-        if(lineData.count()>1)
-        xUnit = (width - (horizontalPadding)) / (lineData.count() - 1)
+        if (lineData.count() > 1)
+            xUnit = (width - (horizontalPadding)) / (lineData.count() - 1)
 
         if ((max - min) > 0)
 
@@ -225,7 +232,7 @@ class NewCustomLineChart : RelativeLayout {
                 if (lineData[i] == max) pointMax = Point(width.toFloat(), startY)
                 else if (lineData[i] == min) pointMin = Point(width.toFloat(), startY)
 
-                if(i == lineData.count() - 1) lastPoint = Point(startX, startY)
+                if (i == lineData.count() - 1) lastPoint = Point(startX, startY)
 
                 points.add(Point(startX, startY))
             }
@@ -239,7 +246,7 @@ class NewCustomLineChart : RelativeLayout {
                 if (lineData[i] == max) pointMax = Point(width.toFloat(), startY)
                 else if (lineData[i] == min) pointMin = Point(width.toFloat(), startY)
 
-                if(i == lineData.count() - 1) lastPoint = Point(startX, startY)
+                if (i == lineData.count() - 1) lastPoint = Point(startX, startY)
 
                 points.add(Point(startX, startY))
             }
@@ -281,26 +288,37 @@ class NewCustomLineChart : RelativeLayout {
                 pointSelected(it.x, it.y, selectedPosition)
             }
         }
-
+        var xF = 0
         pointMax?.let { max ->
             pointMin?.let { min ->
 
                 val valueMax: Float = lineData.max()
                 val valueMin: Float = lineData.min()
 
-                maxText.tvY.text = valueMax.commaFormatted
-                minText.tvY.text = valueMin.commaFormatted
+//                maxText.tvY.text = valueMax.commaFormatted
+                maxText.tvY.text = commaFormat(valueMax)
+                minText.tvY.text = commaFormat(valueMin)
 
-                midText.tvY.text = ((valueMax + valueMin) / 2).commaFormatted
+                midText.tvY.text = commaFormat((valueMax + valueMin) / 2)
+                val maxTextWidth = maxText.root.width
+                val minTextWidth = minText.root.width
+                val midTextWidth = midText.root.width
 
+                val maxOffset = maxTextWidth / 2
+                val minOffset = minTextWidth / 2
+                val midOffset = midTextWidth / 2
+
+//                val xOffset = maxOf(maxOffset, minOffset, midOffset) + 5
+                val xOffset = 0
+                xF = xOffset
                 maxText.root.y = max.y - maxText.root.height
-                maxText.root.x = max.x - maxText.root.width
+                maxText.root.x = max.x - maxText.root.width - xOffset
 
                 minText.root.y = min.y - minText.root.height
-                minText.root.x = min.x - minText.root.width
+                minText.root.x = min.x - minText.root.width - xOffset
 
                 midText.root.y = (max.y + min.y) / 2 - midText.root.height
-                midText.root.x = min.x - midText.root.width
+                midText.root.x = min.x - midText.root.width - xOffset
 
             }
         }
@@ -310,9 +328,10 @@ class NewCustomLineChart : RelativeLayout {
         }
 
         lastPoint?.let {
-           mCanvas.drawLine(
-                it.x, 0F,
-                it.x, height.toFloat(), paint)
+            mCanvas.drawLine(
+                it.x - xF, 0F,
+                it.x - xF, height.toFloat(), paint
+            )
         }
     }
 
@@ -329,7 +348,9 @@ class NewCustomLineChart : RelativeLayout {
 
         dottedLineView.visibility = View.GONE
 
-        binding.tvPrice.text = lineData[position].commaFormatted + "€"
+        binding.tvPrice.text = "${lineData[position].toString().currencyFormatted}"
+//            commaFormat(lineData[position])
+//        binding.tvPrice.text =(lineData[position]).commaFormatted + "€"
 
         binding.tvDate.text = System.currentTimeMillis().toGraphTime()
         if (timeSeries.isNotEmpty())
@@ -350,8 +371,8 @@ class NewCustomLineChart : RelativeLayout {
             (width - binding.root.width).toFloat() - horizontalPadding - (binding.root.paddingStart / 2)
         else binding.root.x = x - (binding.root.width / 2)
 
-        if (y - binding.root.height*1.5F > 0F) binding.root.y = y - binding.root.height*1.5F
-        else binding.root.y = y + binding.root.height*0.5F
+        if (y - binding.root.height * 1.5F > 0F) binding.root.y = y - binding.root.height * 1.5F
+        else binding.root.y = y + binding.root.height * 0.5F
 
         drawableView.translationZ = 2F
         drawableView.x = x - (drawableView.width / 2)
@@ -383,19 +404,22 @@ class NewCustomLineChart : RelativeLayout {
 
 //        if (position == lineData.count() - 1) {
 //            animationDot.visible()
-            animationDot.x = x - (animationDot.width / 2)
-            animationDot.y = y - (animationDot.width / 2)
-            if (animator?.isRunning == false)
-                animator?.start()
+        animationDot.x = x - (animationDot.width / 2)
+        animationDot.y = y - (animationDot.width / 2)
+        if (animator?.isRunning == false)
+            animator?.start()
 
 
     }
 
     fun updateValueLastPoint(value: Float) {
-        if(selectedPoint == points.last() && lineData[lineData.lastIndex] != value){
+        if (selectedPoint == points.last() && lineData[lineData.lastIndex] != value) {
             binding.tvPrice.text = value.toString().currencyFormatted
+            binding.tvDate.text = System.currentTimeMillis().toGraphTime()
         }
         lineData[lineData.lastIndex] = value
+        timeSeries[timeSeries.lastIndex] =
+            listOf(Date().time.toDouble(), lineData.last().toDouble())
         calculatePoints()
         invalidate()
 
@@ -406,13 +430,19 @@ class NewCustomLineChart : RelativeLayout {
         timeSeries.add(listOf(Date().time.toDouble(), lineData.last().toDouble()))
         lineData.removeFirst()
         lineData.add(lineData.last())
-        if (selectedPosition in 1 until points.count()-1) {
+        if (selectedPosition in 1 until points.count() - 1) {
             selectedPosition--
             selectedPoint = points[selectedPosition]
             selectedPoint?.let {
                 pointSelected(it.x, it.y, selectedPosition)
             }
         }
+    }
+
+    fun commaFormat(it: Float): String {
+        var ts = (String.format(Locale.US, "%.3f", it))
+        val number = BigDecimal(ts).stripTrailingZeros()
+        return number.toString()
     }
 
 }

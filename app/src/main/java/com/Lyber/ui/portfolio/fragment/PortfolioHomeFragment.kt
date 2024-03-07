@@ -266,11 +266,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 CommonMethods.dismissProgressDialog()
                 binding.rvRefresh.isRefreshing = false
                 val dates = it.data.map { it.date }
-
-
                 val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
-
-
                 val timeSeries1 = dates.mapIndexed { index, dateString ->
                     val totalValue =
                         it.data[index].total.toDouble() // Get the total value from the corresponding index

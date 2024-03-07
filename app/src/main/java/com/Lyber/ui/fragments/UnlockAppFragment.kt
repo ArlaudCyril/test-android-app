@@ -77,20 +77,20 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
         binding.tvZero.setOnClickListener(this)
         binding.tvBioMetric.setOnClickListener(this)
         binding.tvBackArrow.setOnClickListener(this)
-        val biometricManager = BiometricManager.from(requireContext())
-        when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK or BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
-            BiometricManager.BIOMETRIC_SUCCESS ->
-                ("Biometric authentication is available").showToast(requireContext())
-
-            BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE ->
-                ("This device doesn't support biometric authentication").showToast(requireContext())
-
-            BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE ->
-                ("Biometric authentication is currently unavailable").showToast(requireContext())
-
-            BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED ->
-                ("No biometric credentials are enrolled").showToast(requireContext())
-        }
+//        val biometricManager = BiometricManager.from(requireContext())
+//        when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK or BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
+//            BiometricManager.BIOMETRIC_SUCCESS ->
+//                ("Biometric authentication is available").showToast(requireContext())
+//
+//            BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE ->
+//                ("This device doesn't support biometric authentication").showToast(requireContext())
+//
+//            BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE ->
+//                ("Biometric authentication is currently unavailable").showToast(requireContext())
+//
+//            BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED ->
+//                ("No biometric credentials are enrolled").showToast(requireContext())
+//        }
     }
 
     override fun onResume() {

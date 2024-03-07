@@ -62,6 +62,7 @@ import com.Lyber.models.Balance
 import com.Lyber.models.ErrorResponse
 import com.Lyber.network.RestClient
 import com.Lyber.utils.App.Companion.prefsManager
+import com.Lyber.utils.CommonMethods.Companion.toFormat
 import com.Lyber.utils.Constants.CAP_RANGE
 import com.Lyber.utils.Constants.SMALL_RANGE
 import com.bumptech.glide.Glide
@@ -933,7 +934,7 @@ class CommonMethods {
                 priceFinal = 1.026
             }
 
-            val formatter = DecimalFormat()
+            val formatter = DecimalFormat("#.##########")
 
             // Pour trouver la précision, ici X
             // Prix * 10e-X >= 0.01 (centimes)
@@ -956,7 +957,9 @@ class CommonMethods {
             val symbols = DecimalFormatSymbols(Locale.US)
             formatter.decimalFormatSymbols = symbols
             val valueFormatted = formatter.format(this.toDouble() ?: 0.0)
-
+//            val decimalFormat =
+//                DecimalFormat("#.##########") // Set the number of '#' symbols based on the maximum precision you want to show
+//            return decimalFormat.format(doubleValue)
             return valueFormatted.toString()
         }
 
@@ -1200,10 +1203,16 @@ class CommonMethods {
 
         @SuppressLint("SimpleDateFormat")
         fun String.toMilli(): Long {
-            SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.US).parse(this)?.let {
-                return it.time
+            try {
+                val dateFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+                dateFormat.timeZone = java.util.TimeZone.getTimeZone("UTC") // Set time zone to UTC
+                val date = dateFormat.parse(this)
+
+                // Convert date to milliseconds in the default time zone
+                return date.time
+            }catch (ex:java.lang.Exception){
+                return System.currentTimeMillis()
             }
-            return System.currentTimeMillis()
         }
 
         val ImageView.setProfile: Unit

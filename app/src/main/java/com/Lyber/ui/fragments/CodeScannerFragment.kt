@@ -55,7 +55,7 @@ class CodeScannerFragment : BaseFragment<FragmentCodeScannerBinding>() {
         codeScanner.decodeCallback = DecodeCallback {
 
             requireActivity().runOnUiThread {
-Log.d("text","${trimAddress(it.text)}")
+                Log.d("text", "${trimAddress(it.text)}")
                 requireActivity().sendBroadcast(Intent(SCAN_COMPLETE).apply {
                     putExtra(SCANNED_ADDRESS, trimAddress(it.text))
                 })
@@ -65,7 +65,7 @@ Log.d("text","${trimAddress(it.text)}")
         }
 
         codeScanner.errorCallback = ErrorCallback { // or ErrorCallback.SUPPRESS
-            Log.d("textError","$it")
+            Log.d("textError", "$it")
 //            requireActivity().runOnUiThread {
 //                Toast.makeText(
 //                    requireContext(), "Camera initialization error: ${it.message}",
@@ -76,7 +76,8 @@ Log.d("text","${trimAddress(it.text)}")
         }
 
     }
-    fun trimAddress(code: String):String {
+
+    fun trimAddress(code: String): String {
         var address = code
         val index = code.indexOf(":")
         if (index != -1) {
