@@ -19,6 +19,8 @@ import com.Lyber.models.WithdrawAddress
 import com.Lyber.ui.fragments.bottomsheetfragments.WithdrawalAddressBottomSheet
 import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.commaFormatted
+import com.Lyber.utils.CommonMethods.Companion.currencyFormatted
 import com.Lyber.utils.CommonMethods.Companion.decimalPoint
 import com.Lyber.utils.CommonMethods.Companion.decimalPointUptoTwoPlaces
 import com.Lyber.utils.CommonMethods.Companion.formattedAsset
@@ -44,6 +46,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
     private var mCurrency: String = ""
     private var mConversionCurrency: String = ""
     private var addressId: String = ""
+    private var activate: Boolean = false
     private val addresses: MutableList<WithdrawAddress> = mutableListOf()
     private val amount get() = binding.etAmount.text.trim().toString()
 
@@ -101,7 +104,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                         tvAssetName.text = withdrawAddress.name
                         tvAssetAddress.visible()
                         ivCopy.visible()
-                        addressId= withdrawAddress.address.toString()
+                        addressId = withdrawAddress.address.toString()
                         tvAssetAddress.text = withdrawAddress.address
                         val assest =
                             com.Lyber.ui.activities.BaseActivity.networkAddress.firstNotNullOfOrNull { item -> item.takeIf { item.id == withdrawAddress.network } }
@@ -142,8 +145,8 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                 }
 
                 else -> {
-
-                    activateButton(false)
+                    activate = false
+                    activateButton()
 
                     viewModel.assetAmount = "0"
 
@@ -157,15 +160,19 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                     else assetConversion.replace(mConversionCurrency, "")
                         .replace("~", "").pointFormat.toDouble()
                 if (valueAmountNew >= minAmount.toDouble()) {
-                    activateButton(true)
+                    activate = true
+                    activateButton()
                 } else {
-                    activateButton(false)
+                    activate = false
+                    activateButton()
                 }
             } else {
                 if (valueAmount >= minAmount.toDouble()) {
-                    activateButton(true)
+                    activate = true
+                    activateButton()
                 } else {
-                    activateButton(false)
+                    activate = false
+                    activateButton()
                 }
             }
 
@@ -185,22 +192,22 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
             val priceCoin = valueAmount.toDouble().div(assetAmount.toDouble())
             binding.tvAssetConversion.text =
                 "~${assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN)} $mConversionCurrency"
-            maxValueAsset=assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN).toDouble()
-            Log.d("maxValueAsset","$maxValueAsset")
+            maxValueAsset = assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN).toDouble()
+            Log.d("maxValueAsset", "$maxValueAsset")
 
         } else {
             val priceCoin = assetAmount.toDouble().div(valueAmount.toDouble())
             binding.tvAssetConversion.text =
                 "~${assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN)} $mCurrency"
-            maxValueAsset=assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN).toDouble()
-            Log.d("maxValueAsset","$maxValueAsset")
+            maxValueAsset = assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN).toDouble()
+            Log.d("maxValueAsset", "$maxValueAsset")
 
         }
 
 
     }
 
-    fun activateButton(activate: Boolean) {
+    fun activateButton() {
         binding.btnPreviewInvestment.background = ContextCompat.getDrawable(
             requireContext(),
             if (activate) R.drawable.button_purple_500 else R.drawable.button_purple_400
@@ -235,7 +242,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                     .div(balance.balanceData.balance.toDouble())
 
                 "${
-                    balance.balanceData.balance.formattedAsset(priceCoin, RoundingMode.DOWN,6)
+                    balance.balanceData.balance.formattedAsset(priceCoin, RoundingMode.DOWN, 6)
                 } Available".also { tvSubTitle.text = it }
                 valueConversion =
                     (balance.balanceData.balance.toDouble() / balance.balanceData.euroBalance.toDouble())
@@ -259,11 +266,17 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                 var priceCoin = balance!!.balanceData.euroBalance.toDouble()
                     .div(balance!!.balanceData.balance.toDouble())
 
-                "${getString(R.string.fees)} ${it!!.withdrawFee} ${balance!!.id.uppercase()}".also {
+                "${getString(R.string.fees)} ${
+                    it!!.withdrawFee.formattedAsset(
+                        priceCoin,
+                        RoundingMode.DOWN,
+                        3
+                    )
+                } ${balance!!.id.uppercase()}".also {
                     tvAssetFees.text = it
                 }
 //                maxValue = balance!!.balanceData.balance.toDouble()/valueConversion - it.withdrawFee.toDouble()
-                maxValue = balance!!.balanceData.balance.toDouble()/valueConversion
+                maxValue = balance!!.balanceData.balance.toDouble() / valueConversion
                 if (maxValue < 0) {
                     maxValue = 0.0
                 }
@@ -306,10 +319,10 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
 
                     if (balance == null) {
                         getString(R.string.you_do_not_have_this_asset).showToast(requireActivity())
-                    } else {
+                    } else if (activate) {
 //                        if (maxValue >= amountFinal.toDouble()) {
-                        Log.d("maxValueAsset","$maxValueAsset")
-                        Log.d("balnace","${balance.balanceData.balance.toDouble()}")
+                        Log.d("maxValueAsset", "$maxValueAsset")
+                        Log.d("balnace", "${balance.balanceData.balance.toDouble()}")
                         if (maxValueAsset <= balance.balanceData.balance.toDouble()) {
                             if (viewModel.withdrawAddress != null) {
                                 val bundle = Bundle().apply {
@@ -326,12 +339,13 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                         }
                     }
                 }
-                includedAsset.ivCopy->{
+
+                includedAsset.ivCopy -> {
                     val clipMan =
                         requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
                     val clip = ClipData.newPlainText("label", addressId)
                     clipMan?.setPrimaryClip(clip)
-                   getString(R.string.copied).showToast(requireContext())
+                    getString(R.string.copied).showToast(requireContext())
                 }
             }
         }
@@ -358,12 +372,12 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
             tvAssetName.text = withdrawAddress!!.name
 //            tvAssetNameCode.text = withdrawAddress.address
             tvAssetAddress.text = withdrawAddress.address
-            addressId=withdrawAddress.address.toString()
+            addressId = withdrawAddress.address.toString()
             ivCopy.visible()
             val assest =
                 com.Lyber.ui.activities.BaseActivity.networkAddress.firstNotNullOfOrNull { item -> item.takeIf { item.id == withdrawAddress.network } }
-          if(assest!=null)
-            ivAssetIcon.load(assest!!.imageUrl)
+            if (assest != null)
+                ivAssetIcon.load(assest!!.imageUrl)
         }
     }
 
@@ -379,10 +393,9 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                 val maxinEuro = maxValue / valueConversion
                 var priceCoin = balance!!.balanceData.euroBalance.toDouble()
                     .div(balance.balanceData.balance.toDouble())
-
-
-
-                binding.etAmount.text = "${maxValue.toString().formattedAsset(priceCoin, RoundingMode.DOWN)}"+mCurrency
+                binding.etAmount.text = "${
+                    maxValue.toString().formattedAsset(priceCoin, RoundingMode.DOWN)
+                }" + mCurrency
 //                binding.etAmount.text =     maxinEuro.toString().formattedAsset(priceCoin, RoundingMode.DOWN) + mCurrency
             } else {
                 binding.etAmount.text = "0" + mCurrency
@@ -479,7 +492,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
             val valueOne = amount.replace(mCurrency, "").pointFormat.decimalPoint()
             val valueTwo = assetConversion.replace(mConversionCurrency, "")
                 .replace("~", "").pointFormat.decimalPoint()
-            binding.etAmount.text = ("${valueTwo}$mConversionCurrency")
+            binding.etAmount.text = ("${valueTwo} $mConversionCurrency")
 
             setAssesstAmount(valueOne.toString())
         } else {

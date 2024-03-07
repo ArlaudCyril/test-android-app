@@ -24,8 +24,8 @@
     <TextView
         android:id="@+id/tvTitle"
         style="@style/SubheadMabry"
-        android:layout_marginStart="24dp"
         android:text="@string/withdraw_on"
+        android:layout_marginHorizontal="24dp"
         android:textColor="#423D33"
         app:layout_constraintBottom_toBottomOf="@id/ivTopAction"
         app:layout_constraintEnd_toEndOf="parent"

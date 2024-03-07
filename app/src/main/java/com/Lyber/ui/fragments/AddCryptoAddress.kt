@@ -6,6 +6,8 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -41,6 +43,7 @@ import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.ProfileViewModel
+import java.lang.Exception
 
 class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.OnClickListener {
 
@@ -71,8 +74,15 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
 
     private val broadcastReceiver = object : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            val address: String = intent?.getStringExtra(Constants.SCANNED_ADDRESS) ?: ""
-            binding.etAddress.setText(address)
+            try {
+                Handler(Looper.getMainLooper()).postDelayed({
+                    val address: String = intent?.getStringExtra(Constants.SCANNED_ADDRESS) ?: ""
+                    binding.etAddress.setText(address)
+                }, 50)
+            }catch (ex:Exception){
+
+            }
+
         }
     }
 

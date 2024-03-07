@@ -137,13 +137,17 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
             tvExchangeToValue.text ="~"+
                 data.fees.formattedAsset(
                     priceCoin,
-                    rounding = RoundingMode.DOWN
+                    rounding = RoundingMode.DOWN,6
                 ) +" "+ data.fromAsset.uppercase()
+            Log.d("fee","${data.fees.formattedAsset(
+                priceCoin,
+                rounding = RoundingMode.DOWN,6
+            ).toDouble()}")
 
             orderId = data.orderId
 //            tvExchangeFromValue.text =
 //                "${data.fromAmount} ${data.fromAsset.uppercase()}"
-            tvExchangeFromValue.text =
+           tvExchangeFromValue.text =
                 "~${(data.fromAmount.toDouble() - data.fees.toDouble())} ${data.fromAsset.uppercase()}"
 
             val balanceFrom = com.Lyber.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetFrom}
@@ -178,7 +182,7 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
             tvValueTotal.text =
                 "${valueTotal.toString().formattedAsset(
                     price = priceCoin,
-                    rounding = RoundingMode.DOWN
+                    rounding = RoundingMode.DOWN,3
                 ) } ${data.fromAsset.uppercase()}"
             btnConfirmInvestment.isEnabled = true
             startTimer()

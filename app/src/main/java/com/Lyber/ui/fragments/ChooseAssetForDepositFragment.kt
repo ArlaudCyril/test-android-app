@@ -46,11 +46,14 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = getViewModel(requireActivity())
-        viewModel.listener=this
+        viewModel.listener = this
         binding.ivScan.setOnClickListener {
             if (binding.etAddress.text.toString().isNotEmpty())
-                startActivity(Intent(requireActivity(), com.Lyber.ui.activities.BarCodeActivity::class.java)
-                    .putExtra(Constants.DATA_SELECTED,binding.etAddress.text.toString())) }
+                startActivity(
+                    Intent(requireActivity(), com.Lyber.ui.activities.BarCodeActivity::class.java)
+                        .putExtra(Constants.DATA_SELECTED, binding.etAddress.text.toString())
+                )
+        }
         binding.ivTopAction.setOnClickListener { requireActivity().onBackPressed() }
 
         binding.ivCopy.setOnClickListener {
@@ -58,25 +61,30 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                 val clipboard =
                     requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
                 val clip =
-                    ClipData.newPlainText(getString(R.string.deposit_adress), binding.etAddress.text.toString())
+                    ClipData.newPlainText(
+                        getString(R.string.deposit_adress),
+                        binding.etAddress.text.toString()
+                    )
                 clipboard.setPrimaryClip(clip)
-                Toast.makeText(requireActivity(),
-                    getString(R.string.adress_copied), Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    requireActivity(),
+                    getString(R.string.adress_copied), Toast.LENGTH_SHORT
+                ).show()
             }
         }
 
 
 
         assetAdapter = AssetPopupAdapter()
-        assetAdapterNetwork= AssetPopupAdapterNetwork()
+        assetAdapterNetwork = AssetPopupAdapterNetwork()
         assetPopup = ListPopupWindow(requireContext())
         assetPopupNetwork = ListPopupWindow(requireContext())
         assetPopup.anchorView = binding.llNetwork
         assetPopupNetwork.anchorView = binding.etNetwork
         assetPopup.setAdapter(assetAdapter)
         assetPopupNetwork.setAdapter(assetAdapterNetwork)
-       if(App.prefsManager.assetBaseDataResponse!=null)
-        App.prefsManager.assetBaseDataResponse.let {
+        if (App.prefsManager.assetBaseDataResponse != null)
+            App.prefsManager.assetBaseDataResponse.let {
                 if (assetPopup.isShowing) {
                     assetAdapter.removeProgress()
                     assetAdapter.setData(it!!.data)
@@ -109,11 +117,11 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                         break
                     }
                 }
-        }
-       viewModel.getAddress.observe(viewLifecycleOwner){
-            if (lifecycle.currentState == Lifecycle.State.RESUMED){
+            }
+        viewModel.getAddress.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 CommonMethods.dismissProgressDialog()
-                binding.etAddress.text = it.data.address
+                   binding.etAddress.text = it.data.address
             }
         }
         viewModel.getAssetDetail.observe(viewLifecycleOwner) {
@@ -123,9 +131,9 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                 assetAdapterNetwork.setData(it.data.networks)
                 for (networkq in it.data.networks) {
                     if (networkq.isDepositActive) {
-                        binding.etNetwork.text =networkq.fullName
+                        binding.etNetwork.text = networkq.fullName
                         CommonMethods.showProgressDialog(requireActivity())
-                        viewModel.getAddress(networkq.id,network!!.id)
+                        viewModel.getAddress(networkq.id, network!!.id)
                         binding.tvNote.text = getString(
                             R.string.send_only_to_this_address_using_the_protocol,
                             network!!.fullName,
@@ -133,8 +141,8 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                             networkq.fullName
                         )
                         break
-                    }else{
-                        binding.etNetwork.text =""
+                    } else {
+                        binding.etNetwork.text = ""
                         binding.etAddress.text = ""
                         binding.tvNote.text =
                             getString(R.string.all_networks_for_this_asset_are_currently_deactivated_for_deposit)
@@ -157,7 +165,8 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                 binding.etAssets.setText("${it.fullName.capitalize(Locale.ROOT)} (${it.id.uppercase()})")
 
                 binding.ivNetwork.loadCircleCrop(it.imageUrl)
-                binding.btnAddUseAddress.text = "${getString(R.string.buy)} ${it.fullName.capitalize()} ${getString(R.string.on)} Lyber"
+                binding.btnAddUseAddress.text =
+                    "${getString(R.string.buy)} ${it.fullName.capitalize()} ${getString(R.string.on)} Lyber"
                 viewModel.getAssetDetailIncludeNetworks(it.id)
                 CommonMethods.showProgressDialog(requireActivity())
                 assetPopup.dismiss()
@@ -167,14 +176,13 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
             assetAdapterNetwork.getItemAt(position)?.let {
                 binding.etNetwork.text = it.fullName
                 CommonMethods.showProgressDialog(requireActivity())
-                viewModel.getAddress(it.id,network!!.id)
+                viewModel.getAddress(it.id, network!!.id)
                 binding.tvNote.text = getString(
                     R.string.send_only_to_this_address_using_the_protocol,
                     network!!.fullName,
                     network!!.id.uppercase(),
                     it.fullName
                 )
-
                 assetPopupNetwork.dismiss()
             }
         }
@@ -192,13 +200,30 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
 
 
         viewModel.selectedAsset?.let {
-            binding.btnAddUseAddress.text = "${getString(R.string.buy)} ${it.fullName.capitalize()} ${getString(R.string.on)} Lyber"
+            binding.btnAddUseAddress.text =
+                "${getString(R.string.buy)} ${it.fullName.capitalize()} ${getString(R.string.on)} Lyber"
         }
 
 
-
     }
+    fun replaceMiddleWithDot(input: String): String {
+        // Check if the input has at least 12 characters
+        if (input.length < 12) {
+            return "Input string must have at least 12 characters"
+        }
 
+        val firstSix = input.substring(0, 6)
+        val lastSix = input.substring(input.length - 6)
+
+        // Calculate the number of characters between first six and last six digits
+        val middleCount = input.length - firstSix.length - lastSix.length
+
+        // Replace middle characters with "."
+//        val middlePart = ".".repeat(middleCount)
+        val middlePart = ".".repeat(12)
+
+        return firstSix + middlePart + lastSix
+    }
     class AssetPopupAdapterNetwork : android.widget.BaseAdapter() {
 
         private val list = mutableListOf<NetworkDeposit?>()
@@ -275,6 +300,7 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
 
 
     }
+
     class AssetPopupAdapter : android.widget.BaseAdapter() {
 
         private val list = mutableListOf<AssetBaseData?>()
@@ -337,7 +363,7 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                         list[position]?.let { data ->
 
 
-                                it.ivItem.loadCircleCrop(data.imageUrl)
+                            it.ivItem.loadCircleCrop(data.imageUrl)
 
                             it.tvStartTitleCenter.text =
                                 "${data.fullName.capitalize()} (${data.id.uppercase()})"
@@ -348,8 +374,6 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                         return it.root
                     }
         }
-
-
     }
 
 

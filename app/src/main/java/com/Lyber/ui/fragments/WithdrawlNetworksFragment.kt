@@ -94,7 +94,8 @@ class WithdrawlNetworksFragment : BaseFragment<FragmentListingBinding>() {
             (holder as NetworkHolder).binding.apply {
                 val data = itemList[position]
               ivAssetIcon.loadCircleCrop(data!!.imageUrl)
-                "${context.getString(R.string.withdraw_on)} ${data.fullName}".also { tvAssetName.text = it }
+//                "${context.getString(R.string.withdraw_on)} ${data.fullName}".also { tvAssetName.text = it }
+                "${data.fullName}".also { tvAssetName.text = it }
                 if (data.isWithdrawalActive){
                     tvAssetNameCode.gone()
                 }else{
