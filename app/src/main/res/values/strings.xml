@@ -1,4 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="API_KEY_PROD">AIzaSyB9nBqhoH9KPAKVnvMU03V9y3U14qC8Ufc</string>
+    <string name="API_KEY_STAGING">AIzaSyDILfqSYsVaOhqF8cSugU7ekCt8V4GSYyo</string>
     <string name="app_name">Lyber</string>
     <string name="lyber_investments_reinvented">Lyber, crypto at your fingertips.</string>
     <string name="diversified_regular_simple">Simple, secure and diversified investment.</string>
@@ -134,7 +136,7 @@
     <string name="make_investment">Make investment</string>
     <string name="birth_place">Birth Place</string>
     <string name="birth_country">Birth Country</string>
-    <string name="specified_us_person">Are you an American citizen?</string>
+    <string name="specified_us_person">Are you a US citizen?</string>
     <string name="hint_state">State</string>
     <string name="hint_personal_assets">Your personal assets</string>
     <string name="edit"><b><u>Edit</u></b></string>
@@ -594,7 +596,7 @@
     <string name="card_holder_name">Cardholder\'s name</string>
     <string name="are_you_US_citizen">Are you a US Citizen?</string>
     <string name="postal_address">Postal address</string>
-    <string name="need_informations_legal">We need this information for legal reasons.</string>
+    <string name="need_information_legal">We need this information for legal reasons.</string>
     <string name="street_name">Street name</string>
     <string name="department">Department</string>
     <string name="your_monthly_income">Your monthly income</string>
@@ -751,6 +753,8 @@
     <string name="please_include">2. Send us a message by clicking here. Please include the following information: the amount of USDT you wish to withdraw, as well as your IBAN, BIC and the name of the beneficiary (which must be the same as the name with which you opened your Lyber account).\n\nOur support team will get back to you as soon as possible to make the withdrawal.</string>
     <string name="minimum_investment">Min Investment:</string>
     <string name="no_assets_available">No assets available</string>
+    <string name="do_not_have">You don\'t have enough coins to exchange</string>
+
 
 
 </resources>

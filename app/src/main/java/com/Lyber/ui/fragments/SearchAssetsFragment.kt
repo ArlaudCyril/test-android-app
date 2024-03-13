@@ -17,7 +17,7 @@ import com.Lyber.ui.adapters.BaseAdapter
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
-import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
+import com.Lyber.viewmodels.PortfolioViewModel
 
 class SearchAssetsFragment :
     BaseFragment<FragmentSearchAssetsBinding>() {

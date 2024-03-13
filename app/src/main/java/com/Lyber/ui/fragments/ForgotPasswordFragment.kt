@@ -86,7 +86,7 @@ class ForgotPasswordFragment : BaseFragment<FragmentForgotPasswordBinding>(), On
                 ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
                 btnSendResetLink -> {
                     if (buttonClicked) {
-                        val email = binding.etEmail.text.trim().toString()
+                        val email = binding.etEmail.text.trim().toString().lowercase()
                         CommonMethods.showProgressDialog(requireContext())
                         viewModel.forgotPass(email)
                     }

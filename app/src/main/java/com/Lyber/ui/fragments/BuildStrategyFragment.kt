@@ -26,8 +26,10 @@ import com.Lyber.models.PriceServiceResume
 import com.Lyber.ui.adapters.BuildStrategyAdapter
 import com.Lyber.ui.fragments.bottomsheetfragments.AddAssetBottomSheet
 import com.Lyber.ui.fragments.bottomsheetfragments.BaseBottomSheet
-import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
+import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
+import com.Lyber.utils.CommonMethods.Companion.commaFormatted
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.gone
@@ -37,6 +39,9 @@ import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.CommonMethods.Companion.toPx
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
+import com.Lyber.viewmodels.NetworkViewModel
+import okhttp3.ResponseBody
+import kotlin.math.roundToInt
 
 class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View.OnClickListener {
 
@@ -44,6 +49,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
     private lateinit var layoutManager: LinearLayoutManager
 
     private lateinit var viewModel: PortfolioViewModel
+//    private lateinit var viewModel: NetworkViewModel
 //    private val viewModel: PortfolioViewModel by viewModels()
 
 
@@ -80,8 +86,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
         setItemTouchHelper(requireContext(), binding.rvAssets, adapter)
 
         if (isEdit) {
-            val strategy = viewModel.selectedStrategy
-            for (ada in strategy!!.bundle) {
+            for (ada in viewModel.selectedStrategy!!.bundle) {
                 val priceServiceResume =
                     com.Lyber.ui.activities.BaseActivity.balanceResume.firstNotNullOfOrNull { item -> item.takeIf { item.id == ada.asset } }
                 val assest = AddedAsset(priceServiceResume!!, ada.share, false)
@@ -142,8 +147,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
 
         var count = 0F
         viewModel.addedAsset.apply {
-
-            for (i in this) count += i.allocation
+            for (i in this) count += i.allocation.roundToInt()
 
             when {
                 count > 100 -> {
@@ -224,11 +228,10 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                     if (isEdit && canBuildStrategy) {
                         checkInternet(requireContext()) {
                             showProgressDialog(requireContext())
-                            checkInternet(requireContext()) {
-                                showProgressDialog(requireContext())
+                            if (viewModel.selectedStrategy!!.expectedYield != null)
+                                viewModel.buildOwnStrategy(viewModel.selectedStrategy!!.name + " (Copy)")
+                            else
                                 viewModel.editOwnStrategy(viewModel.selectedStrategy!!.name)
-
-                            }
                         }
                     } else {
                         if (canBuildStrategy) {
@@ -667,6 +670,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                             remove(id)
                         }
                         adapter.removeItem(id)
+                        calculateAllocations()
                     } catch (_: Exception) {
 
                     }

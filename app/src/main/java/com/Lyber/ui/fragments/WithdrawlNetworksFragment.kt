@@ -14,7 +14,7 @@ import com.Lyber.databinding.FragmentListingBinding
 import com.Lyber.databinding.ItemNetworkBinding
 import com.Lyber.models.NetworkDeposit
 import com.Lyber.ui.adapters.BaseAdapter
-import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop

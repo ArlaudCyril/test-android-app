@@ -2,6 +2,7 @@ package com.Lyber.ui.fragments
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
@@ -13,12 +14,13 @@ import com.Lyber.databinding.FragmentConfirmInvestmentBinding
 import com.Lyber.network.RestClient
 import com.Lyber.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
 import com.Lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet2FA
-import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.formattedAsset
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
+import okhttp3.ResponseBody
 import org.json.JSONObject
 import java.math.RoundingMode
 import java.util.Base64
@@ -224,5 +226,12 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                 }
         }
         }
+    }
+    override fun onRetrofitError(responseBody: ResponseBody?) {
+        CommonMethods.dismissProgressDialog()
+        val code = CommonMethods.showErrorMessage(requireContext(), responseBody, binding.root)
+        Log.d("errorCode", "$code")
+        if (code == 7023 || code == 10041 || code == 7025 || code == 10043)
+            customDialog(code)
     }
 }

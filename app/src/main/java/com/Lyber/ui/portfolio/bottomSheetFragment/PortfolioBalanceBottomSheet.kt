@@ -15,13 +15,10 @@ import com.Lyber.databinding.BottomSheetBalanceDetailBinding
 import com.Lyber.databinding.ItemBalanceDetailPortfolioBinding
 import com.Lyber.databinding.ItemBalancePortfolioHistoryBinding
 import com.Lyber.databinding.LoaderViewBinding
-import com.Lyber.models.ErrorResponse
 import com.Lyber.models.Transaction
-import com.Lyber.network.RestClient
 import com.Lyber.ui.adapters.BaseAdapter
 import com.Lyber.ui.fragments.bottomsheetfragments.BaseBottomSheet
-import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
-import com.Lyber.utils.CommonMethods
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.decimalPoints
 import com.Lyber.utils.CommonMethods.Companion.getViewModel

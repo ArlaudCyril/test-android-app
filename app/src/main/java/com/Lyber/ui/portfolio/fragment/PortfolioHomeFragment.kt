@@ -31,7 +31,7 @@ import com.Lyber.ui.fragments.BaseFragment
 import com.Lyber.ui.fragments.bottomsheetfragments.InvestBottomSheet
 import com.Lyber.ui.portfolio.action.PortfolioFragmentActions
 import com.Lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDots
-import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.*
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.commaFormatted

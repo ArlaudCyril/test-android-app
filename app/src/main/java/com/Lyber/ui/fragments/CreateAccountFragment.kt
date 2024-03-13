@@ -313,10 +313,10 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                                 verifyEmail() && verifyPassword() ->
                                     checkInternet(requireContext()) {
                                         showProgressDialog(requireContext())
-                                        viewModel.email = email
+                                        viewModel.email = email.lowercase()
                                         viewModel.password = password
                                         client.step1(
-                                            email,
+                                            email.lowercase(),
                                             password
                                         )
                                         viewModel.userChallenge(email = viewModel.email)

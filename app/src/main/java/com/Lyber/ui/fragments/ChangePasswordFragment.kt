@@ -100,7 +100,7 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
                 client = SRP6ClientSession()
                 client.xRoutine = XRoutineWithUserIdentity()
                 client.step1(
-                    App.prefsManager.user?.email,
+                    App.prefsManager.user?.email!!.lowercase(),
                     binding.etPasswordOld.text.trim().toString()
                 )
                 val creds =
@@ -108,7 +108,7 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
                 val password = binding.etPassword.text.trim().toString()
                 val emailSalt = BigInteger(1, generator.generateRandomSalt())
                 val emailVerifier = generator.generateVerifier(
-                    emailSalt, App.prefsManager.user?.email, password
+                    emailSalt, App.prefsManager.user?.email!!.lowercase(), password
                 )
                 val phoneSalt = BigInteger(1, generator.generateRandomSalt())
                 val phoneVerifier = generator.generateVerifier(

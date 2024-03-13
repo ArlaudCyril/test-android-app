@@ -1,4 +1,6 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="API_KEY_PROD">AIzaSyB9nBqhoH9KPAKVnvMU03V9y3U14qC8Ufc</string>
+    <string name="API_KEY_STAGING">AIzaSyDILfqSYsVaOhqF8cSugU7ekCt8V4GSYyo</string>
     <string name="app_name">Lyber</string>
     <string name="lyber_investments_reinvented">Lyber, la crypto à portée de main.</string>
     <string name="diversified_regular_simple">L’investissement simple, sécurisé et diversifié.</string>
@@ -134,7 +136,7 @@
     <string name="make_investment">Faire un investissement</string>
     <string name="birth_place">Lieu de naissance</string>
     <string name="birth_country">Pays de naissance</string>
-    <string name="specified_us_person">Êtes-vous un citoyen américain?</string>
+    <string name="specified_us_person">Etes vous un citoyen americain?</string>
     <string name="hint_state">État</string>
     <string name="hint_personal_assets">Votre patrimoine personnel</string>
     <string name="edit"><b><u>Editer</u></b></string>
@@ -583,7 +585,7 @@
     <string name="card_holder_name">Nom du titulaire de la carte</string>
     <string name="are_you_US_citizen">Êtes-vous citoyen américain ?</string>
     <string name="postal_address">Adresse postal</string>
-    <string name="need_informations_legal">Nous avons besoin de ces informations pour des raisons juridiques.</string>
+    <string name="need_information_legal">Nous avons besoin de ces informations pour des raisons juridiques.</string>
     <string name="street_name">Nom de la rue</string>
     <string name="department">Département</string>
     <string name="your_monthly_income">Votre revenu mensuel</string>
@@ -750,4 +752,5 @@
     <string name="clicking_here">cliquant ici.</string>
     <string name="please_include">2. Envoyez-nous un message en cliquant ici. Veuillez inclure les informations suivantes: le montant d\'USDT que vous souhaitez retirer, aainsi que votre IBAN, BIC et le nom du bénéficiaire (qui doit être le même que le nom avec lequel vous avez ouvert votre compte Lyber).\n\nNotre équipe d\'assistance vous répondra dans les plus brefs délais pour effectuer le retrait.</string>
     <string name="no_assets_available">Aucun actif disponible</string>
+    <string name="do_not_have">Vous n\'avez pas assez de pièces à échanger</string>
 </resources>

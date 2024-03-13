@@ -105,7 +105,7 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
                     val emailSalt = BigInteger(1, generator.generateRandomSalt())
                     val emailVerifier = generator.generateVerifier(
                         emailSalt,
-                        binding.etEmail.text.toString(),
+                        binding.etEmail.text.toString().lowercase(),
                         binding.etPassword.text.toString()
                     )
 
@@ -115,7 +115,7 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
                     )
 
                     viewModel.setEmail(
-                        binding.etEmail.text.toString(),
+                        binding.etEmail.text.toString().lowercase(),
                         emailSalt.toString(),
                         emailVerifier.toString(),
                         phoneSalt.toString(),
@@ -226,7 +226,7 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
             }
 
             else -> {
-                viewModel.email = email
+                viewModel.email = email.lowercase()
                 viewModel.password = password
                 return true
             }

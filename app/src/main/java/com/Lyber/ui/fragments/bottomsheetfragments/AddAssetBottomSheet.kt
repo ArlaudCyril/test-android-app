@@ -4,8 +4,6 @@ import android.annotation.SuppressLint
 import android.content.DialogInterface
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +19,7 @@ import com.Lyber.databinding.LoaderViewBinding
 import com.Lyber.models.AddedAsset
 import com.Lyber.models.PriceServiceResume
 import com.Lyber.ui.adapters.BaseAdapter
-import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.commaFormatted
@@ -58,7 +56,7 @@ class AddAssetBottomSheet(private val clickListener: (PriceServiceResume) -> Uni
 
         /* viewModel */
         viewModel = getViewModel(requireActivity())
-        viewModel.listener = this
+//        viewModel.listener = this
 
         viewModel.priceServiceResumes.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {

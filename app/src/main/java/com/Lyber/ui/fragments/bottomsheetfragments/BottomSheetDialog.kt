@@ -13,7 +13,7 @@ import com.Lyber.databinding.BottomSheetWithdrawExchangeBinding
 import com.Lyber.models.AssetBaseData
 import com.Lyber.models.DataBottomSheet
 import com.Lyber.ui.adapters.BottomSheetAdapter
-import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.toPx

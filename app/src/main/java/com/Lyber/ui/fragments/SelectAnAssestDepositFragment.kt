@@ -12,7 +12,7 @@ import com.Lyber.databinding.FragmentSelectAssestForDepostBinding
 import com.Lyber.models.AssetBaseData
 import com.Lyber.ui.adapters.AllAssesstAdapterDeposit
 import com.Lyber.ui.portfolio.action.AssestFragmentAction
-import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.Constants
