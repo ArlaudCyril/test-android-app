@@ -14,35 +14,36 @@
 
         <TextView
             style="@style/TitleText"
-            android:text="@string/address" />
+            android:text="@string/postal_address" />
 
         <TextView
             style="@style/SubTitleText"
             android:layout_marginTop="4dp"
             android:lineSpacingExtra="4dp"
-            android:text="@string/subtitle_address" />
-
+            android:text="@string/need_information_legal" />
         <EditText
-            android:id="@+id/etStreetNumber"
+            android:id="@+id/etCountry"
             style="@style/EditTextTheme"
             android:layout_marginTop="24dp"
             android:background="@drawable/edit_text_background"
-            android:hint="@string/hint_street_and_number"
+            android:cursorVisible="false"
+            android:focusable="false"
+            android:focusableInTouchMode="false"
+            android:drawableEnd="@drawable/ic_drop_down"
+            android:hint="@string/hint_country"
+            android:paddingHorizontal="12dp"
+            android:paddingVertical="16dp" />
+        <TextView
+            android:id="@+id/tvSearchAddress"
+            style="@style/EditTextTheme"
+            android:layout_marginTop="24dp"
+            android:background="@drawable/edit_text_background"
+            android:hint="@string/address"
             android:inputType="textCapWords"
             android:paddingHorizontal="12dp"
             android:paddingVertical="16dp"
             tools:ignore="TextFields" />
 
-        <EditText
-            android:id="@+id/etBuildingNumberFloor"
-            style="@style/EditTextTheme"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/edit_text_background"
-            android:hint="@string/hint_building_floor"
-            android:inputType="textPostalAddress"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="16dp"
-            tools:ignore="TextFields" />
 
         <EditText
             android:id="@+id/etCity"
@@ -56,17 +57,6 @@
             android:paddingHorizontal="12dp"
             android:paddingVertical="16dp" />
 
-        <EditText
-            android:id="@+id/etState"
-            style="@style/EditTextTheme"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/edit_text_background"
-            android:hint="@string/hint_state"
-            android:inputType="text"
-            android:imeOptions="actionNext"
-            android:maxLines="1"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="16dp" />
 
         <EditText
             android:id="@+id/etZipCode"
@@ -82,18 +72,7 @@
             android:paddingHorizontal="12dp"
             android:paddingVertical="16dp" />
 
-        <EditText
-            android:id="@+id/etCountry"
-            style="@style/EditTextTheme"
-            android:layout_marginTop="16dp"
-            android:background="@drawable/edit_text_background"
-            android:cursorVisible="false"
-            android:focusable="false"
-            android:focusableInTouchMode="false"
-            android:drawableEnd="@drawable/ic_drop_down"
-            android:hint="@string/hint_country"
-            android:paddingHorizontal="12dp"
-            android:paddingVertical="16dp" />
+
         <AutoCompleteTextView
             android:id="@+id/etSpecifiedUsPerson"
             style="@style/EditTextTheme"

@@ -16,7 +16,7 @@ import com.Lyber.databinding.FragmentAddAmountBinding
 import com.Lyber.models.Whitelistings
 import com.Lyber.ui.fragments.bottomsheetfragments.FrequencyModel
 import com.Lyber.ui.fragments.bottomsheetfragments.PayWithModel
-import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.clearBackStack
 import com.Lyber.utils.CommonMethods.Companion.commaFormatted

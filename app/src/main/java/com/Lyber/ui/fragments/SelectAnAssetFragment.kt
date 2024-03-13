@@ -24,7 +24,7 @@ import com.Lyber.utils.CommonMethods.Companion.replaceFragment
 import com.Lyber.utils.CommonMethods.Companion.roundFloat
 import com.Lyber.utils.Constants
 import com.Lyber.utils.OnTextChange
-import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.google.android.material.tabs.TabLayout
 
 class SelectAnAssetFragment : BaseFragment<FragmentSelectAnAssetBinding>() {

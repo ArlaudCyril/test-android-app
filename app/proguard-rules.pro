@@ -29,7 +29,9 @@
 #-keep class com.Lyber.network.** { *; }
 #-keep class com.Lyber.viewmodels.** { *; }
 -keep class com.Lyber.models.** { *; }
-
+-keep class com.Lyber.viewmodels.** { *; }
+-dontwarn io.grpc.internal.DnsNameResolverProvider
+-dontwarn io.grpc.internal.PickFirstLoadBalancerProvider
 
  # With R8 full mode generic signatures are stripped for classes that are not
  # kept. Suspend functions are wrapped in continuations where the type argument

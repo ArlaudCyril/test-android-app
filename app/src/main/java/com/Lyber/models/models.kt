@@ -879,3 +879,5 @@ data class PriceResumeData(
     val lastPrice: String,
     val squiggleURL: String
 )
+
+data class ChooseAssets(val asset: String, val share: Int)

@@ -15,6 +15,7 @@ import com.Lyber.models.AssetDetailBaseDataResponse
 import com.Lyber.models.BalanceResponse
 import com.Lyber.models.BooleanResponse
 import com.Lyber.models.ChangePasswordData
+import com.Lyber.models.ChooseAssets
 import com.Lyber.models.CoinsResponse
 import com.Lyber.models.CommonResponse
 import com.Lyber.models.CommonResponseVerfiy
@@ -38,7 +39,6 @@ import com.Lyber.models.PriceGraphResponse
 import com.Lyber.models.PriceResponse
 import com.Lyber.models.PriceResumeByIdResponse
 import com.Lyber.models.PriceServiceResume
-import com.Lyber.models.PriceServiceResumeResponse
 import com.Lyber.models.QrCodeResponse
 import com.Lyber.models.RecurringInvestmentDetailResponse
 import com.Lyber.models.RecurringInvestmentResponse
@@ -58,9 +58,7 @@ import com.Lyber.models.WhitelistingResponse
 import com.Lyber.models.WithdrawalAddress
 import com.Lyber.models.res
 import com.Lyber.network.RestClient
-import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
 import com.Lyber.utils.App
-import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.Constants
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
@@ -365,12 +363,12 @@ open class NetworkViewModel : ViewModel() {
 
     fun editOwnStrategy(strategyName: String, addedAsset: List<AddedAsset>) {
 
-        val list = arrayListOf<PortfolioViewModel.ChooseAssets>()
+        val list = arrayListOf<ChooseAssets>()
         var total = 0
         for (i in addedAsset) {
-            total = total + i.allocation.toInt()
+            total += i.allocation.toInt()
             list.add(
-                PortfolioViewModel.ChooseAssets(
+                ChooseAssets(
                     i.addAsset.id,
                     i.allocation.toInt()
                 )
@@ -382,7 +380,8 @@ open class NetworkViewModel : ViewModel() {
 //        }
         hashMap["bundle"] = list
         hashMap["strategyName"] = strategyName
-        hashMap["strategyType"] = "SingleAsset"
+        hashMap["strategyType"] = "MultiAsset"
+//        hashMap["strategyType"] = "SingleAsset"
 
         viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().editStrategy(hashMap)
@@ -395,12 +394,11 @@ open class NetworkViewModel : ViewModel() {
 
     fun buildOwnStrategy(strategyName: String, addedAsset: List<AddedAsset>) {
 
-        val list = arrayListOf<PortfolioViewModel.ChooseAssets>()
+        val list = arrayListOf<ChooseAssets>()
         var total = 0
         for (i in addedAsset) {
-            total = total + i.allocation.toInt()
-            list.add(
-                PortfolioViewModel.ChooseAssets(
+            total += i.allocation.toInt()
+            list.add(ChooseAssets(
                     i.addAsset.id,
                     i.allocation.toInt()
                 )
@@ -411,8 +409,9 @@ open class NetworkViewModel : ViewModel() {
 //        }
         val hashMap = hashMapOf<String, Any>()
         hashMap["bundle"] = list
-        hashMap["strategyType"] = "SingleAsset"
+        hashMap["strategyType"] = "MultiAsset"
         hashMap["strategyName"] = strategyName
+        Log.d("list","$list")
 
         viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().chooseStrategy(hashMap)
@@ -1091,7 +1090,6 @@ open class NetworkViewModel : ViewModel() {
         streetNumber: String,
         street: String,
         city: String,
-        stateOrProvince: String,
         zipCode: String,
         country: String,
         isUSCitizen: Boolean
@@ -1103,8 +1101,7 @@ open class NetworkViewModel : ViewModel() {
 //            if (street.isNotEmpty())
                 hash["street"] = street.toString()
             hash["city"] = city
-            hash["stateOrProvince"] = stateOrProvince
-            hash["zipCode"] = zipCode
+           hash["zipCode"] = zipCode
             hash["country"] = country
             hash["isUSCitizen"] = isUSCitizen
 

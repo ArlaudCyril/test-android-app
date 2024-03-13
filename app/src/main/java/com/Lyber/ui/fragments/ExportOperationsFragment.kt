@@ -15,7 +15,7 @@ import com.Lyber.databinding.FragmentExportOperationsBinding
 import com.Lyber.ui.adapters.CustomArrayAdapter
 import com.Lyber.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
 import com.Lyber.ui.fragments.bottomsheetfragments.ErrorResponseBottomSheet
-import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.Constants

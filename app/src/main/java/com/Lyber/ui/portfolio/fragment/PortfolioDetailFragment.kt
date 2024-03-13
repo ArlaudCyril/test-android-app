@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.ContentValues.TAG
 import android.content.Context
-import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Build
@@ -18,16 +17,13 @@ import android.view.Window
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
-import android.widget.LinearLayout
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.Lyber.R
-import com.Lyber.databinding.CustomDialogLayoutBinding
 import com.Lyber.databinding.CustomDialogVerticalLayoutBinding
-import com.Lyber.databinding.DocumentBeingVerifiedBinding
 import com.Lyber.databinding.FragmentPortfolioDetailBinding
 import com.Lyber.databinding.LottieViewBinding
 import com.Lyber.databinding.ProgressBarNewBinding
@@ -38,11 +34,10 @@ import com.Lyber.ui.adapters.ResourcesAdapter
 import com.Lyber.ui.fragments.AddAmountFragment
 import com.Lyber.ui.fragments.BaseFragment
 import com.Lyber.ui.fragments.PickYourStrategyFragment
-import com.Lyber.ui.fragments.SearchAssetsFragment
 import com.Lyber.ui.fragments.SelectAnAssetFragment
 import com.Lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDots
 import com.Lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDotsDismissListener
-import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.commaFormatted
@@ -70,11 +65,8 @@ import okhttp3.WebSocket
 import okhttp3.WebSocketListener
 import org.json.JSONObject
 import java.math.RoundingMode
-import java.net.URI
-import java.text.SimpleDateFormat
 import java.util.Calendar
 import java.util.Date
-import java.util.Locale
 import java.util.Timer
 import java.util.TimerTask
 import java.util.concurrent.TimeUnit
@@ -104,7 +96,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         Log.d(TAG, "onDestroyView: ")
         com.Lyber.ui.activities.SplashActivity.activityCallbacks = null
         webSocket.close(1000, "Goodbye !")
-        this.stopTimer()
+//        this.stopTimer()
         super.onDestroyView()
     }
 
@@ -184,7 +176,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                     viewModel.selectedAsset?.let { asset ->
                         selectedTab = tab?.text.toString().lowercase()
                         viewModel.getPrice(asset.id, (tab?.text ?: "1h").toString().lowercase())
-                        stopTimer()
+//                        stopTimer()
 //                        setTimer((tab?.text ?: "1h").toString().lowercase())
                     }
                 }
@@ -261,7 +253,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 dismissProgress()
                 Handler().postDelayed({
                     dismissProgressDialog()
-                    if(isAdded) {
+                    if (isAdded) {
                         if (confetti != null) {
                             confetti!!.terminate()
                         }
@@ -285,15 +277,15 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                     (binding.tabLayout.getTabAt(binding.tabLayout.selectedTabPosition)?.text
                         ?: "1h").toString().lowercase()
 
+                binding.lineChart.clearLineData()
                 binding.lineChart.timeSeries =
                     it.data.prices.toTimeSeries(it.data.lastUpdate, timeFrame)
+                binding.lineChart.postInvalidate()
 //                Log.d("timeSeries", "${it.data.prices.toTimeSeries(it.data.lastUpdate, timeFrame)}")
 
                 binding.tvValuePortfolioAndAssetPrice.text =
                     "${it.data.prices.last().currencyFormatted}"
-//                if (selectedTab != "1h")
                 firstPrice = it.data.prices.first().toDouble()
-//                this.setTimer("1h")// le code ne s'exécute pas
 
                 if (arguments != null && requireArguments().containsKey(Constants.ORDER_ID)) {
                     if (requireArguments().containsKey(Constants.FROM_SWAP) || requireArguments().containsKey(
@@ -402,10 +394,10 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 //            }
 //            Log.d("time", "$timeSeries")
 //        } else
-            for (i in 0 until count()) {
-                val date = (last - (count() - i) * timeInterval).toDouble()
-                timeSeries.add(listOf(date, this[i].toDouble()))
-            }
+        for (i in 0 until count()) {
+            val date = (last - (count() - i) * timeInterval).toDouble()
+            timeSeries.add(listOf(date, this[i].toDouble()))
+        }
         return timeSeries
     }
 
@@ -419,18 +411,8 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         return list
     }
 
-    fun investMoneyClicked(toStrategy: Boolean) {
-        if (toStrategy) requireActivity().replaceFragment(
-            R.id.flSplashActivity, PickYourStrategyFragment(), topBottom = true
-        )
-        else requireActivity().replaceFragment(
-            R.id.flSplashActivity, SelectAnAssetFragment(), topBottom = true
-        )
-    }
-
     private fun menuOptionSelected(tag: String, option: String) {
-        viewModel.selectedAsset
-
+//        viewModel.selectedAsset
         when (option) {
             "withdraw" -> {
                 viewModel.selectedOption = Constants.USING_WITHDRAW
@@ -511,7 +493,6 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         }
     }
 
-
     @SuppressLint("InflateParams")
     override fun onClick(v: View?) {
         binding.apply {
@@ -546,7 +527,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 llThreeDot -> {
                     val portfolioThreeDotsFragment = PortfolioThreeDots(::menuOptionSelected)
                     portfolioThreeDotsFragment.dismissListener = this@PortfolioDetailFragment
-                    if (CommonMethods.getBalance(viewModel.selectedAsset!!.id!!) != null) {
+                    if (CommonMethods.getBalance(viewModel.selectedAsset!!.id) != null) {
                         portfolioThreeDotsFragment.typePopUp = "AssetPopUpWithdraw"
                     } else {
                         portfolioThreeDotsFragment.typePopUp = "AssetPopUpWithdraw"
@@ -594,15 +575,6 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             }
         }
     }
-
-    private fun getPriceChart(assetId: String, duration: Duration) {
-        CommonMethods.checkInternet(requireContext()) {
-            binding.lineChart.animation =
-                AnimationUtils.loadAnimation(requireContext(), R.anim.blink)
-            viewModel.getPriceGraph(assetId, duration)
-        }
-    }
-
 
     //MARK:- Web Socket Listener
     private inner class PortfolioDetailWebSocketListener : WebSocketListener() {
@@ -667,7 +639,70 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         }
     }
 
-    //MARK: - Timer
+    override fun onRetrofitError(responseBody: ResponseBody?) {
+        super.onRetrofitError(responseBody)
+        if (dialog != null) {
+//            showLottieProgressDialog(requireActivity(), Constants.LOADING_FAILURE)
+            dismissProgress()
+            Handler().postDelayed({
+                dismissProgressDialog()
+            }, 1000)
+        }
+    }
+
+    fun dismissProgressDialog() {
+        dialog?.let {
+            try {
+                it.findViewById<ImageView>(R.id.progressImage).clearAnimation()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            it.dismiss()
+            dialog = null
+        }
+    }
+
+    override fun onPortfolioThreeDotsDismissed() {
+        // Code to remove the overlay view from the parent fragment's layout
+        binding.screenContent.removeView(grayOverlay)
+    }
+
+    private fun showProgress(context: Context) {
+
+        if (dialog == null) {
+            dialog = Dialog(context)
+            dialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+            dialog!!.window!!.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+            dialog!!.window!!.setDimAmount(0.4F)
+            dialog!!.setCancelable(false)
+            dialog!!.setContentView(ProgressBarNewBinding.inflate(LayoutInflater.from(context)).root)
+        }
+        try {
+            dialog?.findViewById<ImageView>(R.id.progressImage)?.animation =
+                AnimationUtils.loadAnimation(context, R.anim.rotate_drawable)
+            dialog!!.show()
+        } catch (e: WindowManager.BadTokenException) {
+            Log.d("Exception", "showProgressDialog: ${e.message}")
+            dialog?.dismiss()
+            dialog = null
+        } catch (e: Exception) {
+            Log.d("Exception", "showProgressDialog: ${e.message}")
+        }
+
+    }
+
+    private fun dismissProgress() {
+        dialog?.let {
+            try {
+                it.findViewById<ImageView>(R.id.progressImage).clearAnimation()
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+            it.dismiss()
+        }
+    }
+
     private fun setTimer(timeFrame: String) {
         var interval = 0.0
         var date = Date(binding.lineChart.timeSeries.last()[0].toLong())
@@ -743,8 +778,12 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
     }
 
-    private fun stopTimer() {
-        timer.cancel()
+    private fun getPriceChart(assetId: String, duration: Duration) {
+        CommonMethods.checkInternet(requireContext()) {
+            binding.lineChart.animation =
+                AnimationUtils.loadAnimation(requireContext(), R.anim.blink)
+            viewModel.getPriceGraph(assetId, duration)
+        }
     }
 
     private fun showLottieProgressDialog(context: Context, typeOfLoader: Int) {
@@ -796,65 +835,17 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
     }
 
-    override fun onRetrofitError(responseBody: ResponseBody?) {
-        super.onRetrofitError(responseBody)
-        if (dialog != null) {
-//            showLottieProgressDialog(requireActivity(), Constants.LOADING_FAILURE)
-            dismissProgress()
-            Handler().postDelayed({
-                dismissProgressDialog()
-            }, 1000)
-        }
+    private fun stopTimer() {
+        timer.cancel()
     }
 
-    fun dismissProgressDialog() {
-        dialog?.let {
-            try {
-                it.findViewById<ImageView>(R.id.progressImage).clearAnimation()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            it.dismiss()
-            dialog = null
-        }
+    fun investMoneyClicked(toStrategy: Boolean) {
+        if (toStrategy) requireActivity().replaceFragment(
+            R.id.flSplashActivity, PickYourStrategyFragment(), topBottom = true
+        )
+        else requireActivity().replaceFragment(
+            R.id.flSplashActivity, SelectAnAssetFragment(), topBottom = true
+        )
     }
 
-    override fun onPortfolioThreeDotsDismissed() {
-        // Code to remove the overlay view from the parent fragment's layout
-        binding.screenContent.removeView(grayOverlay)
-    }
-    fun showProgress(context: Context) {
-
-        if (dialog == null) {
-            dialog = Dialog(context)
-            dialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
-            dialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            dialog!!.window!!.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-            dialog!!.window!!.setDimAmount(0.4F)
-            dialog!!.setCancelable(false)
-            dialog!!.setContentView(ProgressBarNewBinding.inflate(LayoutInflater.from(context)).root)
-        }
-        try {
-            dialog?.findViewById<ImageView>(R.id.progressImage)?.animation =
-                AnimationUtils.loadAnimation(context, R.anim.rotate_drawable)
-            dialog!!.show()
-        } catch (e: WindowManager.BadTokenException) {
-            Log.d("Exception", "showProgressDialog: ${e.message}")
-            dialog?.dismiss()
-            dialog = null
-        } catch (e: Exception) {
-            Log.d("Exception", "showProgressDialog: ${e.message}")
-        }
-
-    }
-    fun dismissProgress() {
-        dialog?.let {
-            try {
-                it.findViewById<ImageView>(R.id.progressImage).clearAnimation()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            it.dismiss()
-        }
-    }
 }

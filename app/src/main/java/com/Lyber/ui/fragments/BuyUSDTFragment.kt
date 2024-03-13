@@ -14,7 +14,7 @@ import com.Lyber.databinding.FragmentBuyUsdtBinding
 import com.Lyber.models.Balance
 import com.Lyber.models.BalanceData
 import com.Lyber.network.RestClient
-import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.decimalPoint
 import com.Lyber.utils.CommonMethods.Companion.formattedAsset

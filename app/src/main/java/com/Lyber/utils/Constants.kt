@@ -6,6 +6,7 @@ import com.Lyber.models.AvatarData
 
 object Constants {
 
+
     const val USING_BUY: String = "buy"
     const val IS_CHANGE_PIN: String = "changePin"
     const val FREQUENCY: String = "frequency"
@@ -23,7 +24,8 @@ object Constants {
 
     /* steps fill personal data */
     const val ACCOUNT_INITIALIZATION = 0
-//    const val PERSONAL_DATA = 1
+
+    //    const val PERSONAL_DATA = 1
     const val EMAIL_ADDRESS = 2
     const val EMAIL_VERIFIED = 3
     const val ADDRESS = 4
@@ -46,8 +48,9 @@ object Constants {
     //    const val BASE_URL = "http://104.211.21.101:3000/"
     const val BASE_URL = "https://staging.lyber.com/"
     const val NEW_BASE_URL = "https://staging.lyber.com/"
-    const val SOCKET_BASE_URL =  "wss://ws.lyber.com/websocket/"
-//        "ws://ws.lyber.com:80/websocket/"
+    const val SOCKET_BASE_URL = "wss://ws.lyber.com/websocket/"
+
+    //        "ws://ws.lyber.com:80/websocket/"
     const val PICTURE_DIRECTORY = "Lyber/Images"
 
     const val FOR_LOGIN = "for_login"
@@ -258,8 +261,8 @@ object Constants {
     const val TIGER_CAT = "tiger_cat"
     const val UNICORN = "unicorn"
     const val WOLF = "wolf"
-    const val GENERAL_TERMS_CONDITIONS="https://www.lyber.com/terms-conditions"
-    const val PRIVACY_URL="https://www.lyber.com/privacy"
+    const val GENERAL_TERMS_CONDITIONS = "https://www.lyber.com/terms-conditions"
+    const val PRIVACY_URL = "https://www.lyber.com/privacy"
 
     const val API_VERSION = "0.2"
 }

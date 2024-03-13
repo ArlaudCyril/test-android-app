@@ -17,14 +17,11 @@ import com.Lyber.models.Balance
 import com.Lyber.models.BalanceData
 import com.Lyber.models.WithdrawAddress
 import com.Lyber.ui.fragments.bottomsheetfragments.WithdrawalAddressBottomSheet
-import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
-import com.Lyber.utils.CommonMethods.Companion.commaFormatted
-import com.Lyber.utils.CommonMethods.Companion.currencyFormatted
 import com.Lyber.utils.CommonMethods.Companion.decimalPoint
 import com.Lyber.utils.CommonMethods.Companion.decimalPointUptoTwoPlaces
 import com.Lyber.utils.CommonMethods.Companion.formattedAsset
-import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.load
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.CommonMethods.Companion.visible

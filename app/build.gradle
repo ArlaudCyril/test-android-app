@@ -27,11 +27,16 @@ android {
 
     buildTypes {
         release {
-            debuggable false
+            debuggable true
             shrinkResources true
             minifyEnabled true
             signingConfig signingConfigs.release
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+    bundle {
+        language {
+            enableSplit = false
         }
     }
     compileOptions {
@@ -127,4 +132,8 @@ dependencies {
     def lottieVersion = "3.7.0"
     implementation "com.airbnb.android:lottie:$lottieVersion"
     implementation  "com.google.android.gms:play-services-wallet:19.2.1"
+
+    implementation 'com.google.android.libraries.places:places:3.3.0'
+    implementation 'com.google.android.gms:play-services-places:17.0.0'
+    implementation 'com.google.android.gms:play-services-location:21.2.0'
 }

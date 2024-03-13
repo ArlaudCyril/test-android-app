@@ -143,11 +143,11 @@ class PersonalDataViewModel : NetworkViewModel() {
 
         }
 
-    private var _buildingFloorName: String = ""
-    var buildingFloorName
-        get() = _buildingFloorName
+    private var _street: String = ""
+    var street
+        get() = _street
         set(value) {
-            _buildingFloorName = value
+            _street = value
         }
 
     private var _city: String = ""

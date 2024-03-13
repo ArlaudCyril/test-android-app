@@ -444,5 +444,8 @@ class NewCustomLineChart : RelativeLayout {
         val number = BigDecimal(ts).stripTrailingZeros()
         return number.toString()
     }
-
+    fun clearLineData() {
+        lineData.clear()
+        _lineData.clear()
+    }
 }

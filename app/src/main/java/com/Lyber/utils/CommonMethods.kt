@@ -377,7 +377,7 @@ class CommonMethods {
             } else if (errorRes?.code == 7023 || errorRes?.code == 10041 || errorRes?.code == 7025 || errorRes?.code == 10043) {
                 return errorRes?.code
             } else if (errorRes?.code == 7024 || errorRes?.code == 10042) {
-                showSnackBar(root, context)
+                showSnackBar(root, context,null)
                 return errorRes.code
             } else
                 if ((errorRes?.error ?: "").isNotEmpty()) {
@@ -391,7 +391,12 @@ class CommonMethods {
                             context
                         )
 
-                        else -> errorRes?.error?.showToast(context)
+                        else -> {
+                            if(errorRes?.error!!.length<=60)
+                            errorRes?.error?.showToast(context)
+                            else
+                                showSnackBar(root,context,errorRes?.error)
+                        }
                     }
                 }
             if (errorRes?.error == "UNAUTHORIZED" || errorRes?.error == "Unauthorized") {
@@ -1579,7 +1584,7 @@ class CommonMethods {
             return bMapRotate
         }
 
-        fun showSnackBar(root: View, context: Context) {
+        fun showSnackBar(root: View, context: Context,textMsg:String?) {
             val snackbar = Snackbar.make(root, "", Snackbar.LENGTH_LONG)
             val params = snackbar.view.layoutParams as FrameLayout.LayoutParams
             params.gravity = Gravity.TOP
@@ -1593,7 +1598,11 @@ class CommonMethods {
             val snackView =
                 LayoutInflater.from(context).inflate(R.layout.custom_snackbar, null)
             val textViewMsg = snackView.findViewById<TextView>(R.id.tvMsg)
+            if(textMsg==null)
             textViewMsg.text = context.getString(R.string.kyc_under_verification)
+            else
+                textViewMsg.text = textMsg
+
             layout.setPadding(0, 0, 0, 0)
             layout.addView(snackView, 0)
             snackbar.show()

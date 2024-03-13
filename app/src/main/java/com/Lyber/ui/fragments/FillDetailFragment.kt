@@ -303,12 +303,12 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
                         viewModel.setUserInfo(requireContext())
                         viewModel.setUserAddress(
                             viewModel.streetNumber,
-                            viewModel.buildingFloorName,
+                            viewModel.street,
                             viewModel.city,
-                            viewModel.state,
                             viewModel.zipCode,
                             viewModel.country,false
                         )
+
                     }
 
                 }

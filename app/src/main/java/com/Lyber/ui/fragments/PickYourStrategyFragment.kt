@@ -2,7 +2,6 @@ package com.Lyber.ui.fragments
 
 import android.content.Context
 import android.os.Bundle
-import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +20,7 @@ import com.Lyber.models.StrategiesResponse
 import com.Lyber.models.Strategy
 import com.Lyber.ui.adapters.PickStrategyFragmentAdapter
 import com.Lyber.ui.fragments.bottomsheetfragments.InvestWithStrategyBottomSheet
-import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.checkInternet

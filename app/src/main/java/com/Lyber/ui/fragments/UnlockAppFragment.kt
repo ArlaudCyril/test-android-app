@@ -146,6 +146,7 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
             }
 
             else -> {
+//                findNavController().navigate(R.id.addressFragment)
                 findNavController().navigate(R.id.portfolioHomeFragment)
             }
 

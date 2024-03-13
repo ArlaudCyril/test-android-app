@@ -10,14 +10,12 @@ import com.Lyber.R
 import com.Lyber.databinding.FragmentAllAssetsBinding
 import com.Lyber.models.PriceServiceResume
 import com.Lyber.ui.adapters.AllAssetAdapter
-import com.Lyber.ui.portfolio.viewModel.PortfolioViewModel
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
-import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.utils.OnTextChange
 import com.google.android.material.tabs.TabLayout

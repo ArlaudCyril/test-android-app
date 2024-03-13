@@ -417,6 +417,15 @@
         android:id="@+id/underMaintenanceFragment"
         android:name="com.Lyber.ui.fragments.UnderMaintenanceFragment"
         android:label="UnderMaintenanceFragment" />
+    <fragment
+        android:id="@+id/searchAddressFragment"
+        android:name="com.Lyber.ui.fragments.SearchAddressFragment"
+        android:label="SearchAddressFragment" />
+    <fragment
+        android:id="@+id/addressFragment"
+        android:name="com.Lyber.ui.fragments.AddressFragment"
+        android:label="AddressFragment" />
+
     <dialog
         android:id="@+id/portfolioThreeDots"
         android:name="com.Lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDots"

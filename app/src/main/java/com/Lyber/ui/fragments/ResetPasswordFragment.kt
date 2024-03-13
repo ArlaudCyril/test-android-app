@@ -58,11 +58,11 @@ class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>(), OnCl
         viewModel.resetPasswordResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
 //                CommonMethods.dismissProgressDialog()
-                val password = binding.etPassword.text.trim().toString()
+                val password = binding.etPassword.text!!.trim().toString()
                 Log.d("res", "${it.data}")
                 val emailSalt = BigInteger(1, generator.generateRandomSalt())
                 val emailVerifier = generator.generateVerifier(
-                    emailSalt, it.data.email, password
+                    emailSalt, it.data.email.lowercase(), password
                 )
 
                 val phoneSalt = BigInteger(1, generator.generateRandomSalt())
@@ -109,8 +109,8 @@ class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>(), OnCl
         override fun afterTextChanged(s: Editable?) {}
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            if (binding.etPassword.text.trim().toString().isNotEmpty()) {
-                if (CommonMethods.isValidPassword(binding.etPassword.text.trim().toString())) {
+            if (binding.etPassword.text!!.trim().toString().isNotEmpty()) {
+                if (CommonMethods.isValidPassword(binding.etPassword.text!!.trim().toString())) {
                     val colorStateList =
                         ColorStateList.valueOf(
                             ContextCompat.getColor(
@@ -138,6 +138,7 @@ class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>(), OnCl
                             )
                         )
                     binding.btnSendResetLink.backgroundTintList = colorStateList
+                    binding.tvPassValidMsg.text=getString(R.string.pass_valid_msg)
                     binding.tvPassValidMsg.setTextColor(
                         ContextCompat.getColor(
                             requireContext(),
