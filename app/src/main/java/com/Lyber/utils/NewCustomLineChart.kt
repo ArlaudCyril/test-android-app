@@ -109,8 +109,6 @@ class NewCustomLineChart : RelativeLayout {
             _timeSeries = value
             selectedPosition = value.count() - 1
             lineData = value.lineData
-            Log.d("value", "${value}")
-            Log.d("lineData", "${lineData}")
             postInvalidate()
         }
 

@@ -423,7 +423,7 @@
     <string name="all_my_portfolio">Tout mon portefeuille</string>
     <string name="lyber_portfolio">Portefeuille Lyber</string>
     <string name="list_of_all_operations_purchase_exchange_or_withdrawal_made_on_your_account">Liste de toutes les opérations (achat, échange ou retrait) effectuées sur votre compte.</string>
-    <string name="use_biometric">Utiliser la biométrie</string>
+    <string name="use_biometric">Utiliser l\'identification faciale</string>
     <string name="enter_your_pin">Entrez votre code PIN</string>
     <string name="edit_personal_info">Modifier les informations personnelles</string>
     <string name="start">Démarrer</string>
@@ -753,4 +753,8 @@
     <string name="please_include">2. Envoyez-nous un message en cliquant ici. Veuillez inclure les informations suivantes: le montant d\'USDT que vous souhaitez retirer, aainsi que votre IBAN, BIC et le nom du bénéficiaire (qui doit être le même que le nom avec lequel vous avez ouvert votre compte Lyber).\n\nNotre équipe d\'assistance vous répondra dans les plus brefs délais pour effectuer le retrait.</string>
     <string name="no_assets_available">Aucun actif disponible</string>
     <string name="do_not_have">Vous n\'avez pas assez de pièces à échanger</string>
+      <string name="warning">Avertissement!</string>
+    <string name="certify_detail">J\'atteste sur l\'honneur que mes pièces d\'identité ont été délivrées par un pays membre de l\'Union européenne ou de l\'Espace économique européen, à l\'exception de Chypre, Malte, la Croatie, la Hongrie, le Liechtenstein, la Lettonie, la Roumanie et la Slovaquie.</string>
+    <string name="yes_certify">Oui, je certifie</string>
+
 </resources>

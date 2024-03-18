@@ -1,11 +1,15 @@
 package com.Lyber.ui.fragments
 
 import android.content.Context
+import android.content.pm.PackageManager
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.biometric.BiometricManager
@@ -31,6 +35,7 @@ import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.OnTextChange
 import com.Lyber.viewmodels.NetworkViewModel
 import okhttp3.ResponseBody
+import java.util.concurrent.Executor
 
 class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClickListener {
 
@@ -38,7 +43,6 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
     private lateinit var viewModel: NetworkViewModel
 
     override fun bind() = FragmentUnlockAppBinding.inflate(layoutInflater)
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -75,7 +79,7 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
         binding.tvEight.setOnClickListener(this)
         binding.tvNine.setOnClickListener(this)
         binding.tvZero.setOnClickListener(this)
-        binding.tvBioMetric.setOnClickListener(this)
+//        binding.tvBioMetric.setOnClickListener(this)
         binding.tvBackArrow.setOnClickListener(this)
 //        val biometricManager = BiometricManager.from(requireContext())
 //        when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK or BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
@@ -91,17 +95,18 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
 //            BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED ->
 //                ("No biometric credentials are enrolled").showToast(requireContext())
 //        }
-    }
+//        "face id enabled: ${isFaceIdEnabled(requireContext())}".showToast(requireContext())
 
+    }
     override fun onResume() {
         super.onResume()
-        if (CommonMethods.isBiometricReady(requireActivity())) {
-            binding.tvOr.visible()
-            binding.tvBioMetric.visible()
-        } else {
+//        if (CommonMethods.isFaceIdAvail(requireContext()) && CommonMethods.isBiometricReady(requireActivity())) {
+//            binding.tvOr.visible()
+//            binding.tvBioMetric.visible()
+//        } else {
             binding.tvOr.gone()
             binding.tvBioMetric.gone()
-        }
+//        }
     }
 
     private fun isFaceIdEnabled(context: Context): Boolean {
@@ -149,9 +154,7 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
 //                findNavController().navigate(R.id.addressFragment)
                 findNavController().navigate(R.id.portfolioHomeFragment)
             }
-
         }
-
 
     }
 
@@ -230,11 +233,13 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
             override fun onAuthenticationError(errorCode: Int, errString: CharSequence) {
                 super.onAuthenticationError(errorCode, errString)
                 Log.d(TAG, "onAuthenticationError: ")
+//                "onAuthenticationError: $errorCode".showToast(requireContext())
             }
 
             override fun onAuthenticationFailed() {
                 super.onAuthenticationFailed()
                 Log.w(TAG, "Authentication failed for an unknown reason")
+//                "Authentication failed for an unknown reason".showToast(requireContext())
             }
 
             override fun onAuthenticationSucceeded(result: BiometricPrompt.AuthenticationResult) {

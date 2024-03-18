@@ -16,6 +16,7 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.CustomDialogLayoutBinding
+import com.Lyber.databinding.CustomDialogVerticalLayoutBinding
 import com.Lyber.databinding.FragmentVerifyYourIdentityBinding
 import com.Lyber.network.RestClient
 import com.Lyber.ui.activities.WebViewActivity
@@ -28,6 +29,7 @@ import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.VerifyIdentityViewModel
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import okhttp3.ResponseBody
 
 
@@ -108,7 +110,8 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
 
             binding.btnContinue -> {
                 if (isVerificationEnabled)
-                    hitAcpi()
+                    showWarningDialog()
+//                    hitAcpi()
             }
 
             binding.btnReviewMyInformations -> {
@@ -248,6 +251,29 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
                     )
                 )
             isVerificationEnabled = false
+        }
+    }
+
+    private lateinit var bottomDialog: BottomSheetDialog
+    fun showWarningDialog() {
+        bottomDialog = BottomSheetDialog(requireContext(), R.style.CustomDialogBottomSheet).apply {
+            CustomDialogVerticalLayoutBinding.inflate(layoutInflater).let { binding ->
+                setContentView(binding.root)
+                binding.viewGap.visible()
+                binding.tvTitle.text = context.getString(R.string.warning)
+                binding.tvMessage.text = context.getString(R.string.certify_detail)
+                binding.tvNegativeButton.text = context.getString(R.string.cancel)
+                binding.tvPositiveButton.text = context.getString(R.string.yes_certify)
+
+                binding.tvNegativeButton.setOnClickListener {
+                    dismiss()
+                }
+                binding.tvPositiveButton.setOnClickListener {
+                    dismiss()
+                    hitAcpi()
+                }
+                show()
+            }
         }
     }
 }

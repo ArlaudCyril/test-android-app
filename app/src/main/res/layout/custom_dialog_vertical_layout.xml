@@ -3,72 +3,78 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
     android:background="@drawable/top_curved_layout"
     android:backgroundTint="@color/purple_gray_00"
+    android:orientation="vertical"
     android:paddingTop="12dp">
 
     <LinearLayout
         android:id="@+id/llCustom"
-        android:orientation="vertical"
-        android:gravity="center"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
 
         <TextView
             android:id="@+id/tvTitle"
             style="@style/DialogTitle"
             android:padding="2dp"
-            android:textStyle="bold"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             android:textColor="@color/purple_gray_800"
+            android:textStyle="bold"
             tools:text="@string/sign_my_contract" />
+
+        <View
+            android:id="@+id/viewGap"
+            android:layout_width="match_parent"
+            android:layout_height="12dp"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tvMessage"
             style="@style/DialogMessage"
             android:layout_marginHorizontal="16dp"
             android:gravity="center"
-            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             android:lineSpacingExtra="5sp"
-            android:textColor="@color/purple_gray_600"
             android:padding="2dp"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:textColor="@color/purple_gray_600"
             tools:text="@string/contract_has_not_signed" />
 
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginVertical="24dp"
             android:layout_marginHorizontal="16dp"
-            android:orientation="horizontal"
-           >
+            android:layout_marginVertical="24dp"
+            android:orientation="horizontal">
 
             <Button
                 android:id="@+id/tvNegativeButton"
                 style="@style/ButtonStyle"
                 android:layout_width="0dp"
-                android:layout_weight="1"
                 android:layout_gravity="bottom"
+                android:layout_marginEnd="6dp"
+                android:layout_weight="1"
                 android:background="@drawable/curved_button"
-                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:backgroundTint="@color/purple_gray_50"
                 android:text="@string/cancel"
                 android:textAllCaps="false"
-                android:layout_marginEnd="6dp"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:textColor="@color/purple_gray_800" />
+
             <Button
                 android:id="@+id/tvPositiveButton"
                 style="@style/ButtonStyle"
-                android:layout_gravity="bottom"
                 android:layout_width="0dp"
-                android:layout_weight="1"
+                android:layout_gravity="bottom"
                 android:layout_marginStart="6dp"
-                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                android:layout_weight="1"
                 android:background="@drawable/curved_button"
                 android:backgroundTint="@color/purple_500"
                 android:text="@string/sign_my_contract"
                 android:textAllCaps="false"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:textColor="@color/white" />
 
         </LinearLayout>

@@ -126,6 +126,7 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
                         var city = ""
                         var zipcode = ""
                         var adr = ""
+                        var strtNo = ""
                         for (component in place.addressComponents.asList()) {
                             if ("locality" in component.types) {
                                 city = component.name
@@ -135,7 +136,7 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
                             }
                             if ("street_number" in component.types) {
 //                                adr = component.name
-                                streetNumber = component.name
+                                strtNo = component.name
                             }
                             if ("route" in component.types) {
                                 if (adr.isEmpty())
@@ -173,11 +174,12 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
                         )
 
                         streetAddress = adr
+                        streetNumber=strtNo
                         Log.i(
                             TAG, "city: ${streetNumber} ${streetAddress}"
                         )
-                        if (streetNumber.isNotEmpty())
-                            binding.tvSearchAddress.text = streetNumber + ", " + adr
+                        if (strtNo.isNotEmpty())
+                            binding.tvSearchAddress.text = strtNo + ", " + adr
                         else
                             binding.tvSearchAddress.text = adr
                         binding.etCity.setText(city)

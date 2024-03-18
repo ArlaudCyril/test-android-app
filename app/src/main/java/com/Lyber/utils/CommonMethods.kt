@@ -252,7 +252,8 @@ class CommonMethods {
 
             // Use Device Credentials if allowed, otherwise show Cancel Button
             builder.apply {
-                if (allowDeviceCredential) setAllowedAuthenticators(BIOMETRIC_WEAK)
+                if (allowDeviceCredential)
+                    setAllowedAuthenticators(BIOMETRIC_WEAK)
                 else setNegativeButtonText("Cancel")
             }
 
@@ -377,7 +378,7 @@ class CommonMethods {
             } else if (errorRes?.code == 7023 || errorRes?.code == 10041 || errorRes?.code == 7025 || errorRes?.code == 10043) {
                 return errorRes?.code
             } else if (errorRes?.code == 7024 || errorRes?.code == 10042) {
-                showSnackBar(root, context,null)
+                showSnackBar(root, context, null)
                 return errorRes.code
             } else
                 if ((errorRes?.error ?: "").isNotEmpty()) {
@@ -392,10 +393,10 @@ class CommonMethods {
                         )
 
                         else -> {
-                            if(errorRes?.error!!.length<=60)
-                            errorRes?.error?.showToast(context)
+                            if (errorRes?.error!!.length <= 60)
+                                errorRes?.error?.showToast(context)
                             else
-                                showSnackBar(root,context,errorRes?.error)
+                                showSnackBar(root, context, errorRes?.error)
                         }
                     }
                 }
@@ -922,7 +923,7 @@ class CommonMethods {
 
                         val symbols = DecimalFormatSymbols(Locale.US)
                         formatter.decimalFormatSymbols = symbols
-                        val stringFormatted = formatter.format(value)+ Constants.EURO
+                        val stringFormatted = formatter.format(value) + Constants.EURO
                         val ss1 = SpannableString(stringFormatted)
                         ss1.setSpan(RelativeSizeSpan(0.8f), 0, numberZerosLeft, 0) // set size
                         ss1
@@ -933,7 +934,11 @@ class CommonMethods {
             }
 
 
-        fun String.formattedAsset(price: Double?, rounding: RoundingMode,roundValue:Int=0): String {
+        fun String.formattedAsset(
+            price: Double?,
+            rounding: RoundingMode,
+            roundValue: Int = 0
+        ): String {
             var priceFinal = price
             if (this == "" || priceFinal == null || priceFinal == 0.0 || priceFinal.isNaN()) {
                 priceFinal = 1.026
@@ -952,7 +957,7 @@ class CommonMethods {
                 formatter.maximumFractionDigits = 0
                 formatter.minimumFractionDigits = 0
             }
-            if(roundValue!=0){
+            if (roundValue != 0) {
                 formatter.maximumFractionDigits = roundValue
                 formatter.minimumFractionDigits = roundValue
             }
@@ -1215,7 +1220,7 @@ class CommonMethods {
 
                 // Convert date to milliseconds in the default time zone
                 return date.time
-            }catch (ex:java.lang.Exception){
+            } catch (ex: java.lang.Exception) {
                 return System.currentTimeMillis()
             }
         }
@@ -1584,7 +1589,7 @@ class CommonMethods {
             return bMapRotate
         }
 
-        fun showSnackBar(root: View, context: Context,textMsg:String?) {
+        fun showSnackBar(root: View, context: Context, textMsg: String?) {
             val snackbar = Snackbar.make(root, "", Snackbar.LENGTH_LONG)
             val params = snackbar.view.layoutParams as FrameLayout.LayoutParams
             params.gravity = Gravity.TOP
@@ -1598,8 +1603,8 @@ class CommonMethods {
             val snackView =
                 LayoutInflater.from(context).inflate(R.layout.custom_snackbar, null)
             val textViewMsg = snackView.findViewById<TextView>(R.id.tvMsg)
-            if(textMsg==null)
-            textViewMsg.text = context.getString(R.string.kyc_under_verification)
+            if (textMsg == null)
+                textViewMsg.text = context.getString(R.string.kyc_under_verification)
             else
                 textViewMsg.text = textMsg
 
@@ -1608,6 +1613,13 @@ class CommonMethods {
             snackbar.show()
         }
 
+        fun isFaceIdAvail(context: Context): Boolean {
+            val packageManager = context.packageManager
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+                return packageManager?.hasSystemFeature(PackageManager.FEATURE_FACE) == true
+            } else
+                return false
+        }
 
     }
 }
