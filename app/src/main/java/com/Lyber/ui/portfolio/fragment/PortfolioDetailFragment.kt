@@ -90,6 +90,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
     private var grayOverlay: View? = null
     private var firstPrice = 0.0
     private var selectedTab = "1h"
+    private var updateSocketValue = true
     override fun bind() = FragmentPortfolioDetailBinding.inflate(layoutInflater)
 
     override fun onDestroyView() {
@@ -175,6 +176,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 override fun onTabSelected(tab: TabLayout.Tab?) {
                     viewModel.selectedAsset?.let { asset ->
                         selectedTab = tab?.text.toString().lowercase()
+                        updateSocketValue = false
                         viewModel.getPrice(asset.id, (tab?.text ?: "1h").toString().lowercase())
 //                        stopTimer()
 //                        setTimer((tab?.text ?: "1h").toString().lowercase())
@@ -280,9 +282,13 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 binding.lineChart.clearLineData()
                 binding.lineChart.timeSeries =
                     it.data.prices.toTimeSeries(it.data.lastUpdate, timeFrame)
-                binding.lineChart.postInvalidate()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    if (isAdded) {
+                        updateSocketValue = true
+                    }
+                }, 1000)
+//                binding.lineChart.postInvalidate()
 //                Log.d("timeSeries", "${it.data.prices.toTimeSeries(it.data.lastUpdate, timeFrame)}")
-
                 binding.tvValuePortfolioAndAssetPrice.text =
                     "${it.data.prices.last().currencyFormatted}"
                 firstPrice = it.data.prices.first().toDouble()
@@ -593,8 +599,10 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                     if (viewModel.selectedAsset?.id == "usdt")
                         price = (1.0 / price.toFloat()).toString()
 //                    Log.d("price", "$price")
-                    binding.tvValuePortfolioAndAssetPrice.text = price.currencyFormatted
-                    binding.lineChart.updateValueLastPoint(price.toFloat())
+                   if (updateSocketValue) {
+                       binding.tvValuePortfolioAndAssetPrice.text = price.currencyFormatted
+                       binding.lineChart.updateValueLastPoint(price.toFloat())
+                   }
                     if (firstPrice != 0.0) {
                         val percentChange = ((price.toDouble() / firstPrice) - 1) * 100
                         val euroChange = price.toDouble() - firstPrice
@@ -641,6 +649,8 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
     override fun onRetrofitError(responseBody: ResponseBody?) {
         super.onRetrofitError(responseBody)
+        updateSocketValue = true
+
         if (dialog != null) {
 //            showLottieProgressDialog(requireActivity(), Constants.LOADING_FAILURE)
             dismissProgress()

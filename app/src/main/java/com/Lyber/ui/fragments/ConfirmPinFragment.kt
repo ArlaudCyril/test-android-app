@@ -104,8 +104,9 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
                         && requireArguments().getBoolean(Constants.IS_CHANGE_PIN)
                     ) {
                         findNavController().navigate(R.id.action_confirmPinFragment_to_profile)
-                    } else showDialog()
-
+                    } else
+                        findNavController().navigate(R.id.enableNotificationFragment)
+//                        showDialog() For now
                     /*checkInternet(requireContext()) {
                         viewModel.confirmPin = pinConfirm
                         clearField()

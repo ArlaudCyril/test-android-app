@@ -6,6 +6,7 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -94,6 +95,12 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 AnimationUtils.loadAnimation(context, R.anim.rotate_drawable)
             viewModel.getTransactions(limit, offset)
         }
+
+//        if (CommonMethods.isFaceIdAvail(requireContext()))
+//            binding.llFaceId.visible()
+//        else
+//            binding.llFaceId.gone()
+
         viewModel.balanceResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
@@ -147,21 +154,13 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         App.prefsManager.user?.let {
             binding.tvName.text = "${it.firstName} ${it.lastName}"
             binding.tvEmail.text = it.email
-//            binding.tvName.text = "${it.first_name} ${it.last_name}"
-//            binding.tvEmail.text = "${it.email}"
-//            binding.switchFaceId.isChecked = it.is_face_id_enabled == 1
-//            if (it.bic != null && it.iban != null) {
-//                binding.llBankInfo.visible()
-//                binding.tvIban.text = "${it.iban}"
-//                binding.tvBic.text = "${it.bic}"
-//                binding.tvAddPaymentMethod.gone()
-//            }
             if (it.withdrawalLock == "none")
                 binding.tvStatusAddressBook.text = getString(R.string.whitelisting_disabled)
             else
                 binding.tvStatusAddressBook.text = getString(R.string.whitelisting_enabled)
 
         }
+        binding.switchFaceId.isChecked = App.prefsManager.faceIdEnabled
 
         if (App.prefsManager.getLanguage().isNotEmpty()) {
             val ln = App.prefsManager.getLanguage()
@@ -197,13 +196,13 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
             }
         }
 
-        viewModel.faceIdResponse.observe(viewLifecycleOwner) {
-            if (Lifecycle.State.RESUMED == lifecycle.currentState) {
-                dismissProgressDialog()
+//        viewModel.faceIdResponse.observe(viewLifecycleOwner) {
+//            if (Lifecycle.State.RESUMED == lifecycle.currentState) {
+//                dismissProgressDialog()
 //                App.prefsManager.setFaceIdEnabled(App.prefsManager.user?.is_face_id_enabled == 0)
-//                binding.switchFaceId.isChecked = App.prefsManager.user?.is_face_id_enabled == 1
-            }
-        }
+////                binding.switchFaceId.isChecked = App.prefsManager.user?.is_face_id_enabled == 1
+//            }
+//        }
 
         viewModel.uploadResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
@@ -254,13 +253,14 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 
         binding.switchFaceId.setOnCheckedChangeListener { button, isChecked ->
             if (button.isPressed) {
-                checkInternet(requireContext()) {
-                    showProgressDialog(requireContext())
-                    viewModel.setFaceId(
-                        getDeviceId(requireActivity().contentResolver),
-                        isChecked
-                    )
-                }
+                App.prefsManager.faceIdEnabled = isChecked
+//                checkInternet(requireContext()) {
+//                    showProgressDialog(requireContext())
+//                    viewModel.setFaceId(
+//                        getDeviceId(requireActivity().contentResolver),
+//                        isChecked
+//                    )
+//                }
             } else {
 
             }

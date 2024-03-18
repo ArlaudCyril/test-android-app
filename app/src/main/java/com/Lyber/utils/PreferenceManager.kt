@@ -175,6 +175,10 @@ class PreferenceManager(context: Context) {
 
     }
 
+    var faceIdEnabled: Boolean
+        get() = mSharedPreferences.getBoolean("faceIdEnabled", false)
+        set(value) = mEditor.putBoolean("faceIdEnabled", value).apply()
+
     fun logout() {
 //        mEditor.clear()
 //        mEditor.apply()
