@@ -2,6 +2,7 @@ package com.Lyber.ui.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
@@ -223,7 +224,6 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
     }
 
     private fun assetClicked(asset: PriceServiceResume) {
-
         getViewModel<PortfolioViewModel>(requireActivity()).let {
             it.selectedAssetPriceResume = asset
             it.chosenAssets = asset
