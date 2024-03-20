@@ -12,3 +12,4 @@
 .idea/deploymentTargetDropDown.xml
 .idea/gradle.xml
 local.properties
+.gradle/
