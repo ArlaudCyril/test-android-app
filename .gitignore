@@ -1,5 +1,5 @@
-.idea
-.gradle
+.idea/
+.gradle/
 /.idea/caches
 /.idea/libraries
 /.idea/modules.xml
