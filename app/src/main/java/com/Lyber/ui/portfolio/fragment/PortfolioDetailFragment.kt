@@ -97,7 +97,6 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         Log.d(TAG, "onDestroyView: ")
         com.Lyber.ui.activities.SplashActivity.activityCallbacks = null
         webSocket.close(1000, "Goodbye !")
-//        this.stopTimer()
         super.onDestroyView()
     }
 
@@ -163,7 +162,6 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
         /* setting up tabs */
         binding.tabLayout.let {
-
             it.addTab(it.newTab().apply { text = "1H" })
             it.addTab(it.newTab().apply { text = "4H" })
             it.addTab(it.newTab().apply { text = "1D" })
