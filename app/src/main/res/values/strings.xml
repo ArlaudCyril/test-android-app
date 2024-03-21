@@ -306,7 +306,7 @@
     <string name="invest_in_a_single_asset">Invest in a single asset</string>
     <string name="choose_among_20_different_assets">Choose among 20 different assets</string>
     <string name="set_this_allocation">Set this allocation</string>
-    <string name="enter_the_code_displayed_on_your_email_">Enter the code displayed on your email</string>
+    <string name="enter_the_code_displayed_on_your_email_">Enter the code received by email</string>
     <string name="withdraw_deposit_or_exchange">Withdraw, deposit or exchange</string>
     <string name="money_to_lyber">Money to Lyber</string>
     <string name="for_fiat_currency">For fiat currency</string>
