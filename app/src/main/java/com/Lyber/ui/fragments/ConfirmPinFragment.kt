@@ -15,6 +15,7 @@ import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
 import com.Lyber.utils.CommonMethods.Companion.showToast
+import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.utils.OnTextChange
 import com.Lyber.viewmodels.SignUpViewModel
@@ -47,6 +48,11 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
         }
         if (viewModel.forLogin)
             viewModel.getUser()
+        else if (!requireArguments().containsKey(Constants.IS_CHANGE_PIN))
+            binding.ivTopClose.visible()
+        binding.ivTopClose.setOnClickListener {
+            stopRegistrationDialog()
+        }
         viewModel.getUserResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 if (it.data.language.isNotEmpty()) {
@@ -104,8 +110,11 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
                         && requireArguments().getBoolean(Constants.IS_CHANGE_PIN)
                     ) {
                         findNavController().navigate(R.id.action_confirmPinFragment_to_profile)
-                    } else
+                    } else {
+                        App.prefsManager.accountCreationSteps =
+                            Constants.Account_CREATION_STEP_CREATE_PIN
                         findNavController().navigate(R.id.enableNotificationFragment)
+                    }
 //                        showDialog() For now
                     /*checkInternet(requireContext()) {
                         viewModel.confirmPin = pinConfirm
@@ -124,7 +133,7 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
     }
 
     fun showDialog() {
-       Dialog(requireActivity(), R.style.DialogTheme).apply {
+        Dialog(requireActivity(), R.style.DialogTheme).apply {
             CustomDialogLayoutBinding.inflate(layoutInflater).let {
                 requestWindowFeature(Window.FEATURE_NO_TITLE)
                 setCancelable(false)

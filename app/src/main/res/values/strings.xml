@@ -638,7 +638,7 @@
     <string name="edit_personal_data">Edit Personal Data</string>
     <string name="verification_in_progress">Verification in progress</string>
     <string name="start_verification">Start verification</string>
-    <string name="label_cgu_conditions">I have read and accept the <u>General Terms\nand Conditions of Sale</u></string>
+    <string name="label_cgu_conditions">I have read and accept the <u>General Terms and Conditions of Sale</u></string>
     <string name="label_privacy_policy">I have read and accept the <u>privacy policy</u></string>
     <string name="cgu_conditions">General Terms and Conditions of Sale</string>
     <string name="privacy_policy">privacy policy</string>

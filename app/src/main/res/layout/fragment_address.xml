@@ -37,9 +37,10 @@
             android:id="@+id/tvSearchAddress"
             style="@style/EditTextTheme"
             android:layout_marginTop="24dp"
+            android:minHeight="?attr/actionBarSize"
+            android:layout_height="wrap_content"
             android:background="@drawable/edit_text_background"
             android:hint="@string/address"
-            android:inputType="textCapWords"
             android:paddingHorizontal="12dp"
             android:paddingVertical="16dp"
             tools:ignore="TextFields" />

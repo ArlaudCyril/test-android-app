@@ -3,8 +3,10 @@ package com.Lyber.ui.fragments
 import android.annotation.SuppressLint
 import android.content.BroadcastReceiver
 import android.content.Context
+import android.content.Context.RECEIVER_NOT_EXPORTED
 import android.content.Intent
 import android.content.IntentFilter
+import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -66,7 +68,11 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+        requireActivity().registerReceiver(broadcastReceiver, IntentFilter(Constants.SCAN_COMPLETE),RECEIVER_NOT_EXPORTED)
+       else
         requireActivity().registerReceiver(broadcastReceiver, IntentFilter(Constants.SCAN_COMPLETE))
+
         arguments?.let {
             toEdit = it.getBoolean(TO_EDIT, false)
         }
