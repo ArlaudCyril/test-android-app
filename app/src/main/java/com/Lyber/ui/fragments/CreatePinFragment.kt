@@ -47,14 +47,12 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
         ) {
             binding.ivTopAction.visible()
             binding.llIndicators.gone()
-            binding.tvTopAction.gone()
         }
       else  if (arguments != null && requireArguments().containsKey(Constants.FOR_LOGIN) && !requireArguments().getBoolean(
                 Constants.FOR_LOGIN
             )){
             binding.llIndicators.visible()
             binding.ivTopClose.visible()
-            binding.tvTopAction.gone()
             binding.ivTopAction.gone()
             requireActivity().onBackPressedDispatcher.addCallback(this) {
                stopRegistrationDialog()
@@ -62,15 +60,11 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
         }
         else {
             binding.llIndicators.visible()
-            binding.tvTopAction.gone()
         }
         binding.ivTopClose.setOnClickListener {
             stopRegistrationDialog()
         }
 
-        binding.tvTopAction.setOnClickListener {
-            showLogoutDialog()
-        }
         binding.ivTopAction.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
