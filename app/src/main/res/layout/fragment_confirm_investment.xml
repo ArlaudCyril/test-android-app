@@ -64,6 +64,7 @@
                     android:id="@+id/tvAmount"
                     style="@style/HeadingStyle"
                     android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
                     android:gravity="center"
                     android:textColor="@color/purple_500"
                     tools:text="100€" />
