@@ -78,8 +78,8 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
         binding.includedAsset.tvAssetAmountInCrypto.text =
             balance.balanceData.balance.formattedAsset(
                 priceCoin,
-                rounding = RoundingMode.DOWN
-            ) + " USDT"
+                rounding = RoundingMode.DOWN)
+//            ) + " USDT"
 
     }
 
