@@ -539,7 +539,12 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                     screenContent.addView(transparentView, viewParams)
                 }
 
-                tvViewAll -> navController.navigate(R.id.allAssetFragment)
+                tvViewAll -> {
+                    val arguments = Bundle().apply {
+                        putString("type", "assets")
+                    }
+                    navController.navigate(R.id.allAssetFragment, arguments)
+                }
 
                 rvMyAssets -> {
                     requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment)
