@@ -9,7 +9,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        Places.initialize(this, getString(R.string.API_KEY_PROD))
+        Places.initialize(this, getString(R.string.API_KEY_STAGING))
         appContext=this
         prefsManager = PreferenceManager(applicationContext)
         accessToken = prefsManager.accessToken

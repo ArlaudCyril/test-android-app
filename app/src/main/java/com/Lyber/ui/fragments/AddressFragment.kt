@@ -48,9 +48,9 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
         (requireParentFragment() as FillDetailFragment).binding.ivTopAction.setBackgroundResource(
             R.drawable.ic_close
         )
-        if(streetNumber.isNotEmpty())
-            binding.tvSearchAddress.text = streetNumber+", "+streetAddress
-        else if(streetAddress.isNotEmpty())
+        if (streetNumber.isNotEmpty())
+            binding.tvSearchAddress.text = streetNumber + ", " + streetAddress
+        else if (streetAddress.isNotEmpty())
             binding.tvSearchAddress.text = streetAddress
         specifiedUsPersonAdapter = ArrayAdapter(
             requireContext(),
@@ -70,13 +70,12 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
         if (personalDataViewModel.isReview) {
             App.prefsManager.addressDataLocal.let {
                 binding.apply {
-                    if(it!!.streetNumber.isNotEmpty()) {
-                        streetNumber=it.streetNumber
-                        streetAddress=it.streetAddress
+                    if (it!!.streetNumber.isNotEmpty()) {
+                        streetNumber = it.streetNumber
+                        streetAddress = it.streetAddress
                         tvSearchAddress.text = it.streetNumber + ", " + it.streetAddress
-                    }
-                    else {
-                        streetAddress=it.streetAddress
+                    } else {
+                        streetAddress = it.streetAddress
                         tvSearchAddress.text = it.streetAddress
                     }
                     etCity.setText(it.city)
@@ -117,6 +116,9 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
                 if (intent != null) {
                     val place = Autocomplete.getPlaceFromIntent(intent)
                     Log.i(
+                        TAG, "Place: ${place}"
+                    )
+                    Log.i(
                         TAG, "Place: ${place.address}"
                     )
                     Log.i(
@@ -151,6 +153,12 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
                                     adr = adr + ", " + component.name
                             }
 
+                            if ("sublocality_level_3" in component.types) {
+                                if (adr.isEmpty())
+                                    adr = component.name
+                                else
+                                    adr = adr + ", " + component.name
+                            }
                             if ("sublocality_level_2" in component.types) {
                                 if (adr.isEmpty())
                                     adr = component.name
@@ -172,9 +180,12 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
                         Log.i(
                             TAG, "city: ${city} ${zipcode}"
                         )
+                        if (place.name.isNotEmpty()) {
+                            adr = place.name + ", " + adr
+                        }
 
                         streetAddress = adr
-                        streetNumber=strtNo
+                        streetNumber = strtNo
                         Log.i(
                             TAG, "city: ${streetNumber} ${streetAddress}"
                         )

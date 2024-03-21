@@ -154,10 +154,10 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         App.prefsManager.user?.let {
             binding.tvName.text = "${it.firstName} ${it.lastName}"
             binding.tvEmail.text = it.email
-            if (it.withdrawalLock == "none")
-                binding.tvStatusAddressBook.text = getString(R.string.whitelisting_disabled)
-            else
-                binding.tvStatusAddressBook.text = getString(R.string.whitelisting_enabled)
+//            if (it.withdrawalLock == "none")
+//                binding.tvStatusAddressBook.text = getString(R.string.whitelisting_disabled)
+//            else
+//                binding.tvStatusAddressBook.text = getString(R.string.whitelisting_enabled)
 
         }
         binding.switchFaceId.isChecked = App.prefsManager.faceIdEnabled

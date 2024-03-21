@@ -34,11 +34,10 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
         super.onViewCreated(view, savedInstanceState)
         portfolioViewModel = getViewModel(requireActivity())
 
-//        binding.btnInvestMoney.setOnClickListener(this)
-        binding.tvFillPersonalData.setOnClickListener(this)
+
+//        binding.tvFillPersonalData.setOnClickListener(this)
         binding.tvCreateAnAccount.setOnClickListener(this)
         binding.tvBackArrow.setOnClickListener(this)
-//        binding.btnMenu.setOnClickListener(this)
 
         Log.d(TAG, "onViewCreated: ")
         setUpUi(App.prefsManager.portfolioCompletionStep)

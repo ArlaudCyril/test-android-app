@@ -62,7 +62,8 @@ class BalanceAdapter(
                         balance.balance.formattedAsset(
                             priceCoin,
                             rounding = RoundingMode.DOWN
-                        )+" ${balanceId.uppercase()}"
+                        )
+//                    +" ${balanceId.uppercase()}"
 
                     try {
                         val balanceId = it.id
@@ -91,7 +92,8 @@ class BalanceAdapter(
                             balance.balance.formattedAsset(
                                 priceCoin,
                                 rounding = RoundingMode.DOWN
-                            )+" ${balanceId.uppercase()}"
+                            )
+//                        +" ${balanceId.uppercase()}"
                     }catch (_:Exception){
 
                     }

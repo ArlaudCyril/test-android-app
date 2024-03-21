@@ -10,13 +10,12 @@
     <!--android:background="@drawable/curved_button"-->
     <ImageView
         android:id="@+id/ivTopAction"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="44dp"
+        android:layout_height="44dp"
         android:layout_marginEnd="16dp"
         android:layout_marginBottom="12dp"
         android:background="@drawable/white_back"
-        android:paddingHorizontal="12dp"
-        android:paddingVertical="12dp"
+        android:padding="10dp"
         android:src="@drawable/ic_close"
         app:layout_constraintBottom_toTopOf="@id/topGuide"
         app:layout_constraintEnd_toEndOf="parent"
@@ -91,6 +90,7 @@
                     android:background="@null"
                     app:hintAnimationEnabled="false"
                     app:hintEnabled="false"
+                    app:passwordToggleDrawable="@drawable/password_eye_icon"
                     app:passwordToggleEnabled="true">
 
                     <EditText
@@ -183,6 +183,6 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        app:layout_constraintGuide_begin="91dp" />
+        app:layout_constraintGuide_begin="59dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
