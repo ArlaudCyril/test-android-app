@@ -1,23 +1,16 @@
 package com.Lyber.ui.fragments
 
-import android.app.Dialog
-import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.view.View
-import android.view.Window
 import androidx.activity.addCallback
 import androidx.navigation.fragment.findNavController
 import com.Lyber.R
-import com.Lyber.databinding.CustomDialogLayoutBinding
 import com.Lyber.databinding.FragmentCreatePinBinding
-import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.utils.App
-import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.gone
-import com.Lyber.utils.CommonMethods.Companion.replace
 import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
@@ -43,28 +36,25 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
         viewModel.forLogin = requireArguments().getBoolean(Constants.FOR_LOGIN, false)
         binding.etCreatePin.addTextChangedListener(onTextChange)
         if (requireArguments().containsKey(Constants.IS_CHANGE_PIN)
-            && requireArguments().getBoolean(Constants.IS_CHANGE_PIN)
+                && requireArguments().getBoolean(Constants.IS_CHANGE_PIN)
         ) {
             binding.ivTopAction.visible()
             binding.llIndicators.gone()
-        }
-      else  if (arguments != null && requireArguments().containsKey(Constants.FOR_LOGIN) && !requireArguments().getBoolean(
-                Constants.FOR_LOGIN
-            )){
+        } else if (arguments != null && requireArguments().containsKey(Constants.FOR_LOGIN) && !requireArguments().getBoolean(
+                        Constants.FOR_LOGIN
+                )) {
             binding.llIndicators.visible()
             binding.ivTopClose.visible()
             binding.ivTopAction.gone()
             requireActivity().onBackPressedDispatcher.addCallback(this) {
-               stopRegistrationDialog()
+                stopRegistrationDialog()
             }
-        }
-        else {
+        } else {
             binding.llIndicators.visible()
         }
         binding.ivTopClose.setOnClickListener {
             stopRegistrationDialog()
         }
-
 
         binding.ivTopAction.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
@@ -104,8 +94,8 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
                     putBoolean(Constants.FOR_LOGIN, viewModel.forLogin)
                     if (requireArguments().containsKey(Constants.IS_CHANGE_PIN))
                         putBoolean(
-                            Constants.IS_CHANGE_PIN,
-                            requireArguments().getBoolean(Constants.IS_CHANGE_PIN)
+                                Constants.IS_CHANGE_PIN,
+                                requireArguments().getBoolean(Constants.IS_CHANGE_PIN)
                         )
                 }
                 Handler(Looper.getMainLooper()).postDelayed({

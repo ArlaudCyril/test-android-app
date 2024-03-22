@@ -168,7 +168,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             it.addTab(it.newTab().apply { text = "1D" })
             it.addTab(it.newTab().apply { text = "1W" })
             it.addTab(it.newTab().apply { text = "1M" })
-//            it.addTab(it.newTab().apply { text = "1Y" })
+            it.addTab(it.newTab().apply { text = "1Y" })
 
             it.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
