@@ -1,6 +1,7 @@
 package com.Lyber.ui.fragments
 
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
@@ -21,6 +22,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.transition.Fade
 import com.Lyber.R
 import com.Lyber.databinding.FragmentUnlockAppBinding
+import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
@@ -81,6 +83,7 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
         binding.tvZero.setOnClickListener(this)
 //        binding.tvBioMetric.setOnClickListener(this)
         binding.tvBackArrow.setOnClickListener(this)
+        binding.tvLogOut.setOnClickListener(this)
 //        val biometricManager = BiometricManager.from(requireContext())
 //        when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK or BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
 //            BiometricManager.BIOMETRIC_SUCCESS ->
@@ -181,6 +184,18 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
                         setBiometricPromptInfo("Authentications", "", "", false)
                     )
                 }
+                tvLogOut -> {
+                    App.prefsManager.logout()
+                    startActivity(
+                        Intent(
+                            requireActivity(),
+                            SplashActivity::class.java
+                        ).apply {
+                            putExtra("fromLogout", "fromLogout")
+                            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                        })
+                }
+
             }
         }
     }
