@@ -90,11 +90,12 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
     private var grayOverlay: View? = null
     private var firstPrice = 0.0
     private var selectedTab = "1h"
-    private var updateSocketValue = true
+    private var updateSocketValue = false
     override fun bind() = FragmentPortfolioDetailBinding.inflate(layoutInflater)
 
     override fun onDestroyView() {
         Log.d(TAG, "onDestroyView: ")
+        updateSocketValue=false
         com.Lyber.ui.activities.SplashActivity.activityCallbacks = null
         webSocket.close(1000, "Goodbye !")
         super.onDestroyView()
@@ -207,6 +208,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         CommonMethods.checkInternet(requireContext()) {
 
             if (arguments != null && requireArguments().containsKey(Constants.ORDER_ID)) {
+                updateSocketValue=false
                 showProgress(requireActivity())
             } else {
                 CommonMethods.showProgressDialog(requireActivity())
@@ -234,13 +236,14 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
     private fun addObservers() {
         viewModel.exchangeResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                Handler().postDelayed({
+                Handler(Looper.getMainLooper()).postDelayed({
                     viewModel.getBalance()
                 }, 4000)
             }
         }
         viewModel.balanceResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                arguments=null
                 val balanceDataDict = it.data
                 val balances = ArrayList<Balance>()
                 balanceDataDict.forEach {
@@ -251,7 +254,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 loadAnimation()
 //                showLottieProgressDialog(requireActivity(), Constants.LOADING_SUCCESS)
                 dismissProgress()
-                Handler().postDelayed({
+                Handler(Looper.getMainLooper()).postDelayed({
                     dismissProgressDialog()
                     if (isAdded) {
                         if (confetti != null) {
@@ -277,15 +280,14 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                     (binding.tabLayout.getTabAt(binding.tabLayout.selectedTabPosition)?.text
                         ?: "1h").toString().lowercase()
 
-                binding.lineChart.clearLineData()
+//                binding.lineChart.clearLineData()
                 binding.lineChart.timeSeries =
                     it.data.prices.toTimeSeries(it.data.lastUpdate, timeFrame)
                 Handler(Looper.getMainLooper()).postDelayed({
                     if (isAdded) {
                         updateSocketValue = true
                     }
-                }, 1000)
-//                binding.lineChart.postInvalidate()
+                }, 2000)
 //                Log.d("timeSeries", "${it.data.prices.toTimeSeries(it.data.lastUpdate, timeFrame)}")
                 binding.tvValuePortfolioAndAssetPrice.text =
                     "${it.data.prices.last().currencyFormatted}"
@@ -382,22 +384,6 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             "1m" -> 12 * 60 * 60 * 1000L
             else -> 7 * 24 * 60 * 60 * 1000L
         }
-//        if (tf == "1m") {
-//            val calendar = Calendar.getInstance()
-//            calendar.timeInMillis = last
-////            if (tf == "1m")
-////                calendar.add(Calendar.MONTH, -1)
-//            calendar.add(Calendar.MONTH, -1)
-//
-//            val startTime = calendar.timeInMillis
-//            // Iterate over prices and calculate dates based on the interval
-//            for (i in this.indices) {
-////                val date = startTime + (i * timeInterval1)
-//                val date = (last - (count() - i) * timeInterval).toDouble()
-//                timeSeries.add(listOf(date.toDouble(), this[i].toDouble()))
-//            }
-//            Log.d("time", "$timeSeries")
-//        } else
         for (i in 0 until count()) {
             val date = (last - (count() - i) * timeInterval).toDouble()
             timeSeries.add(listOf(date, this[i].toDouble()))
@@ -785,7 +771,6 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         }, date, (interval * 1000).toLong())
 
     }
-
     private fun getPriceChart(assetId: String, duration: Duration) {
         CommonMethods.checkInternet(requireContext()) {
             binding.lineChart.animation =
@@ -793,7 +778,6 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             viewModel.getPriceGraph(assetId, duration)
         }
     }
-
     private fun showLottieProgressDialog(context: Context, typeOfLoader: Int) {
 
         if (dialog == null) {
@@ -842,11 +826,9 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         }
 
     }
-
     private fun stopTimer() {
         timer.cancel()
     }
-
     fun investMoneyClicked(toStrategy: Boolean) {
         if (toStrategy) requireActivity().replaceFragment(
             R.id.flSplashActivity, PickYourStrategyFragment(), topBottom = true

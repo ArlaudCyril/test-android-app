@@ -5,7 +5,6 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Canvas
 import android.graphics.Color
-import android.graphics.DashPathEffect
 import android.graphics.Paint
 import android.graphics.Typeface
 import android.graphics.drawable.Drawable
@@ -23,12 +22,10 @@ import androidx.core.content.res.ResourcesCompat
 import com.Lyber.R
 import com.Lyber.databinding.ItemHighlighterGraphBinding
 import com.Lyber.databinding.YAxisTextBinding
-import com.Lyber.utils.CommonMethods.Companion.commaFormatted
 import com.Lyber.utils.CommonMethods.Companion.currencyFormatted
 import com.Lyber.utils.CommonMethods.Companion.lineData
 import com.Lyber.utils.CommonMethods.Companion.toGraphTime
 import com.bumptech.glide.Glide
-import com.github.mikephil.charting.data.LineData
 import font.FontSize
 import java.math.BigDecimal
 import java.util.Date
@@ -177,7 +174,6 @@ class NewCustomLineChart : RelativeLayout {
                     selectedPosition = position
                     selectedPoint = points[position]
                     selectedPoint?.let {
-                        Log.d("pointSelected", "$position")
                         pointSelected(it.x, it.y, position)
                     }
                 }
@@ -195,7 +191,6 @@ class NewCustomLineChart : RelativeLayout {
                         selectedPosition = position
                         selectedPoint = points[position]
                         selectedPoint?.let {
-                            Log.d("pointSelected", "$position")
                             pointSelected(it.x, it.y, position)
 
                         }
@@ -343,84 +338,91 @@ class NewCustomLineChart : RelativeLayout {
 
     @SuppressLint("SetTextI18n")
     private fun pointSelected(x: Float, y: Float, position: Int) {
+        try {
+            dottedLineView.visibility = View.GONE
 
-        dottedLineView.visibility = View.GONE
-
-        binding.tvPrice.text = "${lineData[position].toString().currencyFormatted}"
+            binding.tvPrice.text = "${lineData[position].toString().currencyFormatted}"
 //            commaFormat(lineData[position])
 //        binding.tvPrice.text =(lineData[position]).commaFormatted + "€"
 
-        binding.tvDate.text = System.currentTimeMillis().toGraphTime()
-        if (timeSeries.isNotEmpty())
-            binding.tvDate.text = timeSeries[position][0].toLong().toGraphTime()
+            binding.tvDate.text = System.currentTimeMillis().toGraphTime()
+            if (timeSeries.isNotEmpty())
+                binding.tvDate.text = timeSeries[position][0].toLong().toGraphTime()
 
-        binding.tvPrice.setTextColor(textColor)
-        binding.tvDate.setTextColor(textColor)
+            binding.tvPrice.setTextColor(textColor)
+            binding.tvDate.setTextColor(textColor)
 
-        drawableView.layoutParams = LayoutParams(selectorPointSize, selectorPointSize)
-        Glide.with(drawableView).load(selectorDrawable).into(drawableView)
+            drawableView.layoutParams = LayoutParams(selectorPointSize, selectorPointSize)
+            Glide.with(drawableView).load(selectorDrawable).into(drawableView)
 
-        animationDot.layoutParams = LayoutParams(selectorPointSize, selectorPointSize)
-        animationDot.background = getDrawable(context, R.drawable.point_drawable)
-
-
-        if (x < (binding.root.width / 2)) binding.root.x = 0F
-        else if (x > ((width - horizontalPadding) - (binding.root.width) / 2)) binding.root.x =
-            (width - binding.root.width).toFloat() - horizontalPadding - (binding.root.paddingStart / 2)
-        else binding.root.x = x - (binding.root.width / 2)
-
-        if (y - binding.root.height * 1.5F > 0F) binding.root.y = y - binding.root.height * 1.5F
-        else binding.root.y = y + binding.root.height * 0.5F
-
-        drawableView.translationZ = 2F
-        drawableView.x = x - (drawableView.width / 2)
-        drawableView.y = y - (drawableView.width / 2)
+            animationDot.layoutParams = LayoutParams(selectorPointSize, selectorPointSize)
+            animationDot.background = getDrawable(context, R.drawable.point_drawable)
 
 
-        if (animator == null)
-            animator =
-                ValueAnimator.ofInt(selectorPointSize, ((selectorPointSize * 2.5).toInt())).apply {
-                    interpolator = AccelerateInterpolator(3F)
-                    duration = 1000
-                    repeatCount = ValueAnimator.INFINITE
+            if (x < (binding.root.width / 2)) binding.root.x = 0F
+            else if (x > ((width - horizontalPadding) - (binding.root.width) / 2)) binding.root.x =
+                (width - binding.root.width).toFloat() - horizontalPadding - (binding.root.paddingStart / 2)
+            else binding.root.x = x - (binding.root.width / 2)
 
-                    val diff = (selectorPointSize * 2.5) - selectorPointSize
-                    addUpdateListener {
+            if (y - binding.root.height * 1.5F > 0F) binding.root.y = y - binding.root.height * 1.5F
+            else binding.root.y = y + binding.root.height * 0.5F
 
-                        val params = animationDot.layoutParams
-                        params.width = animatedValue as Int
-                        params.height = animatedValue as Int
-                        animationDot.layoutParams = params
+            drawableView.translationZ = 2F
+            drawableView.x = x - (drawableView.width / 2)
+            drawableView.y = y - (drawableView.width / 2)
 
-                        animationDot.x = x - params.width
-                        animationDot.y = x - params.height
 
-                        animationDot.alpha =
-                            (1 - ((((animatedValue as Int) - selectorPointSize) / diff)).toFloat())
-                    }
-                }
+            if (animator == null)
+                animator =
+                    ValueAnimator.ofInt(selectorPointSize, ((selectorPointSize * 2.5).toInt()))
+                        .apply {
+                            interpolator = AccelerateInterpolator(3F)
+                            duration = 1000
+                            repeatCount = ValueAnimator.INFINITE
+
+                            val diff = (selectorPointSize * 2.5) - selectorPointSize
+                            addUpdateListener {
+
+                                val params = animationDot.layoutParams
+                                params.width = animatedValue as Int
+                                params.height = animatedValue as Int
+                                animationDot.layoutParams = params
+
+                                animationDot.x = x - params.width
+                                animationDot.y = x - params.height
+
+                                animationDot.alpha =
+                                    (1 - ((((animatedValue as Int) - selectorPointSize) / diff)).toFloat())
+                            }
+                        }
 
 //        if (position == lineData.count() - 1) {
 //            animationDot.visible()
-        animationDot.x = x - (animationDot.width / 2)
-        animationDot.y = y - (animationDot.width / 2)
-        if (animator?.isRunning == false)
-            animator?.start()
+            animationDot.x = x - (animationDot.width / 2)
+            animationDot.y = y - (animationDot.width / 2)
+            if (animator?.isRunning == false)
+                animator?.start()
 
-
+        } catch (ex: Exception) {
+            Log.d("exc", "$ex")
+        }
     }
 
     fun updateValueLastPoint(value: Float) {
-        if (selectedPoint == points.last() && lineData[lineData.lastIndex] != value) {
-            binding.tvPrice.text = value.toString().currencyFormatted
-            binding.tvDate.text = System.currentTimeMillis().toGraphTime()
-        }
-        lineData[lineData.lastIndex] = value
-        timeSeries[timeSeries.lastIndex] =
-            listOf(Date().time.toDouble(), lineData.last().toDouble())
-        calculatePoints()
-        invalidate()
+        try {
 
+            lineData[lineData.lastIndex] = value
+            timeSeries[timeSeries.lastIndex] =
+                listOf(Date().time.toDouble(), lineData.last().toDouble())
+//            calculatePoints()
+            if (selectedPoint == points.last() && lineData[lineData.lastIndex] != value) {
+                binding.tvPrice.text = value.toString().currencyFormatted
+                binding.tvDate.text = System.currentTimeMillis().toGraphTime()
+            }
+//            invalidate()
+        } catch (ex: Exception) {
+
+        }
     }
 
     fun addPoint() {//add a new point
@@ -441,9 +443,5 @@ class NewCustomLineChart : RelativeLayout {
         var ts = (String.format(Locale.US, "%.3f", it))
         val number = BigDecimal(ts).stripTrailingZeros()
         return number.toString()
-    }
-    fun clearLineData() {
-        lineData.clear()
-        _lineData.clear()
     }
 }

@@ -47,14 +47,12 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
         ) {
             binding.ivTopAction.visible()
             binding.llIndicators.gone()
-            binding.tvTopAction.gone()
         }
       else  if (arguments != null && requireArguments().containsKey(Constants.FOR_LOGIN) && !requireArguments().getBoolean(
                 Constants.FOR_LOGIN
             )){
             binding.llIndicators.visible()
             binding.ivTopClose.visible()
-            binding.tvTopAction.gone()
             binding.ivTopAction.gone()
             requireActivity().onBackPressedDispatcher.addCallback(this) {
                stopRegistrationDialog()
@@ -62,87 +60,16 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
         }
         else {
             binding.llIndicators.visible()
-            binding.tvTopAction.gone()
         }
         binding.ivTopClose.setOnClickListener {
             stopRegistrationDialog()
         }
 
-        binding.tvTopAction.setOnClickListener {
-            showLogoutDialog()
-        }
+
         binding.ivTopAction.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
-    }
-
-//    private fun stopRegistrationDialog() {
-//        Dialog(requireActivity(), R.style.DialogTheme).apply {
-//
-//            CustomDialogLayoutBinding.inflate(layoutInflater).let {
-//
-//                requestWindowFeature(Window.FEATURE_NO_TITLE)
-//                setCancelable(false)
-//                setCanceledOnTouchOutside(false)
-//                setContentView(it.root)
-//
-//                it.tvTitle.text = getString(R.string.stop_reg)
-//                it.tvMessage.text = getString(R.string.reg_message)
-//                it.tvNegativeButton.text = getString(R.string.cancel)
-//                it.tvPositiveButton.text = getString(R.string.ok)
-//
-//                it.tvNegativeButton.setOnClickListener { dismiss() }
-//
-//                it.tvPositiveButton.setOnClickListener {
-//                    dismiss()
-//                    App.prefsManager.logout()
-//                    findNavController().popBackStack()
-//                    findNavController().navigate(R.id.discoveryFragment)
-//                    CommonMethods.checkInternet(requireContext()) {
-//                        dismiss()
-//                        CommonMethods.showProgressDialog(requireContext())
-//                        viewModel.logout(CommonMethods.getDeviceId(requireActivity().contentResolver))
-//                    }
-//                }
-//
-//                show()
-//            }
-//        }
-//    }
-    private fun showLogoutDialog() {
-
-        Dialog(requireActivity(), R.style.DialogTheme).apply {
-
-            CustomDialogLayoutBinding.inflate(layoutInflater).let {
-
-                requestWindowFeature(Window.FEATURE_NO_TITLE)
-                setCancelable(false)
-                setCanceledOnTouchOutside(false)
-                setContentView(it.root)
-
-                it.tvTitle.text = getString(R.string.log_out)
-                it.tvMessage.text = getString(R.string.logout_message)
-                it.tvNegativeButton.text = getString(R.string.no_t)
-                it.tvPositiveButton.text = getString(R.string.yes_t)
-
-                it.tvNegativeButton.setOnClickListener { dismiss() }
-
-                it.tvPositiveButton.setOnClickListener {
-                    dismiss()
-                    App.prefsManager.logout()
-                    requireActivity().finishAffinity()
-
-                    startActivity(
-                        Intent(requireActivity(), com.Lyber.ui.activities.SplashActivity::class.java)
-                            .putExtra(Constants.FOR_LOGOUT, Constants.FOR_LOGOUT)
-                    )
-                }
-
-                show()
-
-            }
-        }
     }
 
     /* On Text Change */
