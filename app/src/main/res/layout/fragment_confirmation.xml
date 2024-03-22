@@ -19,9 +19,8 @@
 
     <TextView
         style="@style/HeadingStyle"
+        android:layout_marginTop="8dp"
         android:layout_gravity="center"
-        android:layout_marginTop="32dp"
-        android:gravity="center"
         android:text="@string/confirmation"
         android:textColor="@color/purple_gray_00" />
 
@@ -29,36 +28,37 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="40dp"
+        android:layout_gravity="center"
+        android:gravity="center"
         android:orientation="vertical">
 
         <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_horizontal"
             android:src="@drawable/ic_green_large_tick" />
-
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:gravity="center"
+            android:orientation="vertical">
         <TextView
             android:id="@+id/tvInfoOne"
             style="@style/SubheadMabry"
-            android:layout_width="match_parent"
-            android:layout_gravity="center_horizontal"
-            android:layout_marginTop="16dp"
-            android:gravity="center"
+            android:layout_width="wrap_content"
             android:text="@string/your_deposit_has_been_taken_into_account"
             android:textColor="@color/purple_gray_00" />
 
         <TextView
             android:id="@+id/tvInfoTwo"
             style="@style/SubheadMabry"
-            android:layout_width="match_parent"
-            android:layout_gravity="center_horizontal"
+            android:layout_width="wrap_content"
             android:layout_marginTop="4dp"
             android:alpha="0.8"
-            android:gravity="center"
             android:text="@string/you_can_now_see_its_effect_on_your_portfolio"
             android:textColor="@color/purple_gray_00" />
-
+        </LinearLayout>
     </LinearLayout>
 
 
