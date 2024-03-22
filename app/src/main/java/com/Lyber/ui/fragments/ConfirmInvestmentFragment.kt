@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.core.view.marginTop
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.Lyber.R
@@ -137,6 +138,7 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                 Constants.USING_STRATEGY -> {
 
                     listOf(
+                        zzInfor,
                         tvFrequency,
                         tvValueFrequency,
                         tvAllocation,
@@ -150,6 +152,9 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                     }
 
                     listOf(
+                        ivSingleAsset,
+                        tvTotalAmount,
+                        tvMoreDetails,
                         tvAssetPrice,
                         tvValueAssetPrice,
                         tvDeposit,
@@ -158,7 +163,10 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                         tvValueDepositFee
                     ).gone()
                     //changed fee to 1 percent of the amount
-                    val fee = (viewModel.amount.toFloat() / (100.0))
+                    var fee = ((viewModel.amount.toFloat() * 0.5) / 100.0)
+                    fee = String.format("%.2f", fee).toFloat().toDouble()
+
+                    tvNestedAmount.text = getString(R.string.invest)
 
                     if(viewModel.selectedFrequency=="none")
                     tvValueFrequency.text = getString(R.string.immediate)
@@ -171,8 +179,9 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                     tvValueTotal.text =
                         (viewModel.amount.toFloat()).toString()
                             .decimalPoint().commaFormatted + " USDT"
+                    tvLyberFee.text = getString(R.string.fee)
                     tvValueLyberFee.text =
-                        fee.toString().decimalPoint() + " USDT"
+                        "~" + fee.toString().decimalPoint() + " USDT"
 
 
                     tvAmount.text =
