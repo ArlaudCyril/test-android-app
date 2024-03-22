@@ -130,6 +130,7 @@
     <string name="total_earnings">Total earnings</string>
     <string name="about_value">Bitcoin is a decentralized digital currency, without a central bank or gove… <b><u>View more</u></b></string>
     <string name="log_out"><u>Log out</u></string>
+    <string name="log_out_normal">Log out</string>
     <string name="stop_reg"><u>Stop Registration</u></string>
     <string name="view_all_underline"><u>View all</u></string>
     <string name="add_payment_method"><u>Add payment method</u></string>
