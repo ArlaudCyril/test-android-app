@@ -146,7 +146,7 @@
     <string name="no_t">Non</string>
     <string name="yes_t">Oui</string>
     <string name="logout"><u>Déconnexion</u></string>
-    <string name="log_out_normal"><u>Déconnexion</u></string>
+    <string name="log_out_normal">Déconnexion</string>
     <string name="note_add_bitcoin_address"><b>Note importante:</b> Votre note va ici et va sur une grande quantité de ligne</string>
     <string name="subtitle_crypto_book">Le carnet d’adresse permet aux retraits de crypto-monnaies de n\'être effectués qu\'à des adresses déjà désignées dans votre carnet d\'adresses. Vous pouvez également activer votre carnet pour ces adresses.</string>
     <string name="login_by_email"><u>Connection par email</u></string>
