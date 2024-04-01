@@ -108,7 +108,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
 
         /*  changing ui according to view cases */
 
-        binding.tvTitle.text = getString(R.string.add_a_crypto_address)
+        binding.tvTitle.text = getString(R.string.add_address)
         binding.ivNetwork.gone()
         binding.etNetwork.hint = getString(R.string.choose_network)
 

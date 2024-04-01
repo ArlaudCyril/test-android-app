@@ -46,7 +46,7 @@ class WithdrawalAddressBottomSheet (private val addresses: MutableList<WithdrawA
         binding.includeAddCryptoAddress.let {
             it.ivEndIcon.setImageResource(R.drawable.ic_right_arrow_grey)
             it.ivItem.setImageResource(R.drawable.addaddressicon)
-            it.tvStartTitle.text = getString(R.string.add_an_address)
+            it.tvStartTitle.text = getString(R.string.add_address)
             it.tvStartSubTitle.text = getString(R.string.unlimited_withdrawl)
         }
         binding.includeAddCryptoAddress.root.setOnClickListener {

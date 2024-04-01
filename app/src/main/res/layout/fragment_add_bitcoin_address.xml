@@ -38,7 +38,7 @@
                 android:layout_width="0dp"
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="20dp"
-                android:text="@string/add_a_crypto_address"
+                android:text="@string/add_address"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />

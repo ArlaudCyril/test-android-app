@@ -219,7 +219,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
             ).visible()
             binding.etAmount.text = "0€"
             includedAsset.ivAssetIcon.setImageResource(R.drawable.addaddressicon)
-            includedAsset.tvAssetName.text = getString(R.string.add_an_address)
+            includedAsset.tvAssetName.text = getString(R.string.add_address)
             includedAsset.tvAssetAddress.text = getString(R.string.unlimited_withdrawl)
             includedAsset.tvAssetAddress.visible()
             viewModel.selectedAssetDetail.let {
