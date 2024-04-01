@@ -197,10 +197,10 @@
     <string name="please_provide_cards_expiry_date">Veuillez indiquer la date d\'expiration des cartes</string>
     <string name="credit_card_added">Carte de crédit ajoutée</string>
     <string name="add_and_use_this_address">Ajouter et utiliser cette adresse</string>
-    <string name="add_a_crypto_address">Ajouter une adresse</string>
+<!--    <string name="add_a_crypto_address">Ajouter une adresse</string>-->
     <string name="choose_network">Choisissez le réseau</string>
     <string name="add_a_address">Ajouter une adresse %1$s</string>
-    <string name="add_an_address">Ajouter une adresse</string>
+<!--    <string name="add_an_address">Ajouter une adresse</string>-->
     <string name="wallet">Portefeuille</string>
     <string name="please_enter_address_name">Veuillez saisir votre nom d\'adresse</string>
     <string name="please_select_a_network">Veuillez sélectionner votre réseau</string>
