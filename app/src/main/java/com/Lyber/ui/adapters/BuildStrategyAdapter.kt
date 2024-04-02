@@ -14,32 +14,32 @@ import com.Lyber.utils.CommonMethods.Companion.roundFloat
 import kotlin.math.roundToInt
 
 class BuildStrategyAdapter(
-    val rv: RecyclerView,
-    val callback: (position: Int, String) -> Unit) :
-    BaseAdapter<AddedAsset>() {
+        val rv: RecyclerView,
+        val callback: (position: Int, String) -> Unit) :
+        BaseAdapter<AddedAsset>() {
 
     inner class ViewHolder(val bind: ItemAddedAssetBinding) : RecyclerView.ViewHolder(bind.root) {
         init {
             bind.root.setOnClickListener {
-                if(BuildStrategyFragment.isAnyItemSwiped(rv))
-                    callback.invoke(adapterPosition,"setView")
+                if (BuildStrategyFragment.isAnyItemSwiped(rv))
+                    callback.invoke(adapterPosition, "setView")
             }
             bind.rlDelete.setOnClickListener {
                 callback.invoke(adapterPosition, "delete")
             }
             bind.llAllocation.setOnClickListener {
-                callback(adapterPosition,"allocation")
+                callback(adapterPosition, "allocation")
             }
         }
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         return ViewHolder(
-            ItemAddedAssetBinding.inflate(
-                LayoutInflater.from(parent.context),
-                parent,
-                false
-            )
+                ItemAddedAssetBinding.inflate(
+                        LayoutInflater.from(parent.context),
+                        parent,
+                        false
+                )
         )
     }
 
@@ -57,23 +57,23 @@ class BuildStrategyAdapter(
                 val urlLineChart = it.addAsset.priceServiceResumeData.squiggleURL
                 lineChart.loadImage(urlLineChart)
                 val asset =
-                    com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == itemList[position]!!.addAsset.id } }
-
-                ivAsset.loadCircleCrop(asset!!.imageUrl)
+                        com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == itemList[position]!!.addAsset.id } }
+                if (asset != null)
+                    ivAsset.loadCircleCrop(asset!!.imageUrl)
 
 
                 if (it.isChangedManually) {
                     tvAuto.text = ""
                     tvAllocationValue.text = "${it.allocation.roundToInt().commaFormatted}%"
-                }else{
+                } else {
                     tvAllocationValue.text = "(${it.allocation.roundToInt().commaFormatted}%)"
-                    tvAuto.text = tvAuto.context.getString(R.string.auto )
+                    tvAuto.text = tvAuto.context.getString(R.string.auto)
                 }
                 tvAssetValue.text = "${
                     it.addAsset.priceServiceResumeData.lastPrice.toString()
-                        .roundFloat().commaFormatted
+                            .roundFloat().commaFormatted
                 } €"
-                tvAssetName.text = asset.fullName
+                tvAssetName.text = asset!!.fullName
 
             }
         }

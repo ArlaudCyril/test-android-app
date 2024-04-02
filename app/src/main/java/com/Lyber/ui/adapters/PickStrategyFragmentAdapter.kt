@@ -13,11 +13,11 @@ import com.Lyber.utils.CommonMethods.Companion.visible
 
 
 class PickStrategyFragmentAdapter(val itemClicked: (position: Int, view: StrategyView) -> Unit) :
-    BaseAdapter<Strategy>() {
+        BaseAdapter<Strategy>() {
 
 
     inner class ViewHolder(val strategyView: StrategyView) :
-        RecyclerView.ViewHolder(strategyView) {
+            RecyclerView.ViewHolder(strategyView) {
         init {
 
             strategyView.setOnRadioButtonClickListener {
@@ -25,18 +25,13 @@ class PickStrategyFragmentAdapter(val itemClicked: (position: Int, view: Strateg
             }
 
             strategyView.rootView.setOnClickListener {
-//                Log.d("dataaa", "${itemList[absoluteAdapterPosition]!!.isSelected}")
-//                Log.d("dataaa", "${!itemList[absoluteAdapterPosition]!!.isSelected}")
-//                itemList[absoluteAdapterPosition]!!.isSelected =
-//                    !itemList[absoluteAdapterPosition]!!.isSelected
-//                Log.d("dataaa", "${itemList[absoluteAdapterPosition]!!.isSelected}")
-                for (i in 0..itemList.size-1) {
+                for (i in 0..itemList.size - 1) {
                     if (itemList[absoluteAdapterPosition]!!.name.equals(itemList[i]!!.name))
                         itemList[i]!!.isSelected = !itemList[i]!!.isSelected
                     else
                         itemList[i]!!.isSelected = false
                 }
-                itemClicked(absoluteAdapterPosition,strategyView)
+                itemClicked(absoluteAdapterPosition, strategyView)
                 notifyDataSetChanged()
             }
 
@@ -52,11 +47,11 @@ class PickStrategyFragmentAdapter(val itemClicked: (position: Int, view: Strateg
             ORDINARY_VIEW -> ViewHolder(StrategyView(parent.context))
             else -> {
                 LoaderViewHolder(
-                    LoaderViewBinding.inflate(
-                        LayoutInflater.from(parent.context),
-                        parent,
-                        false
-                    )
+                        LoaderViewBinding.inflate(
+                                LayoutInflater.from(parent.context),
+                                parent,
+                                false
+                        )
                 )
             }
         }
@@ -87,7 +82,7 @@ class PickStrategyFragmentAdapter(val itemClicked: (position: Int, view: Strateg
                             binding.tvRisk.visible()
                             binding.tvValueRisk.visible()
                             risk = it.expectedYield.substring(0, 1)
-                                .uppercase() + it.expectedYield.substring(1).lowercase()
+                                    .uppercase() + it.expectedYield.substring(1).lowercase()
                         } else {
                             binding.ivRisk.gone()
                             binding.tvRisk.gone()
@@ -99,7 +94,7 @@ class PickStrategyFragmentAdapter(val itemClicked: (position: Int, view: Strateg
                             binding.tvYield.visible()
                             binding.tvValueYield.visible()
                             yeild = it.risk.substring(0, 1).uppercase() + it.risk.substring(1)
-                                .lowercase()
+                                    .lowercase()
                         } else {
                             binding.ivYield.gone()
                             binding.tvYield.gone()
@@ -109,7 +104,7 @@ class PickStrategyFragmentAdapter(val itemClicked: (position: Int, view: Strateg
                         binding.ivMinInvest.visible()
                         binding.tvMinInvest.visible()
                         binding.tvMinInvestValue.visible()
-                        binding.tvMinInvestValue.text="${it.minAmount} USDT"
+                        binding.tvMinInvestValue.text = "${it.minAmount} USDT"
 
                         allocationView.setAssetsList(it.bundle)
                         if (it.activeStrategy != null) {

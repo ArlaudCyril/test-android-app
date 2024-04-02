@@ -1,6 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="API_KEY_PROD">AIzaSyB9nBqhoH9KPAKVnvMU03V9y3U14qC8Ufc</string>
-    <string name="API_KEY_STAGING">AIzaSyDILfqSYsVaOhqF8cSugU7ekCt8V4GSYyo</string>
+<!--    production-->
+    <string name="API_KEY">AIzaSyB9nBqhoH9KPAKVnvMU03V9y3U14qC8Ufc</string>
+<!--    staging-->
+<!--    <string name="API_KEY">AIzaSyDILfqSYsVaOhqF8cSugU7ekCt8V4GSYyo</string>-->
     <string name="app_name">Lyber</string>
     <string name="lyber_investments_reinvented">Lyber, la crypto à portée de main.</string>
     <string name="diversified_regular_simple">L’investissement simple, sécurisé et diversifié.</string>
@@ -92,8 +94,7 @@
     <string name="setting">Paramètres</string>
     <string name="cancel">Annuler</string>
     <string name="investment_strategies">Stratégies d\'investissement</string>
-    <string name="subtitle_investment_strategies">Les stratégies sont là pour vous aider à diversifier vos investissements sur plusieurs actifs.\n
-    Les stratégies proposées par Lyber ne constituent pas un conseil en investissement. Les utilisateurs sont seuls responsables de leur choix de stratégie.</string>
+    <string name="subtitle_investment_strategies">Les stratégies sont là pour vous aider à diversifier vos investissements sur plusieurs actifs.\nLes stratégies proposées par Lyber ne constituent pas un conseil en investissement. Les utilisateurs sont seuls responsables de leur choix de stratégie.</string>
     <string name="build_my_own_strategy">Construire ma propre stratégie</string>
     <string name="choose_this_strategy">Choisir une stratégie</string>
     <string name="a_new_code_will_be_sent_in">Un nouveau code sera envoyé</string>
@@ -146,6 +147,7 @@
     <string name="no_t">Non</string>
     <string name="yes_t">Oui</string>
     <string name="logout"><u>Déconnexion</u></string>
+    <string name="log_out_normal">Déconnexion</string>
     <string name="note_add_bitcoin_address"><b>Note importante:</b> Votre note va ici et va sur une grande quantité de ligne</string>
     <string name="subtitle_crypto_book">Le carnet d’adresse permet aux retraits de crypto-monnaies de n\'être effectués qu\'à des adresses déjà désignées dans votre carnet d\'adresses. Vous pouvez également activer votre carnet pour ces adresses.</string>
     <string name="login_by_email"><u>Connection par email</u></string>
