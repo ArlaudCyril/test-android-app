@@ -1,6 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-    <string name="API_KEY_PROD">AIzaSyB9nBqhoH9KPAKVnvMU03V9y3U14qC8Ufc</string>
-    <string name="API_KEY_STAGING">AIzaSyDILfqSYsVaOhqF8cSugU7ekCt8V4GSYyo</string>
+<!--    prod-->
+    <string name="API_KEY">AIzaSyB9nBqhoH9KPAKVnvMU03V9y3U14qC8Ufc</string>
+<!--    staging-->
+<!--    <string name="API_KEY">AIzaSyDILfqSYsVaOhqF8cSugU7ekCt8V4GSYyo</string>-->
     <string name="app_name">Lyber</string>
     <string name="lyber_investments_reinvented">Lyber, crypto at your fingertips.</string>
     <string name="diversified_regular_simple">Simple, secure and diversified investment.</string>
@@ -92,8 +94,7 @@
     <string name="setting">Settings</string>
     <string name="cancel">Cancel</string>
     <string name="investment_strategies">Investment strategies</string>
-    <string name="subtitle_investment_strategies">The strategies are there to help you dilute your investments over several assets.\n
-    The strategies proposed by Lyber do not represent investment advice. Users are solely responsible for their choice of strategy.</string>
+    <string name="subtitle_investment_strategies">The strategies are there to help you dilute your investments over several assets.\nThe strategies proposed by Lyber do not represent investment advice. Users are solely responsible for their choice of strategy.</string>
     <string name="build_my_own_strategy">Build my own strategy</string>
     <string name="choose_this_strategy">Choose this strategy</string>
     <string name="a_new_code_will_be_sent_in">A new code will be sent in</string>
@@ -130,6 +131,7 @@
     <string name="total_earnings">Total earnings</string>
     <string name="about_value">Bitcoin is a decentralized digital currency, without a central bank or gove… <b><u>View more</u></b></string>
     <string name="log_out"><u>Log out</u></string>
+    <string name="log_out_normal">Log out</string>
     <string name="stop_reg"><u>Stop Registration</u></string>
     <string name="view_all_underline"><u>View all</u></string>
     <string name="add_payment_method"><u>Add payment method</u></string>

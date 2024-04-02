@@ -64,10 +64,7 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>() {
 
 
         }
-        var delayMilli = 1500
-        if (arguments != null)
-            delayMilli = 2000
-        view.post {
+   view.post {
             handler.postDelayed(runnable, 1500)
         }
 
