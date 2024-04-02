@@ -69,13 +69,70 @@
         android:visibility="gone"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         tools:text="~10% APY" />
-
+    <ImageView
+        android:id="@+id/ivFrequency"
+        android:layout_width="24dp"
+        android:layout_height="24dp"
+        android:layout_below="@id/ivMinInvest"
+        android:layout_marginTop="12dp"
+        android:src="@drawable/ic_calendar" />
+    <TextView
+        android:id="@+id/tvFrequency"
+        style="@style/SubTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/ivFrequency"
+        android:layout_alignBottom="@id/ivFrequency"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@id/ivFrequency"
+        android:text="@string/frequency"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+    <TextView
+        android:id="@+id/tvFrequencyValue"
+        style="@style/DialogTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/ivFrequency"
+        android:layout_alignBottom="@id/ivFrequency"
+        android:layout_marginStart="4dp"
+        android:layout_toEndOf="@id/tvFrequency"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+         />
+    <ImageView
+        android:id="@+id/ivAmount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ivFrequency"
+        android:layout_marginTop="12dp"
+        android:src="@drawable/euro_circle" />
+    <TextView
+        android:id="@+id/tvAmount"
+        style="@style/SubTitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/ivAmount"
+        android:layout_alignBottom="@id/ivAmount"
+        android:layout_marginStart="8dp"
+        android:layout_toEndOf="@id/ivAmount"
+        android:text="@string/amount"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+    <TextView
+        android:id="@+id/tvAmountValue"
+        style="@style/DialogTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@id/ivAmount"
+        android:layout_alignBottom="@id/ivAmount"
+        android:layout_marginStart="4dp"
+        android:layout_toEndOf="@id/tvAmount"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+         />
 
     <ImageView
         android:id="@+id/ivYield"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ivMinInvest"
+        android:layout_below="@id/ivAmount"
         android:layout_marginTop="12dp"
         android:src="@drawable/ic_risk" />
 
@@ -84,7 +141,7 @@
         style="@style/SubTitleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ivMinInvest"
+        android:layout_below="@id/ivAmount"
         android:layout_marginStart="8dp"
         android:layout_marginTop="10dp"
         android:layout_toEndOf="@id/ivYield"
@@ -96,7 +153,7 @@
         style="@style/DialogTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ivMinInvest"
+        android:layout_below="@id/ivAmount"
         android:layout_marginStart="4dp"
         android:layout_marginTop="10dp"
         android:layout_toEndOf="@id/tvYield"

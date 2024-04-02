@@ -32,6 +32,7 @@ import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.utils.ItemOffsetDecoration
+import com.google.gson.GsonBuilder
 import java.lang.Math.abs
 
 
@@ -126,74 +127,7 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
 
     private fun itemClicked(position: Int, currentView: StrategyView) {
 
-//        when (previousPosition) {
-//            -1 -> { // no one is selected yet
-//                currentView.isStrategySelected = true
-//                currentView.background = getDrawable(
-//                    requireContext(),
-//                    R.drawable.round_stroke_purple_500
-//                )
-//                previousPosition = position
-//                viewModel.strategyPositionSelected.postValue(previousPosition)
-//            }
-//
-//            position -> { // previous
-//                if (currentView.isStrategySelected) { // unselected the item
-//                    currentView.isStrategySelected = false
-//                    currentView.background = getDrawable(
-//                        requireContext(),
-//                        R.drawable.round_stroke_gray_100
-//                    )
-//                    currentView.radioButton.setImageResource(R.drawable.radio_unselect)
-//                    previousPosition = -1
-//                    viewModel.strategyPositionSelected.postValue(previousPosition)
-//                } else { // select the item
-//                    currentView.isStrategySelected = true
-//                    currentView.background = getDrawable(
-//                        requireContext(),
-//                        R.drawable.round_stroke_purple_500
-//                    )
-//                    previousPosition = position
-//                    viewModel.strategyPositionSelected.postValue(previousPosition)
-//                }
-//            }
-//
-//            else -> {
-//                try {
-//                    val previousView = (layoutManager.getChildAt(previousPosition) as StrategyView)
-//                    if (previousView != null) {
-//                        previousView.isStrategySelected = false
-//                        currentView.isStrategySelected = true
-//                        currentView.background = getDrawable(
-//                            requireContext(),
-//                            R.drawable.round_stroke_purple_500
-//                        )
-//
-//                        previousView.background = getDrawable(
-//                            requireContext(),
-//                            R.drawable.round_stroke_gray_100
-//                        )
-//                        previousView.radioButton.setImageResource(R.drawable.radio_unselect)
-//
-//                    }
-//                } catch (e: Exception) {
-//                    e.printStackTrace()
-//                }
-//                previousPosition = position
-//                viewModel.strategyPositionSelected.postValue(previousPosition)
-//            }
-//        }
         viewModel.selectedStrategy = adapter.getItem(position)
-//        layoutManager.scrollToPositionWithOffset(position, 0)
-
-//        val smoothScroller: LinearSmoothScroller = object : LinearSmoothScroller(context) {
-//            override fun getVerticalSnapPreference(): Int {
-//                return SNAP_TO_START // or SNAP_TO_END or SNAP_TO_ANY
-//            }
-//        }
-//        smoothScroller.targetPosition = position
-//        layoutManager.startSmoothScroll(smoothScroller)
-
         val slowScroller = SlowLinearSmoothScroller(requireContext())
         slowScroller.targetPosition = position
         layoutManager.startSmoothScroll(slowScroller)
@@ -203,10 +137,6 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
 
         if (currentView.topText.equals("Advanced"))
             binding.viewGap.visible()
-//            Handler(Looper.getMainLooper()).postDelayed({
-//                binding.viewGap.visible()
-//            }, 50)
-
 
         val transparentView = View(context)
         transparentView.setBackgroundColor(
@@ -275,6 +205,16 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
                 bundle.putBoolean(Constants.ONE_TIME, true)
                 findNavController().navigate(R.id.investAddMoneyFragment, bundle)
             }
+
+            5 -> {
+                val bundle = Bundle()
+                bundle.putBoolean(Constants.EDIT_ACTIVE_STRATEGY, true)
+                val gson = GsonBuilder().create()
+                var data = ""
+                data = gson.toJson(viewModel.selectedStrategy)
+                bundle.putString("data", data)
+                findNavController().navigate(R.id.investAddMoneyFragment, bundle)
+            }
         }
     }
 
@@ -301,7 +241,7 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
 
     class SlowLinearSmoothScroller(context: Context) : LinearSmoothScroller(context) {
 
-//        companion object {
+        //        companion object {
 //            private const val MILLISECONDS_PER_INCH = 1000f // Adjust as needed
 //        }
 //        private  val MILLISECONDS_PER_INCH = 50f // Adjust as needed
@@ -312,7 +252,8 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
 //            return MILLISECONDS_PER_INCH / displayMetrics.densityDpi
 //        }
         companion object {
-            private const val SCROLL_DURATION = 300 // Adjust as needed (make it smaller for faster scrolling)
+            private const val SCROLL_DURATION =
+                300 // Adjust as needed (make it smaller for faster scrolling)
         }
 
         override fun calculateTimeForScrolling(dx: Int): Int {

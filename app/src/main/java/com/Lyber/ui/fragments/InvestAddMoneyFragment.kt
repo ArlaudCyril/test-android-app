@@ -7,12 +7,16 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.FragmentInvestAddMoneyBinding
+import com.Lyber.models.Strategy
+import com.Lyber.models.TransactionData
 import com.Lyber.ui.fragments.bottomsheetfragments.FrequencyModel
 import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.setBackgroundTint
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.Constants
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
 
 class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), View.OnClickListener {
     private var selectedFrequency: String = ""
@@ -20,14 +24,23 @@ class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), Vi
     private var minInvestPerAsset = 10f
     private var requiredAmount = 0f
     private lateinit var viewModel: PortfolioViewModel
+    private var editEnabledStrategy = false
     private val amount get() = binding.etAmount.text.trim().toString()
     override fun bind() = FragmentInvestAddMoneyBinding.inflate(layoutInflater)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = CommonMethods.getViewModel(requireActivity())
         if (arguments != null) {
-            binding.btnAddFrequency.visibility = View.GONE
-            selectedFrequency = "none"
+            if (requireArguments().containsKey(Constants.EDIT_ACTIVE_STRATEGY) && requireArguments().getBoolean(
+                    Constants.EDIT_ACTIVE_STRATEGY
+                )
+            ) {
+                editEnabledStrategy = true
+            } else {
+                editEnabledStrategy = false
+                binding.btnAddFrequency.visibility = View.GONE
+                selectedFrequency = "none"
+            }
         }
         prepareView()
         binding.tvBackArrow.setOnClickListener(this)
@@ -59,6 +72,40 @@ class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), Vi
             }
         }
         binding.etAmount.text = "0$mCurrency"
+        if (editEnabledStrategy) {
+            var data = Gson().fromJson<Strategy>(
+                requireArguments().getString("data"),
+                object :
+                    TypeToken<Strategy>() {}.type
+            )
+            val frequency = when (data.activeStrategy!!.frequency) {
+                "1d" -> getString(R.string.daily)
+                "1w" -> getString(R.string.weekly)
+                else -> getString(R.string.monthly)
+            }
+            binding.apply {
+                etAmount.text = "${data.activeStrategy!!.amount}$mCurrency"
+
+                btnAddFrequency.background =
+                    ContextCompat.getDrawable(requireContext(), R.drawable.curved_button)
+                btnAddFrequency.setBackgroundTint(R.color.purple_gray_50)
+
+                tvAddFrequency.setCompoundDrawablesWithIntrinsicBounds(
+                    R.drawable.ic_calendar_black, 0, R.drawable.ic_drop_down, 0
+                )
+                tvAddFrequency.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(), R.color.purple_gray_800
+                    )
+                )
+                if (frequency == "none")
+                    tvAddFrequency.text = getString(R.string.once)
+                else
+                    tvAddFrequency.text = frequency
+            }
+            selectedFrequency = frequency
+            activateButton(true)
+        }
     }
 
     override fun onClick(v: View?) {
@@ -113,6 +160,7 @@ class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), Vi
             val bundle = Bundle()
             bundle.putString(Constants.AMOUNT, finalAmount)
             bundle.putString(Constants.FREQUENCY, selectedFrequency)
+               bundle.putBoolean(Constants.EDIT_ACTIVE_STRATEGY,editEnabledStrategy)
             viewModel.selectedOption = Constants.USING_STRATEGY
             findNavController().navigate(R.id.confirmInvestmentFragment, bundle)
         }
