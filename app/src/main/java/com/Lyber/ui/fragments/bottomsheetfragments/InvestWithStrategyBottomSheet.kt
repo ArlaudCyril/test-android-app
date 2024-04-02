@@ -41,6 +41,10 @@ class InvestWithStrategyBottomSheet (val clickListener: (Int) -> Unit) :
         binding.tvOneTime.setOnClickListener(this)
         binding.tvSubTitleOneTime.setOnClickListener(this)
         binding.ivOneTime.setOnClickListener(this)
+        //
+        binding.ivAdjustNew.setOnClickListener(this)
+        binding.tvTitleAdjustNew.setOnClickListener(this)
+        binding.tvSubTitleAdjustNew.setOnClickListener(this)
         binding.ivRightArrowInvestInStrategy.setOnClickListener(this)
         if (viewModel.selectedStrategy!!.activeStrategy!=null){
             binding.apply {
@@ -112,6 +116,10 @@ class InvestWithStrategyBottomSheet (val clickListener: (Int) -> Unit) :
                 }
                 tvSubTitleOneTime, tvOneTime, ivOneTime -> {
                    clickVal=4
+                    dismiss()
+                }
+                tvTitleAdjustNew, tvSubTitleAdjustNew, ivAdjustNew -> {
+                   clickVal=5
                     dismiss()
                 }
             }

@@ -34,7 +34,7 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = getViewModel(requireActivity())
-        viewModel.listener=this
+        viewModel.listener = this
         binding.ivTopAction.setOnClickListener(this)
         binding.btnConfirmInvestment.setOnClickListener(this)
         binding.allocationView.rvAllocation.isNestedScrollingEnabled = false
@@ -54,10 +54,10 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         viewModel.oneTimeStrategyDataResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
-               Log.d("dataa","${it.data.id}")
+                Log.d("dataa", "${it.data.id}")
                 val bundle = Bundle()
                 bundle.putString("executionId", it.data.id)
-                findNavController().navigate(R.id.orderStrategyExecutionFragment,bundle)
+                findNavController().navigate(R.id.orderStrategyExecutionFragment, bundle)
             }
         }
     }
@@ -75,11 +75,11 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                             viewModel.selectedStrategy?.let {
                                 checkInternet(requireContext()) {
                                     /*frequency = "now" || "1d" || "1w" || "1m"*/
-                                    val freq = when(viewModel.selectedFrequency){
-                                        "Once"-> null     //"now"
-                                        "Daily"-> "1d"
-                                        "Weekly"-> "1w"
-                                        "none"-> "none"
+                                    val freq = when (viewModel.selectedFrequency) {
+                                        "Once" -> null     //"now"
+                                        "Daily" -> "1d"
+                                        "Weekly" -> "1w"
+                                        "none" -> "none"
                                         else -> "1m"
                                     }
                                     showProgressDialog(requireContext())
@@ -91,23 +91,37 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
 
 
 //                                    showProgressDialog(requireContext())
-                                    if(freq=="none"){
-                                         viewModel.oneTimeOrderStrategy(
-                                            viewModel.selectedStrategy!!.name, viewModel.amount.toFloat().toDouble(),it.ownerUuid,)
+                                    if (freq == "none") {
+                                        viewModel.oneTimeOrderStrategy(
+                                            viewModel.selectedStrategy!!.name,
+                                            viewModel.amount.toFloat().toDouble(),
+                                            it.ownerUuid,
+                                        )
                                     } else {
                                         showProgressDialog(requireContext())
-
-
-                                        viewModel.investStrategy(
-                                            it.ownerUuid,
-                                            freq,
-                                            viewModel.amount.toFloat().toInt(),
-                                            viewModel.selectedStrategy!!.name
+                                        if (arguments != null && requireArguments().getBoolean(
+                                                Constants.EDIT_ACTIVE_STRATEGY
+                                            )
                                         )
+                                            viewModel.editEnabledStrategy(
+                                                it.ownerUuid,
+                                                freq,
+                                                viewModel.amount.toFloat().toInt(),
+                                                viewModel.selectedStrategy!!.name
+                                            )
+                                        else
+
+                                            viewModel.investStrategy(
+                                                it.ownerUuid,
+                                                freq,
+                                                viewModel.amount.toFloat().toInt(),
+                                                viewModel.selectedStrategy!!.name
+                                            )
                                     }
                                 }
                             }
                         }
+
                         else -> {
                             requireActivity().clearBackStack()
                             requireActivity().addFragment(
@@ -168,14 +182,14 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
 
                     tvNestedAmount.text = getString(R.string.invest)
 
-                    if(viewModel.selectedFrequency=="none")
-                    tvValueFrequency.text = getString(R.string.immediate)
+                    if (viewModel.selectedFrequency == "none")
+                        tvValueFrequency.text = getString(R.string.immediate)
                     else
-                    tvValueFrequency.text = viewModel.selectedFrequency
+                        tvValueFrequency.text = viewModel.selectedFrequency
 
-                    tvNestedAmountValue.text =(viewModel.amount.toFloat() - fee).toString()
+                    tvNestedAmountValue.text = (viewModel.amount.toFloat() - fee).toString()
                         .decimalPoint().commaFormatted + " USDT"
-                        viewModel.amount.decimalPoint().commaFormatted + " USDT"
+                    viewModel.amount.decimalPoint().commaFormatted + " USDT"
                     tvValueTotal.text =
                         (viewModel.amount.toFloat()).toString()
                             .decimalPoint().commaFormatted + " USDT"
@@ -185,7 +199,7 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
 
 
                     tvAmount.text =
-                        (viewModel.amount.toFloat()).toString()+" USDT"
+                        (viewModel.amount.toFloat()).toString() + " USDT"
 
                 }
 

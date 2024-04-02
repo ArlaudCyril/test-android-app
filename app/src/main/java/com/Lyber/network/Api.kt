@@ -441,4 +441,7 @@ interface Api {
     @GET("price-service/resume")
     suspend fun getPriceResumeId(@Query("id") id: String): Response<PriceResumeByIdResponse>
 
+    @PATCH("strategy-service/active-strategy")
+    suspend fun editEnabledStrategy(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
+
 }
