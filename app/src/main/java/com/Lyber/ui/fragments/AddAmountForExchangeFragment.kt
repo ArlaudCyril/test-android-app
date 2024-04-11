@@ -14,6 +14,7 @@ import com.Lyber.R
 import com.Lyber.databinding.FragmentAddAmountBinding
 import com.Lyber.network.RestClient
 import com.Lyber.ui.fragments.bottomsheetfragments.FrequencyModel
+import com.Lyber.utils.App
 import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.clearBackStack
@@ -109,7 +110,13 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                 requireActivity().clearBackStack()
             }
         }
-
+//        viewModel.logoutResponse.observe(viewLifecycleOwner){
+//            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+//                App.prefsManager.logout()
+//                findNavController().popBackStack()
+//                findNavController().navigate(R.id.discoveryFragment)
+//            }
+//        }
         if (viewModel.selectedFrequency.isNotEmpty()) frequencySelected(viewModel.selectedFrequency)
 
 
@@ -270,9 +277,10 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
 
     override fun onRetrofitError(responseBody: ResponseBody?) {
         super.onRetrofitError(responseBody)
-        binding.progress.clearAnimation()
-        binding.progress.visibility = View.GONE
-        binding.btnPreviewInvestment.text = getString(R.string.preview_exchange)
+           binding.progress.clearAnimation()
+            binding.progress.visibility = View.GONE
+            binding.btnPreviewInvestment.text = getString(R.string.preview_exchange)
+
     }
 
     private fun hitAPi() {
@@ -365,7 +373,14 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                     val string = amount.substring(0, amount.count() - focusedData.currency.length)
 
                     if (string.contains('.')) {
-                        if (char != '.') etAmount.text = "$string$char${focusedData.currency}"
+                        if (char != '.')
+                            {
+                                val decimalPart = string.substringAfter('.')
+                                if (decimalPart.length < 5 && char.isDigit()) {
+                                    etAmount.text = "$string$char${focusedData.currency}"
+                                }
+                            }
+//                            etAmount.text = "$string$char${focusedData.currency}" //for now
                     } else {
                         if (char == '.') etAmount.text = ("${
                             string.pointFormat
@@ -377,7 +392,6 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
 
             }
         }
-
 
     }
 

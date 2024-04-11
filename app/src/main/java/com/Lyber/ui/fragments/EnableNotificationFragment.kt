@@ -1,10 +1,19 @@
 package com.Lyber.ui.fragments
 
+import android.Manifest
 import android.app.Dialog
+import android.content.Intent
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
+import android.util.Log
 import android.view.View
 import android.view.Window
 import androidx.activity.addCallback
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -13,18 +22,23 @@ import com.Lyber.databinding.CustomDialogLayoutBinding
 import com.Lyber.databinding.FragmentEnableNotificationsBinding
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.clearBackStack
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.SignUpViewModel
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.firebase.messaging.FirebaseMessaging
 
 class EnableNotificationFragment : BaseFragment<FragmentEnableNotificationsBinding>() {
 
     private lateinit var navController: NavController
-    private var enableNotification: Boolean = false
     private lateinit var onBoardingViewModel: SignUpViewModel
-
+    private var fcmToken = ""
+    private var firstTime = false
+private lateinit var settingDialog:Dialog
     override fun bind() = FragmentEnableNotificationsBinding.inflate(layoutInflater)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -38,11 +52,26 @@ class EnableNotificationFragment : BaseFragment<FragmentEnableNotificationsBindi
         onBoardingViewModel = getViewModel(requireParentFragment())
         onBoardingViewModel.listener = this
 
+        FirebaseMessaging.getInstance().token
+            .addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w(
+                        "FirebaseMessagingService.TAG",
+                        "Fetching FCM registration token failed",
+                        task.exception
+                    )
+                    return@OnCompleteListener
+                }
 
-        onBoardingViewModel.enableNotificationResponse.observe(viewLifecycleOwner) {
-//            App.prefsManager.enableNotification(enableNotification)
+                val token = task.result
+                fcmToken = token
+
+                Log.d("FirebaseMessagingService.TAG", token)
+
+            })
+        onBoardingViewModel.booleanResponse.observe(viewLifecycleOwner) {
             dismissProgressDialog()
-            requireActivity().clearBackStack()
+            App.prefsManager.portfolioCompletionStep = Constants.ACCOUNT_CREATED
             navController.navigate(R.id.completePortfolioFragment)
 
         }
@@ -53,16 +82,13 @@ class EnableNotificationFragment : BaseFragment<FragmentEnableNotificationsBindi
             stopRegistrationDialog()
         }
         binding.btnEnableNotifications.setOnClickListener {
-
-            App.prefsManager.portfolioCompletionStep = Constants.ACCOUNT_CREATED
-
-            navController.navigate(R.id.completePortfolioFragment)
-
-            /*checkInternet(requireContext()) {
-                enableNotification = true
-                showProgressDialog(requireContext())
-                onBoardingViewModel.enableNotification(enableNotification)
-            }*/
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
+                askNotificationPermission()
+            else
+                checkInternet(requireContext()) {
+                    showProgressDialog(requireContext())
+                    onBoardingViewModel.enableNotification(fcmToken)
+                }
         }
 
         binding.tvNotNow.setOnClickListener {
@@ -70,44 +96,82 @@ class EnableNotificationFragment : BaseFragment<FragmentEnableNotificationsBindi
 
             navController.navigate(R.id.completePortfolioFragment)
         }
-        /*checkInternet(requireContext()) {
-            enableNotification = false
-            showProgressDialog(requireContext())
-            onBoardingViewModel.enableNotification(enableNotification)
-        }*/
     }
 
-//    private fun stopRegistrationDialog() {
-//        Dialog(requireActivity(), R.style.DialogTheme).apply {
-//
-//            CustomDialogLayoutBinding.inflate(layoutInflater).let {
-//
-//                requestWindowFeature(Window.FEATURE_NO_TITLE)
-//                setCancelable(false)
-//                setCanceledOnTouchOutside(false)
-//                setContentView(it.root)
-//
-//                it.tvTitle.text = getString(R.string.stop_reg)
-//                it.tvMessage.text = getString(R.string.reg_message)
-//                it.tvNegativeButton.text = getString(R.string.cancel)
-//                it.tvPositiveButton.text = getString(R.string.ok)
-//
-//                it.tvNegativeButton.setOnClickListener { dismiss() }
-//
-//                it.tvPositiveButton.setOnClickListener {
-//                    dismiss()
-//                    App.prefsManager.logout()
-//                    findNavController().popBackStack()
-//                    findNavController().navigate(R.id.discoveryFragment)
-//                    CommonMethods.checkInternet(requireContext()) {
-//                        dismiss()
-//                        CommonMethods.showProgressDialog(requireContext())
-//                        onBoardingViewModel.logout(CommonMethods.getDeviceId(requireActivity().contentResolver))
-//                    }
-//                }
-//
-//                show()
-//            }
-//        }
-//    }
+    // Declare the launcher at the top of your Activity/Fragment:
+    private val requestPermissionLauncher = registerForActivityResult(
+        ActivityResultContracts.RequestPermission(),
+    ) { isGranted: Boolean ->
+        if (isGranted) {
+            // FCM SDK (and your app) can post notifications.
+            checkInternet(requireContext()) {
+                showProgressDialog(requireContext())
+                onBoardingViewModel.enableNotification(fcmToken)
+            }
+        } else {
+            // TODO: Inform user that that your app will not show notifications.
+        }
+    }
+
+    private fun askNotificationPermission() {
+        // This is only necessary for API level >= 33 (TIRAMISU)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if (ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.POST_NOTIFICATIONS
+                ) ==
+                PackageManager.PERMISSION_GRANTED
+            ) {
+                // FCM SDK (and your app) can post notifications.
+                checkInternet(requireContext()) {
+                    showProgressDialog(requireContext())
+                    onBoardingViewModel.enableNotification(fcmToken)
+                }
+            } else if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+            } else {
+                if (firstTime)
+                    showNotificationDialog()
+                // Directly ask for the permission
+                if(!firstTime)
+                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                firstTime = true
+            }
+        }
+    }
+
+    private fun showNotificationDialog() {
+
+       settingDialog= Dialog(requireActivity(), R.style.DialogTheme).apply {
+
+            CustomDialogLayoutBinding.inflate(layoutInflater).let {
+
+                requestWindowFeature(Window.FEATURE_NO_TITLE)
+                setContentView(it.root)
+
+                it.tvTitle.text = getString(R.string.enable_notifications)
+                it.tvMessage.text = getString(R.string.notification_detail)
+                it.tvNegativeButton.text = getString(R.string.cancel)
+                it.tvPositiveButton.text = getString(R.string.setting)
+
+                it.tvNegativeButton.setOnClickListener { dismiss() }
+
+                it.tvPositiveButton.setOnClickListener {
+                    openSetting()
+                }
+
+                show()
+
+            }
+        }
+
+    }
+
+    fun openSetting() {
+        settingDialog.dismiss()
+        val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+        val uri: Uri = Uri.fromParts("package", "com.Lyber", null)
+        intent.data = uri
+        startActivity(intent)
+    }
 }

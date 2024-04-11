@@ -16,10 +16,9 @@
     <TextView
         android:id="@+id/title"
         style="@style/HeadingStyle"
-        android:layout_gravity="center"
         android:layout_marginTop="24dp"
+        android:layout_marginStart="24dp"
         android:fontFamily="@font/atypdisplay_semibold"
-        android:gravity="center"
         android:text="@string/verification"
         android:textAppearance="@style/TextAppearance.AppCompat.Title" />
 
@@ -27,11 +26,9 @@
         android:id="@+id/subtitle"
         style="@style/SubheadMabry"
         android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:gravity="center"
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="4dp"
-        android:text="@string/enter_the_code_displayed_on_your_email_" />
+        android:text="@string/enter_the_code_received_at_email" />
 
     <TextView
         android:id="@+id/fieldToVerify"
@@ -158,14 +155,14 @@
 
 
     <TextView
-        android:id="@+id/tvBack"
+        android:id="@+id/tvResendCode"
         style="@style/SubheadMabry"
-        android:visibility="gone"
+        android:visibility="visible"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="4dp"
-        android:layout_marginBottom="24dp"
-        android:text="@string/back" />
+        android:textColor="@color/purple_500"
+        android:text="@string/resend" />
 
     <Button
         android:id="@+id/btnCancel"

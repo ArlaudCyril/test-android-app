@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -23,13 +22,13 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_weight="1"
         android:fillViewport="true">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:fitsSystemWindows="true"
-            android:paddingBottom="24dp">
+            android:fitsSystemWindows="true">
 
 
             <TextView
@@ -131,27 +130,26 @@
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/ttlAddress"
                     android:layout_width="match_parent"
-                    app:hintEnabled="false"
-                    app:helperTextTextColor="@color/red_500"
+                    android:layout_height="wrap_content"
                     android:layout_marginHorizontal="20dp"
                     app:boxStrokeWidth="0dp"
                     app:boxStrokeWidthFocused="0dp"
-                    android:layout_height="wrap_content">
+                    app:helperTextTextColor="@color/red_500"
+                    app:hintEnabled="false">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/etAddress"
-                        android:layout_marginHorizontal="4dp"
                         style="@style/EditTextTheme"
                         android:layout_width="match_parent"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+                        android:layout_marginHorizontal="4dp"
                         android:background="@drawable/edit_text_background"
-                        android:hint="@string/enter_or_scan_an_address"
                         android:drawableEnd="@drawable/ic_code_scanner"
                         android:drawablePadding="12dp"
+                        android:hint="@string/enter_or_scan_an_address"
+                        android:paddingHorizontal="16dp"
                         android:paddingTop="0dp"
                         android:paddingBottom="0dp"
-                        android:paddingHorizontal="16dp"
-                        />
+                        android:textAppearance="@style/TextAppearance.AppCompat.Subhead" />
 
                 </com.google.android.material.textfield.TextInputLayout>
 
@@ -193,8 +191,8 @@
                     android:id="@+id/tvExchange"
                     style="@style/SubheadMabry"
                     android:layout_gravity="center_vertical"
-                    android:gravity="center_vertical"
                     android:layout_marginStart="12dp"
+                    android:gravity="center_vertical"
                     android:text="@string/exchange_platform"
                     android:textColor="@color/purple_gray_800" />
 
@@ -255,10 +253,9 @@
             <TextView
                 android:id="@+id/tvNote"
                 style="@style/BodyMabry"
-                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_marginHorizontal="24dp"
-                android:layout_marginTop="16dp"
+                android:layout_marginVertical="16dp"
                 android:background="@drawable/curved_button"
                 android:backgroundTint="#FFF2D9"
                 android:lineSpacingExtra="6dp"
@@ -267,6 +264,8 @@
                 android:text="@string/note_add_bitcoin_address"
                 android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                 android:textColor="@color/purple_gray_800"
+                android:visibility="gone"
+                app:layout_constraintBottom_toTopOf="@id/btnAddUseAddress"
                 app:layout_constraintTop_toBottomOf="@id/etExchange" />
 
             <Button
@@ -274,13 +273,13 @@
                 style="@style/ButtonStyle"
                 android:layout_width="match_parent"
                 android:layout_marginHorizontal="24dp"
-                android:layout_marginTop="32dp"
+                android:layout_marginBottom="20dp"
                 android:background="@drawable/curved_button"
                 android:backgroundTint="@color/purple_500"
                 android:gravity="center"
                 android:text="@string/add_address"
                 android:textColor="@color/purple_gray_00"
-                app:layout_constraintTop_toBottomOf="@id/tvNote" />
+                app:layout_constraintBottom_toBottomOf="parent" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

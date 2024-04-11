@@ -9,7 +9,9 @@ import com.Lyber.utils.CommonMethods.Companion.replace
 import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
 import com.Lyber.utils.OnTextChange
 import com.Lyber.viewmodels.ProfileViewModel
-
+/*
+        Not in use
+ */
 class CreateNewPinFragment : BaseFragment<FragmentCreatePinBinding>() {
 
     private lateinit var viewModel: ProfileViewModel

@@ -185,7 +185,13 @@ class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), Vi
                     val string = amount.substring(0, amount.count() - currency.length)
 
                     if (string.contains('.')) {
-                        if (char != '.') etAmount.text = "$string$char${currency}"
+                        if (char != '.') {
+                            val decimalPart = string.substringAfter('.')
+                            if (decimalPart.length < 5 && char.isDigit()) {
+                                etAmount.text = "$string$char$currency"
+                            }
+                        }
+//                            etAmount.text = "$string$char${currency}"
                     } else {
                         if (char == '.') etAmount.text = ("${
                             string.pointFormat

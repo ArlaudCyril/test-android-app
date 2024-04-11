@@ -22,6 +22,7 @@ import com.Lyber.databinding.ItemMyAssetBinding
 import com.Lyber.models.BalanceStrategy
 import com.Lyber.models.BalanceStrategyData
 import com.Lyber.ui.adapters.BaseAdapter
+import com.Lyber.utils.App
 import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.commaFormatted
@@ -74,6 +75,13 @@ class OrderStrategyExecutionFragment : BaseFragment<FragmentOrderStrategyExecuti
             it.layoutManager = LinearLayoutManager(requireContext())
             it.isNestedScrollingEnabled = false
         }
+//        viewModel.logoutResponse.observe(viewLifecycleOwner){
+//            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+//                App.prefsManager.logout()
+//                findNavController().popBackStack()
+//                findNavController().navigate(R.id.discoveryFragment)
+//            }
+//        }
         viewModel.strategyExecutionResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 Log.d("response", "${it.data}")

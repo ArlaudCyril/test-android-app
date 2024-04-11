@@ -17,6 +17,7 @@ import com.Lyber.databinding.BottomSheetVerificationBinding
 import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.SignUpViewModel
@@ -86,6 +87,12 @@ class VerificationBottomSheet2FA(private val handle: (String) -> Unit) :
         binding.btnCancel.setOnClickListener {
             dismiss()
         }
+        binding.tvResendCode.setOnClickListener {
+            CommonMethods.checkInternet(requireContext()){
+                CommonMethods.setProgressDialogAlert(requireContext())
+                handle.invoke("Resend")
+            }
+        }
     }
 
     private fun setUpView() {
@@ -103,8 +110,11 @@ class VerificationBottomSheet2FA(private val handle: (String) -> Unit) :
                     subtitle.text = getString(R.string.enter_the_code_received_by_email)
                 else if (type == Constants.PHONE)
                     subtitle.text = getString(R.string.enter_the_code_received_by_sms)
-                else subtitle.text =
-                    getString(R.string.enter_the_code_displayed_by_google_authenticator)
+                else {
+                    tvResendCode.gone()
+                    subtitle.text =
+                        getString(R.string.enter_the_code_displayed_by_google_authenticator)
+                }
             }
 
             fieldToVerify.text = ""

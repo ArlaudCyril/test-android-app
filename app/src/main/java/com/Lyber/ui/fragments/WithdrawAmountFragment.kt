@@ -33,9 +33,11 @@ import java.math.RoundingMode
 class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), View.OnClickListener {
     override fun bind() = FragmentWithdrawAmountBinding.inflate(layoutInflater)
     private var valueConversion: Double = 1.0
+    private var valueConversion2: Double = 1.0
     private var minAmount: String = "0.0"
     private val assetConversion get() = binding.tvAssetConversion.text.trim().toString()
     private var maxValue: Double = 0.0
+    private var maxValueOther: Double = 0.0
     private var maxValueAsset: Double = 0.0
     private lateinit var viewModel: PortfolioViewModel
     private val focusedData: ValueHolder = ValueHolder()
@@ -44,7 +46,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
     private var mConversionCurrency: String = ""
     private var addressId: String = ""
     private var activate: Boolean = false
-    private val addresses: MutableList<WithdrawAddress> = mutableListOf()
+     private val addresses: MutableList<WithdrawAddress> = mutableListOf()
     private val amount get() = binding.etAmount.text.trim().toString()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -103,12 +105,10 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                         ivCopy.visible()
                         addressId = withdrawAddress.address.toString()
                         tvAssetAddress.text = withdrawAddress.address
-                        val assest =
+                        val asset =
                             com.Lyber.ui.activities.BaseActivity.networkAddress.firstNotNullOfOrNull { item -> item.takeIf { item.id == withdrawAddress.network } }
-//                        val assest =
-//                            com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.fullName.lowercase() == withdrawAddress.network!!.lowercase() } }
-                        if (assest != null)
-                            ivAssetIcon.load(assest!!.imageUrl)
+                      if (asset != null)
+                            ivAssetIcon.load(asset.imageUrl)
 
                     }
                 }
@@ -116,13 +116,24 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
         }
     }
 
+    private fun setMaxValueOther() {
+        var balance =
+            com.Lyber.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
+        if (balance == null) {
+            val balanceData = BalanceData("0", "0")
+            balance = Balance("0", balanceData)
+        }
+        var priceCoin = balance.balanceData.balance.toDouble()
+            .div(balance.balanceData.euroBalance.toDouble())
+        maxValueOther = (((maxValue.toString()).formattedAsset(
+            priceCoin,
+            RoundingMode.DOWN
+        )).pointFormat.toDouble() * valueConversion)
+    }
+
     private val textOnTextChange = object : OnTextChange {
-
-
         @SuppressLint("SetTextI18n")
         override fun onTextChange() {
-
-
             val valueAmount =
                 if (amount.contains(mCurrency)) amount.replace(mCurrency, "").pointFormat.toDouble()
                 else amount.replace(mConversionCurrency, "").pointFormat.toDouble()
@@ -185,19 +196,23 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
             if (amount.contains(mCurrency)) amount.replace(mCurrency, "").pointFormat.toDouble()
             else amount.replace(mConversionCurrency, "").pointFormat.toDouble()
 
+        Log.d("valueAmount", "$valueAmount")
         if (focusedData.currency.contains(mCurrency)) {
             val priceCoin = valueAmount.toDouble().div(assetAmount.toDouble())
             binding.tvAssetConversion.text =
                 "~${assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN)} $mConversionCurrency"
             maxValueAsset = assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN).toDouble()
-            Log.d("maxValueAsset", "$maxValueAsset")
-
+            Log.d("bswap priceCoin", "$priceCoin")
+            Log.d("bswap assetAmount", "$assetAmount")
+            Log.d("bswap maxValueAsset", "$maxValueAsset")
         } else {
             val priceCoin = assetAmount.toDouble().div(valueAmount.toDouble())
             binding.tvAssetConversion.text =
                 "~${assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN)} $mCurrency"
             maxValueAsset = assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN).toDouble()
-            Log.d("maxValueAsset", "$maxValueAsset")
+            Log.d("aswap priceCoin", "$priceCoin")
+            Log.d("aswap assetAmount", "$assetAmount")
+            Log.d("aswap maxValueAsset", "$maxValueAsset")
 
         }
 
@@ -243,7 +258,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                 } Available".also { tvSubTitle.text = it }
                 valueConversion =
                     (balance.balanceData.balance.toDouble() / balance.balanceData.euroBalance.toDouble())
-                if (balance.balanceData.balance == "0") {
+               if (balance.balanceData.balance == "0") {
                     val balanceResume =
                         com.Lyber.ui.activities.BaseActivity.balanceResume.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
 
@@ -277,6 +292,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                 if (maxValue < 0) {
                     maxValue = 0.0
                 }
+                setMaxValueOther()
                 minAmount = it.withdrawMin.toString().formattedAsset(priceCoin, RoundingMode.DOWN)
                 (getString(R.string.minimum_withdrawl) + ": " + minAmount + " " + balance!!.id.uppercase()).also {
                     tvMinAmount.text = it
@@ -386,29 +402,42 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
             balance = Balance("0", balanceData)
         }
         if (focusedData.currency.contains(mCurrency)) {
+            var spaceGap=""
+            if(mCurrency==Constants.EURO)
+                spaceGap=""
+            else
+                spaceGap=" "
             if (maxValue > 0) {
-                val maxinEuro = maxValue / valueConversion
-                var priceCoin = balance!!.balanceData.euroBalance.toDouble()
-                    .div(balance.balanceData.balance.toDouble())
-                binding.etAmount.text = "${
-                    maxValue.toString().formattedAsset(priceCoin, RoundingMode.DOWN)
-                }" + mCurrency
-//                binding.etAmount.text =     maxinEuro.toString().formattedAsset(priceCoin, RoundingMode.DOWN) + mCurrency
-            } else {
-                binding.etAmount.text = "0" + mCurrency
+                    var priceCoin = balance!!.balanceData.euroBalance.toDouble()
+                        .div(balance.balanceData.balance.toDouble())
+                    binding.etAmount.text = "${
+                        maxValue.toString().formattedAsset(priceCoin, RoundingMode.DOWN)
+                    }" +spaceGap+ mCurrency
+                Log.d("bSwap max","$maxValue")
+                Log.d("bSwap price","$priceCoin")
+          } else {
+                binding.etAmount.text = "0" +spaceGap+ mCurrency
             }
         } else {
-            if (maxValue > 0) {
+            var spaceGap=""
+            if(mConversionCurrency==Constants.EURO)
+                spaceGap=""
+            else
+                spaceGap=" "
+            if (maxValueOther > 0) {
                 var priceCoin = balance!!.balanceData.euroBalance.toDouble()
                     .div(balance.balanceData.balance.toDouble())
 
                 binding.etAmount.text = "${
-                    maxValue.toString().formattedAsset(priceCoin, RoundingMode.DOWN)
-                }${mConversionCurrency}"
+                    maxValueOther.toString().formattedAsset(priceCoin, RoundingMode.DOWN)
+                }$spaceGap${mConversionCurrency}"
+
+                Log.d("aSwap max","$maxValueOther")
+                Log.d("aSwap price","$priceCoin")
             } else {
                 binding.etAmount.text = "${
                     0
-                }${mConversionCurrency}"
+                }$spaceGap${mConversionCurrency}"
             }
         }
     }
@@ -417,10 +446,8 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
     private fun backspace() {
         try {
             val builder = StringBuilder()
-
             val value = if (amount.contains(mCurrency)) amount.replace(mCurrency, "").pointFormat
             else amount.replace(mConversionCurrency, "").pointFormat
-
             builder.append(value.dropLast(1))
             if (builder.toString().isEmpty()) {
                 builder.append("0")
@@ -442,35 +469,48 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
 
 
         binding.apply {
+            val trimmedText = amount.replace("\\s+".toRegex(), "") // Removes all whitespace
             val currency =
                 if (focusedData.currency.contains(mCurrency)) mCurrency else mConversionCurrency
+            var spaceGap = if (currency == Constants.EURO)
+                ""
+            else
+                " "
             when {
 
-                amount.length == (currency.length + 1) && amount[0] == '0' -> {
+                trimmedText.length == (currency.length + 1) && trimmedText[0] == '0' -> {
                     if (char == '.') {
-                        if (!amount.contains('.')) etAmount.text = ("0$char${currency}")
-                    } else etAmount.text = (char + currency)
+                        if (!trimmedText.contains('.')) etAmount.text =
+                            ("0$char$spaceGap${currency}")
+                    } else etAmount.text = (char + spaceGap + currency)
                 }
 
                 else -> {
 
-                    val string = amount.substring(0, amount.count() - currency.length)
+                    val string = amount.substring(0, amount.count() - currency.length).trim()
 
                     if (string.contains('.')) {
-                        if (char != '.')
-                            if (currency == Constants.EURO) {
-                                val decimalPart = string.substringAfter('.')
-                                if (decimalPart.length < 2 && char.isDigit()) {
-                                    etAmount.text = "$string$char$currency"
-                                }
-                            } else
-                                etAmount.text = "$string$char${currency}"
+//                        if (char != '.')  //FOR NOW
+//                            if (currency == Constants.EURO) {
+//                                val decimalPart = string.substringAfter('.')
+//                                if (decimalPart.length < 5 && char.isDigit()) {
+//                                    etAmount.text = "$string$char$spaceGap$currency"
+//                                }
+//                            } else
+//                                etAmount.text = "$string$char$spaceGap$currency"
+                        if (char != '.') {
+                            val decimalPart = string.substringAfter('.')
+                            if (decimalPart.length < 5 && char.isDigit()) {
+                                etAmount.text = "$string$char$spaceGap$currency"
+                            }
+                        }
+
                     } else {
                         if (char == '.') etAmount.text = ("${
                             string.pointFormat
-                        }.${currency}")
+                        }.$spaceGap${currency}")
                         else etAmount.text = ((string.pointFormat
-                            .toString() + char) + currency)
+                            .toString() + char) + spaceGap + currency)
                     }
                 }
 

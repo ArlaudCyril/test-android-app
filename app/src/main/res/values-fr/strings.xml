@@ -140,13 +140,13 @@
     <string name="specified_us_person">Etes vous un citoyen americain?</string>
     <string name="hint_state">État</string>
     <string name="hint_personal_assets">Votre patrimoine personnel</string>
-    <string name="edit"><b><u>Editer</u></b></string>
+    <string name="edit"><b>Editer</b></string>
     <string name="resend_email"><u>Renvoi de l\'email</u></string>
     <string name="logout_message">Êtes-vous sûr de vouloir vous déconnecter ?</string>
     <string name="reg_message">La progression de votre inscription sera perdue</string>
     <string name="no_t">Non</string>
     <string name="yes_t">Oui</string>
-    <string name="logout"><u>Déconnexion</u></string>
+    <string name="logout"><u>Se déconnecter</u></string>
     <string name="log_out_normal">Déconnexion</string>
     <string name="note_add_bitcoin_address"><b>Note importante:</b> Votre note va ici et va sur une grande quantité de ligne</string>
     <string name="subtitle_crypto_book">Le carnet d’adresse permet aux retraits de crypto-monnaies de n\'être effectués qu\'à des adresses déjà désignées dans votre carnet d\'adresses. Vous pouvez également activer votre carnet pour ces adresses.</string>
@@ -357,7 +357,7 @@
     <string name="your_deposit_has_been_taken_into_account">Votre dépôt a été pris en compte</string>
     <string name="you_can_now_see_its_effect_on_your_portfolio">Vous pouvez maintenant voir son effet sur votre portefeuille.</string>
     <string name="thanks">Merci</string>
-    <string name="select_default_picture">Sélectionnez les images par défaut</string>
+    <string name="select_default_picture">Sélectionnez une Photo de profil</string>
     <string name="deposit_funds">Déposer des fonds</string>
     <string name="bank_account_details">Détails du compte bancaire</string>
     <string name="please_deposit_money_in_the_below_mentioned_account_detail">Veuillez déposer de l\'argent sur les coordonnées du compte mentionné ci-dessous.</string>
@@ -415,7 +415,7 @@
     <string name="asset_deposit">Dépôt d\'actifs</string>
     <string name="crypto">Crypto</string>
     <string name="selected_profile_picture">Sélectionner une photo de profil</string>
-    <string name="strong_authentification">Authentification forte</string>
+    <string name="strong_authentification">Authentification Forte</string>
     <string name="for_added_security_on_your_lyber_account_enable_strong_authentication">Pour plus de sécurité sur votre compte Lyber, activez l\'authentification forte.</string>
     <string name="by_sms">Par SMS</string>
     <string name="manage_the_application_cases_of_sms_authentication">Gérer les cas d\'application de l\'authentification SMS</string>
@@ -478,7 +478,7 @@
     <string name="enter_the_code_displayed_by_google_authenticator">Entrez le code affiché par Google Authenticator</string>
     <string name="enter_the_code_received_by_email">Entrez le code reçu par email</string>
     <string name="back">Retour</string>
-    <string name="add_google_authenticator">Ajouter à votre application Google Authenticator</string>
+    <string name="add_google_authenticator">Scannez ce QR Code directement depuis l\'application Google Authenticator pour configurer automatiquement votre compte.</string>
     <string name="two_fact_authentication">Double authentification</string>
     <string name="tap_to_add_google_authenticator"><u>Tapez pour ajouter à Google Authenticator</u></string>
     <string name="you_must_install_authenticator">Vous devez d\'abord installer une application d\'authentification telle que Google Authenticator avant de pouvoir utiliser ce lien</string>
@@ -628,7 +628,7 @@
     <string name="verification_in_progress">Vérification en cours</string>
     <string name="start_verification">Commencer la vérification</string>
     <string name="label_cgu_conditions">J\'ai lu et j\'accepte les <u>Conditions Générales\et Conditions de Vente</u></string>
-    <string name="label_privacy_policy">J\'ai lu et j\'accepte la <u>politique de confidentialité</u></string>
+    <string name="label_privacy_policy">J\'ai lu et j\'accepte la <u>Politique de Confidentialité</u></string>
     <string name="cgu_conditions">Conditions Générales de Vente</string>
     <string name="privacy_policy">politique de confidentialité</string>
     <string name="preview_my_purchase">Prévisualiser mon achat</string>
@@ -758,5 +758,17 @@
       <string name="warning">Avertissement!</string>
     <string name="certify_detail">J\'atteste sur l\'honneur que mes pièces d\'identité ont été délivrées par un pays membre de l\'Union européenne ou de l\'Espace économique européen, à l\'exception de Chypre, Malte, la Croatie, la Hongrie, le Liechtenstein, la Lettonie, la Roumanie et la Slovaquie.</string>
     <string name="yes_certify">Oui, je certifie</string>
+    <string name="enter_the_code_received_at_email">Entrez le code que vous avez reçu sur votre adresse email.</string>
+    <string name="confirm_your_pin">Confirmez votre code PIN</string>
+    <string name="account_statement">Relevé de compte</string>
+    <string name="add_manually_google_authenticator">Si vous ne parvenez pas à scanner le code QR, vous pouvez ajouter votre compte manuellement dans Google Authenticator avec la clé ci-dessous.</string>
+    <string name="copy_key">Copier la clé</string>
+    <string name="have_google">Avez-vous un authentificateur Google ?</string>
+    <string name="got_it">J\'ai compris</string>
+    <string name="download_google_authenticator"><u>Téléchargez l\'authentificateur Google</u></string>
+    <string name="download_google_if_not">Pour utiliser l\'authentification Google OTP, vous devez avoir Google Authenticator installé sur votre appareil. Si vous ne l\'avez pas déjà fait, téléchargez Google Authenticator depuis l\'App Store pour continuer.</string>
+    <string name="no_result_found">Aucun résultat trouvé</string>
+    <string name="buy_tether_on_lyber">Acheter du Tether sur Lyber</string>
+    <string name="notification_detail">Pour recevoir des notifications push, vous devez autoriser les notifications à partir des paramètres.</string>
 
 </resources>

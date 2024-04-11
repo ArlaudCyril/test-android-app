@@ -1,6 +1,7 @@
 package com.Lyber.ui.fragments.bottomsheetfragments
 
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -14,13 +15,15 @@ import androidx.fragment.app.DialogFragment
 import com.Lyber.R
 import com.Lyber.databinding.BottomSheetVerificationBinding
 import com.Lyber.ui.fragments.TwoFactorAuthenticationFragment
+import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
+import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.SignUpViewModel
 
-
-class VerificationBottomSheet() :
+class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
     BaseBottomSheet<BottomSheetVerificationBinding>() {
 
     private val codeOne get() = binding.etCodeOne.text.trim().toString()
@@ -30,7 +33,7 @@ class VerificationBottomSheet() :
     private val codeFive get() = binding.etCodeFive.text.trim().toString()
     private val codeSix get() = binding.etCodeSix.text.trim().toString()
 
-    private var googleOTP=""
+    private var googleOTP = ""
 
     lateinit var typeVerification: String
     lateinit var viewToDelete: View
@@ -42,23 +45,36 @@ class VerificationBottomSheet() :
         super.onCreate(savedInstanceState)
         setStyle(DialogFragment.STYLE_NORMAL, R.style.DialogStyle)
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpView()
-//        viewModel.listener = this
         this.binding.etCodeOne.requestFocus()
         binding.etCodeOne.requestKeyboard()
         binding.btnCancel.setOnClickListener {
             val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
             imm?.hideSoftInputFromWindow(view?.windowToken, 0)
-
             dismiss()
         }
-
-        binding.tvBack.setOnClickListener {
-            val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
-            imm?.hideSoftInputFromWindow(view?.windowToken, 0)
-            dismiss()
+        binding.tvResendCode.setOnClickListener {
+            CommonMethods.checkInternet(requireContext()){
+                if(googleOTP.isNotEmpty()){
+                    binding.tvResendCode.gone()
+                   binding.subtitle.text =
+                        getString(R.string.enter_the_code_displayed_by_google_authenticator)
+                    binding.etCodeSix.setText("")
+                    binding.etCodeFive.setText("")
+                    binding.etCodeFour.setText("")
+                    binding.etCodeThree.setText("")
+                    binding.etCodeTwo.setText("")
+                    binding.etCodeOne.setText("")
+                    binding.etCodeOne.requestFocus()
+                    binding.etCodeOne.setSelection(binding.etCodeOne.text.length)
+                }else {
+                    CommonMethods.setProgressDialogAlert(requireContext())
+                    handle!!.invoke("tg")
+                }
+            }
         }
     }
 
@@ -67,35 +83,54 @@ class VerificationBottomSheet() :
 
             title.text = getString(R.string.verification)
             if (tag!!.isNotEmpty()) {
-                btnCancel.visibility = View.GONE
-                tvBack.visibility = View.VISIBLE
                 if (arguments != null && requireArguments().containsKey(Constants.TYPE)) {
-                    var type = requireArguments().getString(Constants.TYPE)
-                    if (type == Constants.EMAIL)
-                        subtitle.text = getString(R.string.enter_the_code_received_by_email)
-                    else if (type == Constants.PHONE)
+                    if(requireArguments().containsKey(Constants.GOOGLE) && requireArguments().getBoolean(Constants.GOOGLE)) {
+                        tvResendCode.gone()
+                        subtitle.text =
+                            getString(R.string.enter_the_code_displayed_by_google_authenticator)
+                    }
+                 else   if (App.prefsManager.user!!.type2FA == Constants.EMAIL)
+                        subtitle.text = getString(R.string.enter_the_code_received_at_email)
+                    else if (App.prefsManager.user!!.type2FA == Constants.PHONE)
                         subtitle.text = getString(R.string.enter_the_code_received_by_sms)
-                    else subtitle.text =
-                        getString(R.string.enter_the_code_displayed_by_google_authenticator)
+                    else {
+                        tvResendCode.gone()
+                        subtitle.text =
+                            getString(R.string.enter_the_code_displayed_by_google_authenticator)
+                    }
                 } else {
                     if (tag == Constants.EMAIL)
-                        subtitle.text = getString(R.string.enter_the_code_received_by_email)
+                        subtitle.text = getString(R.string.enter_the_code_received_at_email)
                     else if (tag == Constants.PHONE)
                         subtitle.text = getString(R.string.enter_the_code_received_by_sms)
-                    else subtitle.text =
-                        getString(R.string.enter_the_code_displayed_by_google_authenticator)
+                    else {
+                        tvResendCode.gone()
+                        subtitle.text =
+                            getString(R.string.enter_the_code_displayed_by_google_authenticator)
+                    }
                 }
-            }
-            else if(::typeVerification.isInitialized && !typeVerification.isNullOrEmpty()){
-                if (typeVerification == Constants.EMAIL)
-                    subtitle.text = getString(R.string.enter_the_code_received_by_email)
+            } else if (::typeVerification.isInitialized && !typeVerification.isNullOrEmpty()) {
+                if (typeVerification == Constants.CHANGE_PASSWORD) {
+                    if (App.prefsManager.user!!.type2FA == Constants.EMAIL)
+                        subtitle.text = getString(R.string.enter_the_code_received_at_email)
+                    else if (App.prefsManager.user!!.type2FA == Constants.PHONE)
+                        subtitle.text = getString(R.string.enter_the_code_received_by_sms)
+                    else {
+                        tvResendCode.gone()
+                        subtitle.text =
+                            getString(R.string.enter_the_code_displayed_by_google_authenticator)
+                    }
+                } else if (typeVerification == Constants.EMAIL)
+                    subtitle.text = getString(R.string.enter_the_code_received_at_email)
                 else if (typeVerification == Constants.PHONE)
                     subtitle.text = getString(R.string.enter_the_code_received_by_sms)
-                else subtitle.text =
-                    getString(R.string.enter_the_code_displayed_by_google_authenticator)
-            }
-            else if (viewModel.forLogin) {
-                subtitle.text = getString(R.string.enter_the_code_displayed_on_your_email)
+                else {
+                    tvResendCode.gone()
+                    subtitle.text =
+                        getString(R.string.enter_the_code_displayed_by_google_authenticator)
+                }
+            } else if (viewModel.forLogin) {
+                subtitle.text = getString(R.string.enter_the_code_received_at_email)
             } else {
                 subtitle.text = getString(R.string.enter_the_code_displayed_on_your_sms)
             }
@@ -123,6 +158,7 @@ class VerificationBottomSheet() :
         super.onDestroyView()
         this.mainView.removeView(this.viewToDelete)
     }
+
 
 
     fun getCode() = codeOne + codeTwo + codeThree + codeFour + codeFive + codeSix
@@ -241,18 +277,19 @@ class VerificationBottomSheet() :
                                     )
                                 ) {
                                     var args = requireArguments().getString(Constants.TYPE)
-                                    if (requireArguments().containsKey("changeType")){
+                                    if (requireArguments().containsKey("changeType")) {
                                         dismiss()
                                         Log.d("text", args!!)
                                         val hash = hashMapOf<String, Any>()
-                                        hash["type2FA"] = requireArguments().getString("changeType").toString()
+                                        hash["type2FA"] =
+                                            requireArguments().getString("changeType").toString()
                                         hash["otp"] = getCode()
                                         Log.d("hash", "$hash")
                                         CommonMethods.showProgressDialog(requireContext())
                                         viewModel.updateAuthentication(hash)
                                     }
-                                    if(args== Constants.GOOGLE){
-                                        if(googleOTP.isNotEmpty()){
+                                    if (args == Constants.GOOGLE) {
+                                        if (googleOTP.isNotEmpty()) {
                                             dismiss()
                                             Log.d("text", args!!)
                                             val hash = hashMapOf<String, Any>()
@@ -260,14 +297,17 @@ class VerificationBottomSheet() :
                                             hash["otp"] = getCode()
                                             hash["googleOtp"] = googleOTP
                                             Log.d("hash", "$hash")
-                                            TwoFactorAuthenticationFragment.showOtp=true
+                                            TwoFactorAuthenticationFragment.showOtp = true
                                             CommonMethods.showProgressDialog(requireContext())
                                             viewModel.updateAuthentication(hash)
-                                        }
-                                        else {
+                                        } else {
                                             googleOTP = getCode()
-                                            binding.subtitle.text =
-                                                getString(R.string.enter_the_code_received_by_email)
+                                            if (App.prefsManager.user!!.type2FA == Constants.EMAIL)
+                                                binding.subtitle.text = getString(R.string.enter_the_code_received_at_email)
+                                            else if (App.prefsManager.user!!.type2FA == Constants.PHONE)
+                                                binding.subtitle.text = getString(R.string.enter_the_code_received_by_sms)
+
+                                            binding.tvResendCode.visible()
                                             binding.etCodeSix.setText("")
                                             binding.etCodeFive.setText("")
                                             binding.etCodeFour.setText("")
@@ -278,8 +318,7 @@ class VerificationBottomSheet() :
                                             binding.etCodeOne.setSelection(binding.etCodeOne.text.length)
                                         }
 
-                                    }
-                                    else {
+                                    } else {
                                         dismiss()
                                         Log.d("text", args!!)
                                         val hash = hashMapOf<String, Any>()
@@ -290,13 +329,11 @@ class VerificationBottomSheet() :
                                         viewModel.updateAuthentication(hash)
                                     }
                                 }
-                            }
-                            else if(::typeVerification.isInitialized && typeVerification!=null && typeVerification==Constants.CHANGE_PASSWORD){
+                            } else if (::typeVerification.isInitialized && typeVerification != null && typeVerification == Constants.CHANGE_PASSWORD) {
                                 dismiss()
                                 CommonMethods.showProgressDialog(requireContext())
                                 viewModel.verifyPasswordChange(code = getCode())
-                            }
-                            else if (viewModel.forLogin) {
+                            } else if (viewModel.forLogin) {
                                 dismiss()
                                 viewModel.verify2FA(code = getCode())
                             } else {
@@ -312,7 +349,7 @@ class VerificationBottomSheet() :
         }
 
 
-        private fun  nextEditText(modifiedEditText: EditText) : EditText{
+        private fun nextEditText(modifiedEditText: EditText): EditText {
 
             when (modifiedEditText) {
                 binding.etCodeOne -> return binding.etCodeTwo

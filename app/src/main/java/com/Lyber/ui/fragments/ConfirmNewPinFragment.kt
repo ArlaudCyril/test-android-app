@@ -2,8 +2,11 @@ package com.Lyber.ui.fragments
 
 import android.os.Bundle
 import android.view.View
+import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.FragmentConfirmPinBinding
+import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
@@ -12,7 +15,9 @@ import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.OnTextChange
 import com.Lyber.viewmodels.ProfileViewModel
 import okhttp3.ResponseBody
-
+/*
+        Not in use
+ */
 class ConfirmNewPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
 
     private lateinit var viewModel: ProfileViewModel
@@ -25,8 +30,6 @@ class ConfirmNewPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
 
         viewModel = getViewModel(requireParentFragment())
         viewModel.listener = this
-
-
         binding.etConfirmPin.addTextChangedListener(onTextChange)
         binding.etConfirmPin.requestKeyboard()
 
@@ -73,8 +76,7 @@ class ConfirmNewPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
     }
 
     override fun onRetrofitError(responseBody: ResponseBody?) {
-        super.onRetrofitError(responseBody)
-        clearField()
+          clearField()
     }
 
 

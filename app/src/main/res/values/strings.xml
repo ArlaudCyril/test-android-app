@@ -1,8 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-<!--    prod-->
+    <!--    prod-->
     <string name="API_KEY">AIzaSyB9nBqhoH9KPAKVnvMU03V9y3U14qC8Ufc</string>
-<!--    staging-->
-<!--    <string name="API_KEY">AIzaSyDILfqSYsVaOhqF8cSugU7ekCt8V4GSYyo</string>-->
+    <!--    staging-->
+<!--        <string name="API_KEY">AIzaSyDILfqSYsVaOhqF8cSugU7ekCt8V4GSYyo</string>-->
     <string name="app_name">Lyber</string>
     <string name="lyber_investments_reinvented">Lyber, crypto at your fingertips.</string>
     <string name="diversified_regular_simple">Simple, secure and diversified investment.</string>
@@ -130,7 +130,7 @@
     <string name="view_all"><u>View all</u></string>
     <string name="total_earnings">Total earnings</string>
     <string name="about_value">Bitcoin is a decentralized digital currency, without a central bank or gove… <b><u>View more</u></b></string>
-    <string name="log_out"><u>Log out</u></string>
+    <string name="log_out"><u>Logout</u></string>
     <string name="log_out_normal">Log out</string>
     <string name="stop_reg"><u>Stop Registration</u></string>
     <string name="view_all_underline"><u>View all</u></string>
@@ -141,13 +141,13 @@
     <string name="specified_us_person">Are you a US citizen?</string>
     <string name="hint_state">State</string>
     <string name="hint_personal_assets">Your personal assets</string>
-    <string name="edit"><b><u>Edit</u></b></string>
+    <string name="edit"><b>Edit</b></string>
     <string name="resend_email"><u>RESEND EMAIL</u></string>
-    <string name="logout_message">"Are you sure you want to logout ? "</string>
+    <string name="logout_message">Are you sure you want to Log out ? </string>
     <string name="reg_message">The progress of your registration will be lost.</string>
     <string name="no_t">No</string>
     <string name="yes_t">Yes</string>
-    <string name="logout"><u>Logout</u></string>
+    <string name="logout"><u>Log out</u></string>
     <string name="note_add_bitcoin_address"><b>Important note:</b> Your note goes here and goes on a big amount of line</string>
     <string name="subtitle_crypto_book">The address book allows cryptocurrency withdrawals to be made only at addresses already designated in your address book. You can also activate your address book for these addresses.</string>
     <string name="login_by_email"><u>Login by email</u></string>
@@ -199,10 +199,10 @@
     <string name="please_provide_cards_expiry_date">Please provide cards expiry date</string>
     <string name="credit_card_added">Credit card added</string>
     <string name="add_and_use_this_address">Add and use this address</string>
-<!--    <string name="add_a_crypto_address">Add address</string>-->
+    <!--    <string name="add_a_crypto_address">Add address</string>-->
     <string name="choose_network">Choose network</string>
     <string name="add_a_address">Add a %1$s address</string>
-<!--    <string name="add_an_address">Add address</string>-->
+    <!--    <string name="add_an_address">Add address</string>-->
     <string name="wallet">Wallet</string>
     <string name="please_enter_address_name">Please enter your address name</string>
     <string name="please_select_a_network">Please select your network</string>
@@ -357,7 +357,7 @@
     <string name="your_deposit_has_been_taken_into_account">Your deposit has been taken into account</string>
     <string name="you_can_now_see_its_effect_on_your_portfolio">You can now see its effect on your portfolio.</string>
     <string name="thanks">Thanks</string>
-    <string name="select_default_picture">Select default picture</string>
+    <string name="select_default_picture">Select Profile Picture</string>
     <string name="deposit_funds">Deposit Funds</string>
     <string name="bank_account_details">Bank account details</string>
     <string name="please_deposit_money_in_the_below_mentioned_account_detail">Please deposit money in the below mentioned account detail</string>
@@ -415,7 +415,7 @@
     <string name="asset_deposit">Asset Deposit</string>
     <string name="crypto">Crypto</string>
     <string name="selected_profile_picture">Selected Profile Picture</string>
-    <string name="strong_authentification">Strong authentification</string>
+    <string name="strong_authentification">Strong Authentication</string>
     <string name="for_added_security_on_your_lyber_account_enable_strong_authentication">For added security on your Lyber account, enable strong authentication.</string>
     <string name="by_sms">By SMS</string>
     <string name="manage_the_application_cases_of_sms_authentication">Manage the application cases of SMS authentication</string>
@@ -455,7 +455,7 @@
     <string name="export">Export</string>
     <string name="exportOperations">Export operations</string>
     <string name="successful">Successful</string>
-    <string name="successfulMsg">Your request has been received\nThe export will be delivered to your email address in a few minutes.</string>
+    <string name="successfulMsg">Your request has been received. The export will be delivered to your email address in a few minutes.</string>
     <string name="error">Error</string>
     <string name="somethingWentWrong">Oh no ! Something went wrong.</string>
     <string name="tryAgain">Try Again</string>
@@ -478,7 +478,7 @@
     <string name="enter_the_code_displayed_by_google_authenticator">Enter the code displayed by Google Authenticator</string>
     <string name="enter_the_code_received_by_email">Enter the code received by email</string>
     <string name="back">Back</string>
-    <string name="add_google_authenticator">Add to your Google Authenticator application</string>
+    <string name="add_google_authenticator">Scan this QR Code directly from the Google Authenticator application to automatically configure your account.</string>
     <string name="two_fact_authentication">Two factor authentication</string>
     <string name="tap_to_add_google_authenticator"><u>Tap to add to Google Authenticator</u></string>
     <string name="you_must_install_authenticator">You must first install an authentication application such as Google Authenticator before you can use this link</string>
@@ -641,7 +641,7 @@
     <string name="verification_in_progress">Verification in progress</string>
     <string name="start_verification">Start verification</string>
     <string name="label_cgu_conditions">I have read and accept the <u>General Terms and Conditions of Sale</u></string>
-    <string name="label_privacy_policy">I have read and accept the <u>privacy policy</u></string>
+    <string name="label_privacy_policy">I have read and accept the <u>Privacy Policy</u></string>
     <string name="cgu_conditions">General Terms and Conditions of Sale</string>
     <string name="privacy_policy">privacy policy</string>
     <string name="preview_my_purchase">Preview my purchase</string>
@@ -759,8 +759,16 @@
     <string name="warning">Warning!</string>
     <string name="certify_detail">I certify on my honor that my identity documents were issued by a member country of the European Union or the European Economic Area, with the exception of Cyprus, Malta, Croatia, Hungary, Liechtenstein, Latvia, Romania and Slovakia.</string>
     <string name="yes_certify">Yes, I certify</string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
-
-
+    <string name="enter_the_code_received_at_email">Enter the code you received at your email address.</string>
+    <string name="confirm_your_pin">Confirm your PIN</string>
+    <string name="account_statement">Account statement</string>
+    <string name="add_manually_google_authenticator">If you can\'t scan the QR code, you can add your account manually in Google Authenticator with the key below.</string>
+    <string name="copy_key">Copy Key</string>
+    <string name="have_google">Do you have Google authenticator?</string>
+    <string name="got_it">Got it</string>
+    <string name="download_google_authenticator"><u>Download Google Authenticator</u></string>
+    <string name="download_google_if_not">To use Google OTP authentication, you need to have Google Authenticator installed on your device. If you haven\'t already done so, download Google Authenticator from the App Store to continue.</string>
+    <string name="no_result_found">No result found</string>
+    <string name="buy_tether_on_lyber">Buy Tether on Lyber</string>
+    <string name="notification_detail">For receiving push notifications you need to give notification permission from the settings.</string>
 </resources>

@@ -7,6 +7,7 @@ import android.app.Dialog
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.graphics.Paint
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -44,10 +45,12 @@ import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.checkPermission
+import com.Lyber.utils.CommonMethods.Companion.dismissAlertDialog
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.getDeviceId
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.logOut
 import com.Lyber.utils.CommonMethods.Companion.replaceFragment
 import com.Lyber.utils.CommonMethods.Companion.saveImageToExternalStorage
 import com.Lyber.utils.CommonMethods.Companion.setProfile
@@ -77,6 +80,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
     val limit = 5 // as on this screen we have to show max 3 enteries
     var offset = 0
     private lateinit var navController: NavController
+    private var isResend = false
     override fun bind() = FragmentProfileBinding.inflate(layoutInflater)
 
     @SuppressLint("ClickableViewAccessibility")
@@ -178,23 +182,12 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 
         viewModel.logoutResponse.observe(viewLifecycleOwner) {
             dismissProgressDialog()
-            App.prefsManager.logout()
-            startActivity(
-                Intent(
-                    requireActivity(),
-                    com.Lyber.ui.activities.SplashActivity::class.java
-                ).apply {
-                    putExtra("fromLogout", "fromLogout")
-                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                })
-        }
-
-        viewModel.otpPinChangeResponse.observe(viewLifecycleOwner) {
-            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                dismissProgressDialog()
-                requireActivity().replaceFragment(R.id.flSplashActivity, UpdatePinFragment())
+            if (lifecycle.currentState == Lifecycle.State.RESUMED)
+            {
+             logOut(requireContext())
             }
         }
+
 
 //        viewModel.faceIdResponse.observe(viewLifecycleOwner) {
 //            if (Lifecycle.State.RESUMED == lifecycle.currentState) {
@@ -268,7 +261,10 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         viewModel.commonResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 CommonMethods.dismissProgressDialog()
-                openOtpScreen()
+                dismissAlertDialog()
+                if (!isResend)
+                    openOtpScreen()
+                isResend = true
             }
         }
     }
@@ -297,6 +293,11 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
     }
 
     private fun handle(code: String) {
+        CommonMethods.checkInternet(requireContext()) {
+            isResend = true
+            viewModel.getOtpForWithdraw(Constants.ACTION_CLOSE_ACCOUNT, null)
+
+        }
 
     }
 
@@ -329,27 +330,20 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 setContentView(it.root)
                 it.tvTitle.text = getString(R.string.log_out)
                 it.tvMessage.text = getString(R.string.logout_message)
-                it.tvNegativeButton.text = getString(R.string.no_t)
-                it.tvPositiveButton.text = getString(R.string.yes_t)
+                it.tvNegativeButton.text = getString(R.string.cancel)
+                it.tvPositiveButton.setTextColor(ContextCompat.getColor(requireContext(),R.color.red_500))
+                it.tvPositiveButton.text = getString(R.string.logout)
+                it.tvPositiveButton.paintFlags = it.tvPositiveButton.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+
                 it.tvNegativeButton.setOnClickListener {
                     dismiss()
                 }
                 it.tvPositiveButton.setOnClickListener {
-
-                    App.prefsManager.logout()
-                    startActivity(
-                        Intent(
-                            requireActivity(),
-                            com.Lyber.ui.activities.SplashActivity::class.java
-                        ).apply {
-                            putExtra("fromLogout", "fromLogout")
-                            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        })
-                    /*checkInternet(requireContext()) {
-                        dismiss()
-                        showProgressDialog(requireContext())
-                        viewModel.logout(getDeviceId(requireActivity().contentResolver))
-                    }*/
+                    dismiss()
+                        CommonMethods.checkInternet(requireContext()) {
+                            CommonMethods.showProgressDialog(requireContext())
+                            viewModel.logout()
+                        }
                 }
                 show()
             }

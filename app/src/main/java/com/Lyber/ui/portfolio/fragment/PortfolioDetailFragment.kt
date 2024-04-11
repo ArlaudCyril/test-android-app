@@ -42,6 +42,7 @@ import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.commaFormatted
 import com.Lyber.utils.CommonMethods.Companion.currencyFormatted
+import com.Lyber.utils.CommonMethods.Companion.dismissAlertDialog
 import com.Lyber.utils.CommonMethods.Companion.formattedAsset
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
@@ -95,7 +96,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
     override fun onDestroyView() {
         Log.d(TAG, "onDestroyView: ")
-        updateSocketValue=false
+        updateSocketValue = false
         com.Lyber.ui.activities.SplashActivity.activityCallbacks = null
         webSocket.close(1000, "Goodbye !")
         super.onDestroyView()
@@ -208,7 +209,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         CommonMethods.checkInternet(requireContext()) {
 
             if (arguments != null && requireArguments().containsKey(Constants.ORDER_ID)) {
-                updateSocketValue=false
+                updateSocketValue = false
                 showProgress(requireActivity())
             } else {
                 CommonMethods.showProgressDialog(requireActivity())
@@ -234,6 +235,13 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
     }
 
     private fun addObservers() {
+//        viewModel.logoutResponse.observe(viewLifecycleOwner){
+//            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+//                App.prefsManager.logout()
+//                findNavController().popBackStack()
+//                findNavController().navigate(R.id.discoveryFragment)
+//            }
+//        }
         viewModel.exchangeResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 Handler(Looper.getMainLooper()).postDelayed({
@@ -243,7 +251,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         }
         viewModel.balanceResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                arguments=null
+                arguments = null
                 val balanceDataDict = it.data
                 val balances = ArrayList<Balance>()
                 balanceDataDict.forEach {
@@ -583,10 +591,10 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                     if (viewModel.selectedAsset?.id == "usdt")
                         price = (1.0 / price.toFloat()).toString()
 //                    Log.d("price", "$price")
-                   if (updateSocketValue) {
-                       binding.tvValuePortfolioAndAssetPrice.text = price.currencyFormatted
-                       binding.lineChart.updateValueLastPoint(price.toFloat())
-                   }
+                    if (updateSocketValue) {
+                        binding.tvValuePortfolioAndAssetPrice.text = price.currencyFormatted
+                        binding.lineChart.updateValueLastPoint(price.toFloat())
+                    }
                     if (firstPrice != 0.0) {
                         val percentChange = ((price.toDouble() / firstPrice) - 1) * 100
                         val euroChange = price.toDouble() - firstPrice
@@ -634,7 +642,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
     override fun onRetrofitError(responseBody: ResponseBody?) {
         super.onRetrofitError(responseBody)
         updateSocketValue = true
-
+        dismissAlertDialog()
         if (dialog != null) {
 //            showLottieProgressDialog(requireActivity(), Constants.LOADING_FAILURE)
             dismissProgress()
@@ -771,6 +779,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         }, date, (interval * 1000).toLong())
 
     }
+
     private fun getPriceChart(assetId: String, duration: Duration) {
         CommonMethods.checkInternet(requireContext()) {
             binding.lineChart.animation =
@@ -778,6 +787,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             viewModel.getPriceGraph(assetId, duration)
         }
     }
+
     private fun showLottieProgressDialog(context: Context, typeOfLoader: Int) {
 
         if (dialog == null) {
@@ -826,9 +836,11 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         }
 
     }
+
     private fun stopTimer() {
         timer.cancel()
     }
+
     fun investMoneyClicked(toStrategy: Boolean) {
         if (toStrategy) requireActivity().replaceFragment(
             R.id.flSplashActivity, PickYourStrategyFragment(), topBottom = true

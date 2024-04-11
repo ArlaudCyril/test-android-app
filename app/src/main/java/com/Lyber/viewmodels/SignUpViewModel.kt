@@ -81,8 +81,8 @@ class SignUpViewModel : NetworkViewModel() {
     private var _activateFaceIdResponse: MutableLiveData<MessageResponse> = MutableLiveData()
     val activateFaceId get() = _activateFaceIdResponse
 
-    private var _enableNotificationResponse: MutableLiveData<MessageResponse> = MutableLiveData()
-    val enableNotificationResponse get() = _enableNotificationResponse
+//    private var _enableNotificationResponse: MutableLiveData<MessageResponse> = MutableLiveData()
+//    val enableNotificationResponse get() = _enableNotificationResponse
 
 
     private var _emailVerificationResponse: MutableLiveData<MessageResponse> = MutableLiveData()
@@ -171,20 +171,20 @@ class SignUpViewModel : NetworkViewModel() {
     }
 
 
-    fun enableNotification(enable: Boolean = true) {
-        try {
-            viewModelScope.launch(exceptionHandler) {
-                val res = RestClient.get()
-                    .enableNotification(hashMapOf("is_push_enabled" to if (enable) "1" else "2"))
-                if (res.isSuccessful)
-                    _enableNotificationResponse.postValue(res.body())
-                else listener?.onRetrofitError(res.errorBody())
-
-            }
-        } catch (e: Exception) {
-            listener?.onError()
-        }
-    }
+//    fun enableNotification(enable: Boolean = true) {
+//        try {
+//            viewModelScope.launch(exceptionHandler) {
+//                val res = RestClient.get()
+//                    .enableNotification(hashMapOf("is_push_enabled" to if (enable) "1" else "2"))
+//                if (res.isSuccessful)
+//                    _enableNotificationResponse.postValue(res.body())
+//                else listener?.onRetrofitError(res.errorBody())
+//
+//            }
+//        } catch (e: Exception) {
+//            listener?.onError()
+//        }
+//    }
 
     fun emailVerification() {
         try {

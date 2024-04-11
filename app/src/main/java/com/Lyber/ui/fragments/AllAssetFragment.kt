@@ -1,9 +1,10 @@
 package com.Lyber.ui.fragments
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.View
+import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -11,14 +12,16 @@ import com.Lyber.R
 import com.Lyber.databinding.FragmentAllAssetsBinding
 import com.Lyber.models.PriceServiceResume
 import com.Lyber.ui.adapters.AllAssetAdapter
-import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.utils.OnTextChange
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.google.android.material.tabs.TabLayout
 
 class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickListener {
@@ -128,53 +131,63 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
 
             it.etSearch.addTextChangedListener(object : OnTextChange {
                 override fun onTextChange() {
-
+                    var list = mutableListOf<PriceServiceResume>()
+                    if (searchText.isNotEmpty())
+                        list = assets.filter {
+                            it.id.startsWith(searchText, true)
+                                    || CommonMethods.getAsset(it.id).fullName.startsWith(
+                                searchText,
+                                true
+                            )
+                        }.toMutableList()
+                    else
+                        binding.tvNoResultFound.gone()
                     when (binding.tabLayout.selectedTabPosition) {
                         0 -> {
                             if (searchText.isNotEmpty())
-                                adapter.setList(assets.filter {
-                                    it.id.startsWith(searchText, true)
-                                            || CommonMethods.getAsset(it.id).fullName.startsWith(
-                                        searchText,
-                                        true
-                                    )
-                                })
+                            {
+                                if (list.isEmpty())
+                                    binding.tvNoResultFound.visible()
+                                else
+                                    binding.tvNoResultFound.gone()
+                                adapter.setList(list)
+                            }
                             else adapter.setList(trendings)
                         }
 
                         1 -> {
                             if (searchText.isNotEmpty())
-                                adapter.setList(assets.filter {
-                                    it.id.startsWith(searchText, true)
-                                            || CommonMethods.getAsset(it.id).fullName.startsWith(
-                                        searchText,
-                                        true
-                                    )
-                                })
+                            {
+                                if (list.isEmpty())
+                                    binding.tvNoResultFound.visible()
+                                else
+                                    binding.tvNoResultFound.gone()
+                                adapter.setList(list)
+                            }
                             else adapter.setList(topGainers)
                         }
 
                         2 -> {
                             if (searchText.isNotEmpty())
-                                adapter.setList(assets.filter {
-                                    it.id.startsWith(searchText, true)
-                                            || CommonMethods.getAsset(it.id).fullName.startsWith(
-                                        searchText,
-                                        true
-                                    )
-                                })
+                            {
+                                if (list.isEmpty())
+                                    binding.tvNoResultFound.visible()
+                                else
+                                    binding.tvNoResultFound.gone()
+                                adapter.setList(list)
+                            }
                             else adapter.setList(topLosers)
                         }
 
                         3 -> {
                             if (searchText.isNotEmpty())
-                                adapter.setList(assets.filter {
-                                    it.id.startsWith(searchText, true)
-                                            || CommonMethods.getAsset(it.id).fullName.startsWith(
-                                        searchText,
-                                        true
-                                    )
-                                })
+                            {
+                                if (list.isEmpty())
+                                    binding.tvNoResultFound.visible()
+                                else
+                                    binding.tvNoResultFound.gone()
+                                adapter.setList(list)
+                            }
                             else adapter.setList(stables)
                         }
 
@@ -193,7 +206,15 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
         }
 
         binding.rvRefresh.setOnRefreshListener {
-            viewModel.getAllPriceResume()
+           viewModel.getAllPriceResume()
+            binding.etSearch.setText("")
+            binding.tvNoResultFound.gone()
+            try {
+                val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+                imm?.hideSoftInputFromWindow(view.windowToken, 0)
+
+            }catch (_:Exception){
+            }
         }
 
 
@@ -209,6 +230,8 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
 
     private val tabSelectedListener = object : TabLayout.OnTabSelectedListener {
         override fun onTabSelected(tab: TabLayout.Tab?) {
+            binding.etSearch.setText("")
+            binding.tvNoResultFound.gone()
             when (tab?.position) {
                 0 -> adapter.setList(trendings)
                 1 -> adapter.setList(topGainers)

@@ -1,7 +1,9 @@
 package com.Lyber.ui.fragments.bottomsheetfragments
 
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import android.view.WindowManager
 import com.Lyber.databinding.BottomSheetInvestBinding
 import com.Lyber.ui.portfolio.fragment.PortfolioHomeFragment
 
@@ -12,7 +14,6 @@ class InvestBottomSheet(val clickListener: (Boolean) -> Unit) :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         binding.tvTitleInvestInStrategy.setOnClickListener(this)
         binding.tvSubTitleInvestInStrategy.setOnClickListener(this)
         binding.ivRightArrowInvestInStrategy.setOnClickListener(this)
