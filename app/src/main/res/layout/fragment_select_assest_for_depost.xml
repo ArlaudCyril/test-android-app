@@ -15,8 +15,8 @@
         android:layout_width="48dp"
         android:layout_height="48dp"
         android:layout_marginStart="8dp"
-        android:background="@drawable/gray_purple_50"
         android:layout_marginTop="18dp"
+        android:background="@drawable/gray_purple_50"
         android:backgroundTint="@color/purple_gray_50"
         android:padding="12dp"
         android:src="@drawable/ic_close"
@@ -36,29 +36,32 @@
         app:layout_constraintTop_toTopOf="@id/ivTopAction" />
 
 
-    <include layout="@layout/item_all_assest"
-        android:layout_marginStart="24dp"
+    <include
+        android:id="@+id/llAssest"
+        layout="@layout/item_all_assest"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginStart="24dp"
         android:layout_marginEnd="24dp"
         android:visibility="gone"
-        android:id="@+id/llAssest"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivTopAction"/>
+        app:layout_constraintTop_toBottomOf="@id/ivTopAction" />
+
     <TextView
         android:id="@+id/tvHeading"
         style="@style/SubTitleText"
-        android:gravity="start"
-        android:textStyle="bold"
-        android:text="@string/crypto"
-        android:layout_marginTop="16dp"
         android:layout_marginStart="28dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
+        android:gravity="start"
+        android:text="@string/crypto"
         android:textColor="#423D33"
+        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/llAssest"
 
         />
+
     <ImageView
         android:id="@+id/ivProgress"
         android:layout_width="wrap_content"
@@ -85,20 +88,30 @@
         android:drawableStart="@drawable/search"
         android:drawablePadding="12dp"
         android:hint="@string/search_asset"
-        app:queryHint="Search asset"
         android:paddingHorizontal="12dp"
         android:paddingVertical="12dp"
         android:singleLine="true"
         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
         android:visibility="visible"
-        app:layout_constraintTop_toBottomOf="@id/tvHeading" />
+        app:layout_constraintTop_toBottomOf="@id/tvHeading"
+        app:queryHint="Search asset" />
+
+    <TextView
+        android:id="@+id/tvNoResultFound"
+        style="@style/SubheadMabry"
+        android:text="@string/no_result_found"
+        android:layout_marginTop="24dp"
+        android:visibility="gone"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/etSearch" />
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/rvRefresh"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_marginTop="8dp"
         android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="8dp"
         android:visibility="visible"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toBottomOf="@id/etSearch">

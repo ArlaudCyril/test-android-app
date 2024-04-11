@@ -1,5 +1,7 @@
 package com.Lyber.ui.fragments
 
+import android.Manifest
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -10,6 +12,7 @@ import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.widget.Toast
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
@@ -21,8 +24,10 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.transition.Fade
 import com.Lyber.R
+import com.Lyber.databinding.DownloadGoogleAuthenticatorBinding
 import com.Lyber.databinding.FragmentUnlockAppBinding
 import com.Lyber.ui.activities.SplashActivity
+import com.Lyber.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
@@ -30,12 +35,18 @@ import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.is1DayOld
+import com.Lyber.utils.CommonMethods.Companion.logOut
 import com.Lyber.utils.CommonMethods.Companion.setBiometricPromptInfo
 import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
 import com.Lyber.utils.OnTextChange
 import com.Lyber.viewmodels.NetworkViewModel
+import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.firebase.messaging.FirebaseMessaging
+import com.google.firebase.messaging.FirebaseMessagingService
 import okhttp3.ResponseBody
 import java.util.concurrent.Executor
 
@@ -54,7 +65,6 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         viewModel = getViewModel(this)
         viewModel.listener = this
         viewModel.userLoginResponse.observe(viewLifecycleOwner) {
@@ -67,8 +77,12 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
 
             }
         }
-
-
+        viewModel.logoutResponse.observe(viewLifecycleOwner){
+            if(lifecycle.currentState==Lifecycle.State.RESUMED){
+                dismissProgressDialog()
+                logOut(requireContext())
+            }
+        }
         binding.etPin.addTextChangedListener(onTextChange)
 
         binding.tvOne.setOnClickListener(this)
@@ -101,14 +115,15 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
 //        "face id enabled: ${isFaceIdEnabled(requireContext())}".showToast(requireContext())
 
     }
+
     override fun onResume() {
         super.onResume()
 //        if (CommonMethods.isFaceIdAvail(requireContext()) && CommonMethods.isBiometricReady(requireActivity())) {
 //            binding.tvOr.visible()
 //            binding.tvBioMetric.visible()
 //        } else {
-            binding.tvOr.gone()
-            binding.tvBioMetric.gone()
+        binding.tvOr.gone()
+        binding.tvBioMetric.gone()
 //        }
     }
 
@@ -180,20 +195,16 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
                 }
 
                 tvBioMetric -> {
-                   initBiometricPrompt(requireActivity() as AppCompatActivity).authenticate(
+                    initBiometricPrompt(requireActivity() as AppCompatActivity).authenticate(
                         setBiometricPromptInfo("Authentications", "", "", false)
                     )
                 }
+
                 tvLogOut -> {
-                    App.prefsManager.logout()
-                    startActivity(
-                        Intent(
-                            requireActivity(),
-                            SplashActivity::class.java
-                        ).apply {
-                            putExtra("fromLogout", "fromLogout")
-                            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-                        })
+                        CommonMethods.checkInternet(requireContext()) {
+                            CommonMethods.showProgressDialog(requireContext())
+                            viewModel.logout()
+                        }
                 }
 
             }
@@ -268,6 +279,7 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
         return BiometricPrompt(activity, executor, callback)
     }
 
+    @SuppressLint("SuspiciousIndentation")
     override fun onRetrofitError(responseBody: ResponseBody?) {
         super.onRetrofitError(responseBody)
         binding.etPin.setText("")

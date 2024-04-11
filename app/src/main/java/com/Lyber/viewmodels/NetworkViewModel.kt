@@ -127,7 +127,7 @@ open class NetworkViewModel : ViewModel() {
     private var _getQuoteResponse = MutableLiveData<GetQuoteResponse>()
     val getQuoteResponse get() = _getQuoteResponse
 
-    private var _logoutResponse = MutableLiveData<MessageResponse>()
+    private var _logoutResponse = MutableLiveData<BooleanResponse>()
     val logoutResponse get() = _logoutResponse
 
     private var _transactionResponse = MutableLiveData<TransactionResponse>()
@@ -584,23 +584,23 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun logout(deviceId: String) {
+    fun logout() {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().logout(hashMapOf("device_id" to deviceId))
+            val res = RestClient.get().logout()
             if (res.isSuccessful)
                 _logoutResponse.postValue(res.body())
             else listener?.onRetrofitError(res.errorBody())
         }
     }
 
-    fun sendOtpPinChange() {
-        viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().sendOtpForChangePin()
-            if (res.isSuccessful)
-                _otpForPinChangeResponse.postValue(res.body())
-            else listener?.onRetrofitError(res.errorBody())
-        }
-    }
+//    fun sendOtpPinChange() {
+//        viewModelScope.launch(exceptionHandler) {
+//            val res = RestClient.get().sendOtpForChangePin()
+//            if (res.isSuccessful)
+//                _otpForPinChangeResponse.postValue(res.body())
+//            else listener?.onRetrofitError(res.errorBody())
+//        }
+//    }
 
     fun verifyPhoneForPin(otp: String) {
         viewModelScope.launch(exceptionHandler) {
@@ -1524,6 +1524,19 @@ open class NetworkViewModel : ViewModel() {
             val res = RestClient.get().editEnabledStrategy(hash)
             if (res.isSuccessful)
                 _investStrategyResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+    fun enableNotification(
+        token: String
+    ) {
+        viewModelScope.launch(exceptionHandler) {
+            val hash = hashMapOf<String, Any>()
+            hash["token"] = token
+            hash["device"] = "ANDROID"
+            val res = RestClient.get().enableNotification(hash)
+            if (res.isSuccessful)
+                _booleanResponse.postValue(res.body())
             else listener?.onRetrofitError(res.errorBody())
         }
     }

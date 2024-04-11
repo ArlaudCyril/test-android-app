@@ -14,11 +14,12 @@ import com.Lyber.R
 import com.Lyber.databinding.BottomSheetVerificationBinding
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
+import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.viewmodels.PersonalDataViewModel
 import com.Lyber.viewmodels.SignUpViewModel
 
-class EmailVerificationBottomSheet () :
-    BaseBottomSheet<BottomSheetVerificationBinding>(){
+class EmailVerificationBottomSheet() :
+    BaseBottomSheet<BottomSheetVerificationBinding>() {
 
     private val codeOne get() = binding.etCodeOne.text.trim().toString()
     private val codeTwo get() = binding.etCodeTwo.text.trim().toString()
@@ -37,6 +38,7 @@ class EmailVerificationBottomSheet () :
         super.onCreate(savedInstanceState)
         setStyle(DialogFragment.STYLE_NORMAL, R.style.DialogStyle)
     }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpView()
@@ -50,19 +52,21 @@ class EmailVerificationBottomSheet () :
         }
     }
 
-    private fun setUpView(){
+    private fun setUpView() {
         binding.apply {
 
             title.text = getString(R.string.verification)
-            subtitle.text = getString(R.string.enter_the_code_displayed_on_your_email)
+            subtitle.text = getString(R.string.enter_the_code_received_at_email)
             fieldToVerify.text = ""
             btnCancel.text = getString(R.string.back)
-
+            tvResendCode.visible()
             // Usage example
-            val editTextArray : List<EditText> = listOf(etCodeOne, etCodeTwo, etCodeThree,
-                etCodeFour, etCodeFive, etCodeSix)
+            val editTextArray: List<EditText> = listOf(
+                etCodeOne, etCodeTwo, etCodeThree,
+                etCodeFour, etCodeFive, etCodeSix
+            )
 
-            for (editText in editTextArray){
+            for (editText in editTextArray) {
                 editText.addTextChangedListener(onTextChange)
                 editText.setOnKeyListener(key)
             }
@@ -91,22 +95,27 @@ class EmailVerificationBottomSheet () :
                     binding.etCodeOne.requestFocus()
                     binding.etCodeOne.setSelection(binding.etCodeOne.text.length)
                 }
+
                 binding.etCodeThree -> {
                     binding.etCodeTwo.requestFocus()
                     binding.etCodeTwo.setSelection(binding.etCodeTwo.text.length)
                 }
+
                 binding.etCodeFour -> {
                     binding.etCodeThree.requestFocus()
                     binding.etCodeThree.setSelection(binding.etCodeThree.text.length)
                 }
+
                 binding.etCodeFive -> {
                     binding.etCodeFour.requestFocus()
                     binding.etCodeFour.setSelection(binding.etCodeFour.text.length)
                 }
+
                 binding.etCodeSix -> {
                     binding.etCodeFive.requestFocus()
                     binding.etCodeFive.setSelection(binding.etCodeFive.text.length)
                 }
+
                 else -> {}
             }
             return@OnKeyListener false
@@ -132,9 +141,11 @@ class EmailVerificationBottomSheet () :
                 // Character(s) added
                 if (modifiedEditText != null && s != null && s.count() == 2) {
                     val lastCharacter = modifiedEditText.text[1]
-                    modifiedEditText.text = Editable.Factory.getInstance().newEditable(modifiedEditText.text[0].toString())
+                    modifiedEditText.text = Editable.Factory.getInstance()
+                        .newEditable(modifiedEditText.text[0].toString())
                     val nextEditText = nextEditText(modifiedEditText)
-                    nextEditText.text = Editable.Factory.getInstance().newEditable(lastCharacter.toString())
+                    nextEditText.text =
+                        Editable.Factory.getInstance().newEditable(lastCharacter.toString())
 
                 }
 
@@ -143,27 +154,32 @@ class EmailVerificationBottomSheet () :
                         binding.etCodeTwo.requestFocus()
                         binding.etCodeTwo.setSelection(binding.etCodeTwo.text.length)
                     }
+
                     binding.etCodeTwo -> {
                         binding.etCodeThree.requestFocus()
                         binding.etCodeThree.setSelection(binding.etCodeThree.text.length)
                     }
+
                     binding.etCodeThree -> {
                         binding.etCodeFour.requestFocus()
                         binding.etCodeFour.setSelection(binding.etCodeFour.text.length)
                     }
+
                     binding.etCodeFour -> {
                         binding.etCodeFive.requestFocus()
                         binding.etCodeFive.setSelection(binding.etCodeFive.text.length)
                     }
+
                     binding.etCodeFive -> {
                         binding.etCodeSix.requestFocus()
                         binding.etCodeSix.setSelection(binding.etCodeSix.text.length)
                     }
+
                     binding.etCodeSix -> {
                         if (getCode().length == 6) {
                             dismiss()
                             CommonMethods.showProgressDialog(requireContext())
-                                viewModel.verifyEmail(getCode())
+                            viewModel.verifyEmail(getCode())
                         }
                     }
                 }
@@ -171,7 +187,7 @@ class EmailVerificationBottomSheet () :
 
         }
 
-        private fun  nextEditText(modifiedEditText: EditText) : EditText {
+        private fun nextEditText(modifiedEditText: EditText): EditText {
             when (modifiedEditText) {
                 binding.etCodeOne -> return binding.etCodeTwo
                 binding.etCodeTwo -> return binding.etCodeThree
@@ -184,7 +200,6 @@ class EmailVerificationBottomSheet () :
 
 
     }
-
 
 
 }

@@ -60,8 +60,8 @@ interface Api {
     @POST("user/activate/face-id")
     suspend fun setFaceId(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
 
-    @PUT("user/reset/notification")
-    suspend fun enableNotification(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
+//    @PUT("user/reset/notification")
+//    suspend fun enableNotification(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
 
     @POST("/user/resend/email")
     suspend fun sendEmail(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
@@ -132,8 +132,8 @@ interface Api {
     @POST("order-service/quote")
     suspend fun getQuote(@Body hashMap: HashMap<String, Any>): Response<GetQuoteResponse>
 
-    @POST("user/logout")
-    suspend fun logout(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
+    @POST("user-service/logout")
+    suspend fun logout(): Response<BooleanResponse>
 
     @POST("user/personal-info")
     suspend fun personalInfo(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
@@ -186,8 +186,8 @@ interface Api {
 
     /* change pin */
 
-    @POST("user/pin/otp")
-    suspend fun sendOtpForChangePin(): Response<MessageResponse>
+//    @POST("user/pin/otp")
+//    suspend fun sendOtpForChangePin(): Response<MessageResponse>
 
     @POST("user/pin/verify-phone")
     suspend fun verifyPhoneForPinChange(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
@@ -400,7 +400,7 @@ interface Api {
     suspend fun getPasswordChangeChallenge(): Response<ChangePasswordData>
 
     @POST("user-service/password")
-    suspend fun changePassword(@Body hashMap: HashMap<String, Any>):Response<BooleanResponse>
+    suspend fun changePassword(@Body hashMap: HashMap<String, Any>): Response<BooleanResponse>
 
     @POST("user-service/verify-password-change")
     suspend fun verifyPasswordChange(@Body hashMap: HashMap<String, Any>): Response<ExportResponse>
@@ -415,8 +415,10 @@ interface Api {
 
     @GET("strategy-service/strategy-execution")
     suspend fun checkStrategyStatus(@Query("executionId") executionId: String): Response<StrategyExecution>
+
     @POST("order-service/cancel-quote")
     suspend fun cancelQuote(@Body hashMap: HashMap<String, Any>): Response<BooleanResponse>
+
     @GET("notification-service/notifications")
     suspend fun getActivityLogsList(
         @Query("limit") limit: Int,
@@ -424,7 +426,7 @@ interface Api {
     ): Response<ActivityLogs>
 
     @PATCH("user-service/close-account")
-    suspend fun closeAccount( @Body hashMap: HashMap<String, Any>): Response<BooleanResponse>
+    suspend fun closeAccount(@Body hashMap: HashMap<String, Any>): Response<BooleanResponse>
 
     @GET("kyc-service/sign-url")
     suspend fun startSignUrl(): Response<SignURlResponse>
@@ -443,5 +445,8 @@ interface Api {
 
     @PATCH("strategy-service/active-strategy")
     suspend fun editEnabledStrategy(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
+
+    @POST("notification-service/register")
+    suspend fun enableNotification(@Body hashMap: HashMap<String, Any>): Response<BooleanResponse>
 
 }

@@ -1,12 +1,11 @@
 package com.Lyber.ui.fragments
 
 import android.app.Activity
-import android.app.Dialog
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import android.view.Window
 import android.view.animation.AnimationUtils
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
@@ -15,19 +14,19 @@ import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import com.Lyber.R
-import com.Lyber.databinding.CustomDialogLayoutBinding
 import com.Lyber.databinding.CustomDialogVerticalLayoutBinding
 import com.Lyber.databinding.FragmentVerifyYourIdentityBinding
 import com.Lyber.network.RestClient
 import com.Lyber.ui.activities.WebViewActivity
-import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
+import com.Lyber.utils.CommonMethods.Companion.dismissAlertDialog
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.viewmodels.VerifyIdentityViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import okhttp3.ResponseBody
@@ -67,6 +66,11 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
         binding.radioBtn2.setOnClickListener(this)
         binding.tvGeneralTerms.setOnClickListener(this)
         binding.tvPrivacyPolicy.setOnClickListener(this)
+        isVerificationEnabled()
+        if (privacySelected)
+            binding.radioBtn2.setImageResource(R.drawable.purple_checkbox)
+        if (conditionsSelected)
+            binding.radioBtn.setImageResource(R.drawable.purple_checkbox)
     }
 
     private fun setObserver() {
@@ -95,6 +99,13 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
                 )
             }
         }
+//        portfolioViewModel.logoutResponse.observe(viewLifecycleOwner){
+//            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+//                App.prefsManager.logout()
+//                findNavController().popBackStack()
+//                findNavController().navigate(R.id.discoveryFragment)
+//            }
+//        }
     }
 
     companion object {
@@ -166,8 +177,9 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
 
     override fun onRetrofitError(responseBody: ResponseBody?) {
         super.onRetrofitError(responseBody)
-        isApiHit = false
-        dismissAnimation()
+        dismissAlertDialog()
+            isApiHit = false
+            dismissAnimation()
     }
 
     private fun dismissAnimation() {
@@ -201,42 +213,6 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
 
     }
 
-//    private fun stopRegistrationDialog() {
-//
-//        Dialog(requireActivity(), R.style.DialogTheme).apply {
-//
-//            CustomDialogLayoutBinding.inflate(layoutInflater).let {
-//
-//                requestWindowFeature(Window.FEATURE_NO_TITLE)
-//                setCancelable(false)
-//                setCanceledOnTouchOutside(false)
-//                setContentView(it.root)
-//
-//                it.tvTitle.text = getString(R.string.stop_reg)
-//                it.tvMessage.text = getString(R.string.reg_message)
-//                it.tvNegativeButton.text = getString(R.string.cancel)
-//                it.tvPositiveButton.text = getString(R.string.ok)
-//
-//                it.tvNegativeButton.setOnClickListener { dismiss() }
-//
-//                it.tvPositiveButton.setOnClickListener {
-//                    dismiss()
-//                    App.prefsManager.logout()
-//                    findNavController().popBackStack()
-//                    findNavController().navigate(R.id.discoveryFragment)
-//                    CommonMethods.checkInternet(requireContext()) {
-//                        dismiss()
-//                        CommonMethods.showProgressDialog(requireContext())
-//                        portfolioViewModel.logout(CommonMethods.getDeviceId(requireActivity().contentResolver))
-//                    }
-//                }
-//
-//                show()
-//            }
-//        }
-//
-//    }
-
     private fun isVerificationEnabled() {
         if (privacySelected && conditionsSelected) {
             binding.btnContinue.backgroundTintList =
@@ -255,7 +231,7 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
     }
 
     private lateinit var bottomDialog: BottomSheetDialog
-    fun showWarningDialog() {
+    private fun showWarningDialog() {
         bottomDialog = BottomSheetDialog(requireContext(), R.style.CustomDialogBottomSheet).apply {
             CustomDialogVerticalLayoutBinding.inflate(layoutInflater).let { binding ->
                 setContentView(binding.root)

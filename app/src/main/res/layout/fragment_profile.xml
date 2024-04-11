@@ -17,7 +17,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="12dp"
         android:padding="12dp"
-        android:src="@drawable/ic_close"
+        android:src="@drawable/ic_back"
         app:layout_constraintTop_toTopOf="parent" />
 
     <ScrollView
@@ -292,7 +292,7 @@
                     <TextView
                         style="@style/SubheadMabry"
                         android:layout_alignParentStart="true"
-                        android:text="@string/export"
+                        android:text="@string/account_statement"
                         android:textColor="@color/purple_gray_700"
                         android:textStyle="bold" />
 

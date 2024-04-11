@@ -14,6 +14,7 @@ import com.Lyber.databinding.FragmentBuyUsdtBinding
 import com.Lyber.models.Balance
 import com.Lyber.models.BalanceData
 import com.Lyber.network.RestClient
+import com.Lyber.utils.App
 import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.decimalPoint
@@ -58,6 +59,13 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
         binding.btnPreviewInvestment.setOnClickListener(this)
         prepareView()
         binding.etAmount.addTextChangedListener(textOnTextChange)
+//        viewModel.logoutResponse.observe(viewLifecycleOwner){
+//            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+//                App.prefsManager.logout()
+//                findNavController().popBackStack()
+//                findNavController().navigate(R.id.discoveryFragment)
+//            }
+//        }
         viewModel.getQuoteResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 binding.progress.clearAnimation()
@@ -127,9 +135,11 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
 
     override fun onRetrofitError(responseBody: ResponseBody?) {
         super.onRetrofitError(responseBody)
-        binding.progress.clearAnimation()
-        binding.progress.visibility = View.GONE
-        binding.btnPreviewInvestment.text = getString(R.string.preview_my_purchase)
+
+            binding.progress.clearAnimation()
+            binding.progress.visibility = View.GONE
+            binding.btnPreviewInvestment.text = getString(R.string.preview_my_purchase)
+
     }
 
     private fun setAssesstAmount(assetAmount: String) {

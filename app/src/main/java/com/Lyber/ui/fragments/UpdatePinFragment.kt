@@ -12,7 +12,9 @@ import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.replace
 import com.Lyber.viewmodels.ProfileViewModel
-
+/*
+        Not in use
+ */
 class UpdatePinFragment : BaseFragment<FragmentUpdatePinBinding>(), ActivityCallbacks {
 
     private lateinit var viewModel: ProfileViewModel

@@ -39,7 +39,19 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
     private lateinit var personalDataViewModel: PersonalDataViewModel
 
     override fun bind() = FragmentAddressBinding.inflate(layoutInflater)
-
+    override fun onResume() {
+        super.onResume()
+        // Reinitialize adapter and set it again when the fragment is resumed
+        specifiedUsPersonAdapter = ArrayAdapter(
+            requireContext(),
+            android.R.layout.simple_list_item_1,
+            listOf(
+                requireContext().getString(R.string.yes_t),
+                requireContext().getString(R.string.no_t)
+            )
+        )
+        binding.etSpecifiedUsPerson.setAdapter(specifiedUsPersonAdapter)
+    }
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 

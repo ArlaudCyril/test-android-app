@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/white"
+    android:orientation="vertical"
     android:fitsSystemWindows="true">
 
     <ImageView
         android:id="@+id/ivTopAction"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:layout_alignParentEnd="true"
+        android:layout_gravity="end"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
@@ -24,7 +25,7 @@
     <ScrollView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/ivTopAction"
+        android:layout_weight="1"
         android:fillViewport="true">
 
         <RelativeLayout
@@ -132,53 +133,57 @@
                     android:textColor="@color/purple_500" />
             </RelativeLayout>
 
-            <Button
-                android:id="@+id/btnReviewMyInformations"
-                style="@style/ButtonStyle"
+            <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
+                android:layout_height="wrap_content"
                 android:layout_below="@id/rlPrivacy"
-                android:layout_marginHorizontal="24dp"
-                android:layout_marginTop="24dp"
-                android:backgroundTint="@color/purple_500"
-                android:text="@string/review_my_informations"
-                android:textColor="@color/white" />
+                android:orientation="vertical">
 
-            <RelativeLayout
-                android:id="@+id/btnStartKyc"
-                android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:layout_below="@id/btnReviewMyInformations"
-                android:layout_marginHorizontal="24dp"
-                android:layout_marginTop="16dp"
-                android:layout_marginBottom="28dp">
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
 
                 <Button
-                    android:id="@+id/btnContinue"
+                    android:id="@+id/btnReviewMyInformations"
                     style="@style/ButtonStyle"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:backgroundTint="@color/purple_gray_500"
-                    android:text="@string/start_identity_verifications"
+                    android:layout_below="@id/rlPrivacy"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="24dp"
+                    android:backgroundTint="@color/purple_500"
+                    android:text="@string/review_my_informations"
                     android:textColor="@color/white" />
 
-                <ImageView
-                    android:id="@+id/progress"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_centerInParent="true"
-                    android:elevation="12dp"
-                    android:scaleType="centerCrop"
-                    android:src="@drawable/ic_progress_small"
-                    android:visibility="gone" />
-            </RelativeLayout>
+                <RelativeLayout
+                    android:id="@+id/btnStartKyc"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:layout_marginBottom="24dp"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="16dp">
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/topGuide"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.10" />
+                    <Button
+                        android:id="@+id/btnContinue"
+                        style="@style/ButtonStyle"
+                        android:layout_width="match_parent"
+                        android:layout_height="56dp"
+                        android:backgroundTint="@color/purple_gray_500"
+                        android:text="@string/start_identity_verifications"
+                        android:textColor="@color/white" />
+
+                    <ImageView
+                        android:id="@+id/progress"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_centerInParent="true"
+                        android:elevation="12dp"
+                        android:scaleType="centerCrop"
+                        android:src="@drawable/ic_progress_small"
+                        android:visibility="gone" />
+                </RelativeLayout>
+            </LinearLayout>
         </RelativeLayout>
     </ScrollView>
-</RelativeLayout>
+</LinearLayout>

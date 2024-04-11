@@ -8,12 +8,14 @@ import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.ListPopupWindow
 import android.widget.Toast
 import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.AppItemLayoutBinding
 import com.Lyber.databinding.FragmentChooseAssetDepositBinding
@@ -25,12 +27,14 @@ import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.fadeIn
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import java.util.*
 
-class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBinding>() {
+class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBinding>(),
+    OnClickListener {
 
 
     private var network: AssetBaseData? = null
@@ -47,34 +51,6 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
 
         viewModel = getViewModel(requireActivity())
         viewModel.listener = this
-        binding.ivScan.setOnClickListener {
-            if (binding.etAddress.text.toString().isNotEmpty())
-                startActivity(
-                    Intent(requireActivity(), com.Lyber.ui.activities.BarCodeActivity::class.java)
-                        .putExtra(Constants.DATA_SELECTED, binding.etAddress.text.toString())
-                )
-        }
-        binding.ivTopAction.setOnClickListener { requireActivity().onBackPressed() }
-
-        binding.ivCopy.setOnClickListener {
-            if (binding.etAddress.text.toString().isNotEmpty()) {
-                val clipboard =
-                    requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-                val clip =
-                    ClipData.newPlainText(
-                        getString(R.string.deposit_adress),
-                        binding.etAddress.text.toString()
-                    )
-                clipboard.setPrimaryClip(clip)
-                Toast.makeText(
-                    requireActivity(),
-                    getString(R.string.adress_copied), Toast.LENGTH_SHORT
-                ).show()
-            }
-        }
-
-
-
         assetAdapter = AssetPopupAdapter()
         assetAdapterNetwork = AssetPopupAdapterNetwork()
         assetPopup = ListPopupWindow(requireContext())
@@ -95,23 +71,26 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                 for (sa in it.data) {
                     if (sa.id == requireArguments().getString(Constants.DATA_SELECTED)) {
                         network = sa
-
                         binding.tvTitle.fadeIn()
                         binding.ivNetwork.visible()
                         binding.etAssets.updatePadding(0)
-
                         binding.etAssets.setText(
-                            "${
-                                sa.fullName.replaceFirstChar {
+                            "${sa.fullName.replaceFirstChar {
                                     if (it.isLowerCase()) it.titlecase(
                                         Locale.ROOT
                                     ) else it.toString()
                                 }
                             } (${sa.id.uppercase()})"
                         )
+                        if (sa.id.equals("USDT", ignoreCase = true)) {
+                            binding.btnBuyTether.visible()
+                            binding.tvOr.visible()
+                        }
+                        else {
+                            binding.btnBuyTether.gone()
+                            binding.tvOr.gone()
+                        }
                         binding.ivNetwork.loadCircleCrop(sa.imageUrl)
-                        binding.btnAddUseAddress.text =
-                            "${getString(R.string.buy)} ${sa.fullName.capitalize()} ${getString(R.string.on)} Lyber"
                         CommonMethods.showProgressDialog(requireActivity())
                         viewModel.getAssetDetailIncludeNetworks(sa.id)
                         break
@@ -121,7 +100,7 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
         viewModel.getAddress.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 CommonMethods.dismissProgressDialog()
-                   binding.etAddress.text = it.data.address
+                binding.etAddress.text = it.data.address
             }
         }
         viewModel.getAssetDetail.observe(viewLifecycleOwner) {
@@ -154,19 +133,21 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
 
         assetPopup.setOnItemClickListener { _, _, position, _ ->
             assetAdapter.getItemAt(position)?.let {
-
                 // change ui
                 network = it
-
                 binding.tvTitle.fadeIn()
                 binding.ivNetwork.visible()
                 binding.etAssets.updatePadding(0)
-
                 binding.etAssets.setText("${it.fullName.capitalize(Locale.ROOT)} (${it.id.uppercase()})")
-
+                if (it.id.equals("USDT", ignoreCase = true)) {
+                    binding.btnBuyTether.visible()
+                    binding.tvOr.visible()
+                }
+                else {
+                    binding.btnBuyTether.gone()
+                    binding.tvOr.gone()
+                }
                 binding.ivNetwork.loadCircleCrop(it.imageUrl)
-                binding.btnAddUseAddress.text =
-                    "${getString(R.string.buy)} ${it.fullName.capitalize()} ${getString(R.string.on)} Lyber"
                 viewModel.getAssetDetailIncludeNetworks(it.id)
                 CommonMethods.showProgressDialog(requireActivity())
                 assetPopup.dismiss()
@@ -186,66 +167,21 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                 assetPopupNetwork.dismiss()
             }
         }
-
-
-        binding.etNetwork.setOnClickListener {
-            assetPopupNetwork.show()
-        }
-        binding.etAssets.setOnClickListener {
-            if (assetAdapter.hasNoData()) {
-                assetAdapter.addProgress()
-            }
-            assetPopup.show()
-        }
-
-
-        viewModel.selectedAsset?.let {
-            binding.btnAddUseAddress.text =
-                "${getString(R.string.buy)} ${it.fullName.capitalize()} ${getString(R.string.on)} Lyber"
-        }
-
+        binding.btnBuyTether.setOnClickListener(this)
+        binding.ivCopy.setOnClickListener(this)
+        binding.etNetwork.setOnClickListener(this)
+        binding.etAssets.setOnClickListener(this)
+        binding.ivScan.setOnClickListener(this)
+        binding.ivTopAction.setOnClickListener(this)
 
     }
-    fun replaceMiddleWithDot(input: String): String {
-        // Check if the input has at least 12 characters
-        if (input.length < 12) {
-            return "Input string must have at least 12 characters"
-        }
 
-        val firstSix = input.substring(0, 6)
-        val lastSix = input.substring(input.length - 6)
-
-        // Calculate the number of characters between first six and last six digits
-        val middleCount = input.length - firstSix.length - lastSix.length
-
-        // Replace middle characters with "."
-//        val middlePart = ".".repeat(middleCount)
-        val middlePart = ".".repeat(12)
-
-        return firstSix + middlePart + lastSix
-    }
     class AssetPopupAdapterNetwork : android.widget.BaseAdapter() {
 
         private val list = mutableListOf<NetworkDeposit?>()
 
         fun getItemAt(position: Int): NetworkDeposit? {
             return list[position]
-        }
-
-        fun hasNoData(): Boolean {
-            return list.isEmpty()
-        }
-
-        fun addProgress() {
-            list.add(null)
-            notifyDataSetChanged()
-        }
-
-        fun removeProgress() {
-            list.last()?.let {
-                list.remove(it)
-                notifyDataSetChanged()
-            }
         }
 
         fun setData(items: List<NetworkDeposit?>) {
@@ -298,7 +234,6 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                     }
         }
 
-
     }
 
     class AssetPopupAdapter : android.widget.BaseAdapter() {
@@ -350,7 +285,6 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
         @SuppressLint("ViewHolder")
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {
             if (list[position] == null)
-
                 LoaderViewBinding.inflate(LayoutInflater.from(parent?.context), parent, false).let {
                     it.ivLoader.animation =
                         AnimationUtils.loadAnimation(it.ivLoader.context, R.anim.rotate_drawable)
@@ -359,22 +293,65 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
             else
                 AppItemLayoutBinding.inflate(LayoutInflater.from(parent?.context), parent, false)
                     .let {
-
                         list[position]?.let { data ->
-
-
                             it.ivItem.loadCircleCrop(data.imageUrl)
-
                             it.tvStartTitleCenter.text =
                                 "${data.fullName.capitalize()} (${data.id.uppercase()})"
-
                             return it.root
                         }
-
                         return it.root
                     }
         }
     }
 
-
+    override fun onClick(p0: View?) {
+        binding.apply {
+            when (p0) {
+                btnBuyTether -> {
+                    findNavController().navigate(R.id.buyUsdt)
+                }
+                ivCopy -> {
+                    if (binding.etAddress.text.toString().isNotEmpty()) {
+                        val clipboard =
+                            requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+                        val clip =
+                            ClipData.newPlainText(
+                                getString(R.string.deposit_adress),
+                                binding.etAddress.text.toString()
+                            )
+                        clipboard.setPrimaryClip(clip)
+                        Toast.makeText(
+                            requireActivity(),
+                            getString(R.string.adress_copied), Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+                etNetwork -> {
+                    assetPopupNetwork.show()
+                }
+                etAssets -> {
+                    if (assetAdapter.hasNoData()) {
+                        assetAdapter.addProgress()
+                    }
+                    assetPopup.show()
+                }
+                ivScan -> {
+                    if (binding.etAddress.text.toString().isNotEmpty())
+                        startActivity(
+                            Intent(
+                                requireActivity(),
+                                com.Lyber.ui.activities.BarCodeActivity::class.java
+                            )
+                                .putExtra(
+                                    Constants.DATA_SELECTED,
+                                    binding.etAddress.text.toString()
+                                )
+                        )
+                }
+                ivTopAction -> {
+                    requireActivity().onBackPressed()
+                }
+            }
+        }
+    }
 }

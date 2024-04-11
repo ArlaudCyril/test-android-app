@@ -6,20 +6,27 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import com.Lyber.R
+import com.Lyber.databinding.CustomDialogVerticalLayoutBinding
+import com.Lyber.databinding.DownloadGoogleAuthenticatorBinding
 import com.Lyber.databinding.FragmentTwoFactorAuthenticationBinding
 import com.Lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.dismissAlertDialog
 import com.Lyber.utils.CommonMethods.Companion.showToast
+import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.SignUpViewModel
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
 import okhttp3.ResponseBody
@@ -30,6 +37,7 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
     OnClickListener {
     override fun bind() = FragmentTwoFactorAuthenticationBinding.inflate(layoutInflater)
     var qrCodeUrl = ""
+    private var isResend = false
 
     companion object {
         var showOtp = true
@@ -40,6 +48,13 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
         super.onViewCreated(view, savedInstanceState)
         viewModel = CommonMethods.getViewModel(this)
         viewModel.listener = this
+//        viewModel.logoutResponse.observe(viewLifecycleOwner){
+//            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+//                App.prefsManager.logout()
+//                findNavController().popBackStack()
+//                findNavController().navigate(R.id.discoveryFragment)
+//            }
+//        }
         if (arguments != null && requireArguments().containsKey("QrCode")) {
             var url = requireArguments().getString("QrCode")
             if (url!!.isNotEmpty()) {
@@ -82,34 +97,39 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
 
             }
         }
+        customDialog1()
         binding.tvAddGoogleAuthenticator.setOnClickListener(this)
         binding.btnVerify.setOnClickListener(this)
         binding.ivTopAction.setOnClickListener(this)
         viewModel.booleanResponse.observe(viewLifecycleOwner) {
             if (Lifecycle.State.RESUMED == lifecycle.currentState) {
-                val transparentView = View(context)
-                transparentView.setBackgroundColor(
-                    ContextCompat.getColor(
-                        requireContext(), R.color.semi_transparent_dark
+                dismissAlertDialog()
+                if (!isResend) {
+                    val transparentView = View(context)
+                    transparentView.setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireContext(), R.color.semi_transparent_dark
+                        )
                     )
-                )
-                CommonMethods.dismissProgressDialog()
-                // Set layout parameters for the transparent view
-                val viewParams = RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                    RelativeLayout.LayoutParams.MATCH_PARENT
-                )
-                val vc = VerificationBottomSheet()
-                vc.viewToDelete = transparentView
-                vc.mainView = getView()?.rootView as ViewGroup
-                vc.viewModel = viewModel
-                vc.arguments = Bundle().apply {
-                    putString(Constants.TYPE, Constants.GOOGLE)
+                    CommonMethods.dismissProgressDialog()
+                    // Set layout parameters for the transparent view
+                    val viewParams = RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.MATCH_PARENT
+                    )
+                    val vc = VerificationBottomSheet(::handle)
+                    vc.viewToDelete = transparentView
+                    vc.mainView = getView()?.rootView as ViewGroup
+                    vc.viewModel = viewModel
+                    vc.arguments = Bundle().apply {
+                        putString(Constants.TYPE, Constants.GOOGLE)
+                        putBoolean(Constants.GOOGLE, true)
+                    }
+                    vc.show(childFragmentManager, App.prefsManager.user?.type2FA)
+                    val mainView = getView()?.rootView as ViewGroup
+                    mainView.addView(transparentView, viewParams)
                 }
-                vc.show(childFragmentManager, App.prefsManager.user?.type2FA)
-                val mainView = getView()?.rootView as ViewGroup
-                mainView.addView(transparentView, viewParams)
-
+                isResend = false
             }
         }
 
@@ -130,6 +150,7 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
 
     override fun onRetrofitError(responseBody: ResponseBody?) {
         super.onRetrofitError(responseBody)
+        dismissAlertDialog()
         if (showOtp) {
             showOtp = false
             val transparentView = View(context)
@@ -144,12 +165,13 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
                 RelativeLayout.LayoutParams.MATCH_PARENT,
                 RelativeLayout.LayoutParams.MATCH_PARENT
             )
-            val vc = VerificationBottomSheet()
+            val vc = VerificationBottomSheet(::handle)
             vc.viewToDelete = transparentView
             vc.mainView = getView()?.rootView as ViewGroup
             vc.viewModel = viewModel
             vc.arguments = Bundle().apply {
                 putString(Constants.TYPE, Constants.GOOGLE)
+                putBoolean(Constants.GOOGLE, true)
             }
             vc.show(childFragmentManager, App.prefsManager.user?.type2FA)
             val mainView = getView()?.rootView as ViewGroup
@@ -200,8 +222,55 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
                         viewModel.switchOffAuthentication(detail, Constants.TYPE)
                     }
                 }
-                ivTopAction->{ requireActivity().onBackPressedDispatcher.onBackPressed()}
+
+                ivTopAction -> {
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                }
             }
+        }
+    }
+
+    private lateinit var bottomDialog: BottomSheetDialog
+
+    fun customDialog1() {
+        bottomDialog = BottomSheetDialog(requireContext(), R.style.CustomDialogBottomSheet).apply {
+            DownloadGoogleAuthenticatorBinding.inflate(layoutInflater).let { binding ->
+                setContentView(binding.root)
+                binding.tvAddGoogleAuthenticator.setOnClickListener {
+                    val appPackageName =
+                        "com.google.android.apps.authenticator2" // Package name of Google Authenticator app
+
+                    try {
+                        val intent = Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse("market://details?id=$appPackageName")
+                        )
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        startActivity(intent)
+                    } catch (e: android.content.ActivityNotFoundException) {
+                        // If Google Play Store app is not installed, open the web browser
+                        val intent = Intent(
+                            Intent.ACTION_VIEW,
+                            Uri.parse("https://play.google.com/store/apps/details?id=$appPackageName")
+                        )
+                        startActivity(intent)
+                    }
+                }
+                binding.tvPositiveButton.setOnClickListener {
+                    dismiss()
+                }
+                show()
+            }
+        }
+    }
+
+    fun handle(tx: String) {
+        isResend = true
+        CommonMethods.checkInternet(requireContext()) {
+            showOtp = false
+            var json = """{"type2FA" : "google"}""".trimMargin()
+            val detail = CommonMethods.encodeToBase64(json)
+            viewModel.switchOffAuthentication(detail, Constants.TYPE)
         }
     }
 }

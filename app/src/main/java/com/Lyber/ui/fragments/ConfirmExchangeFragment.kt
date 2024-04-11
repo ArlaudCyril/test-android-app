@@ -22,6 +22,7 @@ import com.Lyber.utils.Constants
 import com.google.gson.Gson
 import java.math.BigDecimal
 import java.math.RoundingMode
+import java.util.Locale
 
 
 class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>(),
@@ -73,9 +74,11 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
             ).gone()
         }
 
-        if (arguments!=null && requireArguments().containsKey(Constants.DATA_SELECTED)){
-            val data = Gson().fromJson(requireArguments().getString(Constants.DATA_SELECTED),
-                DataQuote::class.java)
+        if (arguments != null && requireArguments().containsKey(Constants.DATA_SELECTED)) {
+            val data = Gson().fromJson(
+                requireArguments().getString(Constants.DATA_SELECTED),
+                DataQuote::class.java
+            )
             prepareView(data)
         }
 
@@ -88,11 +91,13 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
                 btnConfirmInvestment -> {
                     viewModel.selectedAsset = CommonMethods.getAsset(viewModel.exchangeAssetTo!!)
                     val bundle = Bundle().apply {
-                        putString(Constants.ORDER_ID,orderId)
+                        putString(Constants.ORDER_ID, orderId)
                     }
-                    findNavController().navigate(R.id.action_confirmExchangeFragment_to_deatil_fragment
-                    ,bundle)
+                    findNavController().navigate(
+                        R.id.action_confirmExchangeFragment_to_deatil_fragment, bundle
+                    )
                 }
+
                 tvMoreDetails -> {
                     if (isExpand) {
                         zzInfor.gone()
@@ -122,35 +127,42 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
     private fun prepareView(data: DataQuote?) {
         binding.apply {
             tvNestedAmount.text = getString(R.string.ratio)
-            val balance = com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
-            var priceCoin =balance!!.balanceData.euroBalance.toDouble()
+            val balance =
+                com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
+            var priceCoin = balance!!.balanceData.euroBalance.toDouble()
                 .div(balance.balanceData.balance.toDouble())
-            tvNestedAmountValue.text = "1 : "+data!!.ratio
+            tvNestedAmountValue.text = "1 : " + data!!.ratio
             tvValueLyberFee.text =
                 data.fees.formattedAsset(
                     priceCoin,
                     rounding = RoundingMode.DOWN
-                ) +" "+ data.fromAsset.uppercase()
-            tvExchangeTo.text=getString(R.string.lyber_fees)
+                ) + " " + data.fromAsset.uppercase()
+            tvExchangeTo.text = getString(R.string.lyber_fees)
 
-            tvExchangeToValue.text ="~"+
-                data.fees.formattedAsset(
-                    priceCoin,
-                    rounding = RoundingMode.DOWN,6
-                ) +" "+ data.fromAsset.uppercase()
-            Log.d("fee","${data.fees.formattedAsset(
-                priceCoin,
-                rounding = RoundingMode.DOWN,6
-            ).toDouble()}")
+            tvExchangeToValue.text = "~" +
+                    data.fees.formattedAsset(
+                        priceCoin,
+                        rounding = RoundingMode.DOWN, 6
+                    ) + " " + data.fromAsset.uppercase()
+            Log.d(
+                "fee", "${
+                    data.fees.formattedAsset(
+                        priceCoin,
+                        rounding = RoundingMode.DOWN, 6
+                    ).toDouble()
+                }"
+            )
 
             orderId = data.orderId
 //            tvExchangeFromValue.text =
 //                "${data.fromAmount} ${data.fromAsset.uppercase()}"
-           tvExchangeFromValue.text =
+            tvExchangeFromValue.text =
                 "~${(data.fromAmount.toDouble() - data.fees.toDouble())} ${data.fromAsset.uppercase()}"
 
-            val balanceFrom = com.Lyber.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetFrom}
-            val balanceTo = com.Lyber.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetTo}
+            val balanceFrom =
+                com.Lyber.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
+            val balanceTo =
+                com.Lyber.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetTo }
             val balanceFromPrice = balanceFrom!!.priceServiceResumeData.lastPrice
             val balanceToPrice = balanceTo!!.priceServiceResumeData.lastPrice
             val valuesInEurosToAsset =
@@ -164,25 +176,32 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
 //                    price = priceCoin,
 //                    rounding = RoundingMode.DOWN
 //                )} ${data.toAsset.uppercase()}"
-            Log.d("dataa","$data")
-            val number = BigDecimal(data.fromAmount)
-            val trimmedNumber = number.stripTrailingZeros()
-            tvTotalAmount.text =
-                "${trimmedNumber} ${data.fromAsset.uppercase()}"
-//                "${String.format(Locale.US, "%f", data.fromAmount.toFloat())} ${data.fromAsset.uppercase()}"
+            Log.d("dataa", "$data")
+            if (data.fromAmount.contains(".")) {
+                val number = BigDecimal(data.fromAmount)
+                val trimmedNumber = number.stripTrailingZeros()
+                tvTotalAmount.text =
+                    "${trimmedNumber} ${data.fromAsset.uppercase()}"
+            } else
+                tvTotalAmount.text =
+                    "${String.format(Locale.US, "%f", data.fromAmount.toFloat()).trimEnd('0').trimEnd('.')} ${data.fromAsset.uppercase()}"
 
             tvAmount.text =
-                "${data.toAmount.formattedAsset(
-                    price = priceCoin,
-                    rounding = RoundingMode.DOWN
-                ) } ${data.toAsset.uppercase()}"
+                "${
+                    data.toAmount.formattedAsset(
+                        price = priceCoin,
+                        rounding = RoundingMode.DOWN
+                    )
+                } ${data.toAsset.uppercase()}"
 //            val valueTotal = data.fees.toDouble()+data.fromAmount.toDouble()
             val valueTotal = data.fromAmount.toDouble()
             tvValueTotal.text =
-                "${valueTotal.toString().formattedAsset(
-                    price = priceCoin,
-                    rounding = RoundingMode.DOWN,3
-                ) } ${data.fromAsset.uppercase()}"
+                "${
+                    valueTotal.toString().formattedAsset(
+                        price = priceCoin,
+                        rounding = RoundingMode.DOWN, 3
+                    )
+                } ${data.fromAsset.uppercase()}"
             btnConfirmInvestment.isEnabled = true
             startTimer()
             btnConfirmInvestment.text =
@@ -195,38 +214,35 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
 
 
     private fun startTimer() {
-       try {
-           Handler(Looper.getMainLooper()).postDelayed({
-               if (lifecycle.currentState == Lifecycle.State.RESUMED)
-               if (timer == 0) {
-                   binding.btnConfirmInvestment.isEnabled = true
-                   binding.btnConfirmInvestment.text = getString(
-                       R.string._25_sec, getString(R.string.confirm_exchange), timer.toString()
-                   )
-                   binding.btnConfirmInvestment.isEnabled = false
-                   binding.btnConfirmInvestment.background = ContextCompat.getDrawable(
-                       requireContext(),
-                       R.drawable.button_purple_400
-                   )
-               } else {
-                   timer -= 1
-                   binding.btnConfirmInvestment.text = getString(
-                       R.string._25_sec, getString(R.string.confirm_exchange), timer.toString()
-                   )
-                   binding.btnConfirmInvestment.background = ContextCompat.getDrawable(
-                       requireContext(),
-                       R.drawable.button_purple_500
-                   )
-                   startTimer()
-               }
-           }, 1000)
-       }catch (e:Exception){
-           e.printStackTrace()
-       }
+        try {
+            Handler(Looper.getMainLooper()).postDelayed({
+                if (lifecycle.currentState == Lifecycle.State.RESUMED)
+                    if (timer == 0) {
+                        binding.btnConfirmInvestment.isEnabled = true
+                        binding.btnConfirmInvestment.text = getString(
+                            R.string._25_sec, getString(R.string.confirm_exchange), timer.toString()
+                        )
+                        binding.btnConfirmInvestment.isEnabled = false
+                        binding.btnConfirmInvestment.background = ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.button_purple_400
+                        )
+                    } else {
+                        timer -= 1
+                        binding.btnConfirmInvestment.text = getString(
+                            R.string._25_sec, getString(R.string.confirm_exchange), timer.toString()
+                        )
+                        binding.btnConfirmInvestment.background = ContextCompat.getDrawable(
+                            requireContext(),
+                            R.drawable.button_purple_500
+                        )
+                        startTimer()
+                    }
+            }, 1000)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
     }
-
-
-
 
 
 }

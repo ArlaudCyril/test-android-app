@@ -3,9 +3,15 @@ package com.Lyber.ui.fragments
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
+import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
+import com.Lyber.R
 import com.Lyber.databinding.FragmentEnterOtpBinding
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.gone
@@ -48,7 +54,13 @@ class VerifyPhoneForPinFragment : BaseFragment<FragmentEnterOtpBinding>() {
 
         }
         binding.etCodeOne.requestKeyboard()
-
+//        viewModel.logoutResponse.observe(viewLifecycleOwner){
+//            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+//                App.prefsManager.logout()
+//                findNavController().popBackStack()
+//                findNavController().navigate(R.id.discoveryFragment)
+//            }
+//        }
     }
 
     fun getCode() = codeOne + codeTwo + codeThree + codeFour
@@ -102,7 +114,6 @@ class VerifyPhoneForPinFragment : BaseFragment<FragmentEnterOtpBinding>() {
 
     override fun onRetrofitError(responseBody: ResponseBody?) {
         super.onRetrofitError(responseBody)
-
         clearFields()
     }
 

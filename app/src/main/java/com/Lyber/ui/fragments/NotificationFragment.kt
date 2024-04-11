@@ -12,7 +12,7 @@ import com.Lyber.databinding.FragmentNotificationBinding
 import com.Lyber.databinding.ItemNotificationBinding
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.visible
-
+//not in use
 class NotificationFragment : BaseFragment<FragmentNotificationBinding>() {
 
     private lateinit var adapter: NotificationAdapter

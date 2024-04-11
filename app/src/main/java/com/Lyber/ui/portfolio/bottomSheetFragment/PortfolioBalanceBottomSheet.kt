@@ -2,11 +2,13 @@ package com.Lyber.ui.portfolio.bottomSheetFragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -18,9 +20,12 @@ import com.Lyber.databinding.LoaderViewBinding
 import com.Lyber.models.Transaction
 import com.Lyber.ui.adapters.BaseAdapter
 import com.Lyber.ui.fragments.bottomsheetfragments.BaseBottomSheet
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
 import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.decimalPoints
+import com.Lyber.utils.CommonMethods.Companion.dismissAlertDialog
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.visible
@@ -47,7 +52,13 @@ class PortfolioBalanceBottomSheet(private val clickListener: (BalanceInfo) -> Un
 
         viewModel = getViewModel(requireActivity())
         viewModel.listener = this
-
+//        viewModel.logoutResponse.observe(viewLifecycleOwner){
+//            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+//                App.prefsManager.logout()
+//                findNavController().popBackStack()
+//                findNavController().navigate(R.id.discoveryFragment)
+//            }
+//        }
         viewModel.transactionResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
 
@@ -265,26 +276,9 @@ class PortfolioBalanceBottomSheet(private val clickListener: (BalanceInfo) -> Un
         }
     }
 
-    data class BalanceHistory(
-        val title: String,
-        val titlePrice: String,
-        val subTitle: String,
-        val subTitlePrice: String
-    )
-
     override fun onRetrofitError(responseBody: ResponseBody?) {
         super.onRetrofitError(responseBody)
         dismissProgress()
-//        val errorConverter = RestClient.getRetrofitInstance()
-//            .responseBodyConverter<ErrorResponse>(
-//                ErrorResponse::class.java,
-//                arrayOfNulls<Annotation>(0)
-//            )
-//        val errorRes: ErrorResponse? = errorConverter.convert(responseBody!!)
-//        if (errorRes?.code == 7023 || errorRes?.code == 10041 || errorRes?.code == 7025 || errorRes?.code == 10043) {
-//            customDialog(errorRes.code)
-//        } else if (errorRes?.code == 7024 || errorRes?.code == 10042) {
-//            CommonMethods.showSnackBar(binding.root,requireContext())
-//        }
+        dismissAlertDialog()
     }
 }

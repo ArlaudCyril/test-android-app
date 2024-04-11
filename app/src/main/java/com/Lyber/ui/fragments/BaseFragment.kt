@@ -28,12 +28,16 @@ import com.Lyber.databinding.CustomDialogLayoutBinding
 import com.Lyber.databinding.CustomDialogVerticalLayoutBinding
 import com.Lyber.databinding.DocumentBeingVerifiedBinding
 import com.Lyber.network.RestClient
+import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.ui.activities.WebViewActivity
 import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.checkInternet
+import com.Lyber.utils.CommonMethods.Companion.dismissAlertDialog
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.logOut
 import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.CommonMethods.Companion.visible
@@ -85,6 +89,13 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
 
             }
         }
+        viewModel.logoutResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                dismissProgressDialog()
+                dismissAlertDialog()
+                CommonMethods.logOut(requireContext())
+            }
+        }
         return binding.root
     }
 
@@ -99,7 +110,7 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
             if (result.resultCode == Activity.RESULT_OK) {
                 if (isSign) {
                     activity?.runOnUiThread {
-                        findNavController().popBackStack(R.id.portfolioHomeFragment,false)
+                        findNavController().popBackStack(R.id.portfolioHomeFragment, false)
                         showDocumentDialog(App.appContext, Constants.LOADING)
                         Handler(Looper.getMainLooper()).postDelayed({
                             showDocumentDialog(App.appContext, Constants.LOADING_SUCCESS)
@@ -117,9 +128,10 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
 
     override fun onRetrofitError(responseBody: ResponseBody?) {
         dismissProgressDialog()
+        dismissAlertDialog()
         val code = CommonMethods.showErrorMessage(requireContext(), responseBody, binding.root)
         Log.d("errorCode", "$code")
-        if (code == 7023 || code == 10041 || code == 7025 || code == 10043)
+         if (code == 7023 || code == 10041 || code == 7025 || code == 10043)
             customDialog(code)
     }
 
@@ -214,7 +226,8 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
         }
 
     }
-     fun stopRegistrationDialog() {
+
+    fun stopRegistrationDialog() {
         Dialog(requireActivity(), R.style.DialogTheme).apply {
 
             CustomDialogLayoutBinding.inflate(layoutInflater).let {
@@ -233,14 +246,10 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
 
                 it.tvPositiveButton.setOnClickListener {
                     dismiss()
-                    App.prefsManager.logout()
-                    findNavController().popBackStack()
-                    findNavController().navigate(R.id.discoveryFragment)
-                    CommonMethods.checkInternet(requireContext()) {
-                        dismiss()
-//                        CommonMethods.showProgressDialog(requireContext())
-                        viewModel.logout(CommonMethods.getDeviceId(requireActivity().contentResolver))
-                    }
+                        CommonMethods.checkInternet(requireContext()) {
+                            CommonMethods.showProgressDialog(requireContext())
+                            viewModel.logout()
+                        }
                 }
 
                 show()

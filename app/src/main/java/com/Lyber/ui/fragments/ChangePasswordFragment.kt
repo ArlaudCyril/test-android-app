@@ -3,8 +3,6 @@ package com.Lyber.ui.fragments
 import android.content.res.ColorStateList
 import android.graphics.PorterDuff
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -25,7 +23,6 @@ import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.Constants
-import com.Lyber.viewmodels.NetworkViewModel
 import com.Lyber.viewmodels.SignUpViewModel
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
@@ -43,6 +40,7 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
     private lateinit var config: SRP6CryptoParams
     lateinit var generator: SRP6VerifierGenerator
     lateinit var client: SRP6ClientSession
+    private var resendCode=false
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = CommonMethods.getViewModel(this)
@@ -54,38 +52,41 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
         client = SRP6ClientSession()
         client.xRoutine = XRoutineWithUserIdentity()
         binding.ivTopAction.setOnClickListener(this)
-        binding.btnSendResetLink.setOnClickListener(this)
+        binding.btnSavePass.setOnClickListener(this)
         binding.etPasswordOld.addTextChangedListener(onTextChange)
         binding.etPassword.addTextChangedListener(onTextChange)
         binding.etPasswordConfirm.addTextChangedListener(onTextChange)
         viewModel.booleanResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 CommonMethods.dismissProgressDialog()
-                val transparentView = View(context)
-                transparentView.setBackgroundColor(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.semi_transparent_dark
+                CommonMethods.dismissAlertDialog()
+                if(!resendCode) {
+                    val transparentView = View(context)
+                    transparentView.setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.semi_transparent_dark
+                        )
                     )
-                )
 
-                // Set layout parameters for the transparent view
-                val viewParams = RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                    RelativeLayout.LayoutParams.MATCH_PARENT
-                )
+                    // Set layout parameters for the transparent view
+                    val viewParams = RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.MATCH_PARENT
+                    )
 
-                val vc = VerificationBottomSheet()
-                vc.typeVerification = Constants.CHANGE_PASSWORD
-                vc.viewToDelete = transparentView
-                vc.mainView = getView()?.rootView as ViewGroup
-                vc.viewModel = viewModel
-                vc.show(childFragmentManager, "")
+                    val vc = VerificationBottomSheet(::handle)
+                    vc.typeVerification = Constants.CHANGE_PASSWORD
+                    vc.viewToDelete = transparentView
+                    vc.mainView = getView()?.rootView as ViewGroup
+                    vc.viewModel = viewModel
+                    vc.show(childFragmentManager, "")
 
-                // Add the transparent view to the RelativeLayout
-                val mainView = getView()?.rootView as ViewGroup
-                mainView.addView(transparentView, viewParams)
-
+                    // Add the transparent view to the RelativeLayout
+                    val mainView = getView()?.rootView as ViewGroup
+                    mainView.addView(transparentView, viewParams)
+                }
+                resendCode=false
             }
         }
         viewModel.exportOperationResponse.observe(viewLifecycleOwner) {
@@ -155,7 +156,7 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
                                 R.color.purple_500
                             )
                         )
-                    binding.btnSendResetLink.backgroundTintList = colorStateList
+                    binding.btnSavePass.backgroundTintList = colorStateList
                     binding.tvPassValidMsg.text = getString(R.string.you_have_strong_password)
                     binding.tvPassValidMsg.setTextColor(
                         ContextCompat.getColor(
@@ -164,7 +165,7 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
                         )
                     )
                     // Set background tint mode to SRC_ATOP
-                    binding.btnSendResetLink.backgroundTintMode = PorterDuff.Mode.SRC_ATOP
+                    binding.btnSavePass.backgroundTintMode = PorterDuff.Mode.SRC_ATOP
                     buttonClicked = true
                 } else {
                     val colorStateList =
@@ -174,7 +175,7 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
                                 R.color.purple_gray_600
                             )
                         )
-                    binding.btnSendResetLink.backgroundTintList = colorStateList
+                    binding.btnSavePass.backgroundTintList = colorStateList
                     binding.tvPassValidMsg.text = getString(R.string.pass_valid_msg)
                     binding.tvPassValidMsg.setTextColor(
                         ContextCompat.getColor(
@@ -183,7 +184,7 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
                         )
                     )
                     // Set background tint mode to SRC_ATOP
-                    binding.btnSendResetLink.backgroundTintMode = PorterDuff.Mode.SRC_ATOP
+                    binding.btnSavePass.backgroundTintMode = PorterDuff.Mode.SRC_ATOP
                     buttonClicked = false
                 }
             } else
@@ -194,11 +195,17 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
 
     }
 
+    private fun handle(txt:String){
+        CommonMethods.checkInternet(requireActivity()) {
+            resendCode=true
+            viewModel.getPasswordChangeChallenge()
+        }
+    }
     override fun onClick(v: View?) {
         binding.apply {
             when (v) {
                 ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
-                btnSendResetLink -> {
+                btnSavePass -> {
                     val snackbar = Snackbar.make(binding.root, "", Snackbar.LENGTH_LONG)
                     val params = snackbar.view.layoutParams as FrameLayout.LayoutParams
                     params.gravity = Gravity.TOP

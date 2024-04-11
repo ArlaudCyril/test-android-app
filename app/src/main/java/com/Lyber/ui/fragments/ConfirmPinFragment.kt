@@ -46,8 +46,9 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
         ) {
             binding.llIndicators.visibility = View.GONE
         }
-        if (viewModel.forLogin)
+        if (viewModel.forLogin) {
             viewModel.getUser()
+        }
         else if (!requireArguments().containsKey(Constants.IS_CHANGE_PIN))
             binding.ivTopClose.visible()
         binding.ivTopClose.setOnClickListener {

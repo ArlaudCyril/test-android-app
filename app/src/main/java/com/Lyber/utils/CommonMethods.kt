@@ -36,9 +36,11 @@ import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.Toast
 import androidx.annotation.RequiresApi
+import androidx.appcompat.app.AlertDialog
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK
@@ -100,6 +102,7 @@ class CommonMethods {
     companion object {
 
         private var dialog: Dialog? = null
+        private var alertDialog: AlertDialog? = null
 
         fun isProgressShown(): Boolean {
             dialog?.let {
@@ -373,10 +376,14 @@ class CommonMethods {
                 )
 
             val errorRes: ErrorResponse? = errorConverter.convert(responseBody!!)
-            if (errorRes?.code == 19002 || errorRes?.code == 19003) {
+            if (errorRes?.code == 19007) {
+                logOut(context)
+//                return errorRes.code
+            }
+            else if (errorRes?.code == 19002 || errorRes?.code == 19003) {
                 findNavController(root).navigate(R.id.underMaintenanceFragment)
             } else if (errorRes?.code == 7023 || errorRes?.code == 10041 || errorRes?.code == 7025 || errorRes?.code == 10043) {
-                return errorRes?.code
+                return errorRes.code
             } else if (errorRes?.code == 7024 || errorRes?.code == 10042) {
                 showSnackBar(root, context, null)
                 return errorRes.code
@@ -1621,6 +1628,87 @@ class CommonMethods {
                 return false
         }
 
+        fun setProgressDialogAlert(context: Context): AlertDialog? {
+
+            if (alertDialog == null) {
+
+                // Inflate the custom progress bar layout
+                val customProgressBarView =
+                    LayoutInflater.from(context).inflate(R.layout.progress_bar, null)
+                val llPadding = 480
+                customProgressBarView.setPadding(llPadding, llPadding, llPadding, llPadding)
+
+                // Create a dialog builder
+                val builder = AlertDialog.Builder(context)
+                builder.setCancelable(false)
+                builder.setView(customProgressBarView) // Set the custom progress bar view as the view
+
+                // Create the dialog
+                alertDialog = builder.create()
+
+                // Set a listener to start animation when the dialog is shown
+                alertDialog!!.setOnShowListener {
+                    try {
+                        alertDialog!!.findViewById<ImageView>(R.id.progressImage)?.startAnimation(
+                            AnimationUtils.loadAnimation(context, R.anim.rotate_drawable)
+                        )
+                    } catch (e: Exception) {
+                        Log.d("Exception", "DialogAlert: ${e.message}")
+                    }
+                }
+
+                // Modify the window attributes
+                val window = alertDialog!!.window
+                if (window != null) {
+                    val layoutParams = WindowManager.LayoutParams().apply {
+                        copyFrom(alertDialog!!.window?.attributes)
+                        width = LinearLayout.LayoutParams.WRAP_CONTENT
+                        height = LinearLayout.LayoutParams.WRAP_CONTENT
+
+                        alertDialog!!.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                        dimAmount = 0.0f
+                    }
+                    alertDialog!!.window?.attributes = layoutParams
+                }
+
+            }
+
+
+            try {
+                alertDialog!!.show()
+            } catch (e: WindowManager.BadTokenException) {
+                Log.d("Exception", "DialogAlert: ${e.message}")
+                alertDialog!!.dismiss()
+                setProgressDialogAlert(context)
+            } catch (e: Exception) {
+                Log.d("Exception", "DialogAlert: ${e.message}")
+            }
+
+            return alertDialog
+        }
+
+        fun dismissAlertDialog() {
+            alertDialog?.let {
+                try {
+                    it.findViewById<ImageView>(R.id.progressImage)!!.clearAnimation()
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+                it.dismiss()
+            }
+        }
+        fun logOut(context: Context){
+            App.prefsManager.logout()
+            context.startActivity(
+                Intent(
+                    context,
+                    com.Lyber.ui.activities.SplashActivity::class.java
+                ).apply {
+                    putExtra("fromLogout", "fromLogout")
+                    addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+                }
+            )
+        }
     }
 }
 

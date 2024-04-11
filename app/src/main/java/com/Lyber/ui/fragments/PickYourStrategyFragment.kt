@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import com.Lyber.R
 import com.Lyber.databinding.FragmentPickYourStrategyBinding
+import com.Lyber.models.Balance
 import com.Lyber.models.MessageResponse
 import com.Lyber.models.StrategiesResponse
 import com.Lyber.models.Strategy
@@ -34,6 +35,7 @@ import com.Lyber.utils.Constants
 import com.Lyber.utils.ItemOffsetDecoration
 import com.google.gson.GsonBuilder
 import java.lang.Math.abs
+import java.util.ArrayList
 
 
 class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>(),
@@ -66,9 +68,15 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
         layoutManager = LinearLayoutManager(requireContext())
 
         viewModel.strategyPositionSelected.observe(viewLifecycleOwner, selectedStrategy)
-        viewModel.getStrategiesResponse.observe(viewLifecycleOwner, getStrategies)
         viewModel.selectedStrategyResponse.observe(viewLifecycleOwner, chooseStrategy)
-
+        viewModel.getStrategiesResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                dismissProgressDialog()
+                strategyList = it.data
+                adapter.setList(strategyList)
+                binding.recyclerViewStrategies.startLayoutAnimation()
+            }
+        }
         binding.apply {
             recyclerViewStrategies.let {
                 it.adapter = adapter
@@ -94,14 +102,6 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
             }
         }
 
-    }
-
-    private val getStrategies = Observer<StrategiesResponse> {
-        dismissProgressDialog()
-        strategyList = it.data
-//        adapter.setList(it.data)
-        adapter.setList(strategyList)
-        binding.recyclerViewStrategies.startLayoutAnimation()
     }
 
     private val selectedStrategy = Observer<Int> {

@@ -19,6 +19,7 @@ import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
+import com.Lyber.utils.CommonMethods.Companion.dismissAlertDialog
 import com.Lyber.utils.CommonMethods.Companion.formattedAsset
 import com.Lyber.utils.CommonMethods.Companion.formattedAssetForInverseRatio
 import com.Lyber.utils.CommonMethods.Companion.gone
@@ -92,7 +93,13 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
                 CommonMethods.dismissProgressDialog()
             }
         }
-
+//        viewModel.logoutResponse.observe(viewLifecycleOwner){
+//            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+//                App.prefsManager.logout()
+//                findNavController().popBackStack()
+//                findNavController().navigate(R.id.discoveryFragment)
+//            }
+//        }
         getData()
     }
 
@@ -307,11 +314,11 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
 
     override fun onRetrofitError(responseBody: ResponseBody?) {
         super.onRetrofitError(responseBody)
+        CommonMethods.dismissProgressDialog()
+        dismissAlertDialog()
         if (isApiHit)
             isApiHit = false
-        CommonMethods.dismissProgressDialog()
-        var code=  CommonMethods.showErrorMessage(requireContext(), responseBody, binding.root)
-        Log.d("errorCode","$code")
+
 //        if(code==7023 || code == 10041)
 //            customDialog(code)
     }

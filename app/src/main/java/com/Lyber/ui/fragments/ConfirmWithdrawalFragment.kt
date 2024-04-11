@@ -9,35 +9,37 @@ import android.widget.RelativeLayout
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.FragmentConfirmInvestmentBinding
 import com.Lyber.network.RestClient
 import com.Lyber.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
 import com.Lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet2FA
-import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.formattedAsset
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
+import com.Lyber.viewmodels.PortfolioViewModel
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import java.math.RoundingMode
-import java.util.Base64
 
 
 class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>(),
     View.OnClickListener, RestClient.OnRetrofitError {
     private lateinit var viewModel: PortfolioViewModel
-    private  var valueTotal : Double =0.0
+    private var valueTotal: Double = 0.0
     private var isExpand = false
     private var isOtpScreen = false
+    private var isResend = false
 
     override fun bind() = FragmentConfirmInvestmentBinding.inflate(layoutInflater)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = CommonMethods.getViewModel(requireActivity())
-        viewModel.listener=this
+        viewModel.listener = this
         binding.tvTotalAmount.gone()
         binding.ivSingleAsset.gone()
         binding.tvMoreDetails.gone()
@@ -52,9 +54,10 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
     }
 
     private fun setObservers() {
-        viewModel.commonResponse.observe(viewLifecycleOwner){
+        viewModel.commonResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 CommonMethods.dismissProgressDialog()
+                CommonMethods.dismissAlertDialog()
                 if (isOtpScreen) {
                     openOtpScreen()
                 } else {
@@ -64,61 +67,82 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                 }
             }
         }
+//        viewModel.logoutResponse.observe(viewLifecycleOwner){
+//            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+//                App.prefsManager.logout()
+//                findNavController().popBackStack()
+//                findNavController().navigate(R.id.discoveryFragment)
+//            }
+//        }
     }
 
     private fun openOtpScreen() {
-        val transparentView = View(context)
-        transparentView.setBackgroundColor(
-            ContextCompat.getColor(
-                requireContext(),
-                R.color.semi_transparent_dark
+        if (!isResend) {
+            val transparentView = View(context)
+            transparentView.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.semi_transparent_dark
+                )
             )
-        )
-        val viewParams = RelativeLayout.LayoutParams(
-            RelativeLayout.LayoutParams.MATCH_PARENT,
-            RelativeLayout.LayoutParams.MATCH_PARENT
-        )
+            val viewParams = RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.MATCH_PARENT,
+                RelativeLayout.LayoutParams.MATCH_PARENT
+            )
 
-        val vc  = VerificationBottomSheet2FA(::handle)
-        vc.viewToDelete = transparentView
-        vc.mainView = getView()?.rootView as ViewGroup
-        vc.show(childFragmentManager, "")
+            val vc = VerificationBottomSheet2FA(::handle)
+            vc.viewToDelete = transparentView
+            vc.mainView = getView()?.rootView as ViewGroup
+            vc.show(childFragmentManager, "")
 
-        // Add the transparent view to the RelativeLayout
-        val mainView = getView()?.rootView as ViewGroup
-        mainView.addView(transparentView, viewParams)
+            // Add the transparent view to the RelativeLayout
+            val mainView = getView()?.rootView as ViewGroup
+            mainView.addView(transparentView, viewParams)
+        }
+        isResend = false
     }
 
-    private fun handle(code:String) {
-        CommonMethods.showProgressDialog(requireActivity())
-        isOtpScreen = false
-        viewModel.createWithdrawalRequest(viewModel.selectedAssetDetail!!.id
-            ,valueTotal,viewModel.withdrawAddress!!.address!!,viewModel.selectedNetworkDeposit!!.id
-        ,code)
-    }
-
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun confirmButtonClick() {
-        //openOtpScreen()
-     /* val isScope2FA = App.prefsManager.user!!.scope2FA.contains("withdrawal")
-        if (isScope2FA){*/
-            CommonMethods.showProgressDialog(requireActivity())
-            val map = HashMap<Any?,Any?>()
-            map["asset"] = viewModel.selectedAssetDetail!!.id
-            map["amount"] = valueTotal
-            map["destination"] = viewModel.withdrawAddress!!.address
-            map["network"] = viewModel.selectedNetworkDeposit!!.id
-            val jso = JSONObject(map)
-            isOtpScreen = true
-            val encoded = String(Base64.getEncoder().encode(jso.toString(4).toByteArray()))
-            viewModel.getOtpForWithdraw(Constants.ACTION_WITHDRAW,encoded)
-        /*}else{
+    private fun handle(code: String) {
+        if (code == "Resend") {
+            isResend = true
+            confirmButtonClick()
+        } else {
             CommonMethods.showProgressDialog(requireActivity())
             isOtpScreen = false
-            viewModel.createWithdrawalRequest(viewModel.selectedAssetDetail!!.id
-            ,valueTotal,viewModel.withdrawAddress!!.address,viewModel.selectedNetworkDeposit!!.id)
-        }*/
+            viewModel.createWithdrawalRequest(
+                viewModel.selectedAssetDetail!!.id,
+                valueTotal,
+                viewModel.withdrawAddress!!.address!!,
+                viewModel.selectedNetworkDeposit!!.id,
+                code
+            )
+        }
     }
+
+    //    @RequiresApi(Build.VERSION_CODES.O)
+    private fun confirmButtonClick() {
+        CommonMethods.showProgressDialog(requireActivity())
+        val map = HashMap<Any?, Any?>()
+        map["asset"] = viewModel.selectedAssetDetail!!.id
+        map["amount"] = valueTotal
+        map["destination"] = viewModel.withdrawAddress!!.address
+        map["network"] = viewModel.selectedNetworkDeposit!!.id
+        val jso = JSONObject(map)
+        isOtpScreen = true
+        var encoded=""
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+         encoded = String(java.util.Base64.getEncoder().encode(jso.toString(4).toByteArray()))
+       else{
+            val jsonString = jso.toString(4) // Convert JSONObject to string with indentation
+
+            val bytes = jsonString.toByteArray() // Convert string to bytes
+
+            encoded =
+                android.util.Base64.encodeToString(bytes, android.util.Base64.DEFAULT)
+        }
+        viewModel.getOtpForWithdraw(Constants.ACTION_WITHDRAW, encoded)
+    }
+
     private fun prepareView() {
         binding.apply {
             listOf(
@@ -151,46 +175,52 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                     com.Lyber.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
                 val priceCoin = balance!!.balanceData.euroBalance.toDouble()
                     .div(balance.balanceData.balance.toDouble() ?: 1.0)
-                 tvValueLyberFee.text =
+                tvValueLyberFee.text =
                     viewModel.selectedNetworkDeposit!!.withdrawFee.toString().formattedAsset(
                         price = priceCoin,
                         rounding = RoundingMode.DOWN
-                    ) + " "+it!!.id.uppercase()
+                    ) + " " + it!!.id.uppercase()
 
 
                 tvExchangeFrom.text = getString(R.string.address)
-                tvExchangeFromValue.text = viewModel.withdrawAddress!!.address!!.substring(0,7)+"...."+
-                        viewModel.withdrawAddress!!.address!!.substring(viewModel.withdrawAddress!!.address
-                            !!.length-4)
+                tvExchangeFromValue.text =
+                    viewModel.withdrawAddress!!.address!!.substring(0, 7) + "...." +
+                            viewModel.withdrawAddress!!.address!!.substring(
+                                viewModel.withdrawAddress!!.address
+                                !!.length - 4
+                            )
                 tvExchangeTo.text = getString(R.string.network)
                 tvExchangeToValue.text = viewModel.selectedNetworkDeposit!!.fullName
-                 valueTotal =
-                        requireArguments().getString(Constants.EURO,"")
-                            .replace(it.id.uppercase(),"").toDouble()
+                valueTotal =
+                    requireArguments().getString(Constants.EURO, "")
+                        .replace(it.id.uppercase(), "").toDouble()
                 tvValueTotal.text =
-                    "${valueTotal.toString().formattedAsset(
-                        price = priceCoin,
-                        rounding = RoundingMode.DOWN
-                    ) } ${it.id.uppercase()}"
+                    "${
+                        valueTotal.toString().formattedAsset(
+                            price = priceCoin,
+                            rounding = RoundingMode.DOWN
+                        )
+                    } ${it.id.uppercase()}"
                 tvAmount.text =
-                    "${valueTotal.toString().formattedAsset(
+                    "${
+                        valueTotal.toString().formattedAsset(
+                            price = priceCoin,
+                            rounding = RoundingMode.DOWN
+                        )
+                    } ${it.id.uppercase()}"
+                val amount = valueTotal - viewModel.selectedNetworkDeposit!!.withdrawFee.toDouble()
+                tvNestedAmountValue.text = "${
+                    amount.toString().formattedAsset(
                         price = priceCoin,
                         rounding = RoundingMode.DOWN
-                    ) } ${it.id.uppercase()}"
-                val amount = valueTotal-viewModel.selectedNetworkDeposit!!.withdrawFee.toDouble()
-                tvNestedAmountValue.text = "${amount.toString().formattedAsset(
-                    price = priceCoin,
-                    rounding = RoundingMode.DOWN
-                ) } ${it.id.uppercase()}"
+                    )
+                } ${it.id.uppercase()}"
 
                 btnConfirmInvestment.isEnabled = true
                 btnConfirmInvestment.text =
                     getString(R.string.confirm_withdrawal)
                 title.text = getString(R.string.confirm_withdrawal)
             }
-
-
-
 
 
         }
@@ -200,9 +230,9 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onClick(v: View?) {
         binding.apply {
-            when(v!!){
-                ivTopAction->requireActivity().onBackPressedDispatcher.onBackPressed()
-                btnConfirmInvestment-> confirmButtonClick()
+            when (v!!) {
+                ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
+                btnConfirmInvestment -> confirmButtonClick()
                 tvMoreDetails -> {
                     if (isExpand) {
                         zzInfor.gone()
@@ -224,11 +254,13 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                         )
                     }
                 }
-        }
+            }
         }
     }
+
     override fun onRetrofitError(responseBody: ResponseBody?) {
         CommonMethods.dismissProgressDialog()
+        CommonMethods.dismissAlertDialog()
         val code = CommonMethods.showErrorMessage(requireContext(), responseBody, binding.root)
         Log.d("errorCode", "$code")
         if (code == 7023 || code == 10041 || code == 7025 || code == 10043)

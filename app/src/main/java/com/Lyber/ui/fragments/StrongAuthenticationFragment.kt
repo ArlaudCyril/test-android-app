@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
@@ -15,6 +16,7 @@ import com.Lyber.databinding.FragmentStrongAuthenticationBinding
 import com.Lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.dismissAlertDialog
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.encodeToBase64
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
@@ -34,6 +36,8 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
     override fun bind() = FragmentStrongAuthenticationBinding.inflate(layoutInflater)
     private var switchOff: Boolean = false
     private var qrCodeUrl = ""
+     var resendCode = -1
+    private var resetView = false
 
     @SuppressLint("SuspiciousIndentation")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -42,10 +46,10 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
         viewModel = getViewModel(this)
         viewModel.listener = this
         binding.tvEmail.text = "${getString(R.string.to)} ${App.prefsManager.user?.email}"
-        if(App.prefsManager.user?.phoneNo!!.contains("+"))
-        binding.tvNumber.text = "${getString(R.string.to)} ${App.prefsManager.user?.phoneNo}"
+        if (App.prefsManager.user?.phoneNo!!.contains("+"))
+            binding.tvNumber.text = "${getString(R.string.to)} ${App.prefsManager.user?.phoneNo}"
         else
-        binding.tvNumber.text = "${getString(R.string.to)} +${App.prefsManager.user?.phoneNo}"
+            binding.tvNumber.text = "${getString(R.string.to)} +${App.prefsManager.user?.phoneNo}"
         setView()
 
         if (App.prefsManager.user?.type2FA != Constants.GOOGLE) {
@@ -56,61 +60,73 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                 }
             }
         }
-
+//        viewModel.logoutResponse.observe(viewLifecycleOwner){
+//            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+//                App.prefsManager.logout()
+//                findNavController().popBackStack()
+//                findNavController().navigate(R.id.discoveryFragment)
+//            }
+//        }
         viewModel.booleanResponse.observe(viewLifecycleOwner) {
             if (Lifecycle.State.RESUMED == lifecycle.currentState) {
+                dismissAlertDialog()
                 if (::scopeType.isInitialized && scopeType == Constants.TYPE) {
-
-                    val transparentView = View(context)
-                    transparentView.setBackgroundColor(
-                        ContextCompat.getColor(
-                            requireContext(), R.color.semi_transparent_dark
+                    if (!resetView) {
+                        val transparentView = View(context)
+                        transparentView.setBackgroundColor(
+                            ContextCompat.getColor(
+                                requireContext(), R.color.semi_transparent_dark
+                            )
                         )
-                    )
-                    dismissProgressDialog()
-                    switchOff = false
-                    // Set layout parameters for the transparent view
-                    val viewParams = RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.MATCH_PARENT,
-                        RelativeLayout.LayoutParams.MATCH_PARENT
-                    )
+                        dismissProgressDialog()
+                        switchOff = false
+                        // Set layout parameters for the transparent view
+                        val viewParams = RelativeLayout.LayoutParams(
+                            RelativeLayout.LayoutParams.MATCH_PARENT,
+                            RelativeLayout.LayoutParams.MATCH_PARENT
+                        )
 
-                    val vc = VerificationBottomSheet()
-                    vc.viewToDelete = transparentView
-                    vc.mainView = getView()?.rootView as ViewGroup
-                    vc.viewModel = viewModel
-                    vc.arguments = Bundle().apply {
-                        putString(Constants.TYPE, clickedOn)
+                        val vc = VerificationBottomSheet(::handle)
+                        vc.viewToDelete = transparentView
+                        vc.mainView = getView()?.rootView as ViewGroup
+                        vc.viewModel = viewModel
+                        vc.arguments = Bundle().apply {
+                            putString(Constants.TYPE, clickedOn)
+                        }
+                        vc.show(childFragmentManager, App.prefsManager.user?.type2FA)
+                        val mainView = getView()?.rootView as ViewGroup
+                        mainView.addView(transparentView, viewParams)
                     }
-                    vc.show(childFragmentManager, App.prefsManager.user?.type2FA)
-                    val mainView = getView()?.rootView as ViewGroup
-                    mainView.addView(transparentView, viewParams)
+                    resetView = false
 
                 } else if (switchOff) {
-                    val transparentView = View(context)
-                    transparentView.setBackgroundColor(
-                        ContextCompat.getColor(
-                            requireContext(), R.color.semi_transparent_dark
+                    if(!resetView) {
+                        val transparentView = View(context)
+                        transparentView.setBackgroundColor(
+                            ContextCompat.getColor(
+                                requireContext(), R.color.semi_transparent_dark
+                            )
                         )
-                    )
-                    dismissProgressDialog()
-                    switchOff = false
-                    // Set layout parameters for the transparent view
-                    val viewParams = RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.MATCH_PARENT,
-                        RelativeLayout.LayoutParams.MATCH_PARENT
-                    )
+                        dismissProgressDialog()
+                        switchOff = false
+                        // Set layout parameters for the transparent view
+                        val viewParams = RelativeLayout.LayoutParams(
+                            RelativeLayout.LayoutParams.MATCH_PARENT,
+                            RelativeLayout.LayoutParams.MATCH_PARENT
+                        )
 
-                    val vc = VerificationBottomSheet()
-                    vc.viewToDelete = transparentView
-                    vc.mainView = getView()?.rootView as ViewGroup
-                    vc.viewModel = viewModel
-                    vc.arguments = Bundle().apply {
-                        putString("clickedOn", clickedOn)
+                        val vc = VerificationBottomSheet(::handle)
+                        vc.viewToDelete = transparentView
+                        vc.mainView = getView()?.rootView as ViewGroup
+                        vc.viewModel = viewModel
+                        vc.arguments = Bundle().apply {
+                            putString("clickedOn", clickedOn)
+                        }
+                        vc.show(childFragmentManager, App.prefsManager.user?.type2FA)
+                        val mainView = getView()?.rootView as ViewGroup
+                        mainView.addView(transparentView, viewParams)
                     }
-                    vc.show(childFragmentManager, App.prefsManager.user?.type2FA)
-                    val mainView = getView()?.rootView as ViewGroup
-                    mainView.addView(transparentView, viewParams)
+                    resetView=false
                 } else {
                     viewModel.getUser()
                 }
@@ -145,7 +161,7 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                 } else {
                     switchOff = true
                     binding.switchWhitelisting.isChecked = true
-
+                    resendCode = 3
                     CommonMethods.showProgressDialog(requireContext())
                     var json = ""
                     if (binding.switchValidateWithdraw.isChecked) {
@@ -174,6 +190,7 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                     viewModel.updateAuthentication(hash)
                 } else {
                     switchOff = true
+                    resendCode=4
                     binding.switchValidateWithdraw.isChecked = true
                     CommonMethods.showProgressDialog(requireContext())
                     var json = ""
@@ -250,6 +267,7 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                     if (App.prefsManager.user?.type2FA != Constants.EMAIL) {
                         if (App.prefsManager.user?.type2FA != Constants.GOOGLE) {
                             CommonMethods.showProgressDialog(requireContext())
+                            resendCode = 2
                             var json = """{"type2FA" : "email"}""".trimMargin()
                             val detail = encodeToBase64(json)
                             scopeType = Constants.TYPE
@@ -266,7 +284,7 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                                 RelativeLayout.LayoutParams.MATCH_PARENT,
                                 RelativeLayout.LayoutParams.MATCH_PARENT
                             )
-                            val vc = VerificationBottomSheet()
+                            val vc = VerificationBottomSheet(::handle)
                             vc.viewToDelete = transparentView
                             vc.mainView = getView()?.rootView as ViewGroup
                             vc.viewModel = viewModel
@@ -285,6 +303,7 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                     if (App.prefsManager.user?.type2FA != Constants.PHONE) {
                         if (App.prefsManager.user?.type2FA != Constants.GOOGLE) {
                             CommonMethods.showProgressDialog(requireContext())
+                            resendCode = 1
                             var json = """{"type2FA" : "phone"}""".trimMargin()
                             val detail = encodeToBase64(json)
                             scopeType = Constants.TYPE
@@ -301,7 +320,7 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                                 RelativeLayout.LayoutParams.MATCH_PARENT,
                                 RelativeLayout.LayoutParams.MATCH_PARENT
                             )
-                            val vc = VerificationBottomSheet()
+                            val vc = VerificationBottomSheet(::handle)
                             vc.viewToDelete = transparentView
                             vc.mainView = getView()?.rootView as ViewGroup
                             vc.viewModel = viewModel
@@ -335,8 +354,58 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
             else if (clickedSwitch == Constants.WITHDRAWAL)
                 binding.switchValidateWithdraw.isChecked = false
         }
+    }
+    fun handle(txt: String) {
+        resetView = true
+        when (resendCode) {
+            1 -> {
+                val json = """{"type2FA" : "phone"}""".trimMargin()
+                val detail = encodeToBase64(json)
+                scopeType = Constants.TYPE
+                clickedOn = Constants.PHONE
+                viewModel.switchOffAuthentication(detail, scopeType)
+            }
 
+            2 -> {
+                val json = """{"type2FA" : "email"}""".trimMargin()
+                val detail = encodeToBase64(json)
+                scopeType = Constants.TYPE
+                clickedOn = Constants.EMAIL
+                viewModel.switchOffAuthentication(detail, scopeType)
 
+            }
+
+            3 -> {
+                switchOff = true
+                binding.switchWhitelisting.isChecked = true
+                var json = ""
+                if (binding.switchValidateWithdraw.isChecked) {
+                    json = """{"scope2FA":["withdrawal"]}""".trimMargin()
+                    clickedOn = Constants.WITHDRAWAL
+                } else {
+                    json = """{"scope2FA":[]}""".trimMargin()
+                    clickedOn = ""
+                }
+                val detail = encodeToBase64(json)
+                scopeType = Constants.SCOPE
+                viewModel.switchOffAuthentication(detail, scopeType)
+            }
+            4->{
+                switchOff = true
+                binding.switchValidateWithdraw.isChecked = true
+                var json = ""
+                if (binding.switchWhitelisting.isChecked) {
+                    json = """{"scope2FA":["whitelisting"]}""".trimMargin()
+                    clickedOn = Constants.WHITELISTING
+                } else {
+                    json = """{"scope2FA":[]}""".trimMargin()
+                    clickedOn = ""
+                }
+                val detail = encodeToBase64(json)
+                scopeType = Constants.SCOPE
+                viewModel.switchOffAuthentication(detail, scopeType)
+            }
+        }
     }
 
 }

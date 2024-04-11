@@ -1,5 +1,6 @@
 package com.Lyber.ui.fragments
 
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.PorterDuff
 import android.os.Bundle
@@ -14,6 +15,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.FragmentResetPasswordBinding
+import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.Constants
@@ -91,6 +93,13 @@ class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>(), OnCl
                 }
             }
         }
+//        viewModel.logoutResponse.observe(viewLifecycleOwner){
+//            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+//                App.prefsManager.logout()
+//                findNavController().popBackStack()
+//                findNavController().navigate(R.id.discoveryFragment)
+//            }
+//        }
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             // Handle back button press
             findNavController().popBackStack()
@@ -100,6 +109,7 @@ class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>(), OnCl
 
     override fun onRetrofitError(responseBody: ResponseBody?) {
         CommonMethods.dismissProgressDialog()
+        CommonMethods.dismissAlertDialog()
          CommonMethods.showErrorMessage(requireContext(), responseBody, binding.root)
 //        if(code==7023 || code == 10041)
 //            customDialog(code)

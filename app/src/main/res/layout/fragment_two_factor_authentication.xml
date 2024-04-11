@@ -32,8 +32,9 @@
 
         <TextView
             style="@style/SubheadMabry"
-            android:layout_marginTop="4dp"
-            android:lineSpacingExtra="6dp"
+            android:layout_marginTop="20dp"
+            android:lineSpacingExtra="2dp"
+            android:gravity="center"
             android:text="@string/add_google_authenticator"
             android:textColor="@color/purple_gray_500" />
 
@@ -41,15 +42,20 @@
             android:id="@+id/ivQrCode"
             android:layout_width="243dp"
             android:layout_height="265dp"
-            android:layout_gravity="center"
-            android:layout_marginTop="72dp" />
+            android:layout_gravity="center" />
+        <TextView
+            style="@style/SubheadMabry"
+            android:gravity="center"
+            android:lineSpacingExtra="2dp"
+            android:text="@string/add_manually_google_authenticator"
+            android:textColor="@color/purple_gray_500" />
 
         <TextView
             android:id="@+id/tvAddGoogleAuthenticator"
             style="@style/SubheadMabry"
             android:layout_gravity="center"
-            android:padding="14dp"
-            android:text="@string/tap_to_add_google_authenticator"
+            android:padding="8dp"
+            android:text="@string/copy_key"
             android:textColor="@color/purple_500" />
 
     </LinearLayout>

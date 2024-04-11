@@ -40,6 +40,7 @@ class ChooseLanguageFragment : BaseFragment<FragmentChooseLanguageBinding>(), On
                     binding.ivEnglish.visibility = View.VISIBLE
                     binding.ivFrench.visibility = View.INVISIBLE
                     App.prefsManager.setLanguage(Constants.ENGLISH)
+                    binding.tvTitle.text=getString(R.string.language)
                 } else if (hashMap["language"] == Constants.FRENCH) {
                     val locale = Locale(Constants.FRENCH)
                     Locale.setDefault(locale)
@@ -50,6 +51,7 @@ class ChooseLanguageFragment : BaseFragment<FragmentChooseLanguageBinding>(), On
                     binding.ivEnglish.visibility = View.INVISIBLE
                     binding.ivFrench.visibility = View.VISIBLE
                     App.prefsManager.setLanguage(Constants.FRENCH)
+                    binding.tvTitle.text=getString(R.string.language)
                 }
                 App.prefsManager.user?.language = hashMap["language"].toString()
 

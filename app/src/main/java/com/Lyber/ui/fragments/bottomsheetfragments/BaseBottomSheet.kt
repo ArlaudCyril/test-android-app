@@ -20,15 +20,19 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.Lyber.R
 import com.Lyber.databinding.CustomDialogVerticalLayoutBinding
 import com.Lyber.databinding.DocumentBeingVerifiedBinding
 import com.Lyber.network.RestClient
+import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.ui.activities.WebViewActivity
+import com.Lyber.utils.App
 import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
@@ -89,6 +93,12 @@ abstract class BaseBottomSheet<viewBinding : ViewBinding> : BottomSheetDialogFra
 
             }
         }
+        viewModel.logoutResponse.observe(viewLifecycleOwner){
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                  CommonMethods.logOut(requireContext())
+
+            }
+        }
         return binding.root
     }
     private var resultLauncher =
@@ -104,6 +114,7 @@ abstract class BaseBottomSheet<viewBinding : ViewBinding> : BottomSheetDialogFra
         }
     override fun onRetrofitError(responseBody: ResponseBody?) {
         CommonMethods.dismissProgressDialog()
+        CommonMethods.dismissAlertDialog()
         val code=  CommonMethods.showErrorMessage(requireContext(), responseBody, binding.root)
         Log.d("errorCode","$code")
         if(code==7023 || code == 10041 || code == 7025 || code == 10043)
@@ -116,7 +127,7 @@ abstract class BaseBottomSheet<viewBinding : ViewBinding> : BottomSheetDialogFra
     }
 
     private lateinit var  bottomDialog: BottomSheetDialog
-    fun customDialog(code: Int) {
+    private fun customDialog(code: Int) {
         bottomDialog = BottomSheetDialog(requireContext(), R.style.CustomDialogBottomSheet).apply {
             CustomDialogVerticalLayoutBinding.inflate(layoutInflater).let { binding ->
                 setContentView(binding.root)

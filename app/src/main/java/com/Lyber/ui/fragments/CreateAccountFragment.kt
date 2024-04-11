@@ -1,15 +1,22 @@
 package com.Lyber.ui.fragments
 
 import android.annotation.SuppressLint
-import android.app.Dialog
+import android.content.Context
 import android.content.res.Configuration
+import android.graphics.Color
+import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.view.Window
+import android.view.WindowManager
+import android.view.animation.AnimationUtils
+import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.RelativeLayout
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
@@ -37,7 +44,6 @@ import com.nimbusds.srp6.SRP6CryptoParams
 import com.nimbusds.srp6.SRP6VerifierGenerator
 import com.nimbusds.srp6.XRoutineWithUserIdentity
 import com.Lyber.R
-import com.Lyber.databinding.CustomDialogLayoutBinding
 
 class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View.OnClickListener {
 
@@ -50,6 +56,8 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
     private lateinit var config: SRP6CryptoParams
     lateinit var generator: SRP6VerifierGenerator
     lateinit var client: SRP6ClientSession
+    private var resendCode = -1
+    private var fromResend = false
     override fun bind() = FragmentCreateAccountBinding.inflate(layoutInflater)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,19 +68,20 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         client = SRP6ClientSession()
         client.xRoutine = XRoutineWithUserIdentity()
     }
+
     @SuppressLint("FragmentLiveDataObserve")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
 //        App.prefsManager.accessToken = ""
         viewModel = getViewModel(this)
-        viewModel.forLogin = requireArguments().getBoolean(Constants.FOR_LOGIN,false)
+        viewModel.forLogin = requireArguments().getBoolean(Constants.FOR_LOGIN, false)
         viewModel.listener = this
         binding.tvCountryCode.text = viewModel.countryCode
-        Log.d("clickSignupFinalQ1",viewModel.forLogin.toString())
+        Log.d("clickSignupFinalQ1", viewModel.forLogin.toString())
         binding.ivTopAction.setOnClickListener {
             if (viewModel.forLogin)
-            requireActivity().onBackPressed()
+                requireActivity().onBackPressed()
             else
                 stopRegistrationDialog()
         }
@@ -86,8 +95,10 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
             binding.tvForgotPassword.fadeIn()
             binding.tvForgotPassword.visible()
             binding.tilPassword.visible()
-        }
+        } else
+            binding.ivBack.visible()
 
+        binding.ivBack.setOnClickListener(this)
         binding.tvLoginViaEmail.setOnClickListener(this)
         binding.tvForgotPassword.setOnClickListener(this)
         binding.tvLoginViaPhone.setOnClickListener(this)
@@ -98,11 +109,11 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         binding.root.viewTreeObserver?.addOnGlobalLayoutListener(
             keyboardLayoutListener
         )
-    setobservers()
+        setObservers()
 
     }
 
-    private fun setobservers() {
+    private fun setObservers() {
         viewModel.userChallengeResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
 
@@ -123,7 +134,11 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
 
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 CommonMethods.dismissProgressDialog()
-                if(it.data.access_token != null){
+                CommonMethods.dismissAlertDialog()
+                if (it.data.access_token != null) {
+                    binding.etEmail.setText("")
+                    binding.etPhone.setText("")
+                    binding.etPassword.setText("")
 
                     App.prefsManager.accessToken = it.data.access_token
                     App.accessToken = it.data.access_token
@@ -135,8 +150,8 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                     val bundle = Bundle().apply {
                         putBoolean(Constants.FOR_LOGIN, viewModel.forLogin)
                     }
-                    findNavController().navigate(R.id.createPinFragment,bundle)
-                }else{
+                    findNavController().navigate(R.id.createPinFragment, bundle)
+                } else if (!fromResend) {
                     // Create a transparent color view
                     val transparentView = View(context)
                     transparentView.setBackgroundColor(
@@ -152,7 +167,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                         RelativeLayout.LayoutParams.MATCH_PARENT
                     )
 
-                    val vc  = VerificationBottomSheet()
+                    val vc = VerificationBottomSheet(::handle)
                     vc.typeVerification = it.data.type2FA
                     vc.viewToDelete = transparentView
                     vc.mainView = getView()?.rootView as ViewGroup
@@ -164,57 +179,57 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                     mainView.addView(transparentView, viewParams)
 
                 }
-
-
+                fromResend = false
             }
-
         }
         viewModel.setPhoneResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 App.prefsManager.accessToken = it.data.token
                 App.accessToken = it.data.token
                 CommonMethods.dismissProgressDialog()
-                val transparentView = View(context)
-                transparentView.setBackgroundColor(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.semi_transparent_dark
+                if (!fromResend) {
+                    val transparentView = View(context)
+                    transparentView.setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.semi_transparent_dark
+                        )
                     )
-                )
 
-                // Set layout parameters for the transparent view
-                val viewParams = RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                    RelativeLayout.LayoutParams.MATCH_PARENT
-                )
+                    // Set layout parameters for the transparent view
+                    val viewParams = RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.MATCH_PARENT
+                    )
 
-                val vc  = VerificationBottomSheet()
+                    val vc = VerificationBottomSheet(::handle)
 
-                vc.viewToDelete = transparentView
-                vc.mainView = getView()?.rootView as ViewGroup
-                vc.viewModel = viewModel
-                vc.show(childFragmentManager, "")
+                    vc.viewToDelete = transparentView
+                    vc.mainView = getView()?.rootView as ViewGroup
+                    vc.viewModel = viewModel
+                    vc.show(childFragmentManager, "")
 
-                // Add the transparent view to the RelativeLayout
-                val mainView = getView()?.rootView as ViewGroup
-                mainView.addView(transparentView, viewParams)
+                    // Add the transparent view to the RelativeLayout
+                    val mainView = getView()?.rootView as ViewGroup
+                    mainView.addView(transparentView, viewParams)
+                }
             }
+            fromResend = false
         }
         viewModel.verifyPhoneResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 App.prefsManager.setPhone(viewModel.mobileNumber)
-                App.prefsManager.accountCreationSteps= Constants.Account_CREATION_STEP_PHONE
+                App.prefsManager.accountCreationSteps = Constants.Account_CREATION_STEP_PHONE
                 App.prefsManager.portfolioCompletionStep = Constants.ACCOUNT_CREATING
                 CommonMethods.dismissProgressDialog()
 
                 val bundle = Bundle().apply {
                     putBoolean(Constants.FOR_LOGIN, false)
                 }
-                findNavController().navigate(R.id.emailAddressFragment,bundle)
+                findNavController().navigate(R.id.emailAddressFragment, bundle)
             }
         }
     }
-
 
 
     override fun onClick(v: View?) {
@@ -293,12 +308,13 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                                 verifyMobile() && verifyPassword() ->
                                     checkInternet(requireContext()) {
                                         showProgressDialog(requireContext())
+                                        resendCode = 1
                                         viewModel.mobileNumber = mobile
                                         viewModel.countryCode = countryCode
                                         viewModel.password = password
 
                                         client.step1(
-                                            countryCode.removeRange(0,1)+mobile,
+                                            countryCode.removeRange(0, 1) + mobile,
                                             password
                                         )
                                         viewModel.userChallenge(phone = "${countryCode}$mobile")
@@ -313,6 +329,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                                 verifyEmail() && verifyPassword() ->
                                     checkInternet(requireContext()) {
                                         showProgressDialog(requireContext())
+                                        resendCode = 2
                                         viewModel.email = email.lowercase()
                                         viewModel.password = password
                                         client.step1(
@@ -332,6 +349,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                             verifyMobile() ->
                                 checkInternet(requireContext()) {
                                     showProgressDialog(requireContext())
+                                    resendCode = 3
                                     viewModel.mobileNumber = mobile
                                     viewModel.countryCode = countryCode
                                     viewModel.setPhone(
@@ -343,9 +361,14 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                         }
 
                 }
-                tvForgotPassword->{
+
+                tvForgotPassword -> {
                     App.prefsManager.accessToken = ""
                     findNavController().navigate(R.id.forgotPasswordFragment)
+                }
+
+                ivBack -> {
+                    findNavController().popBackStack()
                 }
 
             }
@@ -365,6 +388,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                 getString(R.string.please_enter_valid_phone_number).showToast(requireContext())
                 false
             }
+
             else -> true
         }
     }
@@ -382,6 +406,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                 binding.etEmail.requestKeyboard()
                 false
             }
+
             else -> true
         }
     }
@@ -393,6 +418,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                 binding.etPassword.requestFocus()
                 false
             }
+
             else -> true
         }
     }
@@ -443,49 +469,58 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
 
             Configuration.HARDKEYBOARDHIDDEN_YES -> {
                 "opened".showToast(requireContext())
-               /* (requireParentFragment() as SignUpFragment).view?.findViewById<ScrollView>(R.id.scrollView)
-                    ?.let {
-                        it.smoothScrollTo(0, it.height)
-                    }*/
+                /* (requireParentFragment() as SignUpFragment).view?.findViewById<ScrollView>(R.id.scrollView)
+                     ?.let {
+                         it.smoothScrollTo(0, it.height)
+                     }*/
             }
+
             else -> {
 
             }
         }
     }
-//    private fun stopRegistrationDialog() {
+
+    private fun handle(txt:String) {
+        fromResend = true
+        client =
+            SRP6ClientSession()
+        client.xRoutine =
+            XRoutineWithUserIdentity()
+        when (resendCode) {
+            1 -> {
+                viewModel.mobileNumber = mobile
+                viewModel.countryCode = countryCode
+                viewModel.password = password
+
+                client.step1(
+                    countryCode.removeRange(0, 1) + mobile,
+                    password
+                )
+                viewModel.userChallenge(phone = "${countryCode}$mobile")
 //
-//        Dialog(requireActivity(), R.style.DialogTheme).apply {
-//
-//            CustomDialogLayoutBinding.inflate(layoutInflater).let {
-//
-//                requestWindowFeature(Window.FEATURE_NO_TITLE)
-//                setCancelable(false)
-//                setCanceledOnTouchOutside(false)
-//                setContentView(it.root)
-//
-//                it.tvTitle.text = getString(R.string.stop_reg)
-//                it.tvMessage.text = getString(R.string.reg_message)
-//                it.tvNegativeButton.text = getString(R.string.cancel)
-//                it.tvPositiveButton.text = getString(R.string.ok)
-//
-//                it.tvNegativeButton.setOnClickListener { dismiss() }
-//
-//                it.tvPositiveButton.setOnClickListener {
-//                    dismiss()
-//                    App.prefsManager.logout()
-//                    findNavController().popBackStack()
-//                    findNavController().navigate(R.id.discoveryFragment)
-//                    CommonMethods.checkInternet(requireContext()) {
-//                        dismiss()
-//                        viewModel.logout(CommonMethods.getDeviceId(requireActivity().contentResolver))
-//                    }
-//                }
-//
-//                show()
-//            }
-//        }
-//
-//    }
+            }
+
+            2 -> {
+                viewModel.email = email.lowercase()
+                viewModel.password = password
+                client.step1(
+                    email.lowercase(),
+                    password
+                )
+                viewModel.userChallenge(email = viewModel.email)
+            }
+
+            3 -> {
+                viewModel.mobileNumber = mobile
+                viewModel.countryCode = countryCode
+                viewModel.setPhone(
+                    viewModel.countryCode,
+                    viewModel.mobileNumber
+                )
+            }
+        }
+    }
+
 
 }

@@ -51,12 +51,16 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
             }
         } else {
             binding.llIndicators.visible()
+            binding.ivBack.visible()
         }
         binding.ivTopClose.setOnClickListener {
             stopRegistrationDialog()
         }
 
         binding.ivTopAction.setOnClickListener {
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }
+        binding.ivBack.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
 
