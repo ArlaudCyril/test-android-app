@@ -11,6 +11,7 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
+import android.hardware.Camera
 import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
@@ -40,7 +41,7 @@ import com.Lyber.utils.Constants
 import java.io.File
 import java.io.IOException
 
-class WebViewActivity : BaseActivity<ActivityWebViewBinding>() {
+class                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            WebViewActivity : BaseActivity<ActivityWebViewBinding>() {
     override fun bind() = ActivityWebViewBinding.inflate(layoutInflater)
     private var mFilePathCallback: ValueCallback<Array<Uri>>? = null
     private var mImagePath = ""
@@ -407,7 +408,7 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>() {
                     MediaStore.EXTRA_OUTPUT,
                     imageUri
                 )
-            } catch (e: IOException) {
+              } catch (e: IOException) {
                 e.printStackTrace()
                 f = null
                 mImagePath = null!!
@@ -429,16 +430,18 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>() {
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             ImageUri = null
             var results: Array<Uri>? = null
-            if (result.resultCode == RESULT_OK) {
-                ImageUri = saveImageToMediaStore(
-                    getFile(mImagePath)!!, this
-                )
-                Log.d("imageFi", ImageUri.toString())
-                results = arrayOf(ImageUri!!)
+            if(result!=null) {
+                if (result.resultCode == RESULT_OK) {
+                    ImageUri = saveImageToMediaStore(
+                        getFile(mImagePath)!!, this
+                    )
+                    Log.d("imageFi", ImageUri.toString())
+                    results = arrayOf(ImageUri!!)
 
+                }
+                mFilePathCallback!!.onReceiveValue(results)
+                mFilePathCallback = null
             }
-            mFilePathCallback!!.onReceiveValue(results)
-            mFilePathCallback = null
         }
 
 

@@ -332,8 +332,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 it.tvMessage.text = getString(R.string.logout_message)
                 it.tvNegativeButton.text = getString(R.string.cancel)
                 it.tvPositiveButton.setTextColor(ContextCompat.getColor(requireContext(),R.color.red_500))
-                it.tvPositiveButton.text = getString(R.string.logout)
-                it.tvPositiveButton.paintFlags = it.tvPositiveButton.paintFlags or Paint.UNDERLINE_TEXT_FLAG
+                it.tvPositiveButton.text = getString(R.string.log_out_normal)
 
                 it.tvNegativeButton.setOnClickListener {
                     dismiss()

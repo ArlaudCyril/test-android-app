@@ -122,7 +122,7 @@
     <string name="add_a_bank_account">Ajouter un compte bancaire</string>
     <string name="add_a_credit_card">Ajouter une carte de crédit</string>
     <string name="unique_investment">Investissement unique</string>
-    <string name="resend"><u>Renvoyer le code</u></string>
+    <string name="resend">Renvoyer le code</string>
     <string name="alphabets">qwertyuiopasdfghjklzxcvbnm QWERTYUIOPASDFGHJKLZXCVBNM</string>
     <string name="my_assets">Mes actifs</string>
     <string name="analytics">Analyse</string>
@@ -297,7 +297,7 @@
     <string name="manage_your_asset">Gérez votre actif</string>
     <string name="deposit">Dépôt\n</string>
     <string name="deposit_fiat">Dépôt FIAT</string>
-    <string name="buy">Acheter du</string>
+    <string name="buy">Acheter</string>
     <string name="buy_assets">Acheter du actifs</string>
     <string name="sell">Vendre</string>
     <string name="sell_assets">Vendre actifs</string>

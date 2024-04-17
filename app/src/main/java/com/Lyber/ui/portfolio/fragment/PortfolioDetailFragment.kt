@@ -139,9 +139,6 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             includedMyAsset.root.background =
                 ContextCompat.getDrawable(requireContext(), R.drawable.curved_button)
             includedMyAsset.root.setBackgroundTint(R.color.purple_gray_50)
-            includedMyAsset.root.background =
-                ContextCompat.getDrawable(requireContext(), R.drawable.curved_button)
-            includedMyAsset.root.setBackgroundTint(R.color.purple_gray_50)
             includedMyAsset.ivDropIcon.gone()
             tvAssetName.text = "${viewModel.selectedAsset?.fullName}"
             tvAssetName.typeface = context?.resources?.getFont(R.font.mabry_pro_medium)
@@ -372,6 +369,14 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                         price = priceCoin,
                         rounding = RoundingMode.DOWN
                     )
+                try {
+                    it.tvAssetName.text=viewModel.selectedAsset!!.fullName
+                    viewModel.selectedAsset?.imageUrl?.let { it1 ->
+                        binding.includedMyAsset.ivAssetIcon.loadCircleCrop(
+                            viewModel.selectedAsset!!.imageUrl
+                        )
+                    }
+                }catch (_:Exception){ }
                 if (balance != null)
                     btnSell.visible()
 

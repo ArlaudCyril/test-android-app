@@ -246,10 +246,16 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
 
                 it.tvPositiveButton.setOnClickListener {
                     dismiss()
-                        CommonMethods.checkInternet(requireContext()) {
-                            CommonMethods.showProgressDialog(requireContext())
-                            viewModel.logout()
+                    App.prefsManager.logout()
+                    context.startActivity(
+                        Intent(
+                            context,
+                            com.Lyber.ui.activities.SplashActivity::class.java
+                        ).apply {
+                            putExtra("fromLogout", "fromLogout")
+                            addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
                         }
+                    )
                 }
 
                 show()

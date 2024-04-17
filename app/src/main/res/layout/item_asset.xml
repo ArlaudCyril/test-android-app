@@ -6,12 +6,12 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:paddingVertical="16dp">
-
     <ImageView
         android:id="@+id/ivAsset"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_gravity="center"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"

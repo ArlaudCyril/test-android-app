@@ -11,14 +11,15 @@
     <TextView
         android:id="@+id/tvPortfolio"
         style="@style/SubTitleText"
+        android:layout_marginTop="24dp"
         android:text="@string/registration"
         android:textColor="@color/purple_gray_800"
         android:textStyle="bold"
-        android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintVertical_chainStyle="packed" />
+
     <ImageView
         android:id="@+id/tvBackArrow"
         style="@style/HeadingStyle"
@@ -27,9 +28,9 @@
         android:gravity="center"
         android:padding="8dp"
         android:src="@drawable/ic_back"
-        app:layout_constraintTop_toTopOf="@id/tvPortfolio"
         app:layout_constraintBottom_toBottomOf="@id/tvPortfolio"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="@id/tvPortfolio" />
 
     <LinearLayout
         android:layout_width="0dp"
@@ -131,111 +132,87 @@
                         android:textColor="@color/purple_500"
                         app:drawableEndCompat="@drawable/ic_right_arrow_purple" />
 
-
-                    <ImageView
-                        android:id="@+id/ivFillPersonalData"
-                        style="@style/SubTitleText"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_below="@id/ivCreateAccount"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginVertical="36dp"
-                        android:layout_marginStart="12dp"
-                        android:background="@drawable/circle_drawable"
-                        android:gravity="center" />
-
-
-                    <TextView
-                        android:id="@+id/tvNumFillPersonalData"
-                        style="@style/SubTitleText"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_below="@id/ivCreateAccount"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginVertical="36dp"
-                        android:layout_marginStart="12dp"
-                        android:gravity="center"
-                        android:text="@string/_2"
-                        android:textColor="@color/purple_gray_500" />
-
-                    <TextView
-                        android:id="@+id/tvFillPersonalData"
-                        style="@style/SubTitleText"
-                        android:layout_alignTop="@id/ivFillPersonalData"
-                        android:layout_alignBottom="@id/ivFillPersonalData"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginHorizontal="12dp"
-                        android:layout_toEndOf="@id/ivFillPersonalData"
-                        android:gravity="center_vertical"
-                        android:text="@string/fill_personal_data"
-                        android:textColor="@color/purple_gray_500" />
-
-                    <ImageView
-                        android:id="@+id/ivVerifyYourIdentity"
-                        style="@style/SubTitleText"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_below="@id/ivFillPersonalData"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginStart="12dp"
-                        android:layout_marginBottom="24dp"
-                        android:background="@drawable/circle_drawable"
-                        android:backgroundTint="@color/white"
-                        android:gravity="center"
-                        android:text="@string/_3"
-                        android:textColor="@color/purple_gray_500" />
-
-                    <TextView
-                        android:id="@+id/tvNumVerifyYourIdentity"
-                        style="@style/SubTitleText"
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_below="@id/ivFillPersonalData"
-                        android:layout_alignParentStart="true"
-                        android:layout_marginStart="12dp"
-                        android:layout_marginBottom="24dp"
-                        android:gravity="center"
-                        android:text="@string/_3"
-                        android:textColor="@color/purple_gray_500" />
-
-                    <TextView
-                        android:id="@+id/tvVerifyYourIdentity"
-                        style="@style/SubTitleText"
-                        android:layout_alignTop="@id/ivVerifyYourIdentity"
-                        android:layout_alignBottom="@id/ivVerifyYourIdentity"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginHorizontal="12dp"
-                        android:layout_toEndOf="@id/ivVerifyYourIdentity"
-                        android:drawablePadding="12dp"
-                        android:gravity="center_vertical"
-                        android:text="@string/verify_your_identity" />
-
-                    <LinearLayout
-                        android:id="@+id/llVerificationOnGoing"
-                        android:layout_width="wrap_content"
+                    <RelativeLayout
+                        android:id="@+id/rlPersonalData"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_below="@id/tvFillPersonalData"
-                        android:layout_alignParentEnd="true"
-                        android:layout_marginHorizontal="12dp"
-                        android:layout_marginTop="28dp"
-                        android:layout_toEndOf="@id/ivVerifyYourIdentity"
-                        android:orientation="vertical"
-                        android:visibility="gone">
+                        android:layout_below="@id/ivCreateAccount"
+                        android:layout_alignParentStart="true"
+                        android:layout_marginVertical="36dp"
+                        android:layout_marginStart="12dp"
+                        android:orientation="horizontal">
+
+                        <ImageView
+                            android:id="@+id/ivFillPersonalData"
+                            style="@style/SubTitleText"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:background="@drawable/circle_drawable"
+                            android:layout_centerVertical="true" />
 
                         <TextView
+                            android:id="@+id/tvNumFillPersonalData"
                             style="@style/SubTitleText"
-                            android:gravity="center_vertical"
-                            android:text="@string/verify_your_identity"
-                            android:textColor="@color/purple_500" />
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:gravity="center"
+                            android:layout_centerVertical="true"
+                            android:text="@string/_2"
+                            android:textColor="@color/purple_gray_500" />
 
                         <TextView
+                            android:id="@+id/tvFillPersonalData"
                             style="@style/SubTitleText"
-                            android:gravity="center_vertical"
-                            android:text="@string/verification_ongoing"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Body1" />
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginStart="12dp"
+                            android:layout_toEndOf="@id/ivFillPersonalData"
+                            android:layout_centerVertical="true"
+                            android:text="@string/fill_personal_data"
+                            android:textColor="@color/purple_gray_500" />
+                    </RelativeLayout>
 
-                    </LinearLayout>
+                    <RelativeLayout
+                        android:id="@+id/rlVerify"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentStart="true"
+                        android:layout_below="@id/rlPersonalData"
+                        android:layout_marginStart="12dp"
+                        android:layout_marginBottom="24dp">
 
+                        <ImageView
+                            android:id="@+id/ivVerifyYourIdentity"
+                            style="@style/SubTitleText"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_centerVertical="true"
+                            android:background="@drawable/circle_drawable"
+                            android:backgroundTint="@color/white"
+                            android:gravity="center"
+                            android:text="@string/_3"
+                            android:textColor="@color/purple_gray_500" />
+
+                        <TextView
+                            android:id="@+id/tvNumVerifyYourIdentity"
+                            style="@style/SubTitleText"
+                            android:layout_width="32dp"
+                            android:layout_height="32dp"
+                            android:layout_alignParentStart="true"
+                            android:gravity="center"
+                            android:layout_centerVertical="true"
+                            android:text="@string/_3"
+                            android:textColor="@color/purple_gray_500" />
+
+                        <TextView
+                            android:id="@+id/tvVerifyYourIdentity"
+                            style="@style/SubTitleText"
+                            android:layout_alignParentEnd="true"
+                            android:layout_marginHorizontal="12dp"
+                            android:layout_toEndOf="@id/ivVerifyYourIdentity"
+                            android:drawablePadding="12dp"
+                            android:layout_centerVertical="true"
+                            android:text="@string/verify_your_identity" />
+                    </RelativeLayout>
 
                 </RelativeLayout>
 
@@ -247,57 +224,6 @@
                     android:layout_marginTop="32dp"
                     android:text="@string/progress_registration_saved_each_stage"
                     android:textColor="@color/purple_gray_500" />
-
-
-
-                <ImageButton
-                    android:id="@+id/btnMenu"
-                    style="@style/ButtonStyle"
-                    android:layout_width="wrap_content"
-                    android:layout_alignTop="@id/btnInvestMoney"
-                    android:layout_alignBottom="@id/btnInvestMoney"
-                    android:layout_marginEnd="12dp"
-                    android:layout_toStartOf="@id/btnInvestMoney"
-                    android:background="@drawable/curved_button"
-                    android:backgroundTint="@color/purple_gray_50"
-                    android:padding="12dp"
-                    android:src="@drawable/ic_three_dots"
-                    android:visibility="gone" />
-
-                <LinearLayout
-                    android:id="@+id/btnInvestMoney"
-                    android:layout_width="wrap_content"
-                    android:layout_height="?attr/actionBarSize"
-                    android:layout_below="@id/rlStepCount"
-                    android:layout_alignParentEnd="true"
-                    android:layout_marginTop="48dp"
-                    android:layout_marginEnd="24dp"
-                    android:layout_marginBottom="24dp"
-                    android:background="@drawable/curved_button"
-                    android:backgroundTint="@color/purple_gray_50"
-                    android:backgroundTintMode="screen"
-                    android:gravity="center"
-                    android:orientation="horizontal"
-                    android:paddingHorizontal="12dp"
-                    android:visibility="gone">
-
-                    <ImageView
-                        android:id="@+id/ivInvestMoney"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginEnd="6dp"
-                        android:background="@drawable/ic_invest_money" />
-
-                    <TextView
-                        android:id="@+id/tvInvestMoney"
-                        style="@style/DialogTitle"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="6dp"
-                        android:text="@string/invest_money"
-                        android:textColor="@color/purple_gray_800" />
-                </LinearLayout>
-
 
             </RelativeLayout>
 

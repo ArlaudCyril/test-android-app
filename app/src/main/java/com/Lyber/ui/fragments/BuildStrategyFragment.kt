@@ -105,8 +105,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
     private fun clickListen(asset: PriceServiceResume) {
         val item = AddedAsset(asset, 100F)
         viewModel.addedAsset.apply {
-
-            // recycler view
+           // recycler view
             when {
                 // case-1 when there is no item
                 isEmpty() -> {
@@ -120,13 +119,26 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
 
                 // case-3 if we extend the list
                 else -> {
+//                    val baseShare = 100 / count()
+//                    var remainder = 100 % count()
+//                    val shares = MutableList(count()) { baseShare }
+
                     adapter.clearList()
                     add(item)
-                    for (i in 0 until count()) {
-                        get(i).allocation = 100F / count()
+
+                    val count = count()
+                    val shares = distributePercentage(count)
+
+                    for (i in 0 until count) {
+                        get(i).allocation = shares[i].toFloat()
                         get(i).isChangedManually = false
                         adapter.addItem(get(i))
                     }
+//                    for (i in 0 until count()) {
+//                        get(i).allocation = 100F / count()
+//                        get(i).isChangedManually = false
+//                        adapter.addItem(get(i))
+//                    }
 
                     //scroll to position
                     // use scroll views method
@@ -140,7 +152,21 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
         }
 
     }
+    fun distributePercentage(n: Int): List<Int> {
+        val baseShare = 100 / n
+        var remainder = 100 % n
+        val shares = MutableList(n) { baseShare }
 
+        // Distribute remaining percentage points
+        var i = n - 1 // Start from the last item
+        while (remainder > 0) {
+            shares[i]++
+            remainder--
+            i = (i - 1 + n) % n // Move to the previous item in a circular manner
+        }
+
+        return shares
+    }
     private fun calculateAllocations() {
 
         binding.tvInitialInfo.gone()

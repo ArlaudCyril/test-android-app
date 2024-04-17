@@ -53,10 +53,11 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginTop="18dp"
+        android:src="@drawable/circle_dot_unselected"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/llFiatWallet"
-        android:src="@drawable/ic_euro" />
+         />
 <androidx.appcompat.widget.LinearLayoutCompat
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -72,8 +73,7 @@
         style="@style/SubheadMabry"
         android:layout_marginStart="12dp"
         android:gravity="center_vertical"
-        android:textStyle="bold"
-        android:text="@string/euro" />
+        android:textStyle="bold" />
 
     <TextView
         android:id="@+id/tvAssetNameCode"

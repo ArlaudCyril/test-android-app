@@ -2,25 +2,33 @@ package com.Lyber.ui.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.Editable
+import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.FragmentInvestAddMoneyBinding
+import com.Lyber.models.Balance
+import com.Lyber.models.BalanceData
 import com.Lyber.models.Strategy
 import com.Lyber.models.TransactionData
 import com.Lyber.ui.fragments.bottomsheetfragments.FrequencyModel
 import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.formattedAsset
 import com.Lyber.utils.CommonMethods.Companion.setBackgroundTint
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.Constants
+import com.Lyber.utils.OnTextChange
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.math.RoundingMode
 
 class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), View.OnClickListener {
     private var selectedFrequency: String = ""
     private var mCurrency: String = " USDT"
+    private var valueConversion: Double = 1.0
     private var minInvestPerAsset = 10f
     private var requiredAmount = 0f
     private lateinit var viewModel: PortfolioViewModel
@@ -57,6 +65,9 @@ class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), Vi
         binding.tvNine.setOnClickListener(this)
         binding.btnPreviewInvestment.setOnClickListener(this)
         binding.ivTopAction.setOnClickListener(this)
+        binding.ivMax.setOnClickListener(this)
+        binding.etAmount.addTextChangedListener(textOnTextChange)
+
         binding.btnAddFrequency.setOnClickListener {
             FrequencyModel(::frequencySelected).show(
                 parentFragmentManager, ""
@@ -71,6 +82,19 @@ class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), Vi
                 requiredAmount = newAmount
             }
         }
+        var balance =
+            com.Lyber.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == "usdt" } }
+        if (balance == null) {
+            val balanceData = BalanceData("0", "0")
+            balance = Balance("0", balanceData)
+        }
+
+        "${
+            balance.balanceData.balance.formattedAsset(0.0, RoundingMode.DOWN,2)
+        } USDT Available".also { binding.tvSubTitle.text = it }
+        valueConversion =
+            (balance.balanceData.euroBalance.toDouble() / balance.balanceData.balance.toDouble())
+
         binding.etAmount.text = "0$mCurrency"
         if (editEnabledStrategy) {
             var data = Gson().fromJson<Strategy>(
@@ -125,9 +149,26 @@ class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), Vi
                 tvNine -> type('9')
                 tvZero -> type('0')
                 btnPreviewInvestment -> investment()
+                ivMax->{
+                    var balance =
+                        com.Lyber.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == "usdt" } }
+                    if (balance == null) {
+                        val balanceData = BalanceData("0", "0")
+                        balance = Balance("0", balanceData)
+                    }
+                    var maxValue = balance!!.balanceData.balance.toDouble()
+                        if (maxValue > 0) {
+                            binding.etAmount.text = "${
+                                maxValue.toString().formattedAsset(0.0, RoundingMode.DOWN,2)
+                            }" + mCurrency
+                           } else {
+                            binding.etAmount.text = "0" + mCurrency
+                        }
+                    }
+                }
             }
         }
-    }
+
 
     private fun activateButton(activate: Boolean) {
         binding.btnPreviewInvestment.background = ContextCompat.getDrawable(
@@ -160,7 +201,7 @@ class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), Vi
             val bundle = Bundle()
             bundle.putString(Constants.AMOUNT, finalAmount)
             bundle.putString(Constants.FREQUENCY, selectedFrequency)
-               bundle.putBoolean(Constants.EDIT_ACTIVE_STRATEGY,editEnabledStrategy)
+            bundle.putBoolean(Constants.EDIT_ACTIVE_STRATEGY, editEnabledStrategy)
             viewModel.selectedOption = Constants.USING_STRATEGY
             findNavController().navigate(R.id.confirmInvestmentFragment, bundle)
         }
@@ -260,4 +301,42 @@ class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), Vi
         }
     }
 
+    private fun setAssetAmount(assetAmount: String) {
+        val valueAmount =
+            amount.replace(mCurrency, "").pointFormat.toDouble()
+
+        Log.d("valueAmount", "$valueAmount")
+        val priceCoin = valueAmount.toDouble().div(assetAmount.toDouble())
+        binding.tvAssetConversion.text =
+            "~${assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN,2)} ${Constants.EURO}"
+  }
+    private val textOnTextChange = object : OnTextChange {
+        @SuppressLint("SetTextI18n")
+        override fun onTextChange() {
+            val valueAmount =amount.replace(mCurrency, "").pointFormat.toDouble()
+
+
+            when {
+
+                valueAmount > 0 -> {
+                        val assetAmount = (valueAmount * valueConversion).toString()
+                        viewModel.assetAmount = assetAmount
+                        setAssetAmount(assetAmount)
+
+                }
+
+                else -> {
+                    activateButton(false)
+                    viewModel.assetAmount = "0"
+
+                    setAssetAmount("0")
+                }
+            }
+
+        }
+
+        override fun afterTextChanged(s: Editable?) {
+
+        }
+    }
 }
