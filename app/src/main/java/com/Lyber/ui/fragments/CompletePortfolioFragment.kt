@@ -185,7 +185,6 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
                 null
             )
             tvVerifyYourIdentity.visible()
-            llVerificationOnGoing.gone()
         }
     }
 
@@ -206,7 +205,6 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
             tvVerifyYourIdentity.setOnClickListener(null)
             tvVerifyYourIdentity.setCompoundDrawablesWithIntrinsicBounds(null, null, null, null)
             tvVerifyYourIdentity.visibility = View.VISIBLE
-            llVerificationOnGoing.visibility = View.GONE
             tvVerifyYourIdentity.strikeText()
             tvVerifyYourIdentity.setTextColor(requireContext().getColor(R.color.purple_gray_600))
         }
@@ -218,17 +216,6 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
         binding.apply {
             when (v!!) {
 
-                btnMenu -> BottomSheetDialog().show(
-                    requireActivity().supportFragmentManager,
-                    BottomSheetDialog.SheetType.COMPLETE_ACCOUNT.title(requireContext())
-                )
-
-                btnInvestMoney -> {
-
-                    if (App.prefsManager.portfolioCompletionStep == Constants.KYC_COMPLETED) {
-                        findNavController().navigate(R.id.educationStrategyHolderFragment)
-                    }
-                }
                 tvCreateAnAccount->{
                     clickCreateAccount()
                 }

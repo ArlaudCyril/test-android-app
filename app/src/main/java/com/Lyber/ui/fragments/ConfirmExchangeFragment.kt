@@ -144,14 +144,7 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
                         priceCoin,
                         rounding = RoundingMode.DOWN, 6
                     ) + " " + data.fromAsset.uppercase()
-            Log.d(
-                "fee", "${
-                    data.fees.formattedAsset(
-                        priceCoin,
-                        rounding = RoundingMode.DOWN, 6
-                    ).toDouble()
-                }"
-            )
+
 
             orderId = data.orderId
 //            tvExchangeFromValue.text =
@@ -190,7 +183,7 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
                 "${
                     data.toAmount.formattedAsset(
                         price = priceCoin,
-                        rounding = RoundingMode.DOWN
+                        rounding = RoundingMode.DOWN,6
                     )
                 } ${data.toAsset.uppercase()}"
 //            val valueTotal = data.fees.toDouble()+data.fromAmount.toDouble()

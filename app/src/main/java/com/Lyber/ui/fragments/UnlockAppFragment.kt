@@ -84,7 +84,6 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
             }
         }
         binding.etPin.addTextChangedListener(onTextChange)
-
         binding.tvOne.setOnClickListener(this)
         binding.tvTwo.setOnClickListener(this)
         binding.tvThree.setOnClickListener(this)

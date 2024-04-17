@@ -21,6 +21,7 @@ import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.SignUpViewModel
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 
 class VerificationBottomSheet2FA(private val handle: (String) -> Unit) :
@@ -44,6 +45,7 @@ class VerificationBottomSheet2FA(private val handle: (String) -> Unit) :
         viewModel = CommonMethods.getViewModel(this)
         viewModel.listener=this
         setUpView()
+        behavior.state = BottomSheetBehavior.STATE_EXPANDED
         this.binding.etCodeOne.requestFocus()
         binding.etCodeOne.requestKeyboard()
         viewModel.userLoginResponse.observe(viewLifecycleOwner) {

@@ -42,7 +42,6 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AlertDialog
 import androidx.biometric.BiometricManager
-import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_STRONG
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK
 import androidx.biometric.BiometricPrompt
 import androidx.core.app.ActivityCompat
@@ -64,6 +63,7 @@ import com.Lyber.models.Balance
 import com.Lyber.models.ErrorResponse
 import com.Lyber.network.RestClient
 import com.Lyber.utils.App.Companion.prefsManager
+import com.Lyber.utils.CommonMethods.Companion.formattedAsset
 import com.Lyber.utils.CommonMethods.Companion.toFormat
 import com.Lyber.utils.Constants.CAP_RANGE
 import com.Lyber.utils.Constants.SMALL_RANGE
@@ -284,8 +284,12 @@ class CommonMethods {
         fun ImageView.loadCircleCrop(any: Any, placeHolderRes: Int? = -1) {
             if (any.toString().contains("btc")) {
                 this.setImageResource(R.drawable.ic_bitcoin)
-            } else {
-                var res = any
+            }
+            else if (any.toString().contains("pepe")) {
+           this.setImageResource(R.drawable.ic_pepe)
+            }
+            else {
+//                var res = any
                 val requestBuilder: RequestBuilder<PictureDrawable> =
                     Glide.with(this).`as`(PictureDrawable::class.java)
                         .placeholder(placeHolderRes!!)
@@ -293,10 +297,8 @@ class CommonMethods {
                         .listener(SvgSoftwareLayerSetter())
                 when (any) {
                     is String -> {
-                        if (!any.contains("http"))
-                            res = Constants.BASE_URL + any
-
-
+//                        if (!any.contains("http"))
+//                            res = Constants.BASE_URL + any
 
                         if (placeHolderRes != -1)
                             Glide.with(this).load(any)

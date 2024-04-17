@@ -1,14 +1,17 @@
 package com.Lyber.ui.fragments.bottomsheetfragments
 
+import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
+import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.fragment.app.DialogFragment
@@ -22,6 +25,7 @@ import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.SignUpViewModel
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
     BaseBottomSheet<BottomSheetVerificationBinding>() {
@@ -49,6 +53,7 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setUpView()
+        behavior.state = BottomSheetBehavior.STATE_EXPANDED
         this.binding.etCodeOne.requestFocus()
         binding.etCodeOne.requestKeyboard()
         binding.btnCancel.setOnClickListener {

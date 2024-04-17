@@ -32,7 +32,7 @@
 
         <TextView
             style="@style/SubheadMabry"
-            android:layout_marginTop="20dp"
+            android:layout_marginTop="30dp"
             android:lineSpacingExtra="2dp"
             android:gravity="center"
             android:text="@string/add_google_authenticator"
