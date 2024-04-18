@@ -209,7 +209,7 @@ class NewCustomLineChart : RelativeLayout {
         points.clear()
         val max = lineData.max()
         val min = lineData.min()
-
+        val mid = (max!! + min!!) / 2
         if (lineData.count() > 1)
             xUnit = (width - (horizontalPadding)) / (lineData.count() - 1)
 
@@ -234,8 +234,7 @@ class NewCustomLineChart : RelativeLayout {
             for (i in 0 until lineData.count()) {
                 val startX: Float =
                     ((width - (horizontalPadding * 2)) * ((i / (lineData.count() - 1).toFloat()))) + horizontalPadding
-                val startY = (height - ((height * heightFraction)))
-
+                val startY =(height - ((height * heightFraction)))
                 if (lineData[i] == max) pointMax = Point(width.toFloat(), startY)
                 else if (lineData[i] == min) pointMin = Point(width.toFloat(), startY)
 

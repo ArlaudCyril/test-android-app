@@ -1,6 +1,5 @@
 package com.Lyber.ui.activities
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.ContentResolver
@@ -11,7 +10,6 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.graphics.Matrix
-import android.hardware.Camera
 import android.media.ExifInterface
 import android.net.Uri
 import android.os.Build
@@ -21,8 +19,6 @@ import android.provider.MediaStore
 import android.provider.Settings
 import android.util.Log
 import android.view.View
-import android.view.ViewTreeObserver
-import android.view.inputmethod.InputMethodManager
 import android.webkit.PermissionRequest
 import android.webkit.ValueCallback
 import android.webkit.WebChromeClient
@@ -35,19 +31,34 @@ import androidx.annotation.RequiresApi
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.lifecycle.Lifecycle
 import com.Lyber.R
 import com.Lyber.databinding.ActivityWebViewBinding
+import com.Lyber.network.RestClient
+import com.Lyber.ui.portfolio.fragment.PortfolioHomeFragment
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.Constants
+import com.Lyber.viewmodels.PortfolioViewModel
+import okhttp3.ResponseBody
 import java.io.File
 import java.io.IOException
 
-class                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            WebViewActivity : BaseActivity<ActivityWebViewBinding>() {
+class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRetrofitError {
     override fun bind() = ActivityWebViewBinding.inflate(layoutInflater)
     private var mFilePathCallback: ValueCallback<Array<Uri>>? = null
     private var mImagePath = ""
-
+    private lateinit var portfolioViewModel: PortfolioViewModel
+    private var fromBase=false
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        portfolioViewModel = CommonMethods.getViewModel(this)
+
+        portfolioViewModel.listener = this@WebViewActivity
+        if(intent!=null && intent.hasExtra(Constants.FROM))
+            fromBase=intent.getBooleanExtra(Constants.FROM,false)
+
         checkAndRequest()
         binding.webView.settings.apply {
             domStorageEnabled = true
@@ -77,6 +88,25 @@ class                                                                           
             webViewClient = MyBrowser()
             loadUrl(intent.getStringExtra(Constants.URL)!!)
         }
+
+        portfolioViewModel.finishRegistrationResponse.observe(this) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                CommonMethods.dismissProgressDialog()
+                App.prefsManager.accessToken = it.data.access_token
+                App.prefsManager.refreshToken = it.data.refresh_token
+                App.prefsManager.personalDataSteps = 0
+                App.prefsManager.portfolioCompletionStep = 0
+                val intent = Intent(this@WebViewActivity, SplashActivity::class.java)
+                intent.putExtra(
+                    "fragment_to_show",
+                    PortfolioHomeFragment::class.java.name
+                ) // Pass the tag of the desired fragment
+                intent.flags = Intent.FLAG_ACTIVITY_CLEAR_TOP or Intent.FLAG_ACTIVITY_SINGLE_TOP
+                startActivity(intent)
+                finish()
+            }
+        }
+
         //dummyUrl
 //        binding.webView.loadUrl("https://marcusbelcher.github.io/wasm-asm-camera-webgl-test/index.html")
     }
@@ -345,11 +375,18 @@ class                                                                           
         ): Boolean {
             val url = request?.url.toString()
             // Check if the URL matches the completion URL for login
-            if (url == "https://www.lyber.com/kyc-finished" || url=="https://lyber.com/kyc-finished") {
+            if (url == "https://www.lyber.com/kyc-finished" || url == "https://lyber.com/kyc-finished") {
                 // Perform actions to indicate that login is finished
-                setResult(Activity.RESULT_OK)
+                if(fromBase){
+                    setResult(Activity.RESULT_OK)
                 finish()
                 overridePendingTransition(0, 0)
+
+                }
+                else {
+                    CommonMethods.showProgressDialog(this@WebViewActivity)
+                    portfolioViewModel.finishRegistration()
+                }
                 return true
             }
             // For all other URLs, allow the WebView to handle the loading normally
@@ -363,11 +400,7 @@ class                                                                           
         override fun onPageFinished(view: WebView?, url: String?) {
             super.onPageFinished(view, url)
             val PageURL = view?.url
-            Log.d("Url", url!!)
             if (PageURL!!.equals("https://www.lyber.com/kyc-finished") || PageURL.equals("https://lyber.com/kyc-finished")) {
-                setResult(Activity.RESULT_OK)
-                finish()
-                overridePendingTransition(0, 0)
             } else if (PageURL.contains("https://www.lyber.com/sign-finished")) {
                 setResult(Activity.RESULT_OK)
                 finish()
@@ -408,7 +441,7 @@ class                                                                           
                     MediaStore.EXTRA_OUTPUT,
                     imageUri
                 )
-              } catch (e: IOException) {
+            } catch (e: IOException) {
                 e.printStackTrace()
                 f = null
                 mImagePath = null!!
@@ -430,7 +463,7 @@ class                                                                           
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             ImageUri = null
             var results: Array<Uri>? = null
-            if(result!=null) {
+            if (result != null) {
                 if (result.resultCode == RESULT_OK) {
                     ImageUri = saveImageToMediaStore(
                         getFile(mImagePath)!!, this
@@ -599,6 +632,18 @@ class                                                                           
         }
         // If something goes wrong, return null
         return null
+    }
+
+    override fun onRetrofitError(responseBody: ResponseBody?) {
+        CommonMethods.dismissAlertDialog()
+        CommonMethods.dismissProgressDialog()
+        CommonMethods.showErrorMessage(this, responseBody, binding.root)
+    }
+
+    override fun onError() {
+        CommonMethods.dismissProgressDialog()
+        getString(R.string.unable_to_connect_to_the_server).showToast(this)
+
     }
 
 }

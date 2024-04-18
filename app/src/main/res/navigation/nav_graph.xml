@@ -425,7 +425,6 @@
         android:id="@+id/addressFragment"
         android:name="com.Lyber.ui.fragments.AddressFragment"
         android:label="AddressFragment" />
-
     <dialog
         android:id="@+id/portfolioThreeDots"
         android:name="com.Lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDots"

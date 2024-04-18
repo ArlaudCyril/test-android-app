@@ -771,4 +771,6 @@
     <string name="no_result_found">No result found</string>
     <string name="buy_tether_on_lyber">Buy Tether on Lyber</string>
     <string name="notification_detail">For receiving push notifications you need to give notification permission from the settings.</string>
+<string name="verification_of_your_identity">Verification of your identity</string>
+<string name="contract_signature">Contract signature</string>
 </resources>

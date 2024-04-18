@@ -1,17 +1,19 @@
 package com.Lyber.ui.activities
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.net.Uri
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.Lyber.R
 import com.Lyber.databinding.ActivitySplashBinding
+import com.Lyber.ui.portfolio.fragment.PortfolioHomeFragment
 import com.Lyber.utils.ActivityCallbacks
 import com.Lyber.utils.App
 import com.Lyber.utils.Constants
@@ -21,8 +23,20 @@ import java.util.Locale
 @SuppressLint("CustomSplashScreen")
 class SplashActivity : BaseActivity<ActivitySplashBinding>() {
     private val TAG = "CompletePortfolioFragme"
+    lateinit var  navController:NavController
     override fun bind() = ActivitySplashBinding.inflate(layoutInflater)
 
+
+
+    override fun onNewIntent(intent: Intent?) {
+        super.onNewIntent(intent)
+        if (intent!!.extras != null && intent.hasExtra("fragment_to_show") &&
+            intent.getStringExtra("fragment_to_show").equals(PortfolioHomeFragment::class.java.name)) {
+            navController.popBackStack(navController.graph.startDestinationId, false)
+            navController.navigate(R.id.portfolioHomeFragment)
+            intent.removeExtra("fragment_to_show")
+        }
+    }
     @SuppressLint("CommitTransaction")
     override fun onCreate(savedInstanceState: Bundle?) {
         Log.d(TAG, "onCreate: ")
@@ -31,7 +45,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
         super.onCreate(savedInstanceState)
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        val navController = navHostFragment.navController
+         navController = navHostFragment.navController
         onBackPressedDispatcher.addCallback(
             this /* lifecycle owner */,
             object : OnBackPressedCallback(true) {
@@ -67,7 +81,6 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
             config.setLocale(locale)
             resources.updateConfiguration(config, resources.displayMetrics)
         }
-
         if (intent.data != null && App.prefsManager.userPin.isEmpty()) {
             val uriString = intent.data?.toString()
             if (uriString != null && uriString.contains("reset?token")) {
