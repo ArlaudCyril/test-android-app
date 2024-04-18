@@ -4,6 +4,8 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -38,6 +40,7 @@ import com.Lyber.utils.CommonMethods.Companion.dismissAlertDialog
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.logOut
+import com.Lyber.utils.CommonMethods.Companion.setProfile
 import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.CommonMethods.Companion.visible
@@ -45,6 +48,7 @@ import com.Lyber.utils.Constants
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import okhttp3.ResponseBody
+import java.util.Locale
 
 abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.OnRetrofitError {
 
@@ -73,6 +77,7 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
                 resultLauncher.launch(
                     Intent(requireActivity(), WebViewActivity::class.java)
                         .putExtra(Constants.URL, it.data.url)
+                        .putExtra(Constants.FROM, true)
                 )
             }
         }
@@ -85,6 +90,7 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
                 resultLauncher.launch(
                     Intent(requireActivity(), WebViewActivity::class.java)
                         .putExtra(Constants.URL, it.data.url)
+                        .putExtra(Constants.FROM, true)
                 )
 
             }
@@ -96,6 +102,22 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
                 CommonMethods.logOut(requireContext())
             }
         }
+        viewModel.getUserSignResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                dismissProgressDialog()
+                if (it.data.kycStatus == "OK")
+                    when (it.data.yousignStatus) {
+                        "SIGNED" -> {
+                            showDocumentDialog(App.appContext, Constants.LOADING)
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                showDocumentDialog(App.appContext, Constants.LOADING_SUCCESS)
+                            }, 1500)
+                        }
+                    }
+            }
+
+        }
+
         return binding.root
     }
 
@@ -110,18 +132,14 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
             if (result.resultCode == Activity.RESULT_OK) {
                 if (isSign) {
                     activity?.runOnUiThread {
+                        viewModel.getUserSign()
                         findNavController().popBackStack(R.id.portfolioHomeFragment, false)
-                        showDocumentDialog(App.appContext, Constants.LOADING)
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            showDocumentDialog(App.appContext, Constants.LOADING_SUCCESS)
-                        }, 1500)
                     }
-//                    findNavController().popBackStack(R.id.portfolioHomeFragment,false)
-//                    showDocumentDialog(requireActivity(), Constants.LOADING)
-//                    Handler(Looper.getMainLooper()).postDelayed({
-//                        showDocumentDialog(requireActivity(), Constants.LOADING_SUCCESS)
-//                    }, 1500)
+                } else {
+                    CommonMethods.showProgressDialog(requireContext())
+                    viewModel.getUser()
                 }
+
 
             }
         }
@@ -131,7 +149,7 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
         dismissAlertDialog()
         val code = CommonMethods.showErrorMessage(requireContext(), responseBody, binding.root)
         Log.d("errorCode", "$code")
-         if (code == 7023 || code == 10041 || code == 7025 || code == 10043)
+        if (code == 7023 || code == 10041 || code == 7025 || code == 10043)
             customDialog(code)
     }
 
