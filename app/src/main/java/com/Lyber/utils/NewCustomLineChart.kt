@@ -129,13 +129,15 @@ class NewCustomLineChart : RelativeLayout {
     var selectorLineColor: Int = context.getColor(R.color.purple_500)
 
     var selectorDrawable: Drawable? = getDrawable(context, R.drawable.circle_drawable_purple_500)
-    var selectorPointSize: Int = 30
+    var selectorPointSize: Int = 25
+//    var selectorPointSize: Int = 30
 
     var horizontalPadding: Int = 60
     var heightFraction: Float = 0.8f
     var bottomPadding: Int = 24
 
-    var lineThickness = 9f
+    var lineThickness = 7f
+//    var lineThickness = 9f
     var lineColor = context.getColor(R.color.purple_500)
 
     var mCanvas: Canvas? = null

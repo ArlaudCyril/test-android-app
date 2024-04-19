@@ -75,6 +75,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
     private var verificationVisible = false
     private lateinit var navController: NavController
     private var limit = 7
+    private lateinit var ts: MutableList<List<Double>>
     override fun bind() = FragmentPortfolioHomeBinding.inflate(layoutInflater)
 
     @SuppressLint("SetTextI18n")
@@ -213,14 +214,19 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         // All assets available part
         viewModel.getAllPriceResume()
 
-        if(App.prefsManager.user?.kycStatus!="OK" && App.prefsManager.user?.yousignStatus!="SIGNED" ) {
+        if (App.prefsManager.user?.kycStatus != "OK" && App.prefsManager.user?.yousignStatus != "SIGNED") {
             GlobalScope.launch {
                 // Run a loop infinitely
                 while (true && !kycOK) {
                     // Call the function to fetch user data
-                    viewModel.getUser()
-                    // Delay for 10 seconds
-                    delay(10 * 1000)
+                    if(App.prefsManager.accessToken.isNotEmpty() ) {
+                        viewModel.getUser()
+                        // Delay for 10 seconds
+                        if (App.prefsManager.user?.kycStatus == "STARTED" || App.prefsManager.user?.kycStatus == "NOT_STARTED")
+                            delay(3 * 1000)
+                        else
+                            delay(10 * 1000)
+                    }
                 }
             }
             // Prevent the program from terminating immediately
@@ -233,7 +239,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
         viewModel.newsResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                dismissProgressDialog()
+//                dismissProgressDialog()
                 resourcesAdapter.setList(it.data)
             }
         }
@@ -241,7 +247,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         viewModel.allAssets.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 binding.rvRefresh.isRefreshing = false
-                dismissProgressDialog()
+//                dismissProgressDialog()
                 App.prefsManager.assetBaseDataResponse = it
                 com.Lyber.ui.activities.BaseActivity.assets = it.data as ArrayList<AssetBaseData>
             }
@@ -251,7 +257,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         viewModel.priceServiceResumes.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 binding.rvRefresh.isRefreshing = false
-                dismissProgressDialog()
+//                dismissProgressDialog()
                 com.Lyber.ui.activities.BaseActivity.balanceResume.clear()
                 com.Lyber.ui.activities.BaseActivity.balanceResume.addAll(it)
                 adapterAllAsset.setList(it.subList(0, 6))
@@ -260,7 +266,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
         viewModel.balanceResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                dismissProgressDialog()
+//                dismissProgressDialog()
                 binding.rvRefresh.isRefreshing = false
                 if (it.data.isNotEmpty()) {
                     binding.tvNoAssets.gone()
@@ -274,6 +280,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                     for (i in it.data)
                         totalBalance += i.value.euroBalance.toDoubleOrNull()!!
                     viewModel.totalPortfolio = totalBalance
+                    if(!(::ts.isInitialized && ts.isNotEmpty()))
                     binding.lineChart.timeSeries = getLineData(viewModel.totalPortfolio)
                     binding.tvValuePortfolioAndAssetPrice.text =
                         "${totalBalance.commaFormatted}${Constants.EURO}"
@@ -287,7 +294,6 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
         viewModel.walletHistoryResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                CommonMethods.dismissProgressDialog()
                 binding.rvRefresh.isRefreshing = false
                 val dates = it.data.map { it.date }
                 val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
@@ -298,6 +304,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                     listOf(dateInMillis, totalValue)
                 } as MutableList
                 Log.d("timeseries", "$timeSeries1")
+                ts = timeSeries1
                 if (timeSeries1.isEmpty())
                     binding.lineChart.timeSeries = getLineData(viewModel.totalPortfolio)
                 else
@@ -307,13 +314,13 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
         viewModel.getUserResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                dismissProgressDialog()
                 binding.rvRefresh.isRefreshing = false
                 App.prefsManager.user = it.data
                 App.prefsManager.defaultImage = it.data.avatar
                 binding.ivProfile.setProfile
                 App.prefsManager.withdrawalLockSecurity = it.data.withdrawalLock
                 if (it.data.kycStatus == "OK" && it.data.yousignStatus == "SIGNED" && !verificationVisible) {
+                    dismissProgressDialog()
                     kycOK = true
                     binding.tvVerification.gone()
                     binding.llVerification.gone()
@@ -323,11 +330,19 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                     binding.llVerification.visible()
                     when (it.data.kycStatus) {
                         "NOT_STARTED", "STARTED" -> binding.ivKyc.setImageResource(R.drawable.arrow_right_purple)
-                        "FAILED", "CANCELED" -> binding.ivKyc.setImageResource(R.drawable.arrow_right_purple)
+                        "FAILED", "CANCELED" -> {
+                            dismissProgressDialog()
+                            binding.ivKyc.setImageResource(R.drawable.arrow_right_purple)
+                        }
                         "OK" -> {
+                            dismissProgressDialog()
                             binding.ivKyc.setImageResource(R.drawable.accepted_indicator)
                         }
-                        "REVIEW" -> binding.ivKyc.setImageResource(R.drawable.pending_indicator)
+
+                        "REVIEW" -> {
+                            dismissProgressDialog()
+                            binding.ivKyc.setImageResource(R.drawable.pending_indicator)
+                        }
 
                     }
                     if (it.data.kycStatus == "OK")
@@ -354,13 +369,13 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
         viewModel.networkResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                dismissProgressDialog()
+//                dismissProgressDialog()
                 com.Lyber.ui.activities.BaseActivity.networkAddress = it.data as ArrayList<Network>
             }
         }
         viewModel.activeStrategyResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                dismissProgressDialog()
+//                dismissProgressDialog()
                 if (it.data.isNotEmpty()) {
                     binding.llNoActiveStrategy.gone()
                     adapterRecurring.setList(it.data)
