@@ -378,7 +378,7 @@ class CommonMethods {
                 )
 
             val errorRes: ErrorResponse? = errorConverter.convert(responseBody!!)
-            if (errorRes?.code == 19007) {
+            if (errorRes?.code == 19007 || errorRes?.code==19004) {
                 logOut(context)
 //                return errorRes.code
             }
