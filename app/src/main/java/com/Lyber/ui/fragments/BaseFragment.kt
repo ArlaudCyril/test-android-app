@@ -105,15 +105,16 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
         viewModel.getUserSignResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
-                if (it.data.kycStatus == "OK")
+                if (it.data.kycStatus == "OK") {
+                    showDocumentDialog(App.appContext, Constants.LOADING)
                     when (it.data.yousignStatus) {
                         "SIGNED" -> {
-                            showDocumentDialog(App.appContext, Constants.LOADING)
                             Handler(Looper.getMainLooper()).postDelayed({
                                 showDocumentDialog(App.appContext, Constants.LOADING_SUCCESS)
                             }, 1500)
                         }
                     }
+                }
             }
 
         }
@@ -193,7 +194,7 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
     }
 
     private lateinit var dialog: Dialog
-    private fun showDocumentDialog(context: Context, typeOfLoader: Int) {
+    fun showDocumentDialog(context: Context, typeOfLoader: Int) {
         if (!::dialog.isInitialized) {
             dialog = Dialog(requireContext())
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)

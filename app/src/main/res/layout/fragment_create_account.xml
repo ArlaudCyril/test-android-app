@@ -111,7 +111,7 @@
                         android:layout_width="match_parent"
                         android:background="@drawable/edit_text_background"
                         android:hint="@string/hint_enter_email_address"
-                        android:inputType="textEmailAddress"
+                        android:inputType="textEmailAddress|textNoSuggestions"
                         android:paddingHorizontal="12dp"
                         android:visibility="gone" />
 

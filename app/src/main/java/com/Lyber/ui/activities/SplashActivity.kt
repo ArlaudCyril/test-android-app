@@ -87,13 +87,12 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
         handleExtras()
     }
 
-
     companion object {
         private var _activityCallbacks: ActivityCallbacks? = null
         var activityCallbacks: ActivityCallbacks?
-            get() = com.Lyber.ui.activities.SplashActivity.Companion._activityCallbacks
+            get() = _activityCallbacks
             set(value) {
-                com.Lyber.ui.activities.SplashActivity.Companion._activityCallbacks = value
+               _activityCallbacks = value
             }
     }
 
