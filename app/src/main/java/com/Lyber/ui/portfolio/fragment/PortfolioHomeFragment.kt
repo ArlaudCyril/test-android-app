@@ -347,7 +347,12 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                     }
                     if (it.data.kycStatus == "OK")
                         when (it.data.yousignStatus) {
-                            "SIGNED" -> binding.ivSign.setImageResource(R.drawable.accepted_indicator)
+                            "SIGNED" -> {
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    showDocumentDialog(App.appContext, Constants.LOADING_SUCCESS)
+                                }, 1500)
+                                binding.ivSign.setImageResource(R.drawable.accepted_indicator)
+                            }
                             "NOT_SIGNED" -> binding.ivSign.setImageResource(R.drawable.arrow_right_purple)
                         }
                     if (it.data.kycStatus == "OK" && it.data.yousignStatus == "SIGNED")
