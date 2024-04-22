@@ -53,7 +53,8 @@ import java.util.Locale
 abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.OnRetrofitError {
 
     private var _binding: viewBinding? = null
-    private var isSign = false
+     var isSign = false
+     var isKyc = false
     val binding get() = _binding!!
 
     abstract fun bind(): viewBinding
@@ -97,6 +98,7 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
         }
         viewModel.logoutResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+               viewModel.totalPortfolio=0.0
                 dismissProgressDialog()
                 dismissAlertDialog()
                 CommonMethods.logOut(requireContext())
@@ -107,16 +109,18 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
                 dismissProgressDialog()
                 if (it.data.kycStatus == "OK") {
                     showDocumentDialog(App.appContext, Constants.LOADING)
-                    when (it.data.yousignStatus) {
-                        "SIGNED" -> {
-                            Handler(Looper.getMainLooper()).postDelayed({
-                                showDocumentDialog(App.appContext, Constants.LOADING_SUCCESS)
-                            }, 1500)
-                        }
-                    }
+//                    when (it.data.yousignStatus) {
+//                        "SIGNED" -> {
+//                            if(isSign) {
+//                                Handler(Looper.getMainLooper()).postDelayed({
+//                                    showDocumentDialog(App.appContext, Constants.LOADING_SUCCESS)
+//                                }, 1500)
+//                                isSign=false
+//                            }
+//                        }
+//                    }
                 }
             }
-
         }
 
         return binding.root
@@ -138,6 +142,7 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
                     }
                 } else {
                     CommonMethods.showProgressDialog(requireContext())
+                    isKyc=true
                     viewModel.getUser()
                 }
 
@@ -265,6 +270,7 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
 
                 it.tvPositiveButton.setOnClickListener {
                     dismiss()
+                    viewModel.totalPortfolio=0.0
                     App.prefsManager.logout()
                     context.startActivity(
                         Intent(

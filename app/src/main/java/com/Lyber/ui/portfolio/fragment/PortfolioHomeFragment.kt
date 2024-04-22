@@ -76,6 +76,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
     private lateinit var navController: NavController
     private var limit = 7
     private lateinit var ts: MutableList<List<Double>>
+
     override fun bind() = FragmentPortfolioHomeBinding.inflate(layoutInflater)
 
     @SuppressLint("SetTextI18n")
@@ -214,10 +215,10 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         // All assets available part
         viewModel.getAllPriceResume()
 
-        if (App.prefsManager.user?.kycStatus != "OK" && App.prefsManager.user?.yousignStatus != "SIGNED") {
-            GlobalScope.launch {
+      if (App.prefsManager.user?.kycStatus != "OK" || App.prefsManager.user?.yousignStatus != "SIGNED") {
+           GlobalScope.launch {
                 // Run a loop infinitely
-                while (true && !kycOK) {
+                while (!kycOK) {
                     // Call the function to fetch user data
                     if(App.prefsManager.accessToken.isNotEmpty() ) {
                         viewModel.getUser()
@@ -314,18 +315,22 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
         viewModel.getUserResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                if(!isKyc)
+                    dismissProgressDialog()
                 binding.rvRefresh.isRefreshing = false
                 App.prefsManager.user = it.data
                 App.prefsManager.defaultImage = it.data.avatar
                 binding.ivProfile.setProfile
                 App.prefsManager.withdrawalLockSecurity = it.data.withdrawalLock
-                if (it.data.kycStatus == "OK" && it.data.yousignStatus == "SIGNED" && !verificationVisible) {
+                if (it.data.kycStatus == "OK" && it.data.yousignStatus == "SIGNED" && !verificationVisible ) {
                     dismissProgressDialog()
                     kycOK = true
+                    isKyc = true
                     binding.tvVerification.gone()
                     binding.llVerification.gone()
                 } else {
                     verificationVisible = true
+                    isKyc=true
                     binding.tvVerification.visible()
                     binding.llVerification.visible()
                     when (it.data.kycStatus) {
@@ -345,19 +350,27 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                         }
 
                     }
-                    if (it.data.kycStatus == "OK")
+                    if (it.data.kycStatus == "OK" )
                         when (it.data.yousignStatus) {
                             "SIGNED" -> {
-                                Handler(Looper.getMainLooper()).postDelayed({
-                                    showDocumentDialog(App.appContext, Constants.LOADING_SUCCESS)
-                                }, 1500)
+                                if(isSign) {
+                                    Handler(Looper.getMainLooper()).postDelayed({
+                                        showDocumentDialog(
+                                            App.appContext,
+                                            Constants.LOADING_SUCCESS
+                                        )
+                                    }, 1500)
+                                    isSign=false
+                                }
                                 binding.ivSign.setImageResource(R.drawable.accepted_indicator)
                             }
                             "NOT_SIGNED" -> binding.ivSign.setImageResource(R.drawable.arrow_right_purple)
                         }
-                    if (it.data.kycStatus == "OK" && it.data.yousignStatus == "SIGNED")
+                    if (it.data.kycStatus == "OK" && it.data.yousignStatus == "SIGNED") {
                         kycOK = true
-                    verificationVisible = false
+                        verificationVisible = false
+                    }
+
                 }
 
                 if (it.data.language.isNotEmpty()) {
@@ -614,7 +627,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 }
 
                 llContract -> {
-                    if (App.prefsManager.user?.kycStatus == "OK")
+                    if (App.prefsManager.user?.kycStatus == "OK" && App.prefsManager.user?.yousignStatus!="SIGNED")
                         customDialog(7025)
                 }
 
