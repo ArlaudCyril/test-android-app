@@ -4,8 +4,6 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.content.res.Configuration
-import android.content.res.Resources
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
@@ -30,17 +28,13 @@ import com.Lyber.databinding.CustomDialogLayoutBinding
 import com.Lyber.databinding.CustomDialogVerticalLayoutBinding
 import com.Lyber.databinding.DocumentBeingVerifiedBinding
 import com.Lyber.network.RestClient
-import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.ui.activities.WebViewActivity
 import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
-import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.dismissAlertDialog
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.gone
-import com.Lyber.utils.CommonMethods.Companion.logOut
-import com.Lyber.utils.CommonMethods.Companion.setProfile
 import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.CommonMethods.Companion.visible
@@ -48,7 +42,6 @@ import com.Lyber.utils.Constants
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import okhttp3.ResponseBody
-import java.util.Locale
 
 abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.OnRetrofitError {
 
@@ -108,7 +101,7 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
                 if (it.data.kycStatus == "OK") {
-                    showDocumentDialog(App.appContext, Constants.LOADING)
+                    showDocumentDialog(App.appContext, Constants.LOADING, true)
 //                    when (it.data.yousignStatus) {
 //                        "SIGNED" -> {
 //                            if(isSign) {
@@ -141,7 +134,7 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
                         findNavController().popBackStack(R.id.portfolioHomeFragment, false)
                     }
                 } else {
-                    CommonMethods.showProgressDialog(requireContext())
+                     showDocumentDialog(App.appContext, Constants.LOADING,false)
                     isKyc=true
                     viewModel.getUser()
                 }
@@ -199,7 +192,7 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
     }
 
     private lateinit var dialog: Dialog
-    fun showDocumentDialog(context: Context, typeOfLoader: Int) {
+    fun showDocumentDialog(context: Context, typeOfLoader: Int, isSign: Boolean=false) {
         if (!::dialog.isInitialized) {
             dialog = Dialog(requireContext())
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -212,11 +205,16 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
 
         try {
             val viewImage = dialog.findViewById<LottieAnimationView>(R.id.animationView)
-            val llVIew = dialog.findViewById<LinearLayout>(R.id.llProgress)
-            val tvDocVerified = dialog.findViewById<TextView>(R.id.tvDocVerified)
+             val tvDocVerified = dialog.findViewById<TextView>(R.id.tvDocVerified)
+            if(!isSign)
+                tvDocVerified.text=getString(R.string.kyc_under_verification_text)
+            else
+                tvDocVerified.text=getString(R.string.doc_being_verified)
+            tvDocVerified.visible()
             val imageView = dialog.findViewById<ImageView>(R.id.ivCorrect)!!
             when (typeOfLoader) {
                 Constants.LOADING -> {
+                    imageView.gone()
                     viewImage!!.playAnimation()
                     viewImage.setMinAndMaxProgress(0f, .32f)
                 }
@@ -229,6 +227,18 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
                         imageView.setImageResource(R.drawable.baseline_done_24)
                     }, 50)
                     Handler(Looper.getMainLooper()).postDelayed({
+                        dialog.dismiss()
+                    }, 400)
+                }
+                Constants.LOADING_FAILURE -> {
+                    viewImage.clearAnimation()
+                    tvDocVerified.text=getString(R.string.kyc_refused_text)
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        imageView.visible()
+                        imageView.setImageResource(R.drawable.baseline_clear_24)
+                    }, 50)
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        tvDocVerified.gone()
                         dialog.dismiss()
                     }, 400)
                 }

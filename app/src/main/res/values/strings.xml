@@ -773,4 +773,6 @@
     <string name="notification_detail">For receiving push notifications you need to give notification permission from the settings.</string>
 <string name="verification_of_your_identity">Verification of your identity</string>
 <string name="contract_signature">Contract signature</string>
+<string name="kyc_under_verification_text">Your kyc is under verification.</string>
+<string name="kyc_refused_text">Your kyc has been refused.</string>
 </resources>
