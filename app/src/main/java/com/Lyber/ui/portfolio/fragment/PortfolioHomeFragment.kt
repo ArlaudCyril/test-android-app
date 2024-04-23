@@ -220,13 +220,14 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 // Run a loop infinitely
                 while (!kycOK) {
                     // Call the function to fetch user data
+                    Log.d("hitting Api","$kycOK")
                     if(App.prefsManager.accessToken.isNotEmpty() ) {
                         viewModel.getUser()
                         // Delay for 10 seconds
-                        if (App.prefsManager.user?.kycStatus == "STARTED" || App.prefsManager.user?.kycStatus == "NOT_STARTED")
+//                        if (App.prefsManager.user?.kycStatus == "STARTED" || App.prefsManager.user?.kycStatus == "NOT_STARTED")
                             delay(3 * 1000)
-                        else
-                            delay(10 * 1000)
+//                        else
+//                            delay(10 * 1000)
                     }
                 }
             }
@@ -325,27 +326,55 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 if (it.data.kycStatus == "OK" && it.data.yousignStatus == "SIGNED" && !verificationVisible ) {
                     dismissProgressDialog()
                     kycOK = true
-                    isKyc = true
                     binding.tvVerification.gone()
                     binding.llVerification.gone()
                 } else {
                     verificationVisible = true
-                    isKyc=true
                     binding.tvVerification.visible()
                     binding.llVerification.visible()
                     when (it.data.kycStatus) {
                         "NOT_STARTED", "STARTED" -> binding.ivKyc.setImageResource(R.drawable.arrow_right_purple)
                         "FAILED", "CANCELED" -> {
                             dismissProgressDialog()
+                            if(isKyc) {
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    showDocumentDialog(
+                                        App.appContext,
+                                        Constants.LOADING_FAILURE,
+                                        isSign
+                                    )
+                                }, 1500)
+                                isKyc = false
+                            }
                             binding.ivKyc.setImageResource(R.drawable.arrow_right_purple)
                         }
                         "OK" -> {
                             dismissProgressDialog()
+                            if(isKyc) {
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    showDocumentDialog(
+                                        App.appContext,
+                                        Constants.LOADING_SUCCESS,
+                                        isSign
+                                    )
+                                }, 1500)
+                                isKyc = false
+                            }
                             binding.ivKyc.setImageResource(R.drawable.accepted_indicator)
                         }
 
                         "REVIEW" -> {
                             dismissProgressDialog()
+                            if(isKyc) {
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    showDocumentDialog(
+                                        App.appContext,
+                                        Constants.LOADING_SUCCESS,
+                                        isSign
+                                    )
+                                }, 1500)
+                                isKyc=false
+                            }
                             binding.ivKyc.setImageResource(R.drawable.pending_indicator)
                         }
 
@@ -357,7 +386,8 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                                     Handler(Looper.getMainLooper()).postDelayed({
                                         showDocumentDialog(
                                             App.appContext,
-                                            Constants.LOADING_SUCCESS
+                                            Constants.LOADING_SUCCESS,
+                                            isSign
                                         )
                                     }, 1500)
                                     isSign=false
