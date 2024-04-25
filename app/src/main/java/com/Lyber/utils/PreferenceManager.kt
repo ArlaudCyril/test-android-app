@@ -9,6 +9,7 @@ import com.Lyber.models.InvestmentExperienceLocalIds
 import com.Lyber.models.PersonalDataLocal
 import com.Lyber.models.User
 import com.Lyber.ui.activities.BaseActivity
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.google.gson.Gson
 
 class PreferenceManager(context: Context) {
@@ -183,6 +184,7 @@ class PreferenceManager(context: Context) {
 //        mEditor.clear()
 //        mEditor.apply()
         setPhone("")
+        PortfolioViewModel().totalPortfolio=0.0
         portfolioCompletionStep = -1
         addressDataLocal = null
         investmentExperienceLocal = null

@@ -8,248 +8,337 @@
     android:layout_height="match_parent"
     android:background="@drawable/splash_background"
     android:fitsSystemWindows="true">
+
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/rvRefresh"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-    <androidx.core.widget.NestedScrollView
-        android:id="@+id/nestedScrollView"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content">
-
-        <LinearLayout
-            android:id="@+id/mainContent"
+        <androidx.core.widget.NestedScrollView
+            android:id="@+id/nestedScrollView"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:animateLayoutChanges="true"
-            android:orientation="vertical"
-            app:layout_constraintTop_toTopOf="parent">
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="24dp"
-                android:layout_marginTop="20dp">
-
-                <TextView
-                    android:id="@+id/tvPortfolioAssetPrice"
-                    style="@style/SubheadMabry"
-                    android:text="@string/portfolio"
-                    android:textColor="@color/purple_gray_500" />
-
-                <TextView
-                    android:id="@+id/tvValuePortfolioAndAssetPrice"
-                    style="@style/HeadingStyle"
-                    android:layout_below="@id/tvPortfolioAssetPrice"
-                    android:layout_marginTop="2dp"
-                    android:textSize="40sp"
-                    tools:text="1312€" />
-
-                <ImageView
-                    android:id="@+id/ivProfile"
-                    android:layout_width="48dp"
-                    android:layout_height="48dp"
-                    android:layout_alignBottom="@id/tvValuePortfolioAndAssetPrice"
-                    android:layout_alignParentEnd="true"
-                    android:background="@drawable/circle_stroke_profile"
-                    android:padding="8dp" />
-
-            </RelativeLayout>
-
-            <com.Lyber.utils.NewCustomLineChart
-                android:id="@+id/lineChart"
-                android:layout_width="match_parent"
-                android:layout_height="160dp"
-                android:layout_gravity="center"
-                android:layout_marginHorizontal="12dp"
-                android:layout_marginVertical="24dp"
-                android:animateLayoutChanges="true"
-                android:background="@android:color/transparent" />
+            android:layout_height="wrap_content">
 
             <LinearLayout
-                android:id="@+id/llTabLayout"
+                android:id="@+id/mainContent"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginHorizontal="24dp"
-                android:layout_marginBottom="24dp"
-                android:background="@drawable/curved_button"
-                android:backgroundTint="@color/purple_gray_50"
-                android:padding="4dp"
-                android:visibility="visible">
+                android:animateLayoutChanges="true"
+                android:orientation="vertical"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <com.google.android.material.tabs.TabLayout
-                    android:id="@+id/tabLayout"
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:background="@android:color/transparent"
-                    app:tabBackground="@drawable/portfolio_tab_background"
-                    app:tabGravity="fill"
-                    app:tabIndicator="@android:color/transparent"
-                    app:tabMode="fixed"
-                    app:tabSelectedTextColor="@color/purple_gray_800"
-                    app:tabTextAppearance="@style/TextAppearance.AppCompat.Caption"
-                    app:tabTextColor="@color/purple_gray_400" />
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginTop="20dp">
 
-            </LinearLayout>
+                    <TextView
+                        android:id="@+id/tvPortfolioAssetPrice"
+                        style="@style/SubheadMabry"
+                        android:text="@string/portfolio"
+                        android:textColor="@color/purple_gray_500" />
 
-            <RelativeLayout
-                android:id="@+id/tableView"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:background="@drawable/top_curved_layout"
-                android:backgroundTint="@color/purple_gray_00"
-                android:elevation="4dp"
-                android:paddingHorizontal="16dp"
-                android:paddingBottom="48dp"
-                android:translationZ="4dp">
+                    <TextView
+                        android:id="@+id/tvValuePortfolioAndAssetPrice"
+                        style="@style/HeadingStyle"
+                        android:layout_below="@id/tvPortfolioAssetPrice"
+                        android:layout_marginTop="2dp"
+                        android:textSize="40sp"
+                        tools:text="1312€" />
 
+                    <ImageView
+                        android:id="@+id/ivProfile"
+                        android:layout_width="48dp"
+                        android:layout_height="48dp"
+                        android:layout_alignBottom="@id/tvValuePortfolioAndAssetPrice"
+                        android:layout_alignParentEnd="true"
+                        android:background="@drawable/circle_stroke_profile"
+                        android:padding="8dp" />
+
+                </RelativeLayout>
+
+                <com.Lyber.utils.NewCustomLineChart
+                    android:id="@+id/lineChart"
+                    android:layout_width="match_parent"
+                    android:layout_height="160dp"
+                    android:layout_gravity="center"
+                    android:layout_marginHorizontal="12dp"
+                    android:layout_marginVertical="24dp"
+                    android:animateLayoutChanges="true"
+                    android:background="@android:color/transparent" />
 
                 <LinearLayout
-                    android:id="@+id/llPortfolio"
+                    android:id="@+id/llTabLayout"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:animateLayoutChanges="true"
-                    android:orientation="vertical"
+                    android:layout_marginHorizontal="24dp"
+                    android:layout_marginBottom="24dp"
+                    android:background="@drawable/curved_button"
+                    android:backgroundTint="@color/purple_gray_50"
+                    android:padding="4dp"
                     android:visibility="visible">
 
-                    <TextView
-                        android:id="@+id/tvMyAssets"
-                        style="@style/TitleText"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="32dp"
-                        android:text="@string/my_assets"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="@color/purple_gray_900" />
-
-                    <LinearLayout
+                    <com.google.android.material.tabs.TabLayout
+                        android:id="@+id/tabLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
-                        android:background="@drawable/curved_button"
-                        android:backgroundTint="@color/purple_gray_50"
-                        android:orientation="vertical">
-                        <TextView
-                            android:id="@+id/tvNoAssets"
-                            style="@style/SubheadMabry"
-                            android:text="@string/no_assets_available"
-                            android:textStyle="bold"
-                            android:visibility="gone"
-                            android:layout_gravity="center"
-                            android:layout_margin="16dp"
-                            android:textColor="@color/purple_gray_800" />
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/rvMyAssets"
-                            android:visibility="visible"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layoutAnimation="@anim/recycler_view_item_animation"
-                            app:layout_behavior="@string/appbar_scrolling_view_behavior" />
-
-                    </LinearLayout>
-
-                    <TextView
-                        android:id="@+id/tvAnalytics"
-                        style="@style/TitleText"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="40dp"
-                        android:text="@string/analytics"
-                        android:visibility="gone"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                        android:textColor="@color/purple_gray_900" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvAnalytics"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:visibility="gone"
-                        android:layout_marginTop="24dp"
-                        android:backgroundTint="@color/purple_gray_50"
-                        android:layoutAnimation="@anim/recycler_view_item_animation" />
-
-                    <TextView
-                        android:id="@+id/tvTitleRecurringInvestment"
-                        style="@style/TitleText"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="40dp"
-                        android:text="@string/recurring_investment"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="#423D33" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvRecurringInvestments"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
-                        android:visibility="visible"
-                        android:background="@drawable/curved_button"
-                        android:backgroundTint="@color/purple_gray_50"
-                        android:layoutAnimation="@anim/recycler_view_item_animation" />
-<LinearLayout
-    android:id="@+id/llNoActiveStrategy"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:layout_gravity="center"
-    android:gravity="center"
-    android:visibility="gone"
-    android:layout_marginTop="24dp"
-    android:paddingVertical="16dp"
-    android:background="@drawable/curved_button"
-    android:backgroundTint="@color/purple_gray_50"
-    android:orientation="vertical">
-    <TextView
-        style="@style/SubheadMabry"
-        android:text="@string/you_donot_have_active_strategy"
-        android:layout_marginBottom="1dp"
-        android:textStyle="bold"
-        android:textColor="@color/purple_gray_800" />
-    <TextView
-        android:id="@+id/tvActivateStrategy"
-        style="@style/SubheadMabry"
-        android:text="@string/activate_create"
-        android:layout_marginTop="1dp"
-        android:textStyle="bold"
-        android:textColor="@color/purple_500" />
-</LinearLayout>
-                    <TextView
-                        style="@style/TitleText"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="40dp"
-                        android:text="@string/all_assets_available"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="#423D33" />
-
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rvAllAssetsAvailable"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="24dp"
-                        android:backgroundTint="@color/purple_gray_50"
-                        android:layoutAnimation="@anim/recycler_view_item_animation" />
-
-                    <TextView
-                        android:id="@+id/tvViewAll"
-                        style="@style/TitleText"
-                        android:layout_gravity="center"
-                        android:layout_marginTop="24dp"
-                        android:layout_marginBottom="48dp"
-                        android:gravity="center"
-                        android:text="@string/view_all"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                        android:textColor="@color/purple_500" />
+                        android:layout_gravity="center_vertical"
+                        android:background="@android:color/transparent"
+                        app:tabBackground="@drawable/portfolio_tab_background"
+                        app:tabGravity="fill"
+                        app:tabIndicator="@android:color/transparent"
+                        app:tabMode="fixed"
+                        app:tabSelectedTextColor="@color/purple_gray_800"
+                        app:tabTextAppearance="@style/TextAppearance.AppCompat.Caption"
+                        app:tabTextColor="@color/purple_gray_400" />
 
                 </LinearLayout>
 
+                <RelativeLayout
+                    android:id="@+id/tableView"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="@drawable/top_curved_layout"
+                    android:backgroundTint="@color/purple_gray_00"
+                    android:elevation="4dp"
+                    android:paddingHorizontal="16dp"
+                    android:paddingBottom="48dp"
+                    android:translationZ="4dp">
 
-            </RelativeLayout>
 
-        </LinearLayout>
+                    <LinearLayout
+                        android:id="@+id/llPortfolio"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:animateLayoutChanges="true"
+                        android:orientation="vertical"
+                        android:visibility="visible">
+
+                        <TextView
+                            android:id="@+id/tvVerification"
+                            style="@style/TitleText"
+                            android:visibility="gone"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="32dp"
+                            android:text="@string/verification"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@color/purple_gray_900" />
+
+                        <LinearLayout
+                            android:id="@+id/llVerification"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="24dp"
+                            android:visibility="gone"
+                            android:background="@drawable/curved_button"
+                            android:backgroundTint="@color/purple_gray_50"
+                            android:orientation="vertical">
+
+                            <LinearLayout
+                                android:id="@+id/llVerifyIdentity"
+                                android:layout_width="match_parent"
+                                android:layout_marginHorizontal="16dp"
+                                android:layout_marginTop="18dp"
+                                android:layout_marginBottom="12dp"
+                                android:orientation="horizontal"
+                                android:gravity="center_vertical"
+                                android:layout_height="wrap_content">
+                                <ImageView
+                                    android:id="@+id/ivKyc"
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:layout_marginEnd="6dp"
+                                    android:src="@drawable/arrow_right_purple" />
+
+                                <TextView
+                                    style="@style/SubHeadlineStyle"
+                                    android:layout_weight="1"
+                                    android:textColor="@color/purple_gray_900"
+                                    android:layout_marginHorizontal="8dp"
+                                    android:text="@string/verification_of_your_identity" />
+
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/ic_right_arrow_grey" />
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:id="@+id/llContract"
+                                android:layout_width="match_parent"
+                                android:layout_marginHorizontal="16dp"
+                                android:layout_marginTop="12dp"
+                                android:layout_marginBottom="18dp"
+                                android:orientation="horizontal"
+                                android:layout_gravity="center_vertical"
+                                android:gravity="center_vertical"
+                                android:layout_height="wrap_content">
+                                <ImageView
+                                    android:id="@+id/ivSign"
+                                    android:layout_width="24dp"
+                                    android:layout_height="24dp"
+                                    android:layout_marginEnd="6dp"
+                                    android:src="@drawable/rejected_indicator" />
 
 
-    </androidx.core.widget.NestedScrollView>
+                                <TextView
+                                    style="@style/SubHeadlineStyle"
+                                    android:layout_marginVertical="12dp"
+                                    android:layout_marginHorizontal="8dp"
+                                    android:layout_weight="1"
+                                    android:textColor="@color/purple_gray_900"
+                                    android:text="@string/contract_signature" />
+                                <ImageView
+                                    android:layout_width="wrap_content"
+                                    android:layout_height="wrap_content"
+                                    android:src="@drawable/ic_right_arrow_grey" />
+                            </LinearLayout>
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tvMyAssets"
+                            style="@style/TitleText"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="32dp"
+                            android:text="@string/my_assets"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@color/purple_gray_900" />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="24dp"
+                            android:background="@drawable/curved_button"
+                            android:backgroundTint="@color/purple_gray_50"
+                            android:orientation="vertical">
+
+                            <TextView
+                                android:id="@+id/tvNoAssets"
+                                style="@style/SubheadMabry"
+                                android:text="@string/no_assets_available"
+                                android:textStyle="bold"
+                                android:visibility="gone"
+                                android:layout_gravity="center"
+                                android:layout_margin="16dp"
+                                android:textColor="@color/purple_gray_800" />
+
+                            <androidx.recyclerview.widget.RecyclerView
+                                android:id="@+id/rvMyAssets"
+                                android:visibility="visible"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layoutAnimation="@anim/recycler_view_item_animation"
+                                app:layout_behavior="@string/appbar_scrolling_view_behavior" />
+
+                        </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tvAnalytics"
+                            style="@style/TitleText"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="40dp"
+                            android:text="@string/analytics"
+                            android:visibility="gone"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                            android:textColor="@color/purple_gray_900" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rvAnalytics"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:visibility="gone"
+                            android:layout_marginTop="24dp"
+                            android:backgroundTint="@color/purple_gray_50"
+                            android:layoutAnimation="@anim/recycler_view_item_animation" />
+
+                        <TextView
+                            android:id="@+id/tvTitleRecurringInvestment"
+                            style="@style/TitleText"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="40dp"
+                            android:text="@string/recurring_investment"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="#423D33" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rvRecurringInvestments"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="24dp"
+                            android:visibility="visible"
+                            android:background="@drawable/curved_button"
+                            android:backgroundTint="@color/purple_gray_50"
+                            android:layoutAnimation="@anim/recycler_view_item_animation" />
+
+                        <LinearLayout
+                            android:id="@+id/llNoActiveStrategy"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_gravity="center"
+                            android:gravity="center"
+                            android:visibility="gone"
+                            android:layout_marginTop="24dp"
+                            android:paddingVertical="16dp"
+                            android:background="@drawable/curved_button"
+                            android:backgroundTint="@color/purple_gray_50"
+                            android:orientation="vertical">
+
+                            <TextView
+                                style="@style/SubheadMabry"
+                                android:text="@string/you_donot_have_active_strategy"
+                                android:layout_marginBottom="1dp"
+                                android:textStyle="bold"
+                                android:textColor="@color/purple_gray_800" />
+
+                            <TextView
+                                android:id="@+id/tvActivateStrategy"
+                                style="@style/SubheadMabry"
+                                android:text="@string/activate_create"
+                                android:layout_marginTop="1dp"
+                                android:textStyle="bold"
+                                android:textColor="@color/purple_500" />
+                        </LinearLayout>
+
+                        <TextView
+                            style="@style/TitleText"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="40dp"
+                            android:text="@string/all_assets_available"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="#423D33" />
+
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rvAllAssetsAvailable"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="24dp"
+                            android:backgroundTint="@color/purple_gray_50"
+                            android:layoutAnimation="@anim/recycler_view_item_animation" />
+
+                        <TextView
+                            android:id="@+id/tvViewAll"
+                            style="@style/TitleText"
+                            android:layout_gravity="center"
+                            android:layout_marginTop="24dp"
+                            android:layout_marginBottom="48dp"
+                            android:gravity="center"
+                            android:text="@string/view_all"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textColor="@color/purple_500" />
+
+                    </LinearLayout>
+
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+
+        </androidx.core.widget.NestedScrollView>
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
     <LinearLayout
         android:id="@+id/btnPlaceOrder"
         style="@style/ButtonStyle"

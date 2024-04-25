@@ -4,6 +4,8 @@ import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.Gravity
 import android.view.LayoutInflater
@@ -47,6 +49,9 @@ import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.CommonMethods.Companion.visibleFromLeft
 import com.Lyber.utils.CommonMethods.Companion.zoomIn
 import com.google.android.material.tabs.TabLayout
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -66,8 +71,12 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
     private lateinit var viewModel: PortfolioViewModel
     private var apiStarted = false
+    private var kycOK = false
+    private var verificationVisible = false
     private lateinit var navController: NavController
     private var limit = 7
+    private lateinit var ts: MutableList<List<Double>>
+
     override fun bind() = FragmentPortfolioHomeBinding.inflate(layoutInflater)
 
     @SuppressLint("SetTextI18n")
@@ -161,6 +170,8 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         binding.ivProfile.setOnClickListener(this)
         binding.screenContent.setOnClickListener(this)
         binding.tvActivateStrategy.setOnClickListener(this)
+        binding.llVerifyIdentity.setOnClickListener(this)
+        binding.llContract.setOnClickListener(this)
 
         /* pop up initialization */
         assetPopUpWindow = ListPopupWindow(requireContext()).apply {
@@ -204,13 +215,33 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         // All assets available part
         viewModel.getAllPriceResume()
 
+      if (App.prefsManager.user?.kycStatus != "OK" || App.prefsManager.user?.yousignStatus != "SIGNED") {
+           GlobalScope.launch {
+                // Run a loop infinitely
+                while (!kycOK) {
+                    // Call the function to fetch user data
+                    Log.d("hitting Api","$kycOK")
+                    if(App.prefsManager.accessToken.isNotEmpty() ) {
+                        viewModel.getUser()
+                        // Delay for 10 seconds
+//                        if (App.prefsManager.user?.kycStatus == "STARTED" || App.prefsManager.user?.kycStatus == "NOT_STARTED")
+                            delay(3 * 1000)
+//                        else
+//                            delay(10 * 1000)
+                    }
+                }
+            }
+            // Prevent the program from terminating immediately
+            readLine()
+        }
+
     }
 
     private fun addObservers() {
 
         viewModel.newsResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                dismissProgressDialog()
+//                dismissProgressDialog()
                 resourcesAdapter.setList(it.data)
             }
         }
@@ -218,7 +249,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         viewModel.allAssets.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 binding.rvRefresh.isRefreshing = false
-                dismissProgressDialog()
+//                dismissProgressDialog()
                 App.prefsManager.assetBaseDataResponse = it
                 com.Lyber.ui.activities.BaseActivity.assets = it.data as ArrayList<AssetBaseData>
             }
@@ -228,7 +259,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         viewModel.priceServiceResumes.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 binding.rvRefresh.isRefreshing = false
-                dismissProgressDialog()
+//                dismissProgressDialog()
                 com.Lyber.ui.activities.BaseActivity.balanceResume.clear()
                 com.Lyber.ui.activities.BaseActivity.balanceResume.addAll(it)
                 adapterAllAsset.setList(it.subList(0, 6))
@@ -237,7 +268,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
         viewModel.balanceResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                dismissProgressDialog()
+//                dismissProgressDialog()
                 binding.rvRefresh.isRefreshing = false
                 if (it.data.isNotEmpty()) {
                     binding.tvNoAssets.gone()
@@ -251,6 +282,8 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                     for (i in it.data)
                         totalBalance += i.value.euroBalance.toDoubleOrNull()!!
                     viewModel.totalPortfolio = totalBalance
+                    if(!(::ts.isInitialized && ts.isNotEmpty()))
+                    binding.lineChart.timeSeries = getLineData(viewModel.totalPortfolio)
                     binding.tvValuePortfolioAndAssetPrice.text =
                         "${totalBalance.commaFormatted}${Constants.EURO}"
                     com.Lyber.ui.activities.BaseActivity.balances = balances
@@ -263,7 +296,6 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
         viewModel.walletHistoryResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                CommonMethods.dismissProgressDialog()
                 binding.rvRefresh.isRefreshing = false
                 val dates = it.data.map { it.date }
                 val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
@@ -273,31 +305,104 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                     val dateInMillis = dateFormatter.parse(dateString).time.toDouble()
                     listOf(dateInMillis, totalValue)
                 } as MutableList
-//                Log.d("timeseries", "$timeSeries")
                 Log.d("timeseries", "$timeSeries1")
-                binding.lineChart.timeSeries = timeSeries1
-//                val dates1=dates.toTimeSeries("2024-02-16T07:26:00.000Z")
-//                Log.d("timeseries","$dates1")
-
-//                binding.lineChart.timeSeries =(timeSeries)
-
-
+                ts = timeSeries1
+                if (timeSeries1.isEmpty())
+                    binding.lineChart.timeSeries = getLineData(viewModel.totalPortfolio)
+                else
+                    binding.lineChart.timeSeries = timeSeries1
             }
         }
 
         viewModel.getUserResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                dismissProgressDialog()
+                if(!isKyc)
+                    dismissProgressDialog()
                 binding.rvRefresh.isRefreshing = false
                 App.prefsManager.user = it.data
                 App.prefsManager.defaultImage = it.data.avatar
                 binding.ivProfile.setProfile
                 App.prefsManager.withdrawalLockSecurity = it.data.withdrawalLock
-                if (it.data.kycStatus != "NOT_STARTED") {
+                if (it.data.kycStatus == "OK" && it.data.yousignStatus == "SIGNED" && !verificationVisible ) {
+                    dismissProgressDialog()
+                    kycOK = true
+                    binding.tvVerification.gone()
+                    binding.llVerification.gone()
+                } else {
+                    verificationVisible = true
+                    binding.tvVerification.visible()
+                    binding.llVerification.visible()
+                    when (it.data.kycStatus) {
+                        "NOT_STARTED", "STARTED" -> binding.ivKyc.setImageResource(R.drawable.arrow_right_purple)
+                        "FAILED", "CANCELED" -> {
+                            dismissProgressDialog()
+                            if(isKyc) {
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    showDocumentDialog(
+                                        App.appContext,
+                                        Constants.LOADING_FAILURE,
+                                        isSign
+                                    )
+                                }, 1500)
+                                isKyc = false
+                            }
+                            binding.ivKyc.setImageResource(R.drawable.arrow_right_purple)
+                        }
+                        "OK" -> {
+                            dismissProgressDialog()
+                            if(isKyc) {
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    showDocumentDialog(
+                                        App.appContext,
+                                        Constants.LOADING_SUCCESS,
+                                        isSign
+                                    )
+                                }, 1500)
+                                isKyc = false
+                            }
+                            binding.ivKyc.setImageResource(R.drawable.accepted_indicator)
+                        }
 
-                } else if (it.data.yousignStatus != "SIGNED") {
+                        "REVIEW" -> {
+                            dismissProgressDialog()
+                            if(isKyc) {
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    showDocumentDialog(
+                                        App.appContext,
+                                        Constants.LOADING_SUCCESS,
+                                        isSign
+                                    )
+                                }, 1500)
+                                isKyc=false
+                            }
+                            binding.ivKyc.setImageResource(R.drawable.pending_indicator)
+                        }
+
+                    }
+                    if (it.data.kycStatus == "OK" )
+                        when (it.data.yousignStatus) {
+                            "SIGNED" -> {
+                                if(isSign) {
+                                    Handler(Looper.getMainLooper()).postDelayed({
+                                        showDocumentDialog(
+                                            App.appContext,
+                                            Constants.LOADING_SUCCESS,
+                                            isSign
+                                        )
+                                    }, 1500)
+                                    isSign=false
+                                }
+                                binding.ivSign.setImageResource(R.drawable.accepted_indicator)
+                            }
+                            "NOT_SIGNED" -> binding.ivSign.setImageResource(R.drawable.arrow_right_purple)
+                        }
+                    if (it.data.kycStatus == "OK" && it.data.yousignStatus == "SIGNED") {
+                        kycOK = true
+                        verificationVisible = false
+                    }
 
                 }
+
                 if (it.data.language.isNotEmpty()) {
                     App.prefsManager.setLanguage(it.data.language)
                     val locale = Locale(it.data.language)
@@ -312,13 +417,13 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
         viewModel.networkResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                dismissProgressDialog()
+//                dismissProgressDialog()
                 com.Lyber.ui.activities.BaseActivity.networkAddress = it.data as ArrayList<Network>
             }
         }
         viewModel.activeStrategyResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                dismissProgressDialog()
+//                dismissProgressDialog()
                 if (it.data.isNotEmpty()) {
                     binding.llNoActiveStrategy.gone()
                     adapterRecurring.setList(it.data)
@@ -483,8 +588,6 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
     override fun onClick(v: View?) {
         binding.apply {
             when (v!!) {
-
-
                 btnPlaceOrder -> {
                     InvestBottomSheet(
                         ::investMoneyClicked
@@ -513,7 +616,6 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
                 ivProfile -> navController.navigate(R.id.profileFragment)
                 ivProfile -> navController.navigate(R.id.profileFragment)
-
                 llThreeDot -> {
                     PortfolioThreeDots(::menuOptionSelected).show(
                         childFragmentManager,
@@ -552,6 +654,18 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
                 tvActivateStrategy -> {
                     navController.navigate(R.id.pickYourStrategyFragment)
+                }
+
+                llContract -> {
+                    if (App.prefsManager.user?.kycStatus == "OK" && App.prefsManager.user?.yousignStatus!="SIGNED")
+                        customDialog(7025)
+                }
+
+                llVerifyIdentity -> {
+                    if (App.prefsManager.user?.kycStatus == "CANCELED" || App.prefsManager.user?.kycStatus == "FAILED"
+                        || App.prefsManager.user?.kycStatus == "STARTED" || App.prefsManager.user?.kycStatus == "NOT_STARTED"
+                    )
+                        customDialog(7023)
                 }
             }
         }

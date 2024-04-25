@@ -28,16 +28,13 @@ import com.Lyber.databinding.CustomDialogLayoutBinding
 import com.Lyber.databinding.CustomDialogVerticalLayoutBinding
 import com.Lyber.databinding.DocumentBeingVerifiedBinding
 import com.Lyber.network.RestClient
-import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.ui.activities.WebViewActivity
 import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
-import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.dismissAlertDialog
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.gone
-import com.Lyber.utils.CommonMethods.Companion.logOut
 import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.CommonMethods.Companion.visible
@@ -49,7 +46,8 @@ import okhttp3.ResponseBody
 abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.OnRetrofitError {
 
     private var _binding: viewBinding? = null
-    private var isSign = false
+     var isSign = false
+     var isKyc = false
     val binding get() = _binding!!
 
     abstract fun bind(): viewBinding
@@ -73,6 +71,7 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
                 resultLauncher.launch(
                     Intent(requireActivity(), WebViewActivity::class.java)
                         .putExtra(Constants.URL, it.data.url)
+                        .putExtra(Constants.FROM, true)
                 )
             }
         }
@@ -85,17 +84,38 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
                 resultLauncher.launch(
                     Intent(requireActivity(), WebViewActivity::class.java)
                         .putExtra(Constants.URL, it.data.url)
+                        .putExtra(Constants.FROM, true)
                 )
 
             }
         }
         viewModel.logoutResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+               viewModel.totalPortfolio=0.0
                 dismissProgressDialog()
                 dismissAlertDialog()
                 CommonMethods.logOut(requireContext())
             }
         }
+        viewModel.getUserSignResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                dismissProgressDialog()
+                if (it.data.kycStatus == "OK") {
+                    showDocumentDialog(App.appContext, Constants.LOADING, true)
+//                    when (it.data.yousignStatus) {
+//                        "SIGNED" -> {
+//                            if(isSign) {
+//                                Handler(Looper.getMainLooper()).postDelayed({
+//                                    showDocumentDialog(App.appContext, Constants.LOADING_SUCCESS)
+//                                }, 1500)
+//                                isSign=false
+//                            }
+//                        }
+//                    }
+                }
+            }
+        }
+
         return binding.root
     }
 
@@ -110,18 +130,15 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
             if (result.resultCode == Activity.RESULT_OK) {
                 if (isSign) {
                     activity?.runOnUiThread {
+                        viewModel.getUserSign()
                         findNavController().popBackStack(R.id.portfolioHomeFragment, false)
-                        showDocumentDialog(App.appContext, Constants.LOADING)
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            showDocumentDialog(App.appContext, Constants.LOADING_SUCCESS)
-                        }, 1500)
                     }
-//                    findNavController().popBackStack(R.id.portfolioHomeFragment,false)
-//                    showDocumentDialog(requireActivity(), Constants.LOADING)
-//                    Handler(Looper.getMainLooper()).postDelayed({
-//                        showDocumentDialog(requireActivity(), Constants.LOADING_SUCCESS)
-//                    }, 1500)
+                } else {
+                     showDocumentDialog(App.appContext, Constants.LOADING,false)
+                    isKyc=true
+                    viewModel.getUser()
                 }
+
 
             }
         }
@@ -131,7 +148,7 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
         dismissAlertDialog()
         val code = CommonMethods.showErrorMessage(requireContext(), responseBody, binding.root)
         Log.d("errorCode", "$code")
-         if (code == 7023 || code == 10041 || code == 7025 || code == 10043)
+        if (code == 7023 || code == 10041 || code == 7025 || code == 10043)
             customDialog(code)
     }
 
@@ -175,7 +192,7 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
     }
 
     private lateinit var dialog: Dialog
-    private fun showDocumentDialog(context: Context, typeOfLoader: Int) {
+    fun showDocumentDialog(context: Context, typeOfLoader: Int, isSign: Boolean=false) {
         if (!::dialog.isInitialized) {
             dialog = Dialog(requireContext())
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -188,11 +205,16 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
 
         try {
             val viewImage = dialog.findViewById<LottieAnimationView>(R.id.animationView)
-            val llVIew = dialog.findViewById<LinearLayout>(R.id.llProgress)
-            val tvDocVerified = dialog.findViewById<TextView>(R.id.tvDocVerified)
+             val tvDocVerified = dialog.findViewById<TextView>(R.id.tvDocVerified)
+            if(!isSign)
+                tvDocVerified.text=getString(R.string.kyc_under_verification_text)
+            else
+                tvDocVerified.text=getString(R.string.doc_being_verified)
+            tvDocVerified.visible()
             val imageView = dialog.findViewById<ImageView>(R.id.ivCorrect)!!
             when (typeOfLoader) {
                 Constants.LOADING -> {
+                    imageView.gone()
                     viewImage!!.playAnimation()
                     viewImage.setMinAndMaxProgress(0f, .32f)
                 }
@@ -205,6 +227,18 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
                         imageView.setImageResource(R.drawable.baseline_done_24)
                     }, 50)
                     Handler(Looper.getMainLooper()).postDelayed({
+                        dialog.dismiss()
+                    }, 400)
+                }
+                Constants.LOADING_FAILURE -> {
+                    viewImage.clearAnimation()
+                    tvDocVerified.text=getString(R.string.kyc_refused_text)
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        imageView.visible()
+                        imageView.setImageResource(R.drawable.baseline_clear_24)
+                    }, 50)
+                    Handler(Looper.getMainLooper()).postDelayed({
+                        tvDocVerified.gone()
                         dialog.dismiss()
                     }, 400)
                 }
@@ -246,6 +280,7 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
 
                 it.tvPositiveButton.setOnClickListener {
                     dismiss()
+                    viewModel.totalPortfolio=0.0
                     App.prefsManager.logout()
                     context.startActivity(
                         Intent(

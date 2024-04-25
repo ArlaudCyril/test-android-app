@@ -180,13 +180,13 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 binding.tvLanguage.text = getString(R.string.english)
         }
 
-        viewModel.logoutResponse.observe(viewLifecycleOwner) {
-            dismissProgressDialog()
-            if (lifecycle.currentState == Lifecycle.State.RESUMED)
-            {
-             logOut(requireContext())
-            }
-        }
+//        viewModel.logoutResponse.observe(viewLifecycleOwner) {
+//            dismissProgressDialog()
+//            if (lifecycle.currentState == Lifecycle.State.RESUMED)
+//            {
+//             logOut(requireContext())
+//            }
+//        }
 
 
 //        viewModel.faceIdResponse.observe(viewLifecycleOwner) {

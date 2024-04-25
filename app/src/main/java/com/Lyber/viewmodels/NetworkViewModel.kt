@@ -253,6 +253,9 @@ open class NetworkViewModel : ViewModel() {
     private val _getUserResponse = MutableLiveData<GetUserResponse>()
     val getUserResponse get() = _getUserResponse
 
+    private val _getUserSignResponse = MutableLiveData<GetUserResponse>()
+    val getUserSignResponse get() = _getUserSignResponse
+
     private val _setUserAddressResponse = MutableLiveData<MessageResponse>()
     val setUserAddressResponse get() = _setUserAddressResponse
 
@@ -536,24 +539,24 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun exchange(
-        assetIdFrom: String,
-        assetIdTo: String,
-        exchangeFromAmount: String,
-        exchangeToAmount: String
-    ) {
-        viewModelScope.launch(exceptionHandler) {
-            val hashMap = hashMapOf<String, Any>()
-            hashMap["exchange_from"] = assetIdFrom.lowercase()
-            hashMap["exchange_to"] = assetIdTo.lowercase()
-            hashMap["exchange_from_amount"] = exchangeFromAmount
-            hashMap["exchange_to_amount"] = exchangeToAmount
-            val res = RestClient.get().swapCrypto(hashMap)
-            if (res.isSuccessful)
-                exchangeResponse.postValue(res.body())
-            else listener?.onRetrofitError(res.errorBody())
-        }
-    }
+//    fun exchange(
+//        assetIdFrom: String,
+//        assetIdTo: String,
+//        exchangeFromAmount: String,
+//        exchangeToAmount: String
+//    ) {
+//        viewModelScope.launch(exceptionHandler) {
+//            val hashMap = hashMapOf<String, Any>()
+//            hashMap["exchange_from"] = assetIdFrom.lowercase()
+//            hashMap["exchange_to"] = assetIdTo.lowercase()
+//            hashMap["exchange_from_amount"] = exchangeFromAmount
+//            hashMap["exchange_to_amount"] = exchangeToAmount
+//            val res = RestClient.get().swapCrypto(hashMap)
+//            if (res.isSuccessful)
+//                exchangeResponse.postValue(res.body())
+//            else listener?.onRetrofitError(res.errorBody())
+//        }
+//    }
 
     fun getQuote(
         assetIdFrom: String,
@@ -1537,6 +1540,14 @@ open class NetworkViewModel : ViewModel() {
             val res = RestClient.get().enableNotification(hash)
             if (res.isSuccessful)
                 _booleanResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+    fun getUserSign() {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).getUser()
+            if (res.isSuccessful)
+                _getUserSignResponse.postValue(res.body())
             else listener?.onRetrofitError(res.errorBody())
         }
     }

@@ -431,9 +431,11 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
             "buy" -> {
                 val balance =
-                    com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == "usdt" }
-                if (balance != null) {
-
+                    com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.selectedAsset!!.id }
+                viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
+                if (viewModel.selectedAsset!!.id == "usdt") {
+                    findNavController().navigate(R.id.buyUsdt)
+                } else if (balance != null) {
                     viewModel.exchangeAssetTo = viewModel.selectedAsset!!.id
                     viewModel.exchangeAssetFrom = "usdt"
                     findNavController().navigate(R.id.addAmountForExchangeFragment)
@@ -492,6 +494,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                     findNavController().navigate(R.id.buyUsdt)
 
                 }
+                show()
             }
         }
     }
@@ -500,7 +503,6 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
     override fun onClick(v: View?) {
         binding.apply {
             when (v!!) {
-
                 btnSell -> {
                     viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
                     if (viewModel.selectedAsset!!.id == "usdt") {
@@ -514,7 +516,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                         }
                     } else {
                         val balance =
-                            com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == "usdt" }
+                            com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.selectedAsset!!.id }
                         if (balance != null) {
                             viewModel.exchangeAssetTo = "usdt"
                             viewModel.exchangeAssetFrom = viewModel.selectedAsset!!.id
@@ -525,8 +527,6 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                     }
 
                 }
-
-
                 llThreeDot -> {
                     val portfolioThreeDotsFragment = PortfolioThreeDots(::menuOptionSelected)
                     portfolioThreeDotsFragment.dismissListener = this@PortfolioDetailFragment
@@ -550,20 +550,17 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                     grayOverlay?.alpha = 1.0f
                     screenContent.addView(grayOverlay)
                 }
-
                 ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
-
                 tvAssetName -> {
                     findNavController().popBackStack()
                     val bundle = Bundle()
                     bundle.putString(Constants.TYPE, "assets")
                     findNavController().navigate(R.id.allAssetFragment, bundle)
-
                 }
 
                 btnBuy -> {
                     val balance =
-                        com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == "usdt" }
+                        com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.selectedAsset!!.id }
                     viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
                     if (viewModel.selectedAsset!!.id == "usdt") {
                         findNavController().navigate(R.id.buyUsdt)
@@ -648,6 +645,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         super.onRetrofitError(responseBody)
         updateSocketValue = true
         dismissAlertDialog()
+        arguments = null
         if (dialog != null) {
 //            showLottieProgressDialog(requireActivity(), Constants.LOADING_FAILURE)
             dismissProgress()
