@@ -51,6 +51,9 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
                     if (currentFragment is DiscoveryFragment) {
                         finishAffinity()
                     }
+                    else if (currentFragment is PortfolioHomeFragment) {
+                        finishAffinity()
+                    }
                 else    {
                         if (navHostFragment.childFragmentManager.backStackEntryCount > 2) {
                             navController.popBackStack()
