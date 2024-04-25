@@ -284,11 +284,9 @@ class CommonMethods {
         fun ImageView.loadCircleCrop(any: Any, placeHolderRes: Int? = -1) {
             if (any.toString().contains("btc")) {
                 this.setImageResource(R.drawable.ic_bitcoin)
-            }
-            else if (any.toString().contains("pepe")) {
-           this.setImageResource(R.drawable.ic_pepe)
-            }
-            else {
+            } else if (any.toString().contains("pepe")) {
+                this.setImageResource(R.drawable.ic_pepe)
+            } else {
 //                var res = any
                 val requestBuilder: RequestBuilder<PictureDrawable> =
                     Glide.with(this).`as`(PictureDrawable::class.java)
@@ -378,11 +376,10 @@ class CommonMethods {
                 )
 
             val errorRes: ErrorResponse? = errorConverter.convert(responseBody!!)
-            if (errorRes?.code == 19007) {
+            if (errorRes?.code == 19007 || errorRes?.code == 19004) {
                 logOut(context)
 //                return errorRes.code
-            }
-            else if (errorRes?.code == 19002 || errorRes?.code == 19003) {
+            } else if (errorRes?.code == 19002 || errorRes?.code == 19003) {
                 findNavController(root).navigate(R.id.underMaintenanceFragment)
             } else if (errorRes?.code == 7023 || errorRes?.code == 10041 || errorRes?.code == 7025 || errorRes?.code == 10043) {
                 return errorRes.code
@@ -978,7 +975,28 @@ class CommonMethods {
             val valueFormatted = formatter.format(this.toDouble() ?: 0.0)
 //            val decimalFormat =
 //                DecimalFormat("#.##########") // Set the number of '#' symbols based on the maximum precision you want to show
-//            return decimalFormat.format(doubleValue)
+//            return decimalFormat.format(valueFormatted)
+
+//            val trimmedValue = if ((this.toDouble()) % 1 == 0.0) {
+//                // If the number is an integer, just return its integer part
+//                if(this.toDouble()==0.0)
+//                return "0.0".toString()
+//                else
+//                return valueFormatted.trimEnd('0', '.').toInt().toString()
+//            } else {
+//                // Convert the number to a string
+//                val stringValue = valueFormatted.toString()
+//
+//                // Trim trailing zeros and decimal point if any
+//                val trimmedString = stringValue.trimEnd('0', '.')
+//
+//                // If the trimmed string ends with a decimal point, remove it
+//                if (trimmedString.endsWith('.')) {
+//                    return trimmedString.dropLast(1)
+//                } else {
+//                    return trimmedString
+//                }
+//            }
             return valueFormatted.toString()
         }
 
@@ -1699,7 +1717,8 @@ class CommonMethods {
                 it.dismiss()
             }
         }
-        fun logOut(context: Context){
+
+        fun logOut(context: Context) {
             App.prefsManager.logout()
             context.startActivity(
                 Intent(

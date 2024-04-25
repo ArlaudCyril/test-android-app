@@ -74,29 +74,35 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
     }
 
     private fun setObserver() {
-        portfolioViewModel.finishRegistrationResponse.observe(viewLifecycleOwner) {
-            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                dismissProgressDialog()
-                isApiHit = false
-                App.prefsManager.accessToken = it.data.access_token
-                App.prefsManager.refreshToken = it.data.refresh_token
-                App.prefsManager.personalDataSteps = 0
-                App.prefsManager.portfolioCompletionStep = 0
-
-// Clear the entire back stack
-                navController.popBackStack(navController.graph.startDestinationId, false)
-// Navigate to the new fragment
-                navController.navigate(R.id.portfolioHomeFragment)
-            }
-        }
+//        portfolioViewModel.finishRegistrationResponse.observe(viewLifecycleOwner) {
+//            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+//                dismissProgressDialog()
+//                isApiHit = false
+//                App.prefsManager.accessToken = it.data.access_token
+//                App.prefsManager.refreshToken = it.data.refresh_token
+//                App.prefsManager.personalDataSteps = 0
+//                App.prefsManager.portfolioCompletionStep = 0
+//
+//// Clear the entire back stack
+//                navController.popBackStack(navController.graph.startDestinationId, false)
+//// Navigate to the new fragment
+//                navController.navigate(R.id.portfolioHomeFragment)
+//            }
+//        }
         portfolioViewModel.kycResponseIdentity.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 isApiHit = false
                 dismissAnimation()
-                resultLauncher.launch(
-                    Intent(requireActivity(), WebViewActivity::class.java)
+//                val bundle = Bundle()
+//                bundle.putString(Constants.URL, it.data.url)
+//                navController.navigate(R.id.webViewFragmentTrial, bundle)
+//                resultLauncher.launch(
+                val intent=  Intent(requireActivity(), WebViewActivity::class.java)
                         .putExtra(Constants.URL, it.data.url)
-                )
+
+                intent.putExtra("fragment_to_show", "fragment2")
+               startActivity(intent)
+//                )
             }
         }
 //        portfolioViewModel.logoutResponse.observe(viewLifecycleOwner){

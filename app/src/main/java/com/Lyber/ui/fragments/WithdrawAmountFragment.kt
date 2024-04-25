@@ -190,15 +190,21 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
             else amount.replace(mConversionCurrency, "").pointFormat.toDouble()
 
         if (focusedData.currency.contains(mCurrency)) {
+            var pointValue=0
+            if (mConversionCurrency == Constants.EURO || mConversionCurrency.equals("usdt",ignoreCase = true))
+                pointValue=2
             val priceCoin = valueAmount.toDouble().div(assetAmount.toDouble())
             binding.tvAssetConversion.text =
                 "~${assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN)} $mConversionCurrency"
-            maxValueAsset = assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN).toDouble()
+            maxValueAsset = assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN,pointValue).toDouble()
         } else {
+            var pointValue=0
+            if (mCurrency == Constants.EURO || mCurrency.equals("usdt",ignoreCase = true))
+                pointValue=2
             val priceCoin = assetAmount.toDouble().div(valueAmount.toDouble())
             binding.tvAssetConversion.text =
-                "~${assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN)} $mCurrency"
-            maxValueAsset = assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN).toDouble()
+                "~${assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN,pointValue)} $mCurrency"
+            maxValueAsset = assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN,pointValue).toDouble()
         }
     }
 
@@ -422,10 +428,14 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
             else
                 spaceGap = " "
             if (maxValue > 0) {
-                var priceCoin = balance!!.balanceData.euroBalance.toDouble()
+                var pointValue=0
+                    if (mCurrency == Constants.EURO || mCurrency.equals("usdt",ignoreCase = true))
+                        pointValue=2
+
+                        var priceCoin = balance!!.balanceData.euroBalance.toDouble()
                     .div(balance.balanceData.balance.toDouble())
                 binding.etAmount.text = "${
-                    maxValue.toString().formattedAsset(priceCoin, RoundingMode.DOWN)
+                    maxValue.toString().formattedAsset(priceCoin, RoundingMode.DOWN,pointValue)
                 }" + spaceGap + mCurrency
                 Log.d("bSwap max", "$maxValue")
                 Log.d("bSwap price", "$priceCoin")
@@ -455,7 +465,6 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                 }$spaceGap${mConversionCurrency}"
 
                 Log.d("aSwap max", "$maxValueOther")
-                Log.d("aSwap price", "$priceCoin")
             } else {
                 binding.etAmount.text = "${
                     0
