@@ -645,6 +645,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         super.onRetrofitError(responseBody)
         updateSocketValue = true
         dismissAlertDialog()
+        arguments = null
         if (dialog != null) {
 //            showLottieProgressDialog(requireActivity(), Constants.LOADING_FAILURE)
             dismissProgress()

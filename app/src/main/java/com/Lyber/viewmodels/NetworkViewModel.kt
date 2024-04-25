@@ -539,24 +539,24 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun exchange(
-        assetIdFrom: String,
-        assetIdTo: String,
-        exchangeFromAmount: String,
-        exchangeToAmount: String
-    ) {
-        viewModelScope.launch(exceptionHandler) {
-            val hashMap = hashMapOf<String, Any>()
-            hashMap["exchange_from"] = assetIdFrom.lowercase()
-            hashMap["exchange_to"] = assetIdTo.lowercase()
-            hashMap["exchange_from_amount"] = exchangeFromAmount
-            hashMap["exchange_to_amount"] = exchangeToAmount
-            val res = RestClient.get().swapCrypto(hashMap)
-            if (res.isSuccessful)
-                exchangeResponse.postValue(res.body())
-            else listener?.onRetrofitError(res.errorBody())
-        }
-    }
+//    fun exchange(
+//        assetIdFrom: String,
+//        assetIdTo: String,
+//        exchangeFromAmount: String,
+//        exchangeToAmount: String
+//    ) {
+//        viewModelScope.launch(exceptionHandler) {
+//            val hashMap = hashMapOf<String, Any>()
+//            hashMap["exchange_from"] = assetIdFrom.lowercase()
+//            hashMap["exchange_to"] = assetIdTo.lowercase()
+//            hashMap["exchange_from_amount"] = exchangeFromAmount
+//            hashMap["exchange_to_amount"] = exchangeToAmount
+//            val res = RestClient.get().swapCrypto(hashMap)
+//            if (res.isSuccessful)
+//                exchangeResponse.postValue(res.body())
+//            else listener?.onRetrofitError(res.errorBody())
+//        }
+//    }
 
     fun getQuote(
         assetIdFrom: String,
