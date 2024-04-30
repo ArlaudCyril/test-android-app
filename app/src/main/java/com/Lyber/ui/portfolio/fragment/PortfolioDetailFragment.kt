@@ -431,7 +431,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
             "buy" -> {
                 val balance =
-                    com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.selectedAsset!!.id }
+                    com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == "usdt" }
                 viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
                 if (viewModel.selectedAsset!!.id == "usdt") {
                     findNavController().navigate(R.id.buyUsdt)
@@ -560,7 +560,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
                 btnBuy -> {
                     val balance =
-                        com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.selectedAsset!!.id }
+                        com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == "usdt" }
                     viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
                     if (viewModel.selectedAsset!!.id == "usdt") {
                         findNavController().navigate(R.id.buyUsdt)

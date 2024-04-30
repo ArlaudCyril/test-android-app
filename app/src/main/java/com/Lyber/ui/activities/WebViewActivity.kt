@@ -41,6 +41,7 @@ import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.viewmodels.VerifyIdentityViewModel
 import okhttp3.ResponseBody
 import java.io.File
 import java.io.IOException
@@ -51,6 +52,8 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
     private var mImagePath = ""
     private lateinit var portfolioViewModel: PortfolioViewModel
     private var fromBase=false
+
+    private var url: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         portfolioViewModel = CommonMethods.getViewModel(this)
@@ -67,11 +70,10 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
             builtInZoomControls = false
             allowFileAccess = false
             setSupportMultipleWindows(true)
-            allowFileAccess = true
-            setUseWideViewPort(true)
-            setLoadWithOverviewMode(true)
-            allowContentAccess = true
-            javaScriptCanOpenWindowsAutomatically = true
+//            allowFileAccess = true
+            useWideViewPort = true
+            loadWithOverviewMode = true
+//            allowContentAccess = true
             cacheMode = WebSettings.LOAD_NO_CACHE
             allowContentAccess = true
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -79,7 +81,6 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
             }
             mediaPlaybackRequiresUserGesture = false
             pluginState = WebSettings.PluginState.ON
-            setSupportMultipleWindows(true)
             mixedContentMode = 0
         }
         binding.webView.apply {
@@ -152,7 +153,8 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
             } else {
                 Log.d("TAG2", "Permission Already Granted")
             }
-        } else {
+        }
+        else {
             if (ActivityCompat.checkSelfPermission(
                     applicationContext, android.Manifest.permission.CAMERA
                 )

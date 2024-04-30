@@ -409,10 +409,10 @@
         android:id="@+id/activityLogsFragment"
         android:name="com.Lyber.ui.fragments.ActivityLogsFragment"
         android:label="ActivityLogsFragment"/>
-    <fragment
-        android:id="@+id/webViewFragment"
-        android:name="com.Lyber.ui.fragments.WebViewFragment"
-        android:label="WebViewFragment"/>
+<!--    <fragment-->
+<!--        android:id="@+id/webViewFragment"-->
+<!--        android:name="com.Lyber.ui.fragments.WebViewFragment"-->
+<!--        android:label="WebViewFragment"/>-->
     <fragment
         android:id="@+id/underMaintenanceFragment"
         android:name="com.Lyber.ui.fragments.UnderMaintenanceFragment"

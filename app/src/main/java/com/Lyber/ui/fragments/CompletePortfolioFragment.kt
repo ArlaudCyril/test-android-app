@@ -48,31 +48,36 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
         Log.d(TAG, "setUpUi: $state")
 
         when (state) {
-            -1->{
+            -1 -> {
                 binding.tvFillPersonalData.setOnClickListener(null)
 
             }
+
             Constants.ACCOUNT_CREATING -> {
-                accountCreationFilled(false,true)
-            personalDataFilled(personalDataFilled = false, false)
+                accountCreationFilled(false, true)
+                personalDataFilled(personalDataFilled = false, false)
             }
+
             Constants.ACCOUNT_CREATED -> {
-                accountCreationFilled(true,false)
+                accountCreationFilled(true, false)
                 personalDataFilled(personalDataFilled = false, true)
             }
+
             Constants.PERSONAL_DATA_FILLED -> { // focussed verify identity
                 personalDataFilled(true)
-                accountCreationFilled(true,false)
+                accountCreationFilled(true, false)
                 verifyIdentityFocussed(true)
             }
+
             Constants.KYC_COMPLETED -> {
-                accountCreationFilled(true,false)// verified
+                accountCreationFilled(true, false)// verified
                 personalDataFilled(true)
                 identityVerified()
             }
+
             else -> {
                 personalDataFilled(true)
-                accountCreationFilled(true,false)
+                accountCreationFilled(true, false)
                 identityVerified()
             }
         }
@@ -146,9 +151,14 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
                     tvNumFillPersonalData.text = getString(R.string._2)
                     tvNumFillPersonalData.setTextColor(requireContext().getColor(R.color.white))
                     tvFillPersonalData.text = getString(R.string.fill_personal_data)
-                    tvFillPersonalData.setCompoundDrawablesRelativeWithIntrinsicBounds(0, 0, R.drawable.ic_right_arrow_purple, 0)
+                    tvFillPersonalData.setCompoundDrawablesRelativeWithIntrinsicBounds(
+                        0,
+                        0,
+                        R.drawable.ic_right_arrow_purple,
+                        0
+                    )
                     tvFillPersonalData.setTextColor(requireContext().getColor(R.color.purple_500))
-                }else{
+                } else {
                     ivFillPersonalData.setBackgroundResource(R.drawable.circle_drawable)
                     tvNumFillPersonalData.text = getString(R.string._2)
                     tvNumFillPersonalData.setTextColor(requireContext().getColor(R.color.purple_gray_600))
@@ -211,30 +221,35 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
     }
 
 
-
     override fun onClick(v: View?) {
         binding.apply {
             when (v!!) {
 
-                tvCreateAnAccount->{
+                tvCreateAnAccount -> {
                     clickCreateAccount()
                 }
+
                 tvFillPersonalData -> findNavController().navigate(R.id.fillDetailFragment)
 
                 tvVerifyYourIdentity -> findNavController().navigate(R.id.verifyYourIdentityFragment)
-                tvBackArrow->requireActivity().onBackPressedDispatcher.onBackPressed()
+                tvBackArrow -> {
+//                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                    val navController = findNavController()
+                    navController.popBackStack(navController.graph.startDestinationId, false)
+                    navController.navigate(R.id.discoveryFragment)
+                }
 
             }
         }
     }
 
     private fun clickCreateAccount() {
-        when(App.prefsManager.accountCreationSteps) {
+        when (App.prefsManager.accountCreationSteps) {
             Constants.Account_CREATION_STEP_PHONE -> {
                 val bundle = Bundle().apply {
                     putBoolean(Constants.FOR_LOGIN, false)
                 }
-                findNavController().navigate(R.id.emailAddressFragment,bundle)
+                findNavController().navigate(R.id.emailAddressFragment, bundle)
             }
 
             Constants.Account_CREATION_STEP_EMAIL -> {
@@ -242,8 +257,9 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
                     putBoolean(Constants.FOR_LOGIN, false)
                 }
 //                App.prefsManager.accountCreationSteps= Constants.Account_CREATION_STEP_PHONE
-                findNavController().navigate(R.id.createPinFragment,bundle)
+                findNavController().navigate(R.id.createPinFragment, bundle)
             }
+
             Constants.Account_CREATION_STEP_CREATE_PIN -> {
                 val bundle = Bundle().apply {
                     putBoolean(Constants.FOR_LOGIN, false)
@@ -252,7 +268,8 @@ class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>
 //                findNavController().navigate(R.id.createPinFragment,bundle)
                 findNavController().navigate(R.id.enableNotificationFragment)
             }
-            else->{
+
+            else -> {
                 val bundle = Bundle().apply {
                     putBoolean(Constants.FOR_LOGIN, false)
                 }

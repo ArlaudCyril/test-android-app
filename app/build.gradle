@@ -17,9 +17,10 @@ android {
     }
     defaultConfig {
         applicationId "com.Lyber"
-        minSdk 23
+        minSdk 24
         targetSdk 34
-        versionCode 9
+//        versionCode 10 internal
+        versionCode 11  //closed
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -27,7 +28,7 @@ android {
 
     buildTypes {
         release {
-            debuggable true
+            debuggable false
             shrinkResources true
             minifyEnabled true
             signingConfig signingConfigs.release
@@ -137,5 +138,6 @@ dependencies {
     implementation 'com.google.android.gms:play-services-places:17.0.0'
     implementation 'com.google.android.gms:play-services-location:21.2.0'
     implementation 'com.google.firebase:firebase-messaging:23.4.1'
+    implementation 'androidx.core:core-splashscreen:1.2.0-alpha01'
 
 }

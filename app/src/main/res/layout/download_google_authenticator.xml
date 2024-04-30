@@ -5,10 +5,15 @@
     android:layout_height="wrap_content"
     android:background="@drawable/top_curved_layout"
     android:backgroundTint="@color/purple_gray_00"
-    android:gravity="center"
-    android:orientation="vertical"
+   android:orientation="vertical"
     android:paddingTop="12dp">
 
+    <LinearLayout
+        android:id="@+id/llCustom"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:orientation="vertical">
 
     <TextView
         android:id="@+id/tvTitle"
@@ -57,4 +62,4 @@
         android:textColor="@color/white" />
 
 </LinearLayout>
-
+</LinearLayout>
