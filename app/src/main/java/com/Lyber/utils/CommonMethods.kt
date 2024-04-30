@@ -973,30 +973,6 @@ class CommonMethods {
             val symbols = DecimalFormatSymbols(Locale.US)
             formatter.decimalFormatSymbols = symbols
             val valueFormatted = formatter.format(this.toDouble() ?: 0.0)
-//            val decimalFormat =
-//                DecimalFormat("#.##########") // Set the number of '#' symbols based on the maximum precision you want to show
-//            return decimalFormat.format(valueFormatted)
-
-//            val trimmedValue = if ((this.toDouble()) % 1 == 0.0) {
-//                // If the number is an integer, just return its integer part
-//                if(this.toDouble()==0.0)
-//                return "0.0".toString()
-//                else
-//                return valueFormatted.trimEnd('0', '.').toInt().toString()
-//            } else {
-//                // Convert the number to a string
-//                val stringValue = valueFormatted.toString()
-//
-//                // Trim trailing zeros and decimal point if any
-//                val trimmedString = stringValue.trimEnd('0', '.')
-//
-//                // If the trimmed string ends with a decimal point, remove it
-//                if (trimmedString.endsWith('.')) {
-//                    return trimmedString.dropLast(1)
-//                } else {
-//                    return trimmedString
-//                }
-//            }
             return valueFormatted.toString()
         }
 

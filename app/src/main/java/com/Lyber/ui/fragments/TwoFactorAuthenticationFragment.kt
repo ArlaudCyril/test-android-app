@@ -6,14 +6,12 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.CustomDialogVerticalLayoutBinding
 import com.Lyber.databinding.DownloadGoogleAuthenticatorBinding
@@ -23,7 +21,6 @@ import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.dismissAlertDialog
 import com.Lyber.utils.CommonMethods.Companion.showToast
-import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.SignUpViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -235,7 +232,14 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
     fun customDialog1() {
         bottomDialog = BottomSheetDialog(requireContext(), R.style.CustomDialogBottomSheet).apply {
             DownloadGoogleAuthenticatorBinding.inflate(layoutInflater).let { binding ->
+                val dimmedBackgroundColor = Color.argb(82,0,0,0)//alpha = .32F
+
+//                window?.apply {
+//                    setDimAmount(0f)// remove dimmed back on older devices
+//                    decorView.setBackgroundColor(dimmedBackgroundColor)
+//                }
                 setContentView(binding.root)
+
                 binding.tvAddGoogleAuthenticator.setOnClickListener {
                     val appPackageName =
                         "com.google.android.apps.authenticator2" // Package name of Google Authenticator app
@@ -263,7 +267,6 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
             }
         }
     }
-
     fun handle(tx: String) {
         isResend = true
         CommonMethods.checkInternet(requireContext()) {

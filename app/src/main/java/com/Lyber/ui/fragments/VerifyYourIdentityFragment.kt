@@ -74,21 +74,6 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
     }
 
     private fun setObserver() {
-//        portfolioViewModel.finishRegistrationResponse.observe(viewLifecycleOwner) {
-//            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-//                dismissProgressDialog()
-//                isApiHit = false
-//                App.prefsManager.accessToken = it.data.access_token
-//                App.prefsManager.refreshToken = it.data.refresh_token
-//                App.prefsManager.personalDataSteps = 0
-//                App.prefsManager.portfolioCompletionStep = 0
-//
-//// Clear the entire back stack
-//                navController.popBackStack(navController.graph.startDestinationId, false)
-//// Navigate to the new fragment
-//                navController.navigate(R.id.portfolioHomeFragment)
-//            }
-//        }
         portfolioViewModel.kycResponseIdentity.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 isApiHit = false
@@ -97,11 +82,11 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
 //                bundle.putString(Constants.URL, it.data.url)
 //                navController.navigate(R.id.webViewFragmentTrial, bundle)
 //                resultLauncher.launch(
-                val intent=  Intent(requireActivity(), WebViewActivity::class.java)
-                        .putExtra(Constants.URL, it.data.url)
+                val intent = Intent(requireActivity(), WebViewActivity::class.java)
+                    .putExtra(Constants.URL, it.data.url)
 
                 intent.putExtra("fragment_to_show", "fragment2")
-               startActivity(intent)
+                startActivity(intent)
 //                )
             }
         }
@@ -164,17 +149,23 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
 
             binding.tvGeneralTerms -> {
                 if (!isApiHit) {
-                    val bundle = Bundle()
-                    bundle.putString("url", Constants.GENERAL_TERMS_CONDITIONS)
-                    navController.navigate(R.id.webViewFragment, bundle)
+//                    val bundle = Bundle()
+//                    bundle.putString("url", Constants.GENERAL_TERMS_CONDITIONS)
+//                    navController.navigate(R.id.webViewFragment, bundle)
+                    val intent = Intent(requireActivity(), WebViewActivity::class.java)
+                        .putExtra(Constants.URL, Constants.GENERAL_TERMS_CONDITIONS)
+                    startActivity(intent)
                 }
             }
 
             binding.tvPrivacyPolicy -> {
                 if (!isApiHit) {
-                    val bundle = Bundle()
-                    bundle.putString("url", Constants.PRIVACY_URL)
-                    navController.navigate(R.id.webViewFragment, bundle)
+//                    val bundle = Bundle()
+//                    bundle.putString("url", Constants.PRIVACY_URL)
+//                    navController.navigate(R.id.webViewFragment, bundle)
+                    val intent = Intent(requireActivity(), WebViewActivity::class.java)
+                        .putExtra(Constants.URL, Constants.PRIVACY_URL)
+                    startActivity(intent)
                 }
             }
         }
@@ -184,8 +175,8 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
     override fun onRetrofitError(responseBody: ResponseBody?) {
         super.onRetrofitError(responseBody)
         dismissAlertDialog()
-            isApiHit = false
-            dismissAnimation()
+        isApiHit = false
+        dismissAnimation()
     }
 
     private fun dismissAnimation() {

@@ -51,7 +51,6 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
         else
             binding.tvNumber.text = "${getString(R.string.to)} +${App.prefsManager.user?.phoneNo}"
         setView()
-
         if (App.prefsManager.user?.type2FA != Constants.GOOGLE) {
             viewModel.qrCodeUrl()
             viewModel.qrCodeResponse.observe(viewLifecycleOwner) {
