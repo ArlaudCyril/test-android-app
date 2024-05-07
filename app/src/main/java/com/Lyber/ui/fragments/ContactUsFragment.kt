@@ -40,8 +40,15 @@ class ContactUsFragment : BaseFragment<FragmentContactUsBinding>(), OnClickListe
         var ts = getString(R.string.send_us_email)
         // Create a SpannableString from the full text
         val spannableString = SpannableString(ts)
-        val startIndex = 20
-        val endIndex = 37
+//        //for english
+//        val startIndex = 20 // 28
+//        val endIndex = 37 //44
+//        //for french
+
+        // Define the start and end indexes of the email address
+        val startIndex = ts.indexOf("contact@lyber.com")
+        val endIndex = startIndex + "contact@lyber.com".length
+
         val color = ContextCompat.getColor(requireContext(), R.color.purple_500)
         val colorSpan = ForegroundColorSpan(color)
         spannableString.setSpan(colorSpan, startIndex, endIndex, 0)

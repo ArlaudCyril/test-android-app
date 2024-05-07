@@ -468,7 +468,7 @@
     <string name="msg">Message</string>
     <string name="contact_us_by_mail">Vous pouvez également nous contacter par courrier à l\'adresse </string>
     <string name="contact_address">274 ter/3, Avenue de la Marne, 59700 Marcq-en-Baroeul, Lille, France.</string>
-    <string name="will_get_back">Nous vous répondrons à l\'adresse suivante : %@</string>
+    <string name="will_get_back">Nous vous répondrons à l\'adresse suivante</string>
     <string name="send">Envoyer</string>
     <string name="msgIsEmpty">Le champ du message est vide</string>
     <string name="msgHasBeenSent">Le message a bien été envoyé</string>
@@ -775,5 +775,5 @@
     <string name="contract_signature">Signature du contrat</string>
     <string name="kyc_under_verification_text">Votre kyc est en cours de vérification.</string>
     <string name="kyc_refused_text">Votre kyc a été refusé.</string>
-
+    <string name="empty"></string>
 </resources>

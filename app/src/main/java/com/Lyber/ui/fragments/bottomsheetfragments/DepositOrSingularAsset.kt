@@ -36,29 +36,19 @@ class DepositOrSingularAsset(private val handle: (String) -> Unit = { _ -> }) :
         super.onViewCreated(view, savedInstanceState)
 
         binding.ivTopAction.setOnClickListener(this)
-        binding.tvTitleMoneyDeposit.setOnClickListener(this)
-        binding.tvSubtitleMoneyDeposit.setOnClickListener(this)
-        binding.tvTitleSingleAsset.setOnClickListener(this)
-        binding.tvSubtitleSingleAsset.setOnClickListener(this)
+        binding.clMoneyDeposit.setOnClickListener(this)
+        binding.clInvestInSingleAsset.setOnClickListener(this)
     }
 
     override fun onClick(v: View?) {
         binding.apply {
             when (v!!) {
                 ivTopAction -> dismiss()
-                tvTitleMoneyDeposit -> {
+               clMoneyDeposit -> {
                     handle(Constants.USING_DEPOSIT)
                     dismiss()
                 }
-                tvSubtitleMoneyDeposit -> {
-                    handle(Constants.USING_DEPOSIT)
-                    dismiss()
-                }
-                tvTitleSingleAsset -> {
-                    handle(Constants.USING_SINGULAR_ASSET)
-                    dismiss()
-                }
-                tvSubtitleSingleAsset -> {
+                clInvestInSingleAsset -> {
                     handle(Constants.USING_SINGULAR_ASSET)
                     dismiss()
                 }

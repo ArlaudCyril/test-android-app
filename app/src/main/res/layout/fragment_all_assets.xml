@@ -20,16 +20,18 @@
         android:background="@drawable/gray_purple_50"
         android:padding="12dp"
         android:src="@drawable/ic_close"
+        android:visibility="visible"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/purple_gray_800" />
 
     <TextView
         android:id="@+id/tvTitle"
-        style="@style/DialogTitle"
+         style="@style/SubheadMabry"
         android:gravity="center"
         android:text="@string/add_an_asset"
         android:textColor="#423D33"
+        android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="@id/ivTopAction"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

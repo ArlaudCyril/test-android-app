@@ -150,7 +150,7 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
 //            tvExchangeFromValue.text =
 //                "${data.fromAmount} ${data.fromAsset.uppercase()}"
             tvExchangeFromValue.text =
-                "~${(data.fromAmount.toDouble() - data.fees.toDouble())} ${data.fromAsset.uppercase()}"
+                "~${(data.fromAmount.toDouble() - data.fees.toDouble()).toString().formattedAsset(priceCoin, RoundingMode.DOWN,8)} ${data.fromAsset.uppercase()}"
 
             val balanceFrom =
                 com.Lyber.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetFrom }

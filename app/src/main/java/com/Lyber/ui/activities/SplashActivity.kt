@@ -46,13 +46,13 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
         Log.d(TAG, "onCreate: ")
 //        setTheme(R.style.TranslucentStatusBar)
 //        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-        val splash = installSplashScreen()
-        splash.setKeepOnScreenCondition { false }
+//        val splash = installSplashScreen()
+//        splash.setKeepOnScreenCondition { false }
         setTheme(R.style.TranslucentStatusBar)
         AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
 
-        installSplashScreen().setKeepOnScreenCondition { keepSplashOnScreen }
-        Handler(Looper.getMainLooper()).postDelayed({ keepSplashOnScreen = false }, delay)
+//        installSplashScreen().setKeepOnScreenCondition { keepSplashOnScreen }
+//        Handler(Looper.getMainLooper()).postDelayed({ keepSplashOnScreen = false }, delay)
         super.onCreate(savedInstanceState)
 
         val navHostFragment =
@@ -118,8 +118,11 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
         if (intent!!.extras != null && intent.hasExtra("fragment_to_show") &&
             intent.getStringExtra("fragment_to_show").equals(PortfolioHomeFragment::class.java.name)
         ) {
+            val arguments = Bundle().apply {
+                putString("showLoader", "showLoader")
+            }
             navController.popBackStack(navController.graph.startDestinationId, false)
-            navController.navigate(R.id.portfolioHomeFragment)
+            navController.navigate(R.id.portfolioHomeFragment,arguments)
             intent.removeExtra("fragment_to_show")
         } else if (intent!!.extras != null && intent.hasExtra(Constants.FOR_LOGOUT) && (intent?.extras?.getString(Constants.FOR_LOGOUT, "")
                 ?: "").isNotEmpty()
@@ -150,10 +153,10 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
                 }
             }
         }
-//        else if ((intent?.extras?.getString(Constants.FOR_LOGOUT, "") ?: "").isNotEmpty())
-//            navController.navigate(R.id.discoveryFragment)
-//        else navController.navigate(R.id.splashFragment)
-        else splashFragmentFunction()
+        else if ((intent?.extras?.getString(Constants.FOR_LOGOUT, "") ?: "").isNotEmpty())
+            navController.navigate(R.id.discoveryFragment)
+        else navController.navigate(R.id.splashFragment)
+//        else splashFragmentFunction()
     }
 
     fun splashFragmentFunction(){

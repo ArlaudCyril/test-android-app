@@ -211,7 +211,13 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
 //                                tvEndTitle.text = "-${it.fromAmount} ${it.fromAsset.uppercase()}"
                                 var amount = it.toAmount
                                 try {
-                                    amount = String.format(Locale.US,"%.10f", it.toAmount.toFloat())
+                                    amount = String.format(Locale.US,"%.8f", it.toAmount.toFloat())
+                                    try {
+                                        amount=CommonMethods.trimTrailingZeros(amount.toDouble())
+                                    }catch (_:Exception){
+
+                                    }
+
                                 } catch (ex: Exception) {
 
                                 }

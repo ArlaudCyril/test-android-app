@@ -6,6 +6,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
@@ -21,7 +22,9 @@ import com.Lyber.databinding.AppItemLayoutBinding
 import com.Lyber.databinding.FragmentChooseAssetDepositBinding
 import com.Lyber.databinding.LoaderViewBinding
 import com.Lyber.models.AssetBaseData
+import com.Lyber.models.ErrorResponse
 import com.Lyber.models.NetworkDeposit
+import com.Lyber.network.RestClient
 import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
@@ -29,8 +32,10 @@ import com.Lyber.utils.CommonMethods.Companion.fadeIn
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
+import com.Lyber.utils.CommonMethods.Companion.showErrorMessage
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
+import okhttp3.ResponseBody
 import java.util.*
 
 class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBinding>(),
@@ -99,6 +104,7 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
             }
         viewModel.getAddress.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                isAddress=false
                 CommonMethods.dismissProgressDialog()
                 binding.etAddress.text = it.data.address
             }
@@ -112,6 +118,7 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                     if (networkq.isDepositActive) {
                         binding.etNetwork.text = networkq.fullName
                         CommonMethods.showProgressDialog(requireActivity())
+                        isAddress=true
                         viewModel.getAddress(networkq.id, network!!.id)
                         binding.tvNote.text = getString(
                             R.string.send_only_to_this_address_using_the_protocol,
@@ -157,6 +164,7 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
             assetAdapterNetwork.getItemAt(position)?.let {
                 binding.etNetwork.text = it.fullName
                 CommonMethods.showProgressDialog(requireActivity())
+                isAddress=true
                 viewModel.getAddress(it.id, network!!.id)
                 binding.tvNote.text = getString(
                     R.string.send_only_to_this_address_using_the_protocol,

@@ -146,6 +146,9 @@
                     android:id="@+id/tvExchangeFromValue"
                     style="@style/SubheadMabry"
                     android:layout_below="@id/tvNestedAmountValue"
+                    android:layout_toEndOf="@id/tvExchangeFrom"
+                    android:gravity="end"
+                    android:layout_marginStart="12dp"
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="32dp"
                     android:layout_marginBottom="16dp"
@@ -333,6 +336,7 @@
     <TextView
         android:id="@+id/title"
         style="@style/SubheadMabry"
+        android:textStyle="bold"
         android:text="@string/confirm_investment"
         app:layout_constraintBottom_toBottomOf="@+id/ivTopAction"
         app:layout_constraintEnd_toEndOf="parent"

@@ -42,7 +42,7 @@
         android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.App.Starting"
+        android:theme="@style/Theme.Lyber"
         android:usesCleartextTraffic="true"
         tools:targetApi="33">
         <activity

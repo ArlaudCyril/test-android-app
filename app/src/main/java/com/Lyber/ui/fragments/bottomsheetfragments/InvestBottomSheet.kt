@@ -14,13 +14,8 @@ class InvestBottomSheet(val clickListener: (Boolean) -> Unit) :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        binding.tvTitleInvestInStrategy.setOnClickListener(this)
-        binding.tvSubTitleInvestInStrategy.setOnClickListener(this)
-        binding.ivRightArrowInvestInStrategy.setOnClickListener(this)
-
-        binding.tvTitleSingleAsset.setOnClickListener(this)
-        binding.tvSubTitleSingleAsset.setOnClickListener(this)
-        binding.ivRightArrowSingleAsset.setOnClickListener(this)
+        binding.clInvestInStrategy.setOnClickListener(this)
+        binding.clInvestInAsset.setOnClickListener(this)
 
         binding.ivTopAction.setOnClickListener(this)
     }
@@ -30,11 +25,12 @@ class InvestBottomSheet(val clickListener: (Boolean) -> Unit) :
             when (v!!) {
 
                 ivTopAction -> dismiss()
-                tvSubTitleInvestInStrategy, tvTitleInvestInStrategy, ivRightArrowInvestInStrategy -> {
+                clInvestInStrategy -> {
                     clickListener(true)
                     dismiss()
                 }
-                tvTitleSingleAsset, tvSubTitleSingleAsset, ivRightArrowSingleAsset -> {
+
+                clInvestInAsset -> {
                     clickListener(false)
                     dismiss()
                 }
@@ -45,10 +41,9 @@ class InvestBottomSheet(val clickListener: (Boolean) -> Unit) :
     override fun onDestroyView() {
         super.onDestroyView()
         val view = PortfolioHomeFragment.fragmentPortfolio.binding.screenContent
-        val viewToDelete = view.getChildAt(view.childCount-1)
+        val viewToDelete = view.getChildAt(view.childCount - 1)
         view.removeView(viewToDelete)
     }
-
 
 
 }

@@ -218,11 +218,12 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
     }
 
     private fun loadAnimation() {
-        val array = IntArray(4)
-        array[0] = R.color.purple_300
-        array[1] = R.color.purple_500
-        array[2] = R.color.purple_200
-        array[3] = R.color.white_transparent
+        val array = IntArray(1)
+//        array[0] = R.color.purple_300
+//        array[1] = R.color.purple_500
+//        array[2] = R.color.purple_200
+//        array[3] = R.color.white_transparent
+        array[0] = R.color.red_500
         confetti = CommonConfetti.rainingConfetti(binding.root, array)
             .infinite()
         confetti!!.setAccelerationY(400f)
@@ -362,6 +363,9 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 viewModel.selectedBalance = balance
                 val priceCoin = balance?.balanceData?.euroBalance?.toDouble()
                     ?.div(balance.balanceData.balance.toDouble() ?: 1.0)
+                if(balance?.balanceData?.euroBalance==null)
+                it.tvAssetAmount.text ="0 ${Constants.EURO}"
+                else
                 it.tvAssetAmount.text =
                     balance?.balanceData?.euroBalance?.currencyFormatted
                 it.tvAssetAmountInCrypto.text =
@@ -370,13 +374,14 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                         rounding = RoundingMode.DOWN
                     )
                 try {
-                    it.tvAssetName.text=viewModel.selectedAsset!!.fullName
+                    it.tvAssetName.text = viewModel.selectedAsset!!.fullName
                     viewModel.selectedAsset?.imageUrl?.let { it1 ->
                         binding.includedMyAsset.ivAssetIcon.loadCircleCrop(
                             viewModel.selectedAsset!!.imageUrl
                         )
                     }
-                }catch (_:Exception){ }
+                } catch (_: Exception) {
+                }
                 if (balance != null)
                     btnSell.visible()
 
@@ -434,13 +439,16 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                     com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == "usdt" }
                 viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
                 if (viewModel.selectedAsset!!.id == "usdt") {
+                    if(checkKyc())
                     findNavController().navigate(R.id.buyUsdt)
                 } else if (balance != null) {
                     viewModel.exchangeAssetTo = viewModel.selectedAsset!!.id
                     viewModel.exchangeAssetFrom = "usdt"
                     findNavController().navigate(R.id.addAmountForExchangeFragment)
                 } else {
-                    showDialog()
+                    if (App.prefsManager.user!!.kycStatus == "OK" && App.prefsManager.user!!.yousignStatus == "SIGNED")
+                        showDialog()
+                    else checkKyc()
                 }
             }
 
@@ -527,6 +535,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                     }
 
                 }
+
                 llThreeDot -> {
                     val portfolioThreeDotsFragment = PortfolioThreeDots(::menuOptionSelected)
                     portfolioThreeDotsFragment.dismissListener = this@PortfolioDetailFragment
@@ -550,6 +559,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                     grayOverlay?.alpha = 1.0f
                     screenContent.addView(grayOverlay)
                 }
+
                 ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
                 tvAssetName -> {
                     findNavController().popBackStack()
@@ -563,13 +573,16 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                         com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == "usdt" }
                     viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
                     if (viewModel.selectedAsset!!.id == "usdt") {
-                        findNavController().navigate(R.id.buyUsdt)
+                        if(checkKyc())
+                            findNavController().navigate(R.id.buyUsdt)
                     } else if (balance != null) {
                         viewModel.exchangeAssetTo = viewModel.selectedAsset!!.id
                         viewModel.exchangeAssetFrom = "usdt"
                         findNavController().navigate(R.id.addAmountForExchangeFragment)
                     } else {
-                        showDialog()
+                        if (App.prefsManager.user!!.kycStatus == "OK" && App.prefsManager.user!!.yousignStatus == "SIGNED")
+                            showDialog()
+                        else checkKyc()
                     }
                 }
             }
@@ -679,7 +692,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             dialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
             dialog!!.window!!.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-            dialog!!.window!!.setDimAmount(0.4F)
+            dialog!!.window!!.setDimAmount(0.6F)
             dialog!!.setCancelable(false)
             dialog!!.setContentView(ProgressBarNewBinding.inflate(LayoutInflater.from(context)).root)
         }

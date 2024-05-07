@@ -16,14 +16,21 @@
     <color name="grey">#7E7D7D</color>
 
     <color name="purple_00">#F5F1FD</color>
-    <color name="purple_500">#7C38EA</color>
+    <color name="purple_800">#35126D</color>
+    <color name="purple_700">#3E167D</color>
     <color name="purple_600">#5825AC</color>
+    <color name="purple_500">#7C38EA</color>
+    <color name="purple_450">#894AED</color>
     <color name="purple_400">#945DEE</color>
-    <color name="purple_200">#C5A7F5</color>
-    <color name="purple_800">#35127D</color>
-    <color name="purple_700">#DF35126D</color>
+    <color name="purple_350">#A476EF</color>
     <color name="purple_300">#AC82F2</color>
+    <color name="purple_250">#BFA1F1</color>
+    <color name="purple_200">#C5A7F5</color>
+    <color name="purple_150">#D6C3F4</color>
     <color name="purple_100">#DDCCF9</color>
+    <color name="purple_50">#E3D7F8</color>
+    <color name="purple_40">#EBE2FA</color>
+    <color name="purple_30">#E5DDF3</color>
 
     <color name="purple_gray_800">#29262D</color>
     <color name="purple_gray_100">#E7E5EA</color>
@@ -36,6 +43,8 @@
 
     <color name="green_500">#1EB35A</color>
     <color name="red_500">#DF5A43</color>
+    <color name="red_300">#F2BDB4</color>
+    <color name="red_100">#FBE8E5</color>
     <color name="orange_100">#FFF2D9</color>
 
     <!-- asset colors -->

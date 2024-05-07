@@ -139,5 +139,5 @@ dependencies {
     implementation 'com.google.android.gms:play-services-location:21.2.0'
     implementation 'com.google.firebase:firebase-messaging:23.4.1'
     implementation 'androidx.core:core-splashscreen:1.2.0-alpha01'
-
+    implementation("io.github.g00fy2.quickie:quickie-bundled:1.9.0")
 }

@@ -197,10 +197,11 @@ class SelectAssestForBuy : BaseFragment<FragmentAllAssetsBinding>(), View.OnClic
             binding.etSearch.setText("")
             binding.tvNoResultFound.gone()
             try {
-                val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+                val imm =
+                    context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
                 imm?.hideSoftInputFromWindow(view.windowToken, 0)
 
-            }catch (_:Exception){
+            } catch (_: Exception) {
             }
         }
 
@@ -220,7 +221,7 @@ class SelectAssestForBuy : BaseFragment<FragmentAllAssetsBinding>(), View.OnClic
             binding.etSearch.setText("")
             binding.tvNoResultFound.gone()
             when (tab?.position) {
-                0 ->  adapter.setList(trendings)
+                0 -> adapter.setList(trendings)
                 1 -> adapter.setList(topGainers)
                 2 -> adapter.setList(topLosers)
                 3 -> adapter.setList(stables)
@@ -235,19 +236,24 @@ class SelectAssestForBuy : BaseFragment<FragmentAllAssetsBinding>(), View.OnClic
 
     private fun assetClicked(asset: PriceServiceResume) {
         val balance = com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == "usdt" }
-        if (asset.id == "usdt")
-            findNavController().navigate(R.id.buyUsdt)
-        else if (balance != null) {
-            viewModel.exchangeAssetTo = asset.id
-            viewModel.exchangeAssetFrom = "usdt"
-            findNavController().navigate(R.id.addAmountForExchangeFragment)
-        } else {
-            showDialog()
-        }
+        if (asset.id == "usdt") {
+            if (checkKyc())
+                findNavController().navigate(R.id.buyUsdt)
+        }  else if (balance != null) {
+                viewModel.exchangeAssetTo = asset.id
+                viewModel.exchangeAssetFrom = "usdt"
+                findNavController().navigate(R.id.addAmountForExchangeFragment)
+            } else {
+                if (App.prefsManager.user!!.kycStatus == "OK" && App.prefsManager.user!!.yousignStatus == "SIGNED")
+                    showDialog()
+                else checkKyc()
+            }
         //showDialog()*
 
 
     }
+
+
 
     private fun showDialog() {
         BottomSheetDialog(requireContext(), R.style.CustomDialogBottomSheet).apply {

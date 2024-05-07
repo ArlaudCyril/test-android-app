@@ -54,8 +54,8 @@ class AllAssesstAdapterDeposit(
         RecyclerView.ViewHolder(binding.root) {
         init {
             binding.root.setOnClickListener {
-                if (itemList[adapterPosition]!!.isDepositActive) {
-                    itemList[adapterPosition]?.let { it1 -> clickListener(it1) }
+                if (itemList[absoluteAdapterPosition]!!.isDepositActive) {
+                    itemList[absoluteAdapterPosition]?.let { it1 -> clickListener(it1) }
                 }
             }
         }

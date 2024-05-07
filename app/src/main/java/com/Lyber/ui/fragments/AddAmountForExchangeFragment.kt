@@ -189,7 +189,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                     minAmount.toString().decimalPoint(), data1.id.uppercase()
                 )
                 maxValue = "0"
-                binding.tvEuro.text = "0 ${Constants.EURO}"
+                binding.tvEuro.text = "~0 ${Constants.EURO}"
             }
             val balanceTo =
                 com.Lyber.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetTo }
@@ -461,7 +461,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                                 "${assetAmount}$mConversionCurrency"
                             val balanceFromPrice =
                                 com.Lyber.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
-                            binding.tvEuro.text = "${
+                            binding.tvEuro.text = "~${
                                 (valueAmount * balanceFromPrice!!.priceServiceResumeData.lastPrice.toDouble()).toString()
                                     .formattedAsset(0.0, RoundingMode.DOWN, 2)
                             } ${Constants.EURO}"
@@ -473,7 +473,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                             binding.tvAssetConversion.text = "$convertedValue$mCurrency"
                             val balanceFromPrice =
                                 com.Lyber.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
-                            binding.tvEuro.text = "${
+                            binding.tvEuro.text = "~${
                                 (valueAmount * balanceFromPrice!!.priceServiceResumeData.lastPrice.toDouble()).toString()
                                     .formattedAsset(0.0, RoundingMode.DOWN, 2)
                             } ${Constants.EURO}"
@@ -512,7 +512,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
         val fromId = viewModel.exchangeAssetFrom
         viewModel.exchangeAssetTo = fromId
         viewModel.exchangeAssetFrom = toId
-        binding.tvEuro.text = "0 ${Constants.EURO}"
+        binding.tvEuro.text = "~0 ${Constants.EURO}"
         prepareView()
     }
 
@@ -520,7 +520,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
     private fun setMaxValue() {
         if(assetAvail==0.0) {
             binding.etAmount.text = "0${focusedData.currency}"
-            binding.tvEuro.text = "0 ${Constants.EURO}"
+            binding.tvEuro.text = "~0 ${Constants.EURO}"
         }
             else{
             val balance =
