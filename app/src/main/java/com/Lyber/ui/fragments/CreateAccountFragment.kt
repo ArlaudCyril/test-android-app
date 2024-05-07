@@ -97,7 +97,6 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
             binding.tilPassword.visible()
         } else
             binding.ivBack.visible()
-
         binding.ivBack.setOnClickListener(this)
         binding.tvLoginViaEmail.setOnClickListener(this)
         binding.tvForgotPassword.setOnClickListener(this)

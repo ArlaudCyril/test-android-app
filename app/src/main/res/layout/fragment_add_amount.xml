@@ -289,7 +289,7 @@
     <TextView
         android:id="@+id/tvEuro"
         style="@style/SubheadMabry"
-        android:text="0 €"
+        android:text="~0 €"
         android:layout_marginTop="4dp"
         android:textColor="@color/purple_gray_500"
         android:visibility="gone"

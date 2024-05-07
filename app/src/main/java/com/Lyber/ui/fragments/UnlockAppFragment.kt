@@ -5,6 +5,8 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
@@ -48,6 +50,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.firebase.messaging.FirebaseMessaging
 import com.google.firebase.messaging.FirebaseMessagingService
 import okhttp3.ResponseBody
+import java.util.Locale
 import java.util.concurrent.Executor
 
 class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClickListener {
@@ -67,6 +70,7 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
         super.onViewCreated(view, savedInstanceState)
         viewModel = getViewModel(this)
         viewModel.listener = this
+        viewModel.getUser()
         viewModel.userLoginResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
@@ -77,12 +81,31 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
 
             }
         }
-        viewModel.logoutResponse.observe(viewLifecycleOwner){
-            if(lifecycle.currentState==Lifecycle.State.RESUMED){
+        viewModel.logoutResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
                 logOut(requireContext())
             }
         }
+       viewModel.getUserResponse.observe(viewLifecycleOwner) {
+//            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+               try {
+                   if (it.data.language.isNotEmpty()) {
+                       App.prefsManager.setLanguage(it.data.language)
+                       val locale = Locale(it.data.language)
+                       Locale.setDefault(locale)
+                       val resources: Resources = resources
+                       val config: Configuration = resources.configuration
+                       config.setLocale(locale)
+                       resources.updateConfiguration(config, resources.displayMetrics)
+                   }
+               }catch (_:Exception){
+
+               }
+
+//            }
+        }
+
         binding.etPin.addTextChangedListener(onTextChange)
         binding.tvOne.setOnClickListener(this)
         binding.tvTwo.setOnClickListener(this)
@@ -200,10 +223,10 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
                 }
 
                 tvLogOut -> {
-                        CommonMethods.checkInternet(requireContext()) {
-                            CommonMethods.showProgressDialog(requireContext())
-                            viewModel.logout()
-                        }
+                    CommonMethods.checkInternet(requireContext()) {
+                        CommonMethods.showProgressDialog(requireContext())
+                        viewModel.logout()
+                    }
                 }
 
             }

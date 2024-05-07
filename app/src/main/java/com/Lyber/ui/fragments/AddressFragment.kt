@@ -6,6 +6,7 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ArrayAdapter
+import android.widget.Filter
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -30,6 +31,7 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
 
     private var streetNumber = ""
     private var streetAddress = ""
+    private var selectedCountry=""
     private val city: String get() = binding.etCity.text.trim().toString()
     private val zipCode: String get() = binding.etZipCode.text.trim().toString()
     private val country: String get() = binding.etCountry.text.trim().toString()
@@ -111,6 +113,7 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
                 Place.Field.ADDRESS, Place.Field.ADDRESS_COMPONENTS
             )
             val intent = Autocomplete.IntentBuilder(AutocompleteActivityMode.FULLSCREEN, fields)
+                .setCountries(listOf(selectedCountry))
                 .build(requireContext())
             val options = ActivityOptionsCompat.makeCustomAnimation(
                 requireContext(), // Context
@@ -140,52 +143,13 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
                         var city = ""
                         var zipcode = ""
                         var adr = ""
-                        var strtNo = ""
+//                        var strtNo = ""
                         for (component in place.addressComponents.asList()) {
                             if ("locality" in component.types) {
                                 city = component.name
                             }
                             if ("postal_code" in component.types) {
                                 zipcode = component.shortName
-                            }
-                            if ("street_number" in component.types) {
-//                                adr = component.name
-                                strtNo = component.name
-                            }
-                            if ("route" in component.types) {
-                                if (adr.isEmpty())
-                                    adr = component.name
-                                else
-                                    adr = adr + ", " + component.name
-                            }
-                            if ("neighborhood" in component.types) {
-                                if (adr.isEmpty())
-                                    adr = component.name
-                                else
-                                    adr = adr + ", " + component.name
-                            }
-
-                            if ("sublocality_level_3" in component.types) {
-                                if (adr.isEmpty())
-                                    adr = component.name
-                                else
-                                    adr = adr + ", " + component.name
-                            }
-                            if ("sublocality_level_2" in component.types) {
-                                if (adr.isEmpty())
-                                    adr = component.name
-                                else
-                                    adr = adr + ", " + component.name
-                            }
-                            if ("sublocality_level_1" in component.types) {
-                                if (adr.isEmpty())
-                                    adr = component.name
-                                else
-                                    adr = adr + ", " + component.name
-                            }
-
-                            if (adr.isEmpty() && "locality" in component.types) {
-                                adr += component.name
                             }
 
                         }
@@ -194,15 +158,22 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
                         )
                         if (place.name.isNotEmpty()) {
                             adr = place.name + ", " + adr
+                            val result = separateAddress(place.name)
+                            if (result != null) {
+                                val (number, street) = result
+                                streetNumber=number
+                                adr=street
+                            }
                         }
 
                         streetAddress = adr
-                        streetNumber = strtNo
+////                        streetNumber = strtNo
+//                        streetNumber = separateAddress()
                         Log.i(
                             TAG, "city: ${streetNumber} ${streetAddress}"
                         )
-                        if (strtNo.isNotEmpty())
-                            binding.tvSearchAddress.text = strtNo + ", " + adr
+                        if (streetNumber.isNotEmpty())
+                            binding.tvSearchAddress.text = streetNumber + " " + adr
                         else
                             binding.tvSearchAddress.text = adr
                         binding.etCity.setText(city)
@@ -218,11 +189,25 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
                 Log.i(TAG, "User canceled autocomplete")
             }
         }
+    fun separateAddress(address: String): Pair<String, String>? {
+        val regex = Regex("^\\s*(\\d+[a-zA-Z]?)(\\s+.*)")
+        val matchResult = regex.find(address)
 
+        matchResult?.let { match ->
+            if (match.groupValues.size == 3) {
+                val number = address.substring(match.groups[1]!!.range).trim()
+                val street = address.substring(match.groups[2]!!.range).trim()
+                return Pair(number, street)
+            }
+        }
+
+        return Pair("", address)
+    }
     private fun openCountryPicker() {
         CountryPicker.Builder().with(requireContext())
             .listener {
                 binding.etCountry.setText(it.name)
+                selectedCountry=it.code //todo
             }.style(R.style.CountryPickerStyle).sortBy(CountryPicker.SORT_BY_NAME).build()
             .showDialog(requireActivity() as AppCompatActivity, R.style.CountryPickerStyle, true)
     }

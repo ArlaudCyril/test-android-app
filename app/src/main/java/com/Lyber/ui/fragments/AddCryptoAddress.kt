@@ -1,24 +1,35 @@
 package com.Lyber.ui.fragments
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Context.RECEIVER_NOT_EXPORTED
 import android.content.Intent
 import android.content.IntentFilter
+import android.content.pm.PackageManager
+import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.view.animation.AnimationUtils
+import android.widget.FrameLayout
 import android.widget.ListPopupWindow
+import android.widget.TextView
+import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.content.ContextCompat.getDrawable
 import androidx.core.view.updatePadding
@@ -26,6 +37,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.AppItemLayoutBinding
+import com.Lyber.databinding.CustomDialogLayoutBinding
 import com.Lyber.databinding.FragmentAddBitcoinAddressBinding
 import com.Lyber.databinding.LoaderViewBinding
 import com.Lyber.models.Network
@@ -45,6 +57,12 @@ import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.ProfileViewModel
+import com.google.android.material.snackbar.BaseTransientBottomBar
+import com.google.android.material.snackbar.Snackbar
+import io.github.g00fy2.quickie.QRResult
+import io.github.g00fy2.quickie.ScanCustomCode
+import io.github.g00fy2.quickie.config.BarcodeFormat
+import io.github.g00fy2.quickie.config.ScannerConfig
 import java.lang.Exception
 
 class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.OnClickListener {
@@ -59,6 +77,11 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
     private var network: Network? = null
     private lateinit var networkAdapter: NetworkPopupAdapter
     private lateinit var networkPopup: ListPopupWindow
+
+    private var selectedBarcodeFormat = BarcodeFormat.FORMAT_QR_CODE
+
+    val scanCustomCode = registerForActivityResult(ScanCustomCode(), ::handleResult)
+
     private val origin get() = if (originSelectedPosition == 0) "EXCHANGE" else "WALLET"
     private val addressName: String get() = binding.etAddressName.text.trim().toString()
     private val address: String
@@ -69,9 +92,16 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
-        requireActivity().registerReceiver(broadcastReceiver, IntentFilter(Constants.SCAN_COMPLETE),RECEIVER_NOT_EXPORTED)
-       else
-        requireActivity().registerReceiver(broadcastReceiver, IntentFilter(Constants.SCAN_COMPLETE))
+            requireActivity().registerReceiver(
+                broadcastReceiver,
+                IntentFilter(Constants.SCAN_COMPLETE),
+                RECEIVER_NOT_EXPORTED
+            )
+        else
+            requireActivity().registerReceiver(
+                broadcastReceiver,
+                IntentFilter(Constants.SCAN_COMPLETE)
+            )
 
         arguments?.let {
             toEdit = it.getBoolean(TO_EDIT, false)
@@ -85,7 +115,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                     val address: String = intent?.getStringExtra(Constants.SCANNED_ADDRESS) ?: ""
                     binding.etAddress.setText(address)
                 }, 50)
-            }catch (ex:Exception){
+            } catch (ex: Exception) {
 
             }
 
@@ -198,9 +228,9 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
                 if (isFromWithdraw)
-                    WithdrawAmountFragment.newAddress=true
+                    WithdrawAmountFragment.newAddress = true
 
-                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                requireActivity().onBackPressedDispatcher.onBackPressed()
                 //infoBottomSheet.dismiss()
             }
         }
@@ -233,7 +263,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
 
                 // change ui
                 network = it
-Log.d("NetworkC","$it")
+                Log.d("NetworkC", "$it")
                 binding.tvTitle.fadeIn()
                 binding.ivNetwork.visible()
                 binding.etNetwork.updatePadding(0)
@@ -523,7 +553,8 @@ Log.d("NetworkC","$it")
         override fun onTouch(v: View?, event: MotionEvent?): Boolean {
             if (event?.action == MotionEvent.ACTION_UP) {
                 if (event.rawX >= (binding.etAddress.right - binding.etAddress.compoundDrawables[DRAWABLE_RIGHT].bounds.width())) {
-                    findNavController().navigate(R.id.codeScannerFragment)
+                    checkPermissions()
+//                    findNavController().navigate(R.id.codeScannerFragment)
                     return true
                 }
             }
@@ -531,6 +562,186 @@ Log.d("NetworkC","$it")
         }
 
 
+    }
+    var firstTimeGallery = false
+    private fun checkPermissions() {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+            if ( ContextCompat.checkSelfPermission(
+                    requireContext(),
+                    Manifest.permission.CAMERA
+                ) ==
+                PackageManager.PERMISSION_GRANTED
+            ) {
+//                findNavController().navigate(R.id.codeScannerFragment)
+                scanCustomCode.launch(
+                    ScannerConfig.build {
+                        setBarcodeFormats(listOf(BarcodeFormat.FORMAT_QR_CODE)) // set interested barcode formats
+                        setHapticSuccessFeedback(false) // enable (default) or disable haptic feedback when a barcode was detected
+                        setShowTorchToggle(false) // show or hide (default) torch/flashlight toggle button
+                        setShowCloseButton(true) // show or hide (default) close button
+                        setHorizontalFrameRatio(1f) // set the horizontal overlay ratio (default is 1 / square frame)
+                        setUseFrontCamera(false) // use the front camera
+                        setOverlayStringRes(R.string.empty) // string resource used for the scanner overlay
+                        setOverlayDrawableRes(null) // drawable resource used for the scanner overlay
+
+                    }
+                )
+            } else if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+                requestMultiplePermissions.launch(
+                    arrayOf(
+                        Manifest.permission.CAMERA
+                    )
+                )
+            } else {
+                if (firstTimeGallery)
+                    permissionDeniedDialog()
+                // Directly ask for the permission
+                if (!firstTimeGallery)
+                    requestMultiplePermissions.launch(
+                        arrayOf(
+                            Manifest.permission.CAMERA
+                        )
+                    )
+                firstTimeGallery = true
+            }
+//        }
+//        else {
+//            if (ContextCompat.checkSelfPermission(
+//                    requireContext(),
+//                    Manifest.permission.READ_EXTERNAL_STORAGE
+//                ) ==
+//                PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+//                    requireContext(),
+//                    Manifest.permission.WRITE_EXTERNAL_STORAGE
+//                ) ==
+//                PackageManager.PERMISSION_GRANTED && ContextCompat.checkSelfPermission(
+//                    requireContext(),
+//                    Manifest.permission.CAMERA
+//                ) ==
+//                PackageManager.PERMISSION_GRANTED
+//            ) {
+//                scanCustomCode.launch(
+//                    ScannerConfig.build {
+//                        setBarcodeFormats(listOf(BarcodeFormat.FORMAT_QR_CODE)) // set interested barcode formats
+//                        setHapticSuccessFeedback(false) // enable (default) or disable haptic feedback when a barcode was detected
+//                        setShowTorchToggle(false) // show or hide (default) torch/flashlight toggle button
+//                        setShowCloseButton(true) // show or hide (default) close button
+//                        setHorizontalFrameRatio(1f) // set the horizontal overlay ratio (default is 1 / square frame)
+//                        setUseFrontCamera(false) // use the front camera
+//                        setOverlayStringRes(R.string.empty) // string resource used for the scanner overlay
+//                        setOverlayDrawableRes(null) // drawable resource used for the scanner overlay
+//
+//                    }
+//                )
+//            } else if (shouldShowRequestPermissionRationale(Manifest.permission.READ_EXTERNAL_STORAGE)) {
+//                requestMultiplePermissions.launch(
+//                    arrayOf(
+//                        Manifest.permission.CAMERA,
+//                        Manifest.permission.READ_EXTERNAL_STORAGE,
+//                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//                    )
+//                )
+//            } else {
+//                if (firstTimeGallery)
+//                    permissionDeniedDialog()
+//                // Directly ask for the permission
+//                if (!firstTimeGallery)
+//                    requestMultiplePermissions.launch(
+//                        arrayOf(
+//                            Manifest.permission.CAMERA,
+//                            Manifest.permission.READ_EXTERNAL_STORAGE,
+//                            Manifest.permission.WRITE_EXTERNAL_STORAGE
+//                        )
+//                    )
+//                firstTimeGallery = true
+//            }
+//        }
+    }
+
+    private val requestMultiplePermissions =
+        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+
+            permissions.entries.forEach {
+                Log.d("TAG", "${it.key} = ${it.value}")
+            }
+            if (permissions[Manifest.permission.CAMERA] == true
+            ) {
+                Log.d("requestMultiplePermissions", "Permission granted")
+                // isPermissionGranted=true
+//                        binding.ivOpenGallery.performClick()
+//                findNavController().navigate(R.id.codeScannerFragment)
+                scanCustomCode.launch(
+                    ScannerConfig.build {
+                        setBarcodeFormats(listOf(BarcodeFormat.FORMAT_QR_CODE)) // set interested barcode formats
+                        setHapticSuccessFeedback(false) // enable (default) or disable haptic feedback when a barcode was detected
+                        setShowTorchToggle(false) // show or hide (default) torch/flashlight toggle button
+                        setShowCloseButton(true) // show or hide (default) close button
+                        setHorizontalFrameRatio(1f) // set the horizontal overlay ratio (default is 1 / square frame)
+                        setUseFrontCamera(false) // use the front camera
+                        setOverlayStringRes(R.string.empty) // string resource used for the scanner overlay
+                        setOverlayDrawableRes(null) // drawable resource used for the scanner overlay
+
+                    }
+                )
+
+            } else {
+                Log.d("requestMultiplePermissions", "Permission not granted")
+
+            }
+
+        }
+
+
+    private fun permissionDeniedDialog() {
+
+        Dialog(requireActivity(), R.style.DialogTheme).apply {
+            CustomDialogLayoutBinding.inflate(layoutInflater).let {
+                requestWindowFeature(Window.FEATURE_NO_TITLE)
+                setCancelable(false)
+                setCanceledOnTouchOutside(false)
+                setContentView(it.root)
+                it.tvTitle.text = getString(R.string.permission_required)
+                it.tvMessage.text = getString(R.string.message_permission_required)
+                it.tvNegativeButton.text = getString(R.string.cancel)
+                it.tvPositiveButton.text = getString(R.string.setting)
+                it.tvNegativeButton.setOnClickListener {
+                    dismiss()
+                }
+                it.tvPositiveButton.setOnClickListener {
+                    dismiss()
+                    val intent = Intent(
+                        Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                        Uri.fromParts(
+                            "package",
+                            requireActivity().packageName,
+                            null
+                        )
+                    )
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    startActivity(intent)
+                }
+                show()
+            }
+        }
+    }
+
+    private fun handleResult(result: QRResult) {
+        Log.d("result", "$result")
+        val pattern = Regex("rawValue=([^,\\]\\)]+)")
+
+        // Find rawValue using regex
+        val matchResult = pattern.find(result.toString())
+        val rawValue = matchResult?.groups?.get(1)?.value
+
+        println("Raw value: $rawValue")
+
+        var address = rawValue
+        val index = rawValue!!.indexOf(":")
+        if (index != -1) {
+            val intIndex = index + 1
+            address = rawValue.substring(intIndex)
+        }
+        binding.etAddress.setText(address)
     }
 
     override fun onDestroy() {

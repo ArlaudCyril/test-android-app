@@ -29,64 +29,78 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/ivTopAction" />
-
-    <ImageView
-        android:id="@+id/ivOneTime"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/circle_drawable"
-        android:backgroundTint="@color/purple_gray_50"
-        android:padding="4dp"
-        app:tint="@color/purple_500"
-        android:src="@drawable/vector"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/clOneTimeInvest"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivTopAction" />
-
-    <TextView
-        android:id="@+id/tvOneTime"
-        style="@style/SubheadMabry"
-        android:layout_width="0dp"
-        android:layout_marginStart="12dp"
         android:layout_marginTop="36dp"
-        android:text="@string/one_time_investment"
-        android:textColor="@color/purple_gray_700"
-        app:layout_constraintEnd_toStartOf="@+id/ivRightArrowInvestInStrategy"
-        app:layout_constraintStart_toEndOf="@id/ivOneTime"
-        app:layout_constraintTop_toBottomOf="@id/ivTopAction" />
-
-    <TextView
-        android:id="@+id/tvSubTitleOneTime"
-        style="@style/BodyMabry"
-        android:layout_width="0dp"
-        android:layout_marginStart="12dp"
-        android:text="@string/execute_a_strategy_a_single_time"
-        android:textColor="@color/purple_gray_500"
-        app:layout_constraintEnd_toStartOf="@+id/ivRightArrowInvestInStrategy"
-        app:layout_constraintStart_toEndOf="@id/ivOneTime"
-        app:layout_constraintTop_toBottomOf="@id/tvOneTime" />
-
-    <ImageView
-        android:id="@+id/ivRightArrowInvestInStrategy"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:src="@drawable/ic_right_arrow_grey"
-        app:layout_constraintBottom_toBottomOf="@id/tvSubTitleOneTime"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tvOneTime" />
+        app:layout_constraintTop_toBottomOf="@id/ivTopAction">
+        <ImageView
+            android:id="@+id/ivOneTime"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:background="@drawable/circle_drawable"
+            android:backgroundTint="@color/purple_gray_50"
+            android:padding="4dp"
+            app:tint="@color/purple_500"
+            android:src="@drawable/vector"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+        <TextView
+            android:id="@+id/tvOneTime"
+            style="@style/SubheadMabry"
+            android:layout_width="0dp"
+            android:layout_marginStart="12dp"
+            android:text="@string/one_time_investment"
+            android:textColor="@color/purple_gray_700"
+            app:layout_constraintEnd_toStartOf="@+id/ivRightArrowInvestInStrategy"
+            app:layout_constraintStart_toEndOf="@id/ivOneTime"
+            app:layout_constraintTop_toTopOf="parent" />
 
+        <TextView
+            android:id="@+id/tvSubTitleOneTime"
+            style="@style/BodyMabry"
+            android:layout_width="0dp"
+            android:layout_marginStart="12dp"
+            android:text="@string/execute_a_strategy_a_single_time"
+            android:textColor="@color/purple_gray_500"
+            app:layout_constraintEnd_toStartOf="@+id/ivRightArrowInvestInStrategy"
+            app:layout_constraintStart_toEndOf="@id/ivOneTime"
+            app:layout_constraintTop_toBottomOf="@id/tvOneTime" />
 
+        <ImageView
+            android:id="@+id/ivRightArrowInvestInStrategy"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:src="@drawable/ic_right_arrow_grey"
+            app:layout_constraintBottom_toBottomOf="@id/tvSubTitleOneTime"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@id/tvOneTime" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="36dp"
+    android:id="@+id/clAdjust"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/clOneTimeInvest">
     <ImageView
         android:id="@+id/ivAdjust"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:layout_marginTop="40dp"
         android:background="@drawable/circle_drawable"
         android:backgroundTint="@color/purple_gray_50"
         android:padding="4dp"
         android:src="@drawable/ic_repeat"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivOneTime"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:tint="@color/purple_500" />
 
     <TextView
@@ -94,11 +108,10 @@
         style="@style/SubheadMabry"
         android:layout_width="0dp"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="36dp"
         android:text="@string/recurrent_investment"
         android:textColor="@color/purple_gray_700"
         app:layout_constraintStart_toEndOf="@id/ivAdjust"
-        app:layout_constraintTop_toBottomOf="@id/ivOneTime" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvSubTitleAdjust"
@@ -118,18 +131,26 @@
         app:layout_constraintBottom_toBottomOf="@id/tvSubTitleAdjust"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/tvTitleAdjust" />
+</androidx.constraintlayout.widget.ConstraintLayout>
 
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/clAdjustNew"
+    android:layout_marginTop="36dp"
+    app:layout_constraintTop_toBottomOf="@id/clAdjust"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent">
     <ImageView
         android:id="@+id/ivAdjustNew"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:layout_marginTop="40dp"
         android:background="@drawable/circle_drawable"
         android:backgroundTint="@color/purple_gray_50"
         android:padding="4dp"
         android:src="@drawable/pencil"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivAdjust"
+        app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/purple_500" />
 
     <TextView
@@ -137,11 +158,10 @@
         style="@style/SubheadMabry"
         android:layout_width="0dp"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="36dp"
         android:text="@string/adjust_investment"
         android:textColor="@color/purple_gray_700"
         app:layout_constraintStart_toEndOf="@id/ivAdjustNew"
-        app:layout_constraintTop_toBottomOf="@id/ivAdjust" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvSubTitleAdjustNew"
@@ -161,61 +181,75 @@
         app:layout_constraintBottom_toBottomOf="@id/tvSubTitleAdjustNew"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/tvTitleAdjustNew" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+   <androidx.constraintlayout.widget.ConstraintLayout
+       android:layout_width="match_parent"
+       android:layout_height="wrap_content"
+       android:id="@+id/clTailor"
+       android:layout_marginTop="36dp"
+       app:layout_constraintStart_toStartOf="parent"
+       app:layout_constraintEnd_toEndOf="parent"
+       app:layout_constraintTop_toBottomOf="@+id/clAdjustNew">
+       <ImageView
+           android:id="@+id/ivTailor"
+           android:layout_width="32dp"
+           android:layout_height="32dp"
+           android:background="@drawable/circle_drawable"
+           android:backgroundTint="@color/purple_gray_50"
+           android:padding="4dp"
+           android:src="@drawable/ic_invest_single_assets"
+           app:layout_constraintStart_toStartOf="parent"
+           app:layout_constraintTop_toTopOf="parent"
+           app:tint="@color/purple_500" />
 
-    <ImageView
-        android:id="@+id/ivTailor"
-        android:layout_width="32dp"
-        android:layout_height="32dp"
-        android:layout_marginTop="40dp"
-        android:background="@drawable/circle_drawable"
-        android:backgroundTint="@color/purple_gray_50"
-        android:padding="4dp"
-        android:src="@drawable/ic_invest_single_assets"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivAdjustNew"
-        app:tint="@color/purple_500" />
+       <TextView
+           android:id="@+id/tvTitleTailor"
+           style="@style/SubheadMabry"
+           android:layout_width="0dp"
+           android:layout_marginStart="12dp"
+           android:text="@string/tailor_strategy"
+           android:textColor="@color/purple_gray_700"
+           app:layout_constraintStart_toEndOf="@id/ivTailor"
+           app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/tvTitleTailor"
-        style="@style/SubheadMabry"
-        android:layout_width="0dp"
-        android:layout_marginStart="12dp"
-        android:layout_marginTop="36dp"
-        android:text="@string/tailor_strategy"
-        android:textColor="@color/purple_gray_700"
-        app:layout_constraintStart_toEndOf="@id/ivTailor"
-        app:layout_constraintTop_toBottomOf="@id/ivAdjustNew" />
+       <TextView
+           android:id="@+id/tvSubTitleTailor"
+           style="@style/BodyMabry"
+           android:layout_width="0dp"
+           android:layout_marginStart="12dp"
+           android:text="@string/change_asset_repartition"
+           android:textColor="@color/purple_gray_500"
+           app:layout_constraintStart_toEndOf="@id/ivTailor"
+           app:layout_constraintTop_toBottomOf="@id/tvTitleTailor" />
 
-    <TextView
-        android:id="@+id/tvSubTitleTailor"
-        style="@style/BodyMabry"
-        android:layout_width="0dp"
-        android:layout_marginStart="12dp"
-        android:text="@string/change_asset_repartition"
-        android:textColor="@color/purple_gray_500"
-        app:layout_constraintStart_toEndOf="@id/ivTailor"
-        app:layout_constraintTop_toBottomOf="@id/tvTitleTailor" />
-
-    <ImageView
-        android:id="@+id/ivRightArrowTailor"
-        android:layout_width="wrap_content"
-        android:layout_height="0dp"
-        android:src="@drawable/ic_right_arrow_grey"
-        app:layout_constraintBottom_toBottomOf="@id/tvSubTitleTailor"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tvTitleTailor" />
-
+       <ImageView
+           android:id="@+id/ivRightArrowTailor"
+           android:layout_width="wrap_content"
+           android:layout_height="0dp"
+           android:src="@drawable/ic_right_arrow_grey"
+           app:layout_constraintBottom_toBottomOf="@id/tvSubTitleTailor"
+           app:layout_constraintEnd_toEndOf="parent"
+           app:layout_constraintTop_toTopOf="@id/tvTitleTailor" />
+   </androidx.constraintlayout.widget.ConstraintLayout>
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/clDelete"
+    android:layout_marginTop="36dp"
+    app:layout_constraintTop_toBottomOf="@id/clTailor"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent">
     <ImageView
         android:id="@+id/ivDelete"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:layout_marginTop="40dp"
         android:background="@drawable/circle_drawable"
         android:backgroundTint="@color/purple_gray_50"
         android:padding="4dp"
         android:src="@drawable/delete_holo"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivTailor"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:tint="@color/purple_500" />
 
     <TextView
@@ -223,13 +257,11 @@
         style="@style/SubheadMabry"
         android:layout_width="0dp"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="42dp"
         android:text="@string/delete_strategy"
         android:textColor="@color/purple_gray_700"
         app:layout_constraintStart_toEndOf="@id/ivDelete"
-        app:layout_constraintTop_toBottomOf="@id/ivTailor" />
-
-
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
     <ImageView
         android:id="@+id/ivRightArrowDelete"
         android:layout_width="wrap_content"
@@ -238,29 +270,39 @@
         app:layout_constraintBottom_toBottomOf="@id/tvTitleDelete"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/tvTitleDelete" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/clPause"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="36dp"
+    app:layout_constraintStart_toStartOf="parent"
+    app:layout_constraintEnd_toEndOf="parent"
+    app:layout_constraintTop_toBottomOf="@id/clDelete">
     <ImageView
         android:id="@+id/ivPAuse"
         android:layout_width="32dp"
         android:layout_height="32dp"
-        android:layout_marginTop="40dp"
         android:background="@drawable/circle_drawable"
         android:backgroundTint="@color/purple_gray_50"
         android:padding="4dp"
         android:src="@drawable/pause"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivDelete"
-         />
+        app:layout_constraintTop_toTopOf="parent"
+        />
 
     <TextView
         android:id="@+id/tvTitlePAuse"
         style="@style/SubheadMabry"
         android:layout_width="0dp"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="42dp"
         android:text="@string/pause_strategy"
         android:textColor="@color/purple_gray_700"
         app:layout_constraintStart_toEndOf="@id/ivPAuse"
-        app:layout_constraintTop_toBottomOf="@id/ivDelete" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 
     <ImageView
@@ -268,7 +310,9 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:src="@drawable/ic_right_arrow_grey"
-        app:layout_constraintBottom_toBottomOf="@id/tvTitlePAuse"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@id/tvTitleDelete" />
+        app:layout_constraintTop_toTopOf="parent" />
+</androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

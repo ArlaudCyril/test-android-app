@@ -24,6 +24,7 @@
     <TextView
         android:id="@+id/tvTitle"
         style="@style/SubheadMabry"
+        android:textStyle="bold"
         android:text="@string/withdraw_on"
         android:layout_marginHorizontal="24dp"
         android:textColor="#423D33"

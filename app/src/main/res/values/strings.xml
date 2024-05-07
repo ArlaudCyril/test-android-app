@@ -502,7 +502,7 @@
     <string name="you_will_be_able_to_withdraw_immediately_to_any_address_newly_added_to_your_address_book_these_changes_will_take_effect_after_24_hours">You will be able to withdraw immediately to any address newly added to your address book. These changes will take effect after 24 hours.</string>
     <string name="assetpopup">AssetPopUp</string>
     <string name="shifting">You will be able to withdraw immediately to any address newly added to your address book. These changes will take effect after 24 hours</string>
-    <string name="send_assets_to_your_bank_account">Send assets to your bank account</string>
+    <string name="send_assets_to_your_bank_account">Send assets to another account</string>
     <string name="trade_one_asset_for_another">Trade one asset for another</string>
     <string name="deposit_">Deposit</string>
     <string name="add_on_lyber">Add %1$s on Lyber</string>
@@ -776,4 +776,5 @@
     <string name="contract_signature">Contract signature</string>
     <string name="kyc_under_verification_text">Your kyc is under verification.</string>
     <string name="kyc_refused_text">Your kyc has been refused.</string>
+    <string name="empty"></string>
 </resources>

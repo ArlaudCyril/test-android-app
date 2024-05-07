@@ -4,6 +4,7 @@ import android.app.Dialog
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.Window
 import androidx.lifecycle.Lifecycle
@@ -55,7 +56,8 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
             stopRegistrationDialog()
         }
         viewModel.getUserResponse.observe(viewLifecycleOwner) {
-            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+//            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+            try {
                 if (it.data.language.isNotEmpty()) {
                     App.prefsManager.setLanguage(it.data.language)
                     val locale = Locale(it.data.language)
@@ -65,7 +67,11 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
                     config.setLocale(locale)
                     resources.updateConfiguration(config, resources.displayMetrics)
                 }
+            }catch (_:Exception){
+
             }
+
+//            }
         }
     }
 

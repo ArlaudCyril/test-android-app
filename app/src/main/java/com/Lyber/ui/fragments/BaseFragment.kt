@@ -21,6 +21,7 @@ import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.Lyber.R
@@ -29,6 +30,7 @@ import com.Lyber.databinding.CustomDialogVerticalLayoutBinding
 import com.Lyber.databinding.DocumentBeingVerifiedBinding
 import com.Lyber.network.RestClient
 import com.Lyber.ui.activities.WebViewActivity
+import com.Lyber.ui.portfolio.fragment.PortfolioHomeFragment
 import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
@@ -48,6 +50,7 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
     private var _binding: viewBinding? = null
      var isSign = false
      var isKyc = false
+     var isAddress = false
     val binding get() = _binding!!
 
     abstract fun bind(): viewBinding
@@ -158,8 +161,21 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
     }
 
     private lateinit var bottomDialog: BottomSheetDialog
-
-    fun customDialog(code: Int) {
+    fun checkKyc(): Boolean {
+        if (App.prefsManager.user!!.kycStatus != "OK") {
+            if (App.prefsManager.user!!.kycStatus != "REVIEW")
+                customDialog(7023)
+            else
+                CommonMethods.showSnackBar(binding.root, requireContext(), null)
+            return false
+        } else if (App.prefsManager.user!!.yousignStatus != "SIGNED") {
+            customDialog(7025)
+            return false
+        }
+        else
+            return true
+    }
+    fun customDialog(code: Int,cancel:Boolean=false) {
         bottomDialog = BottomSheetDialog(requireContext(), R.style.CustomDialogBottomSheet).apply {
             CustomDialogVerticalLayoutBinding.inflate(layoutInflater).let { binding ->
                 setContentView(binding.root)
@@ -174,8 +190,18 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
                     binding.tvNegativeButton.text = context.getString(R.string.cancel)
                     binding.tvPositiveButton.text = context.getString(R.string.sign_my_contract)
                 }
+                val navHostFragment =
+                    requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+
+
                 binding.tvNegativeButton.setOnClickListener {
                     dismiss()
+                    if (isAddress){
+                        navHostFragment.navController.popBackStack(navHostFragment.navController.graph.startDestinationId, false)
+                        navHostFragment.navController.navigate(R.id.portfolioHomeFragment,arguments)
+                    }
+                    isAddress=false
+
                 }
                 binding.tvPositiveButton.setOnClickListener {
                     CommonMethods.checkInternet(requireContext()) {

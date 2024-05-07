@@ -29,31 +29,39 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/ivTopAction" />
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clInvestInSingleAsset"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/ivTopAction"
+        android:layout_marginTop="36dp">
+
     <ImageView
         android:id="@+id/ivInvestSingleAsset"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="4dp"
         android:background="@drawable/circle_drawable"
         android:backgroundTint="@color/purple_gray_50"
         android:padding="2dp"
         android:src="@drawable/ic_invest_single_assets"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivTopAction" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvTitleSingleAsset"
         style="@style/SubheadMabry"
         android:layout_width="0dp"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="36dp"
         android:text="@string/invest_on_a_single_asset"
         android:textColor="@color/purple_gray_700"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/imageView4"
         app:layout_constraintStart_toEndOf="@id/ivInvestSingleAsset"
-        app:layout_constraintTop_toBottomOf="@id/ivTopAction" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvSubtitleSingleAsset"
@@ -76,19 +84,27 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/tvTitleSingleAsset" />
 
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/clMoneyDeposit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="36dp"
+        app:layout_constraintTop_toBottomOf="@+id/clInvestInSingleAsset">
     <ImageView
         android:id="@+id/ivMoneyDeposit"
         android:layout_width="32dp"
         android:layout_height="32dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="40dp"
+        android:layout_marginTop="4dp"
         android:background="@drawable/circle_drawable"
         android:backgroundTint="@color/purple_gray_50"
         android:padding="2dp"
         android:src="@drawable/ic_invest_money"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/ivInvestSingleAsset"
+        app:layout_constraintTop_toTopOf="parent"
         app:tint="@color/purple_500" />
 
     <TextView
@@ -96,13 +112,12 @@
         style="@style/SubheadMabry"
         android:layout_width="0dp"
         android:layout_marginStart="12dp"
-        android:layout_marginTop="36dp"
         android:text="@string/money_deposit"
         android:textColor="@color/purple_gray_700"
         android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@+id/imageView5"
         app:layout_constraintStart_toEndOf="@id/ivMoneyDeposit"
-        app:layout_constraintTop_toBottomOf="@id/ivInvestSingleAsset" />
+        app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvSubtitleMoneyDeposit"
@@ -124,6 +139,6 @@
         app:layout_constraintBottom_toBottomOf="@id/tvSubtitleMoneyDeposit"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@id/tvTitleMoneyDeposit" />
-
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

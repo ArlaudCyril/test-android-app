@@ -74,7 +74,8 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
     private var kycOK = false
     private var verificationVisible = false
     private lateinit var navController: NavController
-    private var limit = 7
+    private var limit = 1
+    var daily=false
     private lateinit var ts: MutableList<List<Double>>
 
     override fun bind() = FragmentPortfolioHomeBinding.inflate(layoutInflater)
@@ -95,6 +96,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         requireActivity().window.statusBarColor =
             getColor(requireContext(), android.R.color.transparent)
 
+
         /* initializing adapters for recycler views */
 
         adapterBalance = BalanceAdapter(false, ::assetClicked)
@@ -106,7 +108,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
         binding.rvRefresh.setOnRefreshListener {
             binding.rvRefresh.isRefreshing = true
-            viewModel.getWalletHistoryPrice(true, limit)
+            viewModel.getWalletHistoryPrice(daily, limit)
             viewModel.getUser()
             viewModel.getBalance()
             viewModel.getAllPriceResume()
@@ -138,22 +140,38 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         /* setting up tabs */
         binding.tabLayout.let {
 
-//            it.addTab(it.newTab().apply { text = "1D" })
+            it.addTab(it.newTab().apply { text = "1D" })
             it.addTab(it.newTab().apply { text = "1W" })
             it.addTab(it.newTab().apply { text = "1M" })
-            it.addTab(it.newTab().apply { text = "1Y" })
+//            it.addTab(it.newTab().apply { text = "1Y" })
             it.addTab(it.newTab().apply { text = "All" })
 
             it.addOnTabSelectedListener(object : TabLayout.OnTabSelectedListener {
 
                 override fun onTabSelected(tab: TabLayout.Tab?) {
                     when (tab?.text) {
-                        "1W" -> limit = 7
-                        "1M" -> limit = 30
-                        "1Y" -> limit = 365
-                        else -> limit = 500
+                        "1D" -> {
+                            limit = 1
+                            daily = false
+                        }
+                        "1W" -> {
+                            limit = 7
+                            daily=true
+                        }
+                        "1M" -> {
+                            limit = 30
+                            daily=true
+                        }
+                        "1Y" -> {
+                            limit = 365
+                            daily=true
+                        }
+                        else -> {
+                            limit = 500
+                            daily=true
+                        }
                     }
-                    viewModel.getWalletHistoryPrice(true, limit)
+                    viewModel.getWalletHistoryPrice(daily, limit)
                 }
 
                 override fun onTabUnselected(tab: TabLayout.Tab?) {}
@@ -202,12 +220,17 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 viewModel.getPrice(viewModel.chosenAssets?.id ?: "btc")
                 viewModel.getNews(viewModel.chosenAssets?.id ?: "btc")
             }
+            if(arguments!=null && requireArguments().containsKey("showLoader")){
+                isKyc=true
+                showDocumentDialog(App.appContext, Constants.LOADING,false)
+                arguments=null
+            } else
             CommonMethods.showProgressDialog(requireActivity())
             viewModel.getUser()
             viewModel.getAllAssets()
             viewModel.getNetworks()
             viewModel.getActiveStrategies()
-            viewModel.getWalletHistoryPrice(true, limit)
+            viewModel.getWalletHistoryPrice(daily, limit)
 
         }
 
@@ -220,7 +243,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 // Run a loop infinitely
                 while (!kycOK) {
                     // Call the function to fetch user data
-                    Log.d("hitting Api","$kycOK")
+//                    Log.d("hitting Api","$kycOK")
                     if(App.prefsManager.accessToken.isNotEmpty() ) {
                         viewModel.getUser()
                         // Delay for 10 seconds

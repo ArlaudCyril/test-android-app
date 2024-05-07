@@ -16,6 +16,7 @@ import com.Lyber.utils.CommonMethods.Companion.currencyFormatted
 import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
 import com.Lyber.utils.CommonMethods.Companion.loadImage
 import com.Lyber.utils.CommonMethods.Companion.roundFloat
+import kotlin.math.abs
 
 class AllAssetAdapter(private val clickListener: (PriceServiceResume) -> Unit = { _ -> }
 ,private val isExchange:Boolean = false) :
@@ -28,10 +29,10 @@ class AllAssetAdapter(private val clickListener: (PriceServiceResume) -> Unit = 
         RecyclerView.ViewHolder(binding.root) {
         init {
             binding.root.setOnClickListener {
-                itemList[adapterPosition]?.let { it1 -> clickListener(it1) }
+                itemList[absoluteAdapterPosition]?.let { it1 -> clickListener(it1) }
             }
             binding.lineChart.setOnClickListener {
-                itemList[adapterPosition]?.let { it1 -> clickListener(it1) }
+                itemList[absoluteAdapterPosition]?.let { it1 -> clickListener(it1) }
             }
         }
     }

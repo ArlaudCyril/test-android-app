@@ -61,6 +61,8 @@ import com.Lyber.databinding.ProgressBarBinding
 import com.Lyber.models.AssetBaseData
 import com.Lyber.models.Balance
 import com.Lyber.models.ErrorResponse
+import com.Lyber.models.Network
+import com.Lyber.models.PriceServiceResume
 import com.Lyber.network.RestClient
 import com.Lyber.utils.App.Companion.prefsManager
 import com.Lyber.utils.CommonMethods.Companion.formattedAsset
@@ -973,9 +975,14 @@ class CommonMethods {
             val symbols = DecimalFormatSymbols(Locale.US)
             formatter.decimalFormatSymbols = symbols
             val valueFormatted = formatter.format(this.toDouble() ?: 0.0)
-            return valueFormatted.toString()
+//            return valueFormatted.toString()
+            return trimTrailingZeros(valueFormatted.toDouble())
         }
-
+        fun trimTrailingZeros(number: Double): String {
+            val formatted = String.format("%.15f", number) // Use a high precision for double to string conversion
+            val trimmed = formatted.trimEnd('0').trimEnd('.')
+            return if (trimmed == "-0") "0" else trimmed // Handle negative zero case
+        }
         fun TextView.expandWith(string: String) {
 
             measureLayout()
@@ -1695,6 +1702,12 @@ class CommonMethods {
         }
 
         fun logOut(context: Context) {
+            com.Lyber.ui.activities.BaseActivity.balances=ArrayList<Balance>()
+            com.Lyber.ui.activities.BaseActivity.assets = ArrayList<AssetBaseData>()
+            com.Lyber.ui.activities.BaseActivity.networkAddress = ArrayList<Network>()
+            com.Lyber.ui.activities.BaseActivity.balances = ArrayList<Balance>()
+            com.Lyber.ui.activities.BaseActivity.balanceResume = ArrayList<PriceServiceResume>()
+
             App.prefsManager.logout()
             context.startActivity(
                 Intent(
