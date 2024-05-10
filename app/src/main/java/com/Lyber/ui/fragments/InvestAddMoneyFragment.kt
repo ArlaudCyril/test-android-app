@@ -82,6 +82,8 @@ class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), Vi
                 requiredAmount = newAmount
             }
         }
+        if(requiredAmount!=viewModel.selectedStrategy?.minAmount?.toFloat())
+            requiredAmount = viewModel.selectedStrategy?.minAmount?.toFloat()!!
         var balance =
             com.Lyber.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == "usdt" } }
         if (balance == null) {

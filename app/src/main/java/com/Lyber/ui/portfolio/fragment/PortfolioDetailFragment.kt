@@ -364,12 +364,14 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 val priceCoin = balance?.balanceData?.euroBalance?.toDouble()
                     ?.div(balance.balanceData.balance.toDouble() ?: 1.0)
                 if(balance?.balanceData?.euroBalance==null)
-                it.tvAssetAmount.text ="0 ${Constants.EURO}"
+                it.tvAssetAmount.text ="0.0 ${Constants.EURO}"
                 else
                 it.tvAssetAmount.text =
-                    balance?.balanceData?.euroBalance?.currencyFormatted
-                it.tvAssetAmountInCrypto.text =
-                    balance?.balanceData?.balance?.formattedAsset(
+                    balance.balanceData.euroBalance.currencyFormatted
+                if(balance?.balanceData?.balance==null)
+                    it.tvAssetAmountInCrypto.text ="0.00"
+               else it.tvAssetAmountInCrypto.text =
+                    balance.balanceData.balance.formattedAsset(
                         price = priceCoin,
                         rounding = RoundingMode.DOWN
                     )

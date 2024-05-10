@@ -30,3 +30,6 @@ data class InvestmentExperienceLocalIds(
     val investmentExperience: Int, val sourceOfIncome: Int, val workIndustry: Int,
     val annualIncome: Int, val activity: Int
 )
+
+data class MonthsList(
+    val monthEnglish:String,val monthFrench:String)
