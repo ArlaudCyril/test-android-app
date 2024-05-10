@@ -61,6 +61,7 @@ import com.Lyber.databinding.ProgressBarBinding
 import com.Lyber.models.AssetBaseData
 import com.Lyber.models.Balance
 import com.Lyber.models.ErrorResponse
+import com.Lyber.models.MonthsList
 import com.Lyber.models.Network
 import com.Lyber.models.PriceServiceResume
 import com.Lyber.network.RestClient
@@ -90,6 +91,7 @@ import java.time.LocalDate
 import java.time.Period
 import java.time.YearMonth
 import java.time.format.DateTimeFormatter
+import java.time.format.TextStyle
 import java.util.*
 import kotlin.math.abs
 import kotlin.math.absoluteValue
@@ -979,7 +981,7 @@ class CommonMethods {
             return trimTrailingZeros(valueFormatted.toDouble())
         }
         fun trimTrailingZeros(number: Double): String {
-            val formatted = String.format("%.15f", number) // Use a high precision for double to string conversion
+            val formatted = String.format(Locale.US,"%.15f", number) // Use a high precision for double to string conversion
             val trimmed = formatted.trimEnd('0').trimEnd('.')
             return if (trimmed == "-0") "0" else trimmed // Handle negative zero case
         }
@@ -1401,7 +1403,7 @@ class CommonMethods {
         }
 
         @RequiresApi(Build.VERSION_CODES.O)
-        fun getMonthsAndYearsBetweenWithApi26(startDate: String, endDate: String): List<String> {
+        fun getMonthsAndYearsBetweenWithApi26(startDate: String, endDate: String): List<MonthsList> {
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
             val startDateTime = LocalDate.parse(startDate, formatter)
             val endDateTime = LocalDate.parse(endDate, formatter)
@@ -1412,22 +1414,25 @@ class CommonMethods {
 
             val days = period.days
 
-            val result = mutableListOf<String>()
+            val result = mutableListOf<MonthsList>()
 
             var currentDate = startDateTime
             for (i in 0..days) {
                 result.add(
-                    "${
-                        currentDate.month.toString().lowercase().replaceFirstChar { it.uppercase() }
-                    } ${currentDate.year}"
-                )
+                    MonthsList(
+                        "${
+                            currentDate.month.getDisplayName(TextStyle.FULL, Locale.ENGLISH).toString().lowercase().replaceFirstChar { it.uppercase() }
+                        } ${currentDate.year}","${
+                            currentDate.month.getDisplayName(TextStyle.FULL, Locale.FRENCH).toString().lowercase().replaceFirstChar { it.uppercase() }
+                        } ${currentDate.year}"
+                ))
                 currentDate = currentDate.plusDays(1)
             }
 
             return result.distinct()
         }
 
-        fun getMonthsAndYearsBetween(startDate: String, endDate: String): List<String> {
+        fun getMonthsAndYearsBetween(startDate: String, endDate: String): List<MonthsList> {
             val sdf = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'", Locale.getDefault())
             val startDateTime = Calendar.getInstance()
             startDateTime.time = sdf.parse(startDate) ?: Date()
@@ -1435,18 +1440,26 @@ class CommonMethods {
             val endDateTime = Calendar.getInstance()
             endDateTime.time = sdf.parse(endDate) ?: Date()
 
-            val result = mutableListOf<String>()
+            val result = mutableListOf<MonthsList>()
 
             while (startDateTime.before(endDateTime) || startDateTime == endDateTime) {
-                result.add(
-                    "${
-                        startDateTime.getDisplayName(
-                            Calendar.MONTH,
-                            Calendar.LONG,
-                            Locale.getDefault()
-                        ).lowercase().replaceFirstChar { it.uppercase() }
-                    } ${startDateTime.get(Calendar.YEAR)}"
-                )
+             result.add(
+                 MonthsList(
+                     "${
+                         startDateTime.getDisplayName(
+                             Calendar.MONTH,
+                             Calendar.LONG,
+                             Locale.ENGLISH
+                         )!!.lowercase().replaceFirstChar { it.uppercase() }
+                     } ${startDateTime.get(Calendar.YEAR)}",
+                     "${
+                         startDateTime.getDisplayName(
+                             Calendar.MONTH,
+                             Calendar.LONG,
+                             Locale.FRANCE
+                         )!!.lowercase().replaceFirstChar { it.uppercase() }
+                     } ${startDateTime.get(Calendar.YEAR)}"))
+
                 startDateTime.add(Calendar.MONTH, 1)
             }
             return result
