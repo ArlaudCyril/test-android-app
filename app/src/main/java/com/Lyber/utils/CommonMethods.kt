@@ -68,6 +68,7 @@ import com.Lyber.network.RestClient
 import com.Lyber.utils.App.Companion.prefsManager
 import com.Lyber.utils.CommonMethods.Companion.formattedAsset
 import com.Lyber.utils.CommonMethods.Companion.toFormat
+import com.Lyber.utils.CommonMethods.Companion.toMilli
 import com.Lyber.utils.Constants.CAP_RANGE
 import com.Lyber.utils.Constants.SMALL_RANGE
 import com.bumptech.glide.Glide
@@ -160,7 +161,7 @@ class CommonMethods {
                 outputFormatter.timeZone = TimeZone.getDefault()
                 formatter.parse(this)?.let { result = outputFormatter.format(it) }
 
-                return result
+                 return result
             } catch (e: Exception) {
                 return this
             }

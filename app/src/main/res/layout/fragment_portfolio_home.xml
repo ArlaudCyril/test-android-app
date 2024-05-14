@@ -46,7 +46,7 @@
                         android:layout_below="@id/tvPortfolioAssetPrice"
                         android:layout_marginTop="2dp"
                         android:textSize="40sp"
-                        tools:text="1312€" />
+                        tools:text="0€" />
 
                     <ImageView
                         android:id="@+id/ivProfile"
