@@ -19,8 +19,7 @@ android {
         applicationId "com.Lyber"
         minSdk 24
         targetSdk 34
-//        versionCode 10 internal
-        versionCode 11  //closed
+        versionCode 12
         versionName "1.0"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

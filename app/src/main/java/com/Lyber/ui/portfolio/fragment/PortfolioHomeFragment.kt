@@ -33,7 +33,6 @@ import com.Lyber.ui.fragments.BaseFragment
 import com.Lyber.ui.fragments.bottomsheetfragments.InvestBottomSheet
 import com.Lyber.ui.portfolio.action.PortfolioFragmentActions
 import com.Lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDots
-import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.*
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.commaFormatted
@@ -43,11 +42,12 @@ import com.Lyber.utils.CommonMethods.Companion.fadeOut
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.px
-import com.Lyber.utils.CommonMethods.Companion.roundFloat
 import com.Lyber.utils.CommonMethods.Companion.setProfile
+import com.Lyber.utils.CommonMethods.Companion.toFormat
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.CommonMethods.Companion.visibleFromLeft
 import com.Lyber.utils.CommonMethods.Companion.zoomIn
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.google.android.material.tabs.TabLayout
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
@@ -75,8 +75,10 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
     private var verificationVisible = false
     private lateinit var navController: NavController
     private var limit = 1
-    var daily=false
-    private lateinit var ts: MutableList<List<Double>>
+    var daily = false
+    private lateinit var timeGraphList: MutableList<List<Double>>
+    private var lastValueUpdated = false
+    private var responseFrom = ""
 
     override fun bind() = FragmentPortfolioHomeBinding.inflate(layoutInflater)
 
@@ -108,6 +110,8 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
         binding.rvRefresh.setOnRefreshListener {
             binding.rvRefresh.isRefreshing = true
+            responseFrom = ""
+            lastValueUpdated = false
             viewModel.getWalletHistoryPrice(daily, limit)
             viewModel.getUser()
             viewModel.getBalance()
@@ -154,21 +158,25 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                             limit = 1
                             daily = false
                         }
+
                         "1W" -> {
                             limit = 7
-                            daily=true
+                            daily = true
                         }
+
                         "1M" -> {
                             limit = 30
-                            daily=true
+                            daily = true
                         }
+
                         "1Y" -> {
                             limit = 365
-                            daily=true
+                            daily = true
                         }
+
                         else -> {
                             limit = 500
-                            daily=true
+                            daily = true
                         }
                     }
                     viewModel.getWalletHistoryPrice(daily, limit)
@@ -220,35 +228,35 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 viewModel.getPrice(viewModel.chosenAssets?.id ?: "btc")
                 viewModel.getNews(viewModel.chosenAssets?.id ?: "btc")
             }
-            if(arguments!=null && requireArguments().containsKey("showLoader")){
-                isKyc=true
-                showDocumentDialog(App.appContext, Constants.LOADING,false)
-                arguments=null
+            if (arguments != null && requireArguments().containsKey("showLoader")) {
+                isKyc = true
+                showDocumentDialog(App.appContext, Constants.LOADING, false)
+                arguments = null
             } else
-            CommonMethods.showProgressDialog(requireActivity())
+                CommonMethods.showProgressDialog(requireActivity())
+            lastValueUpdated=false
+            responseFrom=""
             viewModel.getUser()
             viewModel.getAllAssets()
             viewModel.getNetworks()
             viewModel.getActiveStrategies()
             viewModel.getWalletHistoryPrice(daily, limit)
-
+            viewModel.getBalance()
+            viewModel.getAllPriceResume()
         }
 
-        viewModel.getBalance()
-        // All assets available part
-        viewModel.getAllPriceResume()
 
-      if (App.prefsManager.user?.kycStatus != "OK" || App.prefsManager.user?.yousignStatus != "SIGNED") {
-           GlobalScope.launch {
+        if (App.prefsManager.user?.kycStatus != "OK" || App.prefsManager.user?.yousignStatus != "SIGNED") {
+            GlobalScope.launch {
                 // Run a loop infinitely
                 while (!kycOK) {
                     // Call the function to fetch user data
 //                    Log.d("hitting Api","$kycOK")
-                    if(App.prefsManager.accessToken.isNotEmpty() ) {
+                    if (App.prefsManager.accessToken.isNotEmpty()) {
                         viewModel.getUser()
                         // Delay for 10 seconds
 //                        if (App.prefsManager.user?.kycStatus == "STARTED" || App.prefsManager.user?.kycStatus == "NOT_STARTED")
-                            delay(3 * 1000)
+                        delay(3 * 1000)
 //                        else
 //                            delay(10 * 1000)
                     }
@@ -305,13 +313,27 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                     for (i in it.data)
                         totalBalance += i.value.euroBalance.toDoubleOrNull()!!
                     viewModel.totalPortfolio = totalBalance
-                    if(!(::ts.isInitialized && ts.isNotEmpty()))
-                    binding.lineChart.timeSeries = getLineData(viewModel.totalPortfolio)
+                    if (!(::timeGraphList.isInitialized && timeGraphList.isNotEmpty()))
+                        binding.lineChart.timeSeries = getLineData(viewModel.totalPortfolio)
+                    else if (responseFrom.isNotEmpty() && responseFrom == "history") {
+                        if (lastValueUpdated)
+                            timeGraphList.removeAt(timeGraphList.size - 1)
+                        timeGraphList.add(
+                            listOf(
+                                System.currentTimeMillis().toDouble(),
+                                viewModel.totalPortfolio
+                            )
+                        )
+                        binding.lineChart.timeSeries = timeGraphList
+                    }
                     binding.tvValuePortfolioAndAssetPrice.text =
                         "${totalBalance.commaFormatted}${Constants.EURO}"
+//                    binding.lineChart.updateValueLastPoint(totalBalance.commaFormatted.toFloat())
                     com.Lyber.ui.activities.BaseActivity.balances = balances
                     balances.sortByDescending { it.balanceData.euroBalance.toDoubleOrNull() }
                     adapterBalance.setList(balances)
+                    responseFrom = "balance"
+
                 } else
                     binding.tvNoAssets.visible()
             }
@@ -321,32 +343,48 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 binding.rvRefresh.isRefreshing = false
                 val dates = it.data.map { it.date }
-                val dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                var dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
+                if (!daily)
+                    dateFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.getDefault())
                 val timeSeries1 = dates.mapIndexed { index, dateString ->
                     val totalValue =
                         it.data[index].total.toDouble() // Get the total value from the corresponding index
-                    val dateInMillis = dateFormatter.parse(dateString).time.toDouble()
+                    var ds = dateString
+                    if (!daily)
+                        ds = dateString.toFormat("yyyy-MM-dd'T'HH:mm", "yyyy-MM-dd'T'HH:mm")
+                    val dateInMillis = dateFormatter.parse(ds).time.toDouble()
                     listOf(dateInMillis, totalValue)
                 } as MutableList
                 Log.d("timeseries", "$timeSeries1")
-                ts = timeSeries1
+                timeGraphList = timeSeries1
+                if (responseFrom.isNotEmpty() && responseFrom == "balance" && viewModel.totalPortfolio != 0.0) {
+                    lastValueUpdated = true
+                    timeGraphList.add(
+                        listOf(
+                            System.currentTimeMillis().toDouble(),
+                            viewModel.totalPortfolio
+                        )
+                    )
+                }
                 if (timeSeries1.isEmpty())
                     binding.lineChart.timeSeries = getLineData(viewModel.totalPortfolio)
                 else
-                    binding.lineChart.timeSeries = timeSeries1
+                    binding.lineChart.timeSeries = timeGraphList
+
+                responseFrom = "history"
             }
         }
 
         viewModel.getUserResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                if(!isKyc)
+                if (!isKyc)
                     dismissProgressDialog()
                 binding.rvRefresh.isRefreshing = false
                 App.prefsManager.user = it.data
                 App.prefsManager.defaultImage = it.data.avatar
                 binding.ivProfile.setProfile
                 App.prefsManager.withdrawalLockSecurity = it.data.withdrawalLock
-                if (it.data.kycStatus == "OK" && it.data.yousignStatus == "SIGNED" && !verificationVisible ) {
+                if (it.data.kycStatus == "OK" && it.data.yousignStatus == "SIGNED" && !verificationVisible) {
                     dismissProgressDialog()
                     kycOK = true
                     binding.tvVerification.gone()
@@ -359,7 +397,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                         "NOT_STARTED", "STARTED" -> binding.ivKyc.setImageResource(R.drawable.arrow_right_purple)
                         "FAILED", "CANCELED" -> {
                             dismissProgressDialog()
-                            if(isKyc) {
+                            if (isKyc) {
                                 Handler(Looper.getMainLooper()).postDelayed({
                                     showDocumentDialog(
                                         App.appContext,
@@ -371,9 +409,10 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                             }
                             binding.ivKyc.setImageResource(R.drawable.arrow_right_purple)
                         }
+
                         "OK" -> {
                             dismissProgressDialog()
-                            if(isKyc) {
+                            if (isKyc) {
                                 Handler(Looper.getMainLooper()).postDelayed({
                                     showDocumentDialog(
                                         App.appContext,
@@ -388,7 +427,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
                         "REVIEW" -> {
                             dismissProgressDialog()
-                            if(isKyc) {
+                            if (isKyc) {
                                 Handler(Looper.getMainLooper()).postDelayed({
                                     showDocumentDialog(
                                         App.appContext,
@@ -396,16 +435,16 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                                         isSign
                                     )
                                 }, 1500)
-                                isKyc=false
+                                isKyc = false
                             }
                             binding.ivKyc.setImageResource(R.drawable.pending_indicator)
                         }
 
                     }
-                    if (it.data.kycStatus == "OK" )
+                    if (it.data.kycStatus == "OK")
                         when (it.data.yousignStatus) {
                             "SIGNED" -> {
-                                if(isSign) {
+                                if (isSign) {
                                     Handler(Looper.getMainLooper()).postDelayed({
                                         showDocumentDialog(
                                             App.appContext,
@@ -413,10 +452,11 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                                             isSign
                                         )
                                     }, 1500)
-                                    isSign=false
+                                    isSign = false
                                 }
                                 binding.ivSign.setImageResource(R.drawable.accepted_indicator)
                             }
+
                             "NOT_SIGNED" -> binding.ivSign.setImageResource(R.drawable.arrow_right_purple)
                         }
                     if (it.data.kycStatus == "OK" && it.data.yousignStatus == "SIGNED") {
@@ -465,35 +505,35 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         return date?.time ?: 0L
     }
 
-    private fun List<String>.toTimeSeries(
-        lastUpdate: String, tf: String = "1h"
-    ): MutableList<List<Double>> {
-        val last = lastUpdate.toMilliS()
-        val timeSeries = mutableListOf<List<Double>>()
-        val timeInterval = when (tf) {
-            "1h" -> 60 * 60 * 1000L
-            "4h" -> 4 * 60 * 60 * 1000L
-            "1d" -> 24 * 60 * 60 * 1000L
-            "1w" -> 7 * 24 * 60 * 60 * 1000L
-            "1m" -> 30 * 24 * 60 * 60 * 1000L
-            else -> 7 * 24 * 60 * 60 * 1000L
-        }
+//    private fun List<String>.toTimeSeries(
+//        lastUpdate: String, tf: String = "1h"
+//    ): MutableList<List<Double>> {
+//        val last = lastUpdate.toMilliS()
+//        val timeSeries = mutableListOf<List<Double>>()
+//        val timeInterval = when (tf) {
+//            "1h" -> 60 * 60 * 1000L
+//            "4h" -> 4 * 60 * 60 * 1000L
+//            "1d" -> 24 * 60 * 60 * 1000L
+//            "1w" -> 7 * 24 * 60 * 60 * 1000L
+//            "1m" -> 30 * 24 * 60 * 60 * 1000L
+//            else -> 7 * 24 * 60 * 60 * 1000L
+//        }
+//
+//        for (i in indices) {
+//            val date = last - (size - i) * timeInterval
+//            timeSeries.add(listOf(date.toDouble(), this[i].toDouble()))
+//        }
+//        return timeSeries
+//    }
 
-        for (i in indices) {
-            val date = last - (size - i) * timeInterval
-            timeSeries.add(listOf(date.toDouble(), this[i].toDouble()))
-        }
-        return timeSeries
-    }
-
-    private fun List<String>.toFloats(): MutableList<Float> {
-        val list = mutableListOf<Float>()
-        forEach {
-            list.add(it.roundFloat().toFloat())
-        }
-        return list
-
-    }
+//    private fun List<String>.toFloats(): MutableList<Float> {
+//        val list = mutableListOf<Float>()
+//        forEach {
+//            list.add(it.roundFloat().toFloat())
+//        }
+//        return list
+//
+//    }
 
     private fun getLineData(
         value: Double,
@@ -680,7 +720,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 }
 
                 llContract -> {
-                    if (App.prefsManager.user?.kycStatus == "OK" && App.prefsManager.user?.yousignStatus!="SIGNED")
+                    if (App.prefsManager.user?.kycStatus == "OK" && App.prefsManager.user?.yousignStatus != "SIGNED")
                         customDialog(7025)
                 }
 
