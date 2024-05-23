@@ -776,5 +776,8 @@
     <string name="contract_signature">Contract signature</string>
     <string name="kyc_under_verification_text">Your kyc is under verification.</string>
     <string name="kyc_refused_text">Your kyc has been refused.</string>
+    <string name="sign_up_in_5">Sign up in 5min</string>
     <string name="empty"></string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>

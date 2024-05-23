@@ -106,14 +106,6 @@ class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
                     viewModel.createPin = pin
                     findNavController().navigate(R.id.confirmPinFragment, bundle)
 
-                    /*App.prefsManager.user?.let {
-                    if (it.login_pin_set) {
-                        checkInternet(requireContext()) {
-                            showProgressDialog(requireContext())
-                            viewModel.verifyPin(pin)
-                        }
-                    }
-                }*/
 
                     clearFields()
                 }, 300)

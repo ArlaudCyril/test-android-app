@@ -12,6 +12,7 @@ import com.Lyber.R
 import com.Lyber.databinding.FragmentAllAssetsBinding
 import com.Lyber.models.PriceServiceResume
 import com.Lyber.ui.adapters.AllAssetAdapter
+import com.Lyber.utils.AppLifeCycleObserver
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
@@ -144,51 +145,43 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
                         binding.tvNoResultFound.gone()
                     when (binding.tabLayout.selectedTabPosition) {
                         0 -> {
-                            if (searchText.isNotEmpty())
-                            {
+                            if (searchText.isNotEmpty()) {
                                 if (list.isEmpty())
                                     binding.tvNoResultFound.visible()
                                 else
                                     binding.tvNoResultFound.gone()
                                 adapter.setList(list)
-                            }
-                            else adapter.setList(trendings)
+                            } else adapter.setList(trendings)
                         }
 
                         1 -> {
-                            if (searchText.isNotEmpty())
-                            {
+                            if (searchText.isNotEmpty()) {
                                 if (list.isEmpty())
                                     binding.tvNoResultFound.visible()
                                 else
                                     binding.tvNoResultFound.gone()
                                 adapter.setList(list)
-                            }
-                            else adapter.setList(topGainers)
+                            } else adapter.setList(topGainers)
                         }
 
                         2 -> {
-                            if (searchText.isNotEmpty())
-                            {
+                            if (searchText.isNotEmpty()) {
                                 if (list.isEmpty())
                                     binding.tvNoResultFound.visible()
                                 else
                                     binding.tvNoResultFound.gone()
                                 adapter.setList(list)
-                            }
-                            else adapter.setList(topLosers)
+                            } else adapter.setList(topLosers)
                         }
 
                         3 -> {
-                            if (searchText.isNotEmpty())
-                            {
+                            if (searchText.isNotEmpty()) {
                                 if (list.isEmpty())
                                     binding.tvNoResultFound.visible()
                                 else
                                     binding.tvNoResultFound.gone()
                                 adapter.setList(list)
-                            }
-                            else adapter.setList(stables)
+                            } else adapter.setList(stables)
                         }
 
                         else -> {
@@ -200,24 +193,36 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
 
         }
 
-        checkInternet(requireContext()) {
-            showProgressDialog(requireContext())
-            viewModel.getAllPriceResume()
-        }
+        hitApi()
 
         binding.rvRefresh.setOnRefreshListener {
-           viewModel.getAllPriceResume()
+            viewModel.getAllPriceResume()
             binding.etSearch.setText("")
             binding.tvNoResultFound.gone()
             try {
-                val imm = context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
+                val imm =
+                    context?.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager?
                 imm?.hideSoftInputFromWindow(view.windowToken, 0)
 
-            }catch (_:Exception){
+            } catch (_: Exception) {
             }
         }
 
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(AppLifeCycleObserver.fromBack){
+            AppLifeCycleObserver.fromBack=false
+            hitApi()
+        }
+    }
+    private fun hitApi() {
+        checkInternet(requireContext()) {
+            showProgressDialog(requireContext())
+            viewModel.getAllPriceResume()
+        }
     }
 
     private fun List<PriceServiceResume>.topLosers(): List<PriceServiceResume> {

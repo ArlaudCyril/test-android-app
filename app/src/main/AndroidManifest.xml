@@ -99,8 +99,12 @@
             </intent-filter>
         </service>
         <meta-data
+            android:name="com.google.firebase.messaging.default_notification_icon"
+            android:resource="@drawable/ic_logo" />
+
+        <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="123456" />
+            android:value="@string/app_name" />
         <meta-data
             android:name="android.webkit.WebView.EnableSafeBrowsing"
             android:value="true" />

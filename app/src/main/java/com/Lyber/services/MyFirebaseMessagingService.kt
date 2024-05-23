@@ -38,16 +38,17 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             intent = Intent("Constants.INTENT_FILTER_NOTIFICATION")
 //            intent.putExtra("notificationData", remoteMessage.data) // Pass notification data if needed
 //            LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
-        } else intent = Intent(this, SplashActivity::class.java)
-            .apply {
-                // extra
-                flags = Intent.FLAG_ACTIVITY_NEW_TASK
-            }
+        } else {
+            intent = Intent(this, SplashActivity::class.java)
+                .apply {
+                    // extra
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                }
 
 //        val intentFilter = Intent(Constants.INTENT_FILTER_NOTIFICATION)
 //        intent.putExtra("notificationRec",true)
-        LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
-
+            LocalBroadcastManager.getInstance(this).sendBroadcast(intent)
+        }
         val pendingIntent = PendingIntent.getActivity(
             this, randomInt, intent,
             PendingIntent.FLAG_ONE_SHOT or PendingIntent.FLAG_IMMUTABLE

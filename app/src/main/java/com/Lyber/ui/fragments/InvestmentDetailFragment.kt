@@ -15,6 +15,7 @@ import com.Lyber.databinding.LoaderViewBinding
 import com.Lyber.models.InvestmentStrategyAsset
 import com.Lyber.models.Transaction
 import com.Lyber.ui.adapters.BaseAdapter
+import com.Lyber.utils.AppLifeCycleObserver
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.commaFormatted
 import com.Lyber.utils.CommonMethods.Companion.decimalPoints
@@ -105,10 +106,8 @@ class InvestmentDetailFragment : BaseFragment<FragmentInvestmentDetailBinding>()
             requireActivity().onBackPressed()
         }
 
-        checkInternet(requireContext()) {
-            showProgressDialog(requireContext())
-            viewModel.getRecurringInvestmentDetail(investmentId)
-        }
+        hitApi()
+
 
         binding.btnCancelInvestment.setOnClickListener {
             checkInternet(requireContext()) {
@@ -124,6 +123,20 @@ class InvestmentDetailFragment : BaseFragment<FragmentInvestmentDetailBinding>()
 
     }
 
+    override fun onResume() {
+        super.onResume()
+        if (AppLifeCycleObserver.fromBack) {
+            AppLifeCycleObserver.fromBack = false
+            hitApi()
+        }
+    }
+
+    private fun hitApi() {
+        checkInternet(requireContext()) {
+            showProgressDialog(requireContext())
+            viewModel.getRecurringInvestmentDetail(investmentId)
+        }
+    }
     // adapter for history items
 
     class HistoryAdapter : BaseAdapter<Transaction>() {
@@ -152,6 +165,7 @@ class InvestmentDetailFragment : BaseFragment<FragmentInvestmentDetailBinding>()
                         )
                     )
                 }
+
                 else -> {
                     LoaderViewHolder(
                         LoaderViewBinding.inflate(
@@ -184,9 +198,11 @@ class InvestmentDetailFragment : BaseFragment<FragmentInvestmentDetailBinding>()
                                             it.exchange_to_amount.toString().decimalPoints(5)
                                         }${it.exchange_to.uppercase()}"
                                 }
+
                                 2 -> { // deposit
                                     root.gone()
                                 }
+
                                 3 -> { // withdraw
 //                                ivItem.setImageResource(R.drawable.ic_withdraw)
                                     tvStartTitleCenter.text = "Withdrawal"
@@ -196,6 +212,7 @@ class InvestmentDetailFragment : BaseFragment<FragmentInvestmentDetailBinding>()
                                             it.asset_amount.toString().decimalPoints(5)
                                         }${it.asset_id.uppercase()}"
                                 }
+
                                 4 -> { // single asset
 //                                ivItem.setImageResource(R.drawable.ic_deposit)
                                     tvStartTitleCenter.text = "Bought ${it.asset_id.uppercase()}"
@@ -206,12 +223,14 @@ class InvestmentDetailFragment : BaseFragment<FragmentInvestmentDetailBinding>()
                                             it.asset_amount.toString().decimalPoints(5)
                                         }${it.asset_id.uppercase()}"
                                 }
+
                                 else -> root.gone()
                             }
 
                         }
                     }
                 }
+
                 LOADER_VIEW -> {}
             }
         }

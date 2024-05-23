@@ -4,10 +4,13 @@ import android.app.Dialog
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.Window
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.CustomDialogLayoutBinding
@@ -49,8 +52,7 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
         }
         if (viewModel.forLogin) {
             viewModel.getUser()
-        }
-        else if (!requireArguments().containsKey(Constants.IS_CHANGE_PIN))
+        } else if (!requireArguments().containsKey(Constants.IS_CHANGE_PIN))
             binding.ivTopClose.visible()
         binding.ivTopClose.setOnClickListener {
             stopRegistrationDialog()
@@ -58,6 +60,7 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
         viewModel.getUserResponse.observe(viewLifecycleOwner) {
 //            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
             try {
+                App.prefsManager.user = it.data
                 if (it.data.language.isNotEmpty()) {
                     App.prefsManager.setLanguage(it.data.language)
                     val locale = Locale(it.data.language)
@@ -67,7 +70,7 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
                     config.setLocale(locale)
                     resources.updateConfiguration(config, resources.displayMetrics)
                 }
-            }catch (_:Exception){
+            } catch (_: Exception) {
 
             }
 
@@ -111,8 +114,11 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
                     App.prefsManager.userPin = pinConfirm
 
                     if (viewModel.forLogin) {
-
-                        findNavController().navigate(R.id.portfolioHomeFragment)
+                        val bundle = Bundle().apply {
+                            putBoolean(Constants.FOR_LOGIN, viewModel.forLogin)
+                        }
+                        findNavController().navigate(R.id.enableNotificationFragment, bundle)
+                        clearField()
                     } else if (requireArguments().containsKey(Constants.IS_CHANGE_PIN)
                         && requireArguments().getBoolean(Constants.IS_CHANGE_PIN)
                     ) {

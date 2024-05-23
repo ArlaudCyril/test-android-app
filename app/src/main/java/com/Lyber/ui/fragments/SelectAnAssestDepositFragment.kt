@@ -16,7 +16,9 @@ import com.Lyber.ui.adapters.AllAssesstAdapterDeposit
 import com.Lyber.ui.portfolio.action.AssestFragmentAction
 import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.App
+import com.Lyber.utils.AppLifeCycleObserver
 import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
@@ -48,9 +50,10 @@ class SelectAnAssestDepositFragment : BaseFragment<FragmentSelectAssestForDepost
             }
         }
         binding.ivTopAction.setOnClickListener { requireActivity().onBackPressedDispatcher.onBackPressed() }
-        viewModel.getAllAssets()
+        hitApi()
         viewModel.allAssets.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                CommonMethods.dismissProgressDialog()
                 binding.rvRefresh.isRefreshing = false
                 App.prefsManager.assetBaseDataResponse = it
                 adapterAllAsset.setList(it.data as ArrayList<AssetBaseData>)
@@ -60,6 +63,21 @@ class SelectAnAssestDepositFragment : BaseFragment<FragmentSelectAssestForDepost
         }
 
         setSearchLogic()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(AppLifeCycleObserver.fromBack){
+            AppLifeCycleObserver.fromBack=false
+            hitApi()
+        }
+    }
+
+    private fun hitApi(){
+        checkInternet(requireContext()){
+            CommonMethods.showProgressDialog(requireContext())
+            viewModel.getAllAssets()
+        }
     }
 
     private fun setSearchLogic() {

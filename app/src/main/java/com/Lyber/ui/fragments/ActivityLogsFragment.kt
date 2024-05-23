@@ -13,6 +13,7 @@ import com.Lyber.databinding.ItemActivityLogsBinding
 import com.Lyber.databinding.LoaderViewBinding
 import com.Lyber.models.ActivityLogsData
 import com.Lyber.ui.adapters.BaseAdapter
+import com.Lyber.utils.AppLifeCycleObserver
 import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.gone
@@ -38,13 +39,23 @@ class ActivityLogsFragment : BaseFragment<FragmentActivityLogsBinding>() {
     private var isLastPage = false
     override fun bind() = FragmentActivityLogsBinding.inflate(layoutInflater)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        viewModel.listener = this
+    override fun onResume() {
+        super.onResume()
+        if(AppLifeCycleObserver.fromBack){
+            AppLifeCycleObserver.fromBack=false
+            hitApis()
+        }
+    }
+    private fun hitApis(){
         CommonMethods.checkInternet(requireContext()) {
             CommonMethods.showProgressDialog(requireContext())
             viewModel.getActivityLogs(limit, offset)
         }
+    }
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        viewModel.listener = this
+
         val mLayoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
 
@@ -76,6 +87,9 @@ class ActivityLogsFragment : BaseFragment<FragmentActivityLogsBinding>() {
         binding.toolbar.setNavigationOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
+
+        hitApis()
+
         binding.rvRefresh.setOnRefreshListener {
             binding.rvRefresh.isRefreshing = true
             offset = 0

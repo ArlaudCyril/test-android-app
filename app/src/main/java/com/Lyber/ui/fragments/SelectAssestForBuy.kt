@@ -17,6 +17,7 @@ import com.Lyber.models.PriceServiceResume
 import com.Lyber.ui.adapters.AllAssetAdapter
 import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.App
+import com.Lyber.utils.AppLifeCycleObserver
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.visible
@@ -186,11 +187,8 @@ class SelectAssestForBuy : BaseFragment<FragmentAllAssetsBinding>(), View.OnClic
             })
 
         }
+        hitApi()
 
-        CommonMethods.checkInternet(requireContext()) {
-            CommonMethods.showProgressDialog(requireContext())
-            viewModel.getAllPriceResume()
-        }
 
         binding.rvRefresh.setOnRefreshListener {
             viewModel.getAllPriceResume()
@@ -206,6 +204,21 @@ class SelectAssestForBuy : BaseFragment<FragmentAllAssetsBinding>(), View.OnClic
         }
 
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (AppLifeCycleObserver.fromBack) {
+            AppLifeCycleObserver.fromBack = false
+            hitApi()
+        }
+    }
+
+    private fun hitApi() {
+        CommonMethods.checkInternet(requireContext()) {
+            CommonMethods.showProgressDialog(requireContext())
+            viewModel.getAllPriceResume()
+        }
     }
 
     private fun List<PriceServiceResume>.topLosers(): List<PriceServiceResume> {
@@ -239,20 +252,19 @@ class SelectAssestForBuy : BaseFragment<FragmentAllAssetsBinding>(), View.OnClic
         if (asset.id == "usdt") {
             if (checkKyc())
                 findNavController().navigate(R.id.buyUsdt)
-        }  else if (balance != null) {
-                viewModel.exchangeAssetTo = asset.id
-                viewModel.exchangeAssetFrom = "usdt"
-                findNavController().navigate(R.id.addAmountForExchangeFragment)
-            } else {
-                if (App.prefsManager.user!!.kycStatus == "OK" && App.prefsManager.user!!.yousignStatus == "SIGNED")
-                    showDialog()
-                else checkKyc()
-            }
+        } else if (balance != null) {
+            viewModel.exchangeAssetTo = asset.id
+            viewModel.exchangeAssetFrom = "usdt"
+            findNavController().navigate(R.id.addAmountForExchangeFragment)
+        } else {
+            if (App.prefsManager.user!!.kycStatus == "OK" && App.prefsManager.user!!.yousignStatus == "SIGNED")
+                showDialog()
+            else checkKyc()
+        }
         //showDialog()*
 
 
     }
-
 
 
     private fun showDialog() {

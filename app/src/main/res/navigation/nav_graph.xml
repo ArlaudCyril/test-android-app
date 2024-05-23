@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <navigation xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
     app:startDestination="@id/splashFragment">
     <fragment
@@ -250,9 +251,13 @@
         android:name="com.Lyber.ui.fragments.EnableNotificationFragment"
         android:label="EnableNotificationFragment" >
         <action
+            android:id="@+id/action_enableNotificationFragment_to_confirmPinFragment"
+            app:destination="@id/confirmPinFragment"/>
+        <action
             android:id="@+id/action_enableNotificationFragment_to_completePortfolioFragment"
             app:destination="@id/completePortfolioFragment"
-           />
+            app:popUpTo="@id/discoveryFragment"
+            app:popUpToInclusive="false"/>
     </fragment>
     <fragment
         android:id="@+id/completePortfolioFragment"
@@ -407,10 +412,10 @@
         android:id="@+id/underMaintenanceFragment"
         android:name="com.Lyber.ui.fragments.UnderMaintenanceFragment"
         android:label="UnderMaintenanceFragment" />
-    <fragment
-        android:id="@+id/searchAddressFragment"
-        android:name="com.Lyber.ui.fragments.SearchAddressFragment"
-        android:label="SearchAddressFragment" />
+<!--    <fragment-->
+<!--        android:id="@+id/searchAddressFragment"-->
+<!--        android:name="com.Lyber.ui.fragments.SearchAddressFragment"-->
+<!--        android:label="SearchAddressFragment" />-->
     <fragment
         android:id="@+id/addressFragment"
         android:name="com.Lyber.ui.fragments.AddressFragment"

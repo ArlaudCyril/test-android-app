@@ -9,6 +9,7 @@ import com.Lyber.R
 import com.Lyber.databinding.FragmentSwapFromBinding
 import com.Lyber.models.Balance
 import com.Lyber.ui.adapters.BalanceAdapter
+import com.Lyber.utils.AppLifeCycleObserver
 import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.commaFormatted
@@ -79,6 +80,14 @@ class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnCli
         CommonMethods.checkInternet(requireContext()) {
             CommonMethods.showProgressDialog(requireContext())
             viewModel.getBalance()
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(AppLifeCycleObserver.fromBack){
+            AppLifeCycleObserver.fromBack=false
+            getData()
         }
     }
 

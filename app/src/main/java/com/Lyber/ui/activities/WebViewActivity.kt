@@ -40,6 +40,7 @@ import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.Constants
+import com.Lyber.utils.LoaderObject
 import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.viewmodels.VerifyIdentityViewModel
 import okhttp3.ResponseBody
@@ -51,16 +52,15 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
     private var mFilePathCallback: ValueCallback<Array<Uri>>? = null
     private var mImagePath = ""
     private lateinit var portfolioViewModel: PortfolioViewModel
-    private var fromBase=false
+    private var fromBase = false
 
     private var url: String = ""
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         portfolioViewModel = CommonMethods.getViewModel(this)
-
         portfolioViewModel.listener = this@WebViewActivity
-        if(intent!=null && intent.hasExtra(Constants.FROM))
-            fromBase=intent.getBooleanExtra(Constants.FROM,false)
+        if (intent != null && intent.hasExtra(Constants.FROM))
+            fromBase = intent.getBooleanExtra(Constants.FROM, false)
 
         checkAndRequest()
         binding.webView.settings.apply {
@@ -95,6 +95,7 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
                 CommonMethods.dismissProgressDialog()
                 App.prefsManager.accessToken = it.data.access_token
                 App.prefsManager.refreshToken = it.data.refresh_token
+                getUser1()
                 App.prefsManager.personalDataSteps = 0
                 App.prefsManager.portfolioCompletionStep = 0
                 val intent = Intent(this@WebViewActivity, SplashActivity::class.java)
@@ -153,8 +154,7 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
             } else {
                 Log.d("TAG2", "Permission Already Granted")
             }
-        }
-        else {
+        } else {
             if (ActivityCompat.checkSelfPermission(
                     applicationContext, android.Manifest.permission.CAMERA
                 )
@@ -379,13 +379,12 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
             // Check if the URL matches the completion URL for login
             if (url == "https://www.lyber.com/kyc-finished" || url == "https://lyber.com/kyc-finished") {
                 // Perform actions to indicate that login is finished
-                if(fromBase){
+                if (fromBase) {
                     setResult(Activity.RESULT_OK)
-                finish()
-                overridePendingTransition(0, 0)
+                    finish()
+                    overridePendingTransition(0, 0)
 
-                }
-                else {
+                } else {
                     CommonMethods.showProgressDialog(this@WebViewActivity)
                     portfolioViewModel.finishRegistration()
                 }
@@ -401,6 +400,7 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
 
         override fun onPageFinished(view: WebView?, url: String?) {
             super.onPageFinished(view, url)
+            LoaderObject.hideLoader()
             val PageURL = view?.url
             if (PageURL!!.equals("https://www.lyber.com/kyc-finished") || PageURL.equals("https://lyber.com/kyc-finished")) {
             } else if (PageURL.contains("https://www.lyber.com/sign-finished")) {
@@ -466,16 +466,21 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
             ImageUri = null
             var results: Array<Uri>? = null
             if (result != null) {
-                if (result.resultCode == RESULT_OK) {
-                    ImageUri = saveImageToMediaStore(
-                        getFile(mImagePath)!!, this
-                    )
-                    Log.d("imageFi", ImageUri.toString())
-                    results = arrayOf(ImageUri!!)
+                try {
+                    if (result.resultCode == RESULT_OK) {
+                        ImageUri = saveImageToMediaStore(
+                            getFile(mImagePath)!!, this
+                        )
+                        Log.d("imageFi", ImageUri.toString())
+                        results = arrayOf(ImageUri!!)
+
+                    }
+                    mFilePathCallback!!.onReceiveValue(results)
+                    mFilePathCallback = null
+                } catch (_: Exception) {
 
                 }
-                mFilePathCallback!!.onReceiveValue(results)
-                mFilePathCallback = null
+
             }
         }
 

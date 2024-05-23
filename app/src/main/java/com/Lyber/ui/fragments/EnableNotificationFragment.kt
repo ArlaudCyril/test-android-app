@@ -21,12 +21,12 @@ import com.Lyber.R
 import com.Lyber.databinding.CustomDialogLayoutBinding
 import com.Lyber.databinding.FragmentEnableNotificationsBinding
 import com.Lyber.utils.App
-import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
-import com.Lyber.utils.CommonMethods.Companion.clearBackStack
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.SignUpViewModel
 import com.google.android.gms.tasks.OnCompleteListener
@@ -43,10 +43,20 @@ private lateinit var settingDialog:Dialog
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val navHostFragment =
-            requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
-        navController = navHostFragment.findNavController()
-        App.prefsManager.savedScreen = javaClass.name
+        if(arguments==null) {
+            val navHostFragment =
+                requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
+            navController = navHostFragment.findNavController()
+            App.prefsManager.savedScreen = javaClass.name
+            binding.ivTopAction.visible()
+            requireActivity().onBackPressedDispatcher.addCallback(this) {
+                stopRegistrationDialog()
+            }
+        }
+        else {
+            binding.ivTopAction.gone()
+            binding.ivBack.visible()
+        }
         // (requireParentFragment() as SignUpFragment).setIndicators(4)
 
         onBoardingViewModel = getViewModel(requireParentFragment())
@@ -69,18 +79,29 @@ private lateinit var settingDialog:Dialog
                 Log.d("FirebaseMessagingService.TAG", token)
 
             })
-        onBoardingViewModel.booleanResponse.observe(viewLifecycleOwner) {
-            dismissProgressDialog()
-            App.prefsManager.portfolioCompletionStep = Constants.ACCOUNT_CREATED
-            navController.navigate(R.id.completePortfolioFragment)
+        onBoardingViewModel.notificationResponse.observe(viewLifecycleOwner) {response ->
+            if (response.success == true) {
+                dismissProgressDialog()
+
+                if (arguments == null) {
+                    App.prefsManager.portfolioCompletionStep = Constants.ACCOUNT_CREATED
+//                navController.navigate(R.id.completePortfolioFragment)
+                    navController.navigate(R.id.action_enableNotificationFragment_to_completePortfolioFragment)
+
+                } else {
+                    findNavController().navigate(R.id.portfolioHomeFragment)
+                }
+            }
 
         }
         binding.ivTopAction.setOnClickListener {
             stopRegistrationDialog()
         }
-        requireActivity().onBackPressedDispatcher.addCallback(this) {
-            stopRegistrationDialog()
+        binding.ivBack.setOnClickListener {
+            requireActivity().onBackPressed()
+//            navController.popBackStack()
         }
+
         binding.btnEnableNotifications.setOnClickListener {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
                 askNotificationPermission()
@@ -92,9 +113,12 @@ private lateinit var settingDialog:Dialog
         }
 
         binding.tvNotNow.setOnClickListener {
-            App.prefsManager.portfolioCompletionStep = Constants.ACCOUNT_CREATED
-
-            navController.navigate(R.id.completePortfolioFragment)
+            if(arguments==null) {
+                App.prefsManager.portfolioCompletionStep = Constants.ACCOUNT_CREATED
+                navController.navigate(R.id.completePortfolioFragment)
+            }
+            else
+                findNavController().navigate(R.id.portfolioHomeFragment)
         }
     }
 
@@ -109,7 +133,7 @@ private lateinit var settingDialog:Dialog
                 onBoardingViewModel.enableNotification(fcmToken)
             }
         } else {
-            // TODO: Inform user that that your app will not show notifications.
+            //  Inform user that that your app will not show notifications.
         }
     }
 

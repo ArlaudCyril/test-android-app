@@ -293,6 +293,7 @@ open class NetworkViewModel : ViewModel() {
 
     private var _booleanResponse: MutableLiveData<BooleanResponse> = MutableLiveData()
     val booleanResponse get() = _booleanResponse
+    val notificationResponse get() = _booleanResponse
 
     private var _updateAuthenticateResponse: MutableLiveData<UpdateAuthenticateResponse> =
         MutableLiveData()

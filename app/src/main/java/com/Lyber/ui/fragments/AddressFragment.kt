@@ -207,7 +207,7 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
         CountryPicker.Builder().with(requireContext())
             .listener {
                 binding.etCountry.setText(it.name)
-                selectedCountry=it.code //todo
+                selectedCountry=it.code
             }.style(R.style.CountryPickerStyle).sortBy(CountryPicker.SORT_BY_NAME).build()
             .showDialog(requireActivity() as AppCompatActivity, R.style.CountryPickerStyle, true)
     }

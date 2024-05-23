@@ -18,6 +18,7 @@ import android.net.ConnectivityManager
 import android.net.NetworkCapabilities
 import android.os.Build
 import android.os.Environment
+import android.os.Handler
 import android.os.Looper
 import android.provider.Settings
 import android.text.Spannable
@@ -57,6 +58,7 @@ import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.Navigation.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.CustomDialogVerticalLayoutBinding
+import com.Lyber.databinding.DocumentBeingVerifiedBinding
 import com.Lyber.databinding.ProgressBarBinding
 import com.Lyber.models.AssetBaseData
 import com.Lyber.models.Balance
@@ -71,6 +73,7 @@ import com.Lyber.utils.CommonMethods.Companion.toFormat
 import com.Lyber.utils.CommonMethods.Companion.toMilli
 import com.Lyber.utils.Constants.CAP_RANGE
 import com.Lyber.utils.Constants.SMALL_RANGE
+import com.airbnb.lottie.LottieAnimationView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -109,6 +112,8 @@ class CommonMethods {
         private var dialog: Dialog? = null
         private var alertDialog: AlertDialog? = null
 
+        private  var dialogVerification: Dialog?=null
+
         fun isProgressShown(): Boolean {
             dialog?.let {
                 return it.isShowing
@@ -140,6 +145,7 @@ class CommonMethods {
                 dialog?.findViewById<ImageView>(R.id.progressImage)?.animation =
                     AnimationUtils.loadAnimation(context, R.anim.rotate_drawable)
                 dialog!!.show()
+                AppLifeCycleObserver.progressDialogVisible=true
             } catch (e: WindowManager.BadTokenException) {
                 Log.d("Exception", "showProgressDialog: ${e.message}")
                 dialog?.dismiss()
@@ -175,6 +181,8 @@ class CommonMethods {
                     e.printStackTrace()
                 }
                 it.dismiss()
+                AppLifeCycleObserver.progressDialogVisible=false
+
             }
         }
 
@@ -381,7 +389,7 @@ class CommonMethods {
                 )
 
             val errorRes: ErrorResponse? = errorConverter.convert(responseBody!!)
-            if (errorRes?.code == 19007 || errorRes?.code == 19004) {
+            if (errorRes?.code == 19006 ||errorRes?.code == 19007 || errorRes?.code == 19004) {
                 logOut(context)
 //                return errorRes.code
             } else if (errorRes?.code == 19002 || errorRes?.code == 19003) {
@@ -1733,6 +1741,83 @@ class CommonMethods {
                 }
             )
         }
+        fun showDocumentDialog(context: Context, typeOfLoader: Int, tt: Boolean = false) {
+            if (dialogVerification==null) {
+                dialogVerification = Dialog(context)
+                dialogVerification!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                dialogVerification!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                dialogVerification!!.window!!.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+                dialogVerification!!.window!!.setDimAmount(0.3F)
+                dialogVerification!!.setCancelable(false)
+                dialogVerification!!.setContentView(
+                    DocumentBeingVerifiedBinding.inflate(
+                        LayoutInflater.from(
+                            context
+                        )
+                    ).root
+                )
+            }
+
+            try {
+                val viewImage = dialogVerification!!.findViewById<LottieAnimationView>(R.id.animationView)
+                val tvDocVerified = dialogVerification!!.findViewById<TextView>(R.id.tvDocVerified)
+                if (!tt)
+                    tvDocVerified.text = context.getString(R.string.kyc_under_verification_text)
+                else
+                    tvDocVerified.text = context.getString(R.string.doc_being_verified)
+                tvDocVerified.visible()
+                val imageView = dialogVerification!!.findViewById<ImageView>(R.id.ivCorrect)!!
+                when (typeOfLoader) {
+                    Constants.LOADING -> {
+                        imageView.gone()
+                        viewImage!!.playAnimation()
+                        viewImage.setMinAndMaxProgress(0f, .32f)
+                    }
+
+                    Constants.LOADING_SUCCESS -> {
+                        viewImage.clearAnimation()
+                        tvDocVerified.gone()
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            imageView.visible()
+                            imageView.setImageResource(R.drawable.baseline_done_24)
+                        }, 50)
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            tvDocVerified.gone()
+                            dialogVerification!!.dismiss()
+                        }, 400)
+                    }
+
+                    Constants.LOADING_FAILURE -> {
+                        viewImage.clearAnimation()
+                        tvDocVerified.text = context.getString(R.string.kyc_refused_text)
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            imageView.visible()
+                            imageView.setImageResource(R.drawable.baseline_clear_24)
+                        }, 50)
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            tvDocVerified.gone()
+                            dialogVerification!!.dismiss()
+                        }, 400)
+                    }
+
+                }
+
+
+                /*(0f,.32f) for loader
+                * (0f,.84f) for success
+                * (0.84f,1f) for failure*/
+
+
+                dialogVerification!!.show()
+            } catch (e: WindowManager.BadTokenException) {
+                Log.d("Exception", "showProgressDialog: ${e.message}")
+                dialogVerification!!.dismiss()
+            } catch (e: Exception) {
+                Log.d("Exception", "showProgressDialog: ${e.message}")
+            }
+
+        }
+
     }
 }
 

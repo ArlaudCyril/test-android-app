@@ -23,7 +23,16 @@ class PreferenceManager(context: Context) {
         mSharedPreferences = context.getSharedPreferences(PREFS_FILENAME, Context.MODE_PRIVATE)
         mEditor = mSharedPreferences.edit()
     }
-
+    var isSign: Boolean
+        get() = mSharedPreferences.getBoolean("isSign", false)
+        set(value) {
+            mEditor.putBoolean("isSign", value).apply()
+        }
+    var isKyc: Boolean
+        get() = mSharedPreferences.getBoolean("isKyc", false)
+        set(value) {
+            mEditor.putBoolean("isKyc", value).apply()
+        }
     var userPin: String
         get() = mSharedPreferences.getString("user_pin", "") ?: ""
         set(value) {

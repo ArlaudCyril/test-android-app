@@ -28,23 +28,25 @@ import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.utils.OnTextChange
 import java.math.RoundingMode
+import kotlin.math.round
 
 
 class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), View.OnClickListener {
     override fun bind() = FragmentWithdrawAmountBinding.inflate(layoutInflater)
+    private lateinit var viewModel: PortfolioViewModel
+    private val focusedData: ValueHolder = ValueHolder()
+    private val unfocusedData: ValueHolder = ValueHolder()
     private var valueConversion: Double = 1.0
     private var minAmount: String = "0.0"
     private val assetConversion get() = binding.tvAssetConversion.text.trim().toString()
     private var maxValue: Double = 0.0
     private var maxValueOther: Double = 0.0
     private var maxValueAsset: Double = 0.0
-    private lateinit var viewModel: PortfolioViewModel
-    private val focusedData: ValueHolder = ValueHolder()
-    private val unfocusedData: ValueHolder = ValueHolder()
     private var mCurrency: String = ""
     private var mConversionCurrency: String = ""
     private var addressId: String = ""
     private var activate: Boolean = false
+    private var decimal: Int = 3
     private val addresses: MutableList<WithdrawAddress> = mutableListOf()
     private val amount get() = binding.etAmount.text.trim().toString()
 
@@ -76,6 +78,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
             CommonMethods.showProgressDialog(requireActivity())
             viewModel.getWithdrawalAddresses()
         }
+        decimal=viewModel.selectedNetworkDeposit!!.decimals
     }
 
     private fun setObservers() {
@@ -177,33 +180,33 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
             else amount.replace(mConversionCurrency, "").pointFormat.toDouble()
 
         if (focusedData.currency.contains(mCurrency)) {
-            var pointValue = 0
+            var roundDigits = decimal
             if (mConversionCurrency == Constants.EURO || mConversionCurrency.equals(
                     "usdt",
                     ignoreCase = true
                 )
             )
-                pointValue = 2
+                roundDigits = 2
             val priceCoin = valueAmount.div(assetAmount.toDouble())
             binding.tvAssetConversion.text =
                 "~${assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN)} $mConversionCurrency"
             maxValueAsset =
-                assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN, pointValue).toDouble()
+                assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN, roundDigits).toDouble()
         } else {
-            var pointValue = 0
+            var roundDigits = decimal
             if (mCurrency == Constants.EURO || mCurrency.equals("usdt", ignoreCase = true))
-                pointValue = 2
+                roundDigits = 2
             val priceCoin = assetAmount.toDouble().div(valueAmount)
             binding.tvAssetConversion.text =
                 "~${
                     assetAmount.formattedAsset(
                         priceCoin,
                         RoundingMode.DOWN,
-                        pointValue
+                        roundDigits
                     )
                 } $mCurrency"
             maxValueAsset =
-                assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN, pointValue).toDouble()
+                assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN, roundDigits).toDouble()
         }
     }
 
@@ -241,18 +244,23 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                 }
                 val priceCoin = balance.balanceData.euroBalance.toDouble()
                     .div(balance.balanceData.balance.toDouble())
-                var roundedValue = 0
-                if (viewModel.selectedAssetDetail!!.id.equals("usdt", ignoreCase = true))
-                    roundedValue = 2
+                var roundDigits = decimal
+                if (viewModel.selectedAssetDetail!!.id.equals("usdt", ignoreCase = true) ||
+                    viewModel.selectedAssetDetail!!.id.equals(Constants.EURO, ignoreCase = true))
+                    roundDigits = 2
                 "${
                     balance.balanceData.balance.formattedAsset(
                         priceCoin,
                         RoundingMode.DOWN,
-                        roundedValue
+                        roundDigits
                     )
                 } Available".also { tvSubTitle.text = it }
                 valueConversion =
-                    (balance.balanceData.balance.toDouble() / balance.balanceData.euroBalance.toDouble())
+                    (balance.balanceData.balance.toDouble() / balance.balanceData.euroBalance.toDouble()).toString().formattedAsset(
+                        priceCoin,
+                        RoundingMode.DOWN,
+                        10
+                    ).toDouble()
                 if (balance.balanceData.balance == "0") {
                     val balanceResume =
                         com.Lyber.ui.activities.BaseActivity.balanceResume.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
@@ -281,12 +289,12 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                     tvAssetFees.text = it
                 }
                 //calculating max value of asset euro
-                maxValue = balance!!.balanceData.balance.toDouble() / valueConversion
+                maxValue = balance!!.balanceData.balance.toDouble() / valueConversion //59.48
                 if (maxValue < 0) {
                     maxValue = 0.0
                 }
                 //calculating max value of other asset
-                 maxValueOther = (balance!!.balanceData.euroBalance.toDouble() * valueConversion)
+                 maxValueOther = (balance!!.balanceData.euroBalance.toDouble() * valueConversion) //64.35370783
               //setting minimum withdrawal amount
                minAmount = it.withdrawMin.formattedAsset(priceCoin, RoundingMode.DOWN)
                 (getString(R.string.minimum_withdrawl) + ": " + minAmount + " " + balance!!.id.uppercase()).also {
@@ -418,11 +426,11 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
             else
                 " "
             if (maxValue > 0) {
-                var pointValue = 0
+                var roundDigits = decimal
                 if (mCurrency == Constants.EURO || mCurrency.equals("usdt", ignoreCase = true))
-                    pointValue = 2
+                    roundDigits = 2
                 binding.etAmount.text = "${
-                    maxValue.toString().formattedAsset(priceCoin, RoundingMode.DOWN, pointValue)
+                    maxValue.toString().formattedAsset(priceCoin, RoundingMode.DOWN, roundDigits)
                 }" + spaceGap + mCurrency
             } else {
                 binding.etAmount.text = "0$spaceGap$mCurrency"
@@ -433,7 +441,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
             else
                 " "
             if (maxValueOther > 0) {
-                var roundDigits = 0
+                var roundDigits = decimal
                 if (mConversionCurrency == Constants.EURO || mConversionCurrency.equals(
                         "usdt",
                         ignoreCase = true
@@ -518,7 +526,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                                 if (decimalPart.length < 2 && char.isDigit()) {
                                     etAmount.text = "$string$char$spaceGap$currency"
                                 }
-                            } else if (decimalPart.length < 5 && char.isDigit())
+                            } else if (decimalPart.length < decimal && char.isDigit())
                                 etAmount.text = "$string$char$spaceGap$currency"
                         }
                     } else {
@@ -583,17 +591,4 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
 
     data class ValueHolder(var value: Double = 0.0, var currency: String = Constants.EURO)
 
-    private fun setMaxValueOther() {
-        var balance =
-            com.Lyber.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
-        if (balance == null) {
-            val balanceData = BalanceData("0", "0")
-            balance = Balance("0", balanceData)
-        }
-        maxValueOther = (balance.balanceData.euroBalance.toDouble() * valueConversion)
-//        maxValueOther = (((maxValue.toString()).formattedAsset(
-//            priceCoin,
-//            RoundingMode.DOWN
-//        )).pointFormat.toDouble() * valueConversion)
-    }
 }

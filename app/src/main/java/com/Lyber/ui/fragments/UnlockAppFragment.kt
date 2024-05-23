@@ -90,6 +90,7 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
        viewModel.getUserResponse.observe(viewLifecycleOwner) {
 //            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                try {
+                   App.prefsManager.user = it.data
                    if (it.data.language.isNotEmpty()) {
                        App.prefsManager.setLanguage(it.data.language)
                        val locale = Locale(it.data.language)

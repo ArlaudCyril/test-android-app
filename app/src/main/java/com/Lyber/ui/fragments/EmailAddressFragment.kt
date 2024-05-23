@@ -126,41 +126,6 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
         }
     }
 
-//    private fun stopRegistrationDialog() {
-//
-//        Dialog(requireActivity(), R.style.DialogTheme).apply {
-//
-//            CustomDialogLayoutBinding.inflate(layoutInflater).let {
-//
-//                requestWindowFeature(Window.FEATURE_NO_TITLE)
-//                setCancelable(false)
-//                setCanceledOnTouchOutside(false)
-//                setContentView(it.root)
-//
-//                it.tvTitle.text = getString(R.string.stop_reg)
-//                it.tvMessage.text = getString(R.string.reg_message)
-//                it.tvNegativeButton.text = getString(R.string.cancel)
-//                it.tvPositiveButton.text = getString(R.string.ok)
-//
-//                it.tvNegativeButton.setOnClickListener { dismiss() }
-//
-//                it.tvPositiveButton.setOnClickListener {
-//                    dismiss()
-//                    App.prefsManager.logout()
-//                    findNavController().popBackStack()
-//                    findNavController().navigate(R.id.discoveryFragment)
-//                    CommonMethods.checkInternet(requireContext()) {
-//                        dismiss()
-//                        CommonMethods.showProgressDialog(requireContext())
-//                        viewModel.logout(CommonMethods.getDeviceId(requireActivity().contentResolver))
-//                    }
-//                }
-//
-//                show()
-//            }
-//        }
-//
-//    }
 
     private fun setObervers() {
         viewModel.verifyEmailResponse.observe(viewLifecycleOwner) {

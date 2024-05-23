@@ -18,7 +18,9 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.view.updatePadding
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.Observer
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -48,16 +50,16 @@ import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.CommonMethods.Companion.visibleFromLeft
 import com.Lyber.utils.CommonMethods.Companion.zoomIn
 import com.Lyber.viewmodels.PortfolioViewModel
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.tabs.TabLayout
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.google.firebase.messaging.FirebaseMessaging
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 
 class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), ActivityCallbacks,
     View.OnClickListener, PortfolioFragmentActions {
+    private val viewModel1: GetUserViewModal by activityViewModels()
 
     /* adapters */
     private lateinit var adapterBalance: BalanceAdapter
@@ -71,7 +73,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
     private lateinit var viewModel: PortfolioViewModel
     private var apiStarted = false
-    private var kycOK = false
+    var kycOK = false
     private var verificationVisible = false
     private lateinit var navController: NavController
     private var limit = 1
@@ -85,8 +87,11 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
     @SuppressLint("SetTextI18n")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
+        Log.d("onCeated", "yes")
         viewModel = getViewModel(requireActivity())
+        viewModel1.let {
+            // Now the ViewModel is initialized and the init block should be called
+        }
         viewModel.listener = this
 
         com.Lyber.ui.activities.SplashActivity.activityCallbacks = this
@@ -97,7 +102,6 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         navController = navHostFragment.findNavController()
         requireActivity().window.statusBarColor =
             getColor(requireContext(), android.R.color.transparent)
-
 
         /* initializing adapters for recycler views */
 
@@ -223,19 +227,65 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
         addObservers()
 
+        hitApis()
+
+        FirebaseMessaging.getInstance().token
+            .addOnCompleteListener(OnCompleteListener { task ->
+                if (!task.isSuccessful) {
+                    Log.w(
+                        "FirebaseMessagingService.TAG",
+                        "Fetching FCM registration token failed",
+                        task.exception
+                    )
+                    return@OnCompleteListener
+                }
+
+                val token = task.result
+//                fcmToken = token
+
+                Log.d("FirebaseMessagingService.TAG", token)
+
+            })
+
+        if (App.prefsManager.user?.kycStatus != "OK" || App.prefsManager.user?.yousignStatus != "SIGNED") {
+//          viewModel1.startFetchingUserData()
+//            GlobalScope.launch {
+//                // Run a loop infinitely
+//                while (!kycOK) {
+//                    // Call the function to fetch user data
+////                    Log.d("hitting Api","$kycOK")
+//                    if (App.prefsManager.accessToken.isNotEmpty()) {
+//                        viewModel.getUser()
+//                        // Delay for 10 seconds
+////                        if (App.prefsManager.user?.kycStatus == "STARTED" || App.prefsManager.user?.kycStatus == "NOT_STARTED")
+//                        delay(3 * 1000)
+////                        else
+////                            delay(10 * 1000)
+//                    }
+//                }
+//            }
+            // Prevent the program from terminating immediately
+//            readLine()
+        }
+
+    }
+
+    private fun hitApis() {
         checkInternet(requireContext()) {
             if (viewModel.screenCount == 1) {
                 viewModel.getPrice(viewModel.chosenAssets?.id ?: "btc")
                 viewModel.getNews(viewModel.chosenAssets?.id ?: "btc")
             }
             if (arguments != null && requireArguments().containsKey("showLoader")) {
-                isKyc = true
-                showDocumentDialog(App.appContext, Constants.LOADING, false)
+                App.isKyc = true
+                CommonMethods.showDocumentDialog(requireActivity(), Constants.LOADING, false)
                 arguments = null
-            } else
+            } else if (!App.isLoader)
                 CommonMethods.showProgressDialog(requireActivity())
-            lastValueUpdated=false
-            responseFrom=""
+            else
+                App.isLoader = false
+            lastValueUpdated = false
+            responseFrom = ""
             viewModel.getUser()
             viewModel.getAllAssets()
             viewModel.getNetworks()
@@ -244,28 +294,6 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             viewModel.getBalance()
             viewModel.getAllPriceResume()
         }
-
-
-        if (App.prefsManager.user?.kycStatus != "OK" || App.prefsManager.user?.yousignStatus != "SIGNED") {
-            GlobalScope.launch {
-                // Run a loop infinitely
-                while (!kycOK) {
-                    // Call the function to fetch user data
-//                    Log.d("hitting Api","$kycOK")
-                    if (App.prefsManager.accessToken.isNotEmpty()) {
-                        viewModel.getUser()
-                        // Delay for 10 seconds
-//                        if (App.prefsManager.user?.kycStatus == "STARTED" || App.prefsManager.user?.kycStatus == "NOT_STARTED")
-                        delay(3 * 1000)
-//                        else
-//                            delay(10 * 1000)
-                    }
-                }
-            }
-            // Prevent the program from terminating immediately
-            readLine()
-        }
-
     }
 
     private fun addObservers() {
@@ -377,7 +405,8 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
         viewModel.getUserResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                if (!isKyc)
+                Log.d("userREs", "home")
+                if (!App.isKyc)
                     dismissProgressDialog()
                 binding.rvRefresh.isRefreshing = false
                 App.prefsManager.user = it.data
@@ -389,7 +418,8 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                     kycOK = true
                     binding.tvVerification.gone()
                     binding.llVerification.gone()
-                } else {
+                }
+                else {
                     verificationVisible = true
                     binding.tvVerification.visible()
                     binding.llVerification.visible()
@@ -397,45 +427,45 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                         "NOT_STARTED", "STARTED" -> binding.ivKyc.setImageResource(R.drawable.arrow_right_purple)
                         "FAILED", "CANCELED" -> {
                             dismissProgressDialog()
-                            if (isKyc) {
+                            if (App.isKyc) {
                                 Handler(Looper.getMainLooper()).postDelayed({
-                                    showDocumentDialog(
-                                        App.appContext,
+                                    CommonMethods.showDocumentDialog(
+                                        requireActivity(),
                                         Constants.LOADING_FAILURE,
-                                        isSign
+                                        App.isSign
                                     )
                                 }, 1500)
-                                isKyc = false
+                                App.isKyc = false
                             }
                             binding.ivKyc.setImageResource(R.drawable.arrow_right_purple)
                         }
 
                         "OK" -> {
                             dismissProgressDialog()
-                            if (isKyc) {
+                            if (App.isKyc) {
                                 Handler(Looper.getMainLooper()).postDelayed({
-                                    showDocumentDialog(
-                                        App.appContext,
+                                    CommonMethods.showDocumentDialog(
+                                        requireActivity(),
                                         Constants.LOADING_SUCCESS,
-                                        isSign
+                                        App.isSign
                                     )
                                 }, 1500)
-                                isKyc = false
+                                App.isKyc = false
                             }
                             binding.ivKyc.setImageResource(R.drawable.accepted_indicator)
                         }
 
                         "REVIEW" -> {
                             dismissProgressDialog()
-                            if (isKyc) {
+                            if (App.isKyc) {
                                 Handler(Looper.getMainLooper()).postDelayed({
-                                    showDocumentDialog(
-                                        App.appContext,
+                                    CommonMethods.showDocumentDialog(
+                                        requireActivity(),
                                         Constants.LOADING_SUCCESS,
-                                        isSign
+                                        App.isSign
                                     )
                                 }, 1500)
-                                isKyc = false
+                                App.isKyc = false
                             }
                             binding.ivKyc.setImageResource(R.drawable.pending_indicator)
                         }
@@ -444,15 +474,20 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                     if (it.data.kycStatus == "OK")
                         when (it.data.yousignStatus) {
                             "SIGNED" -> {
-                                if (isSign) {
+                                Log.d("isSignedB ", "${App.isSign}")
+                                if (App.isSign) {
+                                    Log.d("isSignedIf ", "${App.isSign}")
+//                                    dialogSuccess()
                                     Handler(Looper.getMainLooper()).postDelayed({
-                                        showDocumentDialog(
-                                            App.appContext,
+                                        Log.d("isSigned ", "inHandler")
+                                        CommonMethods.showDocumentDialog(
+                                            requireActivity(),
                                             Constants.LOADING_SUCCESS,
-                                            isSign
+                                            true
                                         )
-                                    }, 1500)
-                                    isSign = false
+                                    }, 1600)
+                                    App.isSign = false
+                                    Log.d("isSignedAss ", "${App.isSign}")
                                 }
                                 binding.ivSign.setImageResource(R.drawable.accepted_indicator)
                             }
@@ -460,8 +495,11 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                             "NOT_SIGNED" -> binding.ivSign.setImageResource(R.drawable.arrow_right_purple)
                         }
                     if (it.data.kycStatus == "OK" && it.data.yousignStatus == "SIGNED") {
+                        Log.d("isSignedKy ", "$viewModel.isSign")
                         kycOK = true
-                        verificationVisible = false
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            verificationVisible = false
+                        }, 2000)
                     }
 
                 }
@@ -477,6 +515,121 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 }
             }
         }
+
+        viewModel1.userLiveData.observe(viewLifecycleOwner, Observer { it ->
+            // Handle the updated user data here
+
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                Log.d("userREs", "home")
+                if (!App.isKyc)
+                    dismissProgressDialog()
+                binding.rvRefresh.isRefreshing = false
+                App.prefsManager.user = it
+                App.prefsManager.defaultImage = it.avatar
+                binding.ivProfile.setProfile
+                App.prefsManager.withdrawalLockSecurity = it.withdrawalLock
+                if (it.kycStatus == "OK" && it.yousignStatus == "SIGNED" && !verificationVisible) {
+                    dismissProgressDialog()
+                    kycOK = true
+                    binding.tvVerification.gone()
+                    binding.llVerification.gone()
+                } else {
+                    verificationVisible = true
+                    binding.tvVerification.visible()
+                    binding.llVerification.visible()
+                    when (it.kycStatus) {
+                        "NOT_STARTED", "STARTED" -> binding.ivKyc.setImageResource(R.drawable.arrow_right_purple)
+                        "FAILED", "CANCELED" -> {
+                            dismissProgressDialog()
+                            if (App.isKyc) {
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    CommonMethods.showDocumentDialog(
+                                        requireActivity(),
+                                        Constants.LOADING_FAILURE,
+                                        App.isSign
+                                    )
+                                }, 1500)
+                                App.isKyc = false
+                            }
+                            binding.ivKyc.setImageResource(R.drawable.arrow_right_purple)
+                        }
+
+                        "OK" -> {
+                            dismissProgressDialog()
+                            if (App.isKyc) {
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    CommonMethods.showDocumentDialog(
+                                        requireActivity(),
+                                        Constants.LOADING_SUCCESS,
+                                        App.isSign
+                                    )
+                                }, 1500)
+                                App.isKyc = false
+                            }
+                            binding.ivKyc.setImageResource(R.drawable.accepted_indicator)
+                        }
+
+                        "REVIEW" -> {
+                            dismissProgressDialog()
+                            if (App.isKyc) {
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    CommonMethods.showDocumentDialog(
+                                        requireActivity(),
+                                        Constants.LOADING_SUCCESS,
+                                        App.isSign
+                                    )
+                                }, 1500)
+                                App.isKyc = false
+                            }
+                            binding.ivKyc.setImageResource(R.drawable.pending_indicator)
+                        }
+
+                    }
+                    if (it.kycStatus == "OK")
+                        when (it.yousignStatus) {
+                            "SIGNED" -> {
+                                Log.d("isSignedB ", "${App.isSign}")
+                                if (App.isSign) {
+                                    Log.d("isSignedIf ", "${App.isSign}")
+//                                    dialogSuccess()
+                                    Handler(Looper.getMainLooper()).postDelayed({
+                                        Log.d("isSigned ", "inHandler")
+                                        CommonMethods.showDocumentDialog(
+                                            requireActivity(),
+                                            Constants.LOADING_SUCCESS,
+                                            true
+                                        )
+                                    }, 1600)
+                                    App.isSign = false
+                                    Log.d("isSignedAss ", "${App.isSign}")
+                                }
+                                binding.ivSign.setImageResource(R.drawable.accepted_indicator)
+                            }
+
+                            "NOT_SIGNED" -> binding.ivSign.setImageResource(R.drawable.arrow_right_purple)
+                        }
+                    if (it.kycStatus == "OK" && it.yousignStatus == "SIGNED") {
+                        Log.d("isSignedKy ", "$viewModel.isSign")
+                        kycOK = true
+                        Handler(Looper.getMainLooper()).postDelayed({
+                            verificationVisible = false
+                        }, 2000)
+                    }
+
+                }
+
+                if (it.language.isNotEmpty()) {
+                    App.prefsManager.setLanguage(it.language)
+                    val locale = Locale(it.language)
+                    Locale.setDefault(locale)
+                    val resources: Resources = resources
+                    val config: Configuration = resources.configuration
+                    config.setLocale(locale)
+                    resources.updateConfiguration(config, resources.displayMetrics)
+                }
+            }
+        })
+
 
         viewModel.networkResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
@@ -736,6 +889,11 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
     override fun onResume() {
         super.onResume()
+        Log.d("onresume", "yes")
+        if (AppLifeCycleObserver.fromBack) {
+            AppLifeCycleObserver.fromBack = false
+            hitApis()
+        }
         binding.ivProfile.setProfile
     }
 
@@ -816,5 +974,4 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
     }
 
 }
-
 
