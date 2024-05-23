@@ -10,11 +10,13 @@ import android.view.View.OnClickListener
 import com.Lyber.R
 import com.Lyber.databinding.FragmentTransactionDetailsBottomSheetBinding
 import com.Lyber.models.TransactionData
+import com.Lyber.utils.CommonMethods.Companion.formattedAsset
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.CommonMethods.Companion.toFormat
 import com.Lyber.utils.Constants
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.math.RoundingMode
 
 
 class TransactionDetailsBottomSheetFragment :
@@ -41,7 +43,10 @@ class TransactionDetailsBottomSheetFragment :
                 binding.ivCopyFrom.visibility = View.GONE
                 binding.ivTransactionHash.visibility = View.GONE
                 binding.tvToValue.text =
-                    "${transactionData.toAmount} ${transactionData.toAsset.uppercase()}"
+                    "${transactionData.toAmount.formattedAsset(
+                        0.0,
+                        rounding = RoundingMode.DOWN,8
+                    )} ${transactionData.toAsset.uppercase()}"
                 binding.tvFeePaid.text =
                     "${transactionData.fees} ${transactionData.fromAsset.uppercase()}"
                 binding.tvDateValue.text =

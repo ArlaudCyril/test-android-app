@@ -23,6 +23,7 @@ import com.Lyber.ui.adapters.PickStrategyFragmentAdapter
 import com.Lyber.ui.fragments.bottomsheetfragments.InvestWithStrategyBottomSheet
 import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.App
+import com.Lyber.utils.AppLifeCycleObserver
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
@@ -88,10 +89,7 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
             btnChooseStrategy.setOnClickListener(this@PickYourStrategyFragment)
         }
 
-        checkInternet(requireContext()) {
-            showProgressDialog(requireContext())
-            viewModel.getStrategies()
-        }
+        hitApi()
 
         viewModel.pauseStrategyResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
@@ -102,6 +100,20 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
             }
         }
 
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if(AppLifeCycleObserver.fromBack){
+            AppLifeCycleObserver.fromBack=false
+            hitApi()
+        }
+    }
+    private fun hitApi(){
+        checkInternet(requireContext()) {
+            showProgressDialog(requireContext())
+            viewModel.getStrategies()
+        }
     }
 
     private val selectedStrategy = Observer<Int> {
@@ -174,10 +186,12 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
         adapter.notifyDataSetChanged()
         when (type) {
             0 -> {
+                if(checkKyc())
                 findNavController().navigate(R.id.investAddMoneyFragment)
             }
 
             1 -> {
+                if(checkKyc())
                 checkInternet(requireActivity()) {
                     CommonMethods.showProgressDialog(requireActivity())
                     viewModel.pauseStrategy(
@@ -195,26 +209,28 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
             }
 
             3 -> {
-                val bundle = Bundle()
-                bundle.putBoolean(Constants.ID, true)
-                findNavController().navigate(R.id.buildStrategyFragment, bundle)
-            }
+                    val bundle = Bundle()
+                    bundle.putBoolean(Constants.ID, true)
+                    findNavController().navigate(R.id.buildStrategyFragment, bundle)
+                 }
 
             4 -> {
-                val bundle = Bundle()
-                bundle.putBoolean(Constants.ONE_TIME, true)
-                findNavController().navigate(R.id.investAddMoneyFragment, bundle)
-            }
+                if(checkKyc()) {
+                    val bundle = Bundle()
+                    bundle.putBoolean(Constants.ONE_TIME, true)
+                    findNavController().navigate(R.id.investAddMoneyFragment, bundle)
+                } }
 
             5 -> {
-                val bundle = Bundle()
-                bundle.putBoolean(Constants.EDIT_ACTIVE_STRATEGY, true)
-                val gson = GsonBuilder().create()
-                var data = ""
-                data = gson.toJson(viewModel.selectedStrategy)
-                bundle.putString("data", data)
-                findNavController().navigate(R.id.investAddMoneyFragment, bundle)
-            }
+                if(checkKyc()) {
+                    val bundle = Bundle()
+                    bundle.putBoolean(Constants.EDIT_ACTIVE_STRATEGY, true)
+                    val gson = GsonBuilder().create()
+                    var data = ""
+                    data = gson.toJson(viewModel.selectedStrategy)
+                    bundle.putString("data", data)
+                    findNavController().navigate(R.id.investAddMoneyFragment, bundle)
+                }   }
         }
     }
 

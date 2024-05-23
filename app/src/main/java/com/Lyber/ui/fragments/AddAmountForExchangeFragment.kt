@@ -14,7 +14,6 @@ import com.Lyber.R
 import com.Lyber.databinding.FragmentAddAmountBinding
 import com.Lyber.network.RestClient
 import com.Lyber.ui.fragments.bottomsheetfragments.FrequencyModel
-import com.Lyber.utils.App
 import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.clearBackStack
@@ -51,6 +50,8 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
     private val unfocusedData: ValueHolder = ValueHolder()
     private lateinit var viewModel: PortfolioViewModel
     var assetAvail = 0.0
+    var decimalFrom = 3
+    var decimalTo = 3
 
     override fun bind() = FragmentAddAmountBinding.inflate(layoutInflater)
 
@@ -144,18 +145,22 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
             llSwapLayout.visible()
             val balance =
                 com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
+            val asset =
+                com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.exchangeAssetFrom } }
+
             Log.d("Balance", "$balance")
             if (balance != null) {
+                decimalFrom=asset!!.decimals
                 mCurrency = " " + balance!!.id.uppercase()
                 tvTitle.text = "Exchange ${balance.id.uppercase()}"
                 val priceCoin = balance.balanceData.euroBalance.toDouble()
                     .div(balance.balanceData.balance.toDouble())
                 tvSubTitle.text = "${
-                    balance.balanceData.balance.formattedAsset(priceCoin, RoundingMode.DOWN)
+                    balance.balanceData.balance.formattedAsset(priceCoin, RoundingMode.DOWN) //removed decimal for now
                 } Available"
 //                } ${balance.id.uppercase()} Available"
                 assetAvail =
-                    balance.balanceData.balance.formattedAsset(priceCoin, RoundingMode.DOWN)
+                    balance.balanceData.balance.formattedAsset(priceCoin, RoundingMode.DOWN) //removed decimal for now
                         .toDouble()
                 val currency =
                     com.Lyber.ui.activities.BaseActivity.assets.find { it1 -> it1.id == balance.id }
@@ -198,8 +203,9 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
             mConversionCurrency = " " + balanceTo.id.uppercase()
             val data =
                 com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.exchangeAssetTo } }
+           decimalTo=data!!.decimals
             Log.d("assetTo", "$data")
-            ivAssetSwapTo.loadCircleCrop(data!!.imageUrl)
+            ivAssetSwapTo.loadCircleCrop(data.imageUrl)
             tvSwapAssetTo.text = balanceTo.id.uppercase()
             binding.etAmount.text = "${0.commaFormatted}$mCurrency"
             focusedData.currency = mCurrency
@@ -291,9 +297,9 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
             com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
         Log.d("Balance", "$balance")
 
-        val priceCoin = balance!!.balanceData.euroBalance.toDouble()
-            .div(balance.balanceData.balance.toDouble())
-        val maxAmount = balance.balanceData.balance.formattedAsset(priceCoin, RoundingMode.DOWN)
+//        val priceCoin = balance!!.balanceData.euroBalance.toDouble()
+//            .div(balance.balanceData.balance.toDouble())
+//        val maxAmount = balance.balanceData.balance.formattedAsset(priceCoin, RoundingMode.DOWN)
 
         if (valueAmount <= maxValue.toDouble()) {
             binding.progress.visible()
@@ -376,7 +382,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                         if (char != '.')
                             {
                                 val decimalPart = string.substringAfter('.')
-                                if (decimalPart.length < 5 && char.isDigit()) {
+                                if (decimalPart.length < decimalFrom && char.isDigit()) {
                                     etAmount.text = "$string$char${focusedData.currency}"
                                 }
                             }
@@ -512,6 +518,8 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
         val fromId = viewModel.exchangeAssetFrom
         viewModel.exchangeAssetTo = fromId
         viewModel.exchangeAssetFrom = toId
+        decimalFrom = decimalTo.also { decimalTo = decimalFrom }
+
         binding.tvEuro.text = "~0 ${Constants.EURO}"
         prepareView()
     }
@@ -525,10 +533,14 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
             else{
             val balance =
                 com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetFrom!! }
+            val asset =
+                com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.exchangeAssetFrom } }
+
+
             val priceCoin = balance!!.balanceData.euroBalance.toDouble()
                 .div(balance.balanceData.balance.toDouble())
             binding.etAmount.text = "${
-                maxValue.formattedAsset(priceCoin, RoundingMode.DOWN)
+                maxValue.formattedAsset(priceCoin, RoundingMode.DOWN,asset!!.decimals)
             }${focusedData.currency}"
         }
 

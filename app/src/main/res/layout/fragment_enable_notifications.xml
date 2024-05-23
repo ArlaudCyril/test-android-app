@@ -21,20 +21,18 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:tint="@color/black" />
 
-    <TextView
-        android:id="@+id/tvTopAction"
+    <ImageView
+        android:id="@+id/ivBack"
         style="@style/SubheadMabry"
         android:layout_marginStart="12dp"
         android:layout_marginBottom="12dp"
         android:backgroundTint="@color/purple_gray_00"
         android:padding="12dp"
-        android:src="@drawable/ic_close"
-        android:text="@string/logout"
-        android:textColor="@color/purple_500"
+        android:src="@drawable/ic_back"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@id/topGuide"
         app:layout_constraintStart_toStartOf="parent"
-        app:tint="@color/black" />
+         />
 
     <ScrollView
         android:id="@+id/scrollView"

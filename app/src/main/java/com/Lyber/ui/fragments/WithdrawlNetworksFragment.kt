@@ -14,6 +14,7 @@ import com.Lyber.databinding.FragmentListingBinding
 import com.Lyber.databinding.ItemNetworkBinding
 import com.Lyber.models.NetworkDeposit
 import com.Lyber.ui.adapters.BaseAdapter
+import com.Lyber.utils.AppLifeCycleObserver
 import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.gone
@@ -32,7 +33,7 @@ class WithdrawlNetworksFragment : BaseFragment<FragmentListingBinding>() {
         assetId = requireArguments().getString(Constants.ID, "")
         viewModel = CommonMethods.getViewModel(requireActivity())
         setObservers()
-        adapter = NetworkAdapter(requireActivity(),::itemClicked)
+        adapter = NetworkAdapter(requireActivity(), ::itemClicked)
         val layoutManager = LinearLayoutManager(requireContext())
         binding.rvAddAsset.let {
             it.adapter = adapter
@@ -41,11 +42,23 @@ class WithdrawlNetworksFragment : BaseFragment<FragmentListingBinding>() {
         binding.ivTopAction.setOnClickListener {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
+        hitApi()
+
+    }
+
+    private fun hitApi() {
         CommonMethods.checkInternet(requireActivity()) {
             CommonMethods.showProgressDialog(requireActivity())
             viewModel.getAssetDetailIncludeNetworks(assetId)
         }
+    }
 
+    override fun onResume() {
+        super.onResume()
+        if (AppLifeCycleObserver.fromBack) {
+            AppLifeCycleObserver.fromBack = false
+            hitApi()
+        }
     }
 
     private fun setObservers() {
@@ -58,8 +71,9 @@ class WithdrawlNetworksFragment : BaseFragment<FragmentListingBinding>() {
             }
         }
     }
+
     private fun itemClicked(myAsset: NetworkDeposit) {
-        if (myAsset.isWithdrawalActive){
+        if (myAsset.isWithdrawalActive) {
             val bundle = Bundle()
             viewModel.selectedNetworkDeposit = myAsset
             bundle.putString(Constants.ID, myAsset.id)
@@ -67,7 +81,10 @@ class WithdrawlNetworksFragment : BaseFragment<FragmentListingBinding>() {
         }
     }
 
-    class NetworkAdapter(private val context:Context,private val handle: (NetworkDeposit) ->  Unit) :
+    class NetworkAdapter(
+        private val context: Context,
+        private val handle: (NetworkDeposit) -> Unit
+    ) :
         BaseAdapter<NetworkDeposit>() {
         override fun getItemCount(): Int {
             return itemList.size
@@ -93,12 +110,12 @@ class WithdrawlNetworksFragment : BaseFragment<FragmentListingBinding>() {
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             (holder as NetworkHolder).binding.apply {
                 val data = itemList[position]
-              ivAssetIcon.loadCircleCrop(data!!.imageUrl)
+                ivAssetIcon.loadCircleCrop(data!!.imageUrl)
 //                "${context.getString(R.string.withdraw_on)} ${data.fullName}".also { tvAssetName.text = it }
                 "${data.fullName}".also { tvAssetName.text = it }
-                if (data.isWithdrawalActive){
+                if (data.isWithdrawalActive) {
                     tvAssetNameCode.gone()
-                }else{
+                } else {
                     tvAssetNameCode.visible()
                 }
             }

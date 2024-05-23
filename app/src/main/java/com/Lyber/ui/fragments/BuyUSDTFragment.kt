@@ -14,8 +14,6 @@ import com.Lyber.databinding.FragmentBuyUsdtBinding
 import com.Lyber.models.Balance
 import com.Lyber.models.BalanceData
 import com.Lyber.network.RestClient
-import com.Lyber.utils.App
-import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.decimalPoint
 import com.Lyber.utils.CommonMethods.Companion.formattedAsset
@@ -23,6 +21,7 @@ import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.utils.OnTextChange
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.google.gson.Gson
 import okhttp3.ResponseBody
 import java.math.RoundingMode

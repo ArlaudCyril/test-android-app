@@ -83,22 +83,14 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                                         else -> "1m"
                                     }
                                     showProgressDialog(requireContext())
-//                                    viewModel.investStrategy(
-//                                        it.ownerUuid,
-//                                        freq,
-//                                        viewModel.amount.toFloat().toInt()
-//                                        ,viewModel.selectedStrategy!!.name)
-
-
-//                                    showProgressDialog(requireContext())
                                     if (freq == "none") {
                                         viewModel.oneTimeOrderStrategy(
                                             viewModel.selectedStrategy!!.name,
                                             viewModel.amount.toFloat().toDouble(),
                                             it.ownerUuid,
                                         )
-                                    } else {
-                                        showProgressDialog(requireContext())
+                                    }
+                                    else {
                                         if (arguments != null && requireArguments().getBoolean(
                                                 Constants.EDIT_ACTIVE_STRATEGY
                                             )

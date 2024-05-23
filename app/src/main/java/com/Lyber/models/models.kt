@@ -513,6 +513,7 @@ data class AssetBaseData(
     val isStablecoin: Boolean,
     val isDepositActive: Boolean,
     val isWithdrawalActive: Boolean,
+    val decimals: Int=4
 )
 
 class AssetDetailBaseDataResponse(
@@ -547,7 +548,8 @@ data class NetworkDeposit(
     val withdrawMin: String,
     val withdrawFee: String,
     val isDepositActive: Boolean,
-    val isWithdrawalActive: Boolean
+    val isWithdrawalActive: Boolean,
+    val decimals: Int=3
 )
 
 data class Description(

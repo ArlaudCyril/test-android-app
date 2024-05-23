@@ -47,6 +47,7 @@ import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.checkPermission
 import com.Lyber.utils.CommonMethods.Companion.dismissAlertDialog
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.formattedAsset
 import com.Lyber.utils.CommonMethods.Companion.getDeviceId
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.gone
@@ -490,16 +491,20 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                             } catch (_: Exception) {
 
                             }
-                            tvEndTitle.text = "-${roundedNumber} ${it.fromAsset.uppercase()}"
-//                            tvEndTitle.text = "-${it.fromAmount} ${it.fromAsset.uppercase()}"
-                            var amount = it.toAmount
-                            try {
-                                amount =
-                                    String.format(Locale.US, "%.10f", it.toAmount.toFloat())
-                            } catch (ex: java.lang.Exception) {
+//                            tvEndTitle.text = "-${roundedNumber} ${it.fromAsset.uppercase()}"
+                            tvEndTitle.text = "-${it.fromAmount} ${it.fromAsset.uppercase()}"
+//                            var amount = it.toAmount
+//                            try {
+//                                amount =
+//                                    String.format(Locale.US, "%.10f", it.toAmount.toFloat())
+//                            } catch (ex: java.lang.Exception) {
+//
+//                            }
 
-                            }
-                            tvEndSubTitle.text = "+${amount} ${it.toAsset.uppercase()}"
+                            tvEndSubTitle.text = "+${it.toAmount.formattedAsset(
+                                0.0,
+                                rounding = RoundingMode.DOWN,8
+                            )} ${it.toAsset.uppercase()}"
 
 
                         }

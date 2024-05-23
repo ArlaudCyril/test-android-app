@@ -19,8 +19,9 @@ import com.Lyber.databinding.LoaderViewBinding
 import com.Lyber.models.TransactionData
 import com.Lyber.ui.adapters.BaseAdapter
 import com.Lyber.ui.fragments.bottomsheetfragments.TransactionDetailsBottomSheetFragment
-import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.utils.AppLifeCycleObserver
 import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.formattedAsset
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.px
 import com.Lyber.utils.CommonMethods.Companion.toDateFormat
@@ -28,6 +29,7 @@ import com.Lyber.utils.CommonMethods.Companion.toDateFormatTwo
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.utils.PaginationListener
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.google.gson.GsonBuilder
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -47,16 +49,27 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
 
     override fun bind() = FragmentTransactionBinding.inflate(layoutInflater)
 
+    private fun hitApi() {
+        CommonMethods.checkInternet(requireContext()) {
+            CommonMethods.showProgressDialog(requireContext())
+            viewModel.getTransactions(limit, offset)
+        }
+    }
+
+    override fun onResume() {
+        super.onResume()
+        if (AppLifeCycleObserver.fromBack) {
+            AppLifeCycleObserver.fromBack = false
+            hitApi()
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
 //        viewModel = getViewModel(requireActivity())
         viewModel.listener = this
-        CommonMethods.checkInternet(requireContext()) {
-            CommonMethods.showProgressDialog(requireContext())
-            viewModel.getTransactions(limit, offset)
-        }
+        hitApi()
 
         val mLayoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -69,7 +82,7 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
                 PaginationListener.NestedScrollPaginationListener() {
                 override fun loadMoreItems() {
                     binding.rvTransactions.post {
-                        offset = offset + limit+1
+                        offset = offset + limit + 1
                         isLoading = true
                         adapter.addProgress()
                         CommonMethods.checkInternet(requireContext()) {
@@ -90,15 +103,15 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
             requireActivity().onBackPressed()
         }
         binding.rvRefresh.setOnRefreshListener {
-            binding.rvRefresh.isRefreshing=true
-            offset=0
+            binding.rvRefresh.isRefreshing = true
+            offset = 0
             positionList.clear()
             viewModel.getTransactions(limit, offset)
         }
         viewModel.getTransactionListingResponse.observe(viewLifecycleOwner) { response ->
             response?.let {
                 // Process the response here
-                binding.rvRefresh.isRefreshing=false
+                binding.rvRefresh.isRefreshing = false
                 CommonMethods.dismissProgressDialog()
                 adapter.calculatePositions(it.data)
                 if (offset == 0)
@@ -121,7 +134,9 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
         }
 
     }
+
     private val positionList = mutableListOf<String>()
+
     inner class TransactionAdapter : BaseAdapter<TransactionData>() {
         private var date = ""
 
@@ -187,7 +202,7 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
                         if (itemList[position]!!.id in positionList) {
                             tvDate.visible()
                             tvDate.text = it.date.toMillis().toLong().toDateFormat()
-                        }else
+                        } else
                             tvDate.gone()
                         when (it.type) {
                             Constants.ORDER -> { //exchange
@@ -207,21 +222,24 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
                                 } catch (_: Exception) {
 
                                 }
-                                tvEndTitle.text = "-${roundedNumber} ${it.fromAsset.uppercase()}"
-//                                tvEndTitle.text = "-${it.fromAmount} ${it.fromAsset.uppercase()}"
-                                var amount = it.toAmount
-                                try {
-                                    amount = String.format(Locale.US,"%.8f", it.toAmount.toFloat())
-                                    try {
-                                        amount=CommonMethods.trimTrailingZeros(amount.toDouble())
-                                    }catch (_:Exception){
-
-                                    }
-
-                                } catch (ex: Exception) {
-
-                                }
-                                tvEndSubTitle.text = "+${amount} ${it.toAsset.uppercase()}"
+//                                tvEndTitle.text = "-${roundedNumber} ${it.fromAsset.uppercase()}"
+                                tvEndTitle.text = "-${it.fromAmount} ${it.fromAsset.uppercase()}"
+//                                var amount = it.toAmount
+//                                try {
+//                                    amount = String.format(Locale.US, "%.8f", it.toAmount.toFloat())
+//                                    try {
+//                                        amount = CommonMethods.trimTrailingZeros(amount.toDouble())
+//                                    } catch (_: Exception) {
+//
+//                                    }
+//
+//                                } catch (ex: Exception) {
+//
+//                                }
+                                tvEndSubTitle.text = "+${it.toAmount.formattedAsset(
+                                    0.0,
+                                    rounding = RoundingMode.DOWN,8
+                                )} ${it.toAsset.uppercase()}"
                                 tvFailed.visibility = View.GONE
                                 tvStartTitleCenter.visibility = View.GONE
                                 tvEndTitleCenter.visibility = View.GONE
@@ -287,7 +305,7 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
                     val detailBottomSheet = TransactionDetailsBottomSheetFragment()
                     val gson = GsonBuilder().create()
                     var data = ""
-                    data = gson.toJson(itemList[adapterPosition])
+                    data = gson.toJson(itemList[absoluteAdapterPosition])
                     detailBottomSheet.arguments = Bundle().apply {
                         putString("data", data)
                     }

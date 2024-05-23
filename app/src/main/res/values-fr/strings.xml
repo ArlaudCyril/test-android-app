@@ -775,5 +775,6 @@
     <string name="contract_signature">Signature du contrat</string>
     <string name="kyc_under_verification_text">Votre kyc est en cours de vérification.</string>
     <string name="kyc_refused_text">Votre kyc a été refusé.</string>
+    <string name="sign_up_in_5">Créer son compte en 5min</string>
     <string name="empty"></string>
 </resources>

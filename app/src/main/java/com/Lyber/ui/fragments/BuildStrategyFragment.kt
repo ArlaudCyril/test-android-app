@@ -26,10 +26,7 @@ import com.Lyber.models.PriceServiceResume
 import com.Lyber.ui.adapters.BuildStrategyAdapter
 import com.Lyber.ui.fragments.bottomsheetfragments.AddAssetBottomSheet
 import com.Lyber.ui.fragments.bottomsheetfragments.BaseBottomSheet
-import com.Lyber.viewmodels.PortfolioViewModel
-import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
-import com.Lyber.utils.CommonMethods.Companion.commaFormatted
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.gone
@@ -39,8 +36,7 @@ import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.CommonMethods.Companion.toPx
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
-import com.Lyber.viewmodels.NetworkViewModel
-import okhttp3.ResponseBody
+import com.Lyber.viewmodels.PortfolioViewModel
 import kotlin.math.roundToInt
 
 class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View.OnClickListener {
@@ -105,7 +101,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
     private fun clickListen(asset: PriceServiceResume) {
         val item = AddedAsset(asset, 100F)
         viewModel.addedAsset.apply {
-           // recycler view
+            // recycler view
             when {
                 // case-1 when there is no item
                 isEmpty() -> {
@@ -152,6 +148,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
         }
 
     }
+
     fun distributePercentage(n: Int): List<Int> {
         val baseShare = 100 / n
         var remainder = 100 % n
@@ -167,6 +164,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
 
         return shares
     }
+
     private fun calculateAllocations() {
 
         binding.tvInitialInfo.gone()
@@ -314,7 +312,6 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                             checkInternet(requireContext()) {
                                 mainView.removeView(transparentView)
                                 dismiss()
-                                showProgressDialog(requireContext())
                                 checkInternet(requireContext()) {
                                     showProgressDialog(requireContext())
                                     if (isEdit) {

@@ -39,6 +39,7 @@ import com.Lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDots
 import com.Lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDotsDismissListener
 import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.App
+import com.Lyber.utils.AppLifeCycleObserver
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.commaFormatted
 import com.Lyber.utils.CommonMethods.Companion.currencyFormatted
@@ -102,6 +103,13 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         super.onDestroyView()
     }
 
+    override fun onResume() {
+        super.onResume()
+        if(AppLifeCycleObserver.fromBack){
+            AppLifeCycleObserver.fromBack=false
+           setView()
+        }
+    }
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SetTextI18n", "ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -203,6 +211,10 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             "${viewModel.totalPortfolio.commaFormatted}${Constants.EURO}"
 
         addObservers()
+       setView()
+    }
+
+    private fun setView(){
         CommonMethods.checkInternet(requireContext()) {
 
             if (arguments != null && requireArguments().containsKey(Constants.ORDER_ID)) {
@@ -216,7 +228,6 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             viewModel.getPriceResumeById(viewModel.selectedAsset?.id ?: "btc")
         }
     }
-
     private fun loadAnimation() {
         val array = IntArray(1)
 //        array[0] = R.color.purple_300

@@ -10,6 +10,7 @@ class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        registerActivityLifecycleCallbacks(AppLifeCycleObserver())
         val decodedApiKey = getSplitedDecodedApiKey()
         Places.initialize(
             this,
@@ -19,6 +20,8 @@ class App : Application() {
         appContext = this
         prefsManager = PreferenceManager(applicationContext)
         accessToken = prefsManager.accessToken
+        isSign = prefsManager.isSign
+        isKyc = prefsManager.isKyc
 //        getEncodedApiKey()
     }
 
@@ -49,6 +52,9 @@ class App : Application() {
 
     companion object {
         lateinit var accessToken: String
+         var isSign: Boolean=false
+         var isKyc: Boolean=false
+         var isLoader: Boolean=false
         lateinit var prefsManager: PreferenceManager
         lateinit var appContext: Context
     }

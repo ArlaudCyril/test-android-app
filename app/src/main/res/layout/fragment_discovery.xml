@@ -41,7 +41,7 @@
             android:layout_marginHorizontal="24dp"
             android:layout_marginTop="32dp"
             android:backgroundTint="@color/purple_500"
-            android:text="@string/sign_up" />
+            android:text="@string/sign_up_in_5" />
 
         <TextView
             android:id="@+id/tvLogin"

@@ -289,34 +289,7 @@ class PersonalDataViewModel : NetworkViewModel() {
     val addPersonalInfoResponse get() = _addPersonalInfoResponse
 
     private var _treezorCreateUser = MutableLiveData<User>()
-    val treezorCreateUser get() = _treezorCreateUser
 
-
-    fun addPersonalInfo(step: Int) {
-        viewModelScope.launch(exceptionHandler) {
-            hashMap["personal_info_step"] = step
-            val res = RestClient.get().personalInfo(hashMap)
-            if (res.isSuccessful)
-                _addPersonalInfoResponse.postValue(res.body())
-            else listener?.onRetrofitError(res.errorBody())
-        }
-    }
-
-    fun sendEmail(isResend: Boolean = false) {
-        try {
-            CoroutineScope(Dispatchers.Main).launch(exceptionHandler) {
-                val res = RestClient.get().sendEmail(hashMapOf("email" to email))
-                if (res.isSuccessful) {
-                    if (isResend)
-                        _resendEmailResponse.postValue(res.body())
-                    else
-                        _sendEmailResponse.postValue(res.body())
-                } else listener?.onRetrofitError(res.errorBody())
-            }
-        } catch (e: Exception) {
-            listener?.onError()
-        }
-    }
 
     fun emailVerification() {
         try {
@@ -330,45 +303,6 @@ class PersonalDataViewModel : NetworkViewModel() {
         }
     }
 
-    fun fillPersonalData() {
-        try {
-            CoroutineScope(Dispatchers.Main).launch(exceptionHandler) {
-                val res = RestClient.get().fillPersonalData(hashMap)
-                if (res.isSuccessful) _fillPersonalDataResponse.postValue(res.body())
-                else listener?.onRetrofitError(res.errorBody())
-            }
-        } catch (e: Exception) {
-            listener?.onError()
-        }
-    }
 
-    fun getPersonalData() {
-        try {
-            viewModelScope.launch(exceptionHandler) {
-                val res = RestClient.get().getPersonalInfo()
-                if (res.isSuccessful) _personalDataResponse.postValue(res.body())
-                else listener?.onRetrofitError(res.errorBody())
-            }
-        } catch (e: Exception) {
-            listener?.onError()
-        }
-    }
 
-    fun updatePersonalInfo() {
-        viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().updatePersonalInfo(hashMap)
-            if (res.isSuccessful)
-                _updatePersonalData.postValue(res.body())
-            else listener?.onRetrofitError(res.errorBody())
-        }
-    }
-
-    fun treezorCreateUser() {
-        viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().createUser()
-            if (res.isSuccessful)
-                _treezorCreateUser.postValue(res.body())
-            else listener?.onRetrofitError(res.errorBody())
-        }
-    }
 }
