@@ -230,7 +230,7 @@ class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), Vi
                     if (string.contains('.')) {
                         if (char != '.') {
                             val decimalPart = string.substringAfter('.')
-                            if (decimalPart.length < 5 && char.isDigit()) {
+                            if (decimalPart.length < 2 && char.isDigit()) {
                                 etAmount.text = "$string$char$currency"
                             }
                         }

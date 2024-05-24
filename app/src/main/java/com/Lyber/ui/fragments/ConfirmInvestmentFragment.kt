@@ -170,7 +170,7 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                     ).gone()
                     //changed fee to 1 percent of the amount
                     var fee = ((viewModel.amount.toFloat() * 0.5) / 100.0)
-                    fee = String.format("%.2f", fee).toFloat().toDouble()
+                    fee = String.format(Locale.US,"%.2f", fee).toFloat().toDouble()
 
                     tvNestedAmount.text = getString(R.string.invest)
 
