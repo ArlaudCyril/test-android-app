@@ -61,6 +61,7 @@ import com.Lyber.network.RestClient
 import com.Lyber.utils.App
 import com.Lyber.utils.Constants
 import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
@@ -1031,16 +1032,15 @@ open class NetworkViewModel : ViewModel() {
         viewModelScope.launch(exceptionHandler) {
 
             val hashMap = hashMapOf<String, Any>()
-            val configuration = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-                context.resources.configuration.locales[0]
-            } else {
-                @Suppress("DEPRECATION")
-                context.resources.configuration.locale
-            }
-            if(configuration.language.uppercase()==Constants.FRENCH)
-                hashMap["language"] = Constants.FRENCH
+            if(App.prefsManager.getLanguage().isNotEmpty())
+               hashMap["language"] = App.prefsManager.getLanguage()
+            else{
+                val configuration = context.resources.configuration.locales[0]
+                if(configuration.language.uppercase()==Constants.FRENCH)
+                    hashMap["language"] = Constants.FRENCH
                 else
-               hashMap["language"] = Constants.ENGLISH
+                    hashMap["language"] = Constants.ENGLISH
+            }
             val res = RestClient.get(Constants.NEW_BASE_URL).setUserInfo(hashMap)
             if (res.isSuccessful)
                 _setUserInfoResponse.postValue(res.body())
