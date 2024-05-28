@@ -1,8 +1,14 @@
 package com.Lyber.ui.fragments
 
 import android.annotation.SuppressLint
+import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
+import android.text.Spannable
 import android.text.SpannableString
+import android.text.TextPaint
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.text.style.UnderlineSpan
 import android.util.Log
@@ -10,6 +16,7 @@ import android.view.View
 import android.view.View.OnClickListener
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.FragmentContactUsBinding
 import com.Lyber.viewmodels.PortfolioViewModel
@@ -40,10 +47,7 @@ class ContactUsFragment : BaseFragment<FragmentContactUsBinding>(), OnClickListe
         var ts = getString(R.string.send_us_email)
         // Create a SpannableString from the full text
         val spannableString = SpannableString(ts)
-//        //for english
-//        val startIndex = 20 // 28
-//        val endIndex = 37 //44
-//        //for french
+
 
         // Define the start and end indexes of the email address
         val startIndex = ts.indexOf("contact@lyber.com")
@@ -52,9 +56,21 @@ class ContactUsFragment : BaseFragment<FragmentContactUsBinding>(), OnClickListe
         val color = ContextCompat.getColor(requireContext(), R.color.purple_500)
         val colorSpan = ForegroundColorSpan(color)
         spannableString.setSpan(colorSpan, startIndex, endIndex, 0)
-        val underlineSpan = UnderlineSpan()
-        spannableString.setSpan(underlineSpan, startIndex, endIndex, 0)
+        val clickableSpan = object : ClickableSpan() {
+            override fun onClick(widget: View) {
+              openEmailApp("contact@lyber.com")
+            }
+
+            override fun updateDrawState(ds: TextPaint) {
+                ds.color =  ContextCompat.getColor(requireContext(),R.color.purple_500)
+                ds.isUnderlineText = false
+            }
+        }
+        spannableString.setSpan(clickableSpan, startIndex, endIndex, Spannable.SPAN_EXCLUSIVE_EXCLUSIVE)
+
         binding.tvSendEmail.text = spannableString
+        binding.tvSendEmail.movementMethod = LinkMovementMethod.getInstance() // Make links clickable
+
         binding.tvWillGetBack.text = getString(R.string.will_get_back)
         if (App.prefsManager.user!!.email.isNotEmpty())
             binding.tvWillGetBack.append(" ${App.prefsManager.user!!.email}")
@@ -84,5 +100,13 @@ class ContactUsFragment : BaseFragment<FragmentContactUsBinding>(), OnClickListe
             }
         }
     }
-
+    private fun openEmailApp(receiverEmail: String) {
+        val intent = Intent(Intent.ACTION_SENDTO).apply {
+            data = Uri.parse("mailto:") // Only email apps should handle this
+            putExtra(Intent.EXTRA_EMAIL, arrayOf(receiverEmail)) // Pass the receiver's email address
+        }
+        if (intent.resolveActivity(requireContext().packageManager) != null) {
+            startActivity(intent)
+        }
+    }
 }

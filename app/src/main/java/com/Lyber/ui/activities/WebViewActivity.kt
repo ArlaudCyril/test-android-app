@@ -42,7 +42,6 @@ import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.Constants
 import com.Lyber.utils.LoaderObject
 import com.Lyber.viewmodels.PortfolioViewModel
-import com.Lyber.viewmodels.VerifyIdentityViewModel
 import okhttp3.ResponseBody
 import java.io.File
 import java.io.IOException
@@ -336,7 +335,8 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
     private fun permissionsDenied() {
         val alertDialogBuilder = AlertDialog.Builder(this)
         alertDialogRational?.getButton(AlertDialog.BUTTON_NEGATIVE)
-            ?.setTextColor(ContextCompat.getColor(this, R.color.black))
+            ?.setTextColor(ContextCompat.getColor(this,
+                R.color.black))
 
         alertDialogRational = alertDialogBuilder.setTitle("Permissions Required")
             .setMessage(

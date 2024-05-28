@@ -64,6 +64,7 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
         binding.tvResendCode.setOnClickListener {
             CommonMethods.checkInternet(requireContext()){
                 if(googleOTP.isNotEmpty()){
+                    googleOTP=""
                     binding.tvResendCode.gone()
                    binding.subtitle.text =
                         getString(R.string.enter_the_code_displayed_by_google_authenticator)
@@ -75,6 +76,8 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
                     binding.etCodeOne.setText("")
                     binding.etCodeOne.requestFocus()
                     binding.etCodeOne.setSelection(binding.etCodeOne.text.length)
+                    CommonMethods.setProgressDialogAlert(requireContext())
+                    handle!!.invoke("tg")
                 }else {
                     CommonMethods.setProgressDialogAlert(requireContext())
                     handle!!.invoke("tg")

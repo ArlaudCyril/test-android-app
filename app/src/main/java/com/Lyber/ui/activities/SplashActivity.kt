@@ -6,13 +6,9 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.appcompat.app.AppCompatDelegate
-import androidx.core.splashscreen.SplashScreen
-import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.Lyber.R
@@ -38,6 +34,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
         setIntent(intent)
         handleExtras()
     }
+
     private var keepSplashOnScreen = true
     private val delay = 1250L
 
@@ -62,14 +59,13 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
             this /* lifecycle owner */,
             object : OnBackPressedCallback(true) {
                 override fun handleOnBackPressed() {
-                    val currentFragment = navHostFragment.childFragmentManager.primaryNavigationFragment
+                    val currentFragment =
+                        navHostFragment.childFragmentManager.primaryNavigationFragment
                     if (currentFragment is DiscoveryFragment) {
                         finishAffinity()
-                    }
-                    else if (currentFragment is PortfolioHomeFragment) {
+                    } else if (currentFragment is PortfolioHomeFragment) {
                         finishAffinity()
-                    }
-                else    {
+                    } else {
                         if (navHostFragment.childFragmentManager.backStackEntryCount > 1) {
                             navController.popBackStack()
                         } else {
@@ -110,11 +106,21 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
         var activityCallbacks: ActivityCallbacks?
             get() = _activityCallbacks
             set(value) {
-               _activityCallbacks = value
+                _activityCallbacks = value
             }
     }
 
-    private fun handleExtras(){
+    private fun handleExtras() {
+        Log.d("Language","${App.prefsManager.getLanguage()}")
+        if (App.prefsManager.getLanguage().isNotEmpty()) {
+            val code = App.prefsManager.getLanguage()
+            val locale = Locale(code)
+            Locale.setDefault(locale)
+            val resources: Resources = resources
+            val config: Configuration = resources.configuration
+            config.setLocale(locale)
+            resources.updateConfiguration(config, resources.displayMetrics)
+        }
         if (intent!!.extras != null && intent.hasExtra("fragment_to_show") &&
             intent.getStringExtra("fragment_to_show").equals(PortfolioHomeFragment::class.java.name)
         ) {
@@ -122,22 +128,24 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
                 putString("showLoader", "showLoader")
             }
             navController.popBackStack(navController.graph.startDestinationId, false)
-            navController.navigate(R.id.portfolioHomeFragment,arguments)
+            navController.navigate(R.id.portfolioHomeFragment, arguments)
             intent.removeExtra("fragment_to_show")
-        } else if (intent!!.extras != null && intent.hasExtra(Constants.FOR_LOGOUT) && (intent?.extras?.getString(Constants.FOR_LOGOUT, "")
+        } else if (intent!!.extras != null && intent.hasExtra(Constants.FOR_LOGOUT) && (intent?.extras?.getString(
+                Constants.FOR_LOGOUT,
+                ""
+            )
                 ?: "").isNotEmpty()
         ) {
             navController.popBackStack(navController.graph.startDestinationId, false)
             navController.navigate(R.id.discoveryFragment)
             intent.removeExtra(Constants.FOR_LOGOUT)
-        }
-       else if (intent.data != null && App.prefsManager.userPin.isEmpty()) {
+        } else if (intent.data != null && App.prefsManager.userPin.isEmpty()) {
             val uriString = intent.data?.toString()
             if (uriString != null && uriString.contains("reset?token")) {
                 Log.d("URI Data", "$uriString")
                 val urit = Uri.parse(uriString)
                 val token = urit.getQueryParameter("token")
-                intent.data=null
+                intent.data = null
                 if (token != null) {
                     Log.d("Token: ", "$token")
 //                    navController.navigate(R.id.resetPasswordFragment)
@@ -145,37 +153,37 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
                         putString("resetToken", token)
                     }
                     navController.popBackStack(navController.graph.startDestinationId, false)
-//                    navController.navigate(R.id.splashFragment, arguments) //todo
+                    navController.navigate(R.id.splashFragment, arguments) //todo
 
-                    navController.navigate(R.id.resetPasswordFragment, arguments)
+//                    navController.navigate(R.id.resetPasswordFragment, arguments)
                 } else {
                     Log.d("Token not found in the URI", "")
                 }
             }
-        }
-        else if ((intent?.extras?.getString(Constants.FOR_LOGOUT, "") ?: "").isNotEmpty())
+        } else if ((intent?.extras?.getString(Constants.FOR_LOGOUT, "") ?: "").isNotEmpty())
             navController.navigate(R.id.discoveryFragment)
         else navController.navigate(R.id.splashFragment)
 //        else splashFragmentFunction()
     }
 
-    fun splashFragmentFunction(){
-            if (App.prefsManager.tokenSavedAt.is30DaysOld()) {
-                App.prefsManager.logout()
-                navController.navigate(R.id.discoveryFragment)
-            } else {
+    fun splashFragmentFunction() {
+        if (App.prefsManager.tokenSavedAt.is30DaysOld()) {
+            App.prefsManager.logout()
+            navController.navigate(R.id.discoveryFragment)
+        } else {
 
-                if (App.prefsManager.userPin.isNotEmpty()) {
-                    if ( App.prefsManager.refreshToken.isEmpty()) {
-                        navController.navigate(R.id.discoveryFragment)
-                    }else {
-                        navController.navigate(R.id.unlockAppFragment)
-                    } } else {
+            if (App.prefsManager.userPin.isNotEmpty()) {
+                if (App.prefsManager.refreshToken.isEmpty()) {
                     navController.navigate(R.id.discoveryFragment)
-
+                } else {
+                    navController.navigate(R.id.unlockAppFragment)
                 }
+            } else {
+                navController.navigate(R.id.discoveryFragment)
 
             }
+
+        }
     }
 }
 
