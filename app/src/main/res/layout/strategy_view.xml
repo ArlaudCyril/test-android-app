@@ -205,7 +205,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         tools:text="Medium" />
 
-    <com.Lyber.ui.fragments.AllocationView
+    <com.Lyber.dev.ui.fragments.AllocationView
         android:id="@+id/allocationView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

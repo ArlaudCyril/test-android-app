@@ -1,10 +1,14 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!--    prod-->
-    <string name="API_KEY">AIzaSyB9nBqhoH9KPAKVnvMU03V9y3U14qC8Ufc</string>
-    <!--    staging-->
-    <!--        <string name="API_KEY">AIzaSyDILfqSYsVaOhqF8cSugU7ekCt8V4GSYyo</string>-->
+ <string name="API_KEY">AIzaSyB9nBqhoH9KPAKVnvMU03V9y3U14qC8Ufc</string>
+
     <string name="encodedKey">UVVsNllWTjVRamx1UW5Gb2IwZzVTMUJCUzFadWRrMVZNRE5XT1hrelZURTBjVU00Vldaago=</string>
-    <string name="app_name">Lyber</string>
+
+    <!--    staging-->
+<!--            <string name="API_KEY">AIzaSyDILfqSYsVaOhqF8cSugU7ekCt8V4GSYyo</string>-->
+
+<!--    <string name="encodedKey">UVVsNllWTjVSRWxNWm5GVFdYTldZVTlvY1VZNFkxTjFaMVUzWld0RGREaFdORWRUV1hsdgo=</string>-->
+    <string name="app_name">Lyber Dev</string>
     <string name="lyber_investments_reinvented">Lyber, crypto at your fingertips.</string>
     <string name="diversified_regular_simple">Simple, secure and diversified investment.</string>
     <string name="sign_up">Sign up</string>
@@ -778,6 +782,4 @@
     <string name="kyc_refused_text">Your kyc has been refused.</string>
     <string name="sign_up_in_5">Sign up in 5min</string>
     <string name="empty"></string>
-    <!-- TODO: Remove or change this placeholder text -->
-    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
