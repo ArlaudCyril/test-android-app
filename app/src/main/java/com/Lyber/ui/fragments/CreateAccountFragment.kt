@@ -186,6 +186,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                 App.prefsManager.accessToken = it.data.token
                 App.accessToken = it.data.token
                 CommonMethods.dismissProgressDialog()
+                CommonMethods.dismissAlertDialog()
                 if (!fromResend) {
                     val transparentView = View(context)
                     transparentView.setBackgroundColor(
@@ -221,7 +222,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                 App.prefsManager.accountCreationSteps = Constants.Account_CREATION_STEP_PHONE
                 App.prefsManager.portfolioCompletionStep = Constants.ACCOUNT_CREATING
                 CommonMethods.dismissProgressDialog()
-
+                CommonMethods.dismissAlertDialog()
                 val bundle = Bundle().apply {
                     putBoolean(Constants.FOR_LOGIN, false)
                 }

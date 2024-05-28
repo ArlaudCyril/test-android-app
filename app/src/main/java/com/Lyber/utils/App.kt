@@ -3,6 +3,7 @@ package com.Lyber.utils
 import android.app.Application
 import android.content.Context
 import android.util.Base64
+import android.util.Log
 import com.Lyber.R
 import com.google.android.libraries.places.api.Places
 
@@ -25,7 +26,7 @@ class App : Application() {
 //        getEncodedApiKey()
     }
 
-    //    fun getEncodedApiKey() {
+//        fun getEncodedApiKey() {
 //        val plainApiKey = resources.getString(R.string.API_KEY)//
 //        val encodedApiKey = String(
 //            Base64.encode(

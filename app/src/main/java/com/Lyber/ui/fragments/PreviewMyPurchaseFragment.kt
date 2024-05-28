@@ -53,8 +53,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         PaymentConfiguration.init(
-            requireActivity(),
-            "pk_test_51NVVY7F2A3romcuHdC3JDD9evsFhQvyZ5cYS6wpy9OznXgmYzLvWTG81Zfj2nWGQFZ2zs8RboA3uMLCNPpPV08Zk00McUdiPAt"
+            requireActivity(),Constants.STRIKE_KEY
         )
 
         viewModel = CommonMethods.getViewModel(requireActivity())
@@ -66,7 +65,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
         googlePayLauncher = GooglePayLauncher(
             fragment = this@PreviewMyPurchaseFragment,
             config = GooglePayLauncher.Config(
-                environment = GooglePayEnvironment.Test,
+                environment = GooglePayEnvironment.Test, //  change environment
                 merchantCountryCode = "FR",
                 merchantName = "Widget Store",
                 existingPaymentMethodRequired = false

@@ -14,13 +14,10 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
  class GetUserViewModal() : ViewModel() {
 
-     private var isFetching = false
-
-
      private val networkViewModel = NetworkViewModel()
 
-     private val _userLiveData = MutableLiveData<User>()
-     val userLiveData: LiveData<User> get() = _userLiveData
+     private val _userLiveData = MutableLiveData<com.Lyber.models.User>()
+     val userLiveData: LiveData<com.Lyber.models.User> get() = _userLiveData
     init {
         startFetchingUserData()
     }
@@ -30,7 +27,8 @@ import kotlinx.coroutines.launch
            Log.d("Loop","Started")
             viewModelScope.launch {
             // Run a loop until kycOK becomes true
-            while (!PortfolioHomeFragment().kycOK) {
+                val kycOK = PortfolioHomeFragment().kycOK  // This should be passed or observed correctly
+                while (!kycOK) {
                 // Check if the access token is not empty
                 if (App.prefsManager.accessToken.isNotEmpty()) {
                     getUser()
@@ -40,27 +38,9 @@ import kotlinx.coroutines.launch
             }
         }}
 
-//        if (App.prefsManager.user?.kycStatus != "OK" || App.prefsManager.user?.yousignStatus != "SIGNED") {
-//            Log.d("Loop", "Started")
-//            if (!isFetching) { // Check if already fetching
-//                isFetching = true
-//                viewModelScope.launch {
-//                    // Run a loop until kycOK becomes true
-//                    while (!PortfolioHomeFragment().kycOK) {
-//                        // Check if the access token is not empty
-//                        if (App.prefsManager.accessToken.isNotEmpty()) {
-//                            getUser()
-//                            // Delay for 3 seconds
-//                            delay(3 * 1000)
-//                        }
-//                    }
-//                    isFetching = false // Reset the flag once done
-//                }
-//            }
-//        }
     }
 
-    private suspend fun getUser() {
+    private fun getUser() {
         // Fetch user data logic here
         // Update kycOK based on the fetched data
         // For example:

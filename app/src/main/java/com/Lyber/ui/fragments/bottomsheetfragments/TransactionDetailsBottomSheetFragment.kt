@@ -7,12 +7,14 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
+import android.widget.TextView
 import com.Lyber.R
 import com.Lyber.databinding.FragmentTransactionDetailsBottomSheetBinding
 import com.Lyber.models.TransactionData
 import com.Lyber.utils.CommonMethods.Companion.formattedAsset
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.CommonMethods.Companion.toFormat
+import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -90,6 +92,10 @@ class TransactionDetailsBottomSheetFragment :
                 binding.tvFeePaid.text = transactionData.network
                 binding.tvDate.text = getString(R.string.transaction_hash)
                 binding.tvDateValue.text = transactionData.txId
+                binding.tvDateDeposit.visible()
+                binding.tvDateDepositValue.visible()
+                binding.tvDateDepositValue.text = transactionData.date.toFormat("yyyy-MM-dd'T'hh:mm:ss", "dd MMMM yyyy HH:mm")
+
             }
 
             Constants.WITHDRAW -> { // single asset

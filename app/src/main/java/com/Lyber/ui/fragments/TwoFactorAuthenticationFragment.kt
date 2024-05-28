@@ -149,6 +149,13 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
         super.onRetrofitError(responseBody)
         dismissAlertDialog()
         if (showOtp) {
+            CommonMethods.checkInternet(requireContext()) {
+                isResend=true
+                CommonMethods.showProgressDialog(requireContext())
+                var json = """{"type2FA" : "google"}""".trimMargin()
+                val detail = CommonMethods.encodeToBase64(json)
+                viewModel.switchOffAuthentication(detail, Constants.TYPE)
+            }
             showOtp = false
             val transparentView = View(context)
             transparentView.setBackgroundColor(
