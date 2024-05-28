@@ -26,10 +26,10 @@
 #-dontwarn javax.annotation.**
 #-dontwarn io.card.**
 ## Application classes that will be serialized/deserialized over Gson
-#-keep class com.Lyber.dev.network.** { *; }
-#-keep class com.Lyber.dev.viewmodels.** { *; }
--keep class com.Lyber.dev.models.** { *; }
--keep class com.Lyber.dev.viewmodels.** { *; }
+#-keep class com.Lyber.network.** { *; }
+#-keep class com.Lyber.viewmodels.** { *; }
+-keep class com.Lyber.models.** { *; }
+-keep class com.Lyber.viewmodels.** { *; }
 -dontwarn io.grpc.internal.DnsNameResolverProvider
 -dontwarn io.grpc.internal.PickFirstLoadBalancerProvider
 

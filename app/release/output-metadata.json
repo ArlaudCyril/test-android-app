@@ -4,7 +4,7 @@
     "type": "APK",
     "kind": "Directory"
   },
-  "applicationId": "com.Lyber.dev",
+  "applicationId": "com.Lyber",
   "variantName": "release",
   "elements": [
     {
