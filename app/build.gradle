@@ -16,11 +16,11 @@ android {
         }
     }
     defaultConfig {
-        applicationId "com.Lyber.dev"
+        applicationId "com.Lyber"
         minSdk 24
         targetSdk 34
-        versionCode 4 // as new for development
-        versionName "1.1" // on studio pushed version up to 3 and 1
+        versionCode 15
+        versionName "1.0" 
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -49,7 +49,7 @@ android {
     buildFeatures {
         viewBinding = true
     }
-    namespace 'com.Lyber.dev'
+    namespace 'com.Lyber'
 }
 
 dependencies {
