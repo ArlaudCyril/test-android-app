@@ -53,7 +53,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         PaymentConfiguration.init(
-            requireActivity(),Constants.STRIKE_KEY
+            requireActivity(),Constants.STRIPE_KEY
         )
 
         viewModel = CommonMethods.getViewModel(requireActivity())
