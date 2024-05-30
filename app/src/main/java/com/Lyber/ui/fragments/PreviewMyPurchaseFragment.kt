@@ -65,7 +65,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
         googlePayLauncher = GooglePayLauncher(
             fragment = this@PreviewMyPurchaseFragment,
             config = GooglePayLauncher.Config(
-                environment = GooglePayEnvironment.Test, //  change environment
+                environment = GooglePayEnvironment.Production, //  change environment
                 merchantCountryCode = "FR",
                 merchantName = "Widget Store",
                 existingPaymentMethodRequired = false

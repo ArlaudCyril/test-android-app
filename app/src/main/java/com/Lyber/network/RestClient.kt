@@ -80,17 +80,20 @@ object RestClient {
         builder.retryOnConnectionFailure(true)
         builder.addNetworkInterceptor(httpLoggingInterceptor)
         builder.addInterceptor { chain ->
-            val request = chain.request()
-            val header = request.newBuilder().header(
-                "Authorization",
-//                "token",
-//                "Bearer",
-                "Bearer " + prefsManager.accessToken
-//                prefs.getUserProfile().data.access_token
-            )
+//            val request = chain.request()
+//            val header = request.newBuilder().header(
+//                "Authorization",
+//                "Bearer " + prefsManager.accessToken
+//            )
+//                .header("x-api-version", Constants.API_VERSION)
+//            val build = header.build()
+            val originalRequest = chain.request()
+            val modifiedRequest = originalRequest.newBuilder()
+                .header("Authorization", "Bearer ${prefsManager.accessToken ?: ""}")
+                .header("User-Agent", "${Constants.APP_NAME}/${Constants.VERSION}")
                 .header("x-api-version", Constants.API_VERSION)
-            val build = header.build()
-            chain.proceed(build)
+                .build()
+            chain.proceed(modifiedRequest)
         }
         return builder.build()
     }
@@ -99,40 +102,40 @@ object RestClient {
         return retrofit
     }
 
-    fun ImageView.fetchSvg(url: String) {
-//                if (okHttpClient == null)
-//                    okHttpClient = OkHttpClient().newBuilder()
-//                        .cache(Cache(context.cacheDir, 5 * 1024 * 1014))
-//                        .build()
-//                val request = Request.Builder().url(url).build()
-        CoroutineScope(Dispatchers.IO).launch {
-            val connection = withContext(Dispatchers.IO) {
-                URL(url).openConnection()
-            }
-//            connection.doInput = true
-            val bitmap: Bitmap = BitmapFactory.decodeStream(connection.getInputStream())
-            setImageBitmap(bitmap)
-        }
-    }
+//    fun ImageView.fetchSvg(url: String) {
+////                if (okHttpClient == null)
+////                    okHttpClient = OkHttpClient().newBuilder()
+////                        .cache(Cache(context.cacheDir, 5 * 1024 * 1014))
+////                        .build()
+////                val request = Request.Builder().url(url).build()
+//        CoroutineScope(Dispatchers.IO).launch {
+//            val connection = withContext(Dispatchers.IO) {
+//                URL(url).openConnection()
+//            }
+////            connection.doInput = true
+//            val bitmap: Bitmap = BitmapFactory.decodeStream(connection.getInputStream())
+//            setImageBitmap(bitmap)
+//        }
+//    }
 
-    class Utils {
-        companion object {
-            //            private var okHttpClient: OkHttpClient? = null
-            fun fetchSvg(url: String, imageView: ImageView) {
-//                if (okHttpClient == null)
-//                    okHttpClient = OkHttpClient().newBuilder()
-//                        .cache(Cache(context.cacheDir, 5 * 1024 * 1014))
-//                        .build()
-//                val request = Request.Builder().url(url).build()
-                CoroutineScope(Dispatchers.Default).launch {
-                    val connection = URL(url).openConnection()
-                    connection.doInput = true
-                    val bitmap: Bitmap = BitmapFactory.decodeStream(connection.getInputStream())
-                    imageView.setImageBitmap(bitmap)
-                }
-            }
-        }
-    }
+//    class Utils {
+//        companion object {
+//            //            private var okHttpClient: OkHttpClient? = null
+//            fun fetchSvg(url: String, imageView: ImageView) {
+////                if (okHttpClient == null)
+////                    okHttpClient = OkHttpClient().newBuilder()
+////                        .cache(Cache(context.cacheDir, 5 * 1024 * 1014))
+////                        .build()
+////                val request = Request.Builder().url(url).build()
+//                CoroutineScope(Dispatchers.Default).launch {
+//                    val connection = URL(url).openConnection()
+//                    connection.doInput = true
+//                    val bitmap: Bitmap = BitmapFactory.decodeStream(connection.getInputStream())
+//                    imageView.setImageBitmap(bitmap)
+//                }
+//            }
+//        }
+//    }
 
 
 }

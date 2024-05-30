@@ -286,4 +286,6 @@ object Constants {
     const val EDIT_ACTIVE_STRATEGY = "edit_active_strategy"
 
     const val API_VERSION = "0.2"
+    const val APP_NAME = "Lyber"
+    const val VERSION = "1.0"
 }
