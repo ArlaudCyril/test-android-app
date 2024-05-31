@@ -82,25 +82,31 @@ abstract class BaseBottomSheet<viewBinding : ViewBinding> : BottomSheetDialogFra
         }
         viewModel.signUrlResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                CommonMethods.dismissProgressDialog()
-                isSign = true
-                if (::bottomDialog.isInitialized)
-                    bottomDialog.dismiss()
-                resultLauncher.launch(
-                    Intent(requireActivity(), WebViewActivity::class.java)
-                        .putExtra(Constants.URL, it.data.url)
+                Handler(Looper.getMainLooper()).postDelayed(
+                    {
+                        CommonMethods.dismissProgressDialog()
+                        isSign = true
+                        if (::bottomDialog.isInitialized)
+                            bottomDialog.dismiss()
+                        resultLauncher.launch(
+                            Intent(requireActivity(), WebViewActivity::class.java)
+                                .putExtra(Constants.URL, it.data.url)
+                        )
+                    }, 1000
                 )
+
 
             }
         }
-        viewModel.logoutResponse.observe(viewLifecycleOwner){
+        viewModel.logoutResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                  CommonMethods.logOut(requireContext())
+                CommonMethods.logOut(requireContext())
 
             }
         }
         return binding.root
     }
+
     private var resultLauncher =
         registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
             if (result.resultCode == Activity.RESULT_OK) {
@@ -112,12 +118,13 @@ abstract class BaseBottomSheet<viewBinding : ViewBinding> : BottomSheetDialogFra
                 }
             }
         }
+
     override fun onRetrofitError(responseBody: ResponseBody?) {
         CommonMethods.dismissProgressDialog()
         CommonMethods.dismissAlertDialog()
-        val code=  CommonMethods.showErrorMessage(requireContext(), responseBody, binding.root)
-        Log.d("errorCode","$code")
-        if(code==7023 || code == 10041 || code == 7025 || code == 10043)
+        val code = CommonMethods.showErrorMessage(requireContext(), responseBody, binding.root)
+        Log.d("errorCode", "$code")
+        if (code == 7023 || code == 10041 || code == 7025 || code == 10043)
             customDialog(code)
     }
 
@@ -126,7 +133,7 @@ abstract class BaseBottomSheet<viewBinding : ViewBinding> : BottomSheetDialogFra
         "Error occurred!".showToast(requireContext())
     }
 
-    private lateinit var  bottomDialog: BottomSheetDialog
+    private lateinit var bottomDialog: BottomSheetDialog
     private fun customDialog(code: Int) {
         bottomDialog = BottomSheetDialog(requireContext(), R.style.CustomDialogBottomSheet).apply {
             CustomDialogVerticalLayoutBinding.inflate(layoutInflater).let { binding ->
