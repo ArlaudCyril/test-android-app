@@ -163,6 +163,7 @@ class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), Vi
                             binding.etAmount.text = "${
                                 maxValue.toString().formattedAsset(0.0, RoundingMode.DOWN,2)
                             }" + mCurrency
+                            activateButton(true)
                            } else {
                             binding.etAmount.text = "0" + mCurrency
                         }
