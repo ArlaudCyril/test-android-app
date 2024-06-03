@@ -1,10 +1,10 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
-<!--    production-->
-   <string name="API_KEY">AIzaSyB9nBqhoH9KPAKVnvMU03V9y3U14qC8Ufc</string>
+    <!--    production-->
+    <string name="API_KEY">AIzaSyB9nBqhoH9KPAKVnvMU03V9y3U14qC8Ufc</string>
     <string name="encodedKey">UVVsNllWTjVRamx1UW5Gb2IwZzVTMUJCUzFadWRrMVZNRE5XT1hrelZURTBjVU00Vldaago=</string>
-<!--    staging-->
-<!--    <string name="API_KEY">AIzaSyDILfqSYsVaOhqF8cSugU7ekCt8V4GSYyo</string>-->
-<!--    <string name="encodedKey">UVVsNllWTjVSRWxNWm5GVFdYTldZVTlvY1VZNFkxTjFaMVUzWld0RGREaFdORWRUV1hsdgo=</string>-->
+    <!--    staging-->
+    <!--    <string name="API_KEY">AIzaSyDILfqSYsVaOhqF8cSugU7ekCt8V4GSYyo</string>-->
+    <!--    <string name="encodedKey">UVVsNllWTjVSRWxNWm5GVFdYTldZVTlvY1VZNFkxTjFaMVUzWld0RGREaFdORWRUV1hsdgo=</string>-->
 
     <string name="app_name">Lyber</string>
     <string name="lyber_investments_reinvented">Lyber, la crypto à portée de main.</string>
@@ -202,10 +202,10 @@
     <string name="please_provide_cards_expiry_date">Veuillez indiquer la date d\'expiration des cartes</string>
     <string name="credit_card_added">Carte de crédit ajoutée</string>
     <string name="add_and_use_this_address">Ajouter et utiliser cette adresse</string>
-<!--    <string name="add_a_crypto_address">Ajouter une adresse</string>-->
+    <!--    <string name="add_a_crypto_address">Ajouter une adresse</string>-->
     <string name="choose_network">Choisissez le réseau</string>
     <string name="add_a_address">Ajouter une adresse %1$s</string>
-<!--    <string name="add_an_address">Ajouter une adresse</string>-->
+    <!--    <string name="add_an_address">Ajouter une adresse</string>-->
     <string name="wallet">Portefeuille</string>
     <string name="please_enter_address_name">Veuillez saisir votre nom d\'adresse</string>
     <string name="please_select_a_network">Veuillez sélectionner votre réseau</string>
@@ -758,7 +758,7 @@
     <string name="please_include">2. Envoyez-nous un message en cliquant ici. Veuillez inclure les informations suivantes: le montant d\'USDT que vous souhaitez retirer, aainsi que votre IBAN, BIC et le nom du bénéficiaire (qui doit être le même que le nom avec lequel vous avez ouvert votre compte Lyber).\n\nNotre équipe d\'assistance vous répondra dans les plus brefs délais pour effectuer le retrait.</string>
     <string name="no_assets_available">Aucun actif disponible</string>
     <string name="do_not_have">Vous n\'avez pas assez de pièces à échanger</string>
-      <string name="warning">Avertissement!</string>
+    <string name="warning">Avertissement!</string>
     <string name="certify_detail">J\'atteste sur l\'honneur que mes pièces d\'identité ont été délivrées par un pays membre de l\'Union européenne ou de l\'Espace économique européen, à l\'exception de Chypre, Malte, la Croatie, la Hongrie, le Liechtenstein, la Lettonie, la Roumanie et la Slovaquie.</string>
     <string name="yes_certify">Oui, je certifie</string>
     <string name="enter_the_code_received_at_email">Entrez le code que vous avez reçu sur votre adresse email.</string>
@@ -779,4 +779,7 @@
     <string name="kyc_refused_text">Votre kyc a été refusé.</string>
     <string name="sign_up_in_5">Créer son compte en 5min</string>
     <string name="empty"></string>
+    <string name="tailorStrategyError">Le montant investi doit être d\'au moins 10 USDT par actif dans la stratégie.</string>
+    <string name="new_code">Un nouveau code pourra être renvoyé dans </string>
+
 </resources>

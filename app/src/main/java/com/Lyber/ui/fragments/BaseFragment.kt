@@ -84,15 +84,18 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
 
         viewModel.signUrlResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                dismissProgressDialog()
-                App.isSign = true
-                if (::bottomDialog.isInitialized)
-                    bottomDialog.dismiss()
-                resultLauncher.launch(
-                    Intent(requireActivity(), WebViewActivity::class.java)
-                        .putExtra(Constants.URL, it.data.url)
-                        .putExtra(Constants.FROM, true)
-                )
+                Handler(Looper.getMainLooper()).postDelayed({
+                    dismissProgressDialog()
+                    App.isSign = true
+                    if (::bottomDialog.isInitialized)
+                        bottomDialog.dismiss()
+                    resultLauncher.launch(
+                        Intent(requireActivity(), WebViewActivity::class.java)
+                            .putExtra(Constants.URL, it.data.url)
+                            .putExtra(Constants.FROM, true)
+                    )
+                }, 1000)
+
             }
         }
         viewModel.logoutResponse.observe(viewLifecycleOwner) {
