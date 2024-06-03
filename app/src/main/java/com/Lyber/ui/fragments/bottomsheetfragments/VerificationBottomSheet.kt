@@ -1,10 +1,12 @@
 package com.Lyber.ui.fragments.bottomsheetfragments
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -14,7 +16,11 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.RelativeLayout
+import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.Lifecycle
 import com.Lyber.R
 import com.Lyber.databinding.BottomSheetVerificationBinding
 import com.Lyber.ui.fragments.TwoFactorAuthenticationFragment
@@ -24,8 +30,10 @@ import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.viewmodels.SignUpViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.stripe.android.googlepaylauncher.GooglePayLauncher
 
 class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
     BaseBottomSheet<BottomSheetVerificationBinding>() {
@@ -38,6 +46,11 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
     private val codeSix get() = binding.etCodeSix.text.trim().toString()
 
     private var googleOTP = ""
+    var fromSignUp = false
+    private var timer = 60
+    private var isTimerRunning = false
+    private lateinit var handler: Handler
+    var fromResend=false
 
     lateinit var typeVerification: String
     lateinit var viewToDelete: View
@@ -62,11 +75,11 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
             dismiss()
         }
         binding.tvResendCode.setOnClickListener {
-            CommonMethods.checkInternet(requireContext()){
-                if(googleOTP.isNotEmpty()){
-                    googleOTP=""
+            CommonMethods.checkInternet(requireContext()) {
+                if (googleOTP.isNotEmpty()) {
+                    googleOTP = ""
                     binding.tvResendCode.gone()
-                   binding.subtitle.text =
+                    binding.subtitle.text =
                         getString(R.string.enter_the_code_displayed_by_google_authenticator)
                     binding.etCodeSix.setText("")
                     binding.etCodeFive.setText("")
@@ -78,11 +91,57 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
                     binding.etCodeOne.setSelection(binding.etCodeOne.text.length)
                     CommonMethods.setProgressDialogAlert(requireContext())
                     handle!!.invoke("tg")
-                }else {
+                } else {
                     CommonMethods.setProgressDialogAlert(requireContext())
                     handle!!.invoke("tg")
+                    if (fromSignUp)
+                        fromResend=true
                 }
             }
+        }
+        viewModel.setPhoneResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+              if(fromResend){
+                  if(!::handler.isInitialized)
+                      handler = Handler(Looper.getMainLooper())
+                  timer=60
+                  binding.tvTimeLeft.text="60"
+                  startTimer()
+              }
+                fromResend=false
+            }
+        }
+
+    }
+
+    private fun startTimer() {
+        if(binding.tvResendCode.isVisible)
+        binding.tvResendCode.gone()
+        if (!binding.llResendText.isVisible)
+            binding.llResendText.visible()
+        try {
+            handler.postDelayed(runnable, 1000)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    @SuppressLint("SuspiciousIndentation")
+    private val runnable = Runnable {
+        isTimerRunning = true
+        if (timer == 0) {
+            binding.tvResendCode.visible()
+            binding.llResendText.gone()
+        } else {
+            timer -= 1
+
+            if (timer > 0) {
+                binding.tvTimeLeft.text =timer.toString()
+            } else {
+                binding.tvResendCode.visible()
+                binding.llResendText.gone()
+            }
+            startTimer()
         }
     }
 
@@ -90,14 +149,22 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
         binding.apply {
 
             title.text = getString(R.string.verification)
+
+            if (fromSignUp) {
+                handler = Handler(Looper.getMainLooper())
+                binding.tvResendCode.gone()
+                startTimer()
+            }
             if (tag!!.isNotEmpty()) {
                 if (arguments != null && requireArguments().containsKey(Constants.TYPE)) {
-                    if(requireArguments().containsKey(Constants.GOOGLE) && requireArguments().getBoolean(Constants.GOOGLE)) {
+                    if (requireArguments().containsKey(Constants.GOOGLE) && requireArguments().getBoolean(
+                            Constants.GOOGLE
+                        )
+                    ) {
                         tvResendCode.gone()
                         subtitle.text =
                             getString(R.string.enter_the_code_displayed_by_google_authenticator)
-                    }
-                 else   if (App.prefsManager.user!!.type2FA == Constants.EMAIL)
+                    } else if (App.prefsManager.user!!.type2FA == Constants.EMAIL)
                         subtitle.text = getString(R.string.enter_the_code_received_at_email)
                     else if (App.prefsManager.user!!.type2FA == Constants.PHONE)
                         subtitle.text = getString(R.string.enter_the_code_received_by_sms)
@@ -166,7 +233,6 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
         super.onDestroyView()
         this.mainView.removeView(this.viewToDelete)
     }
-
 
 
     fun getCode() = codeOne + codeTwo + codeThree + codeFour + codeFive + codeSix
@@ -311,9 +377,11 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
                                         } else {
                                             googleOTP = getCode()
                                             if (App.prefsManager.user!!.type2FA == Constants.EMAIL)
-                                                binding.subtitle.text = getString(R.string.enter_the_code_received_at_email)
+                                                binding.subtitle.text =
+                                                    getString(R.string.enter_the_code_received_at_email)
                                             else if (App.prefsManager.user!!.type2FA == Constants.PHONE)
-                                                binding.subtitle.text = getString(R.string.enter_the_code_received_by_sms)
+                                                binding.subtitle.text =
+                                                    getString(R.string.enter_the_code_received_by_sms)
 
                                             binding.tvResendCode.visible()
                                             binding.etCodeSix.setText("")
@@ -372,5 +440,17 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        stopTimer()
+    }
 
+    private fun stopTimer() {
+        try {
+            handler.removeCallbacks(runnable)
+            isTimerRunning = false
+        }catch (_:Exception){
+
+        }
+    }
 }

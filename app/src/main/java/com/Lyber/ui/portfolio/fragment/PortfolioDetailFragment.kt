@@ -105,11 +105,12 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
     override fun onResume() {
         super.onResume()
-        if(AppLifeCycleObserver.fromBack){
-            AppLifeCycleObserver.fromBack=false
-           setView()
+        if (AppLifeCycleObserver.fromBack) {
+            AppLifeCycleObserver.fromBack = false
+            setView()
         }
     }
+
     @RequiresApi(Build.VERSION_CODES.O)
     @SuppressLint("SetTextI18n", "ClickableViewAccessibility")
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -211,10 +212,10 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             "${viewModel.totalPortfolio.commaFormatted}${Constants.EURO}"
 
         addObservers()
-       setView()
+        setView()
     }
 
-    private fun setView(){
+    private fun setView() {
         CommonMethods.checkInternet(requireContext()) {
 
             if (arguments != null && requireArguments().containsKey(Constants.ORDER_ID)) {
@@ -228,6 +229,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             viewModel.getPriceResumeById(viewModel.selectedAsset?.id ?: "btc")
         }
     }
+
     private fun loadAnimation() {
         val array = IntArray(1)
 //        array[0] = R.color.purple_300
@@ -374,14 +376,14 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 viewModel.selectedBalance = balance
                 val priceCoin = balance?.balanceData?.euroBalance?.toDouble()
                     ?.div(balance.balanceData.balance.toDouble() ?: 1.0)
-                if(balance?.balanceData?.euroBalance==null)
-                it.tvAssetAmount.text ="0.0 ${Constants.EURO}"
+                if (balance?.balanceData?.euroBalance == null)
+                    it.tvAssetAmount.text = "0.0 ${Constants.EURO}"
                 else
-                it.tvAssetAmount.text =
-                    balance.balanceData.euroBalance.currencyFormatted
-                if(balance?.balanceData?.balance==null)
-                    it.tvAssetAmountInCrypto.text ="0.00"
-               else it.tvAssetAmountInCrypto.text =
+                    it.tvAssetAmount.text =
+                        balance.balanceData.euroBalance.currencyFormatted
+                if (balance?.balanceData?.balance == null)
+                    it.tvAssetAmountInCrypto.text = "0.00"
+                else it.tvAssetAmountInCrypto.text =
                     balance.balanceData.balance.formattedAsset(
                         price = priceCoin,
                         rounding = RoundingMode.DOWN
@@ -395,7 +397,11 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                     }
                 } catch (_: Exception) {
                 }
-                if (balance != null)
+                if (balance != null && !(viewModel.selectedAsset!!.id.equals(
+                        "usdt",
+                        ignoreCase = true
+                    ))
+                )
                     btnSell.visible()
 
             }
@@ -452,8 +458,8 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                     com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == "usdt" }
                 viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
                 if (viewModel.selectedAsset!!.id == "usdt") {
-                    if(checkKyc())
-                    findNavController().navigate(R.id.buyUsdt)
+                    if (checkKyc())
+                        findNavController().navigate(R.id.buyUsdt)
                 } else if (balance != null) {
                     viewModel.exchangeAssetTo = viewModel.selectedAsset!!.id
                     viewModel.exchangeAssetFrom = "usdt"
@@ -586,7 +592,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                         com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == "usdt" }
                     viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
                     if (viewModel.selectedAsset!!.id == "usdt") {
-                        if(checkKyc())
+                        if (checkKyc())
                             findNavController().navigate(R.id.buyUsdt)
                     } else if (balance != null) {
                         viewModel.exchangeAssetTo = viewModel.selectedAsset!!.id

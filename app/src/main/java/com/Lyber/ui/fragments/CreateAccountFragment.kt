@@ -44,6 +44,7 @@ import com.nimbusds.srp6.SRP6CryptoParams
 import com.nimbusds.srp6.SRP6VerifierGenerator
 import com.nimbusds.srp6.XRoutineWithUserIdentity
 import com.Lyber.R
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View.OnClickListener {
 
@@ -207,6 +208,8 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                     vc.viewToDelete = transparentView
                     vc.mainView = getView()?.rootView as ViewGroup
                     vc.viewModel = viewModel
+                    vc.fromSignUp = true
+
                     vc.show(childFragmentManager, "")
 
                     // Add the transparent view to the RelativeLayout
@@ -309,15 +312,21 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                                     checkInternet(requireContext()) {
                                         showProgressDialog(requireContext())
                                         resendCode = 1
-                                        viewModel.mobileNumber = mobile
+                                        val modifiedMobile =
+                                            if (mobile.startsWith("0")) mobile.removeRange(
+                                                0,
+                                                1
+                                            ) else mobile
+
+                                        viewModel.mobileNumber = modifiedMobile
                                         viewModel.countryCode = countryCode
                                         viewModel.password = password
 
                                         client.step1(
-                                            countryCode.removeRange(0, 1) + mobile,
+                                            countryCode.removeRange(0, 1) + modifiedMobile,
                                             password
                                         )
-                                        viewModel.userChallenge(phone = "${countryCode}$mobile")
+                                        viewModel.userChallenge(phone = "${countryCode}$modifiedMobile")
 //                                        viewModel.userChallenge(phone = mobile)
 
                                     }
@@ -350,7 +359,13 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                                 checkInternet(requireContext()) {
                                     showProgressDialog(requireContext())
                                     resendCode = 3
-                                    viewModel.mobileNumber = mobile
+                                    val modifiedMobile =
+                                        if (mobile.startsWith("0")) mobile.removeRange(
+                                            0,
+                                            1
+                                        ) else mobile
+
+                                    viewModel.mobileNumber = modifiedMobile
                                     viewModel.countryCode = countryCode
                                     viewModel.setPhone(
                                         viewModel.countryCode,
@@ -481,7 +496,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         }
     }
 
-    private fun handle(txt:String) {
+    private fun handle(txt: String) {
         fromResend = true
         client =
             SRP6ClientSession()
@@ -489,15 +504,18 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
             XRoutineWithUserIdentity()
         when (resendCode) {
             1 -> {
-                viewModel.mobileNumber = mobile
+                val modifiedMobile =
+                    if (mobile.startsWith("0")) mobile.removeRange(0, 1) else mobile
+
+                viewModel.mobileNumber = modifiedMobile
                 viewModel.countryCode = countryCode
                 viewModel.password = password
 
                 client.step1(
-                    countryCode.removeRange(0, 1) + mobile,
+                    countryCode.removeRange(0, 1) + modifiedMobile,
                     password
                 )
-                viewModel.userChallenge(phone = "${countryCode}$mobile")
+                viewModel.userChallenge(phone = "${countryCode}$modifiedMobile")
 //
             }
 
@@ -512,7 +530,10 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
             }
 
             3 -> {
-                viewModel.mobileNumber = mobile
+                val modifiedMobile =
+                    if (mobile.startsWith("0")) mobile.removeRange(0, 1) else mobile
+
+                viewModel.mobileNumber = modifiedMobile
                 viewModel.countryCode = countryCode
                 viewModel.setPhone(
                     viewModel.countryCode,

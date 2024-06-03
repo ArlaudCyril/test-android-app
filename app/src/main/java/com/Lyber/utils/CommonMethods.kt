@@ -57,6 +57,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.Navigation.findNavController
 import com.Lyber.R
+import com.Lyber.databinding.CustomDialogVerticalLayoutBinding
 import com.Lyber.databinding.DocumentBeingVerifiedBinding
 import com.Lyber.databinding.ProgressBarBinding
 import com.Lyber.models.AssetBaseData
@@ -67,6 +68,9 @@ import com.Lyber.models.Network
 import com.Lyber.models.PriceServiceResume
 import com.Lyber.network.RestClient
 import com.Lyber.utils.App.Companion.prefsManager
+import com.Lyber.utils.CommonMethods.Companion.formattedAsset
+import com.Lyber.utils.CommonMethods.Companion.toFormat
+import com.Lyber.utils.CommonMethods.Companion.toMilli
 import com.Lyber.utils.Constants.CAP_RANGE
 import com.Lyber.utils.Constants.SMALL_RANGE
 import com.airbnb.lottie.LottieAnimationView

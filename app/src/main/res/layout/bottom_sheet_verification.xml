@@ -164,6 +164,26 @@
         android:layout_marginTop="4dp"
         android:textColor="@color/purple_500"
         android:text="@string/resend" />
+    <LinearLayout
+        android:id="@+id/llResendText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        android:gravity="center"
+        android:layout_marginTop="4dp"
+        android:orientation="horizontal">
+
+        <TextView
+            style="@style/SubheadMabry"
+            android:layout_height="wrap_content"
+            android:text="@string/new_code" />
+        <TextView
+            android:id="@+id/tvTimeLeft"
+            style="@style/SubheadMabry"
+            android:layout_marginStart="4dp"
+            android:layout_height="wrap_content"
+            android:text="60" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/btnCancel"
