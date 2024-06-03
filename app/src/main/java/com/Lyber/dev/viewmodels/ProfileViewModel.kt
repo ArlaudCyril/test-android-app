@@ -1,5 +1,5 @@
-package com.Lyber.dev.viewmodels
-import com.Lyber.dev.models.WithdrawAddress
+package com.Lyber.viewmodels
+import com.Lyber.models.WithdrawAddress
 
 
 class ProfileViewModel : NetworkViewModel() {

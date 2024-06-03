@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments.bottomsheetfragments
+package com.Lyber.ui.fragments.bottomsheetfragments
 
 import android.graphics.Color
 import android.os.Bundle
@@ -13,9 +13,9 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentTransactionDetailsBottomSheetBinding
-import com.Lyber.dev.databinding.FragmentWithdrawOnBankAccountBottomSheetBinding
+import com.Lyber.R
+import com.Lyber.databinding.FragmentTransactionDetailsBottomSheetBinding
+import com.Lyber.databinding.FragmentWithdrawOnBankAccountBottomSheetBinding
 
 
 class WithdrawOnBankAccountBottomSheet : BaseBottomSheet<FragmentWithdrawOnBankAccountBottomSheetBinding>() {

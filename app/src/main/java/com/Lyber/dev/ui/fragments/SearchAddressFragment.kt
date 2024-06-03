@@ -1,4 +1,4 @@
-//package com.Lyber.dev.ui.fragments
+//package com.Lyber.ui.fragments
 //
 //import android.content.ContentValues.TAG
 //import android.content.pm.ApplicationInfo
@@ -13,13 +13,13 @@
 //import android.widget.Toast
 //import androidx.recyclerview.widget.LinearLayoutManager
 //import androidx.recyclerview.widget.RecyclerView
-//import com.Lyber.dev.R
-//import com.Lyber.dev.databinding.FragmentSearchAddressBinding
-//import com.Lyber.dev.databinding.ItemLocationTextBinding
-//import com.Lyber.dev.ui.adapters.BaseAdapter
-//import com.Lyber.dev.ui.adapters.PlaceAutocomplete
-//import com.Lyber.dev.ui.adapters.PlacesArrayAdapter
-//import com.Lyber.dev.utils.CommonMethods.Companion.showToast
+//import com.Lyber.R
+//import com.Lyber.databinding.FragmentSearchAddressBinding
+//import com.Lyber.databinding.ItemLocationTextBinding
+//import com.Lyber.ui.adapters.BaseAdapter
+//import com.Lyber.ui.adapters.PlaceAutocomplete
+//import com.Lyber.ui.adapters.PlacesArrayAdapter
+//import com.Lyber.utils.CommonMethods.Companion.showToast
 //import com.google.android.gms.common.api.Status
 //import com.google.android.libraries.places.api.Places
 //import com.google.android.libraries.places.api.model.Place

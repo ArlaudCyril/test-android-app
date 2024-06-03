@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -31,35 +31,35 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.CustomDialogLayoutBinding
-import com.Lyber.dev.databinding.FragmentProfileBinding
-import com.Lyber.dev.databinding.ItemTransactionBinding
-import com.Lyber.dev.models.Balance
-import com.Lyber.dev.models.TransactionData
-import com.Lyber.dev.ui.adapters.BaseAdapter
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.TransactionDetailsBottomSheetFragment
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.VerificationBottomSheet2FA
-import com.Lyber.dev.viewmodels.PortfolioViewModel
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
-import com.Lyber.dev.utils.CommonMethods.Companion.checkPermission
-import com.Lyber.dev.utils.CommonMethods.Companion.dismissAlertDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.dismissProgressDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
-import com.Lyber.dev.utils.CommonMethods.Companion.getDeviceId
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.logOut
-import com.Lyber.dev.utils.CommonMethods.Companion.replaceFragment
-import com.Lyber.dev.utils.CommonMethods.Companion.saveImageToExternalStorage
-import com.Lyber.dev.utils.CommonMethods.Companion.setProfile
-import com.Lyber.dev.utils.CommonMethods.Companion.shouldShowPermission
-import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.showToast
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
+import com.Lyber.R
+import com.Lyber.databinding.CustomDialogLayoutBinding
+import com.Lyber.databinding.FragmentProfileBinding
+import com.Lyber.databinding.ItemTransactionBinding
+import com.Lyber.models.Balance
+import com.Lyber.models.TransactionData
+import com.Lyber.ui.adapters.BaseAdapter
+import com.Lyber.ui.fragments.bottomsheetfragments.TransactionDetailsBottomSheetFragment
+import com.Lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet2FA
+import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.checkInternet
+import com.Lyber.utils.CommonMethods.Companion.checkPermission
+import com.Lyber.utils.CommonMethods.Companion.dismissAlertDialog
+import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.formattedAsset
+import com.Lyber.utils.CommonMethods.Companion.getDeviceId
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.logOut
+import com.Lyber.utils.CommonMethods.Companion.replaceFragment
+import com.Lyber.utils.CommonMethods.Companion.saveImageToExternalStorage
+import com.Lyber.utils.CommonMethods.Companion.setProfile
+import com.Lyber.utils.CommonMethods.Companion.shouldShowPermission
+import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.showToast
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
 import com.caverock.androidsvg.BuildConfig
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
@@ -115,7 +115,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                     val balance = Balance(id = it.key, balanceData = it.value)
                     balances.add(balance)
                 }
-                com.Lyber.dev.ui.activities.BaseActivity.balances = balances
+                com.Lyber.ui.activities.BaseActivity.balances = balances
             }
         }
 
@@ -351,7 +351,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
     }
 
     private fun showCloseAccountDialog() {
-        if (com.Lyber.dev.ui.activities.BaseActivity.balances.size == 0)
+        if (com.Lyber.ui.activities.BaseActivity.balances.size == 0)
             viewModel.getBalance()
         Dialog(requireActivity(), R.style.DialogTheme).apply {
             CustomDialogLayoutBinding.inflate(layoutInflater).let {
@@ -367,7 +367,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                     dismiss()
                 }
                 it.tvPositiveButton.setOnClickListener {
-                    if (com.Lyber.dev.ui.activities.BaseActivity.balances.size >= 1) {
+                    if (com.Lyber.ui.activities.BaseActivity.balances.size >= 1) {
 //                        getString(R.string.make_sure_withdraw).showToast(requireContext())
                         val snackbar = Snackbar.make(binding.root, "", Snackbar.LENGTH_LONG)
                         val params = snackbar.view.layoutParams as FrameLayout.LayoutParams

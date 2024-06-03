@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments.bottomsheetfragments
+package com.Lyber.ui.fragments.bottomsheetfragments
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -8,14 +8,14 @@ import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
 import android.widget.TextView
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentTransactionDetailsBottomSheetBinding
-import com.Lyber.dev.models.TransactionData
-import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
-import com.Lyber.dev.utils.CommonMethods.Companion.showToast
-import com.Lyber.dev.utils.CommonMethods.Companion.toFormat
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
+import com.Lyber.R
+import com.Lyber.databinding.FragmentTransactionDetailsBottomSheetBinding
+import com.Lyber.models.TransactionData
+import com.Lyber.utils.CommonMethods.Companion.formattedAsset
+import com.Lyber.utils.CommonMethods.Companion.showToast
+import com.Lyber.utils.CommonMethods.Companion.toFormat
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.math.RoundingMode

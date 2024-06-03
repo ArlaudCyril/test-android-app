@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.os.Bundle
 import android.text.Editable
@@ -8,16 +8,16 @@ import android.view.KeyEvent
 import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentEnterOtpBinding
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.requestKeyboard
-import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
-import com.Lyber.dev.viewmodels.ProfileViewModel
+import com.Lyber.R
+import com.Lyber.databinding.FragmentEnterOtpBinding
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.checkInternet
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
+import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
+import com.Lyber.viewmodels.ProfileViewModel
 import okhttp3.ResponseBody
 
 class VerifyPhoneForPinFragment : BaseFragment<FragmentEnterOtpBinding>() {

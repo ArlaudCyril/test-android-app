@@ -1,14 +1,14 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.os.Bundle
 import android.view.View
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentCreatePinBinding
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.replace
-import com.Lyber.dev.utils.CommonMethods.Companion.requestKeyboard
-import com.Lyber.dev.utils.OnTextChange
-import com.Lyber.dev.viewmodels.ProfileViewModel
+import com.Lyber.R
+import com.Lyber.databinding.FragmentCreatePinBinding
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.replace
+import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
+import com.Lyber.utils.OnTextChange
+import com.Lyber.viewmodels.ProfileViewModel
 /*
         Not in use
  */

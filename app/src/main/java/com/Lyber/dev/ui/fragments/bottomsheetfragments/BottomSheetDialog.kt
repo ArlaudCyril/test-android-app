@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments.bottomsheetfragments
+package com.Lyber.ui.fragments.bottomsheetfragments
 
 import android.content.Context
 import android.os.Bundle
@@ -6,18 +6,18 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.BottomSheetPortfolioBinding
-import com.Lyber.dev.databinding.BottomSheetRecyclerViewBinding
-import com.Lyber.dev.databinding.BottomSheetWithdrawExchangeBinding
-import com.Lyber.dev.models.AssetBaseData
-import com.Lyber.dev.models.DataBottomSheet
-import com.Lyber.dev.ui.adapters.BottomSheetAdapter
-import com.Lyber.dev.viewmodels.PortfolioViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.toPx
-import com.Lyber.dev.utils.Constants.LYBER_ASSETS
+import com.Lyber.R
+import com.Lyber.databinding.BottomSheetPortfolioBinding
+import com.Lyber.databinding.BottomSheetRecyclerViewBinding
+import com.Lyber.databinding.BottomSheetWithdrawExchangeBinding
+import com.Lyber.models.AssetBaseData
+import com.Lyber.models.DataBottomSheet
+import com.Lyber.ui.adapters.BottomSheetAdapter
+import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.toPx
+import com.Lyber.utils.Constants.LYBER_ASSETS
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 

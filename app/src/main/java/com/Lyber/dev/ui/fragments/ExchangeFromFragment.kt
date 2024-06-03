@@ -1,20 +1,20 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentSwapFromBinding
-import com.Lyber.dev.models.Balance
-import com.Lyber.dev.ui.adapters.BalanceAdapter
-import com.Lyber.dev.utils.AppLifeCycleObserver
-import com.Lyber.dev.viewmodels.PortfolioViewModel
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.commaFormatted
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.Constants
+import com.Lyber.R
+import com.Lyber.databinding.FragmentSwapFromBinding
+import com.Lyber.models.Balance
+import com.Lyber.ui.adapters.BalanceAdapter
+import com.Lyber.utils.AppLifeCycleObserver
+import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.commaFormatted
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.Constants
 
 class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnClickListener {
 
@@ -57,7 +57,7 @@ class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnCli
                     }
                     balancesDummy.add(balance)
                 }
-                com.Lyber.dev.ui.activities.BaseActivity.balances = balancesDummy
+                com.Lyber.ui.activities.BaseActivity.balances = balancesDummy
                 adapter.setList(balances)
             }
         }

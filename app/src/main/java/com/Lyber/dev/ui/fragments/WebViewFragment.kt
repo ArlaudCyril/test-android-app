@@ -1,4 +1,4 @@
-//package com.Lyber.dev.ui.fragments
+//package com.Lyber.ui.fragments
 //
 //import android.Manifest
 //import android.annotation.SuppressLint
@@ -17,12 +17,12 @@
 //import android.webkit.WebViewClient
 //import androidx.activity.result.contract.ActivityResultContracts
 //import androidx.fragment.app.FragmentActivity
-//import com.Lyber.dev.R
-//import com.Lyber.dev.databinding.CustomDialogLayoutBinding
-//import com.Lyber.dev.databinding.FragmentWebViewBinding
-//import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-//import com.Lyber.dev.utils.CommonMethods.Companion.postDelay
-//import com.Lyber.dev.viewmodels.VerifyIdentityViewModel
+//import com.Lyber.R
+//import com.Lyber.databinding.CustomDialogLayoutBinding
+//import com.Lyber.databinding.FragmentWebViewBinding
+//import com.Lyber.utils.CommonMethods.Companion.getViewModel
+//import com.Lyber.utils.CommonMethods.Companion.postDelay
+//import com.Lyber.viewmodels.VerifyIdentityViewModel
 //
 //class WebViewFragment : BaseFragment<FragmentWebViewBinding>() {
 //

@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments.bottomsheetfragments
+package com.Lyber.ui.fragments.bottomsheetfragments
 
 import android.annotation.SuppressLint
 import android.content.DialogInterface
@@ -8,13 +8,13 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
 import android.view.View
-import com.Lyber.dev.databinding.BottomSheetEnterCodeBinding
-import com.Lyber.dev.ui.fragments.StrongAuthenticationFragment
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.viewmodels.ProfileViewModel
+import com.Lyber.databinding.BottomSheetEnterCodeBinding
+import com.Lyber.ui.fragments.StrongAuthenticationFragment
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.viewmodels.ProfileViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class AuthenticationCodeBottomSheet : BaseBottomSheet<BottomSheetEnterCodeBinding>() {

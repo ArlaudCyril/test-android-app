@@ -1,26 +1,26 @@
-//package com.Lyber.dev.ui.fragments
+//package com.Lyber.ui.fragments
 //
 //import android.app.Dialog
 //import android.os.Bundle
 //import android.view.View
 //import android.view.Window
 //import androidx.lifecycle.Lifecycle
-//import com.Lyber.dev.R
-//import com.Lyber.dev.databinding.CustomDialogLayoutBinding
-//import com.Lyber.dev.databinding.FragmentVerifyIdentityBinding
-//import com.Lyber.dev.ui.portfolio.fragment.PortfolioHomeFragment
-//import com.Lyber.dev.utils.App
-//import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
-//import com.Lyber.dev.utils.CommonMethods.Companion.clearBackStack
-//import com.Lyber.dev.utils.CommonMethods.Companion.dismissProgressDialog
-//import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-//import com.Lyber.dev.utils.CommonMethods.Companion.gone
-//import com.Lyber.dev.utils.CommonMethods.Companion.replaceFragment
-//import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
-//import com.Lyber.dev.utils.CommonMethods.Companion.visible
-//import com.Lyber.dev.utils.Constants
-//import com.Lyber.dev.viewmodels.PortfolioViewModel
-//import com.Lyber.dev.viewmodels.VerifyIdentityViewModel
+//import com.Lyber.R
+//import com.Lyber.databinding.CustomDialogLayoutBinding
+//import com.Lyber.databinding.FragmentVerifyIdentityBinding
+//import com.Lyber.ui.portfolio.fragment.PortfolioHomeFragment
+//import com.Lyber.utils.App
+//import com.Lyber.utils.CommonMethods.Companion.checkInternet
+//import com.Lyber.utils.CommonMethods.Companion.clearBackStack
+//import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
+//import com.Lyber.utils.CommonMethods.Companion.getViewModel
+//import com.Lyber.utils.CommonMethods.Companion.gone
+//import com.Lyber.utils.CommonMethods.Companion.replaceFragment
+//import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
+//import com.Lyber.utils.CommonMethods.Companion.visible
+//import com.Lyber.utils.Constants
+//import com.Lyber.viewmodels.PortfolioViewModel
+//import com.Lyber.viewmodels.VerifyIdentityViewModel
 ///*
 //    ** not in use
 // */

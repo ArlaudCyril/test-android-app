@@ -1,4 +1,4 @@
-package com.Lyber.dev.utils
+package com.Lyber.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -12,7 +12,7 @@ import android.text.style.ClickableSpan
 import android.util.AttributeSet
 import android.view.View
 import android.widget.TextView
-import com.Lyber.dev.R
+import com.Lyber.R
 
 @SuppressLint("AppCompatCustomView")
 class ExpandableTextView : TextView {

@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -11,17 +11,17 @@ import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentStrongAuthenticationBinding
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.VerificationBottomSheet
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.dismissAlertDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.dismissProgressDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.encodeToBase64
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.viewmodels.SignUpViewModel
+import com.Lyber.R
+import com.Lyber.databinding.FragmentStrongAuthenticationBinding
+import com.Lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.dismissAlertDialog
+import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.encodeToBase64
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.Constants
+import com.Lyber.viewmodels.SignUpViewModel
 import okhttp3.ResponseBody
 
 class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBinding>(),

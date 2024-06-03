@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -7,20 +7,20 @@ import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentInvestAddMoneyBinding
-import com.Lyber.dev.models.Balance
-import com.Lyber.dev.models.BalanceData
-import com.Lyber.dev.models.Strategy
-import com.Lyber.dev.models.TransactionData
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.FrequencyModel
-import com.Lyber.dev.viewmodels.PortfolioViewModel
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
-import com.Lyber.dev.utils.CommonMethods.Companion.setBackgroundTint
-import com.Lyber.dev.utils.CommonMethods.Companion.showToast
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.utils.OnTextChange
+import com.Lyber.R
+import com.Lyber.databinding.FragmentInvestAddMoneyBinding
+import com.Lyber.models.Balance
+import com.Lyber.models.BalanceData
+import com.Lyber.models.Strategy
+import com.Lyber.models.TransactionData
+import com.Lyber.ui.fragments.bottomsheetfragments.FrequencyModel
+import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.formattedAsset
+import com.Lyber.utils.CommonMethods.Companion.setBackgroundTint
+import com.Lyber.utils.CommonMethods.Companion.showToast
+import com.Lyber.utils.Constants
+import com.Lyber.utils.OnTextChange
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.math.RoundingMode
@@ -88,7 +88,7 @@ class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), Vi
         if (ceil(requiredAmount) != viewModel.selectedStrategy?.minAmount?.toFloat())
             requiredAmount = viewModel.selectedStrategy?.minAmount?.toFloat()!!
         var balance =
-            com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == "usdt" } }
+            com.Lyber.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == "usdt" } }
         if (balance == null) {
             val balanceData = BalanceData("0", "0")
             balance = Balance("0", balanceData)
@@ -159,7 +159,7 @@ class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), Vi
                 btnPreviewInvestment -> investment()
                 ivMax -> {
                     var balance =
-                        com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == "usdt" } }
+                        com.Lyber.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == "usdt" } }
                     if (balance == null) {
                         val balanceData = BalanceData("0", "0")
                         balance = Balance("0", balanceData)
@@ -189,7 +189,7 @@ class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), Vi
     private fun investment() {
         val finalAmount = amount.replace(mCurrency, "").pointFormat
         val balance =
-            com.Lyber.dev.ui.activities.BaseActivity.balances.find { it1 -> it1.id == "usdt" }
+            com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == "usdt" }
         val amount: Float = balance?.balanceData?.balance?.toFloat() ?: 0f
 
         if (finalAmount.toFloat() < requiredAmount) {

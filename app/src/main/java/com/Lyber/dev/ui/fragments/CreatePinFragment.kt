@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.os.Bundle
 import android.os.Handler
@@ -6,16 +6,16 @@ import android.os.Looper
 import android.view.View
 import androidx.activity.addCallback
 import androidx.navigation.fragment.findNavController
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentCreatePinBinding
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.requestKeyboard
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.utils.OnTextChange
-import com.Lyber.dev.viewmodels.SignUpViewModel
+import com.Lyber.R
+import com.Lyber.databinding.FragmentCreatePinBinding
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
+import com.Lyber.utils.OnTextChange
+import com.Lyber.viewmodels.SignUpViewModel
 
 class CreatePinFragment : BaseFragment<FragmentCreatePinBinding>() {
     override fun bind() = FragmentCreatePinBinding.inflate(layoutInflater)

@@ -1,4 +1,4 @@
-package com.Lyber.dev.utils
+package com.Lyber.utils
 
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
@@ -56,23 +56,23 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.Navigation.findNavController
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.CustomDialogVerticalLayoutBinding
-import com.Lyber.dev.databinding.DocumentBeingVerifiedBinding
-import com.Lyber.dev.databinding.ProgressBarBinding
-import com.Lyber.dev.models.AssetBaseData
-import com.Lyber.dev.models.Balance
-import com.Lyber.dev.models.ErrorResponse
-import com.Lyber.dev.models.MonthsList
-import com.Lyber.dev.models.Network
-import com.Lyber.dev.models.PriceServiceResume
-import com.Lyber.dev.network.RestClient
-import com.Lyber.dev.utils.App.Companion.prefsManager
-import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
-import com.Lyber.dev.utils.CommonMethods.Companion.toFormat
-import com.Lyber.dev.utils.CommonMethods.Companion.toMilli
-import com.Lyber.dev.utils.Constants.CAP_RANGE
-import com.Lyber.dev.utils.Constants.SMALL_RANGE
+import com.Lyber.R
+import com.Lyber.databinding.CustomDialogVerticalLayoutBinding
+import com.Lyber.databinding.DocumentBeingVerifiedBinding
+import com.Lyber.databinding.ProgressBarBinding
+import com.Lyber.models.AssetBaseData
+import com.Lyber.models.Balance
+import com.Lyber.models.ErrorResponse
+import com.Lyber.models.MonthsList
+import com.Lyber.models.Network
+import com.Lyber.models.PriceServiceResume
+import com.Lyber.network.RestClient
+import com.Lyber.utils.App.Companion.prefsManager
+import com.Lyber.utils.CommonMethods.Companion.formattedAsset
+import com.Lyber.utils.CommonMethods.Companion.toFormat
+import com.Lyber.utils.CommonMethods.Companion.toMilli
+import com.Lyber.utils.Constants.CAP_RANGE
+import com.Lyber.utils.Constants.SMALL_RANGE
 import com.airbnb.lottie.LottieAnimationView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.RequestBuilder
@@ -305,7 +305,7 @@ class CommonMethods {
                     Glide.with(this).`as`(PictureDrawable::class.java)
                         .placeholder(placeHolderRes!!)
                         .error(placeHolderRes)
-                        .listener(com.Lyber.dev.utils.SvgSoftwareLayerSetter())
+                        .listener(com.Lyber.utils.SvgSoftwareLayerSetter())
                 when (any) {
                     is String -> {
 //                        if (!any.contains("http"))
@@ -423,7 +423,7 @@ class CommonMethods {
 
                 prefsManager.logout()
                 val intent =
-                    Intent(context, com.Lyber.dev.ui.activities.SplashActivity::class.java).apply {
+                    Intent(context, com.Lyber.ui.activities.SplashActivity::class.java).apply {
                         putExtra(Constants.IS_LOGOUT, true).flags =
                             Intent.FLAG_ACTIVITY_CLEAR_TOP or
                                     Intent.FLAG_ACTIVITY_CLEAR_TASK or
@@ -1404,11 +1404,11 @@ class CommonMethods {
         }
 
         fun getAsset(id: String): AssetBaseData {
-            return com.Lyber.dev.ui.activities.BaseActivity.assets.first { it.id == id }
+            return com.Lyber.ui.activities.BaseActivity.assets.first { it.id == id }
         }
 
         fun getBalance(id: String): Balance? {
-            return com.Lyber.dev.ui.activities.BaseActivity.balances.firstOrNull { it.id == id }
+            return com.Lyber.ui.activities.BaseActivity.balances.firstOrNull { it.id == id }
         }
 
         @RequiresApi(Build.VERSION_CODES.O)
@@ -1724,17 +1724,17 @@ class CommonMethods {
         }
 
         fun logOut(context: Context) {
-            com.Lyber.dev.ui.activities.BaseActivity.balances=ArrayList<Balance>()
-            com.Lyber.dev.ui.activities.BaseActivity.assets = ArrayList<AssetBaseData>()
-            com.Lyber.dev.ui.activities.BaseActivity.networkAddress = ArrayList<Network>()
-            com.Lyber.dev.ui.activities.BaseActivity.balances = ArrayList<Balance>()
-            com.Lyber.dev.ui.activities.BaseActivity.balanceResume = ArrayList<PriceServiceResume>()
+            com.Lyber.ui.activities.BaseActivity.balances=ArrayList<Balance>()
+            com.Lyber.ui.activities.BaseActivity.assets = ArrayList<AssetBaseData>()
+            com.Lyber.ui.activities.BaseActivity.networkAddress = ArrayList<Network>()
+            com.Lyber.ui.activities.BaseActivity.balances = ArrayList<Balance>()
+            com.Lyber.ui.activities.BaseActivity.balanceResume = ArrayList<PriceServiceResume>()
 
             App.prefsManager.logout()
             context.startActivity(
                 Intent(
                     context,
-                    com.Lyber.dev.ui.activities.SplashActivity::class.java
+                    com.Lyber.ui.activities.SplashActivity::class.java
                 ).apply {
                     putExtra("fromLogout", "fromLogout")
                     addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)

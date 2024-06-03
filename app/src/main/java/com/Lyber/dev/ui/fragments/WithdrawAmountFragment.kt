@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.annotation.SuppressLint
 import android.content.ClipData
@@ -11,22 +11,22 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentWithdrawAmountBinding
-import com.Lyber.dev.models.Balance
-import com.Lyber.dev.models.BalanceData
-import com.Lyber.dev.models.WithdrawAddress
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.WithdrawalAddressBottomSheet
-import com.Lyber.dev.viewmodels.PortfolioViewModel
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.decimalPoint
-import com.Lyber.dev.utils.CommonMethods.Companion.decimalPointUptoTwoPlaces
-import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
-import com.Lyber.dev.utils.CommonMethods.Companion.load
-import com.Lyber.dev.utils.CommonMethods.Companion.showToast
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.utils.OnTextChange
+import com.Lyber.R
+import com.Lyber.databinding.FragmentWithdrawAmountBinding
+import com.Lyber.models.Balance
+import com.Lyber.models.BalanceData
+import com.Lyber.models.WithdrawAddress
+import com.Lyber.ui.fragments.bottomsheetfragments.WithdrawalAddressBottomSheet
+import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.decimalPoint
+import com.Lyber.utils.CommonMethods.Companion.decimalPointUptoTwoPlaces
+import com.Lyber.utils.CommonMethods.Companion.formattedAsset
+import com.Lyber.utils.CommonMethods.Companion.load
+import com.Lyber.utils.CommonMethods.Companion.showToast
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
+import com.Lyber.utils.OnTextChange
 import java.math.RoundingMode
 import kotlin.math.round
 
@@ -107,7 +107,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                         addressId = withdrawAddress.address.toString()
                         tvAssetAddress.text = withdrawAddress.address
                         val asset =
-                            com.Lyber.dev.ui.activities.BaseActivity.networkAddress.firstNotNullOfOrNull { item -> item.takeIf { item.id == withdrawAddress.network } }
+                            com.Lyber.ui.activities.BaseActivity.networkAddress.firstNotNullOfOrNull { item -> item.takeIf { item.id == withdrawAddress.network } }
                         if (asset != null)
                             ivAssetIcon.load(asset.imageUrl)
 
@@ -237,7 +237,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                 "${getString(R.string.withdraw)} ${it.id.uppercase()}".also { tvTitle.text = it }
                // calculate available balance and value conversion
                 var balance =
-                    com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
+                    com.Lyber.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
                 if (balance == null) {
                     val balanceData = BalanceData("0", "0")
                     balance = Balance("0", balanceData)
@@ -263,7 +263,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                     ).toDouble()
                 if (balance.balanceData.balance == "0") {
                     val balanceResume =
-                        com.Lyber.dev.ui.activities.BaseActivity.balanceResume.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
+                        com.Lyber.ui.activities.BaseActivity.balanceResume.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
                     valueConversion =
                         1.0 / balanceResume!!.priceServiceResumeData.lastPrice.toDouble()
                 }
@@ -271,7 +271,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
              }
             viewModel.selectedNetworkDeposit.let {
                 var balance =
-                    com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
+                    com.Lyber.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
                 if (balance == null) {
                     val balanceData = BalanceData("0", "0")
                     balance = Balance("0", balanceData)
@@ -330,7 +330,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                         amount.replace(mConversionCurrency, "")
                     }
                     val balance =
-                        com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
+                        com.Lyber.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
 
                     if (balance == null) {
                         getString(R.string.you_do_not_have_this_asset).showToast(requireActivity())
@@ -405,7 +405,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
             addressId = withdrawAddress.address.toString()
             ivCopy.visible()
             val asset =
-                com.Lyber.dev.ui.activities.BaseActivity.networkAddress.firstNotNullOfOrNull { item -> item.takeIf { item.id == withdrawAddress.network } }
+                com.Lyber.ui.activities.BaseActivity.networkAddress.firstNotNullOfOrNull { item -> item.takeIf { item.id == withdrawAddress.network } }
             if (asset != null)
                 ivAssetIcon.load(asset.imageUrl)
         }
@@ -413,7 +413,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
 
     private fun setMaxValue() {
         var balance =
-            com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
+            com.Lyber.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
         if (balance == null) {
             val balanceData = BalanceData("0", "0")
             balance = Balance("0", balanceData)

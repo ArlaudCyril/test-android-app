@@ -1,16 +1,16 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Lifecycle
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentAddBankBinding
-import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
-import com.Lyber.dev.utils.CommonMethods.Companion.dismissProgressDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.showToast
-import com.Lyber.dev.viewmodels.ProfileViewModel
+import com.Lyber.R
+import com.Lyber.databinding.FragmentAddBankBinding
+import com.Lyber.utils.CommonMethods.Companion.checkInternet
+import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.showToast
+import com.Lyber.viewmodels.ProfileViewModel
 
 class AddBankInfoFragment : BaseFragment<FragmentAddBankBinding>() {
 

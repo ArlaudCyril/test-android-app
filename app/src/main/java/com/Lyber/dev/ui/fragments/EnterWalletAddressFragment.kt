@@ -1,17 +1,17 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Lifecycle
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentEnterWalletAddressBinding
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
-import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.requestKeyboard
-import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.showToast
-import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.Lyber.R
+import com.Lyber.databinding.FragmentEnterWalletAddressBinding
+import com.Lyber.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
+import com.Lyber.utils.CommonMethods.Companion.checkInternet
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
+import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.showToast
+import com.Lyber.viewmodels.PortfolioViewModel
 
 class EnterWalletAddressFragment : BaseFragment<FragmentEnterWalletAddressBinding>() {
 

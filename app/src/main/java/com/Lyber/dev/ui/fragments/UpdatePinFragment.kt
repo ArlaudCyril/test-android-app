@@ -1,17 +1,17 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentUpdatePinBinding
-import com.Lyber.dev.ui.activities.SplashActivity.Companion.activityCallbacks
-import com.Lyber.dev.utils.ActivityCallbacks
-import com.Lyber.dev.utils.CommonMethods.Companion.dismissProgressDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.replace
-import com.Lyber.dev.viewmodels.ProfileViewModel
+import com.Lyber.R
+import com.Lyber.databinding.FragmentUpdatePinBinding
+import com.Lyber.ui.activities.SplashActivity.Companion.activityCallbacks
+import com.Lyber.utils.ActivityCallbacks
+import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.replace
+import com.Lyber.viewmodels.ProfileViewModel
 /*
         Not in use
  */

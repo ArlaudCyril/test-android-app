@@ -1,4 +1,4 @@
-package com.Lyber.dev.utils
+package com.Lyber.utils
 
 import android.app.Activity
 import android.app.Application

@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments.bottomsheetfragments
+package com.Lyber.ui.fragments.bottomsheetfragments
 
 import android.os.Bundle
 import android.text.TextUtils
@@ -8,17 +8,17 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.AppItemLayoutBinding
-import com.Lyber.dev.databinding.BottomsheetWithdrawalAddressesBinding
-import com.Lyber.dev.databinding.LoaderViewBinding
-import com.Lyber.dev.models.WithdrawAddress
-import com.Lyber.dev.ui.activities.BaseActivity
-import com.Lyber.dev.ui.adapters.BaseAdapter
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.loadCircleCrop
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
+import com.Lyber.R
+import com.Lyber.databinding.AppItemLayoutBinding
+import com.Lyber.databinding.BottomsheetWithdrawalAddressesBinding
+import com.Lyber.databinding.LoaderViewBinding
+import com.Lyber.models.WithdrawAddress
+import com.Lyber.ui.activities.BaseActivity
+import com.Lyber.ui.adapters.BaseAdapter
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
 
 class WithdrawalAddressBottomSheet (private val addresses: MutableList<WithdrawAddress>, private val selectedNetwork:String, private val handle: (WithdrawAddress?, String?) -> Unit = { _, _ -> }
 ) : BaseBottomSheet<BottomsheetWithdrawalAddressesBinding>(), View.OnClickListener {

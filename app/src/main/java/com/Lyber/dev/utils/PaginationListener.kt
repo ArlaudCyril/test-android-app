@@ -1,4 +1,4 @@
-package com.Lyber.dev.utils
+package com.Lyber.utils
 
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.LinearLayoutManager

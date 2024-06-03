@@ -1,15 +1,15 @@
-package com.Lyber.dev.ui.adapters
+package com.Lyber.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.core.content.ContextCompat.getColor
 import androidx.recyclerview.widget.RecyclerView
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.ItemAssetAvailableBinding
-import com.Lyber.dev.models.AssetBaseData
-import com.Lyber.dev.models.PriceServiceResume
-import com.Lyber.dev.utils.CommonMethods.Companion.commaFormatted
-import com.Lyber.dev.utils.CommonMethods.Companion.loadCircleCrop
+import com.Lyber.R
+import com.Lyber.databinding.ItemAssetAvailableBinding
+import com.Lyber.models.AssetBaseData
+import com.Lyber.models.PriceServiceResume
+import com.Lyber.utils.CommonMethods.Companion.commaFormatted
+import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
 
 class AvailableAssetAdapter(
     private val clickListener: (PriceServiceResume) -> Unit = { _ -> }) :
@@ -33,7 +33,7 @@ class AvailableAssetAdapter(
             (holder as AvailableAssetViewHolder).binding.apply {
                 itemList[position]?.let { it ->
                     val id = it.id
-                    val currency : AssetBaseData? = com.Lyber.dev.ui.activities.BaseActivity.assets.firstNotNullOfOrNull{ item -> item.takeIf {item.id == id}}
+                    val currency : AssetBaseData? = com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull{ item -> item.takeIf {item.id == id}}
                     if (currency != null) {
                         ivAsset.loadCircleCrop(currency.imageUrl)
                     }

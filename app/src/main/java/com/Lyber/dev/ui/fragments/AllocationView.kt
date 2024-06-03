@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.content.Context
 import android.util.AttributeSet
@@ -10,13 +10,13 @@ import android.widget.LinearLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.AllocationViewBinding
-import com.Lyber.dev.databinding.ItemAssetsStrategyBinding
-import com.Lyber.dev.models.InvestmentStrategyAsset
-import com.Lyber.dev.utils.CommonMethods.Companion.setBackgroundTint
-import com.Lyber.dev.utils.Constants.colors
-import com.Lyber.dev.utils.ItemOffsetDecoration
+import com.Lyber.R
+import com.Lyber.databinding.AllocationViewBinding
+import com.Lyber.databinding.ItemAssetsStrategyBinding
+import com.Lyber.models.InvestmentStrategyAsset
+import com.Lyber.utils.CommonMethods.Companion.setBackgroundTint
+import com.Lyber.utils.Constants.colors
+import com.Lyber.utils.ItemOffsetDecoration
 import kotlin.math.roundToInt
 
 class AllocationView : LinearLayout {

@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -9,19 +9,19 @@ import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentBuyUsdtBinding
-import com.Lyber.dev.models.Balance
-import com.Lyber.dev.models.BalanceData
-import com.Lyber.dev.network.RestClient
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.decimalPoint
-import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.utils.OnTextChange
-import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.Lyber.R
+import com.Lyber.databinding.FragmentBuyUsdtBinding
+import com.Lyber.models.Balance
+import com.Lyber.models.BalanceData
+import com.Lyber.network.RestClient
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.decimalPoint
+import com.Lyber.utils.CommonMethods.Companion.formattedAsset
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
+import com.Lyber.utils.OnTextChange
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.google.gson.Gson
 import okhttp3.ResponseBody
 import java.math.RoundingMode
@@ -186,7 +186,7 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
 
             "${getString(R.string.buy)} ${"usdt".uppercase()}".also { tvTitle.text = it }
             var balance =
-                com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == "usdt" } }
+                com.Lyber.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == "usdt" } }
             if (balance == null) {
                 val balanceData = BalanceData("0", "0")
                 balance = Balance("0", balanceData)
@@ -198,7 +198,7 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
                 (balance.balanceData.balance.toDouble() / balance.balanceData.euroBalance.toDouble())
             if (balance.balanceData.balance == "0") {
                 val balanceResume =
-                    com.Lyber.dev.ui.activities.BaseActivity.balanceResume.firstNotNullOfOrNull { item -> item.takeIf { item.id == "usdt" } }
+                    com.Lyber.ui.activities.BaseActivity.balanceResume.firstNotNullOfOrNull { item -> item.takeIf { item.id == "usdt" } }
 
                 valueConversion = 1.0 / balanceResume!!.priceServiceResumeData.lastPrice.toDouble()
             }
@@ -206,7 +206,7 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
 
             viewModel.selectedNetworkDeposit.let {
                 var balance =
-                    com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == "usdt" } }
+                    com.Lyber.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == "usdt" } }
                 if (balance == null) {
                     val balanceData = BalanceData("0", "0")
                     balance = Balance("0", balanceData)

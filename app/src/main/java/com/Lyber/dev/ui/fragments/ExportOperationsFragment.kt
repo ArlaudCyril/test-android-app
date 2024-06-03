@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -17,14 +17,14 @@ import android.widget.ListPopupWindow
 import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Lifecycle
-import com.Lyber.dev.databinding.FragmentExportOperationsBinding
-import com.Lyber.dev.models.MonthsList
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.ErrorResponseBottomSheet
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.Lyber.databinding.FragmentExportOperationsBinding
+import com.Lyber.models.MonthsList
+import com.Lyber.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
+import com.Lyber.ui.fragments.bottomsheetfragments.ErrorResponseBottomSheet
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.Constants
+import com.Lyber.viewmodels.PortfolioViewModel
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.Month
@@ -205,7 +205,7 @@ class ExportOperationsFragment : BaseFragment<FragmentExportOperationsBinding>()
         }
 
         private val customTypeface: Typeface? =
-            ResourcesCompat.getFont(requireContext(), com.Lyber.dev.R.font.mabry_pro)
+            ResourcesCompat.getFont(requireContext(), com.Lyber.R.font.mabry_pro)
 
         @SuppressLint("ViewHolder")
         override fun getView(position: Int, convertView: View?, parent: ViewGroup?): View {

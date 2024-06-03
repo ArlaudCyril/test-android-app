@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments.bottomsheetfragments
+package com.Lyber.ui.fragments.bottomsheetfragments
 
 import android.annotation.SuppressLint
 import android.content.DialogInterface
@@ -12,23 +12,23 @@ import androidx.annotation.RequiresApi
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.ItemAssetBinding
-import com.Lyber.dev.databinding.LayoutAddAnAssetBinding
-import com.Lyber.dev.databinding.LoaderViewBinding
-import com.Lyber.dev.models.AddedAsset
-import com.Lyber.dev.models.PriceServiceResume
-import com.Lyber.dev.ui.adapters.BaseAdapter
-import com.Lyber.dev.viewmodels.PortfolioViewModel
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
-import com.Lyber.dev.utils.CommonMethods.Companion.commaFormatted
-import com.Lyber.dev.utils.CommonMethods.Companion.currencyFormatted
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.loadCircleCrop
-import com.Lyber.dev.utils.CommonMethods.Companion.loadImage
-import com.Lyber.dev.utils.CommonMethods.Companion.roundFloat
-import com.Lyber.dev.utils.OnTextChange
+import com.Lyber.R
+import com.Lyber.databinding.ItemAssetBinding
+import com.Lyber.databinding.LayoutAddAnAssetBinding
+import com.Lyber.databinding.LoaderViewBinding
+import com.Lyber.models.AddedAsset
+import com.Lyber.models.PriceServiceResume
+import com.Lyber.ui.adapters.BaseAdapter
+import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.checkInternet
+import com.Lyber.utils.CommonMethods.Companion.commaFormatted
+import com.Lyber.utils.CommonMethods.Companion.currencyFormatted
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
+import com.Lyber.utils.CommonMethods.Companion.loadImage
+import com.Lyber.utils.CommonMethods.Companion.roundFloat
+import com.Lyber.utils.OnTextChange
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.tabs.TabLayout
 
@@ -65,8 +65,8 @@ class AddAssetBottomSheet(private val clickListener: (PriceServiceResume) -> Uni
                 topLosers.clear()
                 topGainers.clear()
                 stables.clear()
-                com.Lyber.dev.ui.activities.BaseActivity.balanceResume.clear()
-                com.Lyber.dev.ui.activities.BaseActivity.balanceResume.addAll(it)
+                com.Lyber.ui.activities.BaseActivity.balanceResume.clear()
+                com.Lyber.ui.activities.BaseActivity.balanceResume.addAll(it)
                 val dummyList: MutableList<PriceServiceResume> = mutableListOf()
                 for (data in it){
                     var isAdded = false
@@ -252,7 +252,7 @@ class AddAssetBottomSheet(private val clickListener: (PriceServiceResume) -> Uni
                         val urlLineChart = it.priceServiceResumeData.squiggleURL
                         lineChart.loadImage(urlLineChart)
                         val id = it.id
-                        com.Lyber.dev.ui.activities.BaseActivity.assets.firstNotNullOfOrNull{ item -> item.takeIf {item.id == id}}
+                        com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull{ item -> item.takeIf {item.id == id}}
                             ?.let {
                                     it1 -> ivAsset.loadCircleCrop(it1.imageUrl); tvAssetName.text = it1.fullName
                             }

@@ -1,4 +1,4 @@
-package com.Lyber.dev.models
+package com.Lyber.models
 
 import android.content.Context
 import android.util.Log
@@ -6,18 +6,18 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.Lyber.dev.ui.portfolio.fragment.PortfolioHomeFragment
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.viewmodels.NetworkViewModel
+import com.Lyber.ui.portfolio.fragment.PortfolioHomeFragment
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
+import com.Lyber.viewmodels.NetworkViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
  class GetUserViewModal() : ViewModel() {
 
      private val networkViewModel = NetworkViewModel()
 
-     private val _userLiveData = MutableLiveData<com.Lyber.dev.models.User>()
-     val userLiveData: LiveData<com.Lyber.dev.models.User> get() = _userLiveData
+     private val _userLiveData = MutableLiveData<com.Lyber.models.User>()
+     val userLiveData: LiveData<com.Lyber.models.User> get() = _userLiveData
     init {
         startFetchingUserData()
     }

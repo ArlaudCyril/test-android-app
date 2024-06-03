@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -8,17 +8,17 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentManageWhitelistingBinding
-import com.Lyber.dev.databinding.ItemExtraSecurityBinding
-import com.Lyber.dev.ui.adapters.BaseAdapter
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
-import com.Lyber.dev.utils.CommonMethods.Companion.dismissProgressDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.viewmodels.NetworkViewModel
+import com.Lyber.R
+import com.Lyber.databinding.FragmentManageWhitelistingBinding
+import com.Lyber.databinding.ItemExtraSecurityBinding
+import com.Lyber.ui.adapters.BaseAdapter
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods.Companion.checkInternet
+import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
+import com.Lyber.utils.Constants
+import com.Lyber.viewmodels.NetworkViewModel
 
 class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBinding>() {
 

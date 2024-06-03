@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.annotation.SuppressLint
 import android.content.IntentFilter
@@ -10,24 +10,24 @@ import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentAddAmountBinding
-import com.Lyber.dev.network.RestClient
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.FrequencyModel
-import com.Lyber.dev.viewmodels.PortfolioViewModel
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.clearBackStack
-import com.Lyber.dev.utils.CommonMethods.Companion.commaFormatted
-import com.Lyber.dev.utils.CommonMethods.Companion.decimalPoint
-import com.Lyber.dev.utils.CommonMethods.Companion.fadeIn
-import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.loadCircleCrop
-import com.Lyber.dev.utils.CommonMethods.Companion.setBackgroundTint
-import com.Lyber.dev.utils.CommonMethods.Companion.showToast
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.utils.OnTextChange
+import com.Lyber.R
+import com.Lyber.databinding.FragmentAddAmountBinding
+import com.Lyber.network.RestClient
+import com.Lyber.ui.fragments.bottomsheetfragments.FrequencyModel
+import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.clearBackStack
+import com.Lyber.utils.CommonMethods.Companion.commaFormatted
+import com.Lyber.utils.CommonMethods.Companion.decimalPoint
+import com.Lyber.utils.CommonMethods.Companion.fadeIn
+import com.Lyber.utils.CommonMethods.Companion.formattedAsset
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
+import com.Lyber.utils.CommonMethods.Companion.setBackgroundTint
+import com.Lyber.utils.CommonMethods.Companion.showToast
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
+import com.Lyber.utils.OnTextChange
 import com.google.gson.Gson
 import okhttp3.ResponseBody
 import java.math.RoundingMode
@@ -144,9 +144,9 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
             btnPreviewInvestment.text = getString(R.string.preview_exchange)
             llSwapLayout.visible()
             val balance =
-                com.Lyber.dev.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
+                com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
             val asset =
-                com.Lyber.dev.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.exchangeAssetFrom } }
+                com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.exchangeAssetFrom } }
 
             Log.d("Balance", "$balance")
             if (balance != null) {
@@ -163,7 +163,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                     balance.balanceData.balance.formattedAsset(priceCoin, RoundingMode.DOWN) //removed decimal for now
                         .toDouble()
                 val currency =
-                    com.Lyber.dev.ui.activities.BaseActivity.assets.find { it1 -> it1.id == balance.id }
+                    com.Lyber.ui.activities.BaseActivity.assets.find { it1 -> it1.id == balance.id }
                 ivAssetSwapFrom.loadCircleCrop(currency!!.imageUrl)
                 tvSwapAssetFrom.text = balance.id.uppercase()
                 val exchangeFromCoinPrice =
@@ -176,13 +176,13 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                 maxValue = balance.balanceData.balance
             } else {
                 val data1 =
-                    com.Lyber.dev.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.exchangeAssetFrom } }
+                    com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.exchangeAssetFrom } }
                 mCurrency = " " + data1!!.id.uppercase()
                 tvTitle.text = "Exchange ${data1.id.uppercase()}"
                 assetAvail = 0.0
                 tvSubTitle.text = "0 Available"
                 val currency =
-                    com.Lyber.dev.ui.activities.BaseActivity.assets.find { it1 -> it1.id == data1.id }
+                    com.Lyber.ui.activities.BaseActivity.assets.find { it1 -> it1.id == data1.id }
                 ivAssetSwapFrom.loadCircleCrop(currency!!.imageUrl)
                 tvSwapAssetFrom.text = data1.id.uppercase()
 //                val exchangeFromCoinPrice =
@@ -197,12 +197,12 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                 binding.tvEuro.text = "~0 ${Constants.EURO}"
             }
             val balanceTo =
-                com.Lyber.dev.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetTo }
+                com.Lyber.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetTo }
             tvAssetConversion.text = balanceTo!!.priceServiceResumeData
                 .lastPrice.commaFormatted
             mConversionCurrency = " " + balanceTo.id.uppercase()
             val data =
-                com.Lyber.dev.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.exchangeAssetTo } }
+                com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.exchangeAssetTo } }
            decimalTo=data!!.decimals
             Log.d("assetTo", "$data")
             ivAssetSwapTo.loadCircleCrop(data.imageUrl)
@@ -294,7 +294,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
             if (amount.contains(focusedData.currency)) amount.split(focusedData.currency)[0].pointFormat.toDouble()
             else amount.split(unfocusedData.currency)[0].pointFormat.toDouble()
         val balance =
-            com.Lyber.dev.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
+            com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
         Log.d("Balance", "$balance")
 
 //        val priceCoin = balance!!.balanceData.euroBalance.toDouble()
@@ -325,9 +325,9 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
             if (amount.contains(focusedData.currency)) amount.split(focusedData.currency)[0].pointFormat.toDouble()
             else amount.split(unfocusedData.currency)[0].pointFormat.toDouble()
         val balanceFromPrice =
-            com.Lyber.dev.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
+            com.Lyber.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
         val balanceToPrice =
-            com.Lyber.dev.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetTo }
+            com.Lyber.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetTo }
         val valueInEurosFromAsset = balanceFromPrice!!.priceServiceResumeData.lastPrice.toDouble()
         val valuesInEurosToAsset = balanceToPrice!!.priceServiceResumeData.lastPrice.toDouble()
         val numberToAssets = (valueAmount * valueInEurosFromAsset) / (valuesInEurosToAsset)
@@ -466,7 +466,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                             binding.tvAssetConversion.text =
                                 "${assetAmount}$mConversionCurrency"
                             val balanceFromPrice =
-                                com.Lyber.dev.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
+                                com.Lyber.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
                             binding.tvEuro.text = "~${
                                 (valueAmount * balanceFromPrice!!.priceServiceResumeData.lastPrice.toDouble()).toString()
                                     .formattedAsset(0.0, RoundingMode.DOWN, 2)
@@ -478,7 +478,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                             val convertedValue = conversionFormula()
                             binding.tvAssetConversion.text = "$convertedValue$mCurrency"
                             val balanceFromPrice =
-                                com.Lyber.dev.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
+                                com.Lyber.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
                             binding.tvEuro.text = "~${
                                 (valueAmount * balanceFromPrice!!.priceServiceResumeData.lastPrice.toDouble()).toString()
                                     .formattedAsset(0.0, RoundingMode.DOWN, 2)
@@ -532,9 +532,9 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
         }
             else{
             val balance =
-                com.Lyber.dev.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetFrom!! }
+                com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetFrom!! }
             val asset =
-                com.Lyber.dev.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.exchangeAssetFrom } }
+                com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.exchangeAssetFrom } }
 
 
             val priceCoin = balance!!.balanceData.euroBalance.toDouble()

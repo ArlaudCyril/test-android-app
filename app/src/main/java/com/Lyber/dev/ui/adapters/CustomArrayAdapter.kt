@@ -1,4 +1,4 @@
-//package com.Lyber.dev.ui.adapters
+//package com.Lyber.ui.adapters
 //
 //import android.annotation.SuppressLint
 //import android.content.Context
@@ -12,12 +12,12 @@
 //import android.widget.TextView
 //import androidx.annotation.RequiresApi
 //import androidx.core.content.res.ResourcesCompat
-//import com.Lyber.dev.R
-//import com.Lyber.dev.databinding.AppItemLayoutBinding
-//import com.Lyber.dev.databinding.LoaderViewBinding
-//import com.Lyber.dev.models.MonthsList
-//import com.Lyber.dev.models.Network
-//import com.Lyber.dev.utils.CommonMethods.Companion.loadCircleCrop
+//import com.Lyber.R
+//import com.Lyber.databinding.AppItemLayoutBinding
+//import com.Lyber.databinding.LoaderViewBinding
+//import com.Lyber.models.MonthsList
+//import com.Lyber.models.Network
+//import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
 //
 //
 //class CustomArrayAdapter(context: Context, resource: Int, objects: List<MonthsList>) :

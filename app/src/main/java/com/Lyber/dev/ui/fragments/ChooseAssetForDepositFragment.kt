@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.annotation.SuppressLint
 import android.content.ClipData
@@ -17,24 +17,24 @@ import android.widget.Toast
 import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.AppItemLayoutBinding
-import com.Lyber.dev.databinding.FragmentChooseAssetDepositBinding
-import com.Lyber.dev.databinding.LoaderViewBinding
-import com.Lyber.dev.models.AssetBaseData
-import com.Lyber.dev.models.ErrorResponse
-import com.Lyber.dev.models.NetworkDeposit
-import com.Lyber.dev.network.RestClient
-import com.Lyber.dev.viewmodels.PortfolioViewModel
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.fadeIn
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.loadCircleCrop
-import com.Lyber.dev.utils.CommonMethods.Companion.showErrorMessage
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
+import com.Lyber.R
+import com.Lyber.databinding.AppItemLayoutBinding
+import com.Lyber.databinding.FragmentChooseAssetDepositBinding
+import com.Lyber.databinding.LoaderViewBinding
+import com.Lyber.models.AssetBaseData
+import com.Lyber.models.ErrorResponse
+import com.Lyber.models.NetworkDeposit
+import com.Lyber.network.RestClient
+import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.fadeIn
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
+import com.Lyber.utils.CommonMethods.Companion.showErrorMessage
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
 import okhttp3.ResponseBody
 import java.util.*
 
@@ -348,7 +348,7 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                         startActivity(
                             Intent(
                                 requireActivity(),
-                                com.Lyber.dev.ui.activities.BarCodeActivity::class.java
+                                com.Lyber.ui.activities.BarCodeActivity::class.java
                             )
                                 .putExtra(
                                     Constants.DATA_SELECTED,

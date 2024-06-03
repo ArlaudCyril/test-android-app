@@ -1,14 +1,14 @@
-package com.Lyber.dev.viewmodels
+package com.Lyber.viewmodels
 
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.Lyber.dev.models.InitiateKycResponse
-import com.Lyber.dev.models.KycStatusResponse
-import com.Lyber.dev.models.MessageResponse
-import com.Lyber.dev.models.UploadResponse
-import com.Lyber.dev.network.RestClient
-import com.Lyber.dev.ui.fragments.VerifyYourIdentityFragment.Companion.NONE
+import com.Lyber.models.InitiateKycResponse
+import com.Lyber.models.KycStatusResponse
+import com.Lyber.models.MessageResponse
+import com.Lyber.models.UploadResponse
+import com.Lyber.network.RestClient
+import com.Lyber.ui.fragments.VerifyYourIdentityFragment.Companion.NONE
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.launch
 import okhttp3.MediaType.Companion.toMediaTypeOrNull

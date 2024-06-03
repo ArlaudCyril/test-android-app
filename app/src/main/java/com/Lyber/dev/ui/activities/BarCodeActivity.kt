@@ -1,14 +1,14 @@
-package com.Lyber.dev.ui.activities
+package com.Lyber.ui.activities
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatDelegate
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.ActivityBarcodingBinding
-import com.Lyber.dev.utils.Constants
+import com.Lyber.R
+import com.Lyber.databinding.ActivityBarcodingBinding
+import com.Lyber.utils.Constants
 import com.google.zxing.BarcodeFormat
 import com.journeyapps.barcodescanner.BarcodeEncoder
 
-class BarCodeActivity : com.Lyber.dev.ui.activities.BaseActivity<ActivityBarcodingBinding>() {
+class BarCodeActivity : com.Lyber.ui.activities.BaseActivity<ActivityBarcodingBinding>() {
     override fun bind() = ActivityBarcodingBinding.inflate(layoutInflater)
 
     override fun onCreate(savedInstanceState: Bundle?) {

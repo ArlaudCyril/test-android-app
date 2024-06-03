@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.adapters
+package com.Lyber.ui.adapters
 
 import android.content.Context
 import com.google.android.gms.tasks.Task

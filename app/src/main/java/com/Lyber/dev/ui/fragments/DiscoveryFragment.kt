@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
@@ -12,13 +12,13 @@ import android.view.View.OnClickListener
 import androidx.core.view.isVisible
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentDiscoveryBinding
-import com.Lyber.dev.network.RestClient
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
+import com.Lyber.R
+import com.Lyber.databinding.FragmentDiscoveryBinding
+import com.Lyber.network.RestClient
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
 import kotlinx.coroutines.launch
 import java.util.Locale
 

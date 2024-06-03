@@ -1,15 +1,15 @@
-package com.Lyber.dev.ui.fragments.bottomsheetfragments
+package com.Lyber.ui.fragments.bottomsheetfragments
 
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.findNavController
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentConfirmationBinding
-import com.Lyber.dev.utils.CommonMethods.Companion.clearBackStack
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.Lyber.R
+import com.Lyber.databinding.FragmentConfirmationBinding
+import com.Lyber.utils.CommonMethods.Companion.clearBackStack
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.Constants
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
