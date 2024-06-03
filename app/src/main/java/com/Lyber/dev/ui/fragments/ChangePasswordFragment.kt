@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.content.res.ColorStateList
 import android.graphics.PorterDuff
@@ -16,14 +16,14 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentChangePasswordBinding
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.VerificationBottomSheet
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.showToast
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.viewmodels.SignUpViewModel
+import com.Lyber.R
+import com.Lyber.databinding.FragmentChangePasswordBinding
+import com.Lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.showToast
+import com.Lyber.utils.Constants
+import com.Lyber.viewmodels.SignUpViewModel
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import com.nimbusds.srp6.SRP6ClientSession

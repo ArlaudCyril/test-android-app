@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -7,11 +7,11 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat.getColor
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentNotificationBinding
-import com.Lyber.dev.databinding.ItemNotificationBinding
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
+import com.Lyber.R
+import com.Lyber.databinding.FragmentNotificationBinding
+import com.Lyber.databinding.ItemNotificationBinding
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.visible
 //not in use
 class NotificationFragment : BaseFragment<FragmentNotificationBinding>() {
 

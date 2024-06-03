@@ -1,15 +1,15 @@
-package com.Lyber.dev.viewmodels
+package com.Lyber.viewmodels
 
 import androidx.lifecycle.MutableLiveData
-import com.Lyber.dev.models.AddedAsset
-import com.Lyber.dev.models.AssetBaseData
-import com.Lyber.dev.models.AssetDetailBaseData
-import com.Lyber.dev.models.Balance
-import com.Lyber.dev.models.NetworkDeposit
-import com.Lyber.dev.models.PersonalDataResponse
-import com.Lyber.dev.models.PriceServiceResume
-import com.Lyber.dev.models.Strategy
-import com.Lyber.dev.models.WithdrawAddress
+import com.Lyber.models.AddedAsset
+import com.Lyber.models.AssetBaseData
+import com.Lyber.models.AssetDetailBaseData
+import com.Lyber.models.Balance
+import com.Lyber.models.NetworkDeposit
+import com.Lyber.models.PersonalDataResponse
+import com.Lyber.models.PriceServiceResume
+import com.Lyber.models.Strategy
+import com.Lyber.models.WithdrawAddress
 
 class PortfolioViewModel : NetworkViewModel() {
 

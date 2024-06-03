@@ -1,13 +1,13 @@
-package com.Lyber.dev.ui.fragments.bottomsheetfragments
+package com.Lyber.ui.fragments.bottomsheetfragments
 
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import com.Lyber.dev.databinding.BottomSheetInvestWithStrategyBinding
-import com.Lyber.dev.viewmodels.PortfolioViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
+import com.Lyber.databinding.BottomSheetInvestWithStrategyBinding
+import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.visible
 
 class InvestWithStrategyBottomSheet(val clickListener: (Int) -> Unit) :
     BaseBottomSheet<BottomSheetInvestWithStrategyBinding>(), View.OnClickListener {

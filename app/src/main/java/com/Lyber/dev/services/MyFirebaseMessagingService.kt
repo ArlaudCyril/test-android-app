@@ -1,4 +1,4 @@
-package com.Lyber.dev.services
+package com.Lyber.services
 
 import android.app.ActivityManager
 import android.app.NotificationChannel
@@ -13,11 +13,11 @@ import android.util.Log
 import androidx.core.app.NotificationCompat
 import androidx.core.content.ContextCompat
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
-import com.Lyber.dev.ui.activities.SplashActivity
+import com.Lyber.ui.activities.SplashActivity
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import java.util.Random
-import com.Lyber.dev.R
+import com.Lyber.R
 
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {

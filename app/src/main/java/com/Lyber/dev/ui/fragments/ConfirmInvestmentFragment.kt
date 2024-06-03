@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -7,21 +7,21 @@ import android.view.View
 import androidx.core.view.marginTop
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentConfirmInvestmentBinding
-import com.Lyber.dev.ui.portfolio.fragment.PortfolioHomeFragment
-import com.Lyber.dev.viewmodels.PortfolioViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.addFragment
-import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
-import com.Lyber.dev.utils.CommonMethods.Companion.clearBackStack
-import com.Lyber.dev.utils.CommonMethods.Companion.commaFormatted
-import com.Lyber.dev.utils.CommonMethods.Companion.decimalPoint
-import com.Lyber.dev.utils.CommonMethods.Companion.dismissProgressDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
+import com.Lyber.R
+import com.Lyber.databinding.FragmentConfirmInvestmentBinding
+import com.Lyber.ui.portfolio.fragment.PortfolioHomeFragment
+import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.utils.CommonMethods.Companion.addFragment
+import com.Lyber.utils.CommonMethods.Companion.checkInternet
+import com.Lyber.utils.CommonMethods.Companion.clearBackStack
+import com.Lyber.utils.CommonMethods.Companion.commaFormatted
+import com.Lyber.utils.CommonMethods.Companion.decimalPoint
+import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
 import java.util.*
 
 class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>(),

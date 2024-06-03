@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -10,29 +10,29 @@ import android.view.Window
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
 import androidx.lifecycle.Lifecycle
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.ConfirmationDialogBinding
-import com.Lyber.dev.databinding.FragmentAddAmountBinding
-import com.Lyber.dev.models.Whitelistings
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.FrequencyModel
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.PayWithModel
-import com.Lyber.dev.viewmodels.PortfolioViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
-import com.Lyber.dev.utils.CommonMethods.Companion.clearBackStack
-import com.Lyber.dev.utils.CommonMethods.Companion.commaFormatted
-import com.Lyber.dev.utils.CommonMethods.Companion.decimalPoint
-import com.Lyber.dev.utils.CommonMethods.Companion.dismissProgressDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.fadeIn
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.loadCircleCrop
-import com.Lyber.dev.utils.CommonMethods.Companion.replaceFragment
-import com.Lyber.dev.utils.CommonMethods.Companion.setBackgroundTint
-import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.showToast
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.utils.OnTextChange
+import com.Lyber.R
+import com.Lyber.databinding.ConfirmationDialogBinding
+import com.Lyber.databinding.FragmentAddAmountBinding
+import com.Lyber.models.Whitelistings
+import com.Lyber.ui.fragments.bottomsheetfragments.FrequencyModel
+import com.Lyber.ui.fragments.bottomsheetfragments.PayWithModel
+import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.utils.CommonMethods.Companion.checkInternet
+import com.Lyber.utils.CommonMethods.Companion.clearBackStack
+import com.Lyber.utils.CommonMethods.Companion.commaFormatted
+import com.Lyber.utils.CommonMethods.Companion.decimalPoint
+import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.fadeIn
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
+import com.Lyber.utils.CommonMethods.Companion.replaceFragment
+import com.Lyber.utils.CommonMethods.Companion.setBackgroundTint
+import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.showToast
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
+import com.Lyber.utils.OnTextChange
 
 class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClickListener {
 

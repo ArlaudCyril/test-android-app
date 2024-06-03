@@ -1,10 +1,10 @@
-package com.Lyber.dev.network
+package com.Lyber.network
 
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.widget.ImageView
-import com.Lyber.dev.utils.App.Companion.prefsManager
-import com.Lyber.dev.utils.Constants
+import com.Lyber.utils.App.Companion.prefsManager
+import com.Lyber.utils.Constants
 import com.google.gson.GsonBuilder
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

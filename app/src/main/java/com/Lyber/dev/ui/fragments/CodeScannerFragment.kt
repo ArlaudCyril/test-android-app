@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.Manifest
 import android.app.Activity
@@ -14,12 +14,12 @@ import android.view.View
 import android.view.Window
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.CustomDialogLayoutBinding
-import com.Lyber.dev.databinding.FragmentCodeScannerBinding
-import com.Lyber.dev.utils.CommonMethods.Companion.showToast
-import com.Lyber.dev.utils.Constants.SCANNED_ADDRESS
-import com.Lyber.dev.utils.Constants.SCAN_COMPLETE
+import com.Lyber.R
+import com.Lyber.databinding.CustomDialogLayoutBinding
+import com.Lyber.databinding.FragmentCodeScannerBinding
+import com.Lyber.utils.CommonMethods.Companion.showToast
+import com.Lyber.utils.Constants.SCANNED_ADDRESS
+import com.Lyber.utils.Constants.SCAN_COMPLETE
 import com.budiyev.android.codescanner.*
 import com.google.android.material.snackbar.Snackbar
 import io.github.g00fy2.quickie.QRResult

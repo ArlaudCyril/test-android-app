@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.os.Bundle
 import android.text.Editable
@@ -9,15 +9,15 @@ import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.Lyber.dev.databinding.AppItemLayoutBinding
-import com.Lyber.dev.databinding.FragmentSearchAssetsBinding
-import com.Lyber.dev.databinding.LoaderViewBinding
-import com.Lyber.dev.models.GetAssetsResponseItem
-import com.Lyber.dev.ui.adapters.BaseAdapter
-import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.loadCircleCrop
-import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.Lyber.databinding.AppItemLayoutBinding
+import com.Lyber.databinding.FragmentSearchAssetsBinding
+import com.Lyber.databinding.LoaderViewBinding
+import com.Lyber.models.GetAssetsResponseItem
+import com.Lyber.ui.adapters.BaseAdapter
+import com.Lyber.utils.CommonMethods.Companion.checkInternet
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
+import com.Lyber.viewmodels.PortfolioViewModel
 
 class SearchAssetsFragment :
     BaseFragment<FragmentSearchAssetsBinding>() {

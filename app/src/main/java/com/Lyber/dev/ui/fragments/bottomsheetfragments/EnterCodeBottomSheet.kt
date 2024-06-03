@@ -1,9 +1,9 @@
-package com.Lyber.dev.ui.fragments.bottomsheetfragments
+package com.Lyber.ui.fragments.bottomsheetfragments
 
 import android.os.Bundle
 import android.view.View
-import com.Lyber.dev.databinding.BottomSheetEnterCodeBinding
-import com.Lyber.dev.ui.portfolio.fragment.PortfolioHomeFragment
+import com.Lyber.databinding.BottomSheetEnterCodeBinding
+import com.Lyber.ui.portfolio.fragment.PortfolioHomeFragment
 
 class EnterCodeBottomSheet(val clickListener: (Boolean) -> Unit) :
     BaseBottomSheet<BottomSheetEnterCodeBinding>(), View.OnClickListener {

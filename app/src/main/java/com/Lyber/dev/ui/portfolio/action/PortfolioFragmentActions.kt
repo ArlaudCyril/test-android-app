@@ -1,9 +1,9 @@
-package com.Lyber.dev.ui.portfolio.action
+package com.Lyber.ui.portfolio.action
 
-import com.Lyber.dev.models.Balance
-import com.Lyber.dev.models.Investment
-import com.Lyber.dev.models.PriceServiceResume
-import com.Lyber.dev.models.*
+import com.Lyber.models.Balance
+import com.Lyber.models.Investment
+import com.Lyber.models.PriceServiceResume
+import com.Lyber.models.*
 
 interface PortfolioFragmentActions {
 

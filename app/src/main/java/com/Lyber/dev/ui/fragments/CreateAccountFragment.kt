@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -22,28 +22,29 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
-import com.Lyber.dev.databinding.FragmentCreateAccountBinding
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.VerificationBottomSheet
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
-import com.Lyber.dev.utils.CommonMethods.Companion.fadeIn
-import com.Lyber.dev.utils.CommonMethods.Companion.fadeOut
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.isValidEmail
-import com.Lyber.dev.utils.CommonMethods.Companion.requestKeyboard
-import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.showToast
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.viewmodels.SignUpViewModel
+import com.Lyber.databinding.FragmentCreateAccountBinding
+import com.Lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.checkInternet
+import com.Lyber.utils.CommonMethods.Companion.fadeIn
+import com.Lyber.utils.CommonMethods.Companion.fadeOut
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.isValidEmail
+import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
+import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.showToast
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
+import com.Lyber.viewmodels.SignUpViewModel
 import com.au.countrycodepicker.CountryPicker
 import com.nimbusds.srp6.SRP6ClientSession
 import com.nimbusds.srp6.SRP6CryptoParams
 import com.nimbusds.srp6.SRP6VerifierGenerator
 import com.nimbusds.srp6.XRoutineWithUserIdentity
-import com.Lyber.dev.R
+import com.Lyber.R
+import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View.OnClickListener {
 
@@ -207,6 +208,8 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                     vc.viewToDelete = transparentView
                     vc.mainView = getView()?.rootView as ViewGroup
                     vc.viewModel = viewModel
+                    vc.fromSignUp = true
+
                     vc.show(childFragmentManager, "")
 
                     // Add the transparent view to the RelativeLayout
@@ -309,7 +312,11 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                                     checkInternet(requireContext()) {
                                         showProgressDialog(requireContext())
                                         resendCode = 1
-                                        val modifiedMobile = if (mobile.startsWith("0")) mobile.removeRange(0, 1) else mobile
+                                        val modifiedMobile =
+                                            if (mobile.startsWith("0")) mobile.removeRange(
+                                                0,
+                                                1
+                                            ) else mobile
 
                                         viewModel.mobileNumber = modifiedMobile
                                         viewModel.countryCode = countryCode
@@ -352,7 +359,11 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                                 checkInternet(requireContext()) {
                                     showProgressDialog(requireContext())
                                     resendCode = 3
-                                    val modifiedMobile = if (mobile.startsWith("0")) mobile.removeRange(0, 1) else mobile
+                                    val modifiedMobile =
+                                        if (mobile.startsWith("0")) mobile.removeRange(
+                                            0,
+                                            1
+                                        ) else mobile
 
                                     viewModel.mobileNumber = modifiedMobile
                                     viewModel.countryCode = countryCode
@@ -485,7 +496,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         }
     }
 
-    private fun handle(txt:String) {
+    private fun handle(txt: String) {
         fromResend = true
         client =
             SRP6ClientSession()
@@ -493,7 +504,8 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
             XRoutineWithUserIdentity()
         when (resendCode) {
             1 -> {
-                val modifiedMobile = if (mobile.startsWith("0")) mobile.removeRange(0, 1) else mobile
+                val modifiedMobile =
+                    if (mobile.startsWith("0")) mobile.removeRange(0, 1) else mobile
 
                 viewModel.mobileNumber = modifiedMobile
                 viewModel.countryCode = countryCode
@@ -518,7 +530,8 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
             }
 
             3 -> {
-                val modifiedMobile = if (mobile.startsWith("0")) mobile.removeRange(0, 1) else mobile
+                val modifiedMobile =
+                    if (mobile.startsWith("0")) mobile.removeRange(0, 1) else mobile
 
                 viewModel.mobileNumber = modifiedMobile
                 viewModel.countryCode = countryCode

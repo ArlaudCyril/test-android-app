@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.app.Dialog
 import android.content.res.Configuration
@@ -12,17 +12,17 @@ import android.view.Window
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.CustomDialogLayoutBinding
-import com.Lyber.dev.databinding.FragmentConfirmPinBinding
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.requestKeyboard
-import com.Lyber.dev.utils.CommonMethods.Companion.showToast
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.utils.OnTextChange
-import com.Lyber.dev.viewmodels.SignUpViewModel
+import com.Lyber.R
+import com.Lyber.databinding.CustomDialogLayoutBinding
+import com.Lyber.databinding.FragmentConfirmPinBinding
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
+import com.Lyber.utils.CommonMethods.Companion.showToast
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
+import com.Lyber.utils.OnTextChange
+import com.Lyber.viewmodels.SignUpViewModel
 import java.util.Locale
 
 class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {

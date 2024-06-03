@@ -1,8 +1,8 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.os.Bundle
 import android.view.View
-import com.Lyber.dev.databinding.FragmentDepositAssetBinding
+import com.Lyber.databinding.FragmentDepositAssetBinding
 
 class DepositAssetFragment : BaseFragment<FragmentDepositAssetBinding>() {
 

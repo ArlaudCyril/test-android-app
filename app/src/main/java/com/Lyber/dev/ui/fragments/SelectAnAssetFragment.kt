@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -11,20 +11,20 @@ import android.view.animation.AnimationUtils
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentSelectAnAssetBinding
-import com.Lyber.dev.databinding.ItemAssetBinding
-import com.Lyber.dev.databinding.LoaderViewBinding
-import com.Lyber.dev.models.Data
-import com.Lyber.dev.ui.adapters.BaseAdapter
-import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.loadCircleCrop
-import com.Lyber.dev.utils.CommonMethods.Companion.replaceFragment
-import com.Lyber.dev.utils.CommonMethods.Companion.roundFloat
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.utils.OnTextChange
-import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.Lyber.R
+import com.Lyber.databinding.FragmentSelectAnAssetBinding
+import com.Lyber.databinding.ItemAssetBinding
+import com.Lyber.databinding.LoaderViewBinding
+import com.Lyber.models.Data
+import com.Lyber.ui.adapters.BaseAdapter
+import com.Lyber.utils.CommonMethods.Companion.checkInternet
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
+import com.Lyber.utils.CommonMethods.Companion.replaceFragment
+import com.Lyber.utils.CommonMethods.Companion.roundFloat
+import com.Lyber.utils.Constants
+import com.Lyber.utils.OnTextChange
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.google.android.material.tabs.TabLayout
 
 class SelectAnAssetFragment : BaseFragment<FragmentSelectAnAssetBinding>() {

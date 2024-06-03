@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.annotation.SuppressLint
 import android.content.Intent
@@ -17,12 +17,12 @@ import android.view.View.OnClickListener
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentContactUsBinding
-import com.Lyber.dev.viewmodels.PortfolioViewModel
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.showToast
+import com.Lyber.R
+import com.Lyber.databinding.FragmentContactUsBinding
+import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.showToast
 
 
 class ContactUsFragment : BaseFragment<FragmentContactUsBinding>(), OnClickListener {

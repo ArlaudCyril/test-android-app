@@ -1,4 +1,4 @@
-package com.Lyber.dev.utils
+package com.Lyber.utils
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -12,8 +12,8 @@ import android.view.Window
 import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.ProgressBarBinding
+import com.Lyber.R
+import com.Lyber.databinding.ProgressBarBinding
 
 object LoaderObject {
     private var dialog: Dialog? = null

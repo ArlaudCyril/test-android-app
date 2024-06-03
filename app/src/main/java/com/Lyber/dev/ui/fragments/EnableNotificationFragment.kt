@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.Manifest
 import android.app.Dialog
@@ -17,18 +17,18 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.CustomDialogLayoutBinding
-import com.Lyber.dev.databinding.FragmentEnableNotificationsBinding
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
-import com.Lyber.dev.utils.CommonMethods.Companion.dismissProgressDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.viewmodels.SignUpViewModel
+import com.Lyber.R
+import com.Lyber.databinding.CustomDialogLayoutBinding
+import com.Lyber.databinding.FragmentEnableNotificationsBinding
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods.Companion.checkInternet
+import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
+import com.Lyber.viewmodels.SignUpViewModel
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
 
@@ -194,7 +194,7 @@ private lateinit var settingDialog:Dialog
     fun openSetting() {
         settingDialog.dismiss()
         val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
-        val uri: Uri = Uri.fromParts("package", "com.Lyber.dev", null)
+        val uri: Uri = Uri.fromParts("package", "com.Lyber", null)
         intent.data = uri
         startActivity(intent)
     }

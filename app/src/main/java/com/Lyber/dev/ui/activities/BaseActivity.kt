@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.activities
+package com.Lyber.ui.activities
 
 import android.content.res.Configuration
 import android.content.res.Resources
@@ -6,13 +6,13 @@ import android.os.Bundle
 import android.os.PersistableBundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
-import com.Lyber.dev.models.AssetBaseData
-import com.Lyber.dev.models.Balance
-import com.Lyber.dev.models.Network
-import com.Lyber.dev.models.PriceServiceResume
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.Lyber.models.AssetBaseData
+import com.Lyber.models.Balance
+import com.Lyber.models.Network
+import com.Lyber.models.PriceServiceResume
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
+import com.Lyber.viewmodels.PortfolioViewModel
 import java.util.Locale
 
 abstract class BaseActivity<viewBinding : ViewBinding> : AppCompatActivity() {

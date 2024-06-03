@@ -1,16 +1,16 @@
-package com.Lyber.dev.ui.adapters
+package com.Lyber.ui.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.ItemRecurringInvestmentBinding
-import com.Lyber.dev.models.ActiveStrategyData
-import com.Lyber.dev.models.Investment
-import com.Lyber.dev.utils.CommonMethods.Companion.loadCircleCrop
-import com.Lyber.dev.utils.CommonMethods.Companion.toFormat
-import com.Lyber.dev.utils.Constants
+import com.Lyber.R
+import com.Lyber.databinding.ItemRecurringInvestmentBinding
+import com.Lyber.models.ActiveStrategyData
+import com.Lyber.models.Investment
+import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
+import com.Lyber.utils.CommonMethods.Companion.toFormat
+import com.Lyber.utils.Constants
 
 class RecurringInvestmentAdapter(private val clickListener: (ActiveStrategyData) -> Unit = { _ -> }, private val context:Context) :
     BaseAdapter<ActiveStrategyData>() {

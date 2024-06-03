@@ -1,12 +1,12 @@
-package com.Lyber.dev.ui.adapters
+package com.Lyber.ui.adapters
 
 import android.content.Intent
 import android.net.Uri
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.Lyber.dev.databinding.ItemResourcesBinding
-import com.Lyber.dev.models.News
+import com.Lyber.databinding.ItemResourcesBinding
+import com.Lyber.models.News
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.bitmap.CenterCrop
 import com.bumptech.glide.load.resource.bitmap.RoundedCorners

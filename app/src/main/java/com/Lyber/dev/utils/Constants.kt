@@ -1,8 +1,8 @@
-package com.Lyber.dev.utils
+package com.Lyber.utils
 
 import android.accounts.Account
-import com.Lyber.dev.R
-import com.Lyber.dev.models.AvatarData
+import com.Lyber.R
+import com.Lyber.models.AvatarData
 
 object Constants {
 
@@ -50,7 +50,7 @@ object Constants {
     const val BASE_URL = "https://staging.lyber.com/"
     const val NEW_BASE_URL = "https://staging.lyber.com/"
     const val SOCKET_BASE_URL = "wss://ws.lyber.com/websocket/"
-    const val STRIKE_KEY =
+    const val STRIPE_KEY =
         "pk_test_51NVVY7F2A3romcuHdC3JDD9evsFhQvyZ5cYS6wpy9OznXgmYzLvWTG81Zfj2nWGQFZ2zs8RboA3uMLCNPpPV08Zk00McUdiPAt"
 
     //Live also change environment on PreviewMyPurchase

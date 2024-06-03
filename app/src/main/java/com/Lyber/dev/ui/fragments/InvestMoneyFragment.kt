@@ -1,16 +1,16 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.os.Bundle
 import android.view.View
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentInvestMoneyBinding
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.DepositOrSingularAsset
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.replaceFragment
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.Lyber.R
+import com.Lyber.databinding.FragmentInvestMoneyBinding
+import com.Lyber.ui.fragments.bottomsheetfragments.DepositOrSingularAsset
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.replaceFragment
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
+import com.Lyber.viewmodels.PortfolioViewModel
 
 class InvestMoneyFragment : BaseFragment<FragmentInvestMoneyBinding>() {
 

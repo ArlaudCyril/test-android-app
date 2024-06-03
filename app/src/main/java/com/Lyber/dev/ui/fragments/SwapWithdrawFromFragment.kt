@@ -1,28 +1,28 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentSwapFromBinding
-import com.Lyber.dev.models.Balance
-import com.Lyber.dev.ui.adapters.BalanceAdapter
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.WithdrawOnBankAccountBottomSheet
-import com.Lyber.dev.viewmodels.PortfolioViewModel
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
-import com.Lyber.dev.utils.CommonMethods.Companion.commaFormatted
-import com.Lyber.dev.utils.CommonMethods.Companion.currencyFormatted
-import com.Lyber.dev.utils.CommonMethods.Companion.dismissProgressDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.loadCircleCrop
-import com.Lyber.dev.utils.CommonMethods.Companion.replaceFragment
-import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
+import com.Lyber.R
+import com.Lyber.databinding.FragmentSwapFromBinding
+import com.Lyber.models.Balance
+import com.Lyber.ui.adapters.BalanceAdapter
+import com.Lyber.ui.fragments.bottomsheetfragments.WithdrawOnBankAccountBottomSheet
+import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.checkInternet
+import com.Lyber.utils.CommonMethods.Companion.commaFormatted
+import com.Lyber.utils.CommonMethods.Companion.currencyFormatted
+import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.formattedAsset
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
+import com.Lyber.utils.CommonMethods.Companion.replaceFragment
+import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
 import java.math.RoundingMode
 
 class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnClickListener {
@@ -51,7 +51,7 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
                         setBankAccount(balance)
 
                 }
-                com.Lyber.dev.ui.activities.BaseActivity.balances = balances
+                com.Lyber.ui.activities.BaseActivity.balances = balances
                 balances.sortByDescending { it.balanceData.euroBalance.toDoubleOrNull() }
                adapter.setList(balances)
             }
@@ -96,7 +96,7 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
         binding.rlAllPortfolio.gone()
         binding.includedAsset.root.visible()
         binding.includedAsset.llFiatWallet.gone()
-        val currency = com.Lyber.dev.ui.activities.BaseActivity.assets.find { it.id == "usdt" }
+        val currency = com.Lyber.ui.activities.BaseActivity.assets.find { it.id == "usdt" }
         binding.includedAsset.ivAssetIcon.loadCircleCrop(currency?.imageUrl ?: "")
         binding.includedAsset.ivDropIcon.setImageResource(R.drawable.ic_right_arrow_grey)
         binding.includedAsset.tvAssetName.text = "Tether"
@@ -105,7 +105,7 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
 
 
     private fun itemClicked(myAsset: Balance) {
-        val currency = com.Lyber.dev.ui.activities.BaseActivity.assets.find { it.id == myAsset.id }
+        val currency = com.Lyber.ui.activities.BaseActivity.assets.find { it.id == myAsset.id }
         if (currency!!.isWithdrawalActive) {
             val bundle = Bundle()
             bundle.putString(Constants.ID, myAsset.id)

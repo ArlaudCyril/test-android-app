@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.content.res.ColorStateList
 import android.graphics.PorterDuff
@@ -13,13 +13,13 @@ import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Lifecycle
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentForgotPasswordBinding
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.viewmodels.SignUpViewModel
+import com.Lyber.R
+import com.Lyber.databinding.FragmentForgotPasswordBinding
+import com.Lyber.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.Constants
+import com.Lyber.viewmodels.SignUpViewModel
 
 
 class ForgotPasswordFragment : BaseFragment<FragmentForgotPasswordBinding>(), OnClickListener {

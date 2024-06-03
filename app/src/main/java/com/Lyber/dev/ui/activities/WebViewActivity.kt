@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.activities
+package com.Lyber.ui.activities
 
 import android.app.Activity
 import android.app.AlertDialog
@@ -32,16 +32,16 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
 import androidx.lifecycle.Lifecycle
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.ActivityWebViewBinding
-import com.Lyber.dev.network.RestClient
-import com.Lyber.dev.ui.portfolio.fragment.PortfolioHomeFragment
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.showToast
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.utils.LoaderObject
-import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.Lyber.R
+import com.Lyber.databinding.ActivityWebViewBinding
+import com.Lyber.network.RestClient
+import com.Lyber.ui.portfolio.fragment.PortfolioHomeFragment
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.showToast
+import com.Lyber.utils.Constants
+import com.Lyber.utils.LoaderObject
+import com.Lyber.viewmodels.PortfolioViewModel
 import okhttp3.ResponseBody
 import java.io.File
 import java.io.IOException

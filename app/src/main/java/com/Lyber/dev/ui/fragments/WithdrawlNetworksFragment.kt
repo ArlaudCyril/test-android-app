@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.content.Context
 import android.os.Bundle
@@ -9,18 +9,18 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentListingBinding
-import com.Lyber.dev.databinding.ItemNetworkBinding
-import com.Lyber.dev.models.NetworkDeposit
-import com.Lyber.dev.ui.adapters.BaseAdapter
-import com.Lyber.dev.utils.AppLifeCycleObserver
-import com.Lyber.dev.viewmodels.PortfolioViewModel
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.loadCircleCrop
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
+import com.Lyber.R
+import com.Lyber.databinding.FragmentListingBinding
+import com.Lyber.databinding.ItemNetworkBinding
+import com.Lyber.models.NetworkDeposit
+import com.Lyber.ui.adapters.BaseAdapter
+import com.Lyber.utils.AppLifeCycleObserver
+import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
 
 class WithdrawlNetworksFragment : BaseFragment<FragmentListingBinding>() {
     private lateinit var viewModel: PortfolioViewModel

@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments.bottomsheetfragments
+package com.Lyber.ui.fragments.bottomsheetfragments
 
 import android.content.ClipData
 import android.content.ClipboardManager
@@ -6,10 +6,10 @@ import android.content.Context
 import android.os.Bundle
 import android.view.View
 import android.widget.Toast
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.BottomSheetAddressBookBinding
-import com.Lyber.dev.models.WithdrawAddress
-import com.Lyber.dev.utils.CommonMethods.Companion.toFormat
+import com.Lyber.R
+import com.Lyber.databinding.BottomSheetAddressBookBinding
+import com.Lyber.models.WithdrawAddress
+import com.Lyber.utils.CommonMethods.Companion.toFormat
 
 class AddAddressInfoBottomSheet(
     private val toDelete: Boolean, private val context: Context,

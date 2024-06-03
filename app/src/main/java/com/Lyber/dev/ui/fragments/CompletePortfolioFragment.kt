@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.os.Build
 import android.os.Bundle
@@ -6,16 +6,16 @@ import android.util.Log
 import android.view.View
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.navigation.fragment.findNavController
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentCompletePortfolioBinding
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.BottomSheetDialog
-import com.Lyber.dev.viewmodels.PortfolioViewModel
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.strikeText
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
+import com.Lyber.R
+import com.Lyber.databinding.FragmentCompletePortfolioBinding
+import com.Lyber.ui.fragments.bottomsheetfragments.BottomSheetDialog
+import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.strikeText
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
 
 class CompletePortfolioFragment : BaseFragment<FragmentCompletePortfolioBinding>(),
     View.OnClickListener {

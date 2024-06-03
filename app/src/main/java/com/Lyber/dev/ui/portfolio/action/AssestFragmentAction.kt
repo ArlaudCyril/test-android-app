@@ -1,7 +1,7 @@
-package com.Lyber.dev.ui.portfolio.action
+package com.Lyber.ui.portfolio.action
 
-import com.Lyber.dev.models.AssetBaseData
-import com.Lyber.dev.models.Balance
+import com.Lyber.models.AssetBaseData
+import com.Lyber.models.Balance
 
 interface AssestFragmentAction {
     fun assetClicked(balance: AssetBaseData)

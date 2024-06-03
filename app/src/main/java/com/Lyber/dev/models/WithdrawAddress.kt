@@ -1,4 +1,4 @@
-package com.Lyber.dev.models
+package com.Lyber.models
 
 import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName

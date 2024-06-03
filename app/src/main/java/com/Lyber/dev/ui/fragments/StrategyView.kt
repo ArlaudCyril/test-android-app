@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.content.Context
 import android.util.AttributeSet
@@ -11,8 +11,8 @@ import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.core.view.setPadding
 import androidx.recyclerview.widget.GridLayoutManager
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.StrategyViewBinding
+import com.Lyber.R
+import com.Lyber.databinding.StrategyViewBinding
 
 class StrategyView : RelativeLayout, View.OnClickListener {
 

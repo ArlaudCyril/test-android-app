@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -8,24 +8,24 @@ import android.util.Log
 import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentMyPurchaseBinding
-import com.Lyber.dev.models.Balance
-import com.Lyber.dev.models.BalanceData
-import com.Lyber.dev.models.DataQuote
-import com.Lyber.dev.network.RestClient
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.ErrorBottomSheet
-import com.Lyber.dev.viewmodels.PortfolioViewModel
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
-import com.Lyber.dev.utils.CommonMethods.Companion.dismissAlertDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
-import com.Lyber.dev.utils.CommonMethods.Companion.formattedAssetForInverseRatio
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.showToast
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
+import com.Lyber.R
+import com.Lyber.databinding.FragmentMyPurchaseBinding
+import com.Lyber.models.Balance
+import com.Lyber.models.BalanceData
+import com.Lyber.models.DataQuote
+import com.Lyber.network.RestClient
+import com.Lyber.ui.fragments.bottomsheetfragments.ErrorBottomSheet
+import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.checkInternet
+import com.Lyber.utils.CommonMethods.Companion.dismissAlertDialog
+import com.Lyber.utils.CommonMethods.Companion.formattedAsset
+import com.Lyber.utils.CommonMethods.Companion.formattedAssetForInverseRatio
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.showToast
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
 import com.google.gson.Gson
 import com.stripe.android.PaymentConfiguration
 import com.stripe.android.googlepaylauncher.GooglePayEnvironment
@@ -53,7 +53,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         PaymentConfiguration.init(
-            requireActivity(),Constants.STRIKE_KEY
+            requireActivity(),Constants.STRIPE_KEY
         )
 
         viewModel = CommonMethods.getViewModel(requireActivity())
@@ -65,7 +65,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
         googlePayLauncher = GooglePayLauncher(
             fragment = this@PreviewMyPurchaseFragment,
             config = GooglePayLauncher.Config(
-                environment = GooglePayEnvironment.Test, //  change environment
+                environment = GooglePayEnvironment.Production, //  change environment
                 merchantCountryCode = "FR",
                 merchantName = "Widget Store",
                 existingPaymentMethodRequired = false
@@ -209,7 +209,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
             clientSecret = data!!.clientSecret
             orderId = data!!.orderId
             var balance =
-                com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == "usdt" } }
+                com.Lyber.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == "usdt" } }
             if (balance == null) {
                 val balanceData = BalanceData("0", "0")
                 balance = Balance("0", balanceData)

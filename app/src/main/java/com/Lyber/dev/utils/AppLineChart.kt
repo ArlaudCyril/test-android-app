@@ -1,10 +1,10 @@
-package com.Lyber.dev.utils
+package com.Lyber.utils
 
 import android.content.Context
 import android.graphics.Color
 import android.util.AttributeSet
 import androidx.core.content.ContextCompat
-import com.Lyber.dev.R
+import com.Lyber.R
 import com.github.mikephil.charting.charts.LineChart
 import com.github.mikephil.charting.data.Entry
 import com.github.mikephil.charting.data.LineData

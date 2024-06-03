@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.os.Build
 import android.os.Bundle
@@ -12,22 +12,22 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentCryptoAddressBookBinding
-import com.Lyber.dev.databinding.ItemAddressesBinding
-import com.Lyber.dev.databinding.LoaderViewBinding
-import com.Lyber.dev.models.WithdrawAddress
-import com.Lyber.dev.ui.adapters.BaseAdapter
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.AddAddressInfoBottomSheet
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
-import com.Lyber.dev.utils.CommonMethods.Companion.dismissProgressDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.loadCircleCrop
-import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.viewmodels.ProfileViewModel
+import com.Lyber.R
+import com.Lyber.databinding.FragmentCryptoAddressBookBinding
+import com.Lyber.databinding.ItemAddressesBinding
+import com.Lyber.databinding.LoaderViewBinding
+import com.Lyber.models.WithdrawAddress
+import com.Lyber.ui.adapters.BaseAdapter
+import com.Lyber.ui.fragments.bottomsheetfragments.AddAddressInfoBottomSheet
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods.Companion.checkInternet
+import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
+import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
+import com.Lyber.viewmodels.ProfileViewModel
 
 
 class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
@@ -232,7 +232,7 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
 
                     itemList[position]?.let {
                         val id = it.network
-                        com.Lyber.dev.ui.activities.BaseActivity.networkAddress.firstNotNullOfOrNull{ item -> item.takeIf {item.id == id}}
+                        com.Lyber.ui.activities.BaseActivity.networkAddress.firstNotNullOfOrNull{ item -> item.takeIf {item.id == id}}
                             ?.let {
                                     it1 -> ivItem.loadCircleCrop(it1.imageUrl);
 

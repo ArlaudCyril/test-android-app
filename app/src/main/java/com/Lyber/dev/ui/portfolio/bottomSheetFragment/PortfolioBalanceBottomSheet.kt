@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.portfolio.bottomSheetFragment
+package com.Lyber.ui.portfolio.bottomSheetFragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -12,26 +12,26 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.BottomSheetBalanceDetailBinding
-import com.Lyber.dev.databinding.ItemBalanceDetailPortfolioBinding
-import com.Lyber.dev.databinding.ItemBalancePortfolioHistoryBinding
-import com.Lyber.dev.databinding.LoaderViewBinding
-import com.Lyber.dev.models.Transaction
-import com.Lyber.dev.ui.adapters.BaseAdapter
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.BaseBottomSheet
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.viewmodels.PortfolioViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
-import com.Lyber.dev.utils.CommonMethods.Companion.decimalPoints
-import com.Lyber.dev.utils.CommonMethods.Companion.dismissAlertDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.CommonMethods.Companion.zoomIn
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.utils.ItemOffsetDecoration
+import com.Lyber.R
+import com.Lyber.databinding.BottomSheetBalanceDetailBinding
+import com.Lyber.databinding.ItemBalanceDetailPortfolioBinding
+import com.Lyber.databinding.ItemBalancePortfolioHistoryBinding
+import com.Lyber.databinding.LoaderViewBinding
+import com.Lyber.models.Transaction
+import com.Lyber.ui.adapters.BaseAdapter
+import com.Lyber.ui.fragments.bottomsheetfragments.BaseBottomSheet
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
+import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.utils.CommonMethods.Companion.checkInternet
+import com.Lyber.utils.CommonMethods.Companion.decimalPoints
+import com.Lyber.utils.CommonMethods.Companion.dismissAlertDialog
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.CommonMethods.Companion.zoomIn
+import com.Lyber.utils.Constants
+import com.Lyber.utils.ItemOffsetDecoration
 import okhttp3.ResponseBody
 
 class PortfolioBalanceBottomSheet(private val clickListener: (BalanceInfo) -> Unit = { _ -> }) :

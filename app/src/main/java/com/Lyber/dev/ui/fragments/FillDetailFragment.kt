@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.app.Dialog
 import android.content.Intent
@@ -9,23 +9,23 @@ import android.widget.ImageView
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.CustomDialogLayoutBinding
-import com.Lyber.dev.databinding.FragmentTestFillDetailBinding
-import com.Lyber.dev.utils.ActivityCallbacks
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.App.Companion.prefsManager
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.add
-import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
-import com.Lyber.dev.utils.CommonMethods.Companion.dismissProgressDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.replace
-import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.viewmodels.PersonalDataViewModel
+import com.Lyber.R
+import com.Lyber.databinding.CustomDialogLayoutBinding
+import com.Lyber.databinding.FragmentTestFillDetailBinding
+import com.Lyber.utils.ActivityCallbacks
+import com.Lyber.utils.App
+import com.Lyber.utils.App.Companion.prefsManager
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.add
+import com.Lyber.utils.CommonMethods.Companion.checkInternet
+import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.replace
+import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
+import com.Lyber.viewmodels.PersonalDataViewModel
 import com.nimbusds.srp6.SRP6CryptoParams
 import com.nimbusds.srp6.SRP6VerifierGenerator
 import com.nimbusds.srp6.XRoutineWithUserIdentity
@@ -66,7 +66,7 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
 
         viewModel = getViewModel(this)
 
-        com.Lyber.dev.ui.activities.SplashActivity.activityCallbacks = this
+        com.Lyber.ui.activities.SplashActivity.activityCallbacks = this
 
         viewModel.listener = this
 
@@ -236,7 +236,7 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
                         startActivity(
                             Intent(
                                 requireActivity(),
-                                com.Lyber.dev.ui.activities.SplashActivity::class.java
+                                com.Lyber.ui.activities.SplashActivity::class.java
                             )
                                 .putExtra(Constants.FOR_LOGOUT, Constants.FOR_LOGOUT)
                         )
@@ -306,7 +306,7 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
 
     override fun onDestroyView() {
         super.onDestroyView()
-        com.Lyber.dev.ui.activities.SplashActivity.activityCallbacks = null
+        com.Lyber.ui.activities.SplashActivity.activityCallbacks = null
     }
 }
 

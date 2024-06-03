@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -8,12 +8,12 @@ import android.os.Handler
 import android.os.Looper
 import android.text.Html
 import android.view.View
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentVerificationEmailBinding
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.showToast
-import com.Lyber.dev.viewmodels.PersonalDataViewModel
+import com.Lyber.R
+import com.Lyber.databinding.FragmentVerificationEmailBinding
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.showToast
+import com.Lyber.viewmodels.PersonalDataViewModel
 /*
     **Not in use right not
  */

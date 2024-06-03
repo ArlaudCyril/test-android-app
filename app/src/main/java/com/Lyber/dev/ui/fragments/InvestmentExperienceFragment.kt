@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 
 import android.content.Context
@@ -6,16 +6,16 @@ import android.content.res.Configuration
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentInvenstmentExperienceBinding
-import com.Lyber.dev.models.DataBottomSheet
-import com.Lyber.dev.models.InvestmentExperienceLocal
-import com.Lyber.dev.models.InvestmentExperienceLocalIds
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.BottomSheetDialog
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.showToast
-import com.Lyber.dev.viewmodels.PersonalDataViewModel
+import com.Lyber.R
+import com.Lyber.databinding.FragmentInvenstmentExperienceBinding
+import com.Lyber.models.DataBottomSheet
+import com.Lyber.models.InvestmentExperienceLocal
+import com.Lyber.models.InvestmentExperienceLocalIds
+import com.Lyber.ui.fragments.bottomsheetfragments.BottomSheetDialog
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.showToast
+import com.Lyber.viewmodels.PersonalDataViewModel
 import java.util.Locale
 
 class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceBinding>(),

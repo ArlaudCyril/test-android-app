@@ -1,4 +1,4 @@
-package com.Lyber.dev.utils;
+package com.Lyber.utils;
 
 import static com.bumptech.glide.request.target.Target.SIZE_ORIGINAL;
 

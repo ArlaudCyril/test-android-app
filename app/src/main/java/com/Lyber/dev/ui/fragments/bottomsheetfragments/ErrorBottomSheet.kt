@@ -1,13 +1,13 @@
-package com.Lyber.dev.ui.fragments.bottomsheetfragments
+package com.Lyber.ui.fragments.bottomsheetfragments
 
 import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
 import androidx.navigation.fragment.findNavController
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.ErrorBottomSheetBinding
-import com.Lyber.dev.viewmodels.PortfolioViewModel
-import com.Lyber.dev.utils.CommonMethods
+import com.Lyber.R
+import com.Lyber.databinding.ErrorBottomSheetBinding
+import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.utils.CommonMethods
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class ErrorBottomSheet(val clickListener: (Boolean) -> Unit) :

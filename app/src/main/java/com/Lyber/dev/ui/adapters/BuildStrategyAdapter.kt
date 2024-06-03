@@ -1,16 +1,16 @@
-package com.Lyber.dev.ui.adapters
+package com.Lyber.ui.adapters
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.ItemAddedAssetBinding
-import com.Lyber.dev.models.AddedAsset
-import com.Lyber.dev.ui.fragments.BuildStrategyFragment
-import com.Lyber.dev.utils.CommonMethods.Companion.commaFormatted
-import com.Lyber.dev.utils.CommonMethods.Companion.loadCircleCrop
-import com.Lyber.dev.utils.CommonMethods.Companion.loadImage
-import com.Lyber.dev.utils.CommonMethods.Companion.roundFloat
+import com.Lyber.R
+import com.Lyber.databinding.ItemAddedAssetBinding
+import com.Lyber.models.AddedAsset
+import com.Lyber.ui.fragments.BuildStrategyFragment
+import com.Lyber.utils.CommonMethods.Companion.commaFormatted
+import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
+import com.Lyber.utils.CommonMethods.Companion.loadImage
+import com.Lyber.utils.CommonMethods.Companion.roundFloat
 import kotlin.math.roundToInt
 
 class BuildStrategyAdapter(
@@ -57,7 +57,7 @@ class BuildStrategyAdapter(
                 val urlLineChart = it.addAsset.priceServiceResumeData.squiggleURL
                 lineChart.loadImage(urlLineChart)
                 val asset =
-                        com.Lyber.dev.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == itemList[position]!!.addAsset.id } }
+                        com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == itemList[position]!!.addAsset.id } }
                 if (asset != null)
                     ivAsset.loadCircleCrop(asset!!.imageUrl)
 

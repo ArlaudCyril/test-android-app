@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments.bottomsheetfragments
+package com.Lyber.ui.fragments.bottomsheetfragments
 
 import android.content.Context
 import android.os.Bundle
@@ -10,13 +10,13 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.fragment.app.DialogFragment
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.BottomSheetVerificationBinding
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.requestKeyboard
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.viewmodels.PersonalDataViewModel
-import com.Lyber.dev.viewmodels.SignUpViewModel
+import com.Lyber.R
+import com.Lyber.databinding.BottomSheetVerificationBinding
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.viewmodels.PersonalDataViewModel
+import com.Lyber.viewmodels.SignUpViewModel
 
 class EmailVerificationBottomSheet() :
     BaseBottomSheet<BottomSheetVerificationBinding>() {
