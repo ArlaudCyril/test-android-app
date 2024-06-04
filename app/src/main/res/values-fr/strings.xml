@@ -780,5 +780,6 @@
     <string name="sign_up_in_5">Créer son compte en 5min</string>
     <string name="empty"></string>
     <string name="tailorStrategyError">Le montant investi doit être d\'au moins 10 USDT par actif dans la stratégie.</string>
+    <string name="new_code">Un nouveau code pourra être renvoyé dans </string>
 
 </resources>

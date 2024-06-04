@@ -350,9 +350,8 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                                             }
                                             requiredAmount= ceil(requiredAmount)
                                             if (requiredAmount > viewModel.selectedStrategy!!.activeStrategy!!.amount!!)
-                                                getString(R.string.tailorStrategyError).showToast(
-                                                    requireContext()
-                                                )
+                                                CommonMethods.showSnackBar(binding.root, requireContext(), getString(R.string.tailorStrategyError))
+
                                             else
                                                 viewModel.editOwnStrategy(name)
                                         }

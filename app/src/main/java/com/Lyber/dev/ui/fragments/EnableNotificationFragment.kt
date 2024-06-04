@@ -38,12 +38,12 @@ class EnableNotificationFragment : BaseFragment<FragmentEnableNotificationsBindi
     private lateinit var onBoardingViewModel: SignUpViewModel
     private var fcmToken = ""
     private var firstTime = false
-private lateinit var settingDialog:Dialog
+    private lateinit var settingDialog: Dialog
     override fun bind() = FragmentEnableNotificationsBinding.inflate(layoutInflater)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        if(arguments==null) {
+        if (arguments == null) {
             val navHostFragment =
                 requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
             navController = navHostFragment.findNavController()
@@ -52,8 +52,7 @@ private lateinit var settingDialog:Dialog
             requireActivity().onBackPressedDispatcher.addCallback(this) {
                 stopRegistrationDialog()
             }
-        }
-        else {
+        } else {
             binding.ivTopAction.gone()
             binding.ivBack.visible()
         }
@@ -79,7 +78,7 @@ private lateinit var settingDialog:Dialog
                 Log.d("FirebaseMessagingService.TAG", token)
 
             })
-        onBoardingViewModel.notificationResponse.observe(viewLifecycleOwner) {response ->
+        onBoardingViewModel.notificationResponse.observe(viewLifecycleOwner) { response ->
             if (response.success == true) {
                 dismissProgressDialog()
 
@@ -113,11 +112,10 @@ private lateinit var settingDialog:Dialog
         }
 
         binding.tvNotNow.setOnClickListener {
-            if(arguments==null) {
+            if (arguments == null) {
                 App.prefsManager.portfolioCompletionStep = Constants.ACCOUNT_CREATED
                 navController.navigate(R.id.completePortfolioFragment)
-            }
-            else
+            } else
                 findNavController().navigate(R.id.portfolioHomeFragment)
         }
     }
@@ -157,8 +155,8 @@ private lateinit var settingDialog:Dialog
                 if (firstTime)
                     showNotificationDialog()
                 // Directly ask for the permission
-                if(!firstTime)
-                requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
+                if (!firstTime)
+                    requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
                 firstTime = true
             }
         }
@@ -166,7 +164,7 @@ private lateinit var settingDialog:Dialog
 
     private fun showNotificationDialog() {
 
-       settingDialog= Dialog(requireActivity(), R.style.DialogTheme).apply {
+        settingDialog = Dialog(requireActivity(), R.style.DialogTheme).apply {
 
             CustomDialogLayoutBinding.inflate(layoutInflater).let {
 

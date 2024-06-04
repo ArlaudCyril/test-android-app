@@ -19,6 +19,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -46,6 +47,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import okhttp3.ResponseBody
 
 abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.OnRetrofitError {
+     val viewModel1: com.Lyber.dev.models.GetUserViewModal by activityViewModels()
 
     private var _binding: viewBinding? = null
 
@@ -104,6 +106,7 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
                 dismissProgressDialog()
                 dismissAlertDialog()
                 CommonMethods.logOut(requireContext())
+                viewModel1.stopFetchingUserData()
             }
         }
 //        viewModel.getUserSignResponse.observe(viewLifecycleOwner) {
