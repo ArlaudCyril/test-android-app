@@ -59,7 +59,7 @@ import java.util.Locale
 
 class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), ActivityCallbacks,
     View.OnClickListener, PortfolioFragmentActions {
-    private val viewModel1: com.Lyber.dev.models.GetUserViewModal by activityViewModels()
+//    private val viewModel1: com.Lyber.dev.models.GetUserViewModal by activityViewModels()
 
     /* adapters */
     private lateinit var adapterBalance: BalanceAdapter

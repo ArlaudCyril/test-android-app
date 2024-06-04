@@ -1,10 +1,12 @@
 package com.Lyber.dev.ui.fragments.bottomsheetfragments
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.os.Bundle
 import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -14,7 +16,9 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.Lifecycle
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.BottomSheetVerificationBinding
 import com.Lyber.dev.ui.fragments.TwoFactorAuthenticationFragment
@@ -38,6 +42,11 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
     private val codeSix get() = binding.etCodeSix.text.trim().toString()
 
     private var googleOTP = ""
+    var fromSignUp = false
+    private var timer = 60
+    private var isTimerRunning = false
+    private lateinit var handler: Handler
+    var fromResend=false
 
     lateinit var typeVerification: String
     lateinit var viewToDelete: View
@@ -81,8 +90,52 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
                 }else {
                     CommonMethods.setProgressDialogAlert(requireContext())
                     handle!!.invoke("tg")
+                    if (fromSignUp)
+                        fromResend=true
                 }
             }
+        }
+        viewModel.setPhoneResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                if(fromResend){
+                    if(!::handler.isInitialized)
+                        handler = Handler(Looper.getMainLooper())
+                    timer=60
+                    binding.tvTimeLeft.text="60"
+                    startTimer()
+                }
+                fromResend=false
+            }
+        }
+    }
+    private fun startTimer() {
+        if(binding.tvResendCode.isVisible)
+            binding.tvResendCode.gone()
+        if (!binding.llResendText.isVisible)
+            binding.llResendText.visible()
+        try {
+            handler.postDelayed(runnable, 1000)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    @SuppressLint("SuspiciousIndentation")
+    private val runnable = Runnable {
+        isTimerRunning = true
+        if (timer == 0) {
+            binding.tvResendCode.visible()
+            binding.llResendText.gone()
+        } else {
+            timer -= 1
+
+            if (timer > 0) {
+                binding.tvTimeLeft.text =timer.toString()
+            } else {
+                binding.tvResendCode.visible()
+                binding.llResendText.gone()
+            }
+            startTimer()
         }
     }
 
@@ -90,6 +143,12 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
         binding.apply {
 
             title.text = getString(R.string.verification)
+
+            if (fromSignUp) {
+                handler = Handler(Looper.getMainLooper())
+                binding.tvResendCode.gone()
+                startTimer()
+            }
             if (tag!!.isNotEmpty()) {
                 if (arguments != null && requireArguments().containsKey(Constants.TYPE)) {
                     if(requireArguments().containsKey(Constants.GOOGLE) && requireArguments().getBoolean(Constants.GOOGLE)) {
@@ -372,5 +431,19 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
 
     }
 
+
+    override fun onDestroy() {
+        super.onDestroy()
+        stopTimer()
+    }
+
+    private fun stopTimer() {
+        try {
+            handler.removeCallbacks(runnable)
+            isTimerRunning = false
+        }catch (_:Exception){
+
+        }
+    }
 
 }

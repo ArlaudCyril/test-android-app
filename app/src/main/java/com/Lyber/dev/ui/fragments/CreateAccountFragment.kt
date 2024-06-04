@@ -207,6 +207,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                     vc.viewToDelete = transparentView
                     vc.mainView = getView()?.rootView as ViewGroup
                     vc.viewModel = viewModel
+                    vc.fromSignUp = true
                     vc.show(childFragmentManager, "")
 
                     // Add the transparent view to the RelativeLayout
@@ -218,7 +219,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         }
         viewModel.verifyPhoneResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                App.prefsManager.setPhone(viewModel.mobileNumber)
+                App.prefsManager.setPhone(viewModel.countryCode.substring(1)+viewModel.mobileNumber)
                 App.prefsManager.accountCreationSteps = Constants.Account_CREATION_STEP_PHONE
                 App.prefsManager.portfolioCompletionStep = Constants.ACCOUNT_CREATING
                 CommonMethods.dismissProgressDialog()
@@ -316,7 +317,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                                         viewModel.password = password
 
                                         client.step1(
-                                            countryCode.removeRange(0, 1) + modifiedMobile,
+                                            countryCode.substring(1) + modifiedMobile,
                                             password
                                         )
                                         viewModel.userChallenge(phone = "${countryCode}$modifiedMobile")
@@ -357,7 +358,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                                     viewModel.mobileNumber = modifiedMobile
                                     viewModel.countryCode = countryCode
                                     viewModel.setPhone(
-                                        viewModel.countryCode,
+                                        viewModel.countryCode.substring(1),
                                         viewModel.mobileNumber
                                     )
 
@@ -500,7 +501,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                 viewModel.password = password
 
                 client.step1(
-                    countryCode.removeRange(0, 1) + modifiedMobile,
+                    countryCode.substring(1) + modifiedMobile,
                     password
                 )
                 viewModel.userChallenge(phone = "${countryCode}$modifiedMobile")
@@ -523,7 +524,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                 viewModel.mobileNumber = modifiedMobile
                 viewModel.countryCode = countryCode
                 viewModel.setPhone(
-                    viewModel.countryCode,
+                    viewModel.countryCode.substring(1),
                     viewModel.mobileNumber
                 )
             }
