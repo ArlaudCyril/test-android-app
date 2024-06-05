@@ -9,7 +9,7 @@
       "client_info": {
         "mobilesdk_app_id": "1:672116436946:android:cfad940c73e0cb5d9ca20b",
         "android_client_info": {
-          "package_name": "com.Lyber.dev"
+          "package_name": "com.Lyber"
         }
       },
       "oauth_client": [
@@ -34,7 +34,7 @@
               "client_id": "672116436946-6f6esv5397stq7vho549u71dfmmujjl3.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.Lyber.dev"
+                "bundle_id": "com.Lyber"
               }
             }
           ]
@@ -70,7 +70,7 @@
               "client_id": "672116436946-6f6esv5397stq7vho549u71dfmmujjl3.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "com.Lyber.dev"
+                "bundle_id": "com.Lyber"
               }
             }
           ]
