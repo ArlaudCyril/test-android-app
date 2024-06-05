@@ -1,0 +1,1555 @@
+package com.Lyber.viewmodels
+
+import android.content.Context
+import android.os.Build
+import android.util.Log
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import com.Lyber.models.ActiveStrategyResponse
+import com.Lyber.models.ActivityLogs
+import com.Lyber.models.AddedAsset
+import com.Lyber.models.AssetBaseData
+import com.Lyber.models.AssetBaseDataResponse
+import com.Lyber.models.AssetDetailBaseDataResponse
+import com.Lyber.models.BalanceResponse
+import com.Lyber.models.BooleanResponse
+import com.Lyber.models.ChangePasswordData
+import com.Lyber.models.ChooseAssets
+import com.Lyber.models.CoinsResponse
+import com.Lyber.models.CommonResponse
+import com.Lyber.models.CommonResponseVerfiy
+import com.Lyber.models.Duration
+import com.Lyber.models.ExchangeListingResponse
+import com.Lyber.models.ExportResponse
+import com.Lyber.models.GetAddress
+import com.Lyber.models.GetAssetsResponse
+import com.Lyber.models.GetQuoteResponse
+import com.Lyber.models.GetUserResponse
+import com.Lyber.models.KYCResponse
+import com.Lyber.models.MessageResponse
+import com.Lyber.models.MessageResponsePause
+import com.Lyber.models.MyAssetResponse
+import com.Lyber.models.NetworkResponse
+import com.Lyber.models.NetworksResponse
+import com.Lyber.models.NewsResponse
+import com.Lyber.models.OneTimeStrategyData
+import com.Lyber.models.OrderResponseData
+import com.Lyber.models.PriceGraphResponse
+import com.Lyber.models.PriceResponse
+import com.Lyber.models.PriceResumeByIdResponse
+import com.Lyber.models.PriceServiceResume
+import com.Lyber.models.QrCodeResponse
+import com.Lyber.models.RecurringInvestmentDetailResponse
+import com.Lyber.models.RecurringInvestmentResponse
+import com.Lyber.models.SetPhoneResponse
+import com.Lyber.models.SignURlResponse
+import com.Lyber.models.StrategiesResponse
+import com.Lyber.models.Strategy
+import com.Lyber.models.StrategyExecution
+import com.Lyber.models.TransactionList
+import com.Lyber.models.TransactionResponse
+import com.Lyber.models.UpdateAuthenticateResponse
+import com.Lyber.models.UploadResponse
+import com.Lyber.models.UserChallengeResponse
+import com.Lyber.models.UserLoginResponse
+import com.Lyber.models.WalletHistoryResponse
+import com.Lyber.models.WhitelistingResponse
+import com.Lyber.models.WithdrawalAddress
+import com.Lyber.models.res
+import com.Lyber.network.RestClient
+import com.Lyber.utils.App
+import com.Lyber.utils.Constants
+import kotlinx.coroutines.CoroutineExceptionHandler
+import kotlinx.coroutines.isActive
+import kotlinx.coroutines.launch
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody.Companion.asRequestBody
+import java.io.File
+
+open class NetworkViewModel : ViewModel() {
+
+    private var _listener: RestClient.OnRetrofitError? = null
+    var listener
+        get() = _listener
+        set(value) {
+            _listener = value
+        }
+
+    private var _commonResponse = MutableLiveData<CommonResponse>()
+    val commonResponse get() = _commonResponse
+
+
+    private val exceptionHandler = CoroutineExceptionHandler { coroutineContext, exception ->
+        Log.d("exceptionHandler", exception.message ?: "")
+
+        /* handle exception */
+    }
+
+    private var _educationStrategyResponse = MutableLiveData<MessageResponse>()
+    val educationStrategyResponse get() = _educationStrategyResponse
+
+    private var _getStrategiesResponse = MutableLiveData<StrategiesResponse>()
+    val getStrategiesResponse get() = _getStrategiesResponse
+
+    private var _selectedStrategyResponse = MutableLiveData<MessageResponse>()
+    val selectedStrategyResponse get() = _selectedStrategyResponse
+
+    private var _buildStrategyResponse = MutableLiveData<MessageResponse>()
+    val buildStrategyResponse get() = _buildStrategyResponse
+
+    private var _trendingCoinResponse = MutableLiveData<CoinsResponse>()
+    val trendingCoinResponse get() = _trendingCoinResponse
+
+    /*    private var _topGainerResponse = MutableLiveData<CoinsResponse>()
+        val topGainerResponse get() = _topGainerResponse
+
+        private var _topLooserResponse = MutableLiveData<CoinsResponse>()
+        val topLooserResponse get() = _topLooserResponse
+
+        private var _stableResponse = MutableLiveData<CoinsResponse>()
+        val stableResponse get() = _stableResponse*/
+
+    private var _investSingleAssetResponse = MutableLiveData<MessageResponse>()
+    val investSingleAssetResponse get() = _investSingleAssetResponse
+
+    private var _investStrategyResponse = MutableLiveData<MessageResponse>()
+    val investStrategyResponse get() = _investStrategyResponse
+    private var _pauseStrategyResponse = MutableLiveData<MessageResponsePause>()
+    val pauseStrategyResponse get() = _pauseStrategyResponse
+
+    private var _withdrawResponse = MutableLiveData<MessageResponse>()
+    val withdrawResponse get() = _withdrawResponse
+
+    private var _exchangeResponse = MutableLiveData<MessageResponse>()
+    val exchangeResponse get() = _exchangeResponse
+
+    private var _getQuoteResponse = MutableLiveData<GetQuoteResponse>()
+    val getQuoteResponse get() = _getQuoteResponse
+
+    private var _logoutResponse = MutableLiveData<BooleanResponse>()
+    val logoutResponse get() = _logoutResponse
+
+    private var _transactionResponse = MutableLiveData<TransactionResponse>()
+    val transactionResponse get() = _transactionResponse
+
+    private var _otpForPinChangeResponse = MutableLiveData<MessageResponse>()
+    val otpPinChangeResponse get() = _otpForPinChangeResponse
+
+    private var _verifyPhoneForPinResponse = MutableLiveData<MessageResponse>()
+    val verifyPhoneForPinResponse get() = _verifyPhoneForPinResponse
+
+    private var _updatePinResponse = MutableLiveData<MessageResponse>()
+    val updatePinResponse get() = _updatePinResponse
+
+    private var _getAssetsResponse = MutableLiveData<MyAssetResponse>()
+    val getAssetResponse get() = _getAssetsResponse
+
+    private var _recurringInvestmentResponse = MutableLiveData<RecurringInvestmentResponse>()
+    val recurringInvestmentResponse get() = _recurringInvestmentResponse
+
+    private var _faceIdResponse = MutableLiveData<MessageResponse>()
+    val faceIdResponse get() = _faceIdResponse
+
+    private var _addBankResponse = MutableLiveData<MessageResponse>()
+    val addBankAccount get() = _addBankResponse
+
+    private var _enableStrongAuthentication = MutableLiveData<MessageResponse>()
+    val enableStrongAuthentication get() = _enableStrongAuthentication
+
+    private var _verifyStrongAuthentication = MutableLiveData<MessageResponse>()
+    val verifyStrongAuthentication get() = _verifyStrongAuthentication
+
+    private var _enableWhitelisting = MutableLiveData<MessageResponse>()
+    val enableWhitelisting get() = _enableWhitelisting
+
+    private var _networksResponse = MutableLiveData<NetworksResponse>()
+    val networkResponse get() = _networksResponse
+
+    private var _networksResponseSingle = MutableLiveData<NetworkResponse>()
+    val singleNetworkResponse get() = _networksResponseSingle
+
+    private var _exchangeListingResponse = MutableLiveData<ExchangeListingResponse>()
+    val exchangeListingResponse get() = _exchangeListingResponse
+
+    private var _addWhitelistResponse = MutableLiveData<MessageResponse>()
+    val addWhitelistResponse get() = _addWhitelistResponse
+    private var _updateUserInfoResponse = MutableLiveData<MessageResponse>()
+    val updateUserInfoResponse get() = _updateUserInfoResponse
+
+    private var _getWhiteListing = MutableLiveData<WhitelistingResponse>()
+    val getWhiteListing get() = _getWhiteListing
+
+    private var _searchWhitelisting = MutableLiveData<WhitelistingResponse>()
+    val searchWhitelisting get() = _searchWhitelisting
+
+    private var _assetsWhitelisting = MutableLiveData<WhitelistingResponse>()
+    val assetsWhitelisting get() = _assetsWhitelisting
+
+    private var _uploadResponse = MutableLiveData<UploadResponse>()
+    val uploadResponse get() = _uploadResponse
+
+    private var _deleteWhiteListResponse = MutableLiveData<MessageResponse>()
+    val deleteWhiteList get() = _deleteWhiteListResponse
+
+    private var _updateWhiteListResponse = MutableLiveData<MessageResponse>()
+    val updateWhiteList get() = _updateWhiteListResponse
+
+    private var _updateUserResponse = MutableLiveData<MessageResponse>()
+    val updateUser get() = _updateUserResponse
+
+    private val _assetsToChoose = MutableLiveData<GetAssetsResponse>()
+    val assetsToChoose get() = _assetsToChoose
+
+    private val _priceServiceResumes = MutableLiveData<ArrayList<PriceServiceResume>>()
+    val priceServiceResumes get() = _priceServiceResumes
+
+    private val _allAssets = MutableLiveData<AssetBaseDataResponse>()
+    val allAssets get() = _allAssets
+    private val _withdrawalAddresses = MutableLiveData<WithdrawalAddress>()
+    val withdrawalAddresses get() = _withdrawalAddresses
+
+    private val _getAssetDetail = MutableLiveData<AssetDetailBaseDataResponse>()
+    private val _getAddress = MutableLiveData<GetAddress>()
+    val getAddress get() = _getAddress
+    val getAssetDetail get() = _getAssetDetail
+
+    private val _recurringInvestmentDetail =
+        MutableLiveData<RecurringInvestmentDetailResponse>()
+    val recurringInvestmentDetail get() = _recurringInvestmentDetail
+
+    private val _cancelRecurringInvestment = MutableLiveData<MessageResponse>()
+    val cancelRecurringInvestment get() = _cancelRecurringInvestment
+
+    private val _priceGraphResponse = MutableLiveData<PriceGraphResponse>()
+    val priceGraphResponse get() = _priceGraphResponse
+
+    private val _withdrawFiatResponse = MutableLiveData<MessageResponse>()
+    val withdrawFiatResponse get() = _withdrawFiatResponse
+
+
+    private val _userChallengeResponse = MutableLiveData<UserChallengeResponse>()
+    val userChallengeResponse get() = _userChallengeResponse
+
+    private val _userLoginResponse = MutableLiveData<UserLoginResponse>()
+    val commonResponseWithdraw = MutableLiveData<CommonResponseVerfiy>()
+    val userLoginResponse get() = _userLoginResponse
+
+    private val _setPhoneResponse = MutableLiveData<SetPhoneResponse>()
+    val setPhoneResponse get() = _setPhoneResponse
+
+    private val _verifyPhoneResponse = MutableLiveData<MessageResponse>()
+    val verifyPhoneResponse get() = _verifyPhoneResponse
+
+    private val _setUserInfoResponse = MutableLiveData<MessageResponse>()
+    val setUserInfoResponse get() = _setUserInfoResponse
+
+    private val _setUpEmailResponse = MutableLiveData<MessageResponse>()
+    val setUpEmailResponse get() = _setUpEmailResponse
+
+    private val _verifyEmailResponse = MutableLiveData<Any>()
+    val verifyEmailResponse get() = _verifyEmailResponse
+
+    private val _getUserResponse = MutableLiveData<GetUserResponse>()
+    val getUserResponse get() = _getUserResponse
+
+    private val _getUserSignResponse = MutableLiveData<GetUserResponse>()
+    val getUserSignResponse get() = _getUserSignResponse
+
+    private val _setUserAddressResponse = MutableLiveData<MessageResponse>()
+    val setUserAddressResponse get() = _setUserAddressResponse
+
+    private val _finishRegistrationResponse = MutableLiveData<UserLoginResponse>()
+    val finishRegistrationResponse get() = _finishRegistrationResponse
+
+    private val _setInvestmentExpResponse = MutableLiveData<MessageResponse>()
+    val setInvestmentExpResponse get() = _setInvestmentExpResponse
+
+    private val _newsResponse = MutableLiveData<NewsResponse>()
+    val newsResponse get() = _newsResponse
+
+    private val _priceResponse = MutableLiveData<PriceResponse>()
+    val priceResponse get() = _priceResponse
+
+    private val _balanceResponse = MutableLiveData<BalanceResponse>()
+    val balanceResponse get() = _balanceResponse
+    private val _kycResponse = MutableLiveData<KYCResponse>()
+    val kycResponse get() = _kycResponse
+
+    private val _kycResponseIdentity= MutableLiveData<KYCResponse>()
+    val kycResponseIdentity get() = _kycResponseIdentity
+
+
+    private var _msgResponse: MutableLiveData<BooleanResponse> = MutableLiveData()
+    val msgResponse get() = _msgResponse
+
+    private val _getOrderResponse = MutableLiveData<OrderResponseData>()
+    val orderResponse get() = _getOrderResponse
+
+    private var _oneTimeStrategyDataResponse = MutableLiveData<OneTimeStrategyData>()
+    val oneTimeStrategyDataResponse get() = _oneTimeStrategyDataResponse
+    private var _strategyExecutionResponse = MutableLiveData<StrategyExecution>()
+    val strategyExecutionResponse get() = _strategyExecutionResponse
+
+    private var _booleanResponse: MutableLiveData<BooleanResponse> = MutableLiveData()
+    val booleanResponse get() = _booleanResponse
+    val notificationResponse get() = _booleanResponse
+
+    private var _updateAuthenticateResponse: MutableLiveData<UpdateAuthenticateResponse> =
+        MutableLiveData()
+    val updateAuthenticateResponse get() = _updateAuthenticateResponse
+    private var _qrCodeResponse: MutableLiveData<QrCodeResponse> = MutableLiveData()
+    val qrCodeResponse get() = _qrCodeResponse
+
+    private var _getTransactionListing = MutableLiveData<TransactionList>()
+    val getTransactionListingResponse get() = _getTransactionListing
+
+
+    private var _exportOperationResponse: MutableLiveData<ExportResponse> = MutableLiveData()
+    val exportOperationResponse get() = _exportOperationResponse
+
+    private var _resetPassResponse: MutableLiveData<res> = MutableLiveData()
+    val resetPasswordResponse get() = _resetPassResponse
+    private var _changePassResponse: MutableLiveData<ChangePasswordData> = MutableLiveData()
+    val changePasswordData get() = _changePassResponse
+
+    private var _getActivityLogsListing = MutableLiveData<ActivityLogs>()
+    val getActivityLogsListingResponse get() = _getActivityLogsListing
+
+    private val _signUrlResponse = MutableLiveData<SignURlResponse>()
+    val signUrlResponse get() = _signUrlResponse
+
+    private val _walletHistoryResponse = MutableLiveData<WalletHistoryResponse>()
+    val walletHistoryResponse get() = _walletHistoryResponse
+
+    private val _activeStrategyResponse = MutableLiveData<ActiveStrategyResponse>()
+    val activeStrategyResponse get() = _activeStrategyResponse
+    private val _priceResumeIdResponse = MutableLiveData<PriceResumeByIdResponse>()
+    val priceResumeIdResponse get() = _priceResumeIdResponse
+    fun cancelJob() {
+
+    }
+
+    fun educationStrategy() {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().educationStrategy()
+            if (res.isSuccessful)
+                _educationStrategyResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun getStrategies() {
+        viewModelScope.launch(exceptionHandler) {
+            val map = HashMap<String, Any>()
+            map.put("type", "all")
+            val res = RestClient.get().getStrategies(map)
+            if (res.isSuccessful)
+                _getStrategiesResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun chooseStrategy(strategy: Strategy?) {
+        strategy?.let {
+            val hashMap = hashMapOf<String, Any>()
+//            hashMap["assets"] = list
+            hashMap["is_own_strategy"] = 0
+            hashMap["investment_strategy_id"] = it.ownerUuid
+            viewModelScope.launch(exceptionHandler) {
+                val res = RestClient.get().chooseStrategy(hashMap)
+                if (res.isSuccessful)
+                    _selectedStrategyResponse.postValue(res.body())
+                else listener?.onRetrofitError(res.errorBody())
+            }
+        }
+    }
+
+    fun editOwnStrategy(strategyName: String, addedAsset: List<AddedAsset>) {
+
+        val list = arrayListOf<ChooseAssets>()
+        var total = 0
+        for (i in addedAsset) {
+            total += i.allocation.toInt()
+            list.add(
+                ChooseAssets(
+                    i.addAsset.id,
+                    i.allocation.toInt()
+                )
+            )
+        }
+        val hashMap = hashMapOf<String, Any>()
+//        if (total < 100) {
+//            list[0].share = list[0].share + (100 - total)
+//        }
+        hashMap["bundle"] = list
+        hashMap["strategyName"] = strategyName
+        hashMap["strategyType"] = "MultiAsset"
+//        hashMap["strategyType"] = "SingleAsset"
+
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().editStrategy(hashMap)
+            if (res.isSuccessful)
+                _buildStrategyResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+
+    }
+
+    fun buildOwnStrategy(strategyName: String, addedAsset: List<AddedAsset>) {
+
+        val list = arrayListOf<ChooseAssets>()
+        var total = 0
+        for (i in addedAsset) {
+            total += i.allocation.toInt()
+            list.add(ChooseAssets(
+                    i.addAsset.id,
+                    i.allocation.toInt()
+                )
+            )
+        }
+//        if (total < 100) {
+//            list[0].share = list[0].share + (100 - total)
+//        }
+        val hashMap = hashMapOf<String, Any>()
+        hashMap["bundle"] = list
+        hashMap["strategyType"] = "MultiAsset"
+        hashMap["strategyName"] = strategyName
+        Log.d("list","$list")
+
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().chooseStrategy(hashMap)
+            if (res.isSuccessful)
+                _buildStrategyResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+
+    }
+
+    fun getCoins(
+        page: Int = 1,
+        limit: Int = 100,
+        order: String = Constants.VOLUME_DESC,
+        keyword: String = ""
+    ) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = if (keyword.isNotEmpty()) RestClient.get()
+                .trendingCoin(order = order, keyword = keyword, limit = limit)
+            else RestClient.get().trendingCoins(order = order, limit = limit)
+
+            if (res.isSuccessful)
+                _trendingCoinResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun investSingleAsset(
+        coinDetail: AssetBaseData?,
+        amount: Int,
+        assetAmount: Float,
+        frequency: String
+    ) {
+        coinDetail?.let {
+            val hashMap: HashMap<String, Any> = hashMapOf()
+            hashMap["asset_id"] = it.id
+            hashMap["amount"] = amount
+            hashMap["asset_name"] = it.fullName
+            hashMap["asset_amount"] = assetAmount
+            if (frequency.isNotEmpty())
+                hashMap["frequency"] = frequency
+            viewModelScope.launch(exceptionHandler) {
+                val res = RestClient.get().investOnSingleAsset(hashMap)
+                if (res.isSuccessful)
+                    _investSingleAssetResponse.postValue(res.body())
+                else listener?.onRetrofitError(res.errorBody())
+            }
+        }
+    }
+
+
+    fun investStrategy(
+        strategyId: String,
+        frequency: String?,
+        amount: Int,
+        strateggyName: String
+    ) {
+        viewModelScope.launch(exceptionHandler) {
+            val hash = hashMapOf<String, Any>()
+            hash["strategyName"] = strateggyName
+            hash["ownerUuid"] = strategyId
+            if (frequency != null)
+                hash["frequency"] = frequency
+            hash["amount"] = amount
+            Log.d("logData", "$hash")
+            val res = RestClient.get().investOnStrategy(hash)
+            if (res.isSuccessful)
+                _investStrategyResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun pauseStrategy(strategyId: String, strateggyName: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().pauseStrategy(
+                hashMapOf(
+                    "strategyName" to strateggyName,
+                    "ownerUuid" to strategyId
+                )
+            )
+            if (res.isSuccessful)
+                pauseStrategyResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun deleteStrategy(strateggyName: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().deleteStrategy(
+                hashMapOf(
+                    "strategyName" to strateggyName
+                )
+            )
+            if (res.isSuccessful)
+                pauseStrategyResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun withdraw(assetId: String, amount: String, assetAmount: Float, wallet_address: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val hash = hashMapOf<String, Any>()
+            hash["asset_id"] = assetId
+            hash["amount"] = amount
+            hash["asset_amount"] = assetAmount
+            hash["wallet_address"] = wallet_address
+            val res = RestClient.get().withdrawCryptos(hash)
+            if (res.isSuccessful)
+                _withdrawResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun confirmOrder(order: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val hashMap = hashMapOf<String, Any>()
+            hashMap["orderId"] = order
+            val res = RestClient.get().acceptQuote(hashMap)
+            if (res.isSuccessful)
+                exchangeResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+//    fun exchange(
+//        assetIdFrom: String,
+//        assetIdTo: String,
+//        exchangeFromAmount: String,
+//        exchangeToAmount: String
+//    ) {
+//        viewModelScope.launch(exceptionHandler) {
+//            val hashMap = hashMapOf<String, Any>()
+//            hashMap["exchange_from"] = assetIdFrom.lowercase()
+//            hashMap["exchange_to"] = assetIdTo.lowercase()
+//            hashMap["exchange_from_amount"] = exchangeFromAmount
+//            hashMap["exchange_to_amount"] = exchangeToAmount
+//            val res = RestClient.get().swapCrypto(hashMap)
+//            if (res.isSuccessful)
+//                exchangeResponse.postValue(res.body())
+//            else listener?.onRetrofitError(res.errorBody())
+//        }
+//    }
+
+    fun getQuote(
+        assetIdFrom: String,
+        assetIdTo: String,
+        exchangeFromAmount: String
+    ) {
+        viewModelScope.launch(exceptionHandler) {
+            val hashMap = hashMapOf<String, Any>()
+            hashMap["fromAsset"] = assetIdFrom.trim().lowercase()
+            hashMap["toAsset"] = assetIdTo.trim().lowercase()
+            hashMap["fromAmount"] = exchangeFromAmount
+            val res = RestClient.get().getQuote(hashMap)
+            if (res.isSuccessful)
+                getQuoteResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun getTransactions(page: Int = 1, limit: Int = 10, assetId: String = "") {
+        viewModelScope.launch(exceptionHandler) {
+            val res = if (assetId.isEmpty()) RestClient.get()
+                .getTransactions(page, limit)
+            else RestClient.get()
+                .getTransactions(assetId, page, limit)
+            if (res.isSuccessful)
+                _transactionResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun logout() {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().logout()
+            if (res.isSuccessful)
+                _logoutResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+//    fun sendOtpPinChange() {
+//        viewModelScope.launch(exceptionHandler) {
+//            val res = RestClient.get().sendOtpForChangePin()
+//            if (res.isSuccessful)
+//                _otpForPinChangeResponse.postValue(res.body())
+//            else listener?.onRetrofitError(res.errorBody())
+//        }
+//    }
+
+    fun verifyPhoneForPin(otp: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().verifyPhoneForPinChange(hashMapOf("otp" to otp.toInt()))
+            if (res.isSuccessful)
+                _verifyPhoneForPinResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun updatePin(pin: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().updatePin(hashMapOf("newPin" to pin.toInt()))
+            if (res.isSuccessful)
+                _updatePinResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun getAssets() {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().getAssets()
+            if (res.isSuccessful)
+                _getAssetsResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun getRecurringInvestments() {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().getRecurringInvestments()
+            if (res.isSuccessful) _recurringInvestmentResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun setFaceId(faceId: String, enableFaceId: Boolean) {
+        val hashMap = hashMapOf<String, Any>()
+        hashMap["face_id"] = faceId
+        hashMap["enable_face_id"] = if (enableFaceId) 1 else 0
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().setFaceId(hashMap)
+            if (res.isSuccessful)
+                _faceIdResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun addBankInfo(iban: String, bic: String) {
+
+        viewModelScope.launch(exceptionHandler) {
+            val hashMap = hashMapOf<String, Any>()
+            hashMap["iban"] = iban
+            hashMap["bic"] = bic
+            val res = RestClient.get().addBank(hashMap)
+            if (res.isSuccessful)
+                _addBankResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun enableStrongAuthentication(enable: Boolean) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().enableStrongAuthentication(hashMapOf("enable" to enable))
+            if (res.isSuccessful)
+                _enableStrongAuthentication.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun verifyStrongAuthentication(otp: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val res =
+                RestClient.get().verifyStrongAuthentication(hashMapOf("otp" to otp.toInt()))
+            if (res.isSuccessful)
+                _verifyStrongAuthentication.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun enableWhitelisting(enable: Boolean, extraSecurity: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().enableWhitelisting(
+                hashMapOf(
+                    "enable" to enable,
+                    "extra_security" to extraSecurity
+                )
+            )
+            if (res.isSuccessful)
+                _enableWhitelisting.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+
+        }
+    }
+
+
+    fun getNetwork(id: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().getNetworkById(id)
+            if (res.isSuccessful)
+                _networksResponseSingle.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun getNetworks() {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().getNetworks()
+            if (res.isSuccessful)
+                _networksResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun getExchangeListing() {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().getExchangeListing()
+            if (res.isSuccessful)
+                _exchangeListingResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun addAddress(
+        name: String,
+        network: String,
+        address: String,
+        origin: String,
+        exchange: String,
+        logo: String
+    ) {
+        viewModelScope.launch(exceptionHandler) {
+            val hashMap: HashMap<String, Any> = hashMapOf()
+            hashMap["name"] = name
+            hashMap["network"] = network
+            hashMap["address"] = address
+            hashMap["origin"] = origin.lowercase()
+            if (origin.lowercase() == "exchange")
+                hashMap["exchange"] = exchange
+            val res = RestClient.get().addWhitelistingAddress(hashMap)
+            if (res.isSuccessful)
+                _addWhitelistResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun updateUserInfo(
+        hashMap: HashMap<String, Any>
+    ) {
+        viewModelScope.launch(exceptionHandler) {
+//            val hashMap: HashMap<String, Any> = hashMapOf()
+//            hashMap["withdrawalLock"] = lock
+            val res = RestClient.get().updateUserInfo(hashMap)
+            if (res.isSuccessful)
+                _updateUserInfoResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun updateAvtaar(
+        lock: String
+    ) {
+        viewModelScope.launch(exceptionHandler) {
+            val hashMap: HashMap<String, Any> = hashMapOf()
+            hashMap["avatar"] = lock
+            val res = RestClient.get().updateUserInfo(hashMap)
+            if (res.isSuccessful)
+                _updateUserInfoResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun getWhiteListings() {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().getWhitelistedAddress()
+            if (res.isSuccessful)
+                _getWhiteListing.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+
+    fun searchWhitelist(keyword: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().getWhitelistedAddress(keyword = keyword)
+            if (res.isSuccessful)
+                _searchWhitelisting.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun upload(file: File) {
+        viewModelScope.launch(exceptionHandler) {
+            val fileRequestBody = file.asRequestBody("image/*".toMediaTypeOrNull())
+            val multiPart = MultipartBody.Part.createFormData(
+                "file",
+                file.name,
+                fileRequestBody
+            )
+            val res = RestClient.get().upload(multiPart)
+            if (res.isSuccessful)
+                _uploadResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun deleteWhiteList(address: String, network: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val map = HashMap<String, Any>()
+            map["network"] = network
+            map["address"] = address
+            val res = RestClient.get().deleteWhiteListing(map)
+            if (res.isSuccessful) _deleteWhiteListResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun updateWhiteList(hashMap: HashMap<String, Any>) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().updateWhiteList(hashMap)
+            if (res.isSuccessful)
+                _updateWhiteListResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun updateUser(hashMap: HashMap<String, Any>) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().updateUser(hashMap)
+            if (res.isSuccessful)
+                _updateUserResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun assetsToChoose(keyword: String = "") {
+        viewModelScope.launch(exceptionHandler) {
+            val res = if (keyword.isEmpty()) RestClient.get().getAssetsToChoose()
+            else RestClient.get().getAssetsToChoose(keyword)
+            if (res.isSuccessful) _assetsToChoose.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun getAllPriceResume() {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().getAllPriceResume()
+            if (res.isSuccessful) {
+                val priceServiceResumeDict = res.body()?.data
+                val priceServiceResumeArray = ArrayList<PriceServiceResume>()
+                priceServiceResumeDict?.forEach {
+                    val priceServiceResume =
+                        PriceServiceResume(id = it.key, priceServiceResumeData = it.value)
+                    priceServiceResumeArray.add(priceServiceResume)
+                }
+                _priceServiceResumes.postValue(priceServiceResumeArray)
+            } else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun getAllAssets() {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().getAllAssets()
+            if (res.isSuccessful) _allAssets.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun getWithdrawalAddresses() {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().getWithdrawalAddress()
+            if (res.isSuccessful) _withdrawalAddresses.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun getAssetDetail(assetId: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().getAssetDetail(assetId)
+            if (res.isSuccessful) _getAssetDetail.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun getAssetDetailIncludeNetworks(assetId: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().getAssetDetail(assetId, "true")
+            if (res.isSuccessful) _getAssetDetail.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun getAddress(network: String, assetId: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().getAddress(network, assetId)
+            if (res.isSuccessful) _getAddress.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun getRecurringInvestmentDetail(investmentId: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().getRecurringInvestmentDetail(investmentId)
+            if (res.isSuccessful)
+                _recurringInvestmentDetail.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun cancelRecurringInvestment(investmentId: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val res =
+                RestClient.get().cancelRecurringInvestment(hashMapOf("id" to investmentId))
+            if (res.isSuccessful) _cancelRecurringInvestment.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun getPriceGraph(assetId: String, duration: Duration) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().getPriceGraph(assetId, duration.duration)
+            if (res.isSuccessful)
+                _priceGraphResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun withdrawFiat(amount: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().withdrawFiat(hashMapOf("amount" to amount))
+            if (res.isSuccessful)
+                _withdrawFiatResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun userChallenge(phone: String = "", email: String = "") {
+        viewModelScope.launch(exceptionHandler) {
+            var phoneNumber = ""
+            if (phone.isNotEmpty()) phoneNumber = phone.substring(1)//remove the "+"
+            val param = phoneNumber.ifEmpty { email }
+            val key = if (phone.isEmpty()) "email" else "phoneNo"
+            val res =
+                RestClient.get(Constants.NEW_BASE_URL).userChallenge(hashMapOf(key to param))
+            if (res.isSuccessful)
+                _userChallengeResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun authenticateUser(a: String, m1: String) {
+        viewModelScope.launch(exceptionHandler) {
+
+            val param = hashMapOf<String, Any>()
+            param["method"] = "srp"
+            param["A"] = a
+            param["M1"] = m1
+
+            val res = RestClient.get(Constants.NEW_BASE_URL).userLogin(param)
+            if (res.isSuccessful)
+                _userLoginResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+
+        }
+    }
+
+    fun verify2FA(code: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val hash = hashMapOf<String, Any>()
+            hash["code"] = code
+            val res = RestClient.get(Constants.NEW_BASE_URL).verify2FA(hash)
+            if (res.isSuccessful)
+                _userLoginResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun verify2FAWithdraw(code: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val hash = hashMapOf<String, Any>()
+            hash["code"] = code
+            val res = RestClient.get(Constants.NEW_BASE_URL).verify2FAWithdraw(hash)
+            if (res.isSuccessful)
+                commonResponseWithdraw.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+
+    fun refreshToken() {
+        viewModelScope.launch(exceptionHandler) {
+            val hashMap = hashMapOf<String, Any>()
+            hashMap["method"] = "refresh_token"
+            hashMap["refresh_token"] = App.prefsManager.refreshToken
+            val res = RestClient.get(Constants.NEW_BASE_URL).userLogin(hashMap)
+            if (res.isSuccessful)
+                _userLoginResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun setPhone(countryCode: String, phone: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL)
+                .setPhone(hashMapOf("countryCode" to countryCode.toInt(), "phoneNo" to phone))
+            if (res.isSuccessful)
+                _setPhoneResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun verifyPhone(code: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL)
+                .verifyPhone(hashMapOf("code" to code.toString()))
+            if (res.isSuccessful)
+                _verifyPhoneResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun setUserInfo(context: Context
+    ) {
+        viewModelScope.launch(exceptionHandler) {
+
+            val hashMap = hashMapOf<String, Any>()
+            if(App.prefsManager.getLanguage().isNotEmpty())
+               hashMap["language"] = App.prefsManager.getLanguage()
+            else{
+                val configuration = context.resources.configuration.locales[0]
+                if(configuration.language.uppercase()==Constants.FRENCH)
+                    hashMap["language"] = Constants.FRENCH
+                else
+                    hashMap["language"] = Constants.ENGLISH
+            }
+            val res = RestClient.get(Constants.NEW_BASE_URL).setUserInfo(hashMap)
+            if (res.isSuccessful)
+                _setUserInfoResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun setEmail(
+        email: String,
+        emailSalt: String,
+        emailVerifier: String,
+        phoneSalt: String,
+        phoneVerifier: String
+    ) {
+        viewModelScope.launch(exceptionHandler) {
+            val hashMap = hashMapOf<String, Any>()
+            hashMap["email"] = email
+            hashMap["emailSalt"] = emailSalt
+            hashMap["emailVerifier"] = emailVerifier
+            hashMap["phoneSalt"] = phoneSalt
+            hashMap["phoneVerifier"] = phoneVerifier
+
+            val res = RestClient.get(Constants.NEW_BASE_URL).setEmail(hashMap)
+            if (res.isSuccessful)
+                _setUpEmailResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+
+    fun verifyEmail(/*uuid: String,*/ code: String) {
+        viewModelScope.launch(exceptionHandler) {
+
+            val hash = hashMapOf<String, Any>()
+//            hash["uuid"] = uuid
+            hash["code"] = code
+            try {
+                val res = RestClient.get(Constants.NEW_BASE_URL).verifyEmail(hash)
+                if (res.isSuccessful)
+                    _verifyEmailResponse.postValue(res.body())
+                else listener?.onRetrofitError(res.errorBody())
+            } catch (e: Exception) {
+                _verifyEmailResponse.postValue("Email verified")
+            }
+
+        }
+    }
+
+
+    fun setUserAddress(
+        streetNumber: String,
+        street: String,
+        city: String,
+        zipCode: String,
+        country: String,
+        isUSCitizen: Boolean
+    ) {
+        viewModelScope.launch(exceptionHandler) {
+            val hash = hashMapOf<String, Any>()
+            if (streetNumber.isNotEmpty())
+                hash["streetNumber"] = streetNumber
+//            if (street.isNotEmpty())
+                hash["street"] = street.toString()
+            hash["city"] = city
+           hash["zipCode"] = zipCode
+            hash["country"] = country
+            hash["isUSCitizen"] = isUSCitizen
+
+
+
+            val res = RestClient.get(Constants.NEW_BASE_URL).setUserAddress(hash)
+            if (res.isSuccessful)
+                _setUserAddressResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun finishRegistration() {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).finishRegistration()
+            if (res.isSuccessful)
+                _finishRegistrationResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun setInvestmentExp(
+        investmentExperience: String,
+        incomeSource: String,
+        occupation: String,
+        incomeRange: String,
+        personalAssets: String
+    ) {
+        viewModelScope.launch(exceptionHandler) {
+            val hash = hashMapOf<String, Any>()
+            hash["investmentExperience"] = investmentExperience
+            hash["incomeSource"] = incomeSource
+            hash["occupation"] = occupation
+            hash["incomeRange"] = incomeRange
+            hash["mainUse"] = personalAssets
+            val res = RestClient.get(Constants.NEW_BASE_URL).setInvestmentExp(hash)
+            if (res.isSuccessful)
+                _setInvestmentExpResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+
+    }
+
+    fun getUser() {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).getUser()
+            if (res.isSuccessful)
+                _getUserResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun getNews(id: String = "btc") {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).getNews(id)
+            if (res.isSuccessful)
+                _newsResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun getPrice(id: String = "btc", tf: String = "1h") {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).getPrice(id, tf)
+            if (res.isSuccessful)
+                _priceResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun createWithdrawalRequest(
+        assetId: String,
+        amount: Double,
+        destination: String,
+        network: String,
+        code: String
+    ) {
+        viewModelScope.launch(exceptionHandler) {
+            val map = HashMap<String, Any>()
+            map["asset"] = assetId
+            map["amount"] = amount
+            map["destination"] = destination
+            map["network"] = network
+            map["otp"] = code
+            val res = RestClient.get(Constants.NEW_BASE_URL).createWithdrawalRequest(map)
+            if (res.isSuccessful) {
+                _commonResponse.postValue(res.body())
+            } else {
+                listener!!.onRetrofitError(res.errorBody())
+            }
+        }
+    }
+
+    fun getOtpForWithdraw(action: String, details: String?) {
+        viewModelScope.launch(exceptionHandler) {
+            val map = HashMap<String, Any>()
+            map["action"] = action
+            if(details!=null)
+            map["details"] = details
+            val res = RestClient.get(Constants.NEW_BASE_URL).getOtpForWithdraw(map)
+            if (res.isSuccessful) {
+                _commonResponse.postValue(res.body())
+            } else {
+                listener!!.onRetrofitError(res.errorBody())
+            }
+        }
+    }
+
+    fun startKYC() {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).startKyc()
+            if (res.isSuccessful) {
+                _kycResponse.postValue(res.body())
+            } else {
+                _listener?.onRetrofitError(res.errorBody())
+            }
+        }
+    }
+
+    fun getBalanceApi() {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).getBalance()
+            if (res.isSuccessful)
+                _balanceResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun getOrderApi(id: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).getOrder(id)
+            if (res.isSuccessful)
+                _getOrderResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun updateAuthentication(hash: HashMap<String, Any>) {
+        viewModelScope.launch(exceptionHandler) {
+
+            val res = RestClient.get(Constants.NEW_BASE_URL).updateUserAuthentication(hash)
+            if (res.isSuccessful)
+                _updateAuthenticateResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun switchOffAuthentication(detail: String, scope: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val res =
+                RestClient.get(Constants.NEW_BASE_URL).switchOffAuthentication(detail, scope)
+            if (res.isSuccessful)
+                _booleanResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun getExportOperation(date: String) {
+        try {
+            viewModelScope.launch(exceptionHandler) {
+                val res = RestClient.get().getOperationExport(date)
+                if (res.isSuccessful)
+                    _exportOperationResponse.postValue(res.body())
+            }
+        } catch (ex: Exception) {
+        }
+    }
+
+    fun qrCodeUrl() {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).getQrUrl()
+            if (res.isSuccessful)
+                _qrCodeResponse.postValue(res.body())
+        }
+    }
+
+    fun sendMsgToSupport(msg: String) {
+        try {
+            viewModelScope.launch(exceptionHandler) {
+                val hash = hashMapOf<String, Any>()
+                hash["message"] = msg
+                val res = RestClient.get().contactSupport(hash)
+                if (res.isSuccessful)
+                    _msgResponse.postValue(res.body())
+                else listener?.onRetrofitError(res.errorBody())
+            }
+        } catch (e: Exception) {
+            listener?.onError()
+
+        }
+    }
+
+    fun getTransactions(limit: Int, offset: Int) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().getTransactionsList(limit, offset)
+            if (res.isSuccessful)
+                _getTransactionListing.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun forgotPass(email: String) {
+        try {
+            viewModelScope.launch(exceptionHandler) {
+                val hash = hashMapOf<String, Any>()
+                hash["email"] = email
+                val res = RestClient.get().forgotPassword(hash)
+                if (res.isSuccessful)
+                    _booleanResponse.postValue(res.body())
+                else listener?.onRetrofitError(res.errorBody())
+            }
+        } catch (e: Exception) {
+            listener?.onError()
+        }
+
+    }
+
+    fun resetNewPass(
+        emailSalt: String,
+        emailVerifier: String,
+        phoneSalt: String,
+        phoneVerifier: String
+    ) {
+        try {
+            viewModelScope.launch(exceptionHandler) {
+                val hashMap = hashMapOf<String, Any>()
+                hashMap["emailSalt"] = emailSalt
+                hashMap["emailVerifier"] = emailVerifier
+                hashMap["phoneSalt"] = phoneSalt
+                hashMap["phoneVerifier"] = phoneVerifier
+                val res = RestClient.get().resetNewPassword(hashMap)
+                if (res.isSuccessful)
+                    _booleanResponse.postValue(res.body())
+                else
+                    listener?.onRetrofitError(res.errorBody())
+            }
+        } catch (e: Exception) {
+            listener?.onError()
+        }
+    }
+
+    fun getResetPass() {
+        try {
+            viewModelScope.launch(exceptionHandler) {
+                val res = RestClient.get().getResetPassword()
+                if (res.isSuccessful)
+                    _resetPassResponse.postValue(res.body())
+                else listener?.onRetrofitError(res.errorBody())
+            }
+        } catch (e: Exception) {
+            listener?.onError()
+
+        }
+    }
+
+    fun getPasswordChangeChallenge() {
+        try {
+            viewModelScope.launch(exceptionHandler) {
+                val res = RestClient.get().getPasswordChangeChallenge()
+                if (res.isSuccessful)
+                    _changePassResponse.postValue(res.body())
+                else listener?.onRetrofitError(res.errorBody())
+            }
+        } catch (e: Exception) {
+            listener?.onError()
+
+        }
+    }
+
+    fun changePassword(hash: HashMap<String, Any>) {
+        try {
+            viewModelScope.launch(exceptionHandler) {
+                val res = RestClient.get().changePassword(hash)
+                if (res.isSuccessful)
+                    _booleanResponse.postValue(res.body())
+                else listener?.onRetrofitError(res.errorBody())
+            }
+        } catch (e: Exception) {
+            listener?.onError()
+
+        }
+    }
+
+    fun verifyPasswordChange(code: String) {
+        try {
+            viewModelScope.launch(exceptionHandler) {
+                val hash = hashMapOf<String, Any>()
+                hash["code"] = code
+                val res = RestClient.get().verifyPasswordChange(hash)
+                if (res.isSuccessful)
+                    _exportOperationResponse.postValue(res.body())
+                else listener?.onRetrofitError(res.errorBody())
+            }
+        } catch (e: Exception) {
+            listener?.onError()
+        }
+    }
+
+    fun oneTimeOrderStrategy(strategyName: String, amount: Double, ownerUuid: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val map = HashMap<String, Any>()
+            map["strategyName"] = strategyName
+            map["amount"] = amount
+            map["ownerUuid"] = ownerUuid
+            val res =
+                RestClient.get(Constants.NEW_BASE_URL).oneTimeStrategyExecution(map)
+            if (res.isSuccessful) {
+                _oneTimeStrategyDataResponse.postValue(res.body())
+            } else {
+                listener!!.onRetrofitError(res.errorBody())
+            }
+        }
+    }
+
+    fun strategyStatus(executionId: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val res =
+                RestClient.get(Constants.NEW_BASE_URL).checkStrategyStatus(executionId)
+            if (res.isSuccessful) {
+                _strategyExecutionResponse.postValue(res.body())
+            } else {
+                listener!!.onRetrofitError(res.errorBody())
+            }
+        }
+    }
+
+    fun cancelQuote(hashMap: HashMap<String, Any>) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).cancelQuote(hashMap)
+            if (res.isSuccessful) {
+                _booleanResponse.postValue(res.body())
+            } else {
+                listener!!.onRetrofitError(res.errorBody())
+            }
+        }
+    }
+
+    fun getActivityLogs(limit: Int, offset: Int) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().getActivityLogsList(limit, offset)
+            if (res.isSuccessful)
+                _getActivityLogsListing.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+    
+    fun closeAccount(hash: HashMap<String, Any>) {
+        viewModelScope.launch(exceptionHandler) {
+
+            val res = RestClient.get(Constants.NEW_BASE_URL).closeAccount(hash)
+            if (res.isSuccessful)
+                _booleanResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+
+        }
+    }
+
+    fun startSignUrl() {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).startSignUrl()
+            if (res.isSuccessful) {
+                _signUrlResponse.postValue(res.body())
+            } else {
+                _listener?.onRetrofitError(res.errorBody())
+            }
+        }
+    }
+
+    fun startKYCIdentity() {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).startKyc()
+            if (res.isSuccessful) {
+                _kycResponseIdentity.postValue(res.body())
+            } else {
+                _listener?.onRetrofitError(res.errorBody())
+            }
+        }
+    }
+
+    fun getWalletHistoryPrice( daily: Boolean = true,limit: Int =500) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).getWalletHistory(limit, daily)
+            if (res.isSuccessful)
+                _walletHistoryResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+    fun getActiveStrategies( ) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).activeStrategies()
+            if (res.isSuccessful)
+                _activeStrategyResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun getPriceResumeById(id:String ) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).getPriceResumeId(id)
+            if (res.isSuccessful)
+                _priceResumeIdResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun editEnabledStrategy(
+        strategyId: String,
+        frequency: String?,
+        amount: Int,
+        strateggyName: String
+    ) {
+        viewModelScope.launch(exceptionHandler) {
+            val hash = hashMapOf<String, Any>()
+            hash["strategyName"] = strateggyName
+            hash["ownerUuid"] = strategyId
+            if (frequency != null)
+                hash["frequency"] = frequency
+            hash["amount"] = amount
+            Log.d("logData", "$hash")
+            val res = RestClient.get().editEnabledStrategy(hash)
+            if (res.isSuccessful)
+                _investStrategyResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+    fun enableNotification(
+        token: String
+    ) {
+        viewModelScope.launch(exceptionHandler) {
+            val hash = hashMapOf<String, Any>()
+            hash["token"] = token
+            hash["device"] = "ANDROID"
+            val res = RestClient.get().enableNotification(hash)
+            if (res.isSuccessful)
+                _booleanResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+    fun getUserSign() {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).getUser()
+            if (res.isSuccessful)
+                _getUserSignResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+}
