@@ -783,5 +783,6 @@
     <string name="sign_up_in_5">Sign up in 5min</string>
     <string name="empty"></string>
     <string name="tailorStrategyError">The invested amount must be at least 10 USDT per asset in the strategy.</string>
-    <string name="new_code">A new code can be returned in </string>
+   <string name="new_code">A new code can be returned in </string>
+
 </resources>

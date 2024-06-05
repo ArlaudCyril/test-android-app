@@ -46,6 +46,7 @@ import com.nimbusds.srp6.XRoutineWithUserIdentity
 import com.Lyber.R
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
+
 class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View.OnClickListener {
 
     private lateinit var viewModel: SignUpViewModel
@@ -209,7 +210,6 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                     vc.mainView = getView()?.rootView as ViewGroup
                     vc.viewModel = viewModel
                     vc.fromSignUp = true
-
                     vc.show(childFragmentManager, "")
 
                     // Add the transparent view to the RelativeLayout
@@ -367,9 +367,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
 
                                     viewModel.mobileNumber = modifiedMobile
                                     viewModel.countryCode = countryCode
-                                    viewModel.setPhone(
-                                        viewModel.countryCode.removeRange(0,1),
-                                        viewModel.mobileNumber
+                                    viewModel.setPhone(viewModel.countryCode.substring(1), viewModel.mobileNumber
                                     )
 
                                 }

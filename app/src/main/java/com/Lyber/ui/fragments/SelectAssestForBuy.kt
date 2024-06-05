@@ -250,8 +250,13 @@ class SelectAssestForBuy : BaseFragment<FragmentAllAssetsBinding>(), View.OnClic
     private fun assetClicked(asset: PriceServiceResume) {
         val balance = com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == "usdt" }
         if (asset.id == "usdt") {
-            if (checkKyc())
-                findNavController().navigate(R.id.buyUsdt)
+
+            if (checkKyc()) {
+                val arguments = Bundle().apply {
+                    putString(Constants.FROM, SelectAssestForBuy::class.java.name)
+                }
+                findNavController().navigate(R.id.buyUsdt,arguments)
+            }
         } else if (balance != null) {
             viewModel.exchangeAssetTo = asset.id
             viewModel.exchangeAssetFrom = "usdt"
@@ -285,7 +290,12 @@ class SelectAssestForBuy : BaseFragment<FragmentAllAssetsBinding>(), View.OnClic
                 }
                 it.tvPositiveButton.setOnClickListener {
                     dismiss()
-                    findNavController().navigate(R.id.buyUsdt)
+//                    viewModel.selectedAsset=assetUsdt
+//                    findNavController().navigate(R.id.buyUsdt)
+                    val arguments = Bundle().apply {
+                        putString(Constants.FROM, SelectAssestForBuy::class.java.name)
+                    }
+                    findNavController().navigate(R.id.buyUsdt,arguments)
 
                 }
                 show()

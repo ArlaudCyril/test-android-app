@@ -48,6 +48,8 @@ abstract class BaseActivity<viewBinding : ViewBinding> : AppCompatActivity() {
         viewModel1.getUserResponse.observe(this) {
             try {
                 App.prefsManager.user = it.data
+
+
                 if (it.data.language.isNotEmpty()) {
                     App.prefsManager.setLanguage(it.data.language)
                     val locale = Locale(it.data.language)
@@ -64,7 +66,7 @@ abstract class BaseActivity<viewBinding : ViewBinding> : AppCompatActivity() {
         }
     }
 
-   public fun getUser1() {
+    fun getUser1() {
         viewModel1.getUser()
     }
 

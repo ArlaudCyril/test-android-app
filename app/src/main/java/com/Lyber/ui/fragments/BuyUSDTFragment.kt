@@ -36,11 +36,14 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
     private val unfocusedData: ValueHolder = ValueHolder()
     private var mCurrency: String = ""
     private var mConversionCurrency: String = ""
+    private lateinit var from:String
     private val amount get() = binding.etAmount.text.trim().toString()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = CommonMethods.getViewModel(requireActivity())
         viewModel.listener = this
+        if(arguments!=null && requireArguments().containsKey(Constants.FROM))
+            from= requireArguments().getString(Constants.FROM).toString()
         binding.tvBackArrow.setOnClickListener(this)
         binding.tvDot.setOnClickListener(this)
         binding.tvZero.setOnClickListener(this)
@@ -71,11 +74,11 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
                 binding.progress.gone()
                 val bundle = Bundle().apply {
                     putString(Constants.DATA_SELECTED, Gson().toJson(it.data))
+                    if(::from.isInitialized)
+                    putString(Constants.FROM, from)
                 }
                 findNavController().navigate(R.id.previewMyPurchaseFragment, bundle)
-//                startActivity(
-//                    Intent(requireActivity(), PayActivity::class.java).putExtra("clientSecret",it.data?.clientSecret))
-            }
+          }
         }
     }
 

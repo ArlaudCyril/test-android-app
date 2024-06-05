@@ -316,7 +316,10 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
         binding.apply {
             when (p0) {
                 btnBuyTether -> {
-                    findNavController().navigate(R.id.buyUsdt)
+                    val arguments = Bundle().apply {
+                        putString(Constants.FROM, ChooseAssetForDepositFragment::class.java.name)
+                    }
+                    findNavController().navigate(R.id.buyUsdt,arguments)
                 }
                 ivCopy -> {
                     if (binding.etAddress.text.toString().isNotEmpty()) {
