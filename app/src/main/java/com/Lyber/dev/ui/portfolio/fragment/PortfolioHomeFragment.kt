@@ -278,6 +278,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             }
             if (arguments != null && requireArguments().containsKey("showLoader")) {
                 App.isKyc = true
+                    startJob()
                 CommonMethods.showDocumentDialog(requireActivity(), Constants.LOADING, false)
                 arguments = null
             } else if (!App.isLoader)

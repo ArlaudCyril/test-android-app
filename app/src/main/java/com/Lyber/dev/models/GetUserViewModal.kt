@@ -13,6 +13,7 @@ import com.Lyber.dev.viewmodels.NetworkViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+
 class GetUserViewModal() : ViewModel() {
 
     private val networkViewModel = NetworkViewModel()
@@ -25,7 +26,13 @@ class GetUserViewModal() : ViewModel() {
         startFetchingUserData()
     }
 
-    private fun startFetchingUserData() {
+     fun startFetchingUserData() {
+        try {
+            if (fetchingJob != null)
+                fetchingJob?.cancel()
+        } catch (_: Exception) {
+
+        }
         if (App.prefsManager.user?.kycStatus != "OK" || App.prefsManager.user?.yousignStatus != "SIGNED") {
             Log.d("Loop", "Started")
             fetchingJob = viewModelScope.launch {

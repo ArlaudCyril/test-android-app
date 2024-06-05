@@ -59,7 +59,8 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
     val hashMap: HashMap<String, Any> = hashMapOf()
 
     override fun bind() = FragmentMyPurchaseBinding.inflate(layoutInflater)
-//    private fun baseCardPaymentMethod(): JSONObject =
+
+    //    private fun baseCardPaymentMethod(): JSONObject =
 //        JSONObject()
 //            .put("type", "CARD")
 //            .put(
@@ -77,6 +78,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
                     .put("allowedCardNetworks", JSONArray(listOf("*")))
                     .put("billingAddressRequired", false)
             )
+
     private val allowedCardNetworks = JSONArray(
         listOf(
             "AMEX",
@@ -117,7 +119,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
 
         binding.ivTopAction.setOnClickListener(this)
         binding.tvMoreDetails.setOnClickListener(this)
-        Handler(Looper.getMainLooper()).postDelayed({ binding.googlePayPaymentButton.visible() }, 1000)
+//        Handler(Looper.getMainLooper()).postDelayed({ binding.googlePayPaymentButton.visible() }, 1000)
 
 
         handler = Handler(Looper.getMainLooper())
@@ -218,8 +220,8 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
             hashMap["paymentIntentId"] = data.paymentIntentId
             hashMap["orderId"] = data.orderId
             hashMap["userUuid"] = App.prefsManager.user?.uuid.toString()
-            if(requireArguments().containsKey(Constants.FROM))
-                fromFragment=requireArguments().getString(Constants.FROM).toString()
+            if (requireArguments().containsKey(Constants.FROM))
+                fromFragment = requireArguments().getString(Constants.FROM).toString()
         }
 
 
@@ -294,8 +296,9 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
             btnConfirmInvestment.isEnabled = true
             timer =
                 ((data.validTimestamp.toLong() - System.currentTimeMillis()) / 1000).toInt()
-
+            Log.d("time", "$timer")
             handler.removeCallbacks(runnable)
+            binding.googlePayPaymentButton.visible()
             startTimer()
             title.text = getString(R.string.confirm_purchase)
 
@@ -318,11 +321,11 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
         isTimerRunning = true
         if (timer == 0) {
             try {
-               val errorBottomSheet = ErrorBottomSheet(::dismissList)
-               if(::fromFragment.isInitialized)
-                   errorBottomSheet.arguments = Bundle().apply {
-                    putString(Constants.FROM, fromFragment)
-                }
+                val errorBottomSheet = ErrorBottomSheet(::dismissList)
+                if (::fromFragment.isInitialized)
+                    errorBottomSheet.arguments = Bundle().apply {
+                        putString(Constants.FROM, fromFragment)
+                    }
                 if (isGpayHit)
                     errorBottomSheet.show(childFragmentManager, "GpaySheet")
                 else

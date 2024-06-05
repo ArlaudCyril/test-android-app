@@ -236,8 +236,6 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
         }
     }
 
-
-
     fun stopRegistrationDialog() {
         Dialog(requireActivity(), R.style.DialogTheme).apply {
 
@@ -273,5 +271,9 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
                 show()
             }
         }
+    }
+
+    fun startJob(){
+        viewModel1.startFetchingUserData()
     }
 }

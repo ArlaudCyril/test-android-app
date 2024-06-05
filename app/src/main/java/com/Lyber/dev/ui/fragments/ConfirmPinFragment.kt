@@ -57,10 +57,13 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
         binding.ivTopClose.setOnClickListener {
             stopRegistrationDialog()
         }
+        if (viewModel.forLogin)
         viewModel.getUserResponse.observe(viewLifecycleOwner) {
 //            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
             try {
                 App.prefsManager.user = it.data
+                if (it.data.kycStatus != "OK" || it.data.yousignStatus != "SIGNED")
+                    startJob()
                 if (it.data.language.isNotEmpty()) {
                     App.prefsManager.setLanguage(it.data.language)
                     val locale = Locale(it.data.language)
