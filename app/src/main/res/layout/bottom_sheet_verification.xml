@@ -173,6 +173,7 @@
         android:layout_marginTop="4dp"
         android:orientation="horizontal">
 
+
         <TextView
             style="@style/SubheadMabry"
             android:layout_height="wrap_content"

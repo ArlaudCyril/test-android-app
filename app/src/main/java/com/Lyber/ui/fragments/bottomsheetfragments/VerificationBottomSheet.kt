@@ -16,8 +16,6 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.RelativeLayout
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Lifecycle
@@ -30,7 +28,6 @@ import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
-import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.viewmodels.SignUpViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.stripe.android.googlepaylauncher.GooglePayLauncher
@@ -117,14 +114,17 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
     private fun startTimer() {
         if(binding.tvResendCode.isVisible)
         binding.tvResendCode.gone()
-        if (!binding.llResendText.isVisible)
-            binding.llResendText.visible()
-        try {
-            handler.postDelayed(runnable, 1000)
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
-    }
+                if(fromResend){
+                    if(!::handler.isInitialized)
+                        handler = Handler(Looper.getMainLooper())
+                    timer=60
+                    binding.tvTimeLeft.text="60"
+                    startTimer()
+                }
+                fromResend=false
+            }
+
+
 
     @SuppressLint("SuspiciousIndentation")
     private val runnable = Runnable {
@@ -444,7 +444,6 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
         super.onDestroy()
         stopTimer()
     }
-
     private fun stopTimer() {
         try {
             handler.removeCallbacks(runnable)

@@ -190,21 +190,25 @@
         android:translationZ="4dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
+
         <RelativeLayout
             android:id="@+id/btnConfirmInvestment"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/button_purple_500"
             android:backgroundTint="@color/black">
-
-            <TextView
-                style="@style/ButtonStyle"
-                android:layout_width="wrap_content"
-                android:layout_centerInParent="true"
-                android:background="@color/black"
-                android:drawableStart="@drawable/ic_gpay_removebg_preview"
-                android:gravity="center"
-                android:text="@string/pay" />
+            <com.google.android.gms.wallet.button.PayButton
+                android:id="@+id/google_pay_payment_button"
+                android:layout_width="match_parent"
+                android:visibility="gone"
+                android:layout_height="wrap_content"/>
+<!--            <TextView-->
+<!--                style="@style/ButtonStyle"-->
+<!--                android:layout_width="wrap_content"-->
+<!--                android:layout_centerInParent="true"-->
+<!--                android:background="@color/black"-->
+<!--                android:drawableStart="@drawable/ic_gpay_removebg_preview"-->
+<!--                android:gravity="center"-->
+<!--                android:text="@string/pay" />-->
         </RelativeLayout>
 
         <TextView

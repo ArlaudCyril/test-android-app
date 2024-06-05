@@ -59,7 +59,9 @@ import java.util.Locale
 
 class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), ActivityCallbacks,
     View.OnClickListener, PortfolioFragmentActions {
-    private val viewModel1: com.Lyber.models.GetUserViewModal by activityViewModels()
+
+//    private val viewModel1: com.Lyber.models.GetUserViewModal by activityViewModels()
+
 
     /* adapters */
     private lateinit var adapterBalance: BalanceAdapter
@@ -278,6 +280,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             }
             if (arguments != null && requireArguments().containsKey("showLoader")) {
                 App.isKyc = true
+                    startJob()
                 CommonMethods.showDocumentDialog(requireActivity(), Constants.LOADING, false)
                 arguments = null
             } else if (!App.isLoader)
