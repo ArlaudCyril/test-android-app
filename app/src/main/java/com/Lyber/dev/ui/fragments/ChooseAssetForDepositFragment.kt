@@ -311,12 +311,16 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                     }
         }
     }
+   private var assetUsdt=com.Lyber.dev.ui.activities.BaseActivity.assets.find { it1 -> it1.id == "usdt" }
 
     override fun onClick(p0: View?) {
         binding.apply {
             when (p0) {
                 btnBuyTether -> {
-                    findNavController().navigate(R.id.buyUsdt)
+                    val arguments = Bundle().apply {
+                        putString(Constants.FROM, ChooseAssetForDepositFragment::class.java.name)
+                    }
+                    findNavController().navigate(R.id.buyUsdt,arguments)
                 }
                 ivCopy -> {
                     if (binding.etAddress.text.toString().isNotEmpty()) {
