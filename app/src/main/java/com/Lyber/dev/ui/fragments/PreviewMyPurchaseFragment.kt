@@ -6,6 +6,7 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.Lyber.dev.R
@@ -15,7 +16,7 @@ import com.Lyber.dev.models.BalanceData
 import com.Lyber.dev.models.DataQuote
 import com.Lyber.dev.network.RestClient
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.ErrorBottomSheet
-import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.Lyber.dev.ui.fragments.bottomsheetfragments.VerificationBottomSheet
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
@@ -26,13 +27,20 @@ import com.Lyber.dev.utils.CommonMethods.Companion.gone
 import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
+import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.google.android.gms.wallet.button.ButtonConstants
+import com.google.android.gms.wallet.button.ButtonOptions
+import com.google.android.gms.wallet.button.PayButton
 import com.google.gson.Gson
 import com.stripe.android.PaymentConfiguration
 import com.stripe.android.googlepaylauncher.GooglePayEnvironment
 import com.stripe.android.googlepaylauncher.GooglePayLauncher
 import okhttp3.ResponseBody
+import org.json.JSONArray
+import org.json.JSONObject
 import java.math.RoundingMode
 import java.util.Locale
+
 
 class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
     View.OnClickListener, RestClient.OnRetrofitError {
@@ -42,6 +50,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
     private var orderId: String = ""
     private lateinit var googlePayLauncher: GooglePayLauncher
     private lateinit var viewModel: PortfolioViewModel
+    private lateinit var fromFragment: String
     private var isTimerRunning = false
     private lateinit var handler: Handler
     private var isGpayInstalled = false
@@ -50,17 +59,67 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
     val hashMap: HashMap<String, Any> = hashMapOf()
 
     override fun bind() = FragmentMyPurchaseBinding.inflate(layoutInflater)
+//    private fun baseCardPaymentMethod(): JSONObject =
+//        JSONObject()
+//            .put("type", "CARD")
+//            .put(
+//                "parameters", JSONObject()
+//                    .put("allowedAuthMethods", allowedCardAuthMethods)
+//                    .put("allowedCardNetworks", JSONArray())
+//                    .put("billingAddressRequired", false)
+//            )
+    private fun baseCardPaymentMethod(): JSONObject =
+        JSONObject()
+            .put("type", "CARD")
+            .put(
+                "parameters", JSONObject()
+                    .put("allowedAuthMethods", allowedCardAuthMethods)
+                    .put("allowedCardNetworks", JSONArray(listOf("*")))
+                    .put("billingAddressRequired", false)
+            )
+    private val allowedCardNetworks = JSONArray(
+        listOf(
+            "AMEX",
+            "DISCOVER",
+            "INTERAC",
+            "JCB",
+            "MASTERCARD",
+            "VISA"
+        )
+    )
+    private val allowedCardNetworks1 = JSONArray()
+
+    private val allowedCardAuthMethods = JSONArray(
+        listOf(
+            "PAN_ONLY",
+            "CRYPTOGRAM_3DS"
+        )
+    )
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         PaymentConfiguration.init(
-            requireActivity(),Constants.STRIKE_KEY
+            requireActivity(), Constants.STRIKE_KEY
         )
-
+        val payButton: PayButton = binding.googlePayPaymentButton
+        val paymentMethods: JSONArray = JSONArray().put(baseCardPaymentMethod())
+        payButton.initialize(
+            ButtonOptions.newBuilder()
+                .setButtonType(ButtonConstants.ButtonType.BUY)
+                .setCornerRadius(24)
+                .setAllowedPaymentMethods(paymentMethods.toString())
+                .build()
+        )
         viewModel = CommonMethods.getViewModel(requireActivity())
         viewModel.listener = this
+
+
+
         binding.ivTopAction.setOnClickListener(this)
         binding.tvMoreDetails.setOnClickListener(this)
-        binding.btnConfirmInvestment.setOnClickListener(this)
+        Handler(Looper.getMainLooper()).postDelayed({ binding.googlePayPaymentButton.visible() }, 1000)
+
+
         handler = Handler(Looper.getMainLooper())
         googlePayLauncher = GooglePayLauncher(
             fragment = this@PreviewMyPurchaseFragment,
@@ -92,14 +151,15 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
                 CommonMethods.dismissProgressDialog()
             }
         }
-//        viewModel.logoutResponse.observe(viewLifecycleOwner){
-//            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-//                App.prefsManager.logout()
-//                findNavController().popBackStack()
-//                findNavController().navigate(R.id.discoveryFragment)
-//            }
-//        }
+
         getData()
+        payButton.setOnClickListener {
+            if (isGpayInstalled) {
+                isGpayHit = true
+                googlePayLauncher.presentForPaymentIntent(clientSecret)
+            } else
+                getString(R.string.you_must_install_gpay).showToast(requireContext())
+        }
     }
 
     private fun onGooglePayReady(isReady: Boolean) {
@@ -158,7 +218,10 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
             hashMap["paymentIntentId"] = data.paymentIntentId
             hashMap["orderId"] = data.orderId
             hashMap["userUuid"] = App.prefsManager.user?.uuid.toString()
+            if(requireArguments().containsKey(Constants.FROM))
+                fromFragment=requireArguments().getString(Constants.FROM).toString()
         }
+
 
     }
 
@@ -229,7 +292,8 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
                 "" + (data.fromAmount.toDouble() - data.fees.toDouble()) + Constants.EURO
             tvAmount.text = "${data.toAmount.formattedAsset(priceCoin, RoundingMode.DOWN) + "USDT"}"
             btnConfirmInvestment.isEnabled = true
-            timer = ((data.validTimestamp.toLong() - System.currentTimeMillis()) / 1000).toInt()
+            timer =
+                ((data.validTimestamp.toLong() - System.currentTimeMillis()) / 1000).toInt()
 
             handler.removeCallbacks(runnable)
             startTimer()
@@ -254,10 +318,15 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
         isTimerRunning = true
         if (timer == 0) {
             try {
+               val errorBottomSheet = ErrorBottomSheet(::dismissList)
+               if(::fromFragment.isInitialized)
+                   errorBottomSheet.arguments = Bundle().apply {
+                    putString(Constants.FROM, fromFragment)
+                }
                 if (isGpayHit)
-                    ErrorBottomSheet(::dismissList).show(childFragmentManager, "GpaySheet")
+                    errorBottomSheet.show(childFragmentManager, "GpaySheet")
                 else
-                    ErrorBottomSheet(::dismissList).show(childFragmentManager, "")
+                    errorBottomSheet.show(childFragmentManager, "")
             } catch (_: Exception) {
 
             }

@@ -338,6 +338,18 @@
             app:popUpTo="@id/portfolioHomeFragment"
             app:popUpToInclusive="false"
             />
+        <action
+            android:id="@+id/action_preview_my_purchase_to_select_asset_for_deposit"
+            app:destination="@id/selectAssestForDepositFragment"
+            app:popUpTo="@id/portfolioHomeFragment"
+            app:popUpToInclusive="false"
+            />
+        <action
+            android:id="@+id/action_preview_my_purchase_to_select_asset_for_buy"
+            app:destination="@id/selectAssestForBuy"
+            app:popUpTo="@id/portfolioHomeFragment"
+            app:popUpToInclusive="false"
+            />
     </fragment>
     <fragment
         android:id="@+id/addCryptoAddress"
