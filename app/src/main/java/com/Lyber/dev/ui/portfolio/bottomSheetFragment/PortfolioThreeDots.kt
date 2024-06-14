@@ -18,6 +18,7 @@ import com.Lyber.dev.ui.portfolio.fragment.PortfolioHomeFragment
 import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.dev.utils.CommonMethods.Companion.gone
+import com.Lyber.dev.utils.Constants
 
 class PortfolioThreeDots(private val listenItemClicked: (String, String) -> Unit = { _, _ -> }) :
     View.OnClickListener, DialogFragment() {
@@ -44,6 +45,8 @@ class PortfolioThreeDots(private val listenItemClicked: (String, String) -> Unit
         prepareView()
         if (tag!!.isNotEmpty())
             binding.llSell.root.gone()
+        if(viewModel.selectedAsset?.id!=null && viewModel.selectedAsset?.id=="usdt")
+            binding.llBuy.root.gone()
         binding.llWithdraw.root.setOnClickListener(this)
         binding.llExchange.root.setOnClickListener(this)
         binding.llDepositFiat.root.setOnClickListener(this)
@@ -100,7 +103,7 @@ class PortfolioThreeDots(private val listenItemClicked: (String, String) -> Unit
 //            else
             it.tvStartTitle.text = "${getString(R.string.buy)}"
             if (this.typePopUp == "AssetPopUp" || this.typePopUp == "AssetPopUpWithdraw") {
-                if (viewModel.selectedAsset!!.id!!.lowercase() == "usdt") {
+                if (viewModel.selectedAsset!!.id!!.lowercase() == Constants.MAIN_ASSET) {
                     it.tvStartSubTitle.text = getString(R.string.buy_usdt_with_euro)
 
                 } else
@@ -164,7 +167,7 @@ class PortfolioThreeDots(private val listenItemClicked: (String, String) -> Unit
                 }
 
                 llBuy.root -> {
-                    if (typePopUp != "" && viewModel.selectedAsset != null && viewModel.selectedAsset!!.id!!.lowercase() == "usdt")
+                    if (typePopUp != "" && viewModel.selectedAsset != null && viewModel.selectedAsset!!.id!!.lowercase() == Constants.MAIN_ASSET)
                         findNavController().navigate(R.id.buyUsdt)
                     else
                         listenItemClicked(tag ?: "PortfolioThreeDots", "buy")

@@ -60,6 +60,7 @@ import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
+import com.Lyber.dev.viewmodels.SignUpViewModel
 import com.caverock.androidsvg.BuildConfig
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
@@ -74,6 +75,8 @@ import java.util.*
 class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickListener {
 
     private lateinit var viewModel: PortfolioViewModel
+    private lateinit var viewModelSignup: SignUpViewModel
+
     private lateinit var adapter: TransactionAdapter
 
     private var imageFile: File? = null
@@ -89,7 +92,9 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = getViewModel(requireActivity())
+        viewModelSignup = getViewModel(requireActivity())
         viewModel.listener = this
+        viewModelSignup.listener = this
 
         val navHostFragment =
             requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -296,7 +301,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
     private fun handle(code: String) {
         CommonMethods.checkInternet(requireContext()) {
             isResend = true
-            viewModel.getOtpForWithdraw(Constants.ACTION_CLOSE_ACCOUNT, null)
+            viewModelSignup.getOtpForWithdraw(Constants.ACTION_CLOSE_ACCOUNT, null)
 
         }
 

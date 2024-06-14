@@ -19,7 +19,7 @@ android {
         applicationId "com.Lyber.dev"
         minSdk 24
         targetSdk 34
-        versionCode 7 // as new for development
+        versionCode 8 // as new for development
         versionName "1.1" // on studio pushed version up to 3 and 1
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -27,7 +27,7 @@ android {
 
     buildTypes {
         release {
-            debuggable false
+            debuggable true
             shrinkResources true
             minifyEnabled true
             signingConfig signingConfigs.release
@@ -71,8 +71,6 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.7.6'
     implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation 'androidx.fragment:fragment:1.6.2'
-    implementation 'androidx.core:core-ktx:+'
-    implementation 'androidx.core:core-ktx:+'
     implementation 'androidx.core:core-ktx:+'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
@@ -131,7 +129,7 @@ dependencies {
     implementation 'com.github.jinatonic.confetti:confetti:1.1.2'
     def lottieVersion = "3.7.0"
     implementation "com.airbnb.android:lottie:$lottieVersion"
-    implementation  "com.google.android.gms:play-services-wallet:19.2.1"
+    implementation  "com.google.android.gms:play-services-wallet:19.4.0"
 
     implementation 'com.google.android.libraries.places:places:3.3.0'
     implementation 'com.google.android.gms:play-services-places:17.0.0'
@@ -139,4 +137,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:23.4.1'
     implementation 'androidx.core:core-splashscreen:1.2.0-alpha01'
     implementation("io.github.g00fy2.quickie:quickie-bundled:1.9.0")
+}
+configurations.all {
+    resolutionStrategy {
+        force 'androidx.core:core:1.12.0'
+    }
 }

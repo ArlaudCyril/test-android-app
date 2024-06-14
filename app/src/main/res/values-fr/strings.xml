@@ -1,7 +1,8 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <!--    production-->
     <string name="API_KEY">AIzaSyB9nBqhoH9KPAKVnvMU03V9y3U14qC8Ufc</string>
-    <string name="encodedKey">UVVsNllWTjVRamx1UW5Gb2IwZzVTMUJCUzFadWRrMVZNRE5XT1hrelZURTBjVU00Vldaago=</string>
+    <string name="encodedKey">QUl6YVN5QjluQnFob0g5S1BBS1Zudk1VMDNWOXkzVTE0cUM4VWZj</string>
+
     <!--    staging-->
     <!--    <string name="API_KEY">AIzaSyDILfqSYsVaOhqF8cSugU7ekCt8V4GSYyo</string>-->
     <!--    <string name="encodedKey">UVVsNllWTjVSRWxNWm5GVFdYTldZVTlvY1VZNFkxTjFaMVUzWld0RGREaFdORWRUV1hsdgo=</string>-->
@@ -555,6 +556,8 @@
     <string name="or">OU</string>
     <string name="invest_in_asset_usdt">Pour investir dans un actif, vous devez d\'abord acheter des USDT, puis utiliser les USDT achetés et les échanger contre l\'actif souhaité.</string>
     <string name="buy_usdt">Acheter de l’USDT</string>
+    <string name="buy_usdc">Acheter de l’USDC</string>
+    <string name="buy_usdc_u"><u>Acheter de l’USDC</u></string>
     <string name="copied">Copié</string>
     <string name="low">Faible</string>
     <string name="high">Elevé</string>
@@ -582,7 +585,6 @@
     <string name="view_more">Voir plus</string>
     <string name="read_less">Voir moins</string>
     <string name="next_payment">Prochain paiement</string>
-    <string name="no_active_strategy">Vous n\'avez pas de stratégie active</string>
     <string name="deposit_now">Déposez en maintenant</string>
     <string name="no_assets">Vous n\'avez pas encore d\'actifs</string>
     <string name="activate_create_one">Activer/créer en une maintenant</string>
@@ -723,15 +725,15 @@
     <string name="pass_should_be_same">Votre mot de passe doit être le même dans les champs \"Entrez votre nouveau mot de passe\" et \"Confirmez votre nouveau mot de passe\".</string>
     <string name="selcted_24h">Un délai de 24h est requis avant de pouvoir effectuer un retrait vers une adresse nouvellement ajoutée à votre carnet d\'adresses.</string>
     <string name="selcted_72h">Un délai de 72h est requis avant de pouvoir effectuer un retrait vers toute adresse nouvellement ajoutée à votre carnet d\'adresses.</string>
-    <string name="buy_assets_with_usdt">Acheter des actifs avec USDT</string>
-    <string name="buy__with_usdt">Achetez %1$s avec USDT</string>
-    <string name="buy_usdt_with_euro">Acheter des USDT avec des euros</string>
-    <string name="usdt_error" tools:ignore="ExtraTranslation">Pour investir dans un actif, vous devez d\'abord acheter de l\'USDT, puis utiliser l\'USDT acheté et l\'échanger contre l\'actif souhaité.</string>
+    <string name="buy_assets_with_usdt">Acheter des actifs avec USDC</string>
+    <string name="buy__with_usdt">Achetez %1$s avec USDC</string>
+    <string name="buy_usdt_with_euro">Acheter des USDC avec des euros</string>
+    <string name="usdt_error" tools:ignore="ExtraTranslation">Pour investir dans un actif, vous devez d\'abord acheter de l\'USDC, puis utiliser l\'USDC acheté et l\'échanger contre l\'actif souhaité.</string>
     <string name="pay">Payer</string>
     <string name="purchase_error">La date limite pour confirmer votre achat est dépassée. Souhaitez-vous recevoir une nouvelle proposition?</string>
     <string name="you_have_seconds_to_confirm_this_purchase">Vous disposez de %1$s secondes pour confirmer cet achat.</string>
     <string name="you_must_install_gpay">Vous devez d\'abord installer Google Pay</string>
-    <string name="usdt_price">USDT Prix</string>
+    <string name="usdt_price">USDC Prix</string>
     <string name="fee">Frais</string>
     <string name="previous">Previous</string>
     <string name="activity_logs">Historique d\'activité</string>
@@ -753,9 +755,9 @@
     <string name="on_my_bank_account">Sur mon compte bancaire</string>
     <string name="withdraw_on_my_bank_account">Retirer sur mon compte bancaire</string>
     <string name="to_withdraw_follow_below_steps">Pour retirer vos investissements sur votre compte bancaire, veuillez suivre les étapes ci-dessous :</string>
-    <string name="convert_asset_you_wish_to_withdraw">1. Convertissez les actifs que vous souhaitez retirer en USDT.</string>
+    <string name="convert_asset_you_wish_to_withdraw">1. Convertissez les actifs que vous souhaitez retirer en USDC.</string>
     <string name="clicking_here">cliquant ici.</string>
-    <string name="please_include">2. Envoyez-nous un message en cliquant ici. Veuillez inclure les informations suivantes: le montant d\'USDT que vous souhaitez retirer, aainsi que votre IBAN, BIC et le nom du bénéficiaire (qui doit être le même que le nom avec lequel vous avez ouvert votre compte Lyber).\n\nNotre équipe d\'assistance vous répondra dans les plus brefs délais pour effectuer le retrait.</string>
+    <string name="please_include">2. Envoyez-nous un message en cliquant ici. Veuillez inclure les informations suivantes: le montant d\'USDC que vous souhaitez retirer, aainsi que votre IBAN, BIC et le nom du bénéficiaire (qui doit être le même que le nom avec lequel vous avez ouvert votre compte Lyber).\n\nNotre équipe d\'assistance vous répondra dans les plus brefs délais pour effectuer le retrait.</string>
     <string name="no_assets_available">Aucun actif disponible</string>
     <string name="do_not_have">Vous n\'avez pas assez de pièces à échanger</string>
     <string name="warning">Avertissement!</string>
@@ -771,7 +773,7 @@
     <string name="download_google_authenticator"><u>Téléchargez l\'authentificateur Google</u></string>
     <string name="download_google_if_not">Pour utiliser l\'authentification Google OTP, vous devez avoir Google Authenticator installé sur votre appareil. Si vous ne l\'avez pas déjà fait, téléchargez Google Authenticator depuis l\'App Store pour continuer.</string>
     <string name="no_result_found">Aucun résultat trouvé</string>
-    <string name="buy_tether_on_lyber">Acheter du Tether sur Lyber</string>
+    <string name="buy_tether_on_lyber">Acheter du USDC sur Lyber</string>
     <string name="notification_detail">Pour recevoir des notifications push, vous devez autoriser les notifications à partir des paramètres.</string>
     <string name="verification_of_your_identity">Vérification de votre identité</string>
     <string name="contract_signature">Signature du contrat</string>
@@ -779,7 +781,8 @@
     <string name="kyc_refused_text">Votre kyc a été refusé.</string>
     <string name="sign_up_in_5">Créer son compte en 5min</string>
     <string name="empty"></string>
-    <string name="tailorStrategyError">Le montant investi doit être d\'au moins 10 USDT par actif dans la stratégie.</string>
+    <string name="tailorStrategyError">Le montant investi doit être d\'au moins 10 USDC par actif dans la stratégie.</string>
     <string name="new_code">Un nouveau code pourra être renvoyé dans </string>
+    <string name="no_assets_available_for_exchange">Aucun actif disponible à l\'échange.</string>
 
 </resources>

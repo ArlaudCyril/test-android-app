@@ -8,6 +8,8 @@ import com.Lyber.dev.R
 import com.Lyber.dev.databinding.ItemRecurringInvestmentBinding
 import com.Lyber.dev.models.ActiveStrategyData
 import com.Lyber.dev.models.Investment
+import com.Lyber.dev.utils.CommonMethods.Companion.commaFormattedDecimal
+import com.Lyber.dev.utils.CommonMethods.Companion.decimalPoint
 import com.Lyber.dev.utils.CommonMethods.Companion.loadCircleCrop
 import com.Lyber.dev.utils.CommonMethods.Companion.toFormat
 import com.Lyber.dev.utils.Constants
@@ -43,7 +45,7 @@ class RecurringInvestmentAdapter(private val clickListener: (ActiveStrategyData)
                         ivInvestment.setImageResource(R.drawable.ic_intermediate_strategy)
 
                     tvInvestmentTitle.text=it.strategyName
-                    tvInvestmentAmount.text = "${it.amount}${Constants.EURO}"
+                    tvInvestmentAmount.text = "${it.amount.commaFormattedDecimal(8).decimalPoint()} ${Constants.MAIN_ASSET_UPPER}"
                     when(it.frequency){
                         "1d"->tvInvestmentFrequency.text=context.getString(R.string.daily)
                         "1w"->tvInvestmentFrequency.text=context.getString(R.string.weekly)

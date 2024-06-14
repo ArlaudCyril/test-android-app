@@ -76,6 +76,9 @@ class SelectAssestForBuy : BaseFragment<FragmentAllAssetsBinding>(), View.OnClic
                         }
                     }
                 }
+                val usdtAsset = it.find { it.id == "usdt" }
+                if(usdtAsset!=null)
+                assets.remove(usdtAsset)
 
                 trendings.addAll(assets)
                 topLosers.addAll(assets.topLosers())
@@ -246,23 +249,22 @@ class SelectAssestForBuy : BaseFragment<FragmentAllAssetsBinding>(), View.OnClic
         override fun onTabReselected(tab: TabLayout.Tab?) {}
 
     }
-  private  var assetUsdt=com.Lyber.dev.ui.activities.BaseActivity.assets.find { it1 -> it1.id == "usdt" }
-
 
     private fun assetClicked(asset: PriceServiceResume) {
-        val balance = com.Lyber.dev.ui.activities.BaseActivity.balances.find { it1 -> it1.id == "usdt" }
-        if (asset.id == "usdt") {
+        val balance =
+            com.Lyber.dev.ui.activities.BaseActivity.balances.find { it1 -> it1.id == Constants.MAIN_ASSET }
+        if (asset.id == Constants.MAIN_ASSET) {
 
             if (checkKyc()) {
 //                viewModel.selectedAsset=assetUsdt
                 val arguments = Bundle().apply {
                     putString(Constants.FROM, SelectAssestForBuy::class.java.name)
                 }
-                findNavController().navigate(R.id.buyUsdt,arguments)
+                findNavController().navigate(R.id.buyUsdt, arguments)
             }
         } else if (balance != null) {
             viewModel.exchangeAssetTo = asset.id
-            viewModel.exchangeAssetFrom = "usdt"
+            viewModel.exchangeAssetFrom = Constants.MAIN_ASSET
             findNavController().navigate(R.id.addAmountForExchangeFragment)
         } else {
             if (App.prefsManager.user!!.kycStatus == "OK" && App.prefsManager.user!!.yousignStatus == "SIGNED")
@@ -283,11 +285,11 @@ class SelectAssestForBuy : BaseFragment<FragmentAllAssetsBinding>(), View.OnClic
                 setCanceledOnTouchOutside(false)
                 App.prefsManager.accountCreationSteps = Constants.Account_CREATION_STEP_PHONE
                 setContentView(it.root)
-                it.tvTitle.text = getString(R.string.buy_usdt)
+                it.tvTitle.text = getString(R.string.buy_usdc)
                 it.tvMessage.text =
                     getString(R.string.usdt_error)
                 it.tvNegativeButton.text = getString(R.string.cancel)
-                it.tvPositiveButton.text = getString(R.string.buy_usdt)
+                it.tvPositiveButton.text = getString(R.string.buy_usdc)
                 it.tvNegativeButton.setOnClickListener {
                     dismiss()
                 }
@@ -298,7 +300,7 @@ class SelectAssestForBuy : BaseFragment<FragmentAllAssetsBinding>(), View.OnClic
                     val arguments = Bundle().apply {
                         putString(Constants.FROM, SelectAssestForBuy::class.java.name)
                     }
-                    findNavController().navigate(R.id.buyUsdt,arguments)
+                    findNavController().navigate(R.id.buyUsdt, arguments)
 
                 }
                 show()

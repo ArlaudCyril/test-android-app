@@ -53,15 +53,26 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
     private lateinit var portfolioViewModel: PortfolioViewModel
     private var fromBase = false
 
-    private var url: String = ""
+    private var checkPermission: Boolean = false
+    override fun onResume() {
+        super.onResume()
+        if(checkPermission) {
+            checkPermission=false
+            checkAndRequest()
+        }
+    }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         portfolioViewModel = CommonMethods.getViewModel(this)
         portfolioViewModel.listener = this@WebViewActivity
         if (intent != null && intent.hasExtra(Constants.FROM))
             fromBase = intent.getBooleanExtra(Constants.FROM, false)
-
-        checkAndRequest()
+        if (intent.hasExtra(Constants.ASK_PERMISSION) && intent.getBooleanExtra(
+                Constants.ASK_PERMISSION,
+                false
+            )
+        )
+            checkAndRequest()
         binding.webView.settings.apply {
             domStorageEnabled = true
             javaScriptCanOpenWindowsAutomatically = true
@@ -129,14 +140,14 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
                     applicationContext,
                     android.Manifest.permission.READ_MEDIA_VIDEO
                 ) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(
-                    applicationContext,
-                    android.Manifest.permission.MODIFY_AUDIO_SETTINGS
-                ) != PackageManager.PERMISSION_GRANTED
-                || ActivityCompat.checkSelfPermission(
-                    applicationContext,
-                    android.Manifest.permission.RECORD_AUDIO
-                ) != PackageManager.PERMISSION_GRANTED
+//                || ActivityCompat.checkSelfPermission(
+//                    applicationContext,
+//                    android.Manifest.permission.MODIFY_AUDIO_SETTINGS
+//                ) != PackageManager.PERMISSION_GRANTED
+//                || ActivityCompat.checkSelfPermission(
+//                    applicationContext,
+//                    android.Manifest.permission.RECORD_AUDIO
+//                ) != PackageManager.PERMISSION_GRANTED
 
             ) {
 
@@ -144,16 +155,17 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
                     arrayOf(
                         android.Manifest.permission.CAMERA,
                         android.Manifest.permission.READ_MEDIA_IMAGES,
-                        android.Manifest.permission.READ_MEDIA_VIDEO,
-                        android.Manifest.permission.MODIFY_AUDIO_SETTINGS,
-                        android.Manifest.permission.RECORD_AUDIO
+                        android.Manifest.permission.READ_MEDIA_VIDEO
+//                        android.Manifest.permission.MODIFY_AUDIO_SETTINGS,
+//                        android.Manifest.permission.RECORD_AUDIO
                     )
                 )
 
             } else {
                 Log.d("TAG2", "Permission Already Granted")
             }
-        } else {
+        }
+        else {
             if (ActivityCompat.checkSelfPermission(
                     applicationContext, android.Manifest.permission.CAMERA
                 )
@@ -170,16 +182,16 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
                     applicationContext,
                     android.Manifest.permission.READ_EXTERNAL_STORAGE
                 ) != PackageManager.PERMISSION_GRANTED
-                ||
-                ActivityCompat.checkSelfPermission(
-                    applicationContext,
-                    android.Manifest.permission.MODIFY_AUDIO_SETTINGS
-                ) != PackageManager.PERMISSION_GRANTED
-                ||
-                ActivityCompat.checkSelfPermission(
-                    applicationContext,
-                    android.Manifest.permission.RECORD_AUDIO
-                ) != PackageManager.PERMISSION_GRANTED
+//                ||
+//                ActivityCompat.checkSelfPermission(
+//                    applicationContext,
+//                    android.Manifest.permission.MODIFY_AUDIO_SETTINGS
+//                ) != PackageManager.PERMISSION_GRANTED
+//                ||
+//                ActivityCompat.checkSelfPermission(
+//                    applicationContext,
+//                    android.Manifest.permission.RECORD_AUDIO
+//                ) != PackageManager.PERMISSION_GRANTED
             ) {
 
                 requestMultiplePermissions.launch(
@@ -187,8 +199,8 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
                         android.Manifest.permission.CAMERA,
                         android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
                         android.Manifest.permission.READ_EXTERNAL_STORAGE,
-                        android.Manifest.permission.MODIFY_AUDIO_SETTINGS,
-                        android.Manifest.permission.RECORD_AUDIO
+//                        android.Manifest.permission.MODIFY_AUDIO_SETTINGS,
+//                        android.Manifest.permission.RECORD_AUDIO
                     )
                 )
 
@@ -209,8 +221,8 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
                 if (permissions[android.Manifest.permission.CAMERA] == true
                     && permissions[android.Manifest.permission.READ_MEDIA_IMAGES] == true
                     && permissions[android.Manifest.permission.READ_MEDIA_VIDEO] == true
-                    && permissions[android.Manifest.permission.MODIFY_AUDIO_SETTINGS] == true
-                    && permissions[android.Manifest.permission.RECORD_AUDIO] == true
+//                    && permissions[android.Manifest.permission.MODIFY_AUDIO_SETTINGS] == true
+//                    && permissions[android.Manifest.permission.RECORD_AUDIO] == true
                 ) {
                     Log.d("requestMultiplePermissions", "Permission granted")
                     // isPermissionGranted=true
@@ -222,6 +234,7 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
                                 android.Manifest.permission.CAMERA
                             )
                         ) {
+                            checkAndRequest()
                         } else permissionsDenied()
 
                     } else if (permissions[android.Manifest.permission.READ_MEDIA_VIDEO] == false) {
@@ -230,7 +243,7 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
                                 android.Manifest.permission.READ_MEDIA_VIDEO
                             )
                         ) {
-
+                            checkAndRequest()
                         } else permissionsDenied()
                     } else if (permissions[android.Manifest.permission.READ_MEDIA_IMAGES] == false) {
 
@@ -239,27 +252,31 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
                                 android.Manifest.permission.READ_MEDIA_IMAGES
                             )
                         ) {
-                        } else permissionsDenied()
-
-                    } else if (permissions[android.Manifest.permission.MODIFY_AUDIO_SETTINGS] == false) {
-
-                        if (!ActivityCompat.shouldShowRequestPermissionRationale(
-                                this,
-                                android.Manifest.permission.MODIFY_AUDIO_SETTINGS
-                            )
-                        ) {
-                        } else permissionsDenied()
-
-                    } else if (permissions[android.Manifest.permission.RECORD_AUDIO] == false) {
-
-                        if (!ActivityCompat.shouldShowRequestPermissionRationale(
-                                this,
-                                android.Manifest.permission.RECORD_AUDIO
-                            )
-                        ) {
+                            checkAndRequest()
                         } else permissionsDenied()
 
                     }
+//                    else if (permissions[android.Manifest.permission.MODIFY_AUDIO_SETTINGS] == false) {
+//
+//                        if (!ActivityCompat.shouldShowRequestPermissionRationale(
+//                                this,
+//                                android.Manifest.permission.MODIFY_AUDIO_SETTINGS
+//                            )
+//                        ) {
+//                            checkAndRequest()
+//                        } else permissionsDenied()
+//
+//                    } else if (permissions[android.Manifest.permission.RECORD_AUDIO] == false) {
+//
+//                        if (!ActivityCompat.shouldShowRequestPermissionRationale(
+//                                this,
+//                                android.Manifest.permission.RECORD_AUDIO
+//                            )
+//                        ) {
+//                            checkAndRequest()
+//                        } else permissionsDenied()
+//
+//                    }
 
                     Log.d("requestMultiplePermissions", "Permission not granted")
 
@@ -269,8 +286,8 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
 
                 if (permissions[android.Manifest.permission.CAMERA] == true && permissions[android.Manifest.permission.WRITE_EXTERNAL_STORAGE] == true
                     && permissions[android.Manifest.permission.READ_EXTERNAL_STORAGE] == true
-                    && permissions[android.Manifest.permission.MODIFY_AUDIO_SETTINGS] == true
-                    && permissions[android.Manifest.permission.RECORD_AUDIO] == true
+//                    && permissions[android.Manifest.permission.MODIFY_AUDIO_SETTINGS] == true
+//                    && permissions[android.Manifest.permission.RECORD_AUDIO] == true
                 ) {
                     Log.d("requestMultiplePermissions", "Permission granted")
                     // isPermissionGranted=true
@@ -282,7 +299,7 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
                                 android.Manifest.permission.CAMERA
                             )
                         ) {
-
+                            checkAndRequest()
                         } else {
                             permissionsDenied()
                         }
@@ -299,29 +316,30 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
                                 android.Manifest.permission.READ_EXTERNAL_STORAGE
                             )
                         ) {
-
-                        } else {
-
-                            permissionsDenied()
-                        }
-                    } else if (permissions[android.Manifest.permission.MODIFY_AUDIO_SETTINGS] == false
-                        && permissions[android.Manifest.permission.RECORD_AUDIO] == false
-                    ) {
-                        if (!ActivityCompat.shouldShowRequestPermissionRationale(
-                                this,
-                                android.Manifest.permission.MODIFY_AUDIO_SETTINGS
-                            )
-                            && ActivityCompat.shouldShowRequestPermissionRationale(
-                                this,
-                                android.Manifest.permission.RECORD_AUDIO
-                            )
-                        ) {
-
+                            checkAndRequest()
                         } else {
 
                             permissionsDenied()
                         }
                     }
+//                    else if (permissions[android.Manifest.permission.MODIFY_AUDIO_SETTINGS] == false
+//                        && permissions[android.Manifest.permission.RECORD_AUDIO] == false
+//                    ) {
+//                        if (!ActivityCompat.shouldShowRequestPermissionRationale(
+//                                this,
+//                                android.Manifest.permission.MODIFY_AUDIO_SETTINGS
+//                            )
+//                            && ActivityCompat.shouldShowRequestPermissionRationale(
+//                                this,
+//                                android.Manifest.permission.RECORD_AUDIO
+//                            )
+//                        ) {
+//                            checkAndRequest()
+//                        } else {
+//
+//                            permissionsDenied()
+//                        }
+//                    }
 
                     Log.d("requestMultiplePermissions", "Permission not granted")
 
@@ -335,8 +353,12 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
     private fun permissionsDenied() {
         val alertDialogBuilder = AlertDialog.Builder(this)
         alertDialogRational?.getButton(AlertDialog.BUTTON_NEGATIVE)
-            ?.setTextColor(ContextCompat.getColor(this,
-                R.color.black))
+            ?.setTextColor(
+                ContextCompat.getColor(
+                    this,
+                    R.color.black
+                )
+            )
 
         alertDialogRational = alertDialogBuilder.setTitle("Permissions Required")
             .setMessage(
@@ -345,19 +367,17 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
             .setPositiveButton(
                 "Settings"
             ) { _, _ ->
-
-                val intent = Intent(
-                    Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-                    Uri.fromParts(
-                        "package", packageName,
-                        null
-                    )
-                )
-                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                checkPermission=true
+                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+                val uri: Uri = Uri.fromParts("package", "com.Lyber.dev", null)
+                intent.data = uri
+                startActivity(intent)
             }
             .setNegativeButton(
                 "Cancel"
-            ) { _, _ -> }
+            ) { _, _ ->
+                finish()
+            }
             .setCancelable(false)
             .create()
         alertDialogRational!!.apply {

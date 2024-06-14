@@ -2,6 +2,8 @@ package com.Lyber.dev.ui.fragments
 
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -14,6 +16,7 @@ import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentConfirmInvestmentBinding
 import com.Lyber.dev.network.RestClient
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
+import com.Lyber.dev.ui.fragments.bottomsheetfragments.VerificationBottomSheet
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.VerificationBottomSheet2FA
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
@@ -22,6 +25,7 @@ import com.Lyber.dev.utils.CommonMethods.Companion.gone
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.Lyber.dev.viewmodels.SignUpViewModel
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import java.math.RoundingMode
@@ -30,6 +34,7 @@ import java.math.RoundingMode
 class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>(),
     View.OnClickListener, RestClient.OnRetrofitError {
     private lateinit var viewModel: PortfolioViewModel
+    private lateinit var viewModelSignup: SignUpViewModel
     private var valueTotal: Double = 0.0
     private var isExpand = false
     private var isOtpScreen = false
@@ -39,7 +44,9 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = CommonMethods.getViewModel(requireActivity())
+        viewModelSignup = CommonMethods.getViewModel(requireActivity())
         viewModel.listener = this
+        viewModelSignup.listener = this
         binding.tvTotalAmount.gone()
         binding.ivSingleAsset.gone()
         binding.tvMoreDetails.gone()
@@ -67,6 +74,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                 }
             }
         }
+
 //        viewModel.logoutResponse.observe(viewLifecycleOwner){
 //            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
 //                App.prefsManager.logout()
@@ -92,8 +100,22 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
 
             val vc = VerificationBottomSheet2FA(::handle)
             vc.viewToDelete = transparentView
+            vc.viewModel = viewModelSignup
             vc.mainView = getView()?.rootView as ViewGroup
+
             vc.show(childFragmentManager, "")
+
+
+//            val vc = VerificationBottomSheet(::handle)
+//            vc.viewToDelete = transparentView
+//            vc.mainView = getView()?.rootView as ViewGroup
+//            vc.viewModel = viewModel
+//            vc.arguments = Bundle().apply {
+//                putString(Constants.TYPE, clickedOn)
+//            }
+//            vc.show(childFragmentManager, App.prefsManager.user?.type2FA)
+
+
 
             // Add the transparent view to the RelativeLayout
             val mainView = getView()?.rootView as ViewGroup
@@ -121,6 +143,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
 
     //    @RequiresApi(Build.VERSION_CODES.O)
     private fun confirmButtonClick() {
+        if(!isResend)
         CommonMethods.showProgressDialog(requireActivity())
         val map = HashMap<Any?, Any?>()
         map["asset"] = viewModel.selectedAssetDetail!!.id
@@ -140,8 +163,11 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
             encoded =
                 android.util.Base64.encodeToString(bytes, android.util.Base64.DEFAULT)
         }
+        if(isResend)
+        viewModelSignup.getOtpForWithdraw(Constants.ACTION_WITHDRAW, encoded)
+       else
         viewModel.getOtpForWithdraw(Constants.ACTION_WITHDRAW, encoded)
-    }
+      }
 
     private fun prepareView() {
         binding.apply {

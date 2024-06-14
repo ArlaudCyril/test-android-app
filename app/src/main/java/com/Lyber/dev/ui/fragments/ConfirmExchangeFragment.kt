@@ -150,7 +150,10 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
 //            tvExchangeFromValue.text =
 //                "${data.fromAmount} ${data.fromAsset.uppercase()}"
             tvExchangeFromValue.text =
-                "~${(data.fromAmount.toDouble() - data.fees.toDouble()).toString().formattedAsset(priceCoin, RoundingMode.DOWN,8)} ${data.fromAsset.uppercase()}"
+                "~${
+                    (data.fromAmount.toDouble() - data.fees.toDouble()).toString()
+                        .formattedAsset(priceCoin, RoundingMode.DOWN, 8)
+                } ${data.fromAsset.uppercase()}"
 
             val balanceFrom =
                 com.Lyber.dev.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
@@ -170,6 +173,9 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
 //                    rounding = RoundingMode.DOWN
 //                )} ${data.toAsset.uppercase()}"
             Log.d("dataa", "$data")
+            var assetTo =
+                com.Lyber.dev.ui.activities.BaseActivity.assets.find { it1 -> it1.id == data.toAsset }
+
             if (data.fromAmount.contains(".")) {
                 val number = BigDecimal(data.fromAmount)
                 val trimmedNumber = number.stripTrailingZeros()
@@ -177,13 +183,16 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
                     "${trimmedNumber} ${data.fromAsset.uppercase()}"
             } else
                 tvTotalAmount.text =
-                    "${String.format(Locale.US, "%f", data.fromAmount.toFloat()).trimEnd('0').trimEnd('.')} ${data.fromAsset.uppercase()}"
+                    "${
+                        String.format(Locale.US, "%f", data.fromAmount.toFloat()).trimEnd('0')
+                            .trimEnd('.')
+                    } ${data.fromAsset.uppercase()}"
 
             tvAmount.text =
                 "${
                     data.toAmount.formattedAsset(
                         price = priceCoin,
-                        rounding = RoundingMode.DOWN,6
+                        rounding = RoundingMode.DOWN, assetTo!!.decimals
                     )
                 } ${data.toAsset.uppercase()}"
 //            val valueTotal = data.fees.toDouble()+data.fromAmount.toDouble()

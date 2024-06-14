@@ -129,6 +129,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         resourcesAdapter = ResourcesAdapter()
         assetBreakdownAdapter = BalanceAdapter()
         binding.btnSell.gone()
+        binding.btnBuy.gone()
 
         binding.apply {
 
@@ -154,7 +155,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
 
             var customUrl = ""
-            if (viewModel.selectedAsset?.id == "usdt")
+            if (viewModel.selectedAsset?.id == Constants.MAIN_ASSET)
                 customUrl = Constants.SOCKET_BASE_URL + "eurusdt"
             else
                 customUrl = Constants.SOCKET_BASE_URL + "${viewModel.selectedAsset?.id}eur"
@@ -386,7 +387,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 else it.tvAssetAmountInCrypto.text =
                     balance.balanceData.balance.formattedAsset(
                         price = priceCoin,
-                        rounding = RoundingMode.DOWN
+                        rounding = RoundingMode.DOWN,viewModel.selectedAsset!!.decimals
                     )
                 try {
                     it.tvAssetName.text = viewModel.selectedAsset!!.fullName
@@ -398,12 +399,22 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 } catch (_: Exception) {
                 }
                 if (balance != null && !(viewModel.selectedAsset!!.id.equals(
-                        "usdt",
+                        Constants.MAIN_ASSET,
                         ignoreCase = true
                     ))
                 )
                     btnSell.visible()
-
+                if (balance != null && !(viewModel.selectedAsset!!.id.equals(
+                        "usdt",
+                        ignoreCase = true
+                    ))
+                )
+                    btnBuy.visible()
+                else if (viewModel.selectedAsset!!.id.equals(
+                        Constants.MAIN_ASSET,
+                        ignoreCase = true
+                    ))
+                    btnBuy.visible()
             }
         }
     }
@@ -455,14 +466,14 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
             "buy" -> {
                 val balance =
-                    com.Lyber.dev.ui.activities.BaseActivity.balances.find { it1 -> it1.id == "usdt" }
+                    com.Lyber.dev.ui.activities.BaseActivity.balances.find { it1 -> it1.id == Constants.MAIN_ASSET }
                 viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
-                if (viewModel.selectedAsset!!.id == "usdt") {
+                if (viewModel.selectedAsset!!.id == Constants.MAIN_ASSET) {
                     if (checkKyc())
                         findNavController().navigate(R.id.buyUsdt)
                 } else if (balance != null) {
                     viewModel.exchangeAssetTo = viewModel.selectedAsset!!.id
-                    viewModel.exchangeAssetFrom = "usdt"
+                    viewModel.exchangeAssetFrom = Constants.MAIN_ASSET
                     findNavController().navigate(R.id.addAmountForExchangeFragment)
                 } else {
                     if (App.prefsManager.user!!.kycStatus == "OK" && App.prefsManager.user!!.yousignStatus == "SIGNED")
@@ -508,11 +519,11 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 setCanceledOnTouchOutside(false)
                 App.prefsManager.accountCreationSteps = Constants.Account_CREATION_STEP_PHONE
                 setContentView(it.root)
-                it.tvTitle.text = getString(R.string.buy_usdt)
+                it.tvTitle.text = getString(R.string.buy_usdc)
                 it.tvMessage.text =
                     getString(R.string.usdt_error)
                 it.tvNegativeButton.text = getString(R.string.cancel)
-                it.tvPositiveButton.text = getString(R.string.buy_usdt)
+                it.tvPositiveButton.text = getString(R.string.buy_usdc)
                 it.tvNegativeButton.setOnClickListener {
                     dismiss()
                 }
@@ -532,12 +543,12 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             when (v!!) {
                 btnSell -> {
                     viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
-                    if (viewModel.selectedAsset!!.id == "usdt") {
+                    if (viewModel.selectedAsset!!.id == Constants.MAIN_ASSET) {
 //                        findNavController().navigate(R.id.buyUsdt)
                         val balance =
-                            com.Lyber.dev.ui.activities.BaseActivity.balances.find { it1 -> it1.id == "usdt" }
+                            com.Lyber.dev.ui.activities.BaseActivity.balances.find { it1 -> it1.id == Constants.MAIN_ASSET }
                         if (balance != null) {
-                            viewModel.exchangeAssetTo = "usdt"
+                            viewModel.exchangeAssetTo = Constants.MAIN_ASSET
                             viewModel.exchangeAssetFrom = viewModel.selectedAsset!!.id
                             findNavController().navigate(R.id.addAmountForExchangeFragment)
                         }
@@ -545,7 +556,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                         val balance =
                             com.Lyber.dev.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.selectedAsset!!.id }
                         if (balance != null) {
-                            viewModel.exchangeAssetTo = "usdt"
+                            viewModel.exchangeAssetTo = Constants.MAIN_ASSET
                             viewModel.exchangeAssetFrom = viewModel.selectedAsset!!.id
                             findNavController().navigate(R.id.addAmountForExchangeFragment)
                         } else {
@@ -589,14 +600,14 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
                 btnBuy -> {
                     val balance =
-                        com.Lyber.dev.ui.activities.BaseActivity.balances.find { it1 -> it1.id == "usdt" }
+                        com.Lyber.dev.ui.activities.BaseActivity.balances.find { it1 -> it1.id == Constants.MAIN_ASSET }
                     viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
-                    if (viewModel.selectedAsset!!.id == "usdt") {
+                    if (viewModel.selectedAsset!!.id == Constants.MAIN_ASSET) {
                         if (checkKyc())
                             findNavController().navigate(R.id.buyUsdt)
                     } else if (balance != null) {
                         viewModel.exchangeAssetTo = viewModel.selectedAsset!!.id
-                        viewModel.exchangeAssetFrom = "usdt"
+                        viewModel.exchangeAssetFrom = Constants.MAIN_ASSET
                         findNavController().navigate(R.id.addAmountForExchangeFragment)
                     } else {
                         if (App.prefsManager.user!!.kycStatus == "OK" && App.prefsManager.user!!.yousignStatus == "SIGNED")
@@ -622,7 +633,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                     var price = jsonObject.getString("Price")
 //                    Log.d("price", "$price")
-                    if (viewModel.selectedAsset?.id == "usdt")
+                    if (viewModel.selectedAsset?.id == Constants.MAIN_ASSET)
                         price = (1.0 / price.toFloat()).toString()
 //                    Log.d("price", "$price")
                     if (updateSocketValue) {
