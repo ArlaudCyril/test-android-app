@@ -1,14 +1,21 @@
 package com.Lyber.dev.ui.activities
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.Lyber.dev.R
@@ -28,7 +35,14 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
     lateinit var navController: NavController
     override fun bind() = ActivitySplashBinding.inflate(layoutInflater)
 
-
+//    private var checkPermission: Boolean = false
+//    override fun onResume() {
+//        super.onResume()
+//        if(checkPermission) {
+//            checkPermission=false
+//            checkAndRequest()
+//        }
+//    }
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         setIntent(intent)
@@ -80,6 +94,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
                 }
             })
 
+//        checkAndRequest()
         if (App.prefsManager != null && App.prefsManager.user != null && !App.prefsManager.user?.language.isNullOrEmpty()) {
             App.prefsManager.setLanguage(App.prefsManager.user?.language!!)
             val code = App.prefsManager.getLanguage()
@@ -185,6 +200,269 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
 
         }
     }
+//    private fun checkAndRequest() {
+//        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//            if (ActivityCompat.checkSelfPermission(
+//                    applicationContext, android.Manifest.permission.CAMERA
+//                )
+//                != PackageManager.PERMISSION_GRANTED
+//
+//                ||
+//                ActivityCompat.checkSelfPermission(
+//                    applicationContext,
+//                    android.Manifest.permission.READ_MEDIA_IMAGES
+//                ) != PackageManager.PERMISSION_GRANTED
+//                ||
+//                ActivityCompat.checkSelfPermission(
+//                    applicationContext,
+//                    android.Manifest.permission.READ_MEDIA_VIDEO
+//                ) != PackageManager.PERMISSION_GRANTED
+//                || ActivityCompat.checkSelfPermission(
+//                    applicationContext,
+//                    android.Manifest.permission.MODIFY_AUDIO_SETTINGS
+//                ) != PackageManager.PERMISSION_GRANTED
+//                || ActivityCompat.checkSelfPermission(
+//                    applicationContext,
+//                    android.Manifest.permission.RECORD_AUDIO
+//                ) != PackageManager.PERMISSION_GRANTED
+//
+//            ) {
+//
+//                requestMultiplePermissions.launch(
+//                    arrayOf(
+//                        android.Manifest.permission.CAMERA,
+//                        android.Manifest.permission.READ_MEDIA_IMAGES,
+//                        android.Manifest.permission.READ_MEDIA_VIDEO,
+//                        android.Manifest.permission.MODIFY_AUDIO_SETTINGS,
+//                        android.Manifest.permission.RECORD_AUDIO
+//                    )
+//                )
+//
+//            } else {
+//                Log.d("TAG2", "Permission Already Granted")
+//            }
+//        }
+//        else {
+//            if (ActivityCompat.checkSelfPermission(
+//                    applicationContext, android.Manifest.permission.CAMERA
+//                )
+//                != PackageManager.PERMISSION_GRANTED
+//
+//                ||
+//                ActivityCompat.checkSelfPermission(
+//                    applicationContext, android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+//                )
+//                != PackageManager.PERMISSION_GRANTED
+//
+//                ||
+//                ActivityCompat.checkSelfPermission(
+//                    applicationContext,
+//                    android.Manifest.permission.READ_EXTERNAL_STORAGE
+//                ) != PackageManager.PERMISSION_GRANTED
+//                ||
+//                ActivityCompat.checkSelfPermission(
+//                    applicationContext,
+//                    android.Manifest.permission.MODIFY_AUDIO_SETTINGS
+//                ) != PackageManager.PERMISSION_GRANTED
+//                ||
+//                ActivityCompat.checkSelfPermission(
+//                    applicationContext,
+//                    android.Manifest.permission.RECORD_AUDIO
+//                ) != PackageManager.PERMISSION_GRANTED
+//            ) {
+//
+//                requestMultiplePermissions.launch(
+//                    arrayOf(
+//                        android.Manifest.permission.CAMERA,
+//                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//                        android.Manifest.permission.READ_EXTERNAL_STORAGE,
+//                        android.Manifest.permission.MODIFY_AUDIO_SETTINGS,
+//                        android.Manifest.permission.RECORD_AUDIO
+//                    )
+//                )
+//
+//            } else {
+//                Log.d("TAG2", "Permission Already Granted")
+//            }
+//        }
+//    }
+//
+//    private val requestMultiplePermissions =
+//        registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { permissions ->
+//
+//            permissions.entries.forEach {
+//                Log.d("TAG", "${it.key} = ${it.value}")
+//            }
+//
+//            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+//                if (permissions[android.Manifest.permission.CAMERA] == true
+//                    && permissions[android.Manifest.permission.READ_MEDIA_IMAGES] == true
+//                    && permissions[android.Manifest.permission.READ_MEDIA_VIDEO] == true
+//                    && permissions[android.Manifest.permission.MODIFY_AUDIO_SETTINGS] == true
+//                    && permissions[android.Manifest.permission.RECORD_AUDIO] == true
+//                ) {
+//                    Log.d("requestMultiplePermissions", "Permission granted")
+//                    // isPermissionGranted=true
+//                } else {
+//
+//                    if (permissions[android.Manifest.permission.CAMERA] == false) {
+//                        if (ActivityCompat.shouldShowRequestPermissionRationale(
+//                                this,
+//                                android.Manifest.permission.CAMERA
+//                            )
+//                        ) {
+//                            checkAndRequest()
+//                        } else permissionsDenied()
+//
+//                    } else if (permissions[android.Manifest.permission.READ_MEDIA_VIDEO] == false) {
+//                        if (!ActivityCompat.shouldShowRequestPermissionRationale(
+//                                this,
+//                                android.Manifest.permission.READ_MEDIA_VIDEO
+//                            )
+//                        ) {
+//                            checkAndRequest()
+//                        } else permissionsDenied()
+//                    } else if (permissions[android.Manifest.permission.READ_MEDIA_IMAGES] == false) {
+//
+//                        if (!ActivityCompat.shouldShowRequestPermissionRationale(
+//                                this,
+//                                android.Manifest.permission.READ_MEDIA_IMAGES
+//                            )
+//                        ) {
+//                            checkAndRequest()
+//                        } else permissionsDenied()
+//
+//                    } else if (permissions[android.Manifest.permission.MODIFY_AUDIO_SETTINGS] == false) {
+//
+//                        if (!ActivityCompat.shouldShowRequestPermissionRationale(
+//                                this,
+//                                android.Manifest.permission.MODIFY_AUDIO_SETTINGS
+//                            )
+//                        ) {
+//                            checkAndRequest()
+//                        } else permissionsDenied()
+//
+//                    } else if (permissions[android.Manifest.permission.RECORD_AUDIO] == false) {
+//
+//                        if (!ActivityCompat.shouldShowRequestPermissionRationale(
+//                                this,
+//                                android.Manifest.permission.RECORD_AUDIO
+//                            )
+//                        ) {
+//                            checkAndRequest()
+//                        } else permissionsDenied()
+//
+//                    }
+//
+//                    Log.d("requestMultiplePermissions", "Permission not granted")
+//
+//                }
+//
+//            } else {
+//
+//                if (permissions[android.Manifest.permission.CAMERA] == true && permissions[android.Manifest.permission.WRITE_EXTERNAL_STORAGE] == true
+//                    && permissions[android.Manifest.permission.READ_EXTERNAL_STORAGE] == true
+//                    && permissions[android.Manifest.permission.MODIFY_AUDIO_SETTINGS] == true
+//                    && permissions[android.Manifest.permission.RECORD_AUDIO] == true
+//                ) {
+//                    Log.d("requestMultiplePermissions", "Permission granted")
+//                    // isPermissionGranted=true
+//
+//                } else {
+//                    if (permissions[android.Manifest.permission.CAMERA] == false) {
+//                        if (ActivityCompat.shouldShowRequestPermissionRationale(
+//                                this,
+//                                android.Manifest.permission.CAMERA
+//                            )
+//                        ) {
+//                            checkAndRequest()
+//                        } else {
+//                            permissionsDenied()
+//                        }
+//
+//                    } else if (permissions[android.Manifest.permission.WRITE_EXTERNAL_STORAGE] == false
+//                        && permissions[android.Manifest.permission.READ_EXTERNAL_STORAGE] == false
+//                    ) {
+//                        if (!ActivityCompat.shouldShowRequestPermissionRationale(
+//                                this,
+//                                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+//                            )
+//                            && ActivityCompat.shouldShowRequestPermissionRationale(
+//                                this,
+//                                android.Manifest.permission.READ_EXTERNAL_STORAGE
+//                            )
+//                        ) {
+//                            checkAndRequest()
+//                        } else {
+//
+//                            permissionsDenied()
+//                        }
+//                    } else if (permissions[android.Manifest.permission.MODIFY_AUDIO_SETTINGS] == false
+//                        && permissions[android.Manifest.permission.RECORD_AUDIO] == false
+//                    ) {
+//                        if (!ActivityCompat.shouldShowRequestPermissionRationale(
+//                                this,
+//                                android.Manifest.permission.MODIFY_AUDIO_SETTINGS
+//                            )
+//                            && ActivityCompat.shouldShowRequestPermissionRationale(
+//                                this,
+//                                android.Manifest.permission.RECORD_AUDIO
+//                            )
+//                        ) {
+//                            checkAndRequest()
+//                        } else {
+//
+//                            permissionsDenied()
+//                        }
+//                    }
+//
+//                    Log.d("requestMultiplePermissions", "Permission not granted")
+//
+//                }
+//
+//            }
+//
+//        }
+//
+//    private var alertDialogRational: AlertDialog? = null
+//    private fun permissionsDenied() {
+//        val alertDialogBuilder = AlertDialog.Builder(this)
+//        alertDialogRational?.getButton(AlertDialog.BUTTON_NEGATIVE)
+//            ?.setTextColor(
+//                ContextCompat.getColor(
+//                    this,
+//                    R.color.black
+//                )
+//            )
+//
+//        alertDialogRational = alertDialogBuilder.setTitle("Permissions Required")
+//            .setMessage(
+//                "Please open settings, go to permissions and allow them."
+//            )
+//            .setPositiveButton(
+//                "Settings"
+//            ) { _, _ ->
+//                checkPermission=true
+//                val intent = Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS)
+//                val uri: Uri = Uri.fromParts("package", "com.Lyber.dev", null)
+//                intent.data = uri
+//                startActivity(intent)
+//            }
+//            .setNegativeButton(
+//                "Cancel"
+//            ) { _, _ ->
+//                finish()
+//            }
+//            .setCancelable(false)
+//            .create()
+//        alertDialogRational!!.apply {
+//            show()
+//            getButton(AlertDialog.BUTTON_NEGATIVE)
+//                .setTextColor(ContextCompat.getColor(this@SplashActivity, R.color.black))
+//            getButton(AlertDialog.BUTTON_POSITIVE)
+//                .setTextColor(ContextCompat.getColor(this@SplashActivity, R.color.black))
+//        }
+//    }
 }
 
 

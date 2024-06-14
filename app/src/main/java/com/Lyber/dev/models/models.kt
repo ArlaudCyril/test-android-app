@@ -153,12 +153,12 @@ data class Strategy(
     val expectedYield: String?,
     var isSelected: Boolean = false,
     var activeStrategy: ActiveStrategy?=null,
-    val minAmount:Int?=0
+    val minAmount:Double?=0.0
 )
 class ActiveStrategy {
     @SerializedName("amount")
     @Expose
-    var amount: Int? = null
+    var amount: Double? = null
 
     @SerializedName("frequency")
     @Expose
@@ -492,7 +492,7 @@ data class PriceServiceResumeData(
     val lastPrice: String,
     val change: String,
     val squiggleURL: String,
-    val isAuto: Boolean,
+    val isAuto: Boolean
 )
 
 data class PriceServiceResume(
@@ -513,6 +513,7 @@ data class AssetBaseData(
     val isStablecoin: Boolean,
     val isDepositActive: Boolean,
     val isWithdrawalActive: Boolean,
+    val isStrategyActive: Boolean,
     val decimals: Int=4
 )
 
@@ -863,7 +864,7 @@ data class ActiveStrategyResponse(
 )
 
 data class ActiveStrategyData(
-    val amount: Int,
+    val amount: Double,
     val frequency: String,
     val nextExecution: String,
     val ownerUuid: String,

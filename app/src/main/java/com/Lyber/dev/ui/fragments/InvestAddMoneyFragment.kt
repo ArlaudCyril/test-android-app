@@ -29,12 +29,13 @@ import kotlin.math.round
 
 class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), View.OnClickListener {
     private var selectedFrequency: String = ""
-    private var mCurrency: String = " USDT"
+    private var mCurrency: String = " ${Constants.MAIN_ASSET_UPPER}"
     private var valueConversion: Double = 1.0
     private var minInvestPerAsset = 10f
     private var requiredAmount = 0f
     private lateinit var viewModel: PortfolioViewModel
     private var editEnabledStrategy = false
+    private var decimal = 2
     private val amount get() = binding.etAmount.text.trim().toString()
     override fun bind() = FragmentInvestAddMoneyBinding.inflate(layoutInflater)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -78,31 +79,35 @@ class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), Vi
     }
 
     private fun prepareView() {
+        val selectedAsset =
+            com.Lyber.dev.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == Constants.MAIN_ASSET } }
+       if(selectedAsset!=null)
+        decimal = selectedAsset.decimals
         for (asset in viewModel.selectedStrategy?.bundle!!) {
             val newAmount = minInvestPerAsset / (asset.share / 100)
             if (newAmount > requiredAmount) {
                 requiredAmount = newAmount
             }
         }
-        requiredAmount= ceil(requiredAmount)
+        requiredAmount = ceil(requiredAmount)
         if (ceil(requiredAmount) != viewModel.selectedStrategy?.minAmount?.toFloat())
             requiredAmount = viewModel.selectedStrategy?.minAmount?.toFloat()!!
         var balance =
-            com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == "usdt" } }
+            com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == Constants.MAIN_ASSET } }
         if (balance == null) {
             val balanceData = BalanceData("0", "0")
             balance = Balance("0", balanceData)
         }
 
         "${
-            balance.balanceData.balance.formattedAsset(0.0, RoundingMode.DOWN, 2)
-        } USDT Available".also { binding.tvSubTitle.text = it }
+            balance.balanceData.balance.formattedAsset(0.0, RoundingMode.DOWN, decimal)
+        } USDC Available".also { binding.tvSubTitle.text = it }
         valueConversion =
             (balance.balanceData.euroBalance.toDouble() / balance.balanceData.balance.toDouble())
 
         binding.etAmount.text = "0$mCurrency"
         if (editEnabledStrategy) {
-            var data = Gson().fromJson<Strategy>(
+            val data = Gson().fromJson<Strategy>(
                 requireArguments().getString("data"),
                 object :
                     TypeToken<Strategy>() {}.type
@@ -113,10 +118,12 @@ class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), Vi
                 else -> getString(R.string.monthly)
             }
             binding.apply {
-                etAmount.text = "${data.activeStrategy!!.amount}$mCurrency"
+                etAmount.text = "${data.activeStrategy!!.amount.toString().formattedAsset(0.0, RoundingMode.DOWN, decimal)
+                }$mCurrency"
                 val assetAmount =
                     (data.activeStrategy!!.amount!!.toDouble() * valueConversion).toString()
                 viewModel.assetAmount = assetAmount
+
                 setAssetAmount(assetAmount)
                 btnAddFrequency.background =
                     ContextCompat.getDrawable(requireContext(), R.drawable.curved_button)
@@ -159,15 +166,15 @@ class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), Vi
                 btnPreviewInvestment -> investment()
                 ivMax -> {
                     var balance =
-                        com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == "usdt" } }
+                        com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == Constants.MAIN_ASSET } }
                     if (balance == null) {
                         val balanceData = BalanceData("0", "0")
                         balance = Balance("0", balanceData)
                     }
-                    var maxValue = balance!!.balanceData.balance.toDouble()
+                    var maxValue = balance.balanceData.balance.toDouble()
                     if (maxValue > 0) {
                         binding.etAmount.text = "${
-                            maxValue.toString().formattedAsset(0.0, RoundingMode.DOWN, 2)
+                            maxValue.toString().formattedAsset(0.0, RoundingMode.DOWN, decimal)
                         }" + mCurrency
                         activateButton(true)
                     } else {
@@ -189,7 +196,7 @@ class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), Vi
     private fun investment() {
         val finalAmount = amount.replace(mCurrency, "").pointFormat
         val balance =
-            com.Lyber.dev.ui.activities.BaseActivity.balances.find { it1 -> it1.id == "usdt" }
+            com.Lyber.dev.ui.activities.BaseActivity.balances.find { it1 -> it1.id == Constants.MAIN_ASSET }
         val amount: Float = balance?.balanceData?.balance?.toFloat() ?: 0f
 
         if (finalAmount.toFloat() < requiredAmount) {
@@ -211,6 +218,7 @@ class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), Vi
             val bundle = Bundle()
             bundle.putString(Constants.AMOUNT, finalAmount)
             bundle.putString(Constants.FREQUENCY, selectedFrequency)
+            bundle.putInt(Constants.DECIMAL, decimal)
             bundle.putBoolean(Constants.EDIT_ACTIVE_STRATEGY, editEnabledStrategy)
             viewModel.selectedOption = Constants.USING_STRATEGY
             findNavController().navigate(R.id.confirmInvestmentFragment, bundle)
@@ -238,7 +246,7 @@ class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), Vi
                     if (string.contains('.')) {
                         if (char != '.') {
                             val decimalPart = string.substringAfter('.')
-                            if (decimalPart.length < 2 && char.isDigit()) {
+                            if (decimalPart.length < decimal && char.isDigit()) {
                                 etAmount.text = "$string$char$currency"
                             }
                         }

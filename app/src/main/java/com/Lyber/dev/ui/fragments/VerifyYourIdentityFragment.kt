@@ -78,25 +78,14 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 isApiHit = false
                 dismissAnimation()
-//                val bundle = Bundle()
-//                bundle.putString(Constants.URL, it.data.url)
-//                navController.navigate(R.id.webViewFragmentTrial, bundle)
-//                resultLauncher.launch(
                 val intent = Intent(requireActivity(), WebViewActivity::class.java)
                     .putExtra(Constants.URL, it.data.url)
+                    .putExtra(Constants.ASK_PERMISSION, true)
 
                 intent.putExtra("fragment_to_show", "fragment2")
                 startActivity(intent)
-//                )
             }
         }
-//        portfolioViewModel.logoutResponse.observe(viewLifecycleOwner){
-//            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-//                App.prefsManager.logout()
-//                findNavController().popBackStack()
-//                findNavController().navigate(R.id.discoveryFragment)
-//            }
-//        }
     }
 
     companion object {
@@ -148,23 +137,17 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
             }
 
             binding.tvGeneralTerms -> {
-                if (!isApiHit) {
-//                    val bundle = Bundle()
-//                    bundle.putString("url", Constants.GENERAL_TERMS_CONDITIONS)
-//                    navController.navigate(R.id.webViewFragment, bundle)
-                    val intent = Intent(requireActivity(), WebViewActivity::class.java)
+                if (!isApiHit) {  val intent = Intent(requireActivity(), WebViewActivity::class.java)
                         .putExtra(Constants.URL, Constants.GENERAL_TERMS_CONDITIONS)
+                        .putExtra(Constants.ASK_PERMISSION, false)
                     startActivity(intent)
                 }
             }
 
             binding.tvPrivacyPolicy -> {
-                if (!isApiHit) {
-//                    val bundle = Bundle()
-//                    bundle.putString("url", Constants.PRIVACY_URL)
-//                    navController.navigate(R.id.webViewFragment, bundle)
-                    val intent = Intent(requireActivity(), WebViewActivity::class.java)
+                if (!isApiHit) { val intent = Intent(requireActivity(), WebViewActivity::class.java)
                         .putExtra(Constants.URL, Constants.PRIVACY_URL)
+                        .putExtra(Constants.ASK_PERMISSION, false)
                     startActivity(intent)
                 }
             }

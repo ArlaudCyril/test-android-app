@@ -31,6 +31,7 @@ import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
 import com.Lyber.dev.utils.CommonMethods.Companion.gone
 import com.Lyber.dev.utils.CommonMethods.Companion.loadCircleCrop
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
+import com.Lyber.dev.utils.Constants
 import okhttp3.ResponseBody
 import java.math.RoundingMode
 
@@ -267,7 +268,7 @@ class OrderStrategyExecutionFragment : BaseFragment<FragmentOrderStrategyExecuti
 
                                 var ts =
                                     (balance.stableAmount.commaFormatted.currencyFormatted).toString()
-                                        .replace("€", " USDT")
+                                        .replace("€", " ${Constants.MAIN_ASSET_UPPER}")
                                 tvAssetAmount.text = ts
                                 tvAssetAmountInCrypto.text =
                                     balance.assetAmount.formattedAsset(

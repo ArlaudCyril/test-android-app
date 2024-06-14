@@ -224,7 +224,7 @@ class CommonMethods {
         }
 
         fun String.decimalPoint(): String {
-            val decimalFormat = DecimalFormat("#.######", DecimalFormatSymbols(Locale.ENGLISH))
+            val decimalFormat = DecimalFormat("#.########", DecimalFormatSymbols(Locale.ENGLISH))
             return decimalFormat.format(toDouble())
         }
 
@@ -1816,6 +1816,17 @@ class CommonMethods {
                 Log.d("Exception", "showProgressDialog: ${e.message}")
             }
 
+        }
+
+        fun <T> T.commaFormattedDecimal(decimalPlaces: Int): String {
+            val formatString = "%.${decimalPlaces}f"
+            return when (this) {
+                is Int -> String.format(Locale.US, "%d", this.toDouble())
+                is Number -> String.format(Locale.US, formatString, this)
+                is String -> toDoubleOrNull()?.let { String.format(Locale.US, formatString, it) } ?: "0"
+                is Char -> this.toString()
+                else -> "0"
+            }
         }
 
     }

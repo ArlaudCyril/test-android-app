@@ -284,6 +284,10 @@ object Constants {
     const val GENERAL_TERMS_CONDITIONS = "https://www.lyber.com/terms-conditions"
     const val PRIVACY_URL = "https://www.lyber.com/privacy"
     const val EDIT_ACTIVE_STRATEGY = "edit_active_strategy"
+    const val ASK_PERMISSION = "askPermission"
+    const val DECIMAL = "decimal"
 
+    const val MAIN_ASSET = "usdc"
+    const val MAIN_ASSET_UPPER = "USDC"
     const val API_VERSION = "0.2"
 }

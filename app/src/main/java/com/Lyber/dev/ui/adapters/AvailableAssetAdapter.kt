@@ -62,7 +62,7 @@ class AvailableAssetAdapter(
         RecyclerView.ViewHolder(binding.root) {
         init {
             binding.root.setOnClickListener {
-                itemList[adapterPosition]?.let { it1 -> clickListener(it1) }
+                itemList[absoluteAdapterPosition]?.let { it1 -> clickListener(it1) }
             }
         }
     }

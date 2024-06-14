@@ -8,6 +8,7 @@ import com.Lyber.dev.R
 import com.Lyber.dev.databinding.ErrorBottomSheetBinding
 import com.Lyber.dev.ui.fragments.ChooseAssetForDepositFragment
 import com.Lyber.dev.ui.fragments.SelectAssestForBuy
+import com.Lyber.dev.ui.portfolio.fragment.PortfolioHomeFragment
 import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.Constants
@@ -59,6 +60,9 @@ class ErrorBottomSheet(val clickListener: (Boolean) -> Unit) :
                     )
                     SelectAssestForBuy::class.java.name-> findNavController().navigate(
                         R.id.action_preview_my_purchase_to_select_asset_for_buy
+                    )
+                    PortfolioHomeFragment::class.java.name-> findNavController().navigate(
+                        R.id.action_preview_my_purchase_to_home_fragment
                     )
                 }
             }

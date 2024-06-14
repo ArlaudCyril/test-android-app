@@ -51,7 +51,7 @@ class BalanceAdapter(
                             tvAssetNameCode.visible()
                         }
                     }else {
-                        if (currency!=null && currency!!.isTradeActive) {
+                        if (currency!=null && currency.isTradeActive) {
                             tvAssetNameCode.gone()
                         } else {
                             tvAssetNameCode.visible()
@@ -61,7 +61,7 @@ class BalanceAdapter(
                     tvAssetAmountInCrypto.text =
                         balance.balance.formattedAsset(
                             priceCoin,
-                            rounding = RoundingMode.DOWN
+                            rounding = RoundingMode.DOWN,currency!!.decimals
                         )
 //                    +" ${balanceId.uppercase()}"
 
@@ -81,7 +81,7 @@ class BalanceAdapter(
                                 tvAssetNameCode.visible()
                             }
                         }else {
-                            if (currency!=null && currency!!.isTradeActive) {
+                            if (currency!=null && currency.isTradeActive) {
                                 tvAssetNameCode.gone()
                             } else {
                                 tvAssetNameCode.visible()
@@ -91,7 +91,7 @@ class BalanceAdapter(
                         tvAssetAmountInCrypto.text =
                             balance.balance.formattedAsset(
                                 priceCoin,
-                                rounding = RoundingMode.DOWN
+                                rounding = RoundingMode.DOWN,currency!!.decimals
                             )
 //                        +" ${balanceId.uppercase()}"
                     }catch (_:Exception){

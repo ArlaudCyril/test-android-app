@@ -17,7 +17,7 @@ class App : Application() {
             this,
             decodedApiKey.toString()
         )
-//        Places.initialize(this, getString(R.string.API_KEY))
+        Places.initialize(this, getString(R.string.API_KEY))
         appContext = this
         prefsManager = PreferenceManager(applicationContext)
         accessToken = prefsManager.accessToken
@@ -26,28 +26,22 @@ class App : Application() {
 //        getEncodedApiKey()
     }
 
-//        fun getEncodedApiKey() {
-//        val plainApiKey = resources.getString(R.string.API_KEY)//
-//        val encodedApiKey = String(
-//            Base64.encode(
-//                Base64.encode(
-//                    plainApiKey.toByteArray(),
-//                    Base64.DEFAULT
-//                ),
-//                Base64.DEFAULT
-//            )
-//        )
-//        Log.i("encodedApi", "getEncodedApiKey: $encodedApiKey")
-//    }
+        fun getEncodedApiKey() {
+        val plainApiKey = resources.getString(R.string.API_KEY)//
+        val encodedApiKey = String(
+                Base64.encode(
+                    plainApiKey.toByteArray(),
+                    Base64.DEFAULT
+                )
+        )
+        Log.i("encodedApi", "getEncodedApiKey: $encodedApiKey")
+    }
     fun getSplitedDecodedApiKey(): String? {
         return String(
-            Base64.decode(
-                Base64.decode(
+              Base64.decode(
                     resources.getString(R.string.encodedKey),
                     Base64.DEFAULT
-                ),
-                Base64.DEFAULT
-            )
+                )
         )
     }
 

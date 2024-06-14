@@ -6,7 +6,6 @@ import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.Lyber.dev.R
@@ -16,7 +15,6 @@ import com.Lyber.dev.models.BalanceData
 import com.Lyber.dev.models.DataQuote
 import com.Lyber.dev.network.RestClient
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.ErrorBottomSheet
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.VerificationBottomSheet
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
@@ -60,15 +58,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
 
     override fun bind() = FragmentMyPurchaseBinding.inflate(layoutInflater)
 
-    //    private fun baseCardPaymentMethod(): JSONObject =
-//        JSONObject()
-//            .put("type", "CARD")
-//            .put(
-//                "parameters", JSONObject()
-//                    .put("allowedAuthMethods", allowedCardAuthMethods)
-//                    .put("allowedCardNetworks", JSONArray())
-//                    .put("billingAddressRequired", false)
-//            )
+
     private fun baseCardPaymentMethod(): JSONObject =
         JSONObject()
             .put("type", "CARD")
@@ -89,7 +79,6 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
             "VISA"
         )
     )
-    private val allowedCardNetworks1 = JSONArray()
 
     private val allowedCardAuthMethods = JSONArray(
         listOf(
@@ -103,6 +92,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
         PaymentConfiguration.init(
             requireActivity(), Constants.STRIKE_KEY
         )
+
         val payButton: PayButton = binding.googlePayPaymentButton
         val paymentMethods: JSONArray = JSONArray().put(baseCardPaymentMethod())
         payButton.initialize(
@@ -178,7 +168,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
                 Log.d("GooglePayLauncher", "$isGpayHit")
                 stopTimer()
                 isGpayHit = false
-                viewModel.selectedAsset = CommonMethods.getAsset("usdt")
+                viewModel.selectedAsset = CommonMethods.getAsset(Constants.MAIN_ASSET)
                 val bundle = Bundle().apply {
                     putString(Constants.ORDER_ID, orderId)
                     putString(Constants.FROM_SWAP, PreviewMyPurchaseFragment::class.java.name)
@@ -274,7 +264,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
             clientSecret = data!!.clientSecret
             orderId = data!!.orderId
             var balance =
-                com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == "usdt" } }
+                com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == Constants.MAIN_ASSET } }
             if (balance == null) {
                 val balanceData = BalanceData("0", "0")
                 balance = Balance("0", balanceData)
@@ -292,7 +282,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
                 "${String.format(Locale.US, "%.2f", data.fromAmount.toFloat()) + Constants.EURO}"
             tvValueDeposit.text =
                 "" + (data.fromAmount.toDouble() - data.fees.toDouble()) + Constants.EURO
-            tvAmount.text = "${data.toAmount.formattedAsset(priceCoin, RoundingMode.DOWN) + "USDT"}"
+            tvAmount.text = "${data.toAmount.formattedAsset(priceCoin, RoundingMode.DOWN) + Constants.MAIN_ASSET_UPPER}"
             btnConfirmInvestment.isEnabled = true
             timer =
                 ((data.validTimestamp.toLong() - System.currentTimeMillis()) / 1000).toInt()
@@ -376,7 +366,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
                 CommonMethods.showProgressDialog(requireActivity())
                 viewModel.getQuote(
                     "eur",
-                    "usdt",
+                    Constants.MAIN_ASSET,
                     data.fromAmount
                 )
             }

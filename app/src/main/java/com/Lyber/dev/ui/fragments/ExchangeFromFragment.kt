@@ -14,6 +14,7 @@ import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.commaFormatted
 import com.Lyber.dev.utils.CommonMethods.Companion.gone
+import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 
 class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnClickListener {
@@ -58,7 +59,12 @@ class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnCli
                     balancesDummy.add(balance)
                 }
                 com.Lyber.dev.ui.activities.BaseActivity.balances = balancesDummy
-                adapter.setList(balances)
+                if(balances.isNotEmpty()) {
+                    binding.tvNoAssets.gone()
+                    adapter.setList(balances)
+                }
+                else
+                    binding.tvNoAssets.visible()
             }
         }
 

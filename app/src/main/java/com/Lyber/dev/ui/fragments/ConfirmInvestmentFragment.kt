@@ -15,6 +15,7 @@ import com.Lyber.dev.utils.CommonMethods.Companion.addFragment
 import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.dev.utils.CommonMethods.Companion.clearBackStack
 import com.Lyber.dev.utils.CommonMethods.Companion.commaFormatted
+import com.Lyber.dev.utils.CommonMethods.Companion.commaFormattedDecimal
 import com.Lyber.dev.utils.CommonMethods.Companion.decimalPoint
 import com.Lyber.dev.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
@@ -29,7 +30,7 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
 
     private lateinit var viewModel: PortfolioViewModel
     override fun bind() = FragmentConfirmInvestmentBinding.inflate(layoutInflater)
-
+    private var decimal = 2
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -38,7 +39,8 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         binding.ivTopAction.setOnClickListener(this)
         binding.btnConfirmInvestment.setOnClickListener(this)
         binding.allocationView.rvAllocation.isNestedScrollingEnabled = false
-
+        if (arguments != null && requireArguments().containsKey(Constants.DECIMAL))
+            decimal = requireArguments().getInt(Constants.DECIMAL)
         prepareView()
 
 
@@ -89,8 +91,7 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                                             viewModel.amount.toFloat().toDouble(),
                                             it.ownerUuid,
                                         )
-                                    }
-                                    else {
+                                    } else {
                                         if (arguments != null && requireArguments().getBoolean(
                                                 Constants.EDIT_ACTIVE_STRATEGY
                                             )
@@ -98,7 +99,7 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                                             viewModel.editEnabledStrategy(
                                                 it.ownerUuid,
                                                 freq,
-                                                viewModel.amount.toFloat().toInt(),
+                                                viewModel.amount.toFloat().toDouble(),
                                                 viewModel.selectedStrategy!!.name
                                             )
                                         else
@@ -106,7 +107,7 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                                             viewModel.investStrategy(
                                                 it.ownerUuid,
                                                 freq,
-                                                viewModel.amount.toFloat().toInt(),
+                                                viewModel.amount.toFloat().toDouble(),
                                                 viewModel.selectedStrategy!!.name
                                             )
                                     }
@@ -130,14 +131,14 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
     @SuppressLint("SetTextI18n")
     private fun prepareView() {
         binding.apply {
-            val buyValue = (viewModel.amount.toFloat().toInt() * (0.08)).toFloat()
+            val buyValue = (viewModel.amount.toDouble() * (0.08)).toDouble()
             tvNestedAmountValue.text =
-                viewModel.amount.decimalPoint().commaFormatted + " USDT"
+                viewModel.amount.decimalPoint().commaFormattedDecimal(decimal) + " ${Constants.MAIN_ASSET_UPPER}"
             tvValueTotal.text =
                 (viewModel.amount.toFloat() + buyValue).toString()
-                    .decimalPoint().commaFormatted + " USDT"
+                    .decimalPoint().commaFormattedDecimal(decimal) + " ${Constants.MAIN_ASSET_UPPER}"
             tvValueLyberFee.text =
-                buyValue.toString().decimalPoint().commaFormatted + " USDT"
+                buyValue.toString().decimalPoint().commaFormattedDecimal(decimal)+ " ${Constants.MAIN_ASSET_UPPER}"
 
             when (viewModel.selectedOption) {
 
@@ -169,8 +170,8 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                         tvValueDepositFee
                     ).gone()
                     //changed fee to 1 percent of the amount
-                    var fee = ((viewModel.amount.toFloat() * 0.5) / 100.0)
-                    fee = String.format(Locale.US,"%.2f", fee).toFloat().toDouble()
+                    var fee = ((viewModel.amount.toFloat() * 0.5f) / 100.0f)
+                    fee = String.format(Locale.US, "%.${decimal}f", fee).toFloat()
 
                     tvNestedAmount.text = getString(R.string.invest)
 
@@ -180,18 +181,21 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                         tvValueFrequency.text = viewModel.selectedFrequency
 
                     tvNestedAmountValue.text = (viewModel.amount.toFloat() - fee).toString()
-                        .decimalPoint().commaFormatted + " USDT"
-                    viewModel.amount.decimalPoint().commaFormatted + " USDT"
+                        .decimalPoint().commaFormattedDecimal(decimal) + " ${Constants.MAIN_ASSET_UPPER}"
+
+
+
+//                    viewModel.amount.decimalPoint().commaFormatted + " ${Constants.MAIN_ASSET_UPPER}"
                     tvValueTotal.text =
                         (viewModel.amount.toFloat()).toString()
-                            .decimalPoint().commaFormatted + " USDT"
+                            .decimalPoint().commaFormatted + " ${Constants.MAIN_ASSET_UPPER}"
                     tvLyberFee.text = getString(R.string.fee)
                     tvValueLyberFee.text =
-                        "~" + fee.toString().decimalPoint() + " USDT"
+                        "~" + fee.toString().decimalPoint() + " ${Constants.MAIN_ASSET_UPPER}"
 
 
                     tvAmount.text =
-                        (viewModel.amount.toFloat()).toString() + " USDT"
+                        (viewModel.amount.toFloat()).toString() + " ${Constants.MAIN_ASSET_UPPER}"
 
                 }
 

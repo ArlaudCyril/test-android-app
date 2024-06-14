@@ -150,17 +150,25 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
 
             Log.d("Balance", "$balance")
             if (balance != null) {
-                decimalFrom=asset!!.decimals
+                decimalFrom = asset!!.decimals
                 mCurrency = " " + balance!!.id.uppercase()
                 tvTitle.text = "Exchange ${balance.id.uppercase()}"
                 val priceCoin = balance.balanceData.euroBalance.toDouble()
                     .div(balance.balanceData.balance.toDouble())
                 tvSubTitle.text = "${
-                    balance.balanceData.balance.formattedAsset(priceCoin, RoundingMode.DOWN) //removed decimal for now
+                    balance.balanceData.balance.formattedAsset(
+                        priceCoin,
+                        RoundingMode.DOWN,
+                        decimalFrom
+                    ) //removed decimal for now
                 } Available"
 //                } ${balance.id.uppercase()} Available"
                 assetAvail =
-                    balance.balanceData.balance.formattedAsset(priceCoin, RoundingMode.DOWN) //removed decimal for now
+                    balance.balanceData.balance.formattedAsset(
+                        priceCoin,
+                        RoundingMode.DOWN,
+                        decimalFrom
+                    ) //removed decimal for now
                         .toDouble()
                 val currency =
                     com.Lyber.dev.ui.activities.BaseActivity.assets.find { it1 -> it1.id == balance.id }
@@ -203,7 +211,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
             mConversionCurrency = " " + balanceTo.id.uppercase()
             val data =
                 com.Lyber.dev.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.exchangeAssetTo } }
-           decimalTo=data!!.decimals
+            decimalTo = data!!.decimals
             Log.d("assetTo", "$data")
             ivAssetSwapTo.loadCircleCrop(data.imageUrl)
             tvSwapAssetTo.text = balanceTo.id.uppercase()
@@ -283,9 +291,9 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
 
     override fun onRetrofitError(responseBody: ResponseBody?) {
         super.onRetrofitError(responseBody)
-           binding.progress.clearAnimation()
-            binding.progress.visibility = View.GONE
-            binding.btnPreviewInvestment.text = getString(R.string.preview_exchange)
+        binding.progress.clearAnimation()
+        binding.progress.visibility = View.GONE
+        binding.btnPreviewInvestment.text = getString(R.string.preview_exchange)
 
     }
 
@@ -333,7 +341,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
         val numberToAssets = (valueAmount * valueInEurosFromAsset) / (valuesInEurosToAsset)
         val priceCoin = valuesInEurosToAsset
             .div(numberToAssets)
-        return numberToAssets.toString().formattedAsset(priceCoin, RoundingMode.DOWN)
+        return numberToAssets.toString().formattedAsset(priceCoin, RoundingMode.DOWN,decimalTo)
 
     }
 
@@ -379,13 +387,12 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                     val string = amount.substring(0, amount.count() - focusedData.currency.length)
 
                     if (string.contains('.')) {
-                        if (char != '.')
-                            {
-                                val decimalPart = string.substringAfter('.')
-                                if (decimalPart.length < decimalFrom && char.isDigit()) {
-                                    etAmount.text = "$string$char${focusedData.currency}"
-                                }
+                        if (char != '.') {
+                            val decimalPart = string.substringAfter('.')
+                            if (decimalPart.length < decimalFrom && char.isDigit()) {
+                                etAmount.text = "$string$char${focusedData.currency}"
                             }
+                        }
 //                            etAmount.text = "$string$char${focusedData.currency}" //for now
                     } else {
                         if (char == '.') etAmount.text = ("${
@@ -464,7 +471,14 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                             viewModel.assetAmount = assetAmount
 
                             binding.tvAssetConversion.text =
-                                "${assetAmount}$mConversionCurrency"
+                                "${
+                                    assetAmount.formattedAsset(
+                                        1.03,
+                                        RoundingMode.DOWN,
+                                        decimalTo
+                                    )
+                                }$mConversionCurrency"
+//                                "${assetAmount}$mConversionCurrency"
                             val balanceFromPrice =
                                 com.Lyber.dev.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
                             binding.tvEuro.text = "~${
@@ -476,7 +490,10 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                         else -> {
 
                             val convertedValue = conversionFormula()
-                            binding.tvAssetConversion.text = "$convertedValue$mCurrency"
+//                            binding.tvAssetConversion.text = "$convertedValue$mCurrency"
+                            binding.tvAssetConversion.text = "${
+                                convertedValue.formattedAsset(1.03, RoundingMode.DOWN, decimalTo)
+                            }$mCurrency"
                             val balanceFromPrice =
                                 com.Lyber.dev.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
                             binding.tvEuro.text = "~${
@@ -526,11 +543,10 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
 
     @SuppressLint("SetTextI18n")
     private fun setMaxValue() {
-        if(assetAvail==0.0) {
+        if (assetAvail == 0.0) {
             binding.etAmount.text = "0${focusedData.currency}"
             binding.tvEuro.text = "~0 ${Constants.EURO}"
-        }
-            else{
+        } else {
             val balance =
                 com.Lyber.dev.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetFrom!! }
             val asset =
@@ -540,7 +556,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
             val priceCoin = balance!!.balanceData.euroBalance.toDouble()
                 .div(balance.balanceData.balance.toDouble())
             binding.etAmount.text = "${
-                maxValue.formattedAsset(priceCoin, RoundingMode.DOWN,asset!!.decimals)
+                maxValue.formattedAsset(priceCoin, RoundingMode.DOWN, asset!!.decimals)
             }${focusedData.currency}"
         }
 
