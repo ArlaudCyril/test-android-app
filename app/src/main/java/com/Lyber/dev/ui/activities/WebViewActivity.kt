@@ -135,11 +135,11 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
                     applicationContext,
                     android.Manifest.permission.READ_MEDIA_IMAGES
                 ) != PackageManager.PERMISSION_GRANTED
-                ||
-                ActivityCompat.checkSelfPermission(
-                    applicationContext,
-                    android.Manifest.permission.READ_MEDIA_VIDEO
-                ) != PackageManager.PERMISSION_GRANTED
+//                ||
+//                ActivityCompat.checkSelfPermission(
+//                    applicationContext,
+//                    android.Manifest.permission.READ_MEDIA_VIDEO
+//                ) != PackageManager.PERMISSION_GRANTED
 //                || ActivityCompat.checkSelfPermission(
 //                    applicationContext,
 //                    android.Manifest.permission.MODIFY_AUDIO_SETTINGS
@@ -154,8 +154,8 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
                 requestMultiplePermissions.launch(
                     arrayOf(
                         android.Manifest.permission.CAMERA,
-                        android.Manifest.permission.READ_MEDIA_IMAGES,
-                        android.Manifest.permission.READ_MEDIA_VIDEO
+                        android.Manifest.permission.READ_MEDIA_IMAGES
+//                        android.Manifest.permission.READ_MEDIA_VIDEO
 //                        android.Manifest.permission.MODIFY_AUDIO_SETTINGS,
 //                        android.Manifest.permission.RECORD_AUDIO
                     )
@@ -220,7 +220,7 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 if (permissions[android.Manifest.permission.CAMERA] == true
                     && permissions[android.Manifest.permission.READ_MEDIA_IMAGES] == true
-                    && permissions[android.Manifest.permission.READ_MEDIA_VIDEO] == true
+//                    && permissions[android.Manifest.permission.READ_MEDIA_VIDEO] == true
 //                    && permissions[android.Manifest.permission.MODIFY_AUDIO_SETTINGS] == true
 //                    && permissions[android.Manifest.permission.RECORD_AUDIO] == true
                 ) {
@@ -237,15 +237,17 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
                             checkAndRequest()
                         } else permissionsDenied()
 
-                    } else if (permissions[android.Manifest.permission.READ_MEDIA_VIDEO] == false) {
-                        if (!ActivityCompat.shouldShowRequestPermissionRationale(
-                                this,
-                                android.Manifest.permission.READ_MEDIA_VIDEO
-                            )
-                        ) {
-                            checkAndRequest()
-                        } else permissionsDenied()
-                    } else if (permissions[android.Manifest.permission.READ_MEDIA_IMAGES] == false) {
+                    }
+//                    else if (permissions[android.Manifest.permission.READ_MEDIA_VIDEO] == false) {
+//                        if (!ActivityCompat.shouldShowRequestPermissionRationale(
+//                                this,
+//                                android.Manifest.permission.READ_MEDIA_VIDEO
+//                            )
+//                        ) {
+//                            checkAndRequest()
+//                        } else permissionsDenied()
+//                    }
+                    else if (permissions[android.Manifest.permission.READ_MEDIA_IMAGES] == false) {
 
                         if (!ActivityCompat.shouldShowRequestPermissionRationale(
                                 this,

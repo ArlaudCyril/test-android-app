@@ -29,6 +29,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/ivTopAction"
+        app:layout_constraintBottom_toBottomOf="@id/ivTopAction"
         app:layout_constraintVertical_chainStyle="packed" />
 
 
@@ -277,9 +278,10 @@
         <TextView
             android:id="@+id/btnPreviewInvestment"
             style="@style/ButtonStyle"
-            android:layout_width="match_parent"
-            android:background="@drawable/button_purple_400"
+            android:layout_centerInParent="true"
             android:gravity="center"
+            android:background="@drawable/button_purple_400"
+            android:includeFontPadding="false"
             android:text="@string/preview_my_purchase"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
