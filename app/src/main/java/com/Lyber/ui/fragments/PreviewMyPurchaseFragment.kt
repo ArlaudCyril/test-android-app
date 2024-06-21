@@ -1,7 +1,6 @@
 package com.Lyber.ui.fragments
 
 import android.annotation.SuppressLint
-import android.app.Activity
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -27,9 +26,6 @@ import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.PortfolioViewModel
-import com.google.android.gms.wallet.PaymentsClient
-import com.google.android.gms.wallet.Wallet
-import com.google.android.gms.wallet.WalletConstants
 import com.google.android.gms.wallet.button.ButtonConstants
 import com.google.android.gms.wallet.button.ButtonOptions
 import com.google.android.gms.wallet.button.PayButton
@@ -61,6 +57,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
     val hashMap: HashMap<String, Any> = hashMapOf()
 
     override fun bind() = FragmentMyPurchaseBinding.inflate(layoutInflater)
+
     private fun baseCardPaymentMethod(): JSONObject =
         JSONObject()
             .put("type", "CARD")
@@ -102,8 +99,9 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         PaymentConfiguration.init(
-        requireActivity(), Constants.STRIPE_KEY
+            requireActivity(), Constants.STRIPE_KEY
         )
+
         val payButton: PayButton = binding.googlePayPaymentButton
         val paymentMethods: JSONArray = JSONArray().put(baseCardPaymentMethod())
         payButton.initialize(
@@ -180,7 +178,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
                 Log.d("GooglePayLauncher", "$isGpayHit")
                 stopTimer()
                 isGpayHit = false
-                viewModel.selectedAsset = CommonMethods.getAsset("usdt")
+                viewModel.selectedAsset = CommonMethods.getAsset(Constants.MAIN_ASSET)
                 val bundle = Bundle().apply {
                     putString(Constants.ORDER_ID, orderId)
                     putString(Constants.FROM_SWAP, PreviewMyPurchaseFragment::class.java.name)
@@ -276,7 +274,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
             clientSecret = data!!.clientSecret
             orderId = data!!.orderId
             var balance =
-                com.Lyber.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == "usdt" } }
+                com.Lyber.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == Constants.MAIN_ASSET } }
             if (balance == null) {
                 val balanceData = BalanceData("0", "0")
                 balance = Balance("0", balanceData)
@@ -294,7 +292,12 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
                 "${String.format(Locale.US, "%.2f", data.fromAmount.toFloat()) + Constants.EURO}"
             tvValueDeposit.text =
                 "" + (data.fromAmount.toDouble() - data.fees.toDouble()) + Constants.EURO
-            tvAmount.text = "${data.toAmount.formattedAsset(priceCoin, RoundingMode.DOWN) + "USDT"}"
+            tvAmount.text = "${
+                data.toAmount.formattedAsset(
+                    priceCoin,
+                    RoundingMode.DOWN
+                ) + Constants.MAIN_ASSET_UPPER
+            }"
             btnConfirmInvestment.isEnabled = true
             timer =
                 ((data.validTimestamp.toLong() - System.currentTimeMillis()) / 1000).toInt()
@@ -378,7 +381,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
                 CommonMethods.showProgressDialog(requireActivity())
                 viewModel.getQuote(
                     "eur",
-                    "usdt",
+                    Constants.MAIN_ASSET,
                     data.fromAmount
                 )
             }

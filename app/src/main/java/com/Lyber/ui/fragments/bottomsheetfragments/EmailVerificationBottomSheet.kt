@@ -1,7 +1,10 @@
 package com.Lyber.ui.fragments.bottomsheetfragments
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.KeyEvent
@@ -9,16 +12,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.RelativeLayout
+import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.Lifecycle
 import com.Lyber.R
 import com.Lyber.databinding.BottomSheetVerificationBinding
+import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
 import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.PersonalDataViewModel
 import com.Lyber.viewmodels.SignUpViewModel
 
-class EmailVerificationBottomSheet() :
+class EmailVerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
     BaseBottomSheet<BottomSheetVerificationBinding>() {
 
     private val codeOne get() = binding.etCodeOne.text.trim().toString()
@@ -32,6 +42,11 @@ class EmailVerificationBottomSheet() :
     lateinit var viewToDelete: View
     lateinit var mainView: ViewGroup
     lateinit var viewModel: PersonalDataViewModel
+    private var timer = 60
+    private var isTimerRunning = false
+    private lateinit var handler: Handler
+    var fromResend = false
+
 
     override fun bind() = BottomSheetVerificationBinding.inflate(layoutInflater)
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -50,16 +65,72 @@ class EmailVerificationBottomSheet() :
 
             dismiss()
         }
+        viewModel.setUpEmailResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                if (fromResend) {
+                    if (!::handler.isInitialized)
+                        handler = Handler(Looper.getMainLooper())
+                    timer = 60
+                    binding.tvTimeLeft.text = "60"
+                    startTimer()
+                }
+                fromResend = false
+
+            }
+        }
+
+    }
+
+    private fun startTimer() {
+        if (binding.tvResendCode.isVisible)
+            binding.tvResendCode.gone()
+        if (!binding.llResendText.isVisible)
+            binding.llResendText.visible()
+        try {
+            handler.postDelayed(runnable, 1000)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
+
+    @SuppressLint("SuspiciousIndentation")
+    private val runnable = Runnable {
+        isTimerRunning = true
+        if (timer == 0) {
+            binding.tvResendCode.visible()
+            binding.llResendText.gone()
+        } else {
+            timer -= 1
+
+            if (timer > 0) {
+                binding.tvTimeLeft.text = timer.toString()
+            } else {
+                binding.tvResendCode.visible()
+                binding.llResendText.gone()
+            }
+            startTimer()
+        }
     }
 
     private fun setUpView() {
         binding.apply {
-
+            handler = Handler(Looper.getMainLooper())
+            binding.tvResendCode.gone()
+            startTimer()
             title.text = getString(R.string.verification)
             subtitle.text = getString(R.string.enter_the_code_received_at_email)
             fieldToVerify.text = ""
             btnCancel.text = getString(R.string.back)
-            tvResendCode.visible()
+//            tvResendCode.visible()
+            tvResendCode.setOnClickListener {
+                CommonMethods.checkInternet(requireContext()) {
+                    CommonMethods.setProgressDialogAlert(requireContext())
+                    handle!!.invoke("tg")
+                    fromResend = true
+
+                }
+
+            }
             // Usage example
             val editTextArray: List<EditText> = listOf(
                 etCodeOne, etCodeTwo, etCodeThree,
@@ -201,5 +272,17 @@ class EmailVerificationBottomSheet() :
 
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        stopTimer()
+    }
 
+    private fun stopTimer() {
+        try {
+            handler.removeCallbacks(runnable)
+            isTimerRunning = false
+        } catch (_: Exception) {
+
+        }
+    }
 }

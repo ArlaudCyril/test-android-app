@@ -19,9 +19,8 @@ android {
         applicationId "com.Lyber"
         minSdk 24
         targetSdk 34
-        versionCode 21
-        versionName "1.0"
-
+        versionCode 22
+        versionName "1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -71,8 +70,6 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.7.6'
     implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation 'androidx.fragment:fragment:1.6.2'
-    implementation 'androidx.core:core-ktx:+'
-    implementation 'androidx.core:core-ktx:+'
     implementation 'androidx.core:core-ktx:+'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
@@ -139,4 +136,9 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:23.4.1'
     implementation 'androidx.core:core-splashscreen:1.2.0-alpha01'
     implementation("io.github.g00fy2.quickie:quickie-bundled:1.9.0")
+}
+configurations.all {
+    resolutionStrategy {
+        force 'androidx.core:core:1.12.0'
+    }
 }

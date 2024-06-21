@@ -107,6 +107,16 @@
                 android:text="@string/on_my_crypto_wallet"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 android:textColor="@color/purple_gray_900" />
+            <TextView
+                android:id="@+id/tvNoAssets"
+                style="@style/SubheadMabry"
+                android:text="@string/no_assets_available_for_exchange"
+                android:textStyle="bold"
+                android:visibility="gone"
+                android:gravity="center"
+                android:layout_gravity="center"
+                android:layout_marginVertical="248dp"
+                android:textColor="@color/purple_gray_800" />
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvRecyclerView"
@@ -123,6 +133,7 @@
                 style="@style/TitleText"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="16dp"
+                android:visibility="gone"
                 android:text="@string/on_my_bank_account"
                 android:textAppearance="@style/TextAppearance.AppCompat.Title"
                 android:textColor="@color/purple_gray_900" />

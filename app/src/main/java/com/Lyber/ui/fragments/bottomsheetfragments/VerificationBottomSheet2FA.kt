@@ -1,7 +1,10 @@
 package com.Lyber.ui.fragments.bottomsheetfragments
 
+import android.annotation.SuppressLint
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
@@ -9,6 +12,7 @@ import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
 import android.widget.EditText
+import androidx.core.view.isVisible
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
@@ -19,6 +23,7 @@ import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
+import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.SignUpViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -37,13 +42,18 @@ class VerificationBottomSheet2FA(private val handle: (String) -> Unit) :
     lateinit var viewToDelete: View
     lateinit var mainView: ViewGroup
 
+    private var timer = 60
+    private var isTimerRunning = false
+    private lateinit var handler: Handler
+    var fromResend = false
+
     lateinit var viewModel: SignUpViewModel
     override fun bind() = BottomSheetVerificationBinding.inflate(layoutInflater)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel = CommonMethods.getViewModel(this)
-        viewModel.listener=this
+//        viewModel = CommonMethods.getViewModel(this)
+//        viewModel.listener=this
         setUpView()
         behavior.state = BottomSheetBehavior.STATE_EXPANDED
         this.binding.etCodeOne.requestFocus()
@@ -89,10 +99,29 @@ class VerificationBottomSheet2FA(private val handle: (String) -> Unit) :
         binding.btnCancel.setOnClickListener {
             dismiss()
         }
+        if (!::handler.isInitialized)
+            handler = Handler(Looper.getMainLooper())
+
         binding.tvResendCode.setOnClickListener {
             CommonMethods.checkInternet(requireContext()){
                 CommonMethods.setProgressDialogAlert(requireContext())
+               fromResend=true
                 handle.invoke("Resend")
+            }
+        }
+        viewModel.commonResponse.observe(viewLifecycleOwner) {
+
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                CommonMethods.dismissProgressDialog()
+                CommonMethods.dismissAlertDialog()
+                if (fromResend) {
+                    if (!::handler.isInitialized)
+                        handler = Handler(Looper.getMainLooper())
+                    timer = 60
+                    binding.tvTimeLeft.text = "60"
+                    startTimer()
+                }
+                fromResend = false
             }
         }
     }
@@ -107,15 +136,25 @@ class VerificationBottomSheet2FA(private val handle: (String) -> Unit) :
                 subtitle.text = getString(R.string.enter_the_code_displayed_on_your_sms)
             }
             if (App.prefsManager.user!=null && App.prefsManager.user?.type2FA!=null) {
-                var type = App.prefsManager.user?.type2FA
-                if (type == Constants.EMAIL)
-                    subtitle.text = getString(R.string.enter_the_code_received_by_email)
-                else if (type == Constants.PHONE)
-                    subtitle.text = getString(R.string.enter_the_code_received_by_sms)
-                else {
-                    tvResendCode.gone()
-                    subtitle.text =
-                        getString(R.string.enter_the_code_displayed_by_google_authenticator)
+                val type = App.prefsManager.user?.type2FA
+                when (type) {
+                    Constants.EMAIL -> {
+                        subtitle.text = getString(R.string.enter_the_code_received_by_email)
+                        handler = Handler(Looper.getMainLooper())
+                        binding.tvResendCode.gone()
+                        startTimer()
+                    }
+                    Constants.PHONE -> {
+                        subtitle.text = getString(R.string.enter_the_code_received_by_sms)
+                        handler = Handler(Looper.getMainLooper())
+                        binding.tvResendCode.gone()
+                        startTimer()
+                    }
+                    else -> {
+                        tvResendCode.gone()
+                        subtitle.text =
+                            getString(R.string.enter_the_code_displayed_by_google_authenticator)
+                    }
                 }
             }
 
@@ -252,9 +291,6 @@ class VerificationBottomSheet2FA(private val handle: (String) -> Unit) :
                                 viewModel.verify2FA(code = getCode())
                             } else {
                                 dismiss()
-                                viewModel.verifyPhone(getCode())
-                            }
-                                dismiss()
                                 handle.invoke(getCode())
                             }
                             //  viewModel.verify2FAWithdraw(code = getCode())
@@ -264,7 +300,7 @@ class VerificationBottomSheet2FA(private val handle: (String) -> Unit) :
                 }
             }
 
-        }
+        }}
 
         private fun nextEditText(modifiedEditText: EditText): EditText {
             when (modifiedEditText) {
@@ -279,6 +315,48 @@ class VerificationBottomSheet2FA(private val handle: (String) -> Unit) :
 
 
     }
+    private fun startTimer() {
+        if (binding.tvResendCode.isVisible)
+            binding.tvResendCode.gone()
+        if (!binding.llResendText.isVisible)
+            binding.llResendText.visible()
+        try {
+            handler.postDelayed(runnable, 1000)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 
+    @SuppressLint("SuspiciousIndentation")
+    private val runnable = Runnable {
+        isTimerRunning = true
+        if (timer == 0) {
+            binding.tvResendCode.visible()
+            binding.llResendText.gone()
+        } else {
+            timer -= 1
+
+            if (timer > 0) {
+                binding.tvTimeLeft.text = timer.toString()
+            } else {
+                binding.tvResendCode.visible()
+                binding.llResendText.gone()
+            }
+            startTimer()
+        }
+    }
+    override fun onDestroy() {
+        super.onDestroy()
+        stopTimer()
+    }
+
+    private fun stopTimer() {
+        try {
+            handler.removeCallbacks(runnable)
+            isTimerRunning = false
+        } catch (_: Exception) {
+
+        }
+    }
 
 }

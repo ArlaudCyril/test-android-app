@@ -77,6 +77,7 @@ abstract class BaseBottomSheet<viewBinding : ViewBinding> : BottomSheetDialogFra
                 resultLauncher.launch(
                     Intent(requireActivity(), WebViewActivity::class.java)
                         .putExtra(Constants.URL, it.data.url)
+                        .putExtra(Constants.ASK_PERMISSION, true)
                 )
             }
         }
@@ -91,6 +92,7 @@ abstract class BaseBottomSheet<viewBinding : ViewBinding> : BottomSheetDialogFra
                         resultLauncher.launch(
                             Intent(requireActivity(), WebViewActivity::class.java)
                                 .putExtra(Constants.URL, it.data.url)
+                                .putExtra(Constants.ASK_PERMISSION, true)
                         )
                     }, 1000
                 )

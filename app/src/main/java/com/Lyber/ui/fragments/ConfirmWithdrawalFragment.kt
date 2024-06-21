@@ -9,19 +9,18 @@ import android.widget.RelativeLayout
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.FragmentConfirmInvestmentBinding
 import com.Lyber.network.RestClient
 import com.Lyber.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
 import com.Lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet2FA
-import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.formattedAsset
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.viewmodels.SignUpViewModel
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import java.math.RoundingMode
@@ -30,6 +29,7 @@ import java.math.RoundingMode
 class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>(),
     View.OnClickListener, RestClient.OnRetrofitError {
     private lateinit var viewModel: PortfolioViewModel
+    private lateinit var viewModelSignup: SignUpViewModel
     private var valueTotal: Double = 0.0
     private var isExpand = false
     private var isOtpScreen = false
@@ -39,7 +39,9 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = CommonMethods.getViewModel(requireActivity())
+        viewModelSignup = CommonMethods.getViewModel(requireActivity())
         viewModel.listener = this
+        viewModelSignup.listener = this
         binding.tvTotalAmount.gone()
         binding.ivSingleAsset.gone()
         binding.tvMoreDetails.gone()
@@ -67,6 +69,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                 }
             }
         }
+
 //        viewModel.logoutResponse.observe(viewLifecycleOwner){
 //            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
 //                App.prefsManager.logout()
@@ -92,8 +95,21 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
 
             val vc = VerificationBottomSheet2FA(::handle)
             vc.viewToDelete = transparentView
+            vc.viewModel = viewModelSignup
             vc.mainView = getView()?.rootView as ViewGroup
+
             vc.show(childFragmentManager, "")
+
+
+//            val vc = VerificationBottomSheet(::handle)
+//            vc.viewToDelete = transparentView
+//            vc.mainView = getView()?.rootView as ViewGroup
+//            vc.viewModel = viewModel
+//            vc.arguments = Bundle().apply {
+//                putString(Constants.TYPE, clickedOn)
+//            }
+//            vc.show(childFragmentManager, App.prefsManager.user?.type2FA)
+
 
             // Add the transparent view to the RelativeLayout
             val mainView = getView()?.rootView as ViewGroup
@@ -121,7 +137,8 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
 
     //    @RequiresApi(Build.VERSION_CODES.O)
     private fun confirmButtonClick() {
-        CommonMethods.showProgressDialog(requireActivity())
+        if (!isResend)
+            CommonMethods.showProgressDialog(requireActivity())
         val map = HashMap<Any?, Any?>()
         map["asset"] = viewModel.selectedAssetDetail!!.id
         map["amount"] = valueTotal
@@ -129,10 +146,10 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         map["network"] = viewModel.selectedNetworkDeposit!!.id
         val jso = JSONObject(map)
         isOtpScreen = true
-        var encoded=""
+        var encoded = ""
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-         encoded = String(java.util.Base64.getEncoder().encode(jso.toString(4).toByteArray()))
-       else{
+            encoded = String(java.util.Base64.getEncoder().encode(jso.toString(4).toByteArray()))
+        else {
             val jsonString = jso.toString(4) // Convert JSONObject to string with indentation
 
             val bytes = jsonString.toByteArray() // Convert string to bytes
@@ -140,7 +157,10 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
             encoded =
                 android.util.Base64.encodeToString(bytes, android.util.Base64.DEFAULT)
         }
-        viewModel.getOtpForWithdraw(Constants.ACTION_WITHDRAW, encoded)
+        if (isResend)
+            viewModelSignup.getOtpForWithdraw(Constants.ACTION_WITHDRAW, encoded)
+        else
+            viewModel.getOtpForWithdraw(Constants.ACTION_WITHDRAW, encoded)
     }
 
     private fun prepareView() {

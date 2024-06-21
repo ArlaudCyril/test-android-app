@@ -18,6 +18,7 @@ import com.Lyber.databinding.LayoutAddAnAssetBinding
 import com.Lyber.databinding.LoaderViewBinding
 import com.Lyber.models.AddedAsset
 import com.Lyber.models.PriceServiceResume
+import com.Lyber.ui.activities.BaseActivity
 import com.Lyber.ui.adapters.BaseAdapter
 import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
@@ -65,18 +66,19 @@ class AddAssetBottomSheet(private val clickListener: (PriceServiceResume) -> Uni
                 topLosers.clear()
                 topGainers.clear()
                 stables.clear()
-                com.Lyber.ui.activities.BaseActivity.balanceResume.clear()
-                com.Lyber.ui.activities.BaseActivity.balanceResume.addAll(it)
+                BaseActivity.balanceResume.clear()
+               BaseActivity.balanceResume.addAll(it)
                 val dummyList: MutableList<PriceServiceResume> = mutableListOf()
                 for (data in it){
                     var isAdded = false
+                    val asset=BaseActivity.assets.find { it.id==data.id  }
                     for (added in addedAssets){
                         if (added.addAsset.id == data.id){
                             isAdded = true
                             break
                         }
                     }
-                    if (!isAdded){
+                    if (!isAdded && asset!!.isStrategyActive){
                         dummyList.add(data)
                     }
                 }

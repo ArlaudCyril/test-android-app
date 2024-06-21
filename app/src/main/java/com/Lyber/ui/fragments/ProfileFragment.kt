@@ -6,8 +6,6 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.graphics.Paint
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -40,7 +38,6 @@ import com.Lyber.models.TransactionData
 import com.Lyber.ui.adapters.BaseAdapter
 import com.Lyber.ui.fragments.bottomsheetfragments.TransactionDetailsBottomSheetFragment
 import com.Lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet2FA
-import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
@@ -48,10 +45,8 @@ import com.Lyber.utils.CommonMethods.Companion.checkPermission
 import com.Lyber.utils.CommonMethods.Companion.dismissAlertDialog
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.formattedAsset
-import com.Lyber.utils.CommonMethods.Companion.getDeviceId
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.gone
-import com.Lyber.utils.CommonMethods.Companion.logOut
 import com.Lyber.utils.CommonMethods.Companion.replaceFragment
 import com.Lyber.utils.CommonMethods.Companion.saveImageToExternalStorage
 import com.Lyber.utils.CommonMethods.Companion.setProfile
@@ -60,6 +55,8 @@ import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
+import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.viewmodels.SignUpViewModel
 import com.caverock.androidsvg.BuildConfig
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
@@ -74,6 +71,8 @@ import java.util.*
 class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickListener {
 
     private lateinit var viewModel: PortfolioViewModel
+    private lateinit var viewModelSignup: SignUpViewModel
+
     private lateinit var adapter: TransactionAdapter
 
     private var imageFile: File? = null
@@ -89,7 +88,9 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         super.onViewCreated(view, savedInstanceState)
 
         viewModel = getViewModel(requireActivity())
+        viewModelSignup = getViewModel(requireActivity())
         viewModel.listener = this
+        viewModelSignup.listener = this
 
         val navHostFragment =
             requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -296,7 +297,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
     private fun handle(code: String) {
         CommonMethods.checkInternet(requireContext()) {
             isResend = true
-            viewModel.getOtpForWithdraw(Constants.ACTION_CLOSE_ACCOUNT, null)
+            viewModelSignup.getOtpForWithdraw(Constants.ACTION_CLOSE_ACCOUNT, null)
 
         }
 
@@ -332,7 +333,12 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 it.tvTitle.text = getString(R.string.log_out)
                 it.tvMessage.text = getString(R.string.logout_message)
                 it.tvNegativeButton.text = getString(R.string.cancel)
-                it.tvPositiveButton.setTextColor(ContextCompat.getColor(requireContext(),R.color.red_500))
+                it.tvPositiveButton.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.red_500
+                    )
+                )
                 it.tvPositiveButton.text = getString(R.string.log_out_normal)
 
                 it.tvNegativeButton.setOnClickListener {
@@ -340,10 +346,10 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 }
                 it.tvPositiveButton.setOnClickListener {
                     dismiss()
-                        CommonMethods.checkInternet(requireContext()) {
-                            CommonMethods.showProgressDialog(requireContext())
-                            viewModel.logout()
-                        }
+                    CommonMethods.checkInternet(requireContext()) {
+                        CommonMethods.showProgressDialog(requireContext())
+                        viewModel.logout()
+                    }
                 }
                 show()
             }
@@ -501,10 +507,12 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 //
 //                            }
 
-                            tvEndSubTitle.text = "+${it.toAmount.formattedAsset(
-                                0.0,
-                                rounding = RoundingMode.DOWN,8
-                            )} ${it.toAsset.uppercase()}"
+                            tvEndSubTitle.text = "+${
+                                it.toAmount.formattedAsset(
+                                    0.0,
+                                    rounding = RoundingMode.DOWN, 8
+                                )
+                            } ${it.toAsset.uppercase()}"
 
 
                         }

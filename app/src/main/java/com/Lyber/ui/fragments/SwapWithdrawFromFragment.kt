@@ -24,7 +24,6 @@ import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import java.math.RoundingMode
-
 class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnClickListener {
 
     private lateinit var adapter: BalanceAdapter
@@ -47,7 +46,7 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
                 balanceDataDict.forEach { it1 ->
                     val balance = Balance(id = it1.key, balanceData = it1.value)
                     balances.add(balance)
-                    if (it1.key == "usdt")
+                    if (it1.key == Constants.MAIN_ASSET)
                         setBankAccount(balance)
 
                 }
@@ -94,12 +93,14 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
 //        binding.tvLyberPortfolio.text = getString(R.string.a_precise_asset)
         binding.tvTitle.text = getString(R.string.i_want_to_withdraw)
         binding.rlAllPortfolio.gone()
+        binding.tvOnMyBank.visible()
         binding.includedAsset.root.visible()
         binding.includedAsset.llFiatWallet.gone()
-        val currency = com.Lyber.ui.activities.BaseActivity.assets.find { it.id == "usdt" }
+
+        val currency = com.Lyber.ui.activities.BaseActivity.assets.find { it.id == Constants.MAIN_ASSET }
         binding.includedAsset.ivAssetIcon.loadCircleCrop(currency?.imageUrl ?: "")
         binding.includedAsset.ivDropIcon.setImageResource(R.drawable.ic_right_arrow_grey)
-        binding.includedAsset.tvAssetName.text = "Tether"
+        binding.includedAsset.tvAssetName.text = Constants.MAIN_ASSET_UPPER
 
     }
 

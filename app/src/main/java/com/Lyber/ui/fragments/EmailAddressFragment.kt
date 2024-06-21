@@ -1,19 +1,16 @@
 package com.Lyber.ui.fragments
 
-import android.app.Dialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import android.widget.RelativeLayout
 import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.Lyber.R
-import com.Lyber.databinding.CustomDialogLayoutBinding
 import com.Lyber.databinding.FragmentEmailAddressBinding
 import com.Lyber.ui.fragments.bottomsheetfragments.EmailVerificationBottomSheet
 import com.Lyber.utils.App
@@ -42,6 +39,8 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
     private val passwordRegex = Pattern.compile("(?=.*[a-z])(?=.*[A-Z])(?=.*[^\\w]).{10,}")
 
     private var isPasswordOk = false
+    private var fromResend = false
+
     override fun bind() = FragmentEmailAddressBinding.inflate(layoutInflater)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -142,36 +141,71 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
         viewModel.setUpEmailResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 CommonMethods.dismissProgressDialog()
-                App.prefsManager.personalDataSteps = Constants.EMAIL_ADDRESS
-                val transparentView = View(context)
-                transparentView.setBackgroundColor(
-                    ContextCompat.getColor(
-                        requireContext(),
-                        R.color.semi_transparent_dark
+                CommonMethods.dismissAlertDialog()
+                if (!fromResend) {
+                    App.prefsManager.personalDataSteps = Constants.EMAIL_ADDRESS
+                    val transparentView = View(context)
+                    transparentView.setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.semi_transparent_dark
+                        )
                     )
-                )
 
-                // Set layout parameters for the transparent view
-                val viewParams = RelativeLayout.LayoutParams(
-                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                    RelativeLayout.LayoutParams.MATCH_PARENT
-                )
+                    // Set layout parameters for the transparent view
+                    val viewParams = RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.MATCH_PARENT,
+                        RelativeLayout.LayoutParams.MATCH_PARENT
+                    )
 
-                val vc = EmailVerificationBottomSheet()
+                    val vc = EmailVerificationBottomSheet(::handle)
 
-                vc.viewToDelete = transparentView
-                vc.mainView = view?.rootView as ViewGroup
-                vc.viewModel = viewModel
-                vc.show(childFragmentManager, "")
+                    vc.viewToDelete = transparentView
+                    vc.mainView = view?.rootView as ViewGroup
+                    vc.viewModel = viewModel
+                    vc.show(childFragmentManager, "")
 
-                // Add the transparent view to the RelativeLayout
-                val mainView = view?.rootView as ViewGroup
-                mainView.addView(transparentView, viewParams)
+                    // Add the transparent view to the RelativeLayout
+                    val mainView = view?.rootView as ViewGroup
+                    mainView.addView(transparentView, viewParams)
+                }
+                fromResend = false
 
             }
         }
     }
 
+    private fun handle(txt: String) {
+        fromResend = true
+        config = SRP6CryptoParams.getInstance(2048, "SHA-512")
+        generator = SRP6VerifierGenerator(config)
+        generator.xRoutine = XRoutineWithUserIdentity()
+        binding.etEmail.clearFocus()
+        binding.etPassword.clearFocus()
+        if (checkData()) {
+            checkInternet(requireActivity()) {
+                val emailSalt = BigInteger(1, generator.generateRandomSalt())
+                val emailVerifier = generator.generateVerifier(
+                    emailSalt,
+                    binding.etEmail.text.toString().lowercase(),
+                    binding.etPassword.text.toString()
+                )
+
+                val phoneSalt = BigInteger(1, generator.generateRandomSalt())
+                val phoneVerifier = generator.generateVerifier(
+                    phoneSalt, App.prefsManager.getPhone(), binding.etPassword.text.toString()
+                )
+
+                viewModel.setEmail(
+                    binding.etEmail.text.toString().lowercase(),
+                    emailSalt.toString(),
+                    emailVerifier.toString(),
+                    phoneSalt.toString(),
+                    phoneVerifier.toString()
+                )
+            }
+        }
+    }
 
     fun checkData(): Boolean {
         when {

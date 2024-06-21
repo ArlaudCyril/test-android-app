@@ -1,14 +1,21 @@
 package com.Lyber.ui.activities
 
 import android.annotation.SuppressLint
+import android.app.AlertDialog
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.net.Uri
+import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import androidx.activity.OnBackPressedCallback
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import com.Lyber.R
@@ -28,7 +35,14 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
     lateinit var navController: NavController
     override fun bind() = ActivitySplashBinding.inflate(layoutInflater)
 
-
+//    private var checkPermission: Boolean = false
+//    override fun onResume() {
+//        super.onResume()
+//        if(checkPermission) {
+//            checkPermission=false
+//            checkAndRequest()
+//        }
+//    }
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         setIntent(intent)
@@ -184,51 +198,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
             }
 
         }
-    }
-}
-
-
-//private fun handleExtras(){
-//    if (intent!!.extras != null && intent.hasExtra("fragment_to_show") &&
-//        intent.getStringExtra("fragment_to_show").equals(PortfolioHomeFragment::class.java.name)
-//    ) {
-//        navController.popBackStack(navController.graph.startDestinationId, false)
-//        navController.navigate(R.id.portfolioHomeFragment)
-//        intent.removeExtra("fragment_to_show")
-//    } else if (intent!!.extras != null && intent.hasExtra(Constants.FOR_LOGOUT) && (intent?.extras?.getString(Constants.FOR_LOGOUT, "")
-//            ?: "").isNotEmpty()
-//    ) {
-//        navController.popBackStack(navController.graph.startDestinationId, false)
-//        navController.navigate(R.id.discoveryFragment)
-//        intent.removeExtra(Constants.FOR_LOGOUT)
-//    }
-//    else if (intent.data != null && App.prefsManager.userPin.isEmpty()) {
-//        val uriString = intent.data?.toString()
-//        if (uriString != null && uriString.contains("reset?token")) {
-//            Log.d("URI Data", "$uriString")
-//            val urit = Uri.parse(uriString)
-//            val token = urit.getQueryParameter("token")
-//            intent.data=null
-//            if (token != null) {
-//                Log.d("Token: ", "$token")
-////                    navController.navigate(R.id.resetPasswordFragment)
-//                val arguments = Bundle().apply {
-//                    putString("resetToken", token)
-//                }
-//                navController.popBackStack(navController.graph.startDestinationId, false)
-//                navController.navigate(R.id.splashFragment, arguments)
-//            } else {
-//                Log.d("Token not found in the URI", "")
-//            }
-//        }
-//    }
-////        else if ((intent?.extras?.getString(Constants.FOR_LOGOUT, "") ?: "").isNotEmpty())
-////            navController.navigate(R.id.discoveryFragment)
-//    else navController.navigate(R.id.splashFragment)
-//}
-
-
-
+    }}
 
 
 
