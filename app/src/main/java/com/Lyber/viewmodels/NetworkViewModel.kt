@@ -471,7 +471,7 @@ open class NetworkViewModel : ViewModel() {
     fun investStrategy(
         strategyId: String,
         frequency: String?,
-        amount: Int,
+        amount: Double,
         strateggyName: String
     ) {
         viewModelScope.launch(exceptionHandler) {
@@ -1514,7 +1514,7 @@ open class NetworkViewModel : ViewModel() {
     fun editEnabledStrategy(
         strategyId: String,
         frequency: String?,
-        amount: Int,
+        amount: Double,
         strateggyName: String
     ) {
         viewModelScope.launch(exceptionHandler) {

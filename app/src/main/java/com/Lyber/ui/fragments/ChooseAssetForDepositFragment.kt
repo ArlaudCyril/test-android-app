@@ -87,7 +87,7 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                                 }
                             } (${sa.id.uppercase()})"
                         )
-                        if (sa.id.equals("USDT", ignoreCase = true)) {
+                        if (sa.id.equals(Constants.MAIN_ASSET, ignoreCase = true)) {
                             binding.btnBuyTether.visible()
                             binding.tvOr.visible()
                         }
@@ -146,7 +146,7 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                 binding.ivNetwork.visible()
                 binding.etAssets.updatePadding(0)
                 binding.etAssets.setText("${it.fullName.capitalize(Locale.ROOT)} (${it.id.uppercase()})")
-                if (it.id.equals("USDT", ignoreCase = true)) {
+                if (it.id.equals(Constants.MAIN_ASSET, ignoreCase = true)) {
                     binding.btnBuyTether.visible()
                     binding.tvOr.visible()
                 }

@@ -75,6 +75,9 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
                         if (asset.id == viewModel.exchangeAssetFrom) {
                             assets.remove(asset)
                         }
+                        if (asset.id == "usdt") {
+                            assets.remove(asset)
+                        }
                     }
                 }
 

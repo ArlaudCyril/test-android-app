@@ -1,27 +1,19 @@
 package com.Lyber.ui.fragments
 
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.res.Configuration
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.view.WindowManager
-import android.view.animation.AnimationUtils
-import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.RelativeLayout
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
+import com.Lyber.R
 import com.Lyber.databinding.FragmentCreateAccountBinding
 import com.Lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet
 import com.Lyber.utils.App
@@ -43,8 +35,6 @@ import com.nimbusds.srp6.SRP6ClientSession
 import com.nimbusds.srp6.SRP6CryptoParams
 import com.nimbusds.srp6.SRP6VerifierGenerator
 import com.nimbusds.srp6.XRoutineWithUserIdentity
-import com.Lyber.R
-import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 
 
 class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View.OnClickListener {
@@ -221,7 +211,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         }
         viewModel.verifyPhoneResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                App.prefsManager.setPhone(viewModel.countryCode.substring(1)+viewModel.mobileNumber)
+                App.prefsManager.setPhone(viewModel.countryCode.substring(1) + viewModel.mobileNumber)
                 App.prefsManager.accountCreationSteps = Constants.Account_CREATION_STEP_PHONE
                 App.prefsManager.portfolioCompletionStep = Constants.ACCOUNT_CREATING
                 CommonMethods.dismissProgressDialog()
@@ -367,7 +357,8 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
 
                                     viewModel.mobileNumber = modifiedMobile
                                     viewModel.countryCode = countryCode
-                                    viewModel.setPhone(viewModel.countryCode.substring(1), viewModel.mobileNumber
+                                    viewModel.setPhone(
+                                        viewModel.countryCode.substring(1), viewModel.mobileNumber
                                     )
 
                                 }

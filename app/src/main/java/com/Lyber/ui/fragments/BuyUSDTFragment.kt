@@ -153,12 +153,12 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
             val priceCoin = valueAmount.toDouble()
                 .div(assetAmount.toDouble())
             binding.tvAssetConversion.text =
-                "~${assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN)}$mConversionCurrency"
+                "~${assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN)} $mConversionCurrency"
         } else {
             val priceCoin = assetAmount.toDouble()
                 .div(valueAmount.toDouble())
             binding.tvAssetConversion.text =
-                "~${assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN)}$mCurrency"
+                "~${assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN)} $mCurrency"
         }
 
 
@@ -183,13 +183,13 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
             binding.etAmount.text = "0€"
 
             mCurrency = Constants.EURO
-            mConversionCurrency = "usdt".uppercase()
+            mConversionCurrency = Constants.MAIN_ASSET.uppercase()
             focusedData.currency = mCurrency
             unfocusedData.currency = mConversionCurrency
 
-            "${getString(R.string.buy)} ${"usdt".uppercase()}".also { tvTitle.text = it }
+            "${getString(R.string.buy)} ${Constants.MAIN_ASSET.uppercase()}".also { tvTitle.text = it }
             var balance =
-                com.Lyber.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == "usdt" } }
+                com.Lyber.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == Constants.MAIN_ASSET } }
             if (balance == null) {
                 val balanceData = BalanceData("0", "0")
                 balance = Balance("0", balanceData)
@@ -201,7 +201,7 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
                 (balance.balanceData.balance.toDouble() / balance.balanceData.euroBalance.toDouble())
             if (balance.balanceData.balance == "0") {
                 val balanceResume =
-                    com.Lyber.ui.activities.BaseActivity.balanceResume.firstNotNullOfOrNull { item -> item.takeIf { item.id == "usdt" } }
+                    com.Lyber.ui.activities.BaseActivity.balanceResume.firstNotNullOfOrNull { item -> item.takeIf { item.id == Constants.MAIN_ASSET } }
 
                 valueConversion = 1.0 / balanceResume!!.priceServiceResumeData.lastPrice.toDouble()
             }
@@ -209,7 +209,7 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
 
             viewModel.selectedNetworkDeposit.let {
                 var balance =
-                    com.Lyber.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == "usdt" } }
+                    com.Lyber.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == Constants.MAIN_ASSET } }
                 if (balance == null) {
                     val balanceData = BalanceData("0", "0")
                     balance = Balance("0", balanceData)
@@ -253,7 +253,7 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
         binding.btnPreviewInvestment.text = ""
         viewModel.getQuote(
             "eur",
-            "usdt",
+            Constants.MAIN_ASSET,
             amount.split(focusedData.currency)[0].pointFormat
         )
 

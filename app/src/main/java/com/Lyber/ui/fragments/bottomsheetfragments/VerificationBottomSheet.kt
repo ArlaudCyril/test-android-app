@@ -43,11 +43,11 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
     private val codeSix get() = binding.etCodeSix.text.trim().toString()
 
     private var googleOTP = ""
-    var fromSignUp = false
+    var fromSignUp = true
     private var timer = 60
     private var isTimerRunning = false
     private lateinit var handler: Handler
-    var fromResend=false
+    var fromResend = false
 
     lateinit var typeVerification: String
     lateinit var viewToDelete: View
@@ -92,7 +92,7 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
                     CommonMethods.setProgressDialogAlert(requireContext())
                     handle!!.invoke("tg")
                     if (fromSignUp)
-                        fromResend=true
+                        fromResend = true
                 }
             }
         }
@@ -108,23 +108,45 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
                 fromResend=false
             }
         }
+        viewModel.userChallengeResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                if (fromResend) {
+                    if (!::handler.isInitialized)
+                        handler = Handler(Looper.getMainLooper())
+                    timer = 60
+                    binding.tvTimeLeft.text = "60"
+                    startTimer()
+                }
+                fromResend = false
 
+            }
+        }
+        viewModel.booleanResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                if (fromResend) {
+                    if (!::handler.isInitialized)
+                        handler = Handler(Looper.getMainLooper())
+                    timer = 60
+                    binding.tvTimeLeft.text = "60"
+                    startTimer()
+                }
+                fromResend = false
+
+            }
+        }
     }
 
     private fun startTimer() {
-        if(binding.tvResendCode.isVisible)
-        binding.tvResendCode.gone()
-                if(fromResend){
-                    if(!::handler.isInitialized)
-                        handler = Handler(Looper.getMainLooper())
-                    timer=60
-                    binding.tvTimeLeft.text="60"
-                    startTimer()
-                }
-                fromResend=false
-            }
-
-
+        if (binding.tvResendCode.isVisible)
+            binding.tvResendCode.gone()
+        if (!binding.llResendText.isVisible)
+            binding.llResendText.visible()
+        try {
+            handler.postDelayed(runnable, 1000)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
+    }
 
     @SuppressLint("SuspiciousIndentation")
     private val runnable = Runnable {
@@ -136,7 +158,7 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
             timer -= 1
 
             if (timer > 0) {
-                binding.tvTimeLeft.text =timer.toString()
+                binding.tvTimeLeft.text = timer.toString()
             } else {
                 binding.tvResendCode.visible()
                 binding.llResendText.gone()
@@ -149,8 +171,18 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
         binding.apply {
 
             title.text = getString(R.string.verification)
-
-            if (fromSignUp) {
+            if (arguments != null && requireArguments().containsKey(Constants.TYPE) && requireArguments().getBoolean(
+                    Constants.GOOGLE
+                )
+            ) {
+                binding.tvResendCode.gone()
+                binding.llResendText.gone()
+            }
+            else if (  App.prefsManager.user!=null && App.prefsManager.user!!.type2FA==Constants.GOOGLE){
+                binding.tvResendCode.gone()
+                binding.llResendText.gone()
+            }
+            else if (fromSignUp) {
                 handler = Handler(Looper.getMainLooper())
                 binding.tvResendCode.gone()
                 startTimer()
@@ -365,7 +397,7 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
                                     if (args == Constants.GOOGLE) {
                                         if (googleOTP.isNotEmpty()) {
                                             dismiss()
-                                            Log.d("text", args!!)
+                                            Log.d("text", args)
                                             val hash = hashMapOf<String, Any>()
                                             hash["type2FA"] = args
                                             hash["otp"] = getCode()
@@ -383,7 +415,12 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
                                                 binding.subtitle.text =
                                                     getString(R.string.enter_the_code_received_by_sms)
 
-                                            binding.tvResendCode.visible()
+                                            handler = Handler(Looper.getMainLooper())
+                                            binding.tvResendCode.gone()
+                                            timer = 60
+                                            binding.tvTimeLeft.text = "60"
+                                            startTimer()
+//                                            binding.tvResendCode.visible()
                                             binding.etCodeSix.setText("")
                                             binding.etCodeFive.setText("")
                                             binding.etCodeFour.setText("")
@@ -448,7 +485,7 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
         try {
             handler.removeCallbacks(runnable)
             isTimerRunning = false
-        }catch (_:Exception){
+        } catch (_: Exception) {
 
         }
     }

@@ -35,7 +35,10 @@ import com.Lyber.ui.fragments.BaseFragment
 import com.Lyber.ui.fragments.bottomsheetfragments.InvestBottomSheet
 import com.Lyber.ui.portfolio.action.PortfolioFragmentActions
 import com.Lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDots
-import com.Lyber.utils.*
+import com.Lyber.utils.ActivityCallbacks
+import com.Lyber.utils.App
+import com.Lyber.utils.AppLifeCycleObserver
+import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.commaFormatted
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
@@ -49,6 +52,8 @@ import com.Lyber.utils.CommonMethods.Companion.toFormat
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.CommonMethods.Companion.visibleFromLeft
 import com.Lyber.utils.CommonMethods.Companion.zoomIn
+import com.Lyber.utils.Constants
+import com.Lyber.utils.ItemOffsetDecoration
 import com.Lyber.viewmodels.PortfolioViewModel
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.tabs.TabLayout
@@ -62,6 +67,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
 //    private val viewModel1: com.Lyber.models.GetUserViewModal by activityViewModels()
 
+//    private val viewModel1: com.Lyber.models.GetUserViewModal by activityViewModels()
 
     /* adapters */
     private lateinit var adapterBalance: BalanceAdapter
@@ -204,6 +210,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         binding.tvActivateStrategy.setOnClickListener(this)
         binding.llVerifyIdentity.setOnClickListener(this)
         binding.llContract.setOnClickListener(this)
+        binding.tvBuyUSDC.setOnClickListener(this)
 
         /* pop up initialization */
         assetPopUpWindow = ListPopupWindow(requireContext()).apply {
@@ -280,7 +287,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             }
             if (arguments != null && requireArguments().containsKey("showLoader")) {
                 App.isKyc = true
-                    startJob()
+                startJob()
                 CommonMethods.showDocumentDialog(requireActivity(), Constants.LOADING, false)
                 arguments = null
             } else if (!App.isLoader)
@@ -313,7 +320,10 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 binding.rvRefresh.isRefreshing = false
 //                dismissProgressDialog()
                 App.prefsManager.assetBaseDataResponse = it
-                com.Lyber.ui.activities.BaseActivity.assets = it.data as ArrayList<AssetBaseData>
+
+                com.Lyber.ui.activities.BaseActivity.assets =
+                    it.data as ArrayList<AssetBaseData>
+
             }
         }
 
@@ -325,6 +335,23 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 com.Lyber.ui.activities.BaseActivity.balanceResume.clear()
                 com.Lyber.ui.activities.BaseActivity.balanceResume.addAll(it)
                 adapterAllAsset.setList(it.subList(0, 6))
+                val filterUsdc = it.find { it.id == Constants.MAIN_ASSET }
+                var list = ArrayList<PriceServiceResume>()
+                if (filterUsdc != null) {
+                    list.add(0, filterUsdc)
+                }
+
+//                val sublist = mutableListOf(filterUsdc)
+                var count = 0
+
+                for (crypto in it) {
+                    if (crypto.id != Constants.MAIN_ASSET && count < 5) {
+                        list.add(crypto)
+                        count++
+                    }
+                }
+                adapterAllAsset.setList(list)
+//                adapterAllAsset.setList(it.subList(0, 6))
             }
         }
 
@@ -334,6 +361,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 binding.rvRefresh.isRefreshing = false
                 if (it.data.isNotEmpty()) {
                     binding.tvNoAssets.gone()
+                    binding.tvBuyUSDC.gone()
                     val balanceDataDict = it.data
                     val balances = ArrayList<Balance>()
                     balanceDataDict.forEach {
@@ -365,8 +393,10 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                     adapterBalance.setList(balances)
                     responseFrom = "balance"
 
-                } else
+                } else {
                     binding.tvNoAssets.visible()
+                    binding.tvBuyUSDC.visible()
+                }
             }
         }
 
@@ -421,8 +451,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                     kycOK = true
                     binding.tvVerification.gone()
                     binding.llVerification.gone()
-                }
-                else {
+                } else {
                     verificationVisible = true
                     binding.tvVerification.visible()
                     binding.llVerification.visible()
@@ -637,7 +666,8 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         viewModel.networkResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
 //                dismissProgressDialog()
-                com.Lyber.ui.activities.BaseActivity.networkAddress = it.data as ArrayList<Network>
+                com.Lyber.ui.activities.BaseActivity.networkAddress =
+                    it.data as ArrayList<Network>
             }
         }
         viewModel.activeStrategyResponse.observe(viewLifecycleOwner) {
@@ -885,6 +915,13 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                         || App.prefsManager.user?.kycStatus == "STARTED" || App.prefsManager.user?.kycStatus == "NOT_STARTED"
                     )
                         customDialog(7023)
+                }
+
+                tvBuyUSDC -> {
+                    val arguments = Bundle().apply {
+                        putString(Constants.FROM, PortfolioHomeFragment::class.java.name)
+                    }
+                    findNavController().navigate(R.id.buyUsdt, arguments)
                 }
             }
         }

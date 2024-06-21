@@ -10,11 +10,12 @@ import com.Lyber.databinding.FragmentSwapFromBinding
 import com.Lyber.models.Balance
 import com.Lyber.ui.adapters.BalanceAdapter
 import com.Lyber.utils.AppLifeCycleObserver
-import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.commaFormatted
 import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
+import com.Lyber.viewmodels.PortfolioViewModel
 
 class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnClickListener {
 
@@ -32,7 +33,7 @@ class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnCli
         viewModel = CommonMethods.getViewModel(requireActivity())
         viewModel.allMyPortfolio = ""
         viewModel.listener = this
-        viewModel.balanceResponse.observe(viewLifecycleOwner){
+        viewModel.balanceResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 CommonMethods.dismissProgressDialog()
                 val balanceDataDict = it.data
@@ -43,13 +44,13 @@ class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnCli
                     if (arguments != null && requireArguments().getString(Constants.TYPE)
                         == Constants.FROM_SWAP
                     ) {
-                        if (viewModel.exchangeAssetTo != balance.id){
+                        if (viewModel.exchangeAssetTo != balance.id) {
                             balances.add(balance)
                         }
-                    }else if (arguments != null && requireArguments().getString(Constants.TYPE)
+                    } else if (arguments != null && requireArguments().getString(Constants.TYPE)
                         == Constants.TO_SWAP
                     ) {
-                        if (viewModel.exchangeAssetFrom != balance.id){
+                        if (viewModel.exchangeAssetFrom != balance.id) {
                             balances.add(balance)
                         }
                     } else {
@@ -59,12 +60,17 @@ class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnCli
                 }
                 com.Lyber.ui.activities.BaseActivity.balances = balancesDummy
                 adapter.setList(balances)
+                if (balances.isNotEmpty()) {
+                    binding.tvNoAssets.gone()
+                    adapter.setList(balances)
+                } else
+                    binding.tvNoAssets.visible()
             }
         }
 
 
         /* recycler view */
-        adapter = BalanceAdapter(false,::itemClicked)
+        adapter = BalanceAdapter(false, ::itemClicked)
         layoutManager = LinearLayoutManager(requireContext())
         binding.rvRecyclerView.let {
             it.adapter = adapter
@@ -85,8 +91,8 @@ class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnCli
 
     override fun onResume() {
         super.onResume()
-        if(AppLifeCycleObserver.fromBack){
-            AppLifeCycleObserver.fromBack=false
+        if (AppLifeCycleObserver.fromBack) {
+            AppLifeCycleObserver.fromBack = false
             getData()
         }
     }
@@ -96,25 +102,26 @@ class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnCli
         binding.rlAllPortfolio.gone()
         binding.tvTitle.text = getString(R.string.exchange_from)
         binding.rlAllPortfolio.gone()
-        binding.tvLyberPortfolio.text=getString(R.string.lyber_portfolio)
+        binding.tvLyberPortfolio.text = getString(R.string.lyber_portfolio)
         binding.tvOnMyBank.gone()
         binding.includedAsset.root.gone()
         binding.includedAsset.llFiatWallet.gone()
         binding.includedAsset.ivAssetIcon.setImageResource(R.drawable.ic_euro)
         binding.includedAsset.ivDropIcon.setImageResource(R.drawable.ic_right_arrow_grey)
         binding.includedAsset.tvAssetName.text = getString(R.string.euro)
-        "${viewModel.totalPortfolio.commaFormatted}${Constants.EURO}".also { binding.tvAmountAllPortfolio.text = it }
+        "${viewModel.totalPortfolio.commaFormatted}${Constants.EURO}".also {
+            binding.tvAmountAllPortfolio.text = it
+        }
     }
 
     private fun itemClicked(myAsset: Balance) {
 //        viewModel.exchangeAssetFrom = myAsset.id
-        if (arguments!=null&& requireArguments().containsKey(Constants.TYPE)
+        if (arguments != null && requireArguments().containsKey(Constants.TYPE)
             && requireArguments().getString(Constants.TYPE) == Constants.FROM_SWAP
         ) {
             viewModel.exchangeAssetFrom = myAsset.id
             requireActivity().onBackPressedDispatcher.onBackPressed()
-        }
-        else if (arguments!=null&& requireArguments().containsKey(Constants.TYPE)
+        } else if (arguments != null && requireArguments().containsKey(Constants.TYPE)
             && requireArguments().getString(Constants.TYPE) == Constants.TO_SWAP
         ) {
             viewModel.exchangeAssetTo = myAsset.id
@@ -126,7 +133,6 @@ class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnCli
             findNavController().navigate(R.id.allAssetFragment, bundle)
         }
     }
-
 
 
     override fun onClick(v: View?) {
