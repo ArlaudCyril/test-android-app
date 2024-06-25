@@ -88,7 +88,7 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                                     if (freq == "none") {
                                         viewModel.oneTimeOrderStrategy(
                                             viewModel.selectedStrategy!!.name,
-                                            viewModel.amount.toFloat().toDouble(),
+                                            viewModel.amount.toDouble(),
                                             it.ownerUuid,
                                         )
                                     } else {
@@ -99,7 +99,7 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                                             viewModel.editEnabledStrategy(
                                                 it.ownerUuid,
                                                 freq,
-                                                viewModel.amount.toFloat().toDouble(),
+                                                viewModel.amount.toDouble(),
                                                 viewModel.selectedStrategy!!.name
                                             )
                                         else
@@ -107,7 +107,7 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                                             viewModel.investStrategy(
                                                 it.ownerUuid,
                                                 freq,
-                                                viewModel.amount.toFloat().toDouble(),
+                                                viewModel.amount.toDouble(),
                                                 viewModel.selectedStrategy!!.name
                                             )
                                     }
@@ -170,8 +170,8 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                         tvValueDepositFee
                     ).gone()
                     //changed fee to 1 percent of the amount
-                    var fee = ((viewModel.amount.toFloat() * 0.5f) / 100.0f)
-                    fee = String.format(Locale.US, "%.${decimal}f", fee).toFloat()
+                    var fee = ((viewModel.amount.toDouble() * 0.5f) / 100.0f)
+                    fee = String.format(Locale.US, "%.${decimal}f", fee).toDouble()
 
                     tvNestedAmount.text = getString(R.string.invest)
 
@@ -180,14 +180,14 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                     else
                         tvValueFrequency.text = viewModel.selectedFrequency
 
-                    tvNestedAmountValue.text = (viewModel.amount.toFloat() - fee).toString()
+                    tvNestedAmountValue.text = (viewModel.amount.toDouble() - fee).toString()
                         .decimalPoint().commaFormattedDecimal(decimal) + " ${Constants.MAIN_ASSET_UPPER}"
 
 
 
 //                    viewModel.amount.decimalPoint().commaFormatted + " ${Constants.MAIN_ASSET_UPPER}"
                     tvValueTotal.text =
-                        (viewModel.amount.toFloat()).toString()
+                        (viewModel.amount.toDouble()).toString()
                             .decimalPoint().commaFormatted + " ${Constants.MAIN_ASSET_UPPER}"
                     tvLyberFee.text = getString(R.string.fee)
                     tvValueLyberFee.text =
@@ -195,7 +195,7 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
 
 
                     tvAmount.text =
-                        (viewModel.amount.toFloat()).toString() + " ${Constants.MAIN_ASSET_UPPER}"
+                        (viewModel.amount.toDouble()).toString() + " ${Constants.MAIN_ASSET_UPPER}"
 
                 }
 
