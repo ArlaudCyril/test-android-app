@@ -396,7 +396,7 @@
     <string name="market_cap">Capitalisation boursière</string>
     <string name="volume">Volume</string>
     <string name="trading_activity">Activité commerciale</string>
-    <string name="circulating_supply">Capitalisation boursière</string>
+    <string name="circulating_supply">Offre en circulation</string>
     <string name="share_of_crypto_market">Part du marché de la cryptographie</string>
     <string name="popularity">Popularité</string>
     <string name="about">A propos</string>
