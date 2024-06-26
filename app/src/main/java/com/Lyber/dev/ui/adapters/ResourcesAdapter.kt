@@ -41,7 +41,7 @@ class ResourcesAdapter() : BaseAdapter<News>() {
         RecyclerView.ViewHolder(binding.root) {
         init {
             binding.root.setOnClickListener {
-                itemList[adapterPosition]?.let {
+                itemList[absoluteAdapterPosition]?.let {
                     binding.root.context.startActivity(
                         Intent(
                             Intent.ACTION_VIEW,

@@ -10,6 +10,7 @@ import androidx.transition.Fade
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentSplashBinding
 import com.Lyber.dev.utils.App
+import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.is30DaysOld
 
 class SplashFragment : BaseFragment<FragmentSplashBinding>() {
@@ -28,6 +29,8 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        CommonMethods.showDocumentDialog(requireActivity(), 3, true)
+
         handler = Handler(Looper.getMainLooper())
         runnable = Runnable {
 

@@ -44,11 +44,12 @@
         android:layout_marginTop="16dp"
         android:layout_weight="1"
         android:layoutAnimation="@anim/recycler_view_item_animation" />
-<View
-    android:layout_width="match_parent"
-    android:layout_height="220dp"
-    android:visibility="gone"
-    android:id="@+id/viewGap"/>
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="220dp"
+        android:visibility="gone"
+        android:id="@+id/viewGap" />
 
     <Button
         android:id="@+id/btnChooseStrategy"

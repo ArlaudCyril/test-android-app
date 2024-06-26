@@ -61,7 +61,7 @@ class BalanceAdapter(
                     tvAssetAmountInCrypto.text =
                         balance.balance.formattedAsset(
                             priceCoin,
-                            rounding = RoundingMode.DOWN,currency!!.decimals
+                            rounding = RoundingMode.DOWN,currency?.decimals ?: 4
                         )
 //                    +" ${balanceId.uppercase()}"
 
