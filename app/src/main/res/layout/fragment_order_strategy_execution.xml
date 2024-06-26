@@ -38,12 +38,11 @@
             <TextView
                 android:id="@+id/tvTitle"
                 style="@style/TitleText"
-                android:gravity="center"
-                android:layout_centerVertical="true"
                 android:layout_centerInParent="true"
-                android:layout_toRightOf="@id/ivTopAction"
-                android:layout_toLeftOf="@id/ivEnd"
                 android:layout_marginHorizontal="24dp"
+                android:layout_toLeftOf="@id/ivEnd"
+                android:layout_toRightOf="@id/ivTopAction"
+                android:gravity="center"
                 android:text="@string/execution_in_progress" />
             <ImageView
                 android:id="@+id/ivEnd"
@@ -92,6 +91,7 @@
             android:layout_marginHorizontal="28dp"
             android:layout_marginBottom="16dp"
             android:gravity="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             android:text="@string/executing_your_strategy" />
 
         <LinearLayout
