@@ -107,6 +107,26 @@ class EnableNotificationFragment : BaseFragment<FragmentEnableNotificationsBindi
             else
                 checkInternet(requireContext()) {
                     showProgressDialog(requireContext())
+                    if(fcmToken.isEmpty()){
+                        FirebaseMessaging.getInstance().token
+                            .addOnCompleteListener(OnCompleteListener { task ->
+                                if (!task.isSuccessful) {
+                                    Log.w(
+                                        "FirebaseMessagingService.TAG",
+                                        "Fetching FCM registration token failed",
+                                        task.exception
+                                    )
+                                    return@OnCompleteListener
+                                }
+
+                                val token = task.result
+                                fcmToken = token
+                                onBoardingViewModel.enableNotification(fcmToken)
+                                Log.d("FirebaseMessagingService.TAG", token)
+
+                            })
+                    }
+                    else
                     onBoardingViewModel.enableNotification(fcmToken)
                 }
         }
@@ -128,7 +148,27 @@ class EnableNotificationFragment : BaseFragment<FragmentEnableNotificationsBindi
             // FCM SDK (and your app) can post notifications.
             checkInternet(requireContext()) {
                 showProgressDialog(requireContext())
-                onBoardingViewModel.enableNotification(fcmToken)
+                if(fcmToken.isEmpty()){
+                    FirebaseMessaging.getInstance().token
+                        .addOnCompleteListener(OnCompleteListener { task ->
+                            if (!task.isSuccessful) {
+                                Log.w(
+                                    "FirebaseMessagingService.TAG",
+                                    "Fetching FCM registration token failed",
+                                    task.exception
+                                )
+                                return@OnCompleteListener
+                            }
+
+                            val token = task.result
+                            fcmToken = token
+                            onBoardingViewModel.enableNotification(fcmToken)
+                            Log.d("FirebaseMessagingService.TAG", token)
+
+                        })
+                }
+                else
+                    onBoardingViewModel.enableNotification(fcmToken)
             }
         } else {
             //  Inform user that that your app will not show notifications.
@@ -147,7 +187,27 @@ class EnableNotificationFragment : BaseFragment<FragmentEnableNotificationsBindi
                 // FCM SDK (and your app) can post notifications.
                 checkInternet(requireContext()) {
                     showProgressDialog(requireContext())
-                    onBoardingViewModel.enableNotification(fcmToken)
+                    if(fcmToken.isEmpty()){
+                        FirebaseMessaging.getInstance().token
+                            .addOnCompleteListener(OnCompleteListener { task ->
+                                if (!task.isSuccessful) {
+                                    Log.w(
+                                        "FirebaseMessagingService.TAG",
+                                        "Fetching FCM registration token failed",
+                                        task.exception
+                                    )
+                                    return@OnCompleteListener
+                                }
+
+                                val token = task.result
+                                fcmToken = token
+                                onBoardingViewModel.enableNotification(fcmToken)
+                                Log.d("FirebaseMessagingService.TAG", token)
+
+                            })
+                    }
+                    else
+                        onBoardingViewModel.enableNotification(fcmToken)
                 }
             } else if (shouldShowRequestPermissionRationale(Manifest.permission.POST_NOTIFICATIONS)) {
                 requestPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)

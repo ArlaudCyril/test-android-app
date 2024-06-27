@@ -169,13 +169,14 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
                     val mainView = view?.rootView as ViewGroup
                     mainView.addView(transparentView, viewParams)
                 }
-                fromResend = false
+                fromResend=false
+
 
             }
         }
     }
 
-    private fun handle(txt: String) {
+    private fun handle(txt:String) {
         fromResend = true
         config = SRP6CryptoParams.getInstance(2048, "SHA-512")
         generator = SRP6VerifierGenerator(config)

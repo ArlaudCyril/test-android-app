@@ -26,7 +26,7 @@ class BottomSheetAdapter(
         RecyclerView.ViewHolder(binding.root) {
         init {
             binding.text.setOnClickListener {
-                listener.itemClicked(list[adapterPosition])
+                listener.itemClicked(list[absoluteAdapterPosition])
             }
         }
     }

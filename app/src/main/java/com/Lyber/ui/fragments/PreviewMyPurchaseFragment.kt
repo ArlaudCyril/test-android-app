@@ -36,6 +36,7 @@ import com.stripe.android.googlepaylauncher.GooglePayLauncher
 import okhttp3.ResponseBody
 import org.json.JSONArray
 import org.json.JSONObject
+import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.Locale
 
@@ -57,6 +58,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
     val hashMap: HashMap<String, Any> = hashMapOf()
 
     override fun bind() = FragmentMyPurchaseBinding.inflate(layoutInflater)
+
 
     private fun baseCardPaymentMethod(): JSONObject =
         JSONObject()
@@ -279,9 +281,13 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
                 val balanceData = BalanceData("0", "0")
                 balance = Balance("0", balanceData)
             }
-            val priceCoin = balance!!.balanceData.euroBalance.toDouble()
+            val priceCoin = balance.balanceData.euroBalance.toDouble()
                 .div(balance.balanceData.balance.toDouble())
-            tvValueDepositFee.text = data.fees + Constants.EURO
+            tvValueDepositFee.text =
+                BigDecimal.valueOf(data.fromAmount.toDouble()).subtract(BigDecimal.valueOf(data.fromAmountDeductedFees.toDouble()))
+                    .toString()
+//                (data.fromAmount.toDouble() - data.fromAmountDeductedFees.toDouble()).toString().formattedAsset(priceCoin, RoundingMode.DOWN,8)+Constants.EURO
+//                data.fees + Constants.EURO TODO
             tvValueTotal.text = "${data.fromAmount}${Constants.EURO}"
             tvValuePrice.text = data.inverseRatio.formattedAssetForInverseRatio(
                 priceCoin,
@@ -290,14 +296,11 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
 //            tvTotalAmount.text =  "${data.fromAmount+" "+ Constants.EURO}"
             tvTotalAmount.text =
                 "${String.format(Locale.US, "%.2f", data.fromAmount.toFloat()) + Constants.EURO}"
-            tvValueDeposit.text =
-                "" + (data.fromAmount.toDouble() - data.fees.toDouble()) + Constants.EURO
-            tvAmount.text = "${
-                data.toAmount.formattedAsset(
-                    priceCoin,
-                    RoundingMode.DOWN
-                ) + Constants.MAIN_ASSET_UPPER
-            }"
+
+
+            tvValueDeposit.text =data.fromAmountDeductedFees + Constants.EURO
+//                "" + (data.fromAmount.toDouble() - data.fees.toDouble()) + Constants.EURO TODO
+            tvAmount.text = "${data.toAmount.formattedAsset(priceCoin, RoundingMode.DOWN) + Constants.MAIN_ASSET_UPPER}"
             btnConfirmInvestment.isEnabled = true
             timer =
                 ((data.validTimestamp.toLong() - System.currentTimeMillis()) / 1000).toInt()

@@ -211,7 +211,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
             mConversionCurrency = " " + balanceTo.id.uppercase()
             val data =
                 com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.exchangeAssetTo } }
-           decimalTo=data!!.decimals
+            decimalTo = data!!.decimals
             Log.d("assetTo", "$data")
             ivAssetSwapTo.loadCircleCrop(data.imageUrl)
             tvSwapAssetTo.text = balanceTo.id.uppercase()

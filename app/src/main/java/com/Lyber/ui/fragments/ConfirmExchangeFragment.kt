@@ -126,6 +126,11 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
     @SuppressLint("SetTextI18n")
     private fun prepareView(data: DataQuote?) {
         binding.apply {
+            var assetTo =
+                com.Lyber.ui.activities.BaseActivity.assets.find { it1 -> it1.id == data!!.toAsset }
+            var assetFrom =
+                com.Lyber.ui.activities.BaseActivity.assets.find { it1 -> it1.id == data!!.fromAsset }
+
             tvNestedAmount.text = getString(R.string.ratio)
             val balance =
                 com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
@@ -142,7 +147,7 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
             tvExchangeToValue.text = "~" +
                     data.fees.formattedAsset(
                         priceCoin,
-                        rounding = RoundingMode.DOWN, 6
+                        rounding = RoundingMode.DOWN, assetTo!!.decimals
                     ) + " " + data.fromAsset.uppercase()
 
 
@@ -173,8 +178,6 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
 //                    rounding = RoundingMode.DOWN
 //                )} ${data.toAsset.uppercase()}"
             Log.d("dataa", "$data")
-            var assetTo =
-                com.Lyber.ui.activities.BaseActivity.assets.find { it1 -> it1.id == data.toAsset }
 
             if (data.fromAmount.contains(".")) {
                 val number = BigDecimal(data.fromAmount)
@@ -201,7 +204,8 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
                 "${
                     valueTotal.toString().formattedAsset(
                         price = priceCoin,
-                        rounding = RoundingMode.DOWN, 3
+                        rounding = RoundingMode.DOWN,
+                        assetFrom!!.decimals
                     )
                 } ${data.fromAsset.uppercase()}"
             btnConfirmInvestment.isEnabled = true

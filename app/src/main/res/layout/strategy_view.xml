@@ -12,6 +12,7 @@
         android:layout_alignBottom="@id/radioButton"
         android:layout_alignParentStart="true"
         android:layout_marginEnd="16dp"
+        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         android:layout_toStartOf="@id/radioButton"
         android:gravity="center_vertical"
         tools:text="@string/safe" />
@@ -145,8 +146,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="10dp"
         android:layout_toEndOf="@id/ivYield"
-        android:text="@string/risk"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+        android:text="@string/risk" />
 
     <TextView
         android:id="@+id/tvValueYield"
@@ -190,8 +190,7 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="10dp"
         android:layout_toEndOf="@id/ivRisk"
-        android:text="@string/yield"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
+        android:text="@string/yield"/>
 
     <TextView
         android:id="@+id/tvValueRisk"
@@ -202,7 +201,6 @@
         android:layout_marginStart="4dp"
         android:layout_marginTop="10dp"
         android:layout_toEndOf="@id/tvRisk"
-        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         tools:text="Medium" />
 
     <com.Lyber.ui.fragments.AllocationView

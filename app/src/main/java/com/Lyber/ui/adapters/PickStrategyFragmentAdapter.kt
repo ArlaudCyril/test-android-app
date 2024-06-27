@@ -125,9 +125,8 @@ class PickStrategyFragmentAdapter(val itemClicked: (position: Int, view: Strateg
                             }
                             binding.tvFrequencyValue.text = ": " + freq
                             binding.tvFrequencyValue.visible()
-                            binding.tvAmountValue.text =
-                                ": " + it.activeStrategy!!.amount.commaFormattedDecimal(8)
-                                    .decimalPoint() + " ${Constants.MAIN_ASSET_UPPER}"
+                            binding.tvAmountValue.text =  ": " + it.activeStrategy!!.amount.commaFormattedDecimal(8).decimalPoint() + " ${Constants.MAIN_ASSET_UPPER}"
+
                             binding.tvAmountValue.visible()
                         } else {
                             binding.tvPriceStrategy.gone()

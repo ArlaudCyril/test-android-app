@@ -121,7 +121,7 @@
                     app:tabIndicator="@android:color/transparent"
                     app:tabMode="fixed"
                     app:tabSelectedTextColor="@color/purple_gray_800"
-                    app:tabTextAppearance="@style/TextAppearance.AppCompat.Caption"
+                    app:tabTextAppearance="@style/tab_text"
                     app:tabTextColor="@color/purple_gray_400" />
 
             </LinearLayout>
@@ -188,8 +188,10 @@
                             style="@style/SubheadMabry"
                             android:layout_alignParentEnd="true"
                             android:text="72 083 593 181,6€"
-                            android:textColor="@color/purple_gray_700"
-                            android:textStyle="bold" />
+                            android:layout_toEndOf="@id/tvMarketCap"
+                            android:gravity="end"
+                            android:layout_marginStart="8dp"
+                            android:textColor="@color/purple_gray_700" />
 
 
                         <TextView
@@ -205,10 +207,12 @@
                             style="@style/SubheadMabry"
                             android:layout_below="@id/tvValueMarketCap"
                             android:layout_alignParentEnd="true"
+                            android:layout_toEndOf="@id/tvVolume"
                             android:layout_marginTop="32dp"
                             android:text="72 181,6€"
-                            android:textColor="@color/purple_gray_700"
-                            android:textStyle="bold" />
+                            android:gravity="end"
+                            android:layout_marginStart="8dp"
+                            android:textColor="@color/purple_gray_700" />
 
 
                         <TextView
@@ -228,7 +232,6 @@
                             android:layout_marginTop="32dp"
                             android:text="+2,4%"
                             android:textColor="@color/purple_gray_700"
-                            android:textStyle="bold"
                             android:visibility="gone" />
 
 
@@ -250,8 +253,7 @@
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="32dp"
                             android:text="19 011 262,00 BTC"
-                            android:textColor="@color/purple_gray_700"
-                            android:textStyle="bold" />
+                            android:textColor="@color/purple_gray_700" />
 
 
                         <TextView
@@ -271,7 +273,6 @@
                             android:layout_marginTop="32dp"
                             android:text="40,96%"
                             android:textColor="@color/purple_gray_700"
-                            android:textStyle="bold"
                             android:visibility="gone" />
 
 
@@ -290,8 +291,7 @@
                             android:layout_alignParentEnd="true"
                             android:layout_marginTop="32dp"
                             android:text="#1"
-                            android:textColor="@color/purple_gray_700"
-                            android:textStyle="bold" />
+                            android:textColor="@color/purple_gray_700" />
                     </RelativeLayout>
 
                     <TextView

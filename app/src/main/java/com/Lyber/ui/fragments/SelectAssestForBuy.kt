@@ -14,6 +14,7 @@ import com.Lyber.databinding.CustomDialogVerticalLayoutBinding
 import com.Lyber.databinding.FragmentAllAssetsBinding
 import com.Lyber.models.PriceServiceResume
 import com.Lyber.ui.adapters.AllAssetAdapter
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.App
 import com.Lyber.utils.AppLifeCycleObserver
 import com.Lyber.utils.CommonMethods
@@ -21,7 +22,6 @@ import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.utils.OnTextChange
-import com.Lyber.viewmodels.PortfolioViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.tabs.TabLayout
 
@@ -76,8 +76,8 @@ class SelectAssestForBuy : BaseFragment<FragmentAllAssetsBinding>(), View.OnClic
                     }
                 }
                 val usdtAsset = it.find { it.id == "usdt" }
-                if (usdtAsset != null)
-                    assets.remove(usdtAsset)
+                if(usdtAsset!=null)
+                assets.remove(usdtAsset)
 
                 trendings.addAll(assets)
                 topLosers.addAll(assets.topLosers())
