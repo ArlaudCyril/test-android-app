@@ -36,6 +36,7 @@ import com.stripe.android.googlepaylauncher.GooglePayLauncher
 import okhttp3.ResponseBody
 import org.json.JSONArray
 import org.json.JSONObject
+import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.Locale
 
@@ -272,7 +273,9 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
             val priceCoin = balance.balanceData.euroBalance.toDouble()
                 .div(balance.balanceData.balance.toDouble())
             tvValueDepositFee.text =
-               (data.fromAmount.toDouble() - data.fromAmountDeductedFees.toDouble()).toString().formattedAsset(priceCoin, RoundingMode.DOWN,8)+Constants.EURO
+                BigDecimal.valueOf(data.fromAmount.toDouble()).subtract(BigDecimal.valueOf(data.fromAmountDeductedFees.toDouble()))
+                    .toString()
+//               (data.fromAmount.toDouble() - data.fromAmountDeductedFees.toDouble()).toString().formattedAsset(priceCoin, RoundingMode.DOWN,8)+Constants.EURO
 //                data.fees + Constants.EURO TODO
             tvValueTotal.text = "${data.fromAmount}${Constants.EURO}"
             tvValuePrice.text = data.inverseRatio.formattedAssetForInverseRatio(
