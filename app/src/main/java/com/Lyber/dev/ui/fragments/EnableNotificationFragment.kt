@@ -128,6 +128,25 @@ class EnableNotificationFragment : BaseFragment<FragmentEnableNotificationsBindi
             // FCM SDK (and your app) can post notifications.
             checkInternet(requireContext()) {
                 showProgressDialog(requireContext())
+                if(fcmToken.isEmpty()){
+                    FirebaseMessaging.getInstance().token
+                        .addOnCompleteListener(OnCompleteListener { task ->
+                            if (!task.isSuccessful) {
+                                Log.w(
+                                    "FirebaseMessagingService.TAG",
+                                    "Fetching FCM registration token failed",
+                                    task.exception
+                                )
+                                return@OnCompleteListener
+                            }
+
+                            val token = task.result
+                            fcmToken = token
+
+                            Log.d("FirebaseMessagingService.TAG", token)
+
+                        })
+                }
                 onBoardingViewModel.enableNotification(fcmToken)
             }
         } else {
