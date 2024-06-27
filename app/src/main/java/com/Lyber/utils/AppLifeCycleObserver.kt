@@ -10,6 +10,7 @@ val TAG="AppLifeCycleObserver"
     companion object {
         var fromBack = false
         var progressDialogVisible = false
+        var documentDialogVisible = false
 
     }
     override fun onActivityCreated(activity: Activity, savedInstanceState: Bundle?) {

@@ -18,7 +18,6 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.view.updatePadding
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
@@ -35,10 +34,7 @@ import com.Lyber.ui.fragments.BaseFragment
 import com.Lyber.ui.fragments.bottomsheetfragments.InvestBottomSheet
 import com.Lyber.ui.portfolio.action.PortfolioFragmentActions
 import com.Lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDots
-import com.Lyber.utils.ActivityCallbacks
-import com.Lyber.utils.App
-import com.Lyber.utils.AppLifeCycleObserver
-import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.*
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.commaFormatted
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
@@ -52,8 +48,6 @@ import com.Lyber.utils.CommonMethods.Companion.toFormat
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.CommonMethods.Companion.visibleFromLeft
 import com.Lyber.utils.CommonMethods.Companion.zoomIn
-import com.Lyber.utils.Constants
-import com.Lyber.utils.ItemOffsetDecoration
 import com.Lyber.viewmodels.PortfolioViewModel
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.tabs.TabLayout
@@ -67,7 +61,6 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
 //    private val viewModel1: com.Lyber.models.GetUserViewModal by activityViewModels()
 
-//    private val viewModel1: com.Lyber.models.GetUserViewModal by activityViewModels()
 
     /* adapters */
     private lateinit var adapterBalance: BalanceAdapter
@@ -320,7 +313,6 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 binding.rvRefresh.isRefreshing = false
 //                dismissProgressDialog()
                 App.prefsManager.assetBaseDataResponse = it
-
                 com.Lyber.ui.activities.BaseActivity.assets =
                     it.data as ArrayList<AssetBaseData>
 

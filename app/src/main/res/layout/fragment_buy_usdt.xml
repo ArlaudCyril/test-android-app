@@ -46,7 +46,7 @@
         android:textColor="@color/purple_500"
         android:layout_width="match_parent"
         android:gravity="center"
-        android:fontFamily="@font/mabry_pro_bold"
+        android:fontFamily="@font/atypdisplay_medium"
         android:layout_height="60dp"
         app:autoSizeMinTextSize="12sp"
         app:autoSizeMaxTextSize="60sp"

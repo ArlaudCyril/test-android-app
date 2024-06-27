@@ -44,7 +44,7 @@
             android:id="@+id/etAmount"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:fontFamily="@font/mabry_pro_bold"
+            android:fontFamily="@font/atypdisplay_medium"
             android:gravity="center"
             android:maxLines="1"
             android:textColor="@color/purple_500"

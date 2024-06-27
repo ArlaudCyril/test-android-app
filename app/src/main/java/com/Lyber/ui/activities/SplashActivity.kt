@@ -211,3 +211,9 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
 
 
 
+
+
+
+
+
+

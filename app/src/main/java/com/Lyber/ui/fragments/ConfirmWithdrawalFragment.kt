@@ -2,6 +2,8 @@ package com.Lyber.ui.fragments
 
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -162,6 +164,8 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         else
             viewModel.getOtpForWithdraw(Constants.ACTION_WITHDRAW, encoded)
     }
+
+
 
     private fun prepareView() {
         binding.apply {

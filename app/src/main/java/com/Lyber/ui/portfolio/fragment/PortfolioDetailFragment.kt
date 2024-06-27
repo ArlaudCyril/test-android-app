@@ -157,7 +157,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             var customUrl = ""
             if (viewModel.selectedAsset?.id =="usdt")
                 customUrl = Constants.SOCKET_BASE_URL + "eurusdt"
-            else
+          else
                 customUrl = Constants.SOCKET_BASE_URL + "${viewModel.selectedAsset?.id}eur"
             val request = Request.Builder()
                 .url(customUrl)

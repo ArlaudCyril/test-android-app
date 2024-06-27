@@ -96,8 +96,7 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
         binding.tvOnMyBank.visible()
         binding.includedAsset.root.visible()
         binding.includedAsset.llFiatWallet.gone()
-
-        val currency = com.Lyber.ui.activities.BaseActivity.assets.find { it.id == Constants.MAIN_ASSET }
+ val currency = com.Lyber.ui.activities.BaseActivity.assets.find { it.id == Constants.MAIN_ASSET }
         binding.includedAsset.ivAssetIcon.loadCircleCrop(currency?.imageUrl ?: "")
         binding.includedAsset.ivDropIcon.setImageResource(R.drawable.ic_right_arrow_grey)
         binding.includedAsset.tvAssetName.text = Constants.MAIN_ASSET_UPPER

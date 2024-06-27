@@ -47,19 +47,19 @@ object Constants {
 
     //staging
 
-//    const val BASE_URL = "https://staging.lyber.com/"
-//    const val NEW_BASE_URL = "https://staging.lyber.com/"
-//    const val SOCKET_BASE_URL = "wss://ws.lyber.com/websocket/"
-//    const val STRIPE_KEY =
-//        "pk_test_51NVVY7F2A3romcuHdC3JDD9evsFhQvyZ5cYS6wpy9OznXgmYzLvWTG81Zfj2nWGQFZ2zs8RboA3uMLCNPpPV08Zk00McUdiPAt"
+    const val BASE_URL = "https://staging.lyber.com/"
+    const val NEW_BASE_URL = "https://staging.lyber.com/"
+    const val SOCKET_BASE_URL = "wss://ws.lyber.com/websocket/"
+    const val STRIPE_KEY =
+        "pk_test_51NVVY7F2A3romcuHdC3JDD9evsFhQvyZ5cYS6wpy9OznXgmYzLvWTG81Zfj2nWGQFZ2zs8RboA3uMLCNPpPV08Zk00McUdiPAt"
 
 
     //Live also change environment on PreviewMyPurchase
-    const val BASE_URL = "https://prod.lyber.com/"
-    const val NEW_BASE_URL = "https://prod.lyber.com/"
-    const val SOCKET_BASE_URL = "wss://ws.lyber.com/websocket/"
-    const val STRIPE_KEY =
-        "pk_live_51NVVY7F2A3romcuHShL3mg16ls7OVvdPNIQkPuU14mCEZNKfci5BLj0eEjcxQyi5MkD5wf9AF0lajeYhjo8OFpkb00akLPszlE"
+//    const val BASE_URL = "https://prod.lyber.com/"
+//    const val NEW_BASE_URL = "https://prod.lyber.com/"
+//    const val SOCKET_BASE_URL = "wss://ws.lyber.com/websocket/"
+//    const val STRIPE_KEY =
+//        "pk_live_51NVVY7F2A3romcuHShL3mg16ls7OVvdPNIQkPuU14mCEZNKfci5BLj0eEjcxQyi5MkD5wf9AF0lajeYhjo8OFpkb00akLPszlE"
 
     const val PICTURE_DIRECTORY = "Lyber/Images"
 

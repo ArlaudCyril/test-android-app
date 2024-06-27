@@ -98,17 +98,17 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
         }
         viewModel.setPhoneResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-              if(fromResend){
-                  if(!::handler.isInitialized)
-                      handler = Handler(Looper.getMainLooper())
-                  timer=60
-                  binding.tvTimeLeft.text="60"
-                  startTimer()
-              }
-                fromResend=false
+                if (fromResend) {
+                    if (!::handler.isInitialized)
+                        handler = Handler(Looper.getMainLooper())
+                    timer = 60
+                    binding.tvTimeLeft.text = "60"
+                    startTimer()
+                }
+                fromResend = false
             }
         }
-        viewModel.userChallengeResponse.observe(viewLifecycleOwner) {
+           viewModel.userChallengeResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 if (fromResend) {
                     if (!::handler.isInitialized)

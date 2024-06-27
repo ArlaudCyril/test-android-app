@@ -54,6 +54,7 @@ class RecurringInvestmentAdapter(
                         "1w" -> tvInvestmentFrequency.text = context.getString(R.string.weekly)
                         "1m" -> tvInvestmentFrequency.text = context.getString(R.string.monthly)
                         else -> tvInvestmentFrequency.text = it.frequency
+
                     }
 //                    tvInvestmentFrequency.text = it.frequency
                     tvInvestmentUpcomingPayment.text =
@@ -71,7 +72,7 @@ class RecurringInvestmentAdapter(
         RecyclerView.ViewHolder(binding.root) {
         init {
             binding.root.setOnClickListener {
-                itemList[adapterPosition]?.let(clickListener)
+                itemList[absoluteAdapterPosition]?.let(clickListener)
             }
 
         }

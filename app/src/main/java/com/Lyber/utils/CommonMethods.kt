@@ -112,7 +112,7 @@ class CommonMethods {
         private var dialog: Dialog? = null
         private var alertDialog: AlertDialog? = null
 
-        private  var dialogVerification: Dialog?=null
+        private var dialogVerification: Dialog? = null
 
         fun isProgressShown(): Boolean {
             dialog?.let {
@@ -145,7 +145,7 @@ class CommonMethods {
                 dialog?.findViewById<ImageView>(R.id.progressImage)?.animation =
                     AnimationUtils.loadAnimation(context, R.anim.rotate_drawable)
                 dialog!!.show()
-                AppLifeCycleObserver.progressDialogVisible=true
+                AppLifeCycleObserver.progressDialogVisible = true
             } catch (e: WindowManager.BadTokenException) {
                 Log.d("Exception", "showProgressDialog: ${e.message}")
                 dialog?.dismiss()
@@ -167,7 +167,7 @@ class CommonMethods {
                 outputFormatter.timeZone = TimeZone.getDefault()
                 formatter.parse(this)?.let { result = outputFormatter.format(it) }
 
-                 return result
+                return result
             } catch (e: Exception) {
                 return this
             }
@@ -181,7 +181,7 @@ class CommonMethods {
                     e.printStackTrace()
                 }
                 it.dismiss()
-                AppLifeCycleObserver.progressDialogVisible=false
+                AppLifeCycleObserver.progressDialogVisible = false
 
             }
         }
@@ -390,7 +390,7 @@ class CommonMethods {
                 )
 
             val errorRes: ErrorResponse? = errorConverter.convert(responseBody!!)
-            if (errorRes?.code == 19006 ||errorRes?.code == 19007 || errorRes?.code == 19004) {
+            if (errorRes?.code == 19006 || errorRes?.code == 19007 || errorRes?.code == 19004) {
                 logOut(context)
 //                return errorRes.code
             } else if (errorRes?.code == 19002 || errorRes?.code == 19003) {
@@ -990,11 +990,17 @@ class CommonMethods {
 //            return valueFormatted.toString()
             return trimTrailingZeros(valueFormatted.toDouble())
         }
+
         fun trimTrailingZeros(number: Double): String {
-            val formatted = String.format(Locale.US,"%.15f", number) // Use a high precision for double to string conversion
+            val formatted = String.format(
+                Locale.US,
+                "%.15f",
+                number
+            ) // Use a high precision for double to string conversion
             val trimmed = formatted.trimEnd('0').trimEnd('.')
             return if (trimmed == "-0") "0" else trimmed // Handle negative zero case
         }
+
         fun TextView.expandWith(string: String) {
 
             measureLayout()
@@ -1413,7 +1419,10 @@ class CommonMethods {
         }
 
         @RequiresApi(Build.VERSION_CODES.O)
-        fun getMonthsAndYearsBetweenWithApi26(startDate: String, endDate: String): List<MonthsList> {
+        fun getMonthsAndYearsBetweenWithApi26(
+            startDate: String,
+            endDate: String
+        ): List<MonthsList> {
             val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
             val startDateTime = LocalDate.parse(startDate, formatter)
             val endDateTime = LocalDate.parse(endDate, formatter)
@@ -1431,11 +1440,13 @@ class CommonMethods {
                 result.add(
                     MonthsList(
                         "${
-                            currentDate.month.getDisplayName(TextStyle.FULL, Locale.ENGLISH).toString().lowercase().replaceFirstChar { it.uppercase() }
-                        } ${currentDate.year}","${
-                            currentDate.month.getDisplayName(TextStyle.FULL, Locale.FRENCH).toString().lowercase().replaceFirstChar { it.uppercase() }
+                            currentDate.month.getDisplayName(TextStyle.FULL, Locale.ENGLISH)
+                                .toString().lowercase().replaceFirstChar { it.uppercase() }
+                        } ${currentDate.year}", "${
+                            currentDate.month.getDisplayName(TextStyle.FULL, Locale.FRENCH)
+                                .toString().lowercase().replaceFirstChar { it.uppercase() }
                         } ${currentDate.year}"
-                ))
+                    ))
                 currentDate = currentDate.plusDays(1)
             }
 
@@ -1453,22 +1464,22 @@ class CommonMethods {
             val result = mutableListOf<MonthsList>()
 
             while (startDateTime.before(endDateTime) || startDateTime == endDateTime) {
-             result.add(
-                 MonthsList(
-                     "${
-                         startDateTime.getDisplayName(
-                             Calendar.MONTH,
-                             Calendar.LONG,
-                             Locale.ENGLISH
-                         )!!.lowercase().replaceFirstChar { it.uppercase() }
-                     } ${startDateTime.get(Calendar.YEAR)}",
-                     "${
-                         startDateTime.getDisplayName(
-                             Calendar.MONTH,
-                             Calendar.LONG,
-                             Locale.FRANCE
-                         )!!.lowercase().replaceFirstChar { it.uppercase() }
-                     } ${startDateTime.get(Calendar.YEAR)}"))
+                result.add(
+                    MonthsList(
+                        "${
+                            startDateTime.getDisplayName(
+                                Calendar.MONTH,
+                                Calendar.LONG,
+                                Locale.ENGLISH
+                            )!!.lowercase().replaceFirstChar { it.uppercase() }
+                        } ${startDateTime.get(Calendar.YEAR)}",
+                        "${
+                            startDateTime.getDisplayName(
+                                Calendar.MONTH,
+                                Calendar.LONG,
+                                Locale.FRANCE
+                            )!!.lowercase().replaceFirstChar { it.uppercase() }
+                        } ${startDateTime.get(Calendar.YEAR)}"))
 
                 startDateTime.add(Calendar.MONTH, 1)
             }
@@ -1725,7 +1736,7 @@ class CommonMethods {
         }
 
         fun logOut(context: Context) {
-            com.Lyber.ui.activities.BaseActivity.balances=ArrayList<Balance>()
+            com.Lyber.ui.activities.BaseActivity.balances = ArrayList<Balance>()
             com.Lyber.ui.activities.BaseActivity.assets = ArrayList<AssetBaseData>()
             com.Lyber.ui.activities.BaseActivity.networkAddress = ArrayList<Network>()
             com.Lyber.ui.activities.BaseActivity.balances = ArrayList<Balance>()
@@ -1742,8 +1753,9 @@ class CommonMethods {
                 }
             )
         }
+
         fun showDocumentDialog(context: Context, typeOfLoader: Int, tt: Boolean = false) {
-            if (dialogVerification==null) {
+            if (dialogVerification == null && typeOfLoader != 3) {
                 dialogVerification = Dialog(context)
                 dialogVerification!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
                 dialogVerification!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
@@ -1758,65 +1770,95 @@ class CommonMethods {
                     ).root
                 )
             }
-
-            try {
-                val viewImage = dialogVerification!!.findViewById<LottieAnimationView>(R.id.animationView)
-                val tvDocVerified = dialogVerification!!.findViewById<TextView>(R.id.tvDocVerified)
-                if (!tt)
-                    tvDocVerified.text = context.getString(R.string.kyc_under_verification_text)
-                else
-                    tvDocVerified.text = context.getString(R.string.doc_being_verified)
-                tvDocVerified.visible()
+            if (dialogVerification != null && typeOfLoader == 3) {
+                val viewImage =
+                    dialogVerification!!.findViewById<LottieAnimationView>(R.id.animationView)
+                val tvDocVerified =
+                    dialogVerification!!.findViewById<TextView>(R.id.tvDocVerified)
                 val imageView = dialogVerification!!.findViewById<ImageView>(R.id.ivCorrect)!!
-                when (typeOfLoader) {
-                    Constants.LOADING -> {
-                        imageView.gone()
-                        viewImage!!.playAnimation()
-                        viewImage.setMinAndMaxProgress(0f, .32f)
-                    }
 
-                    Constants.LOADING_SUCCESS -> {
-                        viewImage.clearAnimation()
-                        tvDocVerified.gone()
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            imageView.visible()
-                            imageView.setImageResource(R.drawable.baseline_done_24)
-                        }, 50)
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            tvDocVerified.gone()
-                            dialogVerification!!.dismiss()
-                        }, 400)
-                    }
-
-                    Constants.LOADING_FAILURE -> {
-                        viewImage.clearAnimation()
-                        tvDocVerified.text = context.getString(R.string.kyc_refused_text)
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            imageView.visible()
-                            imageView.setImageResource(R.drawable.baseline_clear_24)
-                        }, 50)
-                        Handler(Looper.getMainLooper()).postDelayed({
-                            tvDocVerified.gone()
-                            dialogVerification!!.dismiss()
-                        }, 400)
-                    }
-
-                }
-
-
-                /*(0f,.32f) for loader
-                * (0f,.84f) for success
-                * (0.84f,1f) for failure*/
-
-
-                dialogVerification!!.show()
-            } catch (e: WindowManager.BadTokenException) {
-                Log.d("Exception", "showProgressDialog: ${e.message}")
+                viewImage.clearAnimation()
+                tvDocVerified.gone()
+                viewImage.gone()
+                imageView.gone()
+                AppLifeCycleObserver.documentDialogVisible = false
                 dialogVerification!!.dismiss()
-            } catch (e: Exception) {
-                Log.d("Exception", "showProgressDialog: ${e.message}")
+            } else {
+                try {
+                    val viewImage =
+                        dialogVerification!!.findViewById<LottieAnimationView>(R.id.animationView)
+                   viewImage.visible()
+                    val tvDocVerified =
+                        dialogVerification!!.findViewById<TextView>(R.id.tvDocVerified)
+                    if (!tt)
+                        tvDocVerified.text = context.getString(R.string.kyc_under_verification_text)
+                    else
+                        tvDocVerified.text = context.getString(R.string.doc_being_verified)
+                    tvDocVerified.visible()
+                    val imageView = dialogVerification!!.findViewById<ImageView>(R.id.ivCorrect)!!
+                    when (typeOfLoader) {
+
+
+                        Constants.LOADING -> {
+                            imageView.gone()
+                            viewImage!!.playAnimation()
+                            viewImage.setMinAndMaxProgress(0f, .32f)
+                        }
+
+                        Constants.LOADING_SUCCESS -> {
+                            viewImage.clearAnimation()
+                            tvDocVerified.gone()
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                imageView.visible()
+                                imageView.setImageResource(R.drawable.baseline_done_24)
+                            }, 50)
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                tvDocVerified.gone()
+                                dialogVerification!!.dismiss()
+                                AppLifeCycleObserver.documentDialogVisible = false
+                            }, 400)
+                        }
+
+                        Constants.LOADING_FAILURE -> {
+                            viewImage.clearAnimation()
+                            tvDocVerified.text = context.getString(R.string.kyc_refused_text)
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                imageView.visible()
+                                imageView.setImageResource(R.drawable.baseline_clear_24)
+                            }, 50)
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                tvDocVerified.gone()
+                                dialogVerification!!.dismiss()
+                                AppLifeCycleObserver.documentDialogVisible = false
+                            }, 400)
+                        }
+
+                    }
+
+
+                    /*(0f,.32f) for loader
+                    * (0f,.84f) for success
+                    * (0.84f,1f) for failure*/
+
+
+                    dialogVerification!!.show()
+                } catch (e: WindowManager.BadTokenException) {
+                    Log.d("Exception", "showProgressDialog: ${e.message}")
+                    dialogVerification!!.dismiss()
+                } catch (e: Exception) {
+                    Log.d("Exception", "showProgressDialog: ${e.message}")
+                }
             }
 
+        }
+
+        fun dismissDocumentDialog() {
+            try {
+                if (dialogVerification == null)
+                    dialogVerification?.dismiss()
+            } catch (_: Exception) {
+
+            }
         }
 
         fun <T> T.commaFormattedDecimal(decimalPlaces: Int): String {
@@ -1824,7 +1866,8 @@ class CommonMethods {
             return when (this) {
                 is Int -> String.format(Locale.US, "%d", this.toDouble())
                 is Number -> String.format(Locale.US, formatString, this)
-                is String -> toDoubleOrNull()?.let { String.format(Locale.US, formatString, it) } ?: "0"
+                is String -> toDoubleOrNull()?.let { String.format(Locale.US, formatString, it) }
+                    ?: "0"
                 is Char -> this.toString()
                 else -> "0"
             }
