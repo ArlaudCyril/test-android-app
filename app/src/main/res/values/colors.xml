@@ -15,6 +15,9 @@
     <color name="purple_gray_00">#FFFFFF</color>
     <color name="grey">#7E7D7D</color>
 
+    <color name="purple_dark">#080212</color>
+    <color name="purple_dark1">#180936</color>
+    <color name="purple_dark2">#200D49</color>
     <color name="purple_00">#F5F1FD</color>
     <color name="purple_800">#35126D</color>
     <color name="purple_700">#5E2EAA</color>

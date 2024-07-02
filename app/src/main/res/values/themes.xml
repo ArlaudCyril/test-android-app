@@ -34,6 +34,8 @@
     <style name="tab_text" parent="@android:style/TextAppearance.Widget.TabWidget">
         <item name="textAllCaps">false</item>
         <item name="fontFamily">@font/mabry_pro</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+
     </style>
 
 
