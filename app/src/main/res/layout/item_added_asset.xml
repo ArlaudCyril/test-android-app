@@ -31,12 +31,11 @@
 
             <TextView
                 android:id="@+id/tvAssetName"
-                style="@style/SubheadMabry"
+                style="@style/SubheadMabryMedium"
                 android:layout_width="0dp"
                 android:layout_weight="0.8"
                 android:layout_gravity="center_vertical"
                 android:layout_marginStart="12dp"
-                android:textStyle="bold"
                 tools:text="Bitcoin" />
 
             <ImageView
@@ -59,8 +58,7 @@
 
                 <TextView
                     android:id="@+id/tvAssetValue"
-                    style="@style/SubheadMabry"
-                    android:textStyle="bold"
+                    style="@style/SubheadMabryMedium"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="41 255,74€" />
@@ -78,9 +76,10 @@
 
         <TextView
             android:id="@+id/tvAllocation"
-            style="@style/BodyMabry"
+            style="@style/SubheadMabryMedium"
             android:layout_marginTop="20dp"
             android:text="@string/allocation"
+            android:textAppearance="@style/TextAppearance.AppCompat.Body1"
             android:textColor="@color/purple_gray_400"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tvAssetVariation" />
@@ -102,6 +101,7 @@
                 style="@style/SubheadMabry"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:text="@string/auto" />
 
             <TextView
@@ -111,6 +111,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="4dp"
                 android:text="(100%)"
+                android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                 android:textColor="@color/purple_gray_500" />
 
             <View

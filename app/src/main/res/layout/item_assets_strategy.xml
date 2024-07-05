@@ -26,22 +26,21 @@
         android:textColor="@color/purple_gray_500"
         app:layout_constraintEnd_toStartOf="@+id/tvAssetPercent"
         app:layout_constraintStart_toEndOf="@+id/ivColor"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="BTC" />
 
     <TextView
         android:id="@+id/tvAssetPercent"
-        style="@style/DialogTitle"
+        style="@style/SubheadMabryMedium"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_alignParentEnd="true"
         android:layout_gravity="end"
         android:gravity="end"
+        android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         android:textColor="@color/purple_gray_700"
         app:layout_constraintEnd_toEndOf="parent"
-        android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         app:layout_constraintStart_toEndOf="@id/tvAssetsName"
         app:layout_constraintTop_toTopOf="parent"
         android:text="20%" />

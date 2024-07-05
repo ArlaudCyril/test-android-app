@@ -14,10 +14,10 @@
 
         <TextView
             android:id="@+id/tvTitle"
-            style="@style/DialogTitle"
+            style="@style/SubheadMabryMedium"
             android:layout_centerHorizontal="true"
             android:padding="2dp"
-            android:textStyle="bold"
+            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
             tools:text="@string/activate_face_id" />
 
         <TextView
@@ -93,11 +93,11 @@
 
 
         <TextView
-            style="@style/DialogTitle"
+            style="@style/SubheadMabryMedium"
             android:layout_gravity="center"
             android:padding="2dp"
             android:text="@string/build_strategy"
-            android:textStyle="bold" />
+           android:textAppearance="@style/TextAppearance.AppCompat.Medium" />
 
 
         <TextView

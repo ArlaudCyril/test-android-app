@@ -22,10 +22,9 @@
 
     <TextView
         android:id="@+id/tvTitle"
-        style="@style/SubheadMabry"
+        style="@style/SubheadMabryMedium"
         android:text="@string/buy_usdt"
         android:textColor="#423D33"
-        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="@id/ivTopAction"
@@ -277,10 +276,10 @@
 
         <TextView
             android:id="@+id/btnPreviewInvestment"
-            style="@style/ButtonStyle"
+            style="@style/ButtonStyleMabryMedium"
             android:layout_centerInParent="true"
-            android:gravity="center"
             android:background="@drawable/button_purple_400"
+            android:gravity="center"
             android:includeFontPadding="false"
             android:text="@string/preview_my_purchase"
             android:textAppearance="@style/TextAppearance.AppCompat.Medium" />

@@ -21,7 +21,7 @@
 
     <TextView
         android:id="@+id/tvTitle"
-        style="@style/SubheadMabry"
+        style="@style/SubheadMabryMedium"
         android:text="@string/btc_victor"
         app:layout_constraintBottom_toBottomOf="@id/ivTopAction"
         app:layout_constraintEnd_toEndOf="parent"
@@ -76,7 +76,7 @@
 
         <TextView
             android:id="@+id/tvValueNetwork"
-            style="@style/SubheadMabry"
+            style="@style/SubheadMabryMedium"
             android:layout_alignTop="@id/tvNetwork"
             android:layout_alignBottom="@id/tvNetwork"
             android:layout_alignParentEnd="true"
@@ -92,7 +92,7 @@
 
         <TextView
             android:id="@+id/tvValueAddressOrigin"
-            style="@style/SubheadMabry"
+            style="@style/SubheadMabryMedium"
             android:layout_alignTop="@id/tvAddressOrigin"
             android:layout_alignBottom="@id/tvAddressOrigin"
             android:layout_alignParentEnd="true"
@@ -108,7 +108,7 @@
 
         <TextView
             android:id="@+id/tvValueDateAdded"
-            style="@style/SubheadMabry"
+            style="@style/SubheadMabryMedium"
             android:layout_alignTop="@id/tvDateAdded"
             android:layout_alignBottom="@id/tvDateAdded"
             android:layout_alignParentEnd="true"
@@ -137,7 +137,7 @@
         <!--android:drawableStart="@drawable/ic_trash"-->
         <TextView
             android:id="@+id/tvDelete"
-            style="@style/SubheadMabry"
+            style="@style/SubheadMabryMedium"
             android:drawablePadding="12dp"
             android:gravity="center"
             android:text="@string/confirm" />
@@ -162,7 +162,7 @@
         app:layout_constraintTop_toBottomOf="@id/rlInfo">
 
         <TextView
-            style="@style/SubheadMabry"
+            style="@style/SubheadMabryMedium"
             android:drawableStart="@drawable/ic_editor"
             android:drawablePadding="12dp"
             android:gravity="center"

@@ -29,11 +29,12 @@
 
     <TextView
         android:id="@+id/tvSubTitle"
-        style="@style/SubTitleText"
+        style="@style/SubheadMabry"
         android:layout_width="match_parent"
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="4dp"
         android:lineSpacingExtra="8dp"
+        android:textColor="@color/purple_gray_500"
         android:text="@string/subtitle_investment_strategies" />
 
     <androidx.recyclerview.widget.RecyclerView
@@ -53,7 +54,7 @@
 
     <Button
         android:id="@+id/btnChooseStrategy"
-        style="@style/ButtonStyle"
+        style="@style/ButtonStyleMabryMedium"
         android:layout_margin="24dp"
         android:background="@drawable/button_purple_500"
         android:text="@string/build_my_own_strategy" />

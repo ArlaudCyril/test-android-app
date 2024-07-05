@@ -51,14 +51,14 @@
 
                 <TextView
                     android:id="@+id/tvEmail"
-                    style="@style/SubheadMabry"
+                    style="@style/SubheadMabryMedium"
                     android:layout_below="@id/tvName"
                     android:layout_alignStart="@id/tvName"
                     android:layout_alignEnd="@+id/tvName"
                     android:layout_marginTop="2dp"
                     android:text="frida@gmail.com"
                     android:textColor="@color/purple_gray_500"
-                    android:textStyle="bold" />
+                    />
 
                 <ImageView
                     android:id="@+id/ivProfile"
@@ -173,10 +173,9 @@
 
                     <TextView
                         android:id="@+id/tvIban"
-                        style="@style/SubheadMabry"
+                        style="@style/SubheadMabryMedium"
                         android:layout_marginStart="16dp"
                         android:textColor="@color/purple_gray_700"
-                        android:textStyle="bold"
                         tools:text="55786454653" />
 
                     <TextView
@@ -188,10 +187,9 @@
 
                     <TextView
                         android:id="@+id/tvBic"
-                        style="@style/SubheadMabry"
+                        style="@style/SubheadMabryMedium"
                         android:layout_marginStart="16dp"
                         android:textColor="@color/purple_gray_700"
-                        android:textStyle="bold"
                         tools:text="55786454653" />
                 </LinearLayout>
 
@@ -234,11 +232,11 @@
                     >
 
                     <TextView
-                        style="@style/SubheadMabry"
+                        style="@style/SubheadMabryMedium"
                         android:layout_alignParentStart="true"
                         android:text="@string/activity_logs"
                         android:textColor="@color/purple_gray_700"
-                        android:textStyle="bold" />
+                         />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -258,21 +256,21 @@
                     android:paddingVertical="16dp">
 
                     <TextView
-                        style="@style/SubheadMabry"
+                        style="@style/SubheadMabryMedium"
                         android:layout_alignParentStart="true"
                         android:text="@string/language"
                         android:textColor="@color/purple_gray_700"
-                        android:textStyle="bold" />
+                        />
                     <TextView
                         android:id="@+id/tvLanguage"
-                        style="@style/SubheadMabry"
+                        style="@style/SubheadMabryMedium"
                         android:layout_toLeftOf="@id/ivLanguage"
                         android:text="@string/english"
                         android:layout_centerVertical="true"
                         android:layout_marginHorizontal="4dp"
                         android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                         android:textColor="@color/purple_gray_500"
-                        android:textStyle="bold" />
+                         />
                     <ImageView
                         android:id="@+id/ivLanguage"
                         android:layout_width="wrap_content"
@@ -290,11 +288,11 @@
                     android:paddingVertical="16dp">
 
                     <TextView
-                        style="@style/SubheadMabry"
+                        style="@style/SubheadMabryMedium"
                         android:layout_alignParentStart="true"
                         android:text="@string/account_statement"
                         android:textColor="@color/purple_gray_700"
-                        android:textStyle="bold" />
+                        />
 
                     <ImageView
                         android:layout_width="wrap_content"
@@ -335,11 +333,10 @@
 
                     <TextView
                         android:id="@+id/tvTitleStrongAuth"
-                        style="@style/SubheadMabry"
+                        style="@style/SubheadMabryMedium"
                         android:layout_alignParentStart="true"
                         android:text="@string/strong_authentication"
-                        android:textColor="@color/purple_gray_700"
-                        android:textStyle="bold" />
+                        android:textColor="@color/purple_gray_700" />
 
                     <TextView
                         android:id="@+id/tvStatusStrongAuth"
@@ -369,11 +366,10 @@
 
                     <TextView
                         android:id="@+id/tvTitleAddressBook"
-                        style="@style/SubheadMabry"
+                        style="@style/SubheadMabryMedium"
                         android:layout_alignParentStart="true"
                         android:text="@string/crypto_address_book"
-                        android:textColor="@color/purple_gray_700"
-                        android:textStyle="bold" />
+                        android:textColor="@color/purple_gray_700" />
 
                     <TextView
                         android:id="@+id/tvStatusAddressBook"
@@ -403,10 +399,10 @@
 
                     <TextView
                         android:id="@+id/tvChangePass"
-                        style="@style/SubheadMabry"
+                        style="@style/SubheadMabryMedium"
                         android:text="@string/change_password"
                         android:textColor="@color/purple_gray_700"
-                        android:textStyle="bold" />
+                         />
 
                     <View
                         android:layout_width="0dp"
@@ -428,10 +424,10 @@
 
                     <TextView
                         android:id="@+id/tvChangePin"
-                        style="@style/SubheadMabry"
+                        style="@style/SubheadMabryMedium"
                         android:text="@string/change_pin"
                         android:textColor="@color/purple_gray_700"
-                        android:textStyle="bold" />
+                     />
 
                     <View
                         android:layout_width="0dp"
@@ -453,10 +449,10 @@
 
                     <TextView
                         android:id="@+id/tvContactUs"
-                        style="@style/SubheadMabry"
+                        style="@style/SubheadMabryMedium"
                         android:text="@string/contact_us"
                         android:textColor="@color/purple_gray_700"
-                        android:textStyle="bold" />
+                       />
 
                     <View
                         android:layout_width="0dp"
@@ -478,10 +474,10 @@
                     android:paddingVertical="16dp">
 
                     <TextView
-                        style="@style/SubheadMabry"
+                        style="@style/SubheadMabryMedium"
                         android:text="@string/face_id"
                         android:textColor="@color/purple_gray_700"
-                        android:textStyle="bold" />
+                        />
 
                     <View
                         android:layout_width="0dp"
@@ -508,10 +504,10 @@
 
                     <TextView
                         android:id="@+id/tvCloseAccount"
-                        style="@style/SubheadMabry"
+                        style="@style/SubheadMabryMedium"
                         android:text="@string/close_account"
                         android:textColor="@color/red_500"
-                        android:textStyle="bold" />
+                        />
 
                     <View
                         android:layout_width="0dp"

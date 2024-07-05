@@ -16,11 +16,10 @@
 
     <TextView
         android:id="@+id/tvAssetNameCode"
-        style="@style/SubheadMabry"
+        style="@style/SubheadMabryMedium"
         android:layout_gravity="center_horizontal"
         android:layout_marginTop="12dp"
         android:textColor="@color/purple_gray_700"
-        android:textStyle="bold"
         tools:text="DOG" />
 
     <TextView

@@ -19,15 +19,14 @@
 
     <TextView
         android:id="@+id/tvTitle"
-        style="@style/SubheadMabry"
+        style="@style/SubheadMabryMedium"
         android:layout_alignTop="@id/ivTopAction"
         android:layout_alignBottom="@id/ivTopAction"
         android:layout_centerHorizontal="true"
         android:layout_marginStart="12dp"
         android:gravity="center"
         android:text="@string/language"
-        android:textColor="@color/purple_gray_900"
-        android:textStyle="bold" />
+        android:textColor="@color/purple_gray_900"/>
 
     <LinearLayout
         android:id="@+id/llAccount"

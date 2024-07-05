@@ -9,10 +9,9 @@
     <TextView
         android:id="@+id/tvDate"
         android:visibility="visible"
-        style="@style/HeadingStyle"
+        style="@style/SubheadMabryMedium"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
         android:background="@color/purple_gray_50"
         android:paddingHorizontal="24dp"
         android:paddingVertical="16dp" />
@@ -36,7 +35,7 @@
 
         <TextView
             android:id="@+id/tvLog"
-            style="@style/SubheadMabry"
+            style="@style/SubheadMabryMedium"
             android:layout_marginStart="32dp"
             android:layout_marginEnd="12dp"
             android:layout_marginHorizontal="12dp"
