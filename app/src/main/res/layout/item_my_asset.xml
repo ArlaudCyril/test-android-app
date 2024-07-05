@@ -56,57 +56,56 @@
         android:src="@drawable/circle_dot_unselected"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/llFiatWallet"
-         />
-<androidx.appcompat.widget.LinearLayoutCompat
-    android:layout_width="wrap_content"
-    android:layout_height="wrap_content"
-    android:gravity="center_vertical"
-    app:layout_constraintBottom_toBottomOf="parent"
-    app:layout_constraintStart_toEndOf="@+id/ivAssetIcon"
-    app:layout_constraintTop_toBottomOf="@+id/llFiatWallet"
-    app:layout_constraintVertical_bias="0.7"
-    android:orientation="vertical">
+        app:layout_constraintTop_toBottomOf="@id/llFiatWallet" />
 
-    <TextView
-        android:id="@+id/tvAssetName"
-        style="@style/SubheadMabry"
-        android:layout_marginStart="12dp"
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:gravity="center_vertical"
-        android:textStyle="bold" />
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/ivAssetIcon"
+        app:layout_constraintTop_toBottomOf="@+id/llFiatWallet"
+        app:layout_constraintVertical_bias="0.7">
 
-    <TextView
-        android:id="@+id/tvAssetNameCode"
-        style="@style/BodyMabry"
-        android:layout_below="@id/tvAssetName"
-        android:layout_marginStart="12dp"
-        android:visibility="gone"
-        android:layout_toEndOf="@id/ivAssetIcon"
-        android:textColor="@color/purple_gray_500"
-        android:text="@string/deactivated" />
-</androidx.appcompat.widget.LinearLayoutCompat>
+        <TextView
+            android:id="@+id/tvAssetName"
+            style="@style/SubheadMabryMedium"
+            android:layout_marginStart="12dp"
+            android:gravity="center_vertical"
+            android:textColor="@color/purple_gray_900" />
+
+        <TextView
+            android:id="@+id/tvAssetNameCode"
+            style="@style/BodyMabry"
+            android:layout_below="@id/tvAssetName"
+            android:layout_marginStart="12dp"
+            android:layout_toEndOf="@id/ivAssetIcon"
+            android:text="@string/deactivated"
+            android:textColor="@color/purple_gray_500"
+            android:visibility="gone" />
+    </androidx.appcompat.widget.LinearLayoutCompat>
 
 
     <TextView
         android:id="@+id/tvAssetAmount"
-        style="@style/SubheadMabry"
+        style="@style/SubheadMabryMedium"
         android:layout_marginTop="18dp"
         android:layout_marginEnd="12dp"
+        android:text="0€"
         android:textColor="@color/purple_gray_700"
-        android:textStyle="bold"
         app:layout_constraintEnd_toStartOf="@id/ivDropIcon"
-        app:layout_constraintTop_toBottomOf="@id/llFiatWallet"
-        android:text="0€" />
+        app:layout_constraintTop_toBottomOf="@id/llFiatWallet" />
 
     <TextView
         android:id="@+id/tvAssetAmountInCrypto"
         style="@style/BodyMabry"
         android:layout_marginEnd="12dp"
+        android:text="0.0"
         android:textColor="@color/purple_gray_500"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@id/ivDropIcon"
-        app:layout_constraintTop_toBottomOf="@id/tvAssetAmount"
-        android:text="0.0" />
+        app:layout_constraintTop_toBottomOf="@id/tvAssetAmount" />
 
     <ImageView
         android:id="@+id/ivDropIcon"

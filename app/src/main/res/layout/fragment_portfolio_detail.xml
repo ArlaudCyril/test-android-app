@@ -44,7 +44,7 @@
 
                 <TextView
                     android:id="@+id/tvAssetName"
-                    style="@style/SubheadMabry"
+                    style="@style/SubheadMabryMedium"
                     android:layout_alignTop="@id/ivTopAction"
                     android:layout_alignBottom="@id/ivTopAction"
                     android:layout_centerHorizontal="true"
@@ -66,15 +66,15 @@
 
                 <TextView
                     android:id="@+id/tvPortfolioAssetPrice"
-                    style="@style/SubheadMabry"
+                    style="@style/SubheadMabryMedium"
                     android:text="@string/price"
                     android:textColor="@color/purple_gray_500" />
 
                 <TextView
                     android:id="@+id/tvValuePortfolioAndAssetPrice"
-                    style="@style/HeadingStyle"
+                    style="@style/TitleTextAtypText"
                     android:layout_marginTop="12dp"
-                    android:textSize="40sp"
+                    android:textSize="36sp"
                     tools:text="1312€" />
 
                 <TextView
@@ -148,10 +148,9 @@
 
                     <TextView
                         android:id="@+id/tvTitleMyBalance"
-                        style="@style/TitleText"
+                        style="@style/TitleTextAtypText"
                         android:layout_marginTop="30dp"
-                        android:text="@string/my_balance"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                        android:text="@string/my_balance"/>
 
                     <include
                         android:id="@+id/includedMyAsset"
@@ -163,10 +162,9 @@
                         android:backgroundTint="@color/purple_gray_50" />
 
                     <TextView
-                        style="@style/TitleText"
+                        style="@style/TitleTextAtypText"
                         android:layout_marginTop="32dp"
-                        android:text="@string/infos"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                        android:text="@string/infos" />
 
                     <RelativeLayout
                         android:layout_width="match_parent"
@@ -185,12 +183,13 @@
 
                         <TextView
                             android:id="@+id/tvValueMarketCap"
-                            style="@style/SubheadMabry"
+                            style="@style/SubheadMabryMedium"
                             android:layout_alignParentEnd="true"
                             android:text="72 083 593 181,6€"
                             android:layout_toEndOf="@id/tvMarketCap"
                             android:gravity="end"
                             android:layout_marginStart="8dp"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                             android:textColor="@color/purple_gray_700" />
 
 
@@ -204,13 +203,15 @@
 
                         <TextView
                             android:id="@+id/tvValueVolume"
-                            style="@style/SubheadMabry"
+                            style="@style/SubheadMabryMedium"
                             android:layout_below="@id/tvValueMarketCap"
                             android:layout_alignParentEnd="true"
                             android:layout_toEndOf="@id/tvVolume"
-                            android:layout_marginTop="32dp"
+                            android:layout_alignTop="@id/tvVolume"
+                            android:layout_alignBottom="@id/tvVolume"
                             android:text="72 181,6€"
-                            android:gravity="end"
+                            android:gravity="end|center_vertical"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                             android:layout_marginStart="8dp"
                             android:textColor="@color/purple_gray_700" />
 
@@ -245,14 +246,16 @@
 
                         <TextView
                             android:id="@+id/tvValueCirculatingSupply"
-                            style="@style/SubheadMabry"
+                            style="@style/SubheadMabryMedium"
                             android:layout_below="@id/tvValueTradingActivity"
                             android:layout_toEndOf="@id/tvCirculatingSupply"
                             android:layout_alignParentEnd="true"
-                            android:gravity="end"
                             android:layout_marginStart="8dp"
-                            android:layout_marginTop="32dp"
+                            android:layout_alignTop="@id/tvCirculatingSupply"
+                            android:layout_alignBottom="@id/tvCirculatingSupply"
                             android:text="19 011 262,00 BTC"
+                            android:gravity="end|center_vertical"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                             android:textColor="@color/purple_gray_700" />
 
 
@@ -286,24 +289,26 @@
 
                         <TextView
                             android:id="@+id/tvValuePopularity"
-                            style="@style/SubheadMabry"
+                            style="@style/SubheadMabryMedium"
                             android:layout_below="@id/tvValueShareOfCrypto"
                             android:layout_alignParentEnd="true"
-                            android:layout_marginTop="32dp"
+                            android:layout_alignTop="@id/tvPopularity"
+                            android:layout_alignBottom="@id/tvPopularity"
                             android:text="#1"
+                            android:gravity="end"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                             android:textColor="@color/purple_gray_700" />
                     </RelativeLayout>
 
                     <TextView
                         android:id="@+id/tvAbout"
-                        style="@style/TitleText"
+                        style="@style/TitleTextAtypText"
                         android:layout_marginTop="32dp"
-                        android:text="@string/about"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                        android:text="@string/about"/>
 
                     <com.Lyber.dev.utils.ExpandableTextView
                         android:id="@+id/tvValueAbout"
-                        style="@style/SubheadMabry"
+                        style="@style/SubheadMabryMedium"
                         android:layout_gravity="center_vertical"
                         android:layout_marginTop="24dp"
                         android:background="@drawable/curved_button"
@@ -316,10 +321,9 @@
                         tools:visibility="visible" />
 
                     <TextView
-                        style="@style/TitleText"
+                        style="@style/TitleTextAtypText"
                         android:layout_marginTop="32dp"
-                        android:text="@string/resources"
-                        android:textAppearance="@style/TextAppearance.AppCompat.Title" />
+                        android:text="@string/resources"/>
 
                     <androidx.recyclerview.widget.RecyclerView
                         android:id="@+id/rvResources"
@@ -379,7 +383,7 @@
 
             <TextView
                 android:id="@+id/tvInvestMoney"
-                style="@style/SubheadMabry"
+                style="@style/SubheadMabryMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
@@ -402,7 +406,7 @@
             android:paddingVertical="16dp">
 
             <TextView
-                style="@style/SubheadMabry"
+                style="@style/SubheadMabryMedium"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"

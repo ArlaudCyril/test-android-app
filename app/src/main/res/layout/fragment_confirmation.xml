@@ -19,12 +19,13 @@
 
     <TextView
         android:id="@+id/tvTitle"
-        style="@style/HeadingStyle"
+        style="@style/TitleTextAtypText"
         android:layout_marginTop="-8dp"
         android:layout_below="@id/ivTopAction"
         android:layout_gravity="center"
         android:layout_centerHorizontal="true"
         android:text="@string/confirmation"
+        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
         android:textColor="@color/purple_gray_00" />
 
 
@@ -53,7 +54,7 @@
 
             <TextView
                 android:id="@+id/tvInfoOne"
-                style="@style/SubheadMabry"
+                style="@style/SubheadMabryMedium"
                 android:layout_width="wrap_content"
                 android:gravity="center"
                 android:text="@string/your_deposit_has_been_taken_into_account"
@@ -61,7 +62,7 @@
 
             <TextView
                 android:id="@+id/tvInfoTwo"
-                style="@style/SubheadMabry"
+                style="@style/SubheadMabryMedium"
                 android:layout_width="wrap_content"
                 android:layout_marginTop="4dp"
                 android:alpha="0.8"
@@ -74,7 +75,7 @@
 
     <Button
         android:id="@+id/btnThanks"
-        style="@style/ButtonStyle"
+        style="@style/ButtonStyleMabryMedium"
         android:layout_below="@id/llContent"
         android:background="@drawable/curved_button"
         android:backgroundTint="@color/purple_gray_00"

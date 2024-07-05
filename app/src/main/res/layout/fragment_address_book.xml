@@ -74,7 +74,7 @@
                             android:orientation="vertical">
 
                             <TextView
-                                style="@style/SubheadMabry"
+                                style="@style/SubheadMabryMedium"
                                 android:gravity="center_vertical"
                                 android:text="@string/whitelisting" />
 
@@ -195,7 +195,7 @@
                             android:src="@drawable/ic_add" />
 
                         <TextView
-                            style="@style/SubheadMabry"
+                            style="@style/SubheadMabryMedium"
                             android:layout_marginStart="4dp"
                             android:text="@string/add_a_new_address" />
 

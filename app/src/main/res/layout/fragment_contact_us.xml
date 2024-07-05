@@ -26,12 +26,12 @@
             app:tint="@color/purple_gray_800" />
 
         <TextView
-            style="@style/TitleText"
+            style="@style/SubheadMabryMedium"
             android:layout_centerInParent="true"
             android:layout_marginStart="24dp"
             android:layout_marginTop="32dp"
             android:text="@string/contact_us"
-            android:textAppearance="@style/TextAppearance.AppCompat.Title"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             android:textColor="@color/purple_gray_900" />
     </RelativeLayout>
 
@@ -59,7 +59,7 @@
                 android:paddingVertical="16dp">
 
                 <TextView
-                    style="@style/SubheadMabry"
+                    style="@style/SubheadMabryMedium"
                     android:drawableStart="@drawable/sms"
                     android:drawablePadding="12dp"
                     android:gravity="center"
@@ -68,10 +68,11 @@
 
                 <TextView
                     android:id="@+id/tvSendEmail"
-                    style="@style/BodyMabry"
+                    style="@style/SubheadMabryMedium"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="26dp"
                     android:lineSpacingExtra="2sp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:text="@string/send_us_email"
                     android:textColor="@color/purple_gray_300" />
             </LinearLayout>
@@ -89,10 +90,10 @@
                 android:paddingVertical="16dp">
 
                 <TextView
-                    style="@style/SubheadMabry"
+                    style="@style/SubheadMabryMedium"
                     android:layout_marginStart="16dp"
                     android:text="@string/contact_form"
-                    android:textAppearance="@style/TextAppearance.AppCompat.Title"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                     android:textColor="@color/purple_gray_700" />
 
                 <EditText
@@ -110,7 +111,7 @@
 
                 <Button
                     android:id="@+id/btnSend"
-                    style="@style/ButtonStyle"
+                    style="@style/ButtonStyleMabryMedium"
                     android:layout_height="56dp"
                     android:layout_marginHorizontal="16dp"
                     android:layout_marginTop="24dp"
@@ -132,7 +133,7 @@
                 android:paddingVertical="16dp">
 
                 <TextView
-                    style="@style/SubheadMabry"
+                    style="@style/SubheadMabryMedium"
                     android:drawablePadding="12dp"
                     android:gravity="center"
                     android:text="@string/address"
@@ -140,27 +141,30 @@
                     app:drawableStartCompat="@drawable/address" />
 
                 <TextView
-                     style="@style/BodyMabry"
+                     style="@style/SubheadMabryMedium"
                     android:layout_marginTop="20dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:text="@string/contact_us_by_mail"
                     android:textColor="@color/purple_gray_300" />
                 <TextView
                     android:id="@+id/tvContactAddress"
-                    style="@style/BodyMabry"
+                    style="@style/SubheadMabryMedium"
                     android:layout_marginBottom="26dp"
                     android:lineSpacingExtra="2sp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                     android:text="@string/contact_address"
                     android:textColor="@color/purple_500" />
             </LinearLayout>
 
             <TextView
                 android:id="@+id/tvWillGetBack"
+                style="@style/SubheadMabryMedium"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginVertical="20dp"
                 android:text="@string/will_get_back"
-                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:textAppearance="@style/TextAppearance.AppCompat.Body1"
                 android:textColor="@color/purple_gray_400" />
         </LinearLayout>
     </ScrollView>

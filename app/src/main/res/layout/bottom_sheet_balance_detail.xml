@@ -49,11 +49,11 @@
 
                 <TextView
                     android:id="@+id/tvTitleBalance"
-                    style="@style/SubheadMabry"
+                    style="@style/SubheadMabryMedium"
                     android:layout_gravity="center"
                     android:text="@string/balance"
                     android:textColor="#423D33"
-                    android:textStyle="bold" />
+                   />
 
                 <TextView
                     android:id="@+id/tvSubTitle"

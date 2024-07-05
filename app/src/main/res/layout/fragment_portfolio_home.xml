@@ -36,16 +36,16 @@
 
                     <TextView
                         android:id="@+id/tvPortfolioAssetPrice"
-                        style="@style/SubheadMabry"
+                        style="@style/SubheadMabryMedium"
                         android:text="@string/portfolio"
                         android:textColor="@color/purple_gray_500" />
 
                     <TextView
                         android:id="@+id/tvValuePortfolioAndAssetPrice"
-                        style="@style/HeadingStyle"
+                        style="@style/TitleTextAtypText"
                         android:layout_below="@id/tvPortfolioAssetPrice"
                         android:layout_marginTop="2dp"
-                        android:textSize="40sp"
+                        android:textSize="36sp"
                         tools:text="0€" />
 
                     <ImageView
@@ -118,11 +118,10 @@
 
                         <TextView
                             android:id="@+id/tvVerification"
-                            style="@style/TitleText"
+                            style="@style/TitleTextAtypText"
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="32dp"
                             android:text="@string/verification"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             android:textColor="@color/purple_gray_900"
                             android:visibility="gone" />
 
@@ -154,11 +153,11 @@
                                     android:src="@drawable/arrow_right_purple" />
 
                                 <TextView
-                                    style="@style/SubHeadlineStyle"
+                                    style="@style/SubheadMabryMedium"
                                     android:layout_marginHorizontal="8dp"
                                     android:layout_weight="1"
                                     android:text="@string/verification_of_your_identity"
-                                    android:textColor="@color/purple_gray_900" />
+                                    android:textColor="@color/purple_gray_700" />
 
                                 <ImageView
                                     android:layout_width="wrap_content"
@@ -186,12 +185,12 @@
 
 
                                 <TextView
-                                    style="@style/SubHeadlineStyle"
+                                    style="@style/SubheadMabryMedium"
                                     android:layout_marginHorizontal="8dp"
                                     android:layout_marginVertical="12dp"
                                     android:layout_weight="1"
                                     android:text="@string/contract_signature"
-                                    android:textColor="@color/purple_gray_900" />
+                                    android:textColor="@color/purple_gray_700" />
 
                                 <ImageView
                                     android:layout_width="wrap_content"
@@ -202,11 +201,10 @@
 
                         <TextView
                             android:id="@+id/tvMyAssets"
-                            style="@style/TitleText"
+                            style="@style/TitleTextAtypText"
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="32dp"
                             android:text="@string/my_assets"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Title"
                             android:textColor="@color/purple_gray_900" />
 
                         <LinearLayout
@@ -219,24 +217,22 @@
 
                             <TextView
                                 android:id="@+id/tvNoAssets"
-                                style="@style/SubheadMabry"
+                                style="@style/SubheadMabryMedium"
                                 android:layout_gravity="center"
                                 android:layout_marginHorizontal="16dp"
                                 android:layout_marginTop="16dp"
                                 android:text="@string/no_assets"
                                 android:textColor="@color/purple_gray_800"
-                                android:textStyle="bold"
                                 android:visibility="gone" />
 
                             <TextView
                                 android:id="@+id/tvBuyUSDC"
-                                style="@style/SubheadMabry"
+                                style="@style/SubheadMabryMedium"
                                 android:layout_gravity="center"
                                 android:layout_marginTop="6dp"
                                 android:layout_marginBottom="16dp"
                                 android:text="@string/buy_usdc_u"
                                 android:textColor="@color/purple_500"
-                                android:textStyle="bold"
                                 android:visibility="gone" />
 
                             <androidx.recyclerview.widget.RecyclerView
@@ -270,11 +266,10 @@
 
                         <TextView
                             android:id="@+id/tvTitleRecurringInvestment"
-                            style="@style/TitleText"
+                            style="@style/TitleTextAtypText"
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="40dp"
                             android:text="@string/recurring_investment"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Title"
                             android:textColor="#423D33" />
 
                         <androidx.recyclerview.widget.RecyclerView
@@ -301,27 +296,24 @@
                             android:visibility="gone">
 
                             <TextView
-                                style="@style/SubheadMabry"
+                                style="@style/SubheadMabryMedium"
                                 android:layout_marginBottom="1dp"
                                 android:text="@string/you_donot_have_active_strategy"
-                                android:textColor="@color/purple_gray_800"
-                                android:textStyle="bold" />
+                                android:textColor="@color/purple_gray_800" />
 
                             <TextView
                                 android:id="@+id/tvActivateStrategy"
-                                style="@style/SubheadMabry"
+                                style="@style/SubheadMabryMedium"
                                 android:layout_marginTop="1dp"
                                 android:text="@string/activate_create"
-                                android:textColor="@color/purple_500"
-                                android:textStyle="bold" />
+                                android:textColor="@color/purple_500" />
                         </LinearLayout>
 
                         <TextView
-                            style="@style/TitleText"
+                            style="@style/TitleTextAtypText"
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="40dp"
                             android:text="@string/all_assets_available"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Title"
                             android:textColor="#423D33" />
 
                         <androidx.recyclerview.widget.RecyclerView
@@ -372,7 +364,7 @@
 
         <TextView
             android:id="@+id/tvInvestMoney"
-            style="@style/SubheadMabry"
+            style="@style/SubheadMabryMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

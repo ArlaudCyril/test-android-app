@@ -15,19 +15,17 @@
 
     <TextView
         android:id="@+id/tvInvestmentTitle"
-        style="@style/SubheadMabry"
+        style="@style/SubheadMabryMedium"
         android:layout_marginStart="12dp"
         android:layout_toEndOf="@id/ivInvestment"
         android:textColor="@color/purple_gray_700"
-        android:textStyle="bold"
         tools:text="@string/inter_strategy" />
 
     <TextView
         android:id="@+id/tvInvestmentAmount"
-        style="@style/SubheadMabry"
+        style="@style/SubheadMabryMedium"
         android:layout_alignParentEnd="true"
         android:textColor="@color/purple_gray_700"
-        android:textStyle="bold"
         tools:text="100€" />
 
     <TextView
@@ -43,8 +41,7 @@
         style="@style/BodyMabry"
         android:layout_below="@id/tvInvestmentFrequency"
         android:layout_alignStart="@id/tvInvestmentFrequency"
-        android:textColor="@color/purple_gray_500"
-        tools:text="@string/upcoming_payment_august_27" />
+        android:textColor="@color/purple_gray_500" />
 
 
 </RelativeLayout>

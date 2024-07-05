@@ -68,7 +68,7 @@
                     android:src="@drawable/ic_add" />
 
                 <TextView
-                    style="@style/DialogTitle"
+                    style="@style/SubheadMabryMedium"
                     android:layout_marginStart="4dp"
                     android:text="@string/add_an_asset" />
 
@@ -108,7 +108,7 @@
 
         <TextView
             android:id="@+id/tvInitialInfo"
-            style="@style/SubTitleText"
+            style="@style/SubheadMabryMedium"
             android:gravity="center"
             android:layout_gravity="center"
             android:lineSpacingExtra="4dp"

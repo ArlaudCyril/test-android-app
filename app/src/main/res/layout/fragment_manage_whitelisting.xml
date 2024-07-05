@@ -25,9 +25,10 @@
 
 
             <TextView
-                style="@style/TitleText"
+                style="@style/TitleTextAtypText"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="20dp"
+                android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
                 android:text="@string/security_of_your_notebook" />
 
 
@@ -42,7 +43,7 @@
 
 
             <TextView
-                style="@style/TitleText"
+                style="@style/TitleTextAtypText"
                 android:layout_marginStart="24dp"
                 android:layout_marginTop="24dp"
                 android:text="@string/extra_security"
@@ -85,6 +86,7 @@
                     android:layout_toEndOf="@id/ivInfo"
                     android:gravity="top"
                     android:lineSpacingExtra="6dp"
+                    android:textAppearance="@style/TextAppearance.AppCompat.Caption"
                     android:text="@string/allows_you_to_block_the_addition_of_new_addresses_during_a_given_period_effective_4h_after_its_activation" />
 
 
@@ -93,11 +95,12 @@
 
             <Button
                 android:id="@+id/btnEnableWhitelisting"
-                style="@style/ButtonStyle"
+                style="@style/ButtonStyleMabryMedium"
                 android:layout_marginHorizontal="24dp"
                 android:layout_marginTop="32dp"
                 android:background="@drawable/curved_button"
                 android:backgroundTint="@color/purple_500"
+                android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                 android:text="@string/save_settings"
                 android:textColor="@color/white" />
 
