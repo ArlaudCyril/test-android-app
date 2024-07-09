@@ -32,7 +32,7 @@
 
     <TextView
         android:id="@+id/tvAssetName"
-        style="@style/SubheadMabry"
+        style="@style/SubheadMabryMedium"
         android:layout_marginStart="12dp"
         android:layout_marginTop="28dp"
         android:layout_toEndOf="@id/ivAsset"
@@ -40,7 +40,6 @@
         android:maxWidth="100dp"
         android:maxLines="1"
         android:textColor="@color/purple_gray_700"
-        android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@id/ivAsset"
         app:layout_constraintTop_toTopOf="parent"
         android:text="@string/euro" />

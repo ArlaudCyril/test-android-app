@@ -33,9 +33,8 @@
        android:layout_weight="1">
        <TextView
            android:id="@+id/tvAssetName"
-           style="@style/SubheadMabry"
+           style="@style/SubheadMabryMedium"
            android:gravity="center_vertical"
-           android:textStyle="bold"
            android:text="@string/euro" />
 
 

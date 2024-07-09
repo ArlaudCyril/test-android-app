@@ -26,8 +26,7 @@
 
     <TextView
         android:id="@+id/tvTitle"
-        style="@style/SubheadMabry"
-        android:textStyle="bold"
+        style="@style/SubheadMabryMedium"
         android:gravity="center"
         android:text="@string/asset_deposit"
         android:textColor="#423D33"
