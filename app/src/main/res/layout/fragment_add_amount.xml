@@ -185,7 +185,7 @@
 
                 <TextView
                     android:id="@+id/tvSwapAssetFrom"
-                    style="@style/SubheadMabry"
+                    style="@style/SubheadMabryMedium"
                     android:layout_below="@id/tvFrom"
                     android:layout_marginStart="12dp"
                     android:layout_toEndOf="@id/ivAssetSwapFrom"
@@ -239,7 +239,7 @@
 
                 <TextView
                     android:id="@+id/tvSwapAssetTo"
-                    style="@style/SubheadMabry"
+                    style="@style/SubheadMabryMedium"
                     android:layout_below="@id/tvTo"
                     android:layout_marginStart="12dp"
                     android:layout_toEndOf="@id/ivAssetSwapTo"

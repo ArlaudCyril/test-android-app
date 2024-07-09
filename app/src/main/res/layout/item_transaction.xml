@@ -32,9 +32,8 @@
 
         <TextView
             android:id="@+id/tvStartTitleCenter"
-            style="@style/SubheadMabry"
+            style="@style/SubheadMabryMedium"
             android:layout_marginStart="12dp"
-            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/ivItem"
             app:layout_constraintStart_toEndOf="@id/ivItem"
             app:layout_constraintTop_toTopOf="@id/ivItem" />
@@ -82,16 +81,14 @@
 
         <TextView
             android:id="@+id/tvEndTitleCenter"
-            style="@style/SubheadMabry"
+            style="@style/SubheadMabryMedium"
             android:layout_marginEnd="12dp"
-            android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@id/ivItem"
             app:layout_constraintEnd_toStartOf="@id/ivEndIcon"
             app:layout_constraintTop_toTopOf="@id/ivItem" />
         <TextView
             android:id="@+id/tvFailed"
-            style="@style/SubheadMabry"
-            android:textStyle="bold"
+            style="@style/SubheadMabryMedium"
             android:text="@string/failed"
             android:background="@drawable/curved_layout_4_dp"
             android:backgroundTint="@color/red_500"

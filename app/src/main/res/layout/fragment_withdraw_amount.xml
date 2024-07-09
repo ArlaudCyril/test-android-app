@@ -22,10 +22,9 @@
 
     <TextView
         android:id="@+id/tvTitle"
-        style="@style/SubheadMabry"
+        style="@style/SubheadMabryMedium"
         android:text="@string/invest_in_my_strat"
         android:textColor="#423D33"
-        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/tvSubTitle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

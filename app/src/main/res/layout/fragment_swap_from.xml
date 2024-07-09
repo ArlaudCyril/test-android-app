@@ -108,9 +108,8 @@
                 android:textColor="@color/purple_gray_900" />
             <TextView
                 android:id="@+id/tvNoAssets"
-                style="@style/SubheadMabry"
+                style="@style/SubheadMabryMedium"
                 android:text="@string/no_assets_available_for_exchange"
-                android:textStyle="bold"
                 android:visibility="gone"
                 android:gravity="center"
                 android:layout_gravity="center"
