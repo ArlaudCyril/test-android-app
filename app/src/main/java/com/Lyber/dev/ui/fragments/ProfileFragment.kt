@@ -6,8 +6,6 @@ import android.app.Activity
 import android.app.Dialog
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.graphics.Paint
 import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
@@ -48,10 +46,8 @@ import com.Lyber.dev.utils.CommonMethods.Companion.checkPermission
 import com.Lyber.dev.utils.CommonMethods.Companion.dismissAlertDialog
 import com.Lyber.dev.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
-import com.Lyber.dev.utils.CommonMethods.Companion.getDeviceId
 import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.logOut
 import com.Lyber.dev.utils.CommonMethods.Companion.replaceFragment
 import com.Lyber.dev.utils.CommonMethods.Companion.saveImageToExternalStorage
 import com.Lyber.dev.utils.CommonMethods.Companion.setProfile
@@ -547,7 +543,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                         }
 
                         Constants.WITHDRAW -> { // single asset
-                            //TODO
+
                             ivItem.setImageResource(R.drawable.ic_withdraw)
                             tvStartTitle.text =
                                 "${it.asset.uppercase()} ${getString(R.string.withdrawal)}"
@@ -561,6 +557,20 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 //                            tvEndTitle.text = it.type.lowercase().replaceFirstChar(Char::uppercase)
 //                            tvEndSubTitle.text = it.type.lowercase().replaceFirstChar(Char::uppercase)
 
+                        }
+                        Constants.WITHDRAW_EURO -> { // single asset
+                            ivItem.setImageResource(R.drawable.ic_withdraw)
+                            tvFailed.visibility = View.GONE
+                            tvStartTitle.text =
+                                "${it.asset.uppercase()} ${getString(R.string.withdrawal)}"
+//                                tvStartSubTitle.text =
+//                                    it.status.lowercase().replaceFirstChar(Char::uppercase)
+                            tvEndTitleCenter.text = "-${it.amount} ${it.asset.uppercase()}"
+                            tvStartTitleCenter.visibility = View.GONE
+
+
+//                                "type":"withdraw_euro","id":"e15dc586-cc18-4023-a08a-cc7c6a7ffab9",
+//                                "asset":"usdc","iban":"FR123456789","date":"2024-07-15T05:13:17.036Z","amount":"24.59"}
                         }
 
                         else -> root.gone()
