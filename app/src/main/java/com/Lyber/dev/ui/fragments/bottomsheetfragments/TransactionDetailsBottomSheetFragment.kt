@@ -12,6 +12,7 @@ import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentTransactionDetailsBottomSheetBinding
 import com.Lyber.dev.models.TransactionData
 import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
+import com.Lyber.dev.utils.CommonMethods.Companion.gone
 import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.CommonMethods.Companion.toFormat
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
@@ -107,6 +108,27 @@ class TransactionDetailsBottomSheetFragment :
                     transactionData.status.lowercase().replaceFirstChar(Char::uppercase)
                 binding.tvFrom.text = getString(R.string.toCaps)
                 binding.tvFromValue.text = transactionData.toAddress
+                binding.tvTo.text = getString(R.string.amount)
+                binding.tvToValue.text =
+                    "${transactionData.amount} ${transactionData.asset.uppercase()}"
+                binding.tvFee.text = getString(R.string.date)
+                binding.tvFeePaid.text =
+                    transactionData.date.toFormat("yyyy-MM-dd'T'hh:mm:ss", "dd MMMM yyyy HH:mm")
+                binding.tvDate.visibility = View.GONE
+                binding.tvDateValue.visibility = View.GONE
+                binding.ivTransactionHash.visibility = View.GONE
+            }
+            Constants.WITHDRAW_EURO -> { // single asset
+
+
+                binding.tvTitle.text = getString(R.string.withdrawal)
+//                   transactionData.type.replaceFirstChar(Char::uppercase)
+                binding.tvOrder.text = getString(R.string.transaction_id)
+                binding.tvOrderId.text = transactionData.id
+                binding.tvStatusValue.gone()
+                binding.tvStatus.gone()
+                binding.tvFrom.text = getString(R.string.iban)
+                binding.tvFromValue.text = transactionData.iban
                 binding.tvTo.text = getString(R.string.amount)
                 binding.tvToValue.text =
                     "${transactionData.amount} ${transactionData.asset.uppercase()}"

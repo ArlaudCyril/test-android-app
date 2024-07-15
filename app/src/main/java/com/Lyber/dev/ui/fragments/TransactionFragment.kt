@@ -289,6 +289,20 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
                                 tvEndTitleCenter.text = "-${it.amount} ${it.asset.uppercase()}"
                                 tvStartTitleCenter.visibility = View.GONE
                             }
+                            Constants.WITHDRAW_EURO -> { // single asset
+                                ivItem.setImageResource(R.drawable.ic_withdraw)
+                                tvFailed.visibility = View.GONE
+                                tvStartTitle.text =
+                                    "${it.asset.uppercase()} ${getString(R.string.withdrawal)}"
+//                                tvStartSubTitle.text =
+//                                    it.status.lowercase().replaceFirstChar(Char::uppercase)
+                                tvEndTitleCenter.text = "-${it.amount} ${it.asset.uppercase()}"
+                                tvStartTitleCenter.visibility = View.GONE
+
+
+//                                "type":"withdraw_euro","id":"e15dc586-cc18-4023-a08a-cc7c6a7ffab9",
+//                                "asset":"usdc","iban":"FR123456789","date":"2024-07-15T05:13:17.036Z","amount":"24.59"}
+                            }
 
                             else -> root.gone()
                         }

@@ -18,7 +18,6 @@ import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.view.updatePadding
-import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.navigation.NavController
@@ -32,12 +31,10 @@ import com.Lyber.dev.databinding.LoaderViewBinding
 import com.Lyber.dev.models.*
 import com.Lyber.dev.ui.adapters.*
 import com.Lyber.dev.ui.fragments.BaseFragment
-import com.Lyber.dev.ui.fragments.SelectAssestForBuy
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.InvestBottomSheet
 import com.Lyber.dev.ui.portfolio.action.PortfolioFragmentActions
 import com.Lyber.dev.ui.portfolio.bottomSheetFragment.PortfolioThreeDots
 import com.Lyber.dev.utils.*
-import com.Lyber.dev.utils.CommonMethods.Companion.add
 import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.dev.utils.CommonMethods.Companion.commaFormatted
 import com.Lyber.dev.utils.CommonMethods.Companion.dismissProgressDialog
@@ -297,6 +294,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             viewModel.getWalletHistoryPrice(daily, limit)
             viewModel.getBalance()
             viewModel.getAllPriceResume()
+            viewModel.getWalletRib()
         }
     }
 
@@ -672,7 +670,13 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 }
             }
         }
-
+        viewModel.walletRibResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                if (!it.data.isNullOrEmpty())
+                    com.Lyber.dev.ui.activities.BaseActivity.ribWalletList =
+                        it.data as ArrayList<RIBData>
+            }
+        }
     }
 
     private fun String.toMilliS(): Long {

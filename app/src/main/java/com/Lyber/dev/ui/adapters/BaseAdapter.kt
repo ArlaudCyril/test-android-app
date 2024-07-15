@@ -4,6 +4,7 @@ import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.LoaderViewBinding
+import com.Lyber.dev.models.RIBData
 
 abstract class BaseAdapter<items> :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -79,11 +80,11 @@ abstract class BaseAdapter<items> :
             }
     }
 
-    fun setSearchResults(items: List<items>) {
-        copyList.clear()
-        copyList.addAll(itemList)
-        setList(items)
-    }
+//    fun setSearchResults(items: List<items>) {
+//        copyList.clear()
+//        copyList.addAll(itemList)
+//        setList(items)
+//    }
 
     fun setResults() {
         val start = itemList.count()
