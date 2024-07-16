@@ -77,7 +77,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 
     private var imageFile: File? = null
     private var option = 1 // 1 -> camera option 2-> gallery option
-    val limit = 5 // as on this screen we have to show max 3 enteries
+    val limit = 20 // for now from 5 to 20 as on this screen we have to show max 3 enteries
     var offset = 0
     private lateinit var navController: NavController
     private var isResend = false
@@ -126,21 +126,27 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 binding.tvNoTransaction.setBackgroundResource(0)
                 binding.progressImage.clearAnimation()
                 binding.progressImage.visibility = View.GONE
-                when {
-                    it.data.isEmpty() -> {
+                val transactionList = mutableListOf<TransactionData>()
+                for (i in it.data) {
+                    if (i.type != Constants.WITHDRAW_EURO) {
+                        transactionList.add(i)
+                    }
+                }
+                when { // here replacing it.data with transactionlist
+                    transactionList.isEmpty() -> {
                         binding.tvNoTransaction.visible()
                         binding.rvTransactions.gone()
                         binding.tvViewAllTransaction.gone()
                     }
 
-                    it.data.count() in 1..3 -> {
-                        adapter.setList(it.data)
+                    transactionList.count() in 1..3 -> {
+                        adapter.setList(transactionList)
                         binding.tvViewAllTransaction.visible()
                         binding.tvNoTransaction.gone()
                     }
 
                     else -> {
-                        adapter.setList(it.data.subList(0, 3))
+                        adapter.setList(transactionList.subList(0, 3))
                         binding.tvViewAllTransaction.visible()
                         binding.tvNoTransaction.gone()
                     }
