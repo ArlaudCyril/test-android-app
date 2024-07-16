@@ -111,11 +111,18 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
         viewModel.getTransactionListingResponse.observe(viewLifecycleOwner) { response ->
             response?.let {
                 // Process the response here
+                //for now
+                val transactionList = mutableListOf<TransactionData>()
+                for (i in it.data) {
+                    if (i.type != Constants.WITHDRAW_EURO) {
+                        transactionList.add(i)
+                    }
+                }
                 binding.rvRefresh.isRefreshing = false
                 CommonMethods.dismissProgressDialog()
-                adapter.calculatePositions(it.data)
-                if (offset == 0)
-                    binding.rvTransactions.startLayoutAnimation()
+                adapter.calculatePositions(transactionList)
+//                adapter.calculatePositions(it.data)
+                if (offset == 0) binding.rvTransactions.startLayoutAnimation()
                 isLoading = false
                 isLastPage = it.data.count() < limit
 
@@ -123,12 +130,20 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
                     Log.d(TAG, "notificationResponse: Success  page == 1")
                     if (it.data.isNotEmpty()) {
                         Log.d(TAG, "notificationResponse: page == 1 setList")
-                        adapter.setList(it.data)
+
+//                        for (i in it.data) {
+//                            if (i.type != Constants.WITHDRAW_EURO) {
+//                                transactionList.add(i)
+//                            }
+//                        }
+//                        adapter.setList(it.data)
+                        adapter.setList(transactionList)
 
                     }
                 } else {
                     adapter.removeProgress()
-                    adapter.addList(it.data)
+//                    adapter.addList(it.data)
+                    adapter.addList(transactionList)
                 }
             }
         }
@@ -174,17 +189,13 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
             return when (viewType) {
                 ORDINARY_VIEW -> TransactionViewHolder(
                     ItemTransactionBinding.inflate(
-                        LayoutInflater.from(parent.context),
-                        parent,
-                        false
+                        LayoutInflater.from(parent.context), parent, false
                     )
                 )
 
                 else -> LoaderViewHolder(
                     LoaderViewBinding.inflate(
-                        LayoutInflater.from(parent.context),
-                        parent,
-                        false
+                        LayoutInflater.from(parent.context), parent, false
                     )
                 )
             }
@@ -195,35 +206,32 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
         override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
             if (itemList[position] == null) {
 
-            } else
-                itemList[position]?.let {
-                    (holder as TransactionViewHolder).binding.apply {
+            } else itemList[position]?.let {
+                (holder as TransactionViewHolder).binding.apply {
 
-                        if (itemList[position]!!.id in positionList) {
-                            tvDate.visible()
-                            tvDate.text = it.date.toMillis().toLong().toDateFormat()
-                        } else
-                            tvDate.gone()
-                        when (it.type) {
-                            Constants.ORDER -> { //exchange
-                                ivItem.setImageResource(R.drawable.ic_exchange)
-                                tvStartTitle.text = getString(R.string.exchange)
-                                tvStartSubTitle.text =
-                                    "${it.fromAsset.uppercase()} -> ${it.toAsset.uppercase()}"
+                    if (itemList[position]!!.id in positionList) {
+                        tvDate.visible()
+                        tvDate.text = it.date.toMillis().toLong().toDateFormat()
+                    } else tvDate.gone()
+                    when (it.type) {
+                        Constants.ORDER -> { //exchange
+                            ivItem.setImageResource(R.drawable.ic_exchange)
+                            tvStartTitle.text = getString(R.string.exchange)
+                            tvStartSubTitle.text =
+                                "${it.fromAsset.uppercase()} -> ${it.toAsset.uppercase()}"
 
-                                var roundedNumber = BigDecimal(it.fromAmount)
-                                try {
-                                    val originalNumber = BigDecimal(it.fromAmount)
-                                    val scale = originalNumber.scale()
-                                    roundedNumber = if (scale > 8) {
-                                        originalNumber.setScale(8, RoundingMode.HALF_UP)
-                                    } else
-                                        originalNumber
-                                } catch (_: Exception) {
+                            var roundedNumber = BigDecimal(it.fromAmount)
+                            try {
+                                val originalNumber = BigDecimal(it.fromAmount)
+                                val scale = originalNumber.scale()
+                                roundedNumber = if (scale > 8) {
+                                    originalNumber.setScale(8, RoundingMode.HALF_UP)
+                                } else originalNumber
+                            } catch (_: Exception) {
 
-                                }
+                            }
 //                                tvEndTitle.text = "-${roundedNumber} ${it.fromAsset.uppercase()}"
-                                tvEndTitle.text = "-${it.fromAmount} ${it.fromAsset.uppercase()}"
+                            tvEndTitle.text = "-${it.fromAmount} ${it.fromAsset.uppercase()}"
 //                                var amount = it.toAmount
 //                                try {
 //                                    amount = String.format(Locale.US, "%.8f", it.toAmount.toFloat())
@@ -236,78 +244,80 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
 //                                } catch (ex: Exception) {
 //
 //                                }
-                                tvEndSubTitle.text = "+${it.toAmount.formattedAsset(
-                                    0.0,
-                                    rounding = RoundingMode.DOWN,8
-                                )} ${it.toAsset.uppercase()}"
-                                tvFailed.visibility = View.GONE
-                                tvStartTitleCenter.visibility = View.GONE
-                                tvEndTitleCenter.visibility = View.GONE
-                            }
+                            tvEndSubTitle.text = "+${
+                                it.toAmount.formattedAsset(
+                                    0.0, rounding = RoundingMode.DOWN, 8
+                                )
+                            } ${it.toAsset.uppercase()}"
+                            tvFailed.visibility = View.GONE
+                            tvStartTitleCenter.visibility = View.GONE
+                            tvEndTitleCenter.visibility = View.GONE
+                        }
 
-                            Constants.STRATEGY -> {
-                                ivItem.setImageResource(R.drawable.strategy)
-                                tvStartTitleCenter.text =
-                                    "${it.strategyName.replaceFirstChar(Char::uppercase)}"
-                                if (it.status == Constants.FAILURE)
-                                    tvFailed.visibility = View.VISIBLE
-                                else {
-                                    if (it.successfulBundleEntries.isNotEmpty()) {
-                                        try {
-                                            tvEndTitleCenter.text =
-                                                "${it.successfulBundleEntries[0].assetAmount} ${
-                                                    it.successfulBundleEntries[0].asset.uppercase(
-                                                        Locale.US
-                                                    )
-                                                }"
+                        Constants.STRATEGY -> {
+                            ivItem.setImageResource(R.drawable.strategy)
+                            tvStartTitleCenter.text =
+                                "${it.strategyName.replaceFirstChar(Char::uppercase)}"
+                            if (it.status == Constants.FAILURE) tvFailed.visibility = View.VISIBLE
+                            else {
+                                if (it.successfulBundleEntries.isNotEmpty()) {
+                                    try {
+                                        tvEndTitleCenter.text =
+                                            "${it.successfulBundleEntries[0].assetAmount} ${
+                                                it.successfulBundleEntries[0].asset.uppercase(
+                                                    Locale.US
+                                                )
+                                            }"
 
-                                        } catch (ex: Exception) {
+                                    } catch (ex: Exception) {
 
-                                        }
                                     }
                                 }
                             }
+                        }
 
-                            Constants.DEPOSIT -> {
-                                ivItem.setImageResource(R.drawable.ic_deposit)
-                                tvStartTitle.text =
-                                    "${it.asset.uppercase()} ${getString(R.string.deposit_)}"
-                                tvStartSubTitle.text =
-                                    it.status.lowercase().replaceFirstChar(Char::uppercase)
-                                tvEndTitleCenter.text = "+${it.amount} ${it.asset.uppercase()}"
-                                tvFailed.visibility = View.GONE
-                                tvStartTitleCenter.visibility = View.GONE
-                            }
+                        Constants.DEPOSIT -> {
+                            ivItem.setImageResource(R.drawable.ic_deposit)
+                            tvStartTitle.text =
+                                "${it.asset.uppercase()} ${getString(R.string.deposit_)}"
+                            tvStartSubTitle.text =
+                                it.status.lowercase().replaceFirstChar(Char::uppercase)
+                            tvEndTitleCenter.text = "+${it.amount} ${it.asset.uppercase()}"
+                            tvFailed.visibility = View.GONE
+                            tvStartTitleCenter.visibility = View.GONE
+                        }
 
-                            Constants.WITHDRAW -> { // single asset
-                                ivItem.setImageResource(R.drawable.ic_withdraw)
-                                tvFailed.visibility = View.GONE
-                                tvStartTitle.text =
-                                    "${it.asset.uppercase()} ${getString(R.string.withdrawal)}"
-                                tvStartSubTitle.text =
-                                    it.status.lowercase().replaceFirstChar(Char::uppercase)
-                                tvEndTitleCenter.text = "-${it.amount} ${it.asset.uppercase()}"
-                                tvStartTitleCenter.visibility = View.GONE
-                            }
-                            Constants.WITHDRAW_EURO -> { // single asset
-                                ivItem.setImageResource(R.drawable.ic_withdraw)
-                                tvFailed.visibility = View.GONE
-                                tvStartTitle.text =
-                                    "${it.asset.uppercase()} ${getString(R.string.withdrawal)}"
-//                                tvStartSubTitle.text =
-//                                    it.status.lowercase().replaceFirstChar(Char::uppercase)
-                                tvEndTitleCenter.text = "-${it.amount} ${it.asset.uppercase()}"
-                                tvStartTitleCenter.visibility = View.GONE
+                        Constants.WITHDRAW -> { // single asset
+                            ivItem.setImageResource(R.drawable.ic_withdraw)
+                            tvFailed.visibility = View.GONE
+                            tvStartTitle.text =
+                                "${it.asset.uppercase()} ${getString(R.string.withdrawal)}"
+                            tvStartSubTitle.text =
+                                it.status.lowercase().replaceFirstChar(Char::uppercase)
+                            tvEndTitleCenter.text = "-${it.amount} ${it.asset.uppercase()}"
+                            tvStartTitleCenter.visibility = View.GONE
+                        }
+
+                        Constants.WITHDRAW_EURO -> { // single asset
+                            llRoot.gone()
+//                                ivItem.setImageResource(R.drawable.ic_withdraw)
+//                                tvFailed.visibility = View.GONE
+//                                tvStartTitle.text =
+//                                    "${it.asset.uppercase()} ${getString(R.string.withdrawal)}"
+////                                tvStartSubTitle.text =
+////                                    it.status.lowercase().replaceFirstChar(Char::uppercase)
+//                                tvEndTitleCenter.text = "-${it.amount} ${it.asset.uppercase()}"
+//                                tvStartTitleCenter.visibility = View.GONE
 
 
 //                                "type":"withdraw_euro","id":"e15dc586-cc18-4023-a08a-cc7c6a7ffab9",
 //                                "asset":"usdc","iban":"FR123456789","date":"2024-07-15T05:13:17.036Z","amount":"24.59"}
-                            }
-
-                            else -> root.gone()
                         }
+
+                        else -> root.gone()
                     }
                 }
+            }
         }
 
 
@@ -327,8 +337,7 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
                 }
                 binding.root.setBackgroundColor(
                     getColor(
-                        binding.root.context,
-                        R.color.purple_gray_00
+                        binding.root.context, R.color.purple_gray_00
                     )
                 )
                 binding.root.updatePadding(left = 0.px, right = 0.px)
