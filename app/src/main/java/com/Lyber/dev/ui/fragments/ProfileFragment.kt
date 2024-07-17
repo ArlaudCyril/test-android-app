@@ -77,7 +77,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 
     private var imageFile: File? = null
     private var option = 1 // 1 -> camera option 2-> gallery option
-    val limit = 20 // for now from 5 to 20 as on this screen we have to show max 3 enteries
+    val limit = 5 // for now from 5 to 20 as on this screen we have to show max 3 enteries
     var offset = 0
     private lateinit var navController: NavController
     private var isResend = false
@@ -126,27 +126,22 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 binding.tvNoTransaction.setBackgroundResource(0)
                 binding.progressImage.clearAnimation()
                 binding.progressImage.visibility = View.GONE
-                val transactionList = mutableListOf<TransactionData>()
-                for (i in it.data) {
-                    if (i.type != Constants.WITHDRAW_EURO) {
-                        transactionList.add(i)
-                    }
-                }
-                when { // here replacing it.data with transactionlist
-                    transactionList.isEmpty() -> {
+
+                when {
+                    it.data.isEmpty() -> {
                         binding.tvNoTransaction.visible()
                         binding.rvTransactions.gone()
                         binding.tvViewAllTransaction.gone()
                     }
 
-                    transactionList.count() in 1..3 -> {
-                        adapter.setList(transactionList)
+                    it.data.count() in 1..3 -> {
+                        adapter.setList(it.data)
                         binding.tvViewAllTransaction.visible()
                         binding.tvNoTransaction.gone()
                     }
 
                     else -> {
-                        adapter.setList(transactionList.subList(0, 3))
+                        adapter.setList(it.data.subList(0, 3))
                         binding.tvViewAllTransaction.visible()
                         binding.tvNoTransaction.gone()
                     }
@@ -568,16 +563,11 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                             ivItem.setImageResource(R.drawable.ic_withdraw)
                             tvFailed.visibility = View.GONE
                             tvStartTitle.text =
-                                "${it.asset.uppercase()} ${getString(R.string.withdrawal)}"
-//                                tvStartSubTitle.text =
-//                                    it.status.lowercase().replaceFirstChar(Char::uppercase)
+                                "EUR ${getString(R.string.withdrawal)}"
+                            tvStartSubTitle.text =
+                                it.status.lowercase().replaceFirstChar(Char::uppercase)
                             tvEndTitleCenter.text = "-${it.amount} ${it.asset.uppercase()}"
-                            tvStartTitleCenter.visibility = View.GONE
-
-
-//                                "type":"withdraw_euro","id":"e15dc586-cc18-4023-a08a-cc7c6a7ffab9",
-//                                "asset":"usdc","iban":"FR123456789","date":"2024-07-15T05:13:17.036Z","amount":"24.59"}
-                        }
+                            tvStartTitleCenter.visibility = View.GONE     }
 
                         else -> root.gone()
                     }

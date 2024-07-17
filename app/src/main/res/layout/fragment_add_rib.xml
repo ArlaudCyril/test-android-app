@@ -36,6 +36,8 @@
         android:layout_marginTop="24dp"
         android:background="@drawable/edit_text_background"
         android:hint="@string/rib_name"
+        android:textColorHint="@color/purple_800"
+        android:textColor="@color/purple_800"
         android:imeOptions="actionNext"
         android:maxLines="1"
         android:paddingHorizontal="12dp" />
@@ -51,6 +53,8 @@
         android:inputType="text|textCapCharacters"
         android:imeOptions="actionNext"
         android:maxLines="1"
+        android:textColorHint="@color/purple_800"
+        android:textColor="@color/purple_800"
         android:paddingHorizontal="12dp" />
 
     <EditText
@@ -61,6 +65,8 @@
         android:layout_marginTop="24dp"
         android:background="@drawable/edit_text_background"
         android:hint="@string/bic"
+        android:textColorHint="@color/purple_800"
+        android:textColor="@color/purple_800"
         android:inputType="text|textCapCharacters"
         android:imeOptions="actionNext"
         android:maxLines="1"
@@ -74,6 +80,8 @@
         android:layout_marginTop="24dp"
         android:background="@drawable/edit_text_background"
         android:hint="@string/owner_name"
+        android:textColorHint="@color/purple_800"
+        android:textColor="@color/purple_800"
         android:imeOptions="actionNext"
         android:inputType="text"
         android:maxLines="1"
@@ -86,9 +94,12 @@
         android:layout_marginHorizontal="24dp"
         android:layout_marginTop="24dp"
         android:background="@drawable/edit_text_background"
+        android:textColorHint="@color/purple_800"
+        android:textColor="@color/purple_800"
         android:gravity="center_vertical"
         android:hint="@string/bank_country"
         android:paddingHorizontal="12dp"
+        android:drawableTint="@color/purple_800"
         app:drawableEndCompat="@drawable/ic_drop_down" />
     <TextView
         android:id="@+id/tvOwnerValid"

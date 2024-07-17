@@ -194,10 +194,18 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
             encoded =
                 android.util.Base64.encodeToString(bytes, android.util.Base64.DEFAULT)
         }
-        if (isResend)
-            viewModelSignup.getOtpForWithdraw(Constants.ACTION_WITHDRAW, encoded)
-        else
-            viewModel.getOtpForWithdraw(Constants.ACTION_WITHDRAW, encoded)
+        if (withdrawUSDC) {
+            if (isResend)
+                viewModelSignup.getOtpForWithdraw(Constants.ACTION_WITHDRAW_EURO, encoded)
+            else
+                viewModel.getOtpForWithdraw(Constants.ACTION_WITHDRAW_EURO, encoded)
+
+        } else {
+            if (isResend)
+                viewModelSignup.getOtpForWithdraw(Constants.ACTION_WITHDRAW, encoded)
+            else
+                viewModel.getOtpForWithdraw(Constants.ACTION_WITHDRAW, encoded)
+        }
     }
 
     private fun prepareView() {
@@ -223,23 +231,30 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                     tvInfo
                 ).gone()
                 tvNestedAmount.text = getString(R.string.iban)
-                tvNestedAmountValue.text = viewModel.ribDataAddress?.iban
+                val maxLength = 20 // Adjust this value as needed
+                val truncatedText =
+                    CommonMethods.getTruncatedText(viewModel.ribDataAddress!!.iban, maxLength)
+                tvNestedAmountValue.text = truncatedText
+//                tvNestedAmountValue.text = viewModel.ribDataAddress?.iban
                 tvExchangeFrom.text = getString(R.string.bic)
-                tvExchangeFromValue.text = viewModel.ribDataAddress?.bic
+                val truncatedTextBic =
+                    CommonMethods.getTruncatedText(viewModel.ribDataAddress!!.bic, maxLength)
+                binding.tvExchangeFromValue.text = truncatedTextBic
+//                tvExchangeFromValue.text = viewModel.ribDataAddress?.bic
                 tvExchangeTo.text = getString(R.string.sell)
                 tvLyberFee.text = getString(R.string.fee)
-                tvValueLyberFee.text = "${withdrawEuroFee} ${Constants.EURO}" //for now static fee
+                tvValueLyberFee.text = "${withdrawEuroFee} ${Constants.EUR}" //for now static fee
                 tvDeposit.text = getString(R.string.receive)
                 valueTotal =
                     requireArguments().getString(Constants.EURO, "")
                         .replace(Constants.EURO, "").toDouble()
 
-                tvValueDeposit.text = "~${valueTotal - withdrawEuroFee} " + Constants.EURO
+                tvValueDeposit.text = "~${valueTotal - withdrawEuroFee} " + Constants.EUR
 
                 tvTotal.text = getString(R.string.total)
 
-                tvValueTotal.text = "${valueTotal} ${Constants.EURO}"
-                tvAmount.text = "${valueTotal} ${Constants.EURO}"
+                tvValueTotal.text = "${valueTotal} ${Constants.EUR}"
+                tvAmount.text = "${valueTotal} ${Constants.EUR}"
                 valueTotalEuro = requireArguments().getString(
                     Constants.MAIN_ASSET,
                     ""

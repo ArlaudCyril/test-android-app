@@ -802,4 +802,5 @@
     <string name="withdrawal_amount_exceeds_balance">Your withdrawal amount plus the fees exceeds your balance</string>
     <string name="amount_withdrawn">The amount has withdrawn from\nyour account.</string>
     <string name="receive">Receive</string>
+    <string name="euro_amount">Euro amount</string>
 </resources>

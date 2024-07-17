@@ -17,6 +17,7 @@ import com.Lyber.dev.models.WithdrawAddress
 import com.Lyber.dev.ui.activities.BaseActivity
 import com.Lyber.dev.ui.adapters.BaseAdapter
 import com.Lyber.dev.ui.fragments.AddAddressBookFragment
+import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.gone
 import com.Lyber.dev.utils.CommonMethods.Companion.loadCircleCrop
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
@@ -112,7 +113,11 @@ class WithdrawalUsdcAddressBottomSheet(
                             tvStartTitle.text = it.name
                             tvStartSubTitle.gone()
                             tvAddress.visible()
-                            tvAddress.text = it.iban
+                            val maxLength = 20 // Adjust this value as needed
+                            val truncatedText = CommonMethods.getTruncatedText(it.iban, maxLength)
+                            tvAddress.text = truncatedText
+//
+//                            tvAddress.text = it.iban
                             ivItem.setImageResource(R.drawable.ic_euro)
                         }
                     }
