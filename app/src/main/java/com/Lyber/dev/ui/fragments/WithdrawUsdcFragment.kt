@@ -164,9 +164,10 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 CommonMethods.dismissProgressDialog()
                 ribDataList.clear()
-                for( rib in it.data)
-                    if(rib.ribStatus.lowercase()=="validated")
-                        ribDataList.add(rib)
+//                for( rib in it.data)
+//                    if(rib.ribStatus.lowercase()=="validated")
+//                        ribDataList.add(rib)
+                ribDataList.addAll(it.data)
 
                 if (ribDataList.size > 0) {
                     var addressList = ribDataList
@@ -184,7 +185,10 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
                         tvAssetAddress.visible()
                         ivDropIcon2.visible()
 //                        addressId = withdrawAddress.address.toString()
-                        tvAssetAddress.text = withdrawAddress.iban
+                        val maxLength = 20 // Adjust this value as needed
+                        val truncatedText = CommonMethods.getTruncatedText(withdrawAddress.iban, maxLength)
+                        tvAssetAddress.text = truncatedText
+//                        tvAssetAddress.text = withdrawAddress.iban
 
                     }
                 }
@@ -615,7 +619,9 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
         binding.includedAsset.apply {
             viewModel.ribDataAddress = withdrawAddress
             tvAssetName.text = withdrawAddress!!.name
-            tvAssetAddress.text = withdrawAddress.iban
+            val maxLength=20
+            val truncatedText = CommonMethods.getTruncatedText(withdrawAddress.iban, maxLength)
+            tvAssetAddress.text = truncatedText
 //            addressId = withdrawAddress.address.toString()
             ivCopy.gone()
         }

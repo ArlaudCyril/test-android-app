@@ -147,7 +147,10 @@ class RibListingFragment : BaseFragment<FragmentRibListingBinding>(), OnClickLis
                         tvAssetNameCode.gone()
 
                         tvAssetAmount.text = it.userName
-                        tvAssetAmountInCrypto.text = it.iban
+                        val maxLength = 20 // Adjust this value as needed
+                        val truncatedText = CommonMethods.getTruncatedText(it.iban, maxLength)
+                        tvAssetAmountInCrypto.text = truncatedText
+//                        tvAssetAmountInCrypto.text = it.iban
 
 
                     }
@@ -179,4 +182,6 @@ class RibListingFragment : BaseFragment<FragmentRibListingBinding>(), OnClickLis
             }
         }
     }
+
+
 }

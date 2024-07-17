@@ -289,6 +289,7 @@ object Constants {
     const val EDIT_ACTIVE_STRATEGY = "edit_active_strategy"
     const val ASK_PERMISSION = "askPermission"
     const val DECIMAL = "decimal"
+    const val EUR = "EUR"
 
     const val MAIN_ASSET = "usdc"
     const val MAIN_ASSET_UPPER = "USDC"

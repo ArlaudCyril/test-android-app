@@ -800,6 +800,7 @@
     <string name="withdrawal_amount_is_inferior">Le montant de votre retrait est inférieur au minimum requis</string>
     <string name="withdrawal_amount_exceeds_balance">Le montant de votre retrait plus les frais dépasse votre solde</string>
     <string name="amount_withdrawn">Le montant a été retiré de\nvotre compte.</string>
-    <string name="receive">Receive</string>
+    <string name="receive">Recevoir</string>
+    <string name="euro_amount">Euro amount</string>
 
 </resources>

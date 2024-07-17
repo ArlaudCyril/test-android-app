@@ -91,9 +91,16 @@ class AddAddressInfoBottomSheet(
                 binding.tvAddress.text = getString(R.string.iban)
                 binding.tvCopy.gone()
                 binding.tvIbanNo.visible()
-                binding.tvIbanNo.text = it.iban
+                val maxLength = 20 // Adjust this value as needed
+                val truncatedText = CommonMethods.getTruncatedText(it.iban, maxLength)
+                binding.tvIbanNo.text = truncatedText
+//
+//                binding.tvIbanNo.text = it.iban
+
+                val truncatedTextBic = CommonMethods.getTruncatedText(it.bic, maxLength)
+                binding.tvValueNetwork.text = truncatedTextBic
+//                                     binding.tvValueNetwork.text = it.bic
                 binding.tvNetwork.text = getString(R.string.bic)
-                binding.tvValueNetwork.text = it.bic
                 binding.tvAddressOrigin.text = getString(R.string.owner_name)
                 binding.tvValueAddressOrigin.text = it.userName
                 binding.tvDateAdded.text = getString((R.string.bank_country))

@@ -11,6 +11,7 @@ import android.widget.TextView
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentTransactionDetailsBottomSheetBinding
 import com.Lyber.dev.models.TransactionData
+import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
 import com.Lyber.dev.utils.CommonMethods.Companion.gone
 import com.Lyber.dev.utils.CommonMethods.Companion.showToast
@@ -19,6 +20,7 @@ import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import java.math.BigDecimal
 import java.math.RoundingMode
 
 
@@ -46,10 +48,12 @@ class TransactionDetailsBottomSheetFragment :
                 binding.ivCopyFrom.visibility = View.GONE
                 binding.ivTransactionHash.visibility = View.GONE
                 binding.tvToValue.text =
-                    "${transactionData.toAmount.formattedAsset(
-                        0.0,
-                        rounding = RoundingMode.DOWN,8
-                    )} ${transactionData.toAsset.uppercase()}"
+                    "${
+                        transactionData.toAmount.formattedAsset(
+                            0.0,
+                            rounding = RoundingMode.DOWN, 8
+                        )
+                    } ${transactionData.toAsset.uppercase()}"
                 binding.tvFeePaid.text =
                     "${transactionData.fees} ${transactionData.fromAsset.uppercase()}"
                 binding.tvDateValue.text =
@@ -95,7 +99,8 @@ class TransactionDetailsBottomSheetFragment :
                 binding.tvDateValue.text = transactionData.txId
                 binding.tvDateDeposit.visible()
                 binding.tvDateDepositValue.visible()
-                binding.tvDateDepositValue.text = transactionData.date.toFormat("yyyy-MM-dd'T'hh:mm:ss", "dd MMMM yyyy HH:mm")
+                binding.tvDateDepositValue.text =
+                    transactionData.date.toFormat("yyyy-MM-dd'T'hh:mm:ss", "dd MMMM yyyy HH:mm")
 
             }
 
@@ -118,25 +123,35 @@ class TransactionDetailsBottomSheetFragment :
                 binding.tvDateValue.visibility = View.GONE
                 binding.ivTransactionHash.visibility = View.GONE
             }
+
             Constants.WITHDRAW_EURO -> { // single asset
 
 
-                binding.tvTitle.text = getString(R.string.withdrawal)
+                binding.tvTitle.text = "Euro " + getString(R.string.withdrawal)
 //                   transactionData.type.replaceFirstChar(Char::uppercase)
                 binding.tvOrder.text = getString(R.string.transaction_id)
-                binding.tvOrderId.text = transactionData.id
-                binding.tvStatusValue.gone()
-                binding.tvStatus.gone()
+                val maxLength=20
+                binding.tvOrderId.text =CommonMethods.getTruncatedText(transactionData.id,maxLength)
+//                binding.tvOrderId.text = transactionData.id
+                binding.tvStatusValue.text = transactionData.status
+                binding.ivCopyFrom.gone()
                 binding.tvFrom.text = getString(R.string.iban)
-                binding.tvFromValue.text = transactionData.iban
+                val truncatedText = CommonMethods.getTruncatedText(transactionData.iban, maxLength)
+                binding.tvFromValue.text = truncatedText
+//                binding.tvFromValue.text = transactionData.iban
                 binding.tvTo.text = getString(R.string.amount)
                 binding.tvToValue.text =
                     "${transactionData.amount} ${transactionData.asset.uppercase()}"
-                binding.tvFee.text = getString(R.string.date)
+                binding.tvEuroAmount.visible()
+                binding.tvEuroAmountValue.visible()
+                binding.tvEuroAmountValue.text="${transactionData.eurAmount} ${Constants.EUR}"
                 binding.tvFeePaid.text =
+                    BigDecimal.valueOf(transactionData.eurAmount.toDouble()).subtract(BigDecimal.valueOf(transactionData.eurAmountDeductedLyberFees.toDouble()))
+                        .toString()+" ${Constants.EUR}"
+                binding.tvDate.text = getString(R.string.date)
+                binding.tvDateValue.text =
                     transactionData.date.toFormat("yyyy-MM-dd'T'hh:mm:ss", "dd MMMM yyyy HH:mm")
-                binding.tvDate.visibility = View.GONE
-                binding.tvDateValue.visibility = View.GONE
+
                 binding.ivTransactionHash.visibility = View.GONE
             }
 
@@ -162,7 +177,7 @@ class TransactionDetailsBottomSheetFragment :
                         requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
                     val clip = ClipData.newPlainText("label", textToCopy)
                     clipMan?.setPrimaryClip(clip)
-                     getString(R.string.copied).showToast(requireContext())
+                    getString(R.string.copied).showToast(requireContext())
                 }
 
                 ivCopyFrom -> {
@@ -175,7 +190,7 @@ class TransactionDetailsBottomSheetFragment :
                         requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
                     val clip = ClipData.newPlainText("label", textToCopy)
                     clipMan?.setPrimaryClip(clip)
-                     getString(R.string.copied).showToast(requireContext())
+                    getString(R.string.copied).showToast(requireContext())
                 }
 
                 ivTransactionHash -> {
@@ -185,7 +200,7 @@ class TransactionDetailsBottomSheetFragment :
                         requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
                     val clip = ClipData.newPlainText("label", textToCopy)
                     clipMan?.setPrimaryClip(clip)
-                     getString(R.string.copied).showToast(requireContext())
+                    getString(R.string.copied).showToast(requireContext())
                 }
 
                 ivTopAction -> {

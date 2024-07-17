@@ -112,16 +112,16 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
             response?.let {
                 // Process the response here
                 //for now
-                val transactionList = mutableListOf<TransactionData>()
-                for (i in it.data) {
-                    if (i.type != Constants.WITHDRAW_EURO) {
-                        transactionList.add(i)
-                    }
-                }
+//                val transactionList = mutableListOf<TransactionData>()
+//                for (i in it.data) {
+//                    if (i.type != Constants.WITHDRAW_EURO) {
+//                        transactionList.add(i)
+//                    }
+//                }
                 binding.rvRefresh.isRefreshing = false
                 CommonMethods.dismissProgressDialog()
-                adapter.calculatePositions(transactionList)
-//                adapter.calculatePositions(it.data)
+//                adapter.calculatePositions(transactionList)
+                adapter.calculatePositions(it.data)
                 if (offset == 0) binding.rvTransactions.startLayoutAnimation()
                 isLoading = false
                 isLastPage = it.data.count() < limit
@@ -136,14 +136,14 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
 //                                transactionList.add(i)
 //                            }
 //                        }
-//                        adapter.setList(it.data)
-                        adapter.setList(transactionList)
+                        adapter.setList(it.data)
+//                        adapter.setList(transactionList)
 
                     }
                 } else {
                     adapter.removeProgress()
-//                    adapter.addList(it.data)
-                    adapter.addList(transactionList)
+                    adapter.addList(it.data)
+//                    adapter.addList(transactionList)
                 }
             }
         }
@@ -299,20 +299,17 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
                         }
 
                         Constants.WITHDRAW_EURO -> { // single asset
-                            llRoot.gone()
-//                                ivItem.setImageResource(R.drawable.ic_withdraw)
-//                                tvFailed.visibility = View.GONE
-//                                tvStartTitle.text =
-//                                    "${it.asset.uppercase()} ${getString(R.string.withdrawal)}"
-////                                tvStartSubTitle.text =
-////                                    it.status.lowercase().replaceFirstChar(Char::uppercase)
-//                                tvEndTitleCenter.text = "-${it.amount} ${it.asset.uppercase()}"
-//                                tvStartTitleCenter.visibility = View.GONE
 
+                                ivItem.setImageResource(R.drawable.ic_withdraw)
+                                tvFailed.visibility = View.GONE
+                                tvStartTitle.text =
+                                    "EUR ${getString(R.string.withdrawal)}"
+                                tvStartSubTitle.text =
+                                    it.status.lowercase().replaceFirstChar(Char::uppercase)
+                                tvEndTitleCenter.text = "-${it.amount} ${it.asset.uppercase()}"
+                                tvStartTitleCenter.visibility = View.GONE
 
-//                                "type":"withdraw_euro","id":"e15dc586-cc18-4023-a08a-cc7c6a7ffab9",
-//                                "asset":"usdc","iban":"FR123456789","date":"2024-07-15T05:13:17.036Z","amount":"24.59"}
-                        }
+ }
 
                         else -> root.gone()
                     }

@@ -757,7 +757,10 @@ data class TransactionData(
     val network: String,
     val amount: String,
     val nextExecution: String?,
-    val iban: String
+    val iban: String,
+    val eurAmount: String,
+    val eurAmountDeductedLyberFees: String
+
 )
 
 
