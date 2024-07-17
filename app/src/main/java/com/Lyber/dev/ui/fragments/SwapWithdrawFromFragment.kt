@@ -8,8 +8,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentSwapFromBinding
 import com.Lyber.dev.models.Balance
+import com.Lyber.dev.ui.activities.BaseActivity
 import com.Lyber.dev.ui.adapters.BalanceAdapter
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.WithdrawOnBankAccountBottomSheet
 import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
@@ -24,7 +24,7 @@ import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import java.math.RoundingMode
-//TODO to confirm about asset on bank account
+
 class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnClickListener {
 
     private lateinit var adapter: BalanceAdapter
@@ -53,7 +53,7 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
                 }
                 com.Lyber.dev.ui.activities.BaseActivity.balances = balances
                 balances.sortByDescending { it.balanceData.euroBalance.toDoubleOrNull() }
-               adapter.setList(balances)
+                adapter.setList(balances)
             }
         }
         /* recycler view */
@@ -78,7 +78,8 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
         binding.includedAsset.tvAssetAmountInCrypto.text =
             balance.balanceData.balance.formattedAsset(
                 priceCoin,
-                rounding = RoundingMode.DOWN)
+                rounding = RoundingMode.DOWN
+            )
 //            ) + " USDT"
 
     }
@@ -97,7 +98,8 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
         binding.tvOnMyBank.visible()
         binding.includedAsset.root.visible()
         binding.includedAsset.llFiatWallet.gone()
-        val currency = com.Lyber.dev.ui.activities.BaseActivity.assets.find { it.id == Constants.MAIN_ASSET }
+        val currency =
+            com.Lyber.dev.ui.activities.BaseActivity.assets.find { it.id == Constants.MAIN_ASSET }
         binding.includedAsset.ivAssetIcon.loadCircleCrop(currency?.imageUrl ?: "")
         binding.includedAsset.ivDropIcon.setImageResource(R.drawable.ic_right_arrow_grey)
         binding.includedAsset.tvAssetName.text = "USDC"
@@ -127,8 +129,13 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
                 ivTopAction -> requireActivity().onBackPressed()
 
                 includedAsset.root -> {
-                    val detailBottomSheet = WithdrawOnBankAccountBottomSheet()
-                    detailBottomSheet.show(requireActivity().supportFragmentManager, "")
+                    if (BaseActivity.ribWalletList.isEmpty()) {
+                        findNavController().navigate(R.id.addRibFragment)
+                    } else {
+                        findNavController().navigate(R.id.ribListingFragment)
+
+                    }
+
                 }
 
             }

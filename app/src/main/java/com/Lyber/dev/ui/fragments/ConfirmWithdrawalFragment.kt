@@ -14,6 +14,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentConfirmInvestmentBinding
+import com.Lyber.dev.models.Balance
 import com.Lyber.dev.network.RestClient
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.VerificationBottomSheet
@@ -29,16 +30,19 @@ import com.Lyber.dev.viewmodels.SignUpViewModel
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import java.math.RoundingMode
-
+import java.util.ArrayList
 
 class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>(),
     View.OnClickListener, RestClient.OnRetrofitError {
     private lateinit var viewModel: PortfolioViewModel
     private lateinit var viewModelSignup: SignUpViewModel
     private var valueTotal: Double = 0.0
+    private var valueTotalEuro: Double = 0.0
     private var isExpand = false
     private var isOtpScreen = false
     private var isResend = false
+    private var withdrawUSDC = false
+    private var withdrawEuroFee = 0.66
 
     override fun bind() = FragmentConfirmInvestmentBinding.inflate(layoutInflater)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -47,10 +51,21 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         viewModelSignup = CommonMethods.getViewModel(requireActivity())
         viewModel.listener = this
         viewModelSignup.listener = this
+        if (arguments != null && requireArguments().containsKey(Constants.FROM) &&
+            requireArguments().getString(Constants.FROM) == WithdrawUsdcFragment::class.java.name
+        ) {
+            withdrawUSDC = true
+            binding.title.text = getString(R.string.confirm_withdrawal)
+            if (requireArguments().containsKey(Constants.FEE))
+                withdrawEuroFee = requireArguments().getDouble(Constants.FEE)
+        } else
+            withdrawUSDC = false
+
         binding.tvTotalAmount.gone()
         binding.ivSingleAsset.gone()
         binding.tvMoreDetails.gone()
         binding.zzInfor.visible()
+
         binding.ivTopAction.setOnClickListener(this)
         binding.btnConfirmInvestment.setOnClickListener(this)
 //        binding.tvMoreDetails.setOnClickListener(this)
@@ -68,10 +83,25 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                 if (isOtpScreen) {
                     openOtpScreen()
                 } else {
-
-                    viewModel.selectedOption = Constants.USING_WITHDRAW
+                    if (withdrawUSDC) {
+                        viewModel.getBalance()
+                        viewModel.selectedOption = Constants.ACTION_WITHDRAW_EURO
+                    } else
+                        viewModel.selectedOption = Constants.USING_WITHDRAW
                     ConfirmationBottomSheet().show(childFragmentManager, "")
                 }
+            }
+        }
+        viewModel.balanceResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                CommonMethods.dismissProgressDialog()
+                val balanceDataDict = it.data
+                val balances = ArrayList<Balance>()
+                balanceDataDict?.forEach {
+                    val balance = Balance(id = it.key, balanceData = it.value)
+                    balances.add(balance)
+                }
+                com.Lyber.dev.ui.activities.BaseActivity.balances = balances
             }
         }
 
@@ -104,20 +134,6 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
             vc.mainView = getView()?.rootView as ViewGroup
 
             vc.show(childFragmentManager, "")
-
-
-//            val vc = VerificationBottomSheet(::handle)
-//            vc.viewToDelete = transparentView
-//            vc.mainView = getView()?.rootView as ViewGroup
-//            vc.viewModel = viewModel
-//            vc.arguments = Bundle().apply {
-//                putString(Constants.TYPE, clickedOn)
-//            }
-//            vc.show(childFragmentManager, App.prefsManager.user?.type2FA)
-
-
-
-            // Add the transparent view to the RelativeLayout
             val mainView = getView()?.rootView as ViewGroup
             mainView.addView(transparentView, viewParams)
         }
@@ -131,31 +147,46 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         } else {
             CommonMethods.showProgressDialog(requireActivity())
             isOtpScreen = false
-            viewModel.createWithdrawalRequest(
-                viewModel.selectedAssetDetail!!.id,
-                valueTotal,
-                viewModel.withdrawAddress!!.address!!,
-                viewModel.selectedNetworkDeposit!!.id,
-                code
-            )
+            if (withdrawUSDC) {
+                viewModel.createWithdrawalEuroRequest(
+                    viewModel.ribDataAddress!!.ribId,
+                    viewModel.ribDataAddress!!.iban, viewModel.ribDataAddress!!.bic,
+                    valueTotalEuro, code
+                )
+            } else
+                viewModel.createWithdrawalRequest(
+                    viewModel.selectedAssetDetail!!.id,
+                    valueTotal,
+                    viewModel.withdrawAddress!!.address!!,
+                    viewModel.selectedNetworkDeposit!!.id,
+                    code
+                )
         }
     }
 
     //    @RequiresApi(Build.VERSION_CODES.O)
     private fun confirmButtonClick() {
-        if(!isResend)
-        CommonMethods.showProgressDialog(requireActivity())
+        if (!isResend)
+            CommonMethods.showProgressDialog(requireActivity())
         val map = HashMap<Any?, Any?>()
-        map["asset"] = viewModel.selectedAssetDetail!!.id
-        map["amount"] = valueTotal
-        map["destination"] = viewModel.withdrawAddress!!.address
-        map["network"] = viewModel.selectedNetworkDeposit!!.id
+        if (withdrawUSDC) {
+            map["destination"] = viewModel.ribDataAddress!!.iban
+            map["asset"] = "usdc"
+//            map["amount"] = valueTotal
+            map["amount"] = valueTotalEuro
+        } else {
+            map["asset"] = viewModel.selectedAssetDetail!!.id
+            map["amount"] = valueTotal
+            map["destination"] = viewModel.withdrawAddress!!.address
+            map["network"] = viewModel.selectedNetworkDeposit!!.id
+        }
         val jso = JSONObject(map)
+
         isOtpScreen = true
-        var encoded=""
+        var encoded = ""
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-         encoded = String(java.util.Base64.getEncoder().encode(jso.toString(4).toByteArray()))
-       else{
+            encoded = String(java.util.Base64.getEncoder().encode(jso.toString(4).toByteArray()))
+        else {
             val jsonString = jso.toString(4) // Convert JSONObject to string with indentation
 
             val bytes = jsonString.toByteArray() // Convert string to bytes
@@ -163,91 +194,159 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
             encoded =
                 android.util.Base64.encodeToString(bytes, android.util.Base64.DEFAULT)
         }
-        if(isResend)
-        viewModelSignup.getOtpForWithdraw(Constants.ACTION_WITHDRAW, encoded)
-       else
-        viewModel.getOtpForWithdraw(Constants.ACTION_WITHDRAW, encoded)
-      }
+        if (withdrawUSDC) {
+            if (isResend)
+                viewModelSignup.getOtpForWithdraw(Constants.ACTION_WITHDRAW_EURO, encoded)
+            else
+                viewModel.getOtpForWithdraw(Constants.ACTION_WITHDRAW_EURO, encoded)
+
+        } else {
+            if (isResend)
+                viewModelSignup.getOtpForWithdraw(Constants.ACTION_WITHDRAW, encoded)
+            else
+                viewModel.getOtpForWithdraw(Constants.ACTION_WITHDRAW, encoded)
+        }
+    }
 
     private fun prepareView() {
         binding.apply {
-            listOf(
-                tvNestedAmount,
-                tvNestedAmountValue,
-                tvExchangeFrom, tvExchangeFromValue, tvExchangeTo, tvExchangeToValue,
-                tvLyberFee,
-                tvValueLyberFee
-            ).visible()
-
-            listOf(
-                tvFrequency,
-                tvValueFrequency,
-                tvAllocation,
-                allocationView,
-                tvAssetPrice,
-                tvValueAssetPrice,
-                tvDeposit,
-                tvDepositFee,
-                tvValueDeposit,
-                tvValueDepositFee,
-                tvInfo
-            ).gone()
-        }
-        binding.apply {
-            tvNestedAmount.text = getString(R.string.amount)
-
-            viewModel.selectedAssetDetail.let {
-                val balance =
-                    com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
-                val priceCoin = balance!!.balanceData.euroBalance.toDouble()
-                    .div(balance.balanceData.balance.toDouble() ?: 1.0)
-                tvValueLyberFee.text =
-                    viewModel.selectedNetworkDeposit!!.withdrawFee.toString().formattedAsset(
-                        price = priceCoin,
-                        rounding = RoundingMode.DOWN
-                    ) + " " + it!!.id.uppercase()
-
-
-                tvExchangeFrom.text = getString(R.string.address)
-                tvExchangeFromValue.text =
-                    viewModel.withdrawAddress!!.address!!.substring(0, 7) + "...." +
-                            viewModel.withdrawAddress!!.address!!.substring(
-                                viewModel.withdrawAddress!!.address
-                                !!.length - 4
-                            )
-                tvExchangeTo.text = getString(R.string.network)
-                tvExchangeToValue.text = viewModel.selectedNetworkDeposit!!.fullName
+            if (withdrawUSDC) {
+                btnConfirmInvestment.text = getString(R.string.confirm_withdrawal)
+                listOf(
+                    tvNestedAmount,
+                    tvNestedAmountValue,
+                    tvExchangeFrom, tvExchangeFromValue, tvExchangeTo, tvExchangeToValue,
+                    tvLyberFee,
+                    tvValueLyberFee, tvDeposit
+                ).visible()
+                listOf(
+                    tvFrequency,
+                    tvValueFrequency,
+                    tvAllocation,
+                    allocationView,
+                    tvAssetPrice,
+                    tvValueAssetPrice,
+                    tvDepositFee,
+                    tvValueDepositFee,
+                    tvInfo
+                ).gone()
+                tvNestedAmount.text = getString(R.string.iban)
+                val maxLength = 20 // Adjust this value as needed
+                val truncatedText =
+                    CommonMethods.getTruncatedText(viewModel.ribDataAddress!!.iban, maxLength)
+                tvNestedAmountValue.text = truncatedText
+//                tvNestedAmountValue.text = viewModel.ribDataAddress?.iban
+                tvExchangeFrom.text = getString(R.string.bic)
+                val truncatedTextBic =
+                    CommonMethods.getTruncatedText(viewModel.ribDataAddress!!.bic, maxLength)
+                binding.tvExchangeFromValue.text = truncatedTextBic
+//                tvExchangeFromValue.text = viewModel.ribDataAddress?.bic
+                tvExchangeTo.text = getString(R.string.sell)
+                tvLyberFee.text = getString(R.string.fee)
+                tvValueLyberFee.text = "${withdrawEuroFee} ${Constants.EUR}" //for now static fee
+                tvDeposit.text = getString(R.string.receive)
                 valueTotal =
                     requireArguments().getString(Constants.EURO, "")
-                        .replace(it.id.uppercase(), "").toDouble()
-                tvValueTotal.text =
-                    "${
-                        valueTotal.toString().formattedAsset(
-                            price = priceCoin,
-                            rounding = RoundingMode.DOWN
-                        )
-                    } ${it.id.uppercase()}"
-                tvAmount.text =
-                    "${
-                        valueTotal.toString().formattedAsset(
-                            price = priceCoin,
-                            rounding = RoundingMode.DOWN
-                        )
-                    } ${it.id.uppercase()}"
-                val amount = valueTotal - viewModel.selectedNetworkDeposit!!.withdrawFee.toDouble()
-                tvNestedAmountValue.text = "${
-                    amount.toString().formattedAsset(
-                        price = priceCoin,
-                        rounding = RoundingMode.DOWN
-                    )
-                } ${it.id.uppercase()}"
+                        .replace(Constants.EURO, "").toDouble()
 
-                btnConfirmInvestment.isEnabled = true
-                btnConfirmInvestment.text =
-                    getString(R.string.confirm_withdrawal)
-                title.text = getString(R.string.confirm_withdrawal)
+                tvValueDeposit.text = "~${valueTotal - withdrawEuroFee} " + Constants.EUR
+
+                tvTotal.text = getString(R.string.total)
+
+                tvValueTotal.text = "${valueTotal} ${Constants.EUR}"
+                tvAmount.text = "${valueTotal} ${Constants.EUR}"
+                valueTotalEuro = requireArguments().getString(
+                    Constants.MAIN_ASSET,
+                    ""
+                ).toDouble()
+                tvExchangeToValue.text = requireArguments().getString(
+                    Constants.MAIN_ASSET,
+                    ""
+                ) + Constants.MAIN_ASSET_UPPER
+
+            } else {
+                listOf(
+                    tvNestedAmount,
+                    tvNestedAmountValue,
+                    tvExchangeFrom, tvExchangeFromValue, tvExchangeTo, tvExchangeToValue,
+                    tvLyberFee,
+                    tvValueLyberFee
+                ).visible()
+
+                listOf(
+                    tvFrequency,
+                    tvValueFrequency,
+                    tvAllocation,
+                    allocationView,
+                    tvAssetPrice,
+                    tvValueAssetPrice,
+                    tvDeposit,
+                    tvDepositFee,
+                    tvValueDeposit,
+                    tvValueDepositFee,
+                    tvInfo
+                ).gone()
+
+                binding.apply {
+                    tvNestedAmount.text = getString(R.string.amount)
+
+                    viewModel.selectedAssetDetail.let {
+                        val balance =
+                            com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
+                        val priceCoin = balance!!.balanceData.euroBalance.toDouble()
+                            .div(balance.balanceData.balance.toDouble() ?: 1.0)
+                        tvValueLyberFee.text =
+                            viewModel.selectedNetworkDeposit!!.withdrawFee.toString()
+                                .formattedAsset(
+                                    price = priceCoin,
+                                    rounding = RoundingMode.DOWN
+                                ) + " " + it!!.id.uppercase()
+
+
+                        tvExchangeFrom.text = getString(R.string.address)
+                        tvExchangeFromValue.text =
+                            viewModel.withdrawAddress!!.address!!.substring(0, 7) + "...." +
+                                    viewModel.withdrawAddress!!.address!!.substring(
+                                        viewModel.withdrawAddress!!.address
+                                        !!.length - 4
+                                    )
+                        tvExchangeTo.text = getString(R.string.network)
+                        tvExchangeToValue.text = viewModel.selectedNetworkDeposit!!.fullName
+                        valueTotal =
+                            requireArguments().getString(Constants.EURO, "")
+                                .replace(it.id.uppercase(), "").toDouble()
+                        tvValueTotal.text =
+                            "${
+                                valueTotal.toString().formattedAsset(
+                                    price = priceCoin,
+                                    rounding = RoundingMode.DOWN
+                                )
+                            } ${it.id.uppercase()}"
+                        tvAmount.text =
+                            "${
+                                valueTotal.toString().formattedAsset(
+                                    price = priceCoin,
+                                    rounding = RoundingMode.DOWN
+                                )
+                            } ${it.id.uppercase()}"
+                        val amount =
+                            valueTotal - viewModel.selectedNetworkDeposit!!.withdrawFee.toDouble()
+                        tvNestedAmountValue.text = "${
+                            amount.toString().formattedAsset(
+                                price = priceCoin,
+                                rounding = RoundingMode.DOWN
+                            )
+                        } ${it.id.uppercase()}"
+
+                        btnConfirmInvestment.isEnabled = true
+                        btnConfirmInvestment.text =
+                            getString(R.string.confirm_withdrawal)
+                        title.text = getString(R.string.confirm_withdrawal)
+                    }
+
+
+                }
             }
-
 
         }
 
@@ -292,4 +391,5 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         if (code == 7023 || code == 10041 || code == 7025 || code == 10043)
             customDialog(code)
     }
+
 }

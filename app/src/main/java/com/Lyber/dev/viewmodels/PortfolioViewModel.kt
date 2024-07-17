@@ -8,6 +8,7 @@ import com.Lyber.dev.models.Balance
 import com.Lyber.dev.models.NetworkDeposit
 import com.Lyber.dev.models.PersonalDataResponse
 import com.Lyber.dev.models.PriceServiceResume
+import com.Lyber.dev.models.RIBData
 import com.Lyber.dev.models.Strategy
 import com.Lyber.dev.models.WithdrawAddress
 
@@ -25,6 +26,14 @@ class PortfolioViewModel : NetworkViewModel() {
         set(value){
             _withdrawAddress = value
         }
+    private var _ribAddress: RIBData?=null
+
+    var ribDataAddress
+        get() = _ribAddress
+        set(value){
+            _ribAddress = value
+        }
+
     private var _selectedAssetPriceResume: PriceServiceResume? = null
     var selectedAssetPriceResume
         get() = _selectedAssetPriceResume

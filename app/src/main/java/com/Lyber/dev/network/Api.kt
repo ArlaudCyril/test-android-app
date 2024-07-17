@@ -449,4 +449,19 @@ interface Api {
     @POST("notification-service/register")
     suspend fun enableNotification(@Body hashMap: HashMap<String, Any>): Response<BooleanResponse>
 
+    @GET("wallet-service/ribs")
+    suspend fun getWalletServices():Response<RIBResponse>
+
+    @POST("wallet-service/rib")
+    suspend fun addRib(@Body hashMap: HashMap<String, Any>): Response<BooleanResponse>
+
+    @HTTP(method = "DELETE", path = "wallet-service/rib", hasBody = true)
+    suspend fun deleteRIB(@Body hashMap: HashMap<String, Any>): Response<ExportResponse>
+
+    @POST("wallet-service/withdraw-euro")
+    suspend fun withdrawEuroRequest(@Body hashMap: HashMap<String, Any>): Response<CommonResponse>
+
+    @GET("wallet-service/withdraw-euro-info")
+    suspend fun getWithdrawEuroFee():Response<WithdrawEuroFee>
+
 }

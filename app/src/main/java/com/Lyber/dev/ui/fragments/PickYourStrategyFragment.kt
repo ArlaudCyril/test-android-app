@@ -15,9 +15,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.LinearSmoothScroller
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentPickYourStrategyBinding
-import com.Lyber.dev.models.Balance
 import com.Lyber.dev.models.MessageResponse
-import com.Lyber.dev.models.StrategiesResponse
 import com.Lyber.dev.models.Strategy
 import com.Lyber.dev.ui.adapters.PickStrategyFragmentAdapter
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.InvestWithStrategyBottomSheet
@@ -36,7 +34,6 @@ import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.utils.ItemOffsetDecoration
 import com.google.gson.GsonBuilder
 import java.lang.Math.abs
-import java.util.ArrayList
 
 
 class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>(),

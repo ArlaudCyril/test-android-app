@@ -76,6 +76,7 @@ object Constants {
     const val USING_DEPOSIT = "using_deposit"
     const val USING_WITHDRAW = "using_withdraw"
     const val ACTION_WITHDRAW = "withdraw"
+    const val ACTION_WITHDRAW_EURO = "withdrawEuro"
     const val SINGULAR = "SINGULAR"
     const val TO_EDIT = "toEdit"
     const val USING_EXCHANGE = "using_exchange"
@@ -227,6 +228,8 @@ object Constants {
     const val EMAIL = "email"
     const val SCOPE = "scope"
     const val WITHDRAW = "withdraw"
+    const val WITHDRAW_EURO = "withdraw_euro"
+    const val FEE = "fee"
 
     const val FAILURE = "FAILURE"
     const val ORDER = "order"
@@ -286,6 +289,7 @@ object Constants {
     const val EDIT_ACTIVE_STRATEGY = "edit_active_strategy"
     const val ASK_PERMISSION = "askPermission"
     const val DECIMAL = "decimal"
+    const val EUR = "EUR"
 
     const val MAIN_ASSET = "usdc"
     const val MAIN_ASSET_UPPER = "USDC"
