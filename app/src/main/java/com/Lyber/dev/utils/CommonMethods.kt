@@ -1872,7 +1872,19 @@ class CommonMethods {
                 else -> "0"
             }
         }
+         fun getTruncatedText(text: String, maxLength: Int): String {
+            try {
+                if (text.length <= maxLength) {
+                    return text
+                }
+                val startLength = (maxLength - 3) / 2
+                val endLength = 6
+                return text.substring(0, startLength) + "..." + text.substring(text.length - endLength)
 
+            } catch (_: Exception) {
+                return text
+            }
+        }
     }
 }
 

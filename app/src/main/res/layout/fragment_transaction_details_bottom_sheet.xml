@@ -143,11 +143,30 @@
             android:layout_alignTop="@id/tvTo"
             android:layout_alignBottom="@id/tvTo"
             android:layout_alignParentEnd="true" />
+        <TextView
+            android:id="@+id/tvEuroAmount"
+            style="@style/SubheadMabry"
+            android:layout_below="@id/tvTo"
+            android:layout_marginTop="32dp"
+            android:visibility="gone"
+            android:text="@string/euro_amount"
+            android:textColor="@color/purple_gray_500" />
 
+        <TextView
+            android:id="@+id/tvEuroAmountValue"
+            style="@style/SubheadMabry"
+            android:layout_alignTop="@id/tvEuroAmount"
+            android:layout_alignBottom="@id/tvEuroAmount"
+            android:layout_toRightOf="@id/tvEuroAmount"
+            android:layout_alignParentEnd="true"
+            android:ellipsize="middle"
+            android:gravity="end"
+            android:maxLines="1"
+            android:visibility="gone" />
         <TextView
             android:id="@+id/tvFee"
             style="@style/SubheadMabry"
-            android:layout_below="@id/tvTo"
+            android:layout_below="@id/tvEuroAmount"
             android:layout_marginTop="32dp"
             android:text="@string/fees_paid"
             android:textColor="@color/purple_gray_500" />

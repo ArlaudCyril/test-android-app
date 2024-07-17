@@ -40,6 +40,7 @@ import com.Lyber.dev.models.PriceResponse
 import com.Lyber.dev.models.PriceResumeByIdResponse
 import com.Lyber.dev.models.PriceServiceResume
 import com.Lyber.dev.models.QrCodeResponse
+import com.Lyber.dev.models.RIBResponse
 import com.Lyber.dev.models.RecurringInvestmentDetailResponse
 import com.Lyber.dev.models.RecurringInvestmentResponse
 import com.Lyber.dev.models.SetPhoneResponse
@@ -55,6 +56,7 @@ import com.Lyber.dev.models.UserChallengeResponse
 import com.Lyber.dev.models.UserLoginResponse
 import com.Lyber.dev.models.WalletHistoryResponse
 import com.Lyber.dev.models.WhitelistingResponse
+import com.Lyber.dev.models.WithdrawEuroFee
 import com.Lyber.dev.models.WithdrawalAddress
 import com.Lyber.dev.models.res
 import com.Lyber.dev.network.RestClient
@@ -277,7 +279,7 @@ open class NetworkViewModel : ViewModel() {
     private val _kycResponse = MutableLiveData<KYCResponse>()
     val kycResponse get() = _kycResponse
 
-    private val _kycResponseIdentity= MutableLiveData<KYCResponse>()
+    private val _kycResponseIdentity = MutableLiveData<KYCResponse>()
     val kycResponseIdentity get() = _kycResponseIdentity
 
 
@@ -327,6 +329,12 @@ open class NetworkViewModel : ViewModel() {
     val activeStrategyResponse get() = _activeStrategyResponse
     private val _priceResumeIdResponse = MutableLiveData<PriceResumeByIdResponse>()
     val priceResumeIdResponse get() = _priceResumeIdResponse
+
+    private val _getWalletRibResponse = MutableLiveData<RIBResponse>()
+    val walletRibResponse get() = _getWalletRibResponse
+
+    private val _getWithdrawEuroFeeResponse = MutableLiveData<WithdrawEuroFee>()
+    val withdrawEuroFeeResponse get() = _getWithdrawEuroFeeResponse
     fun cancelJob() {
 
     }
@@ -403,7 +411,8 @@ open class NetworkViewModel : ViewModel() {
         var total = 0
         for (i in addedAsset) {
             total += i.allocation.toInt()
-            list.add(ChooseAssets(
+            list.add(
+                ChooseAssets(
                     i.addAsset.id,
                     i.allocation.toInt()
                 )
@@ -416,7 +425,7 @@ open class NetworkViewModel : ViewModel() {
         hashMap["bundle"] = list
         hashMap["strategyType"] = "MultiAsset"
         hashMap["strategyName"] = strategyName
-        Log.d("list","$list")
+        Log.d("list", "$list")
 
         viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().chooseStrategy(hashMap)
@@ -1027,16 +1036,17 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun setUserInfo(context: Context
+    fun setUserInfo(
+        context: Context
     ) {
         viewModelScope.launch(exceptionHandler) {
 
             val hashMap = hashMapOf<String, Any>()
-            if(App.prefsManager.getLanguage().isNotEmpty())
-               hashMap["language"] = App.prefsManager.getLanguage()
-            else{
+            if (App.prefsManager.getLanguage().isNotEmpty())
+                hashMap["language"] = App.prefsManager.getLanguage()
+            else {
                 val configuration = context.resources.configuration.locales[0]
-                if(configuration.language.uppercase()==Constants.FRENCH)
+                if (configuration.language.uppercase() == Constants.FRENCH)
                     hashMap["language"] = Constants.FRENCH
                 else
                     hashMap["language"] = Constants.ENGLISH
@@ -1103,12 +1113,11 @@ open class NetworkViewModel : ViewModel() {
             if (streetNumber.isNotEmpty())
                 hash["streetNumber"] = streetNumber
 //            if (street.isNotEmpty())
-                hash["street"] = street.toString()
+            hash["street"] = street.toString()
             hash["city"] = city
-           hash["zipCode"] = zipCode
+            hash["zipCode"] = zipCode
             hash["country"] = country
             hash["isUSCitizen"] = isUSCitizen
-
 
 
             val res = RestClient.get(Constants.NEW_BASE_URL).setUserAddress(hash)
@@ -1203,8 +1212,8 @@ open class NetworkViewModel : ViewModel() {
         viewModelScope.launch(exceptionHandler) {
             val map = HashMap<String, Any>()
             map["action"] = action
-            if(details!=null)
-            map["details"] = details
+            if (details != null)
+                map["details"] = details
             val res = RestClient.get(Constants.NEW_BASE_URL).getOtpForWithdraw(map)
             if (res.isSuccessful) {
                 _commonResponse.postValue(res.body())
@@ -1451,7 +1460,7 @@ open class NetworkViewModel : ViewModel() {
             else listener?.onRetrofitError(res.errorBody())
         }
     }
-    
+
     fun closeAccount(hash: HashMap<String, Any>) {
         viewModelScope.launch(exceptionHandler) {
 
@@ -1485,7 +1494,7 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun getWalletHistoryPrice( daily: Boolean = true,limit: Int =500) {
+    fun getWalletHistoryPrice(daily: Boolean = true, limit: Int = 500) {
         viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get(Constants.NEW_BASE_URL).getWalletHistory(limit, daily)
             if (res.isSuccessful)
@@ -1493,7 +1502,8 @@ open class NetworkViewModel : ViewModel() {
             else listener?.onRetrofitError(res.errorBody())
         }
     }
-    fun getActiveStrategies( ) {
+
+    fun getActiveStrategies() {
         viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get(Constants.NEW_BASE_URL).activeStrategies()
             if (res.isSuccessful)
@@ -1502,7 +1512,7 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun getPriceResumeById(id:String ) {
+    fun getPriceResumeById(id: String) {
         viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get(Constants.NEW_BASE_URL).getPriceResumeId(id)
             if (res.isSuccessful)
@@ -1531,6 +1541,7 @@ open class NetworkViewModel : ViewModel() {
             else listener?.onRetrofitError(res.errorBody())
         }
     }
+
     fun enableNotification(
         token: String
     ) {
@@ -1544,11 +1555,77 @@ open class NetworkViewModel : ViewModel() {
             else listener?.onRetrofitError(res.errorBody())
         }
     }
+
     fun getUserSign() {
         viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get(Constants.NEW_BASE_URL).getUser()
             if (res.isSuccessful)
                 _getUserSignResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun getWalletRib() {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).getWalletServices()
+            if (res.isSuccessful)
+                _getWalletRibResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun addRib(
+        hash: HashMap<String, Any>
+    ) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().addRib(hash)
+            if (res.isSuccessful)
+                _booleanResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun deleteRIB(
+        ribID: String
+    ) {
+        viewModelScope.launch(exceptionHandler) {
+            val hash = HashMap<String, Any>()
+            hash["ribId"] = ribID
+            val res = RestClient.get().deleteRIB(hash)
+            if (res.isSuccessful)
+                _exportOperationResponse.postValue(res.body())
+            else listener?.onRetrofitError(res.errorBody())
+        }
+    }
+
+    fun createWithdrawalEuroRequest(
+        ribId: String,
+        iban: String,
+        bic: String,
+        amount: Double,
+        code: String
+    ) {
+        viewModelScope.launch(exceptionHandler) {
+            val map = HashMap<String, Any>()
+            map["ribId"] = ribId
+            map["iban"] = iban
+            map["bic"] = bic
+            map["amount"] = amount
+            map["otp"] = code
+            val res = RestClient.get(Constants.NEW_BASE_URL).withdrawEuroRequest(map)
+            if (res.isSuccessful) {
+                _commonResponse.postValue(res.body())
+            } else {
+                listener!!.onRetrofitError(res.errorBody())
+            }
+        }
+    }
+
+    fun getWithdrawEuroFee() {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get(Constants.NEW_BASE_URL).getWithdrawEuroFee()
+            if (res.isSuccessful)
+                _getWithdrawEuroFeeResponse.postValue(res.body())
             else listener?.onRetrofitError(res.errorBody())
         }
     }

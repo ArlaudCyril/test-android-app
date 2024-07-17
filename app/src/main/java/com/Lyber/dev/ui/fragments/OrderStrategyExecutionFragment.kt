@@ -22,7 +22,6 @@ import com.Lyber.dev.databinding.ItemMyAssetBinding
 import com.Lyber.dev.models.BalanceStrategy
 import com.Lyber.dev.models.BalanceStrategyData
 import com.Lyber.dev.ui.adapters.BaseAdapter
-import com.Lyber.dev.utils.App
 import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.commaFormatted
