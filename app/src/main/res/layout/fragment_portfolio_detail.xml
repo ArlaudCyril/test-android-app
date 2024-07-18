@@ -89,7 +89,7 @@
 
             </RelativeLayout>
 
-            <com.Lyber.dev.utils.NewCustomLineChart
+            <com.Lyber.utils.NewCustomLineChart
                 android:id="@+id/lineChart"
                 android:layout_width="match_parent"
                 android:layout_height="160dp"
@@ -306,7 +306,7 @@
                         android:layout_marginTop="32dp"
                         android:text="@string/about"/>
 
-                    <com.Lyber.dev.utils.ExpandableTextView
+                    <com.Lyber.utils.ExpandableTextView
                         android:id="@+id/tvValueAbout"
                         style="@style/SubheadMabryMedium"
                         android:layout_gravity="center_vertical"
