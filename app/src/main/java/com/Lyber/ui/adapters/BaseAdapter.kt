@@ -5,6 +5,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.Lyber.R
 import com.Lyber.databinding.LoaderViewBinding
 
+
 abstract class BaseAdapter<items> :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
@@ -79,11 +80,11 @@ abstract class BaseAdapter<items> :
             }
     }
 
-    fun setSearchResults(items: List<items>) {
-        copyList.clear()
-        copyList.addAll(itemList)
-        setList(items)
-    }
+//    fun setSearchResults(items: List<items>) {
+//        copyList.clear()
+//        copyList.addAll(itemList)
+//        setList(items)
+//    }
 
     fun setResults() {
         val start = itemList.count()

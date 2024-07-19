@@ -319,7 +319,14 @@
     <fragment
         android:id="@+id/confirmWithdrawalFragment"
         android:name="com.Lyber.ui.fragments.ConfirmWithdrawalFragment"
-        android:label="ConfirmWithdrawalFragment" />
+        android:label="ConfirmWithdrawalFragment" >
+        <action
+            android:id="@+id/action_withdrawUsdc_to_portfolioDetail"
+            app:destination="@id/portfolioDetailFragment"
+            app:popUpTo="@id/portfolioHomeFragment"
+            app:popUpToInclusive="false"
+            />
+    </fragment>
     <fragment android:id="@+id/buyUsdt"
         android:name="com.Lyber.ui.fragments.BuyUSDTFragment"
         android:label="BuyUSDTFragment"
@@ -438,6 +445,34 @@
         android:id="@+id/addressFragment"
         android:name="com.Lyber.ui.fragments.AddressFragment"
         android:label="AddressFragment" />
+    <fragment
+        android:id="@+id/addRibFragment"
+        android:name="com.Lyber.ui.fragments.AddRibFragment"
+        android:label="AddRibFragment">
+
+        <action
+            android:id="@+id/action_addRibFragment_to_ribListingFragment"
+            app:destination="@id/ribListingFragment"
+            app:popUpTo="@id/ribListingFragment"
+            app:popUpToInclusive="true"/>
+<!--        <action-->
+<!--            android:id="@+id/action_preview_my_purchase_to_home_fragment"-->
+<!--            app:destination="@id/portfolioHomeFragment"-->
+<!--            app:popUpTo="@id/portfolioHomeFragment"-->
+<!--            app:popUpToInclusive="false"-->
+<!--            />-->
+    </fragment>
+    <fragment
+        android:id="@+id/ribListingFragment"
+        android:name="com.Lyber.ui.fragments.RibListingFragment"
+        android:label="RibListingFragment" />
+    <fragment
+        android:id="@+id/withdrawUsdcFragment"
+        android:name="com.Lyber.ui.fragments.WithdrawUsdcFragment"
+        android:label="WithdrawUsdcFragment" >
+
+
+    </fragment>
     <dialog
         android:id="@+id/portfolioThreeDots"
         android:name="com.Lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDots"

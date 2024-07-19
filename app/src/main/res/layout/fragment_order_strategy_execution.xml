@@ -43,6 +43,7 @@
                 android:layout_toLeftOf="@id/ivEnd"
                 android:layout_toRightOf="@id/ivTopAction"
                 android:gravity="center"
+                android:textAppearance="@style/TextAppearance.AppCompat.Headline"
                 android:text="@string/execution_in_progress" />
             <ImageView
                 android:id="@+id/ivEnd"
@@ -86,7 +87,7 @@
 
         <TextView
             android:id="@+id/tvDetail"
-            style="@style/DialogTitle"
+            style="@style/SubheadMabryMedium"
             android:layout_gravity="center"
             android:layout_marginHorizontal="28dp"
             android:layout_marginBottom="16dp"

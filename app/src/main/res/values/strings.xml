@@ -7,6 +7,7 @@
    <!--            <string name="API_KEY">AIzaSyDILfqSYsVaOhqF8cSugU7ekCt8V4GSYyo</string>-->
 
    <!--    <string name="encodedKey">UVVsNllWTjVSRWxNWm5GVFdYTldZVTlvY1VZNFkxTjFaMVUzWld0RGREaFdORWRUV1hsdgo=</string>-->
+
     <string name="app_name">Lyber</string>
     <string name="lyber_investments_reinvented">Lyber, crypto at your fingertips.</string>
     <string name="diversified_regular_simple">Simple, secure and diversified investment.</string>
@@ -784,5 +785,22 @@
    <string name="tailorStrategyError">The invested amount must be at least 10 USDC per asset in the strategy.</string>
    <string name="new_code">A new code can be returned in </string>
    <string name="no_assets_available_for_exchange">No assets available for exchange.</string>
-
+  <string name="your_new_rib">Your new RIB</string>
+    <string name="rib_name">RIB Name</string>
+    <string name="iban">IBAN</string>
+    <string name="bic">BIC</string>
+    <string name="owner_name">Owner\'s name</string>
+    <string name="bank_country">Bank country</string>
+    <string name="choose_the_rib">Choose the RIB on which you want\nto withdraw</string>
+    <string name="add_a_rib">Add a RIB</string>
+    <string name="please_complete_all_fields">Please complete all fields</string>
+    <string name="owner_name_error">The owner name field must contain only letters, spaces, and hyphens</string>
+    <string name="use_this_rib">Use this RIB</string>
+    <string name="under_validation">We are currently validating your RIB and will process it as soon as possible.</string>
+    <string name="rejected_rib">This RIB has been refused. Please try using another one or contact support if you need help.</string>
+    <string name="withdrawal_amount_is_inferior">Your withdrawal amount is inferior to the minimum required</string>
+    <string name="withdrawal_amount_exceeds_balance">Your withdrawal amount plus the fees exceeds your balance</string>
+    <string name="amount_withdrawn">The amount has withdrawn from\nyour account.</string>
+    <string name="receive">Receive</string>
+    <string name="euro_amount">Euro amount</string>
 </resources>

@@ -785,4 +785,24 @@
     <string name="new_code">Un nouveau code pourra être renvoyé dans </string>
     <string name="no_assets_available_for_exchange">Aucun actif disponible à l\'échange.</string>
 
+    <string name="your_new_rib">Votre nouveau RIB</string>
+    <string name="rib_name">Nom du RIB</string>
+    <string name="iban">IBAN</string>
+    <string name="bic">BIC</string>
+    <string name="owner_name">Le nom du propriétaire</string>
+    <string name="bank_country">Pays de la banque</string>
+    <string name="choose_the_rib">Choisissez le RIB sur lequel vous souhaitez\neffectuer un retrait</string>
+    <string name="add_a_rib">Ajouter un RIB</string>
+    <string name="please_complete_all_fields">Remplissez tous les champs, s\'il vous plaît</string>
+    <string name="owner_name_error">Le champ du nom du propriétaire ne doit contenir que des lettres, des espaces et des traits d\'union.</string>
+    <string name="use_this_rib">Utilisez ce RIB</string>
+    <string name="under_validation">Nous validons actuellement votre RIB et le traiterons dans les plus brefs délais.</string>
+    <string name="rejected_rib">Ce RIB a été refusé. Veuillez essayer d\'en utiliser un autre ou contacter l\'assistance si vous avez besoin d\'aide.</string>
+    <string name="withdrawal_amount_is_inferior">Le montant de votre retrait est inférieur au minimum requis</string>
+    <string name="withdrawal_amount_exceeds_balance">Le montant de votre retrait plus les frais dépasse votre solde</string>
+    <string name="amount_withdrawn">Le montant a été retiré de\nvotre compte.</string>
+    <string name="receive">Recevoir</string>
+    <string name="euro_amount">Euro amount</string>
+
+
 </resources>

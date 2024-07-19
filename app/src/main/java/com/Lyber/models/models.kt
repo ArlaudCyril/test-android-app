@@ -25,6 +25,7 @@ data class MessageResponse(
     val message: String,
     val msg: String
 )
+
 data class MessageResponsePause(
     val message: String,
     val msg: String
@@ -154,7 +155,9 @@ data class Strategy(
     var isSelected: Boolean = false,
     var activeStrategy: ActiveStrategy?=null,
     val minAmount:Double?=0.0
+
 )
+
 class ActiveStrategy {
     @SerializedName("amount")
     @Expose
@@ -170,8 +173,6 @@ data class InvestmentStrategyAsset(
     val share: Float,
     val asset: String
 )
-
-
 
 
 data class AddedAsset(
@@ -200,7 +201,7 @@ enum class Asset(val image: Int, val nameCode: String) {
 }
 
 
-data class DataBottomSheet(val id:Int,val title: String)
+data class DataBottomSheet(val id: Int, val title: String)
 
 
 /* choose your strategy */
@@ -326,8 +327,8 @@ data class DataQuote(
     val orderId: String,
     val fromAsset: String,
     val toAsset: String,
-    val clientSecret:String,
-    val paymentIntentId:String
+    val clientSecret: String,
+    val paymentIntentId: String
 )
 
 data class Data(
@@ -550,7 +551,7 @@ data class NetworkDeposit(
     val withdrawFee: String,
     val isDepositActive: Boolean,
     val isWithdrawalActive: Boolean,
-    val decimals: Int=3
+    val decimals: Int = 3
 )
 
 data class Description(
@@ -711,12 +712,13 @@ data class Balance(
 )
 
 data class ExportResponse(
-    val success:Boolean
+    val success: Boolean
 )
 
 data class BooleanResponse(
-    val success:Boolean
+    val success: Boolean
 )
+
 data class UpdateAuthenticateResponse(
     val success: Boolean
 )
@@ -728,6 +730,7 @@ data class QrCodeResponse(
 data class QrCode(
     val url: String
 )
+
 data class TransactionList(
     val `data`: List<TransactionData>
 )
@@ -748,15 +751,18 @@ data class TransactionData(
     val toAsset: String,
     val totalStableAmountSpent: String,
     val type: String,
-val fromAddress: String,
-val toAddress: String,
-val txId: String,
-val asset: String,
-val network: String,
-val amount: String,
-val nextExecution: String?
-)
+    val fromAddress: String,
+    val toAddress: String,
+    val txId: String,
+    val asset: String,
+    val network: String,
+    val amount: String,
+    val nextExecution: String?,
+    val iban: String,
+    val eurAmount: String,
+    val eurAmountDeductedLyberFees: String
 
+)
 
 
 data class OrderResponseData(
@@ -774,8 +780,9 @@ data class OrderResponse(
 )
 
 data class OneTimeStrategyData(
-    val `data`:OneTimeStrategyDataResponse
+    val `data`: OneTimeStrategyDataResponse
 )
+
 data class OneTimeStrategyDataResponse(
     val id: String
 )
@@ -798,13 +805,16 @@ data class SuccessfulBundleEntry(
     val share: Int,
     val stableAmount: String
 )
+
 data class ResetPasswordResponse(
     val email: String,
     val phoneNo: String
 )
+
 data class res(
     val `data`: ResetPasswordResponse
 )
+
 data class ChangePasswordData(
     val `data`: ChangePasswordDataResponse
 )
@@ -813,6 +823,7 @@ data class ChangePasswordDataResponse(
     val B: String,
     val salt: String
 )
+
 data class FailedBundleEntry(
     val asset: String,
     val assetAmount: String,
@@ -824,11 +835,13 @@ data class BalanceStrategy(
     val id: String,
     val balanceData: BalanceStrategyData
 )
+
 data class BalanceStrategyData(
     val stableAmount: String,
     val assetAmount: String,
-    var success:Boolean=false
+    var success: Boolean = false
 )
+
 data class ActivityLogs(
     val `data`: List<ActivityLogsData>
 )
@@ -842,6 +855,7 @@ data class AvatarData(
     val avatar_name: String,
     val avatar_is: Int
 )
+
 data class SignURlResponse(
     val `data`: SignURl
 )
@@ -884,3 +898,34 @@ data class PriceResumeData(
 )
 
 data class ChooseAssets(val asset: String, val share: Int)
+data class RIBResponse(
+    val `data`: List<RIBData>
+)
+
+data class RIBData(
+    val awaitingReview: Boolean,
+    val bankCountry: String,
+    val bic: String,
+    val byTransactionTypeAndUser: String,
+    val creationDate: String,
+    val iban: String,
+    val name: String,
+    val pk: String,
+    val requiredValidators: Int,
+    val ribId: String,
+    val ribStatus: String,
+    val sk: String,
+    val transactionType: String,
+    val userName: String,
+    val userUuid: String,
+    val validatorsComments: List<Any>
+)
+
+data class WithdrawEuroFee(
+    val `data`: WithdrawEuroData
+)
+
+data class WithdrawEuroData(
+    val withdrawEuroFees: Double,
+    val withdrawEuroMin: Double
+)

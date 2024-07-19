@@ -10,6 +10,7 @@ import com.Lyber.models.AssetBaseData
 import com.Lyber.models.Balance
 import com.Lyber.models.Network
 import com.Lyber.models.PriceServiceResume
+import com.Lyber.models.RIBData
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.viewmodels.PortfolioViewModel
@@ -23,6 +24,7 @@ abstract class BaseActivity<viewBinding : ViewBinding> : AppCompatActivity() {
         var networkAddress = ArrayList<Network>()
         var balances = ArrayList<Balance>()
         var balanceResume = ArrayList<PriceServiceResume>()
+        var ribWalletList = ArrayList<RIBData>()
         var selectedLanguage = ""
 
     }

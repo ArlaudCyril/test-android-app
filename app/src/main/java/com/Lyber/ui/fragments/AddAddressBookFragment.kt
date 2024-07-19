@@ -199,7 +199,7 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
             RecyclerView.ViewHolder(binding.root) {
             init {
                 binding.root.setOnClickListener {
-                    itemList[adapterPosition]?.let(clickListener)
+                    itemList[absoluteAdapterPosition]?.let(clickListener)
                 }
 
             }

@@ -17,11 +17,12 @@
 
         <TextView
             android:id="@+id/tvTitle"
-            style="@style/DialogTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:padding="2dp"
             android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
             android:textColor="@color/purple_gray_800"
-            android:textStyle="bold"
+            android:fontFamily="@font/mabry_pro_bold"
             tools:text="@string/sign_my_contract" />
 
         <View
@@ -51,7 +52,7 @@
 
             <Button
                 android:id="@+id/tvNegativeButton"
-                style="@style/ButtonStyle"
+                style="@style/ButtonStyleMabryMedium"
                 android:layout_width="0dp"
                 android:layout_gravity="bottom"
                 android:layout_marginEnd="6dp"
@@ -65,7 +66,7 @@
 
             <Button
                 android:id="@+id/tvPositiveButton"
-                style="@style/ButtonStyle"
+                style="@style/ButtonStyleMabryMedium"
                 android:layout_width="0dp"
                 android:layout_gravity="bottom"
                 android:layout_marginStart="6dp"

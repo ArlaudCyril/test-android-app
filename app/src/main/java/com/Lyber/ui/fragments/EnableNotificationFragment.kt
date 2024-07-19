@@ -107,7 +107,7 @@ class EnableNotificationFragment : BaseFragment<FragmentEnableNotificationsBindi
             else
                 checkInternet(requireContext()) {
                     showProgressDialog(requireContext())
-                    if(fcmToken.isEmpty()){
+                    if (fcmToken.isEmpty()) {
                         FirebaseMessaging.getInstance().token
                             .addOnCompleteListener(OnCompleteListener { task ->
                                 if (!task.isSuccessful) {
@@ -125,9 +125,8 @@ class EnableNotificationFragment : BaseFragment<FragmentEnableNotificationsBindi
                                 Log.d("FirebaseMessagingService.TAG", token)
 
                             })
-                    }
-                    else
-                    onBoardingViewModel.enableNotification(fcmToken)
+                    } else
+                        onBoardingViewModel.enableNotification(fcmToken)
                 }
         }
 
@@ -148,7 +147,7 @@ class EnableNotificationFragment : BaseFragment<FragmentEnableNotificationsBindi
             // FCM SDK (and your app) can post notifications.
             checkInternet(requireContext()) {
                 showProgressDialog(requireContext())
-                if(fcmToken.isEmpty()){
+                if (fcmToken.isEmpty()) {
                     FirebaseMessaging.getInstance().token
                         .addOnCompleteListener(OnCompleteListener { task ->
                             if (!task.isSuccessful) {
@@ -166,8 +165,7 @@ class EnableNotificationFragment : BaseFragment<FragmentEnableNotificationsBindi
                             Log.d("FirebaseMessagingService.TAG", token)
 
                         })
-                }
-                else
+                } else
                     onBoardingViewModel.enableNotification(fcmToken)
             }
         } else {

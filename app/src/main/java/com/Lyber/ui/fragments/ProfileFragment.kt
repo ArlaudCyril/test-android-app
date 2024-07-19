@@ -77,7 +77,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 
     private var imageFile: File? = null
     private var option = 1 // 1 -> camera option 2-> gallery option
-    val limit = 5 // as on this screen we have to show max 3 enteries
+    val limit = 5 // for now from 5 to 20 as on this screen we have to show max 3 enteries
     var offset = 0
     private lateinit var navController: NavController
     private var isResend = false
@@ -126,6 +126,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 binding.tvNoTransaction.setBackgroundResource(0)
                 binding.progressImage.clearAnimation()
                 binding.progressImage.visibility = View.GONE
+
                 when {
                     it.data.isEmpty() -> {
                         binding.tvNoTransaction.visible()
@@ -550,7 +551,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                         }
 
                         Constants.WITHDRAW -> { // single asset
-                            //TODO
+
                             ivItem.setImageResource(R.drawable.ic_withdraw)
                             tvStartTitle.text =
                                 "${it.asset.uppercase()} ${getString(R.string.withdrawal)}"
@@ -565,6 +566,15 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 //                            tvEndSubTitle.text = it.type.lowercase().replaceFirstChar(Char::uppercase)
 
                         }
+                        Constants.WITHDRAW_EURO -> { // single asset
+                            ivItem.setImageResource(R.drawable.ic_withdraw)
+                            tvFailed.visibility = View.GONE
+                            tvStartTitle.text =
+                                "EUR ${getString(R.string.withdrawal)}"
+                            tvStartSubTitle.text =
+                                it.status.lowercase().replaceFirstChar(Char::uppercase)
+                            tvEndTitleCenter.text = "-${it.amount} ${it.asset.uppercase()}"
+                            tvStartTitleCenter.visibility = View.GONE     }
 
                         else -> root.gone()
                     }

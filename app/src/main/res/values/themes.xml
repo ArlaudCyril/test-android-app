@@ -123,7 +123,13 @@
         <item name="fontFamily">@font/atypdisplay_medium</item>
         <item name="android:textColor">@color/purple_gray_900</item>
     </style>
-
+    <style name="TitleTextAtypText">
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Title</item>
+        <item name="fontFamily">@font/atyptext_medium</item>
+        <item name="android:textColor">@color/purple_gray_900</item>
+    </style>
     <style name="SubTitleText">
         <item name="android:layout_height">wrap_content</item>
         <item name="android:layout_width">wrap_content</item>
@@ -155,6 +161,14 @@
         <item name="android:background">@drawable/curved_button</item>
         <item name="android:textColor">@color/white</item>
     </style>
+    <style name="ButtonStyleMabryMedium">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">44dp</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Medium</item>
+        <item name="fontFamily">@font/mabry_pro_medium</item>
+        <item name="android:background">@drawable/curved_button</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
 
     <style name="DialogTitle">
         <item name="android:layout_width">wrap_content</item>
@@ -171,7 +185,13 @@
         <item name="fontFamily">@font/mabry_pro</item>
         <item name="android:textColor">@color/purple_gray_800</item>
     </style>
-
+    <style name="SubheadMabryMedium">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Subhead</item>
+        <item name="fontFamily">@font/mabry_pro_medium</item>
+        <item name="android:textColor">@color/purple_gray_800</item>
+    </style>
     <style name="BodyMabry">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -179,7 +199,13 @@
         <item name="fontFamily">@font/mabry_pro</item>
         <item name="android:textColor">@color/purple_gray_800</item>
     </style>
-
+    <style name="BodyMabryMedium">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textAppearance">@style/TextAppearance.AppCompat.Body1</item>
+        <item name="fontFamily">@font/mabry_pro_medium</item>
+        <item name="android:textColor">@color/purple_gray_800</item>
+    </style>
     <style name="DialogMessage">
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>

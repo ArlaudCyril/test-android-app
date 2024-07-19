@@ -1,16 +1,19 @@
 package com.Lyber.ui.fragments
 
+import android.app.Dialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
+import android.view.Window
 import android.widget.RelativeLayout
 import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.Lyber.R
+import com.Lyber.databinding.CustomDialogLayoutBinding
 import com.Lyber.databinding.FragmentEmailAddressBinding
 import com.Lyber.ui.fragments.bottomsheetfragments.EmailVerificationBottomSheet
 import com.Lyber.utils.App
@@ -20,6 +23,7 @@ import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.PersonalDataViewModel
+import com.nimbusds.srp6.SRP6ClientSession
 import com.nimbusds.srp6.SRP6CryptoParams
 import com.nimbusds.srp6.SRP6VerifierGenerator
 import com.nimbusds.srp6.XRoutineWithUserIdentity
@@ -142,7 +146,7 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 CommonMethods.dismissProgressDialog()
                 CommonMethods.dismissAlertDialog()
-                if (!fromResend) {
+                if(!fromResend) {
                     App.prefsManager.personalDataSteps = Constants.EMAIL_ADDRESS
                     val transparentView = View(context)
                     transparentView.setBackgroundColor(
@@ -170,7 +174,6 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
                     mainView.addView(transparentView, viewParams)
                 }
                 fromResend=false
-
 
             }
         }

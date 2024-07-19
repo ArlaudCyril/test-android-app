@@ -6,6 +6,7 @@ import android.view.View
 import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.FragmentConfirmationBinding
+import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.clearBackStack
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.Constants
@@ -28,17 +29,20 @@ class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
         binding.btnThanks.setOnClickListener {
             dismiss()
         }
-        if(tag!!.isNotEmpty()){
+        if (tag!!.isNotEmpty()) {
             binding.tvInfoOne.text = getString(R.string.we_have_sent_an_email)
-            binding.tvInfoTwo.visibility=View.GONE
-        }else {
+            binding.tvInfoTwo.visibility = View.GONE
+        } else {
 
             when (viewModel.selectedOption) {
+                Constants.ACTION_WITHDRAW_EURO -> binding.tvInfoOne.text =
+                    getString(R.string.amount_withdrawn)
+
                 Constants.USING_WITHDRAW -> binding.tvInfoOne.text =
                     getString(R.string.your_withdrawal_has_been_taken_into_account)
 
                 Constants.EXPORT_DONE -> {
-                    binding.tvTitle.text=getString(R.string.successful)
+                    binding.tvTitle.text = getString(R.string.successful)
                     binding.tvInfoTwo.visibility = View.GONE
                     binding.tvInfoOne.text = getString(R.string.successfulMsg)
                 }
@@ -51,17 +55,18 @@ class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
     }
 
 
-
-
     override fun onDismiss(dialog: DialogInterface) {
         super.onDismiss(dialog)
-        if(tag!!.isNotEmpty()) {
+        if (tag!!.isNotEmpty()) {
             findNavController().popBackStack(R.id.discoveryFragment, false)
-           }
-        else   if (viewModel.selectedOption != "" && viewModel.selectedOption == Constants.EXPORT_DONE) {
+        } else if (viewModel.selectedOption != "" && viewModel.selectedOption == Constants.EXPORT_DONE) {
             viewModel.selectedOption = ""
-        } else{
-            findNavController().popBackStack(R.id.portfolioHomeFragment,false)
+        } else if (viewModel.selectedOption != "" && viewModel.selectedOption == Constants.ACTION_WITHDRAW_EURO) {
+            viewModel.selectedAsset = CommonMethods.getAsset(Constants.MAIN_ASSET)
+            findNavController().navigate(R.id.action_withdrawUsdc_to_portfolioDetail)
+        }
+        else {
+            findNavController().popBackStack(R.id.portfolioHomeFragment, false)
         }
     }
 

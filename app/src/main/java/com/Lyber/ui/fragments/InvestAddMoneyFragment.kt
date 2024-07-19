@@ -12,6 +12,7 @@ import com.Lyber.databinding.FragmentInvestAddMoneyBinding
 import com.Lyber.models.Balance
 import com.Lyber.models.BalanceData
 import com.Lyber.models.Strategy
+import com.Lyber.models.TransactionData
 import com.Lyber.ui.fragments.bottomsheetfragments.FrequencyModel
 import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
@@ -24,6 +25,7 @@ import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.math.RoundingMode
 import kotlin.math.ceil
+import kotlin.math.round
 
 class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), View.OnClickListener {
     private var selectedFrequency: String = ""
@@ -79,7 +81,7 @@ class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), Vi
     private fun prepareView() {
         val selectedAsset =
             com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == Constants.MAIN_ASSET } }
-        if (selectedAsset != null)
+        if(selectedAsset!=null)
             decimal = selectedAsset.decimals
         for (asset in viewModel.selectedStrategy?.bundle!!) {
             val newAmount = minInvestPerAsset / (asset.share / 100)
@@ -116,9 +118,7 @@ class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), Vi
                 else -> getString(R.string.monthly)
             }
             binding.apply {
-                etAmount.text = "${
-                    data.activeStrategy!!.amount.toString()
-                        .formattedAsset(0.0, RoundingMode.DOWN, decimal)
+                etAmount.text = "${data.activeStrategy!!.amount.toString().formattedAsset(0.0, RoundingMode.DOWN, decimal)
                 }$mCurrency"
                 val assetAmount =
                     (data.activeStrategy!!.amount!!.toDouble() * valueConversion).toString()

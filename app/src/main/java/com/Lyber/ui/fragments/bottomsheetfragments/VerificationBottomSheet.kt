@@ -30,7 +30,6 @@ import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.SignUpViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import com.stripe.android.googlepaylauncher.GooglePayLauncher
 
 class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
     BaseBottomSheet<BottomSheetVerificationBinding>() {
@@ -108,7 +107,7 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
                 fromResend = false
             }
         }
-           viewModel.userChallengeResponse.observe(viewLifecycleOwner) {
+        viewModel.userChallengeResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 if (fromResend) {
                     if (!::handler.isInitialized)
@@ -477,10 +476,12 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
 
     }
 
+
     override fun onDestroy() {
         super.onDestroy()
         stopTimer()
     }
+
     private fun stopTimer() {
         try {
             handler.removeCallbacks(runnable)
@@ -489,4 +490,5 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
 
         }
     }
+
 }

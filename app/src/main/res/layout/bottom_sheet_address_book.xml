@@ -13,15 +13,15 @@
         android:id="@+id/ivTopAction"
         android:layout_width="48dp"
         android:layout_height="48dp"
-        android:padding="12dp"
         android:layout_marginStart="8dp"
+        android:padding="12dp"
         android:src="@drawable/ic_close"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/tvTitle"
-        style="@style/SubheadMabry"
+        style="@style/SubheadMabryMedium"
         android:text="@string/btc_victor"
         app:layout_constraintBottom_toBottomOf="@id/ivTopAction"
         app:layout_constraintEnd_toEndOf="parent"
@@ -33,11 +33,11 @@
         android:id="@+id/rlInfo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="16dp"
         android:layout_marginTop="20dp"
         android:background="@drawable/curved_button"
         android:backgroundTint="@color/purple_gray_50"
         android:paddingHorizontal="12dp"
-        android:layout_marginHorizontal="16dp"
         android:paddingVertical="16dp"
         app:layout_constraintTop_toBottomOf="@id/ivTopAction">
 
@@ -47,9 +47,9 @@
             style="@style/SubheadMabry"
             android:layout_alignParentStart="true"
             android:layout_marginEnd="42dp"
+            android:layout_toStartOf="@id/tvCopy"
             android:ellipsize="middle"
             android:maxLines="1"
-            android:layout_toStartOf="@id/tvCopy"
             android:textColor="@color/purple_gray_500"
             android:visibility="visible"
             tools:text="1FfmbHfnpaZjKFvyi1okTjJJusN455paPH1FfmbHfnpaZjKFvyi1okTjJJusN455paPH" />
@@ -60,11 +60,23 @@
             android:layout_alignTop="@id/tvAddress"
             android:layout_alignBottom="@id/tvAddress"
             android:layout_alignParentEnd="true"
-            android:gravity="center"
             android:text="@string/copy"
+            android:layout_marginStart="32dp"
+            android:gravity="end"
+            android:ellipsize="middle"
             android:textColor="@color/purple_500"
             android:visibility="visible" />
-
+        <TextView
+            android:id="@+id/tvIbanNo"
+            style="@style/SubheadMabryMedium"
+            android:layout_alignTop="@id/tvAddress"
+            android:layout_alignBottom="@id/tvAddress"
+            android:layout_alignParentEnd="true"
+            android:layout_marginStart="32dp"
+            android:layout_toEndOf="@id/tvNetwork"
+            android:gravity="end"
+            android:ellipsize="middle"
+            android:visibility="gone" />
 
         <TextView
             android:id="@+id/tvNetwork"
@@ -76,10 +88,15 @@
 
         <TextView
             android:id="@+id/tvValueNetwork"
-            style="@style/SubheadMabry"
+            style="@style/SubheadMabryMedium"
             android:layout_alignTop="@id/tvNetwork"
             android:layout_alignBottom="@id/tvNetwork"
             android:layout_alignParentEnd="true"
+            android:layout_toEndOf="@id/tvNetwork"
+            android:layout_marginStart="32dp"
+            android:gravity="end"
+            android:ellipsize="middle"
+            android:maxLines="1"
             tools:text="@string/bitcoin" />
 
         <TextView
@@ -92,7 +109,7 @@
 
         <TextView
             android:id="@+id/tvValueAddressOrigin"
-            style="@style/SubheadMabry"
+            style="@style/SubheadMabryMedium"
             android:layout_alignTop="@id/tvAddressOrigin"
             android:layout_alignBottom="@id/tvAddressOrigin"
             android:layout_alignParentEnd="true"
@@ -108,7 +125,7 @@
 
         <TextView
             android:id="@+id/tvValueDateAdded"
-            style="@style/SubheadMabry"
+            style="@style/SubheadMabryMedium"
             android:layout_alignTop="@id/tvDateAdded"
             android:layout_alignBottom="@id/tvDateAdded"
             android:layout_alignParentEnd="true"
@@ -122,9 +139,9 @@
         android:id="@+id/llDelete"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="20dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="16dp"
         android:background="@drawable/curved_button"
         android:backgroundTint="@color/purple_gray_50"
         android:gravity="center"
@@ -137,7 +154,7 @@
         <!--android:drawableStart="@drawable/ic_trash"-->
         <TextView
             android:id="@+id/tvDelete"
-            style="@style/SubheadMabry"
+            style="@style/SubheadMabryMedium"
             android:drawablePadding="12dp"
             android:gravity="center"
             android:text="@string/confirm" />
@@ -150,8 +167,8 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        android:layout_marginEnd="16dp"
         android:layout_marginTop="20dp"
+        android:layout_marginEnd="16dp"
         android:background="@drawable/curved_button"
         android:backgroundTint="@color/purple_gray_50"
         android:gravity="center"
@@ -162,12 +179,24 @@
         app:layout_constraintTop_toBottomOf="@id/rlInfo">
 
         <TextView
-            style="@style/SubheadMabry"
+            style="@style/SubheadMabryMedium"
             android:drawableStart="@drawable/ic_editor"
             android:drawablePadding="12dp"
             android:gravity="center"
             android:text="@string/edit" />
 
     </LinearLayout>
+
+    <Button
+        android:id="@+id/btnUseThis"
+        style="@style/ButtonStyleMabryMedium"
+        android:layout_width="match_parent"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginVertical="20dp"
+        android:background="@drawable/button_purple_500"
+        android:text="@string/use_this_rib"
+        android:visibility="gone"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/llEdit" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

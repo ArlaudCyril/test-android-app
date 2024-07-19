@@ -130,20 +130,10 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
                 val intent = result.data
                 if (intent != null) {
                     val place = Autocomplete.getPlaceFromIntent(intent)
-                    Log.i(
-                        TAG, "Place: ${place}"
-                    )
-                    Log.i(
-                        TAG, "Place: ${place.address}"
-                    )
-                    Log.i(
-                        TAG, "Place: ${place.addressComponents.asList()}"
-                    )
                     try {
                         var city = ""
                         var zipcode = ""
                         var adr = ""
-//                        var strtNo = ""
                         for (component in place.addressComponents.asList()) {
                             if ("locality" in component.types) {
                                 city = component.name
@@ -151,11 +141,7 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
                             if ("postal_code" in component.types) {
                                 zipcode = component.shortName
                             }
-
                         }
-                        Log.i(
-                            TAG, "city: ${city} ${zipcode}"
-                        )
                         if (place.name.isNotEmpty()) {
                             adr = place.name + ", " + adr
                             val result = separateAddress(place.name)
@@ -165,10 +151,7 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
                                 adr=street
                             }
                         }
-
                         streetAddress = adr
-////                        streetNumber = strtNo
-//                        streetNumber = separateAddress()
                         Log.i(
                             TAG, "city: ${streetNumber} ${streetAddress}"
                         )

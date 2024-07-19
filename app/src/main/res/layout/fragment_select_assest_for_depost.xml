@@ -26,8 +26,7 @@
 
     <TextView
         android:id="@+id/tvTitle"
-        style="@style/SubheadMabry"
-        android:textStyle="bold"
+        style="@style/SubheadMabryMedium"
         android:gravity="center"
         android:text="@string/asset_deposit"
         android:textColor="#423D33"
@@ -50,14 +49,13 @@
 
     <TextView
         android:id="@+id/tvHeading"
-        style="@style/SubTitleText"
+        style="@style/SubheadMabryMedium"
         android:layout_marginStart="28dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="24dp"
         android:gravity="start"
         android:text="@string/crypto"
         android:textColor="#423D33"
-        android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/llAssest"
 

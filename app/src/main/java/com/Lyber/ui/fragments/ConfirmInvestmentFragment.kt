@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.core.view.marginTop
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.Lyber.R
@@ -132,15 +133,12 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         binding.apply {
             val buyValue = (viewModel.amount.toDouble() * (0.08)).toDouble()
             tvNestedAmountValue.text =
-                viewModel.amount.decimalPoint()
-                    .commaFormattedDecimal(decimal) + " ${Constants.MAIN_ASSET_UPPER}"
+                viewModel.amount.decimalPoint().commaFormattedDecimal(decimal) + " ${Constants.MAIN_ASSET_UPPER}"
             tvValueTotal.text =
-                (viewModel.amount.toDouble() + buyValue).toString()
-                    .decimalPoint()
-                    .commaFormattedDecimal(decimal) + " ${Constants.MAIN_ASSET_UPPER}"
+                (viewModel.amount.toFloat() + buyValue).toString()
+                    .decimalPoint().commaFormattedDecimal(decimal) + " ${Constants.MAIN_ASSET_UPPER}"
             tvValueLyberFee.text =
-                buyValue.toString().decimalPoint()
-                    .commaFormattedDecimal(decimal) + " ${Constants.MAIN_ASSET_UPPER}"
+                buyValue.toString().decimalPoint().commaFormattedDecimal(decimal)+ " ${Constants.MAIN_ASSET_UPPER}"
 
             when (viewModel.selectedOption) {
 
@@ -172,8 +170,6 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                         tvValueDepositFee
                     ).gone()
                     //changed fee to 1 percent of the amount
-
-
                     var fee = ((viewModel.amount.toDouble() * 0.5f) / 100.0f)
                     fee = String.format(Locale.US, "%.${decimal}f", fee).toDouble()
 
@@ -183,7 +179,6 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                         tvValueFrequency.text = getString(R.string.immediate)
                     else
                         tvValueFrequency.text = viewModel.selectedFrequency
-
 
                     tvNestedAmountValue.text = (viewModel.amount.toDouble() - fee).toString()
                         .decimalPoint().commaFormattedDecimal(decimal) + " ${Constants.MAIN_ASSET_UPPER}"

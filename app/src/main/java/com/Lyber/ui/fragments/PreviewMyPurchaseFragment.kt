@@ -286,7 +286,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
             tvValueDepositFee.text =
                 BigDecimal.valueOf(data.fromAmount.toDouble()).subtract(BigDecimal.valueOf(data.fromAmountDeductedFees.toDouble()))
                     .toString()
-//                (data.fromAmount.toDouble() - data.fromAmountDeductedFees.toDouble()).toString().formattedAsset(priceCoin, RoundingMode.DOWN,8)+Constants.EURO
+
 //                data.fees + Constants.EURO TODO
             tvValueTotal.text = "${data.fromAmount}${Constants.EURO}"
             tvValuePrice.text = data.inverseRatio.formattedAssetForInverseRatio(
@@ -296,7 +296,6 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
 //            tvTotalAmount.text =  "${data.fromAmount+" "+ Constants.EURO}"
             tvTotalAmount.text =
                 "${String.format(Locale.US, "%.2f", data.fromAmount.toFloat()) + Constants.EURO}"
-
 
             tvValueDeposit.text =data.fromAmountDeductedFees + Constants.EURO
 //                "" + (data.fromAmount.toDouble() - data.fees.toDouble()) + Constants.EURO TODO

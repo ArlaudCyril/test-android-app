@@ -97,7 +97,6 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
                             .putExtra(Constants.URL, it.data.url)
                             .putExtra(Constants.FROM, true)
 //                            .putExtra(Constants.ASK_PERMISSION, true)
-
                     )
                 }, 1000)
 

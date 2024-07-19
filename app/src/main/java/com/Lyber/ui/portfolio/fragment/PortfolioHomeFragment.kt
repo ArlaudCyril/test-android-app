@@ -58,10 +58,6 @@ import java.util.Locale
 
 class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), ActivityCallbacks,
     View.OnClickListener, PortfolioFragmentActions {
-
-//    private val viewModel1: com.Lyber.models.GetUserViewModal by activityViewModels()
-
-
     /* adapters */
     private lateinit var adapterBalance: BalanceAdapter
     private lateinit var adapterRecurring: RecurringInvestmentAdapter
@@ -296,6 +292,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             viewModel.getWalletHistoryPrice(daily, limit)
             viewModel.getBalance()
             viewModel.getAllPriceResume()
+            viewModel.getWalletRib()
         }
     }
 
@@ -315,7 +312,6 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 App.prefsManager.assetBaseDataResponse = it
                 com.Lyber.ui.activities.BaseActivity.assets =
                     it.data as ArrayList<AssetBaseData>
-
             }
         }
 
@@ -673,7 +669,13 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 }
             }
         }
-
+        viewModel.walletRibResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                if (!it.data.isNullOrEmpty())
+                    com.Lyber.ui.activities.BaseActivity.ribWalletList =
+                        it.data as ArrayList<RIBData>
+            }
+        }
     }
 
     private fun String.toMilliS(): Long {

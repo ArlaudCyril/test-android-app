@@ -307,6 +307,7 @@ class CommonMethods {
                         .error(placeHolderRes)
                         .listener(SvgSoftwareLayerSetter())
 
+
                 when (any) {
                     is String -> {
 //                        if (!any.contains("http"))
@@ -1868,11 +1869,25 @@ class CommonMethods {
                 is Number -> String.format(Locale.US, formatString, this)
                 is String -> toDoubleOrNull()?.let { String.format(Locale.US, formatString, it) }
                     ?: "0"
+
                 is Char -> this.toString()
                 else -> "0"
             }
         }
 
+         fun getTruncatedText(text: String, maxLength: Int): String {
+            try {
+                if (text.length <= maxLength) {
+                    return text
+                }
+                val startLength = (maxLength - 3) / 2
+                val endLength = 6
+                return text.substring(0, startLength) + "..." + text.substring(text.length - endLength)
+
+            } catch (_: Exception) {
+                return text
+            }
+        }
     }
 }
 

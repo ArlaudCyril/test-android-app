@@ -43,10 +43,11 @@
 
                 <TextView
                     android:id="@+id/tvTotalAmount"
-                    style="@style/HeadingStyle"
+                    style="@style/SubheadMabryMedium"
                     android:layout_width="wrap_content"
                     android:gravity="center"
                     android:textColor="@color/purple_500"
+                    android:textSize="32sp"
                     tools:text="100€" />
 
                 <ImageView
@@ -62,10 +63,11 @@
 
                 <TextView
                     android:id="@+id/tvAmount"
-                    style="@style/HeadingStyle"
+                    style="@style/SubheadMabryMedium"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
+                    android:textSize="32sp"
                     android:textColor="@color/purple_500"
                     tools:text="100€" />
 
@@ -98,7 +100,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_below="@id/tvMoreDetails"
-                android:visibility="gone">
+                android:visibility="visible">
 
             <TextView
                     android:id="@+id/tvAssetPrice"
@@ -109,12 +111,11 @@
                     android:textColor="@color/purple_gray_500" />
                 <TextView
                     android:id="@+id/tvValueAssetPrice"
-                    style="@style/SubheadMabry"
+                    style="@style/SubheadMabryMedium"
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="16dp"
                     android:layout_marginBottom="16dp"
-                    android:textColor="@color/purple_gray_700"
-                    android:textStyle="bold" />
+                    android:textColor="@color/purple_gray_700" />
                 <TextView
                     android:id="@+id/tvNestedAmount"
                     style="@style/SubheadMabry"
@@ -124,12 +125,11 @@
                     android:textColor="@color/purple_gray_500" />
                 <TextView
                     android:id="@+id/tvNestedAmountValue"
-                    style="@style/SubheadMabry"
+                    style="@style/SubheadMabryMedium"
                     android:layout_below="@id/tvValueAssetPrice"
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="16dp"
-                    android:textColor="@color/purple_gray_700"
-                    android:textStyle="bold" />
+                    android:textColor="@color/purple_gray_700" />
 
 
                 <TextView
@@ -144,7 +144,7 @@
 
                 <TextView
                     android:id="@+id/tvExchangeFromValue"
-                    style="@style/SubheadMabry"
+                    style="@style/SubheadMabryMedium"
                     android:layout_below="@id/tvNestedAmountValue"
                     android:layout_toEndOf="@id/tvExchangeFrom"
                     android:gravity="end"
@@ -154,7 +154,6 @@
                     android:layout_marginBottom="16dp"
                     android:text="BTC"
                     android:textColor="@color/purple_gray_700"
-                    android:textStyle="bold"
                     android:visibility="gone" />
 
 
@@ -169,13 +168,12 @@
 
                 <TextView
                     android:id="@+id/tvExchangeToValue"
-                    style="@style/SubheadMabry"
+                    style="@style/SubheadMabryMedium"
                     android:layout_below="@id/tvExchangeFromValue"
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="16dp"
                     android:text="ETH"
                     android:textColor="@color/purple_gray_700"
-                    android:textStyle="bold"
                     android:visibility="gone" />
 
 
@@ -190,13 +188,12 @@
 
                 <TextView
                     android:id="@+id/tvValueFrequency"
-                    style="@style/SubheadMabry"
+                    style="@style/SubheadMabryMedium"
                     android:layout_below="@id/tvExchangeToValue"
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="32dp"
                     android:text="@string/every_month"
                     android:textColor="@color/purple_gray_700"
-                    android:textStyle="bold"
                     android:visibility="visible" />
 
 
@@ -211,13 +208,12 @@
 
                 <TextView
                     android:id="@+id/tvValuePayment"
-                    style="@style/SubheadMabry"
+                    style="@style/SubheadMabryMedium"
                     android:layout_below="@id/tvValueFrequency"
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="32dp"
                     android:text="Mastercard ···· 0103"
                     android:textColor="@color/purple_gray_700"
-                    android:textStyle="bold"
                     android:visibility="gone" />
 
 
@@ -232,12 +228,11 @@
 
                 <TextView
                     android:id="@+id/tvValueBuy"
-                    style="@style/SubheadMabry"
+                    style="@style/SubheadMabryMedium"
                     android:layout_below="@id/tvValuePayment"
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="32dp"
                     android:textColor="@color/purple_gray_700"
-                    android:textStyle="bold"
                     android:visibility="gone" />
 
                 <TextView
@@ -250,12 +245,11 @@
 
                 <TextView
                     android:id="@+id/tvValueLyberFee"
-                    style="@style/SubheadMabry"
+                    style="@style/SubheadMabryMedium"
                     android:layout_below="@id/tvValueBuy"
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="32dp"
-                    android:textColor="@color/purple_gray_700"
-                    android:textStyle="bold" />
+                    android:textColor="@color/purple_gray_700"/>
 
 
                 <!-- Deposit fees -->
@@ -270,12 +264,11 @@
 
                 <TextView
                     android:id="@+id/tvValueDeposit"
-                    style="@style/SubheadMabry"
+                    style="@style/SubheadMabryMedium"
                     android:layout_below="@id/tvValueLyberFee"
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="32dp"
-                    android:textColor="@color/purple_gray_700"
-                    android:textStyle="bold" />
+                    android:textColor="@color/purple_gray_700"/>
 
                 <TextView
                     android:id="@+id/tvDepositFee"
@@ -287,17 +280,16 @@
 
                 <TextView
                     android:id="@+id/tvValueDepositFee"
-                    style="@style/SubheadMabry"
+                    style="@style/SubheadMabryMedium"
                     android:layout_below="@id/tvValueDeposit"
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="32dp"
-                    android:textColor="@color/purple_gray_700"
-                    android:textStyle="bold" />
+                    android:textColor="@color/purple_gray_700" />
 
 
                 <TextView
                     android:id="@+id/tvTotal"
-                    style="@style/SubheadMabry"
+                    style="@style/SubheadMabryMedium"
                     android:layout_below="@id/tvDepositFee"
                     android:layout_marginVertical="32dp"
                     android:text="@string/total"
@@ -305,16 +297,15 @@
 
                 <TextView
                     android:id="@+id/tvValueTotal"
-                    style="@style/SubheadMabry"
+                    style="@style/SubheadMabryMedium"
                     android:layout_below="@id/tvValueDepositFee"
                     android:layout_alignParentEnd="true"
                     android:layout_marginTop="32dp"
-                    android:textColor="@color/purple_gray_700"
-                    android:textStyle="bold" />
+                    android:textColor="@color/purple_gray_700" />
 
                 <TextView
                     android:id="@+id/tvAllocation"
-                    style="@style/SubheadMabry"
+                    style="@style/SubheadMabryMedium"
                     android:layout_below="@id/tvTotal"
                     android:text="@string/allocation"
                     android:textColor="@color/purple_gray_700"
@@ -335,8 +326,7 @@
 
     <TextView
         android:id="@+id/title"
-        style="@style/SubheadMabry"
-        android:textStyle="bold"
+        style="@style/SubheadMabryMedium"
         android:text="@string/confirm_investment"
         app:layout_constraintBottom_toBottomOf="@+id/ivTopAction"
         app:layout_constraintEnd_toEndOf="parent"

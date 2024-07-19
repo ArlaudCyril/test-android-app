@@ -22,10 +22,9 @@
 
     <TextView
         android:id="@+id/tvTitle"
-        style="@style/SubheadMabry"
+        style="@style/SubheadMabryMedium"
         android:text="@string/invest_in_my_strat"
         android:textColor="#423D33"
-        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@id/tvSubTitle"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -67,9 +66,8 @@
 
             <TextView
                 android:id="@+id/tvTitleBalance"
-                style="@style/SubheadMabry"
-                android:text="@string/balance"
-                android:textStyle="bold" />
+                style="@style/SubheadMabryMedium"
+                android:text="@string/balance"/>
 
             <TextView
                 android:id="@+id/tvBalance"
@@ -187,7 +185,7 @@
 
                 <TextView
                     android:id="@+id/tvSwapAssetFrom"
-                    style="@style/SubheadMabry"
+                    style="@style/SubheadMabryMedium"
                     android:layout_below="@id/tvFrom"
                     android:layout_marginStart="12dp"
                     android:layout_toEndOf="@id/ivAssetSwapFrom"
@@ -241,7 +239,7 @@
 
                 <TextView
                     android:id="@+id/tvSwapAssetTo"
-                    style="@style/SubheadMabry"
+                    style="@style/SubheadMabryMedium"
                     android:layout_below="@id/tvTo"
                     android:layout_marginStart="12dp"
                     android:layout_toEndOf="@id/ivAssetSwapTo"
@@ -539,7 +537,7 @@
 
             <TextView
                 android:id="@+id/btnPreviewInvestment"
-                style="@style/ButtonStyle"
+                style="@style/ButtonStyleMabryMedium"
                 android:layout_width="match_parent"
                 android:background="@drawable/button_purple_400"
                 android:gravity="center"

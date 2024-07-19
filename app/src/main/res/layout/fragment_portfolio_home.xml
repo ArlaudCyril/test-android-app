@@ -36,16 +36,16 @@
 
                     <TextView
                         android:id="@+id/tvPortfolioAssetPrice"
-                        style="@style/SubheadMabry"
+                        style="@style/SubheadMabryMedium"
                         android:text="@string/portfolio"
                         android:textColor="@color/purple_gray_500" />
 
                     <TextView
                         android:id="@+id/tvValuePortfolioAndAssetPrice"
-                        style="@style/HeadingStyle"
+                        style="@style/TitleTextAtypText"
                         android:layout_below="@id/tvPortfolioAssetPrice"
                         android:layout_marginTop="2dp"
-                        android:textSize="40sp"
+                        android:textSize="36sp"
                         tools:text="0€" />
 
                     <ImageView
@@ -91,7 +91,7 @@
                         app:tabIndicator="@android:color/transparent"
                         app:tabMode="fixed"
                         app:tabSelectedTextColor="@color/purple_gray_800"
-                        app:tabTextAppearance="@style/TextAppearance.AppCompat.Caption"
+                        app:tabTextAppearance="@style/tab_text"
                         app:tabTextColor="@color/purple_gray_400" />
 
                 </LinearLayout>
@@ -118,33 +118,33 @@
 
                         <TextView
                             android:id="@+id/tvVerification"
-                            style="@style/TitleText"
-                            android:visibility="gone"
+                            style="@style/TitleTextAtypText"
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="32dp"
                             android:text="@string/verification"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
-                            android:textColor="@color/purple_gray_900" />
+                            android:textColor="@color/purple_gray_900"
+                            android:visibility="gone" />
 
                         <LinearLayout
                             android:id="@+id/llVerification"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="24dp"
-                            android:visibility="gone"
                             android:background="@drawable/curved_button"
                             android:backgroundTint="@color/purple_gray_50"
-                            android:orientation="vertical">
+                            android:orientation="vertical"
+                            android:visibility="gone">
 
                             <LinearLayout
                                 android:id="@+id/llVerifyIdentity"
                                 android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
                                 android:layout_marginHorizontal="16dp"
                                 android:layout_marginTop="18dp"
                                 android:layout_marginBottom="12dp"
-                                android:orientation="horizontal"
                                 android:gravity="center_vertical"
-                                android:layout_height="wrap_content">
+                                android:orientation="horizontal">
+
                                 <ImageView
                                     android:id="@+id/ivKyc"
                                     android:layout_width="24dp"
@@ -153,11 +153,11 @@
                                     android:src="@drawable/arrow_right_purple" />
 
                                 <TextView
-                                    style="@style/SubHeadlineStyle"
-                                    android:layout_weight="1"
-                                    android:textColor="@color/purple_gray_900"
+                                    style="@style/SubheadMabryMedium"
                                     android:layout_marginHorizontal="8dp"
-                                    android:text="@string/verification_of_your_identity" />
+                                    android:layout_weight="1"
+                                    android:text="@string/verification_of_your_identity"
+                                    android:textColor="@color/purple_gray_700" />
 
                                 <ImageView
                                     android:layout_width="wrap_content"
@@ -168,13 +168,14 @@
                             <LinearLayout
                                 android:id="@+id/llContract"
                                 android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
                                 android:layout_marginHorizontal="16dp"
                                 android:layout_marginTop="12dp"
                                 android:layout_marginBottom="18dp"
-                                android:orientation="horizontal"
-                                android:layout_gravity="center_vertical"
                                 android:gravity="center_vertical"
-                                android:layout_height="wrap_content">
+                                android:orientation="horizontal">
+
                                 <ImageView
                                     android:id="@+id/ivSign"
                                     android:layout_width="24dp"
@@ -184,12 +185,13 @@
 
 
                                 <TextView
-                                    style="@style/SubHeadlineStyle"
-                                    android:layout_marginVertical="12dp"
+                                    style="@style/SubheadMabryMedium"
                                     android:layout_marginHorizontal="8dp"
+                                    android:layout_marginVertical="12dp"
                                     android:layout_weight="1"
-                                    android:textColor="@color/purple_gray_900"
-                                    android:text="@string/contract_signature" />
+                                    android:text="@string/contract_signature"
+                                    android:textColor="@color/purple_gray_700" />
+
                                 <ImageView
                                     android:layout_width="wrap_content"
                                     android:layout_height="wrap_content"
@@ -199,11 +201,10 @@
 
                         <TextView
                             android:id="@+id/tvMyAssets"
-                            style="@style/TitleText"
+                            style="@style/TitleTextAtypText"
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="32dp"
                             android:text="@string/my_assets"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             android:textColor="@color/purple_gray_900" />
 
                         <LinearLayout
@@ -216,31 +217,30 @@
 
                             <TextView
                                 android:id="@+id/tvNoAssets"
-                                style="@style/SubheadMabry"
-                                android:text="@string/no_assets"
-                                android:textStyle="bold"
-                                android:visibility="gone"
+                                style="@style/SubheadMabryMedium"
                                 android:layout_gravity="center"
-                                android:layout_marginTop="16dp"
                                 android:layout_marginHorizontal="16dp"
-                                android:textColor="@color/purple_gray_800" />
+                                android:layout_marginTop="16dp"
+                                android:text="@string/no_assets"
+                                android:textColor="@color/purple_gray_800"
+                                android:visibility="gone" />
+
                             <TextView
                                 android:id="@+id/tvBuyUSDC"
-                                style="@style/SubheadMabry"
-                                android:text="@string/buy_usdc_u"
-                                android:textStyle="bold"
-                                android:visibility="gone"
+                                style="@style/SubheadMabryMedium"
+                                android:layout_gravity="center"
                                 android:layout_marginTop="6dp"
                                 android:layout_marginBottom="16dp"
-                                android:layout_gravity="center"
-                                android:textColor="@color/purple_500" />
+                                android:text="@string/buy_usdc_u"
+                                android:textColor="@color/purple_500"
+                                android:visibility="gone" />
 
                             <androidx.recyclerview.widget.RecyclerView
                                 android:id="@+id/rvMyAssets"
-                                android:visibility="visible"
                                 android:layout_width="match_parent"
                                 android:layout_height="wrap_content"
                                 android:layoutAnimation="@anim/recycler_view_item_animation"
+                                android:visibility="visible"
                                 app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
                         </LinearLayout>
@@ -251,26 +251,25 @@
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="40dp"
                             android:text="@string/analytics"
-                            android:visibility="gone"
                             android:textAppearance="@style/TextAppearance.AppCompat.Title"
-                            android:textColor="@color/purple_gray_900" />
+                            android:textColor="@color/purple_gray_900"
+                            android:visibility="gone" />
 
                         <androidx.recyclerview.widget.RecyclerView
                             android:id="@+id/rvAnalytics"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:visibility="gone"
                             android:layout_marginTop="24dp"
                             android:backgroundTint="@color/purple_gray_50"
-                            android:layoutAnimation="@anim/recycler_view_item_animation" />
+                            android:layoutAnimation="@anim/recycler_view_item_animation"
+                            android:visibility="gone" />
 
                         <TextView
                             android:id="@+id/tvTitleRecurringInvestment"
-                            style="@style/TitleText"
+                            style="@style/TitleTextAtypText"
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="40dp"
                             android:text="@string/recurring_investment"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             android:textColor="#423D33" />
 
                         <androidx.recyclerview.widget.RecyclerView
@@ -278,46 +277,43 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="24dp"
-                            android:visibility="visible"
                             android:background="@drawable/curved_button"
                             android:backgroundTint="@color/purple_gray_50"
-                            android:layoutAnimation="@anim/recycler_view_item_animation" />
+                            android:layoutAnimation="@anim/recycler_view_item_animation"
+                            android:visibility="visible" />
 
                         <LinearLayout
                             android:id="@+id/llNoActiveStrategy"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_gravity="center"
-                            android:gravity="center"
-                            android:visibility="gone"
                             android:layout_marginTop="24dp"
-                            android:paddingVertical="16dp"
                             android:background="@drawable/curved_button"
                             android:backgroundTint="@color/purple_gray_50"
-                            android:orientation="vertical">
+                            android:gravity="center"
+                            android:orientation="vertical"
+                            android:paddingVertical="16dp"
+                            android:visibility="gone">
 
                             <TextView
-                                style="@style/SubheadMabry"
-                                android:text="@string/you_donot_have_active_strategy"
+                                style="@style/SubheadMabryMedium"
                                 android:layout_marginBottom="1dp"
-                                android:textStyle="bold"
+                                android:text="@string/you_donot_have_active_strategy"
                                 android:textColor="@color/purple_gray_800" />
 
                             <TextView
                                 android:id="@+id/tvActivateStrategy"
-                                style="@style/SubheadMabry"
-                                android:text="@string/activate_create"
+                                style="@style/SubheadMabryMedium"
                                 android:layout_marginTop="1dp"
-                                android:textStyle="bold"
+                                android:text="@string/activate_create"
                                 android:textColor="@color/purple_500" />
                         </LinearLayout>
 
                         <TextView
-                            style="@style/TitleText"
+                            style="@style/TitleTextAtypText"
                             android:layout_marginStart="8dp"
                             android:layout_marginTop="40dp"
                             android:text="@string/all_assets_available"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
                             android:textColor="#423D33" />
 
                         <androidx.recyclerview.widget.RecyclerView
@@ -334,9 +330,10 @@
                             android:layout_gravity="center"
                             android:layout_marginTop="24dp"
                             android:layout_marginBottom="48dp"
+                            android:fontFamily="@font/mabry_pro"
                             android:gravity="center"
                             android:text="@string/view_all"
-                            android:textAppearance="@style/TextAppearance.AppCompat.Medium"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
                             android:textColor="@color/purple_500" />
 
                     </LinearLayout>
@@ -367,7 +364,7 @@
 
         <TextView
             android:id="@+id/tvInvestMoney"
-            style="@style/SubheadMabry"
+            style="@style/SubheadMabryMedium"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"

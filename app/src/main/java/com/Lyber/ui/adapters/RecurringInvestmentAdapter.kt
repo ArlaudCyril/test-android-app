@@ -7,15 +7,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.Lyber.R
 import com.Lyber.databinding.ItemRecurringInvestmentBinding
 import com.Lyber.models.ActiveStrategyData
+import com.Lyber.models.Investment
 import com.Lyber.utils.CommonMethods.Companion.commaFormattedDecimal
 import com.Lyber.utils.CommonMethods.Companion.decimalPoint
+import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
 import com.Lyber.utils.CommonMethods.Companion.toFormat
 import com.Lyber.utils.Constants
+import kotlin.math.abs
 
-class RecurringInvestmentAdapter(
-    private val clickListener: (ActiveStrategyData) -> Unit = { _ -> },
-    private val context: Context
-) :
+class RecurringInvestmentAdapter(private val clickListener: (ActiveStrategyData) -> Unit = { _ -> }, private val context:Context) :
     BaseAdapter<ActiveStrategyData>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -45,23 +45,16 @@ class RecurringInvestmentAdapter(
 //                    } else
                     ivInvestment.setImageResource(R.drawable.ic_intermediate_strategy)
 
-                    tvInvestmentTitle.text = it.strategyName
-                    tvInvestmentAmount.text = "${
-                        it.amount.commaFormattedDecimal(8).decimalPoint()
-                    } ${Constants.MAIN_ASSET_UPPER}"
-                    when (it.frequency) {
-                        "1d" -> tvInvestmentFrequency.text = context.getString(R.string.daily)
-                        "1w" -> tvInvestmentFrequency.text = context.getString(R.string.weekly)
-                        "1m" -> tvInvestmentFrequency.text = context.getString(R.string.monthly)
-                        else -> tvInvestmentFrequency.text = it.frequency
-
+                    tvInvestmentTitle.text=it.strategyName
+                    tvInvestmentAmount.text = "${it.amount.commaFormattedDecimal(8).decimalPoint()} ${Constants.MAIN_ASSET_UPPER}"
+                    when(it.frequency){
+                        "1d"->tvInvestmentFrequency.text=context.getString(R.string.daily)
+                        "1w"->tvInvestmentFrequency.text=context.getString(R.string.weekly)
+                        "1m"->tvInvestmentFrequency.text=context.getString(R.string.monthly)
+                        else -> tvInvestmentFrequency.text=it.frequency
                     }
 //                    tvInvestmentFrequency.text = it.frequency
-                    tvInvestmentUpcomingPayment.text =
-                        context.getString(R.string.upcoming_payment) + it.nextExecution.toFormat(
-                            "yyyy-MM-dd'T'HH:mm:ss.SSS'Z'",
-                            "MMMM dd"
-                        )
+                    tvInvestmentUpcomingPayment.text =  context.getString(R.string.upcoming_payment)+it.nextExecution.toFormat("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'","MMMM dd")
 
 
                 }

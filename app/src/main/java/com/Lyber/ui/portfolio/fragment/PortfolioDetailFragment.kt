@@ -29,6 +29,7 @@ import com.Lyber.databinding.LottieViewBinding
 import com.Lyber.databinding.ProgressBarNewBinding
 import com.Lyber.models.Balance
 import com.Lyber.models.Duration
+import com.Lyber.ui.activities.BaseActivity
 import com.Lyber.ui.adapters.BalanceAdapter
 import com.Lyber.ui.adapters.ResourcesAdapter
 import com.Lyber.ui.fragments.AddAmountFragment
@@ -129,7 +130,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         resourcesAdapter = ResourcesAdapter()
         assetBreakdownAdapter = BalanceAdapter()
         binding.btnSell.gone()
-        binding.btnBuy.gone()
+
 
         binding.apply {
 
@@ -153,12 +154,17 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             tvAssetName.text = "${viewModel.selectedAsset?.fullName}"
             tvAssetName.typeface = context?.resources?.getFont(R.font.mabry_pro_medium)
 
-
             var customUrl = ""
             if (viewModel.selectedAsset?.id =="usdt")
                 customUrl = Constants.SOCKET_BASE_URL + "eurusdt"
           else
                 customUrl = Constants.SOCKET_BASE_URL + "${viewModel.selectedAsset?.id}eur"
+//            var customUrl = ""
+//            if (viewModel.selectedAsset?.id == Constants.MAIN_ASSET)
+//                customUrl = Constants.SOCKET_BASE_URL + "eurusdt"
+//            else
+//                customUrl = Constants.SOCKET_BASE_URL + "${viewModel.selectedAsset?.id}eur"
+
             val request = Request.Builder()
                 .url(customUrl)
                 .build()
@@ -415,6 +421,21 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                         ignoreCase = true
                     ))
                     btnBuy.visible()
+                if (balance != null)
+                    btnSell.visible()
+                if ( (viewModel.selectedAsset!!.id.equals(
+                        "usdt",
+                        ignoreCase = true
+                    ))
+                )
+                    btnBuy.gone()
+//                else if (viewModel.selectedAsset!!.id.equals(
+//                        Constants.MAIN_ASSET,
+//                        ignoreCase = true
+//                    )
+//                )
+//                    btnBuy.visible()
+
             }
         }
     }
@@ -542,82 +563,97 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         binding.apply {
             when (v!!) {
                 btnSell -> {
-                    viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
-                    if (viewModel.selectedAsset!!.id == Constants.MAIN_ASSET) {
-//                        findNavController().navigate(R.id.buyUsdt)
-                        val balance =
-                            com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == Constants.MAIN_ASSET }
-                        if (balance != null) {
-                            viewModel.exchangeAssetTo = Constants.MAIN_ASSET
-                            viewModel.exchangeAssetFrom = viewModel.selectedAsset!!.id
-                            findNavController().navigate(R.id.addAmountForExchangeFragment)
-                        }
-                    } else {
-                        val balance =
-                            com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.selectedAsset!!.id }
-                        if (balance != null) {
-                            viewModel.exchangeAssetTo = Constants.MAIN_ASSET
-                            viewModel.exchangeAssetFrom = viewModel.selectedAsset!!.id
-                            findNavController().navigate(R.id.addAmountForExchangeFragment)
-                        } else {
-                            showDialog()
-                        }
-                    }
-
-                }
-
-                llThreeDot -> {
-                    val portfolioThreeDotsFragment = PortfolioThreeDots(::menuOptionSelected)
-                    portfolioThreeDotsFragment.dismissListener = this@PortfolioDetailFragment
-                    if (CommonMethods.getBalance(viewModel.selectedAsset!!.id) != null) {
-                        portfolioThreeDotsFragment.typePopUp = "AssetPopUpWithdraw"
-                    } else {
-                        portfolioThreeDotsFragment.typePopUp = "AssetPopUpWithdraw"
-                    }
-
-                    portfolioThreeDotsFragment.show(
-                        childFragmentManager,
-                        "PortfolioThreeDots"
-                    )
-                    grayOverlay = View(requireContext())
-                    grayOverlay?.setBackgroundColor(
-                        ContextCompat.getColor(
-                            requireContext(),
-                            R.color.semi_transparent_dark
+                    if (viewModel.selectedAsset!!.id.equals(
+                            Constants.MAIN_ASSET,
+                            ignoreCase = true
                         )
-                    )
-                    grayOverlay?.alpha = 1.0f
-                    screenContent.addView(grayOverlay)
-                }
+                    ) {
+                        if (BaseActivity.ribWalletList.isEmpty()) {
+                            findNavController().navigate(R.id.addRibFragment)
+                        } else {
+                            findNavController().navigate(R.id.ribListingFragment)
 
-                ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
-                tvAssetName -> {
-                    findNavController().popBackStack()
-                    val bundle = Bundle()
-                    bundle.putString(Constants.TYPE, "assets")
-                    findNavController().navigate(R.id.allAssetFragment, bundle)
-                }
-
-                btnBuy -> {
-                    val balance =
-                        com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == Constants.MAIN_ASSET }
-                    viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
-                    if (viewModel.selectedAsset!!.id == Constants.MAIN_ASSET) {
-                        if (checkKyc())
-                            findNavController().navigate(R.id.buyUsdt)
-                    } else if (balance != null) {
-                        viewModel.exchangeAssetTo = viewModel.selectedAsset!!.id
-                        viewModel.exchangeAssetFrom = Constants.MAIN_ASSET
-                        findNavController().navigate(R.id.addAmountForExchangeFragment)
+                        }
                     } else {
-                        if (App.prefsManager.user!!.kycStatus == "OK" && App.prefsManager.user!!.yousignStatus == "SIGNED")
-                            showDialog()
-                        else checkKyc()
+                        viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
+                        if (viewModel.selectedAsset!!.id == Constants.MAIN_ASSET) {
+//                        findNavController().navigate(R.id.buyUsdt)
+                            val balance =
+                                com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == Constants.MAIN_ASSET }
+                            if (balance != null) {
+                                viewModel.exchangeAssetTo = Constants.MAIN_ASSET
+                                viewModel.exchangeAssetFrom = viewModel.selectedAsset!!.id
+                                findNavController().navigate(R.id.addAmountForExchangeFragment)
+                            }
+                        } else {
+                            val balance =
+                                com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.selectedAsset!!.id }
+                            if (balance != null) {
+                                viewModel.exchangeAssetTo = Constants.MAIN_ASSET
+                                viewModel.exchangeAssetFrom = viewModel.selectedAsset!!.id
+                                findNavController().navigate(R.id.addAmountForExchangeFragment)
+                            } else {
+                                showDialog()
+                            }
+                        }
+                    }
+
+                }
+
+                        llThreeDot -> {
+                            val portfolioThreeDotsFragment =
+                                PortfolioThreeDots(::menuOptionSelected)
+                            portfolioThreeDotsFragment.dismissListener =
+                                this@PortfolioDetailFragment
+                            if (CommonMethods.getBalance(viewModel.selectedAsset!!.id) != null) {
+                                portfolioThreeDotsFragment.typePopUp = "AssetPopUpWithdraw"
+                            } else {
+                                portfolioThreeDotsFragment.typePopUp = "AssetPopUpWithdraw"
+                            }
+
+                            portfolioThreeDotsFragment.show(
+                                childFragmentManager,
+                                "PortfolioThreeDots"
+                            )
+                            grayOverlay = View(requireContext())
+                            grayOverlay?.setBackgroundColor(
+                                ContextCompat.getColor(
+                                    requireContext(),
+                                    R.color.semi_transparent_dark
+                                )
+                            )
+                            grayOverlay?.alpha = 1.0f
+                            screenContent.addView(grayOverlay)
+                        }
+
+                        ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
+                        tvAssetName -> {
+                            findNavController().popBackStack()
+                            val bundle = Bundle()
+                            bundle.putString(Constants.TYPE, "assets")
+                            findNavController().navigate(R.id.allAssetFragment, bundle)
+                        }
+
+                        btnBuy -> {
+                            val balance =
+                                com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == Constants.MAIN_ASSET }
+                            viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
+                            if (viewModel.selectedAsset!!.id == Constants.MAIN_ASSET) {
+                                if (checkKyc())
+                                    findNavController().navigate(R.id.buyUsdt)
+                            } else if (balance != null) {
+                                viewModel.exchangeAssetTo = viewModel.selectedAsset!!.id
+                                viewModel.exchangeAssetFrom = Constants.MAIN_ASSET
+                                findNavController().navigate(R.id.addAmountForExchangeFragment)
+                            } else {
+                                if (App.prefsManager.user!!.kycStatus == "OK" && App.prefsManager.user!!.yousignStatus == "SIGNED")
+                                    showDialog()
+                                else checkKyc()
+                            }
+                        }
                     }
                 }
             }
-        }
-    }
 
     //MARK:- Web Socket Listener
     private inner class PortfolioDetailWebSocketListener : WebSocketListener() {
