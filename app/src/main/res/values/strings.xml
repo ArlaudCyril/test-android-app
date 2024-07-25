@@ -803,4 +803,7 @@
     <string name="amount_withdrawn">The amount has withdrawn from\nyour account.</string>
     <string name="receive">Receive</string>
     <string name="euro_amount">Euro amount</string>
+    <string name="today_l">Today</string>
+    <string name="yesterday_L">Yesterday</string>
+
 </resources>

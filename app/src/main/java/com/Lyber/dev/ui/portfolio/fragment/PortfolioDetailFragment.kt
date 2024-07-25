@@ -156,7 +156,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
 
             var customUrl = ""
-            if (viewModel.selectedAsset?.id == Constants.MAIN_ASSET)
+            if (viewModel.selectedAsset?.id == "usdt")
                 customUrl = Constants.SOCKET_BASE_URL + "eurusdt"
             else
                 customUrl = Constants.SOCKET_BASE_URL + "${viewModel.selectedAsset?.id}eur"

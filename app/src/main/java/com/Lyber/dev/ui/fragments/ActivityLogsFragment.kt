@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentActivityLogsBinding
 import com.Lyber.dev.databinding.ItemActivityLogsBinding
 import com.Lyber.dev.databinding.LoaderViewBinding
@@ -170,8 +171,8 @@ class ActivityLogsFragment : BaseFragment<FragmentActivityLogsBinding>() {
             yesterdayCalendar.set(Calendar.MILLISECOND, 0)
 
             return when {
-                calendar.after(todayCalendar) -> "Today"
-                calendar.after(yesterdayCalendar) -> "Yesterday"
+                calendar.after(todayCalendar) -> getString(R.string.today_l)
+                calendar.after(yesterdayCalendar) -> getString(R.string.yesterday_L)
                 else -> SimpleDateFormat("dd/MM/yyyy", Locale.US).format(this)
             }
         }

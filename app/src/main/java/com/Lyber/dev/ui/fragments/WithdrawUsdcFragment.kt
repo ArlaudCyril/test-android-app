@@ -164,10 +164,10 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 CommonMethods.dismissProgressDialog()
                 ribDataList.clear()
-//                for( rib in it.data)
-//                    if(rib.ribStatus.lowercase()=="validated")
-//                        ribDataList.add(rib)
-                ribDataList.addAll(it.data)
+                for( rib in it.data)
+                    if(rib.ribStatus.lowercase()=="validated")
+                        ribDataList.add(rib)
+//                ribDataList.addAll(it.data)
 
                 if (ribDataList.size > 0) {
                     var addressList = ribDataList

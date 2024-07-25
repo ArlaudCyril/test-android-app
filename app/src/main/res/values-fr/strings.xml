@@ -802,5 +802,6 @@
     <string name="amount_withdrawn">Le montant a été retiré de\nvotre compte.</string>
     <string name="receive">Recevoir</string>
     <string name="euro_amount">Euro amount</string>
-
+    <string name="today_l">Aujourd\'hui</string>
+    <string name="yesterday_L">Hier</string>
 </resources>
