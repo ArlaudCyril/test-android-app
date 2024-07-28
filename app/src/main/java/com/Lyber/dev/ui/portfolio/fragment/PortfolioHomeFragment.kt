@@ -248,24 +248,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             })
 
         if (App.prefsManager.user?.kycStatus != "OK" || App.prefsManager.user?.yousignStatus != "SIGNED") {
-//          viewModel1.startFetchingUserData()
-//            GlobalScope.launch {
-//                // Run a loop infinitely
-//                while (!kycOK) {
-//                    // Call the function to fetch user data
-////                    Log.d("hitting Api","$kycOK")
-//                    if (App.prefsManager.accessToken.isNotEmpty()) {
-//                        viewModel.getUser()
-//                        // Delay for 10 seconds
-////                        if (App.prefsManager.user?.kycStatus == "STARTED" || App.prefsManager.user?.kycStatus == "NOT_STARTED")
-//                        delay(3 * 1000)
-////                        else
-////                            delay(10 * 1000)
-//                    }
-//                }
-//            }
-            // Prevent the program from terminating immediately
-//            readLine()
+
         }
 
     }

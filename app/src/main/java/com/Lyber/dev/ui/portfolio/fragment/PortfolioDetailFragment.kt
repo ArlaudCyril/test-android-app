@@ -56,6 +56,10 @@ import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.utils.ItemOffsetDecoration
 import com.airbnb.lottie.LottieAnimationView
+import com.appsflyer.AFInAppEventParameterName
+import com.appsflyer.AFInAppEventType
+import com.appsflyer.AppsFlyerLib
+import com.appsflyer.attribution.AppsFlyerRequestListener
 import com.github.jinatonic.confetti.CommonConfetti
 import com.github.jinatonic.confetti.ConfettiManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -320,8 +324,24 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                         )
                     )
                         viewModel.getOrderApi(requireArguments().getString(Constants.ORDER_ID, ""))
-                    else
+                    else {
                         viewModel.confirmOrder(requireArguments().getString(Constants.ORDER_ID, ""))
+                        val eventValues = HashMap<String, Any>()
+                        eventValues[AFInAppEventParameterName.CONTENT_TYPE] = Constants.APP_FLYER_TYPE_CRYPTO
+                        eventValues[AFInAppEventParameterName.CONTENT_ID] = requireArguments().getString(Constants.ORDER_ID, "")
+                        AppsFlyerLib.getInstance().logEvent( requireContext().applicationContext,
+                            AFInAppEventType.PURCHASE, eventValues,
+                            object : AppsFlyerRequestListener {
+                                override fun onSuccess() {
+                                    Log.d("LOG_TAG", "Event sent successfully")
+                                }
+                                override fun onError(errorCode: Int, errorDesc: String) {
+                                    Log.d("LOG_TAG", "Event failed to be sent:\n" +
+                                            "Error code: " + errorCode + "\n"
+                                            + "Error description: " + errorDesc)
+                                }
+                            })
+                    }
                 }
             }
         }

@@ -4,8 +4,11 @@ import android.app.Application
 import android.content.Context
 import android.util.Base64
 import android.util.Log
+import androidx.core.content.PackageManagerCompat.LOG_TAG
 import com.Lyber.dev.R
 import com.google.android.libraries.places.api.Places
+import com.appsflyer.AppsFlyerLib
+import com.appsflyer.attribution.AppsFlyerRequestListener
 
 class App : Application() {
 
@@ -23,6 +26,22 @@ class App : Application() {
         accessToken = prefsManager.accessToken
         isSign = prefsManager.isSign
         isKyc = prefsManager.isKyc
+        AppsFlyerLib.getInstance().init("G9y3U7W29YR7RSCN6AdBRC", null, this)
+//        AppsFlyerLib.getInstance().start(this)
+        AppsFlyerLib.getInstance().setDebugLog(true)
+        AppsFlyerLib.getInstance().start(this, "G9y3U7W29YR7RSCN6AdBRC", object :
+            AppsFlyerRequestListener {
+            override fun onSuccess() {
+                Log.d("LOG_TAG", "Launch sent successfully")
+            }
+
+            override fun onError(errorCode: Int, errorDesc: String) {
+                Log.d("LOG_TAG", "Launch failed to be sent:\n" +
+                        "Error code: " + errorCode + "\n"
+                        + "Error description: " + errorDesc)
+            }
+        })
+
 //        getEncodedApiKey()
     }
 

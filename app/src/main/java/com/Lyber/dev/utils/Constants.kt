@@ -294,4 +294,10 @@ object Constants {
     const val MAIN_ASSET = "usdc"
     const val MAIN_ASSET_UPPER = "USDC"
     const val API_VERSION = "0.2"
+
+    const val APP_FLYER_TYPE_GPAY="OrderCc"
+    const val APP_FLYER_TYPE_CRYPTO="Order"
+    const val APP_FLYER_TYPE_ACTIVATE_STRATEGY="ActivateStrategy"
+    const val APP_FLYER_TYPE_STRATEGY_EXECUTION="ExecuteStrategy"
+
 }
