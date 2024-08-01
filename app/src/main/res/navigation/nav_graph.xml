@@ -455,12 +455,12 @@
             app:destination="@id/ribListingFragment"
             app:popUpTo="@id/ribListingFragment"
             app:popUpToInclusive="true"/>
-<!--        <action-->
-<!--            android:id="@+id/action_preview_my_purchase_to_home_fragment"-->
-<!--            app:destination="@id/portfolioHomeFragment"-->
-<!--            app:popUpTo="@id/portfolioHomeFragment"-->
-<!--            app:popUpToInclusive="false"-->
-<!--            />-->
+
+        <action
+            android:id="@+id/action_addRibFragment_to_ribListingFragment_to_portfolioDetail"
+            app:destination="@id/ribListingFragment"
+            app:popUpTo="@id/portfolioDetailFragment"
+            app:popUpToInclusive="false"/>
     </fragment>
     <fragment
         android:id="@+id/ribListingFragment"

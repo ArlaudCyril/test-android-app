@@ -804,4 +804,5 @@
     <string name="euro_amount">Euro amount</string>
     <string name="today_l">Aujourd\'hui</string>
     <string name="yesterday_L">Hier</string>
+    <string name="you_have_to_wait">Vous devez attendre %1$s secondes avant d\'envoyer un autre OTP.</string>
 </resources>

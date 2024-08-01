@@ -6,6 +6,8 @@ import android.util.Base64
 import android.util.Log
 import com.Lyber.dev.R
 import com.google.android.libraries.places.api.Places
+import javax.crypto.SecretKey
+
 
 class App : Application() {
 
@@ -23,34 +25,49 @@ class App : Application() {
         accessToken = prefsManager.accessToken
         isSign = prefsManager.isSign
         isKyc = prefsManager.isKyc
+        KeystoreHelper.generateAndStoreKey(this)
+
+        // Get the stored key
+        secretKey = KeystoreHelper.getSecretKey()
+
+
+        // Encrypt data
+        encryptedKey = EncryptionHelper.encrypt(secretKey, Constants.k)
+
+        // Encrypt dat
 //        getEncodedApiKey()
     }
 
-        fun getEncodedApiKey() {
+    fun getEncodedApiKey() {
         val plainApiKey = resources.getString(R.string.API_KEY)//
         val encodedApiKey = String(
-                Base64.encode(
-                    plainApiKey.toByteArray(),
-                    Base64.DEFAULT
-                )
+            Base64.encode(
+                plainApiKey.toByteArray(),
+                Base64.DEFAULT
+            )
         )
         Log.i("encodedApi", "getEncodedApiKey: $encodedApiKey")
     }
+
     fun getSplitedDecodedApiKey(): String? {
         return String(
-              Base64.decode(
-                    resources.getString(R.string.encodedKey),
-                    Base64.DEFAULT
-                )
+            Base64.decode(
+                resources.getString(R.string.encodedKey),
+                Base64.DEFAULT
+            )
         )
     }
 
     companion object {
         lateinit var accessToken: String
-         var isSign: Boolean=false
-         var isKyc: Boolean=false
-         var isLoader: Boolean=false
+        lateinit var encryptedKey: String
+        lateinit var secretKey: SecretKey
+        var isSign: Boolean = false
+        var isKyc: Boolean = false
+        var isLoader: Boolean = false
         lateinit var prefsManager: PreferenceManager
         lateinit var appContext: Context
     }
+
+
 }

@@ -1,25 +1,19 @@
 package com.Lyber.dev.network
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.widget.ImageView
 import com.Lyber.dev.utils.App.Companion.prefsManager
 import com.Lyber.dev.utils.Constants
 import com.google.gson.GsonBuilder
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
+import okhttp3.Response
 import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
-import java.net.URL
-import java.util.*
+import java.util.Collections
 import java.util.concurrent.TimeUnit
 import javax.net.SocketFactory
 
@@ -99,39 +93,44 @@ object RestClient {
         return retrofit
     }
 
-    fun ImageView.fetchSvg(url: String) {
-//                if (okHttpClient == null)
-//                    okHttpClient = OkHttpClient().newBuilder()
-//                        .cache(Cache(context.cacheDir, 5 * 1024 * 1014))
-//                        .build()
-//                val request = Request.Builder().url(url).build()
-        CoroutineScope(Dispatchers.IO).launch {
-            val connection = withContext(Dispatchers.IO) {
-                URL(url).openConnection()
-            }
-//            connection.doInput = true
-            val bitmap: Bitmap = BitmapFactory.decodeStream(connection.getInputStream())
-            setImageBitmap(bitmap)
+
+    class RequestInterceptor(
+        private val accessToken: String,
+        private val apiVersion: String,
+        private val signature: String,
+        private val timestamp: String
+    ) :
+        Interceptor {
+        override fun intercept(chain: Interceptor.Chain): Response {
+            val request = chain.request().newBuilder()
+                .header("Authorization", "Bearer $accessToken")
+                .header("x-api-version", apiVersion)
+                .header("X-Signature", signature)
+                .header("X-Timestamp", timestamp.toString())
+                .build()
+
+            return chain.proceed(request)
         }
     }
 
-    class Utils {
-        companion object {
-            //            private var okHttpClient: OkHttpClient? = null
-            fun fetchSvg(url: String, imageView: ImageView) {
-//                if (okHttpClient == null)
-//                    okHttpClient = OkHttpClient().newBuilder()
-//                        .cache(Cache(context.cacheDir, 5 * 1024 * 1014))
-//                        .build()
-//                val request = Request.Builder().url(url).build()
-                CoroutineScope(Dispatchers.Default).launch {
-                    val connection = URL(url).openConnection()
-                    connection.doInput = true
-                    val bitmap: Bitmap = BitmapFactory.decodeStream(connection.getInputStream())
-                    imageView.setImageBitmap(bitmap)
-                }
-            }
-        }
+     fun getOkHttpClient2(
+         accessToken: String,
+         apiVersion: String,
+         signature: String,
+         timestamp: String
+    ): OkHttpClient {
+        val httpLoggingInterceptor = HttpLoggingInterceptor()
+        httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+
+        return OkHttpClient.Builder()
+            .protocols(Collections.singletonList(Protocol.HTTP_1_1))
+            .connectTimeout(5, TimeUnit.MINUTES)
+            .readTimeout(5, TimeUnit.MINUTES)
+            .socketFactory(SocketFactory.getDefault())
+            .retryOnConnectionFailure(true)
+            .addNetworkInterceptor(httpLoggingInterceptor)
+            .addInterceptor(RequestInterceptor(accessToken, apiVersion, signature, timestamp))
+            .build()
     }
 
 

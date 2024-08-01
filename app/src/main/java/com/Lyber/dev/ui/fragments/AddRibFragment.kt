@@ -16,6 +16,7 @@ import com.Lyber.dev.databinding.FragmentAddRibBinding
 import com.Lyber.dev.models.RIBData
 import com.Lyber.dev.models.Strategy
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.WithdrawalUsdcAddressBottomSheet
+import com.Lyber.dev.ui.portfolio.fragment.PortfolioDetailFragment
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.gone
@@ -34,6 +35,7 @@ class AddRibFragment : BaseFragment<FragmentAddRibBinding>(), OnClickListener {
     private lateinit var viewModel: PortfolioViewModel
     private lateinit var ribData: RIBData
     private var fromWithdraw = false
+    private var fromAssetDetail = false
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -57,6 +59,10 @@ class AddRibFragment : BaseFragment<FragmentAddRibBinding>(), OnClickListener {
             requireArguments().getString(Constants.FROM) == WithdrawalUsdcAddressBottomSheet::class.java.name
         )
             fromWithdraw = true
+        else if (arguments != null && requireArguments().containsKey(Constants.FROM) &&
+            requireArguments().getString(Constants.FROM) == PortfolioDetailFragment::class.java.name
+        )
+            fromAssetDetail = true
         binding.ivBack.setOnClickListener(this)
         binding.tvBankCountry.setOnClickListener(this)
         binding.btnAdd.setOnClickListener(this)
@@ -90,7 +96,9 @@ class AddRibFragment : BaseFragment<FragmentAddRibBinding>(), OnClickListener {
                 if (!it.data.isNullOrEmpty())
                     com.Lyber.dev.ui.activities.BaseActivity.ribWalletList =
                         it.data as ArrayList<RIBData>
-                if (fromWithdraw)
+                if (fromAssetDetail)
+                    findNavController().navigate(R.id.action_addRibFragment_to_ribListingFragment_to_portfolioDetail)
+                else if (fromWithdraw)
                     findNavController().navigate(R.id.action_addRibFragment_to_ribListingFragment)
                 else
                     requireActivity().onBackPressedDispatcher.onBackPressed()
@@ -145,17 +153,19 @@ class AddRibFragment : BaseFragment<FragmentAddRibBinding>(), OnClickListener {
             }
         }
     }
+
     private val onTextChange = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {}
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-           if(isValidInput(binding.etOwnerName.text.trim().toString()))
-               binding.tvOwnerValid.gone()
-            else if(binding.etOwnerName.text.trim().toString().isNotEmpty())
-               binding.tvOwnerValid.visible()
+            if (isValidInput(binding.etOwnerName.text.trim().toString()))
+                binding.tvOwnerValid.gone()
+            else if (binding.etOwnerName.text.trim().toString().isNotEmpty())
+                binding.tvOwnerValid.visible()
         }
 
     }
+
     fun isValidInput(input: String): Boolean {
         val regex = Regex("^[a-zA-Z\\s-]+$")
         return regex.matches(input)

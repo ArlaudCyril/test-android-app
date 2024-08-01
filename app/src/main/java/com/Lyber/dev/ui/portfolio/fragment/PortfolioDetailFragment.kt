@@ -36,6 +36,7 @@ import com.Lyber.dev.ui.fragments.AddAmountFragment
 import com.Lyber.dev.ui.fragments.BaseFragment
 import com.Lyber.dev.ui.fragments.PickYourStrategyFragment
 import com.Lyber.dev.ui.fragments.SelectAnAssetFragment
+import com.Lyber.dev.ui.fragments.bottomsheetfragments.WithdrawalUsdcAddressBottomSheet
 import com.Lyber.dev.ui.portfolio.bottomSheetFragment.PortfolioThreeDots
 import com.Lyber.dev.ui.portfolio.bottomSheetFragment.PortfolioThreeDotsDismissListener
 import com.Lyber.dev.viewmodels.PortfolioViewModel
@@ -401,7 +402,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 }
                 if (balance != null)
                     btnSell.visible()
-                if ( (viewModel.selectedAsset!!.id.equals(
+                if ((viewModel.selectedAsset!!.id.equals(
                         "usdt",
                         ignoreCase = true
                     ))
@@ -546,7 +547,10 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                         )
                     ) {
                         if (BaseActivity.ribWalletList.isEmpty()) {
-                            findNavController().navigate(R.id.addRibFragment)
+                            val bundle = Bundle().apply {
+                                putString(Constants.FROM, PortfolioDetailFragment::class.java.name)
+                            }
+                            findNavController().navigate(R.id.addRibFragment, bundle)
                         } else {
                             findNavController().navigate(R.id.ribListingFragment)
 

@@ -164,6 +164,9 @@ class PreferenceManager(context: Context) {
         get() = mSharedPreferences.getInt("portfolioCompletionStep", -1)
         set(value) = mEditor.putInt("portfolioCompletionStep", value).apply()
 
+    var userSmsTimestamps: Long
+        get() = mSharedPreferences.getLong("userSmsTimestamps", 0)
+        set(value) = mEditor.putLong("userSmsTimestamps", value).apply()
 
     fun setPhone(phone: String) {
         mEditor.putString("phone", phone)

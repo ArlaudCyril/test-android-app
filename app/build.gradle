@@ -27,7 +27,7 @@ android {
 
     buildTypes {
         release {
-            debuggable false
+            debuggable true
             shrinkResources true
             minifyEnabled true
             signingConfig signingConfigs.release
@@ -137,6 +137,8 @@ dependencies {
     implementation 'com.google.firebase:firebase-messaging:23.4.1'
     implementation 'androidx.core:core-splashscreen:1.2.0-alpha01'
     implementation("io.github.g00fy2.quickie:quickie-bundled:1.9.0")
+    implementation "androidx.security:security-crypto:1.1.0-alpha03"
+
 }
 configurations.all {
     resolutionStrategy {

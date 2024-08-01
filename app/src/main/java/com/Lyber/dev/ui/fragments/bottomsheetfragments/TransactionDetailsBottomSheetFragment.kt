@@ -133,7 +133,9 @@ class TransactionDetailsBottomSheetFragment :
                 val maxLength=20
                 binding.tvOrderId.text =CommonMethods.getTruncatedText(transactionData.id,maxLength)
 //                binding.tvOrderId.text = transactionData.id
-                binding.tvStatusValue.text = transactionData.status
+                binding.tvStatusValue.text =
+                transactionData.status.lowercase().replaceFirstChar(Char::uppercase)
+
                 binding.ivCopyFrom.gone()
                 binding.tvFrom.text = getString(R.string.iban)
                 val truncatedText = CommonMethods.getTruncatedText(transactionData.iban, maxLength)

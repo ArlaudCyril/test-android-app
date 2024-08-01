@@ -294,4 +294,5 @@ object Constants {
     const val MAIN_ASSET = "usdc"
     const val MAIN_ASSET_UPPER = "USDC"
     const val API_VERSION = "0.2"
+    const val k="409f3hui4rbf2d2E/4-39u2!-9di4b23-01C*SRFV2d12jbf)2DBFG3i4f24f"
 }

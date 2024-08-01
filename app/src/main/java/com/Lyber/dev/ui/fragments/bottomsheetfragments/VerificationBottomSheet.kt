@@ -28,6 +28,8 @@ import com.Lyber.dev.utils.CommonMethods.Companion.gone
 import com.Lyber.dev.utils.CommonMethods.Companion.requestKeyboard
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
+import com.Lyber.dev.utils.OnResendCode
+import com.Lyber.dev.utils.setOnResendCodeClickListener
 import com.Lyber.dev.viewmodels.SignUpViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
@@ -70,6 +72,19 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
             imm?.hideSoftInputFromWindow(view?.windowToken, 0)
             dismiss()
         }
+        setOnResendCodeClickListener(object : OnResendCode {
+
+            override fun onResend() {
+                if (fromResend) {
+                    if (!::handler.isInitialized)
+                        handler = Handler(Looper.getMainLooper())
+                    timer = 60
+                    binding.tvTimeLeft.text = "60"
+                    startTimer()
+                }
+                fromResend = false
+            }
+        })
         binding.tvResendCode.setOnClickListener {
             CommonMethods.checkInternet(requireContext()) {
                 if (googleOTP.isNotEmpty()) {
@@ -134,7 +149,9 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
             }
         }
     }
+fun reset(){
 
+}
     private fun startTimer() {
         if (binding.tvResendCode.isVisible)
             binding.tvResendCode.gone()
