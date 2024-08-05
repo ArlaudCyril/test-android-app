@@ -36,7 +36,7 @@ class App : Application() {
         // Encrypt dat
         AppsFlyerLib.getInstance().init(Constants.APP_FLYER_KEY, null, this)
 //        AppsFlyerLib.getInstance().start(this)
-        AppsFlyerLib.getInstance().setDebugLog(true)
+        AppsFlyerLib.getInstance().setDebugLog(false)
         AppsFlyerLib.getInstance().start(this, Constants.APP_FLYER_KEY, object :
             AppsFlyerRequestListener {
             override fun onSuccess() {
