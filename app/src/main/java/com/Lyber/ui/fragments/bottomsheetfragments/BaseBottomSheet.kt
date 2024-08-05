@@ -36,6 +36,7 @@ import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
+import com.Lyber.utils.LoaderObject
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -124,6 +125,7 @@ abstract class BaseBottomSheet<viewBinding : ViewBinding> : BottomSheetDialogFra
     override fun onRetrofitError(responseBody: ResponseBody?) {
         CommonMethods.dismissProgressDialog()
         CommonMethods.dismissAlertDialog()
+        LoaderObject.hideLoader()
         val code = CommonMethods.showErrorMessage(requireContext(), responseBody, binding.root)
         Log.d("errorCode", "$code")
         if (code == 7023 || code == 10041 || code == 7025 || code == 10043)

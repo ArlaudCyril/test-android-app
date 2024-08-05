@@ -1,25 +1,20 @@
 package com.Lyber.network
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
-import android.widget.ImageView
+
 import com.Lyber.utils.App.Companion.prefsManager
 import com.Lyber.utils.Constants
 import com.google.gson.GsonBuilder
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
+import okhttp3.Response
 import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 import retrofit2.converter.scalars.ScalarsConverterFactory
-import java.net.URL
-import java.util.*
+import java.util.Collections
 import java.util.concurrent.TimeUnit
 import javax.net.SocketFactory
 
@@ -102,40 +97,58 @@ object RestClient {
         return retrofit
     }
 
-//    fun ImageView.fetchSvg(url: String) {
-////                if (okHttpClient == null)
-////                    okHttpClient = OkHttpClient().newBuilder()
-////                        .cache(Cache(context.cacheDir, 5 * 1024 * 1014))
-////                        .build()
-////                val request = Request.Builder().url(url).build()
-//        CoroutineScope(Dispatchers.IO).launch {
-//            val connection = withContext(Dispatchers.IO) {
-//                URL(url).openConnection()
-//            }
-////            connection.doInput = true
-//            val bitmap: Bitmap = BitmapFactory.decodeStream(connection.getInputStream())
-//            setImageBitmap(bitmap)
-//        }
-//    }
+    private fun getOkHttpClient2(
+        signature: String,
+        timestamp: String
+    ): OkHttpClient {
+        val httpLoggingInterceptor = HttpLoggingInterceptor()
+        httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
 
-//    class Utils {
-//        companion object {
-//            //            private var okHttpClient: OkHttpClient? = null
-//            fun fetchSvg(url: String, imageView: ImageView) {
-////                if (okHttpClient == null)
-////                    okHttpClient = OkHttpClient().newBuilder()
-////                        .cache(Cache(context.cacheDir, 5 * 1024 * 1014))
-////                        .build()
-////                val request = Request.Builder().url(url).build()
-//                CoroutineScope(Dispatchers.Default).launch {
-//                    val connection = URL(url).openConnection()
-//                    connection.doInput = true
-//                    val bitmap: Bitmap = BitmapFactory.decodeStream(connection.getInputStream())
-//                    imageView.setImageBitmap(bitmap)
-//                }
-//            }
-//        }
-//    }
+        return OkHttpClient.Builder()
+            .protocols(Collections.singletonList(Protocol.HTTP_1_1))
+            .connectTimeout(5, TimeUnit.MINUTES)
+            .readTimeout(5, TimeUnit.MINUTES)
+            .socketFactory(SocketFactory.getDefault())
+            .retryOnConnectionFailure(true)
+            .addNetworkInterceptor(httpLoggingInterceptor)
+            .addInterceptor { chain ->
+                val request = chain.request()
+                val header = request.newBuilder().header(
+                    "Authorization",
+                    "Bearer " + ""
+                )
+                    .header("X-Signature", signature)
+                    .header("X-Timestamp", timestamp.toString())
+                    .header("x-api-version", Constants.API_VERSION)
+                    .header("User-Agent", "${Constants.APP_NAME}/${Constants.VERSION}")
+                val build = header.build()
+                chain.proceed(build)
+            }
+//            .addInterceptor(RequestInterceptor(accessToken, apiVersion, signature, timestamp))
+            .build()
+    }
 
+    fun setPhone(
+        baseUrl: String = Constants.BASE_URL,
+        signature: String,
+        timestamp: String
+    ): Api {
 
+        retrofit = Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .client(getOkHttpClient2(signature, timestamp))
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(
+                GsonConverterFactory.create(
+                    GsonBuilder().setLenient()
+                        .disableHtmlEscaping()
+                        .create()
+                )
+            )
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .build()
+
+        REST_CLIENT = retrofit.create(Api::class.java)
+        return REST_CLIENT
+    }
 }

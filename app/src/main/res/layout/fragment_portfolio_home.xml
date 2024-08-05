@@ -125,6 +125,15 @@
                             android:textColor="@color/purple_gray_900"
                             android:visibility="gone" />
 
+                        <TextView
+                            android:id="@+id/tvAccountCreationFailed"
+                            style="@style/BodyMabry"
+                            android:visibility="gone"
+                            android:layout_marginStart="8dp"
+                            android:text="@string/account_creation_failed"
+                            android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                            android:textColor="@color/red_500" />
+
                         <LinearLayout
                             android:id="@+id/llVerification"
                             android:layout_width="match_parent"
@@ -164,6 +173,7 @@
                                     android:layout_height="wrap_content"
                                     android:src="@drawable/ic_right_arrow_grey" />
                             </LinearLayout>
+
 
                             <LinearLayout
                                 android:id="@+id/llContract"

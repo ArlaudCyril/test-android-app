@@ -297,5 +297,13 @@ object Constants {
     const val MAIN_ASSET_UPPER = "USDC"
     const val API_VERSION = "0.2"
     const val APP_NAME = "Lyber"
-    const val VERSION = "1.0"
+    const val VERSION = "1.1"
+//    const val key="409f3hui4rbf2d2E/4-39u2!-9di4b23-01C*SRFV2d12jbf)2DBFG3i4f24f"
+    const val key="dE/rt09f3hujd24-54u2D!B2D4if!23-F3i4f2856V*SFRV-94bOR2d12jxf)" //prod
+    const val APP_FLYER_KEY="G9y3U7W29YR7RSCN6AdBRC"
+
+    const val APP_FLYER_TYPE_GPAY="OrderCc"
+    const val APP_FLYER_TYPE_CRYPTO="Order"
+    const val APP_FLYER_TYPE_ACTIVATE_STRATEGY="ActivateStrategy"
+    const val APP_FLYER_TYPE_STRATEGY_EXECUTION="ExecuteStrategy"
 }

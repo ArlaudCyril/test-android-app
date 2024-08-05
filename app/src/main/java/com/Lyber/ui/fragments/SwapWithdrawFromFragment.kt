@@ -10,7 +10,6 @@ import com.Lyber.databinding.FragmentSwapFromBinding
 import com.Lyber.models.Balance
 import com.Lyber.ui.activities.BaseActivity
 import com.Lyber.ui.adapters.BalanceAdapter
-import com.Lyber.ui.fragments.bottomsheetfragments.WithdrawOnBankAccountBottomSheet
 import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.checkInternet

@@ -1,9 +1,7 @@
 package com.Lyber.ui.fragments.bottomsheetfragments
 
 import android.annotation.SuppressLint
-import android.app.Dialog
 import android.content.Context
-import android.content.DialogInterface
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
@@ -13,7 +11,6 @@ import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import android.view.ViewGroup
-import android.view.WindowManager
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import androidx.core.view.isVisible
@@ -70,6 +67,19 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
             imm?.hideSoftInputFromWindow(view?.windowToken, 0)
             dismiss()
         }
+//        setOnResendCodeClickListener(object : OnResendCode {
+//
+//            override fun onResend() {
+//                if (fromResend) {
+//                    if (!::handler.isInitialized)
+//                        handler = Handler(Looper.getMainLooper())
+//                    timer = 60
+//                    binding.tvTimeLeft.text = "60"
+//                    startTimer()
+//                }
+//                fromResend = false
+//            }
+//        })
         binding.tvResendCode.setOnClickListener {
             CommonMethods.checkInternet(requireContext()) {
                 if (googleOTP.isNotEmpty()) {
@@ -135,6 +145,10 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
         }
     }
 
+    fun reset() {
+
+    }
+
     private fun startTimer() {
         if (binding.tvResendCode.isVisible)
             binding.tvResendCode.gone()
@@ -176,12 +190,10 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
             ) {
                 binding.tvResendCode.gone()
                 binding.llResendText.gone()
-            }
-            else if (  App.prefsManager.user!=null && App.prefsManager.user!!.type2FA==Constants.GOOGLE){
+            } else if (App.prefsManager.user != null && App.prefsManager.user!!.type2FA == Constants.GOOGLE) {
                 binding.tvResendCode.gone()
                 binding.llResendText.gone()
-            }
-            else if (fromSignUp) {
+            } else if (fromSignUp) {
                 handler = Handler(Looper.getMainLooper())
                 binding.tvResendCode.gone()
                 startTimer()

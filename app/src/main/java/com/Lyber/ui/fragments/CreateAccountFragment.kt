@@ -1,22 +1,14 @@
 package com.Lyber.ui.fragments
 
+//import java.util.Base64
 import android.annotation.SuppressLint
-import android.content.Context
 import android.content.res.Configuration
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.util.Log
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
-import android.view.WindowManager
-import android.view.animation.AnimationUtils
-import android.widget.ImageView
-import android.widget.LinearLayout
 import android.widget.RelativeLayout
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
@@ -44,6 +36,9 @@ import com.nimbusds.srp6.SRP6CryptoParams
 import com.nimbusds.srp6.SRP6VerifierGenerator
 import com.nimbusds.srp6.XRoutineWithUserIdentity
 import com.Lyber.R
+import com.Lyber.utils.EncryptionHelper
+import javax.crypto.Mac
+import javax.crypto.spec.SecretKeySpec
 
 class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View.OnClickListener {
 
@@ -58,6 +53,9 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
     lateinit var client: SRP6ClientSession
     private var resendCode = -1
     private var fromResend = false
+
+    // Define the secret key
+
     override fun bind() = FragmentCreateAccountBinding.inflate(layoutInflater)
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -77,6 +75,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         viewModel = getViewModel(this)
         viewModel.forLogin = requireArguments().getBoolean(Constants.FOR_LOGIN, false)
         viewModel.listener = this
+
         binding.tvCountryCode.text = viewModel.countryCode
         Log.d("clickSignupFinalQ1", viewModel.forLogin.toString())
         binding.ivTopAction.setOnClickListener {
@@ -182,6 +181,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
             }
         }
         viewModel.setPhoneResponse.observe(viewLifecycleOwner) {
+            App.prefsManager.userSmsTimestamps=System.currentTimeMillis()
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 App.prefsManager.accessToken = it.data.token
                 App.accessToken = it.data.token
@@ -219,7 +219,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         }
         viewModel.verifyPhoneResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                App.prefsManager.setPhone(viewModel.countryCode.substring(1)+viewModel.mobileNumber)
+                App.prefsManager.setPhone(viewModel.countryCode.substring(1) + viewModel.mobileNumber)
                 App.prefsManager.accountCreationSteps = Constants.Account_CREATION_STEP_PHONE
                 App.prefsManager.portfolioCompletionStep = Constants.ACCOUNT_CREATING
                 CommonMethods.dismissProgressDialog()
@@ -310,7 +310,11 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                                     checkInternet(requireContext()) {
                                         showProgressDialog(requireContext())
                                         resendCode = 1
-                                        val modifiedMobile = if (mobile.startsWith("0")) mobile.removeRange(0, 1) else mobile
+                                        val modifiedMobile =
+                                            if (mobile.startsWith("0")) mobile.removeRange(
+                                                0,
+                                                1
+                                            ) else mobile
 
                                         viewModel.mobileNumber = modifiedMobile
                                         viewModel.countryCode = countryCode
@@ -351,16 +355,37 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                         when {
                             verifyMobile() ->
                                 checkInternet(requireContext()) {
-                                    showProgressDialog(requireContext())
                                     resendCode = 3
-                                    val modifiedMobile = if (mobile.startsWith("0")) mobile.removeRange(0, 1) else mobile
+                                    val modifiedMobile =
+                                        if (mobile.startsWith("0")) mobile.removeRange(
+                                            0,
+                                            1
+                                        ) else mobile
 
                                     viewModel.mobileNumber = modifiedMobile
                                     viewModel.countryCode = countryCode
-                                    viewModel.setPhone(
-                                        viewModel.countryCode.substring(1),
-                                        viewModel.mobileNumber
-                                    )
+                                    if (canSendSms()) {
+                                        showProgressDialog(requireContext())
+                                        makeApiRequest()
+                                    } else {
+                                        val currentTime = System.currentTimeMillis()
+                                        val lastSentTime = App.prefsManager.userSmsTimestamps
+                                        val timeDifference = currentTime - lastSentTime
+                                        val cooldownPeriod = 60000 // 60 seconds in milliseconds
+                                        val time = cooldownPeriod - timeDifference
+                                        var seconds = 0L
+                                        if (time > 0L)
+                                            seconds = (time / 1000) % 60
+                                        getString(
+                                            R.string.you_have_to_wait,
+                                            seconds.toString()
+                                        ).showToast(requireContext())
+
+                                    }
+//                                    viewModel.setPhone(
+//                                        viewModel.countryCode.substring(1),
+//                                        viewModel.mobileNumber
+//                                    )
 
                                 }
                         }
@@ -379,6 +404,16 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
             }
 
         }
+    }
+
+    fun canSendSms(): Boolean {
+        val currentTime = System.currentTimeMillis()
+        val lastSentTime = App.prefsManager.userSmsTimestamps
+            ?: return true // First SMS request
+        if (lastSentTime == 0L)
+            return true
+        val timeDifference = currentTime - lastSentTime
+        return timeDifference >= 60000 // 60 seconds in milliseconds
     }
 
     private fun verifyMobile(): Boolean {
@@ -486,7 +521,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         }
     }
 
-    private fun handle(txt:String) {
+    private fun handle(txt: String) {
         fromResend = true
         client =
             SRP6ClientSession()
@@ -494,7 +529,8 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
             XRoutineWithUserIdentity()
         when (resendCode) {
             1 -> {
-                val modifiedMobile = if (mobile.startsWith("0")) mobile.removeRange(0, 1) else mobile
+                val modifiedMobile =
+                    if (mobile.startsWith("0")) mobile.removeRange(0, 1) else mobile
 
                 viewModel.mobileNumber = modifiedMobile
                 viewModel.countryCode = countryCode
@@ -519,17 +555,146 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
             }
 
             3 -> {
-                val modifiedMobile = if (mobile.startsWith("0")) mobile.removeRange(0, 1) else mobile
+                val modifiedMobile =
+                    if (mobile.startsWith("0")) mobile.removeRange(0, 1) else mobile
 
                 viewModel.mobileNumber = modifiedMobile
                 viewModel.countryCode = countryCode
-                viewModel.setPhone(
-                    viewModel.countryCode.substring(1),
-                    viewModel.mobileNumber
-                )
+//                val payload = """{"countryCode":${viewModel.countryCode.substring(1)},"phoneNo":${viewModel.mobileNumber}}"""
+//
+//// Generate the signature
+//                val signature = createSignature(secretKey, payload, timestamp)
+                if (canSendSms())
+                    makeApiRequest()
+                else {
+                    CommonMethods.dismissProgressDialog()
+                    CommonMethods.dismissAlertDialog()
+                    val currentTime = System.currentTimeMillis()
+                    val lastSentTime = App.prefsManager.userSmsTimestamps
+                    val timeDifference = currentTime - lastSentTime
+                    val cooldownPeriod = 60000 // 60 seconds in milliseconds
+                    val time = cooldownPeriod - timeDifference
+                    var seconds = 0L
+                    if (time > 0L)
+                        seconds = (time / 1000) % 60
+                    getString(R.string.you_have_to_wait, seconds.toString()).showToast(
+                        requireContext()
+                    )
+                }
             }
         }
     }
 
+    private fun makeApiRequest() {
+        val timestamp = (System.currentTimeMillis() / 1000).toString()
+//        val timestamp = Instant.now().epochSecond.toString()
+        val payload =
+            """{"countryCode":${viewModel.countryCode.substring(1)},"phoneNo":"${viewModel.mobileNumber}"}"""
+
+        val decryptedText = EncryptionHelper.decrypt(App.secretKey, App.encryptedKey)
+
+        val signature = createSignature(decryptedText, payload, timestamp)
+
+        viewModel.setPhone(
+            viewModel.countryCode.substring(1),
+            viewModel.mobileNumber, signature, timestamp
+        )
+//        val okHttpClient = RestClient.getOkHttpClient2(
+//            signature,
+//            timestamp
+//        )
+//        val requestBody = RequestBody.create(
+//            "application/json; charset=utf-8".toMediaTypeOrNull(),
+//            payload
+//        )
+//
+//        val request = Request.Builder()
+//            .url(Constants.BASE_URL + "user-service/set-phone")
+//            .post(requestBody)
+//            .build()
+//        okHttpClient.newCall(request).enqueue(object : Callback {
+//            override fun onFailure(call: Call, e: IOException) {
+//                // Handle failure
+//                activity?.runOnUiThread {
+//                    CommonMethods.dismissProgressDialog()
+//                    CommonMethods.dismissAlertDialog()
+//                    getString(R.string.unable_to_connect_to_the_server).showToast(requireContext())
+//                }
+//            }
+//
+//            override fun onResponse(call: Call, response: Response) {
+//                // Handle response
+//                if (!response.isSuccessful) {
+//                    activity?.runOnUiThread {
+//                        // Handle unsuccessful response
+//                        CommonMethods.dismissProgressDialog()
+//                        CommonMethods.dismissAlertDialog()
+////                    val errorBody = response.errorBody()?.string() ?: "Unknown error occurred"
+////                    CommonMethods.showErrorMessage(requireContext(), response.errorBody(), binding.root)
+//                    }
+//                    return
+//                }
+//                activity?.runOnUiThread {
+//                    App.prefsManager.userSmsTimestamps=System.currentTimeMillis()
+//
+//                    // Parse the response body
+//                    response.body?.let { responseBody ->
+//                        val responseData = responseBody.string()
+//                        val gson = Gson()
+//                        val it = gson.fromJson(responseData, SetPhoneResponse::class.java)
+//
+//                        if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+//                            App.prefsManager.accessToken = it.data.token
+//                            App.accessToken = it.data.token
+//                            CommonMethods.dismissProgressDialog()
+//                            CommonMethods.dismissAlertDialog()
+//                            if (!fromResend) {
+//                                val transparentView = View(context)
+//                                transparentView.setBackgroundColor(
+//                                    ContextCompat.getColor(
+//                                        requireContext(),
+//                                        R.color.semi_transparent_dark
+//                                    )
+//                                )
+//
+//                                // Set layout parameters for the transparent view
+//                                val viewParams = RelativeLayout.LayoutParams(
+//                                    RelativeLayout.LayoutParams.MATCH_PARENT,
+//                                    RelativeLayout.LayoutParams.MATCH_PARENT
+//                                )
+//
+//                                val vc = VerificationBottomSheet(::handle)
+//
+//                                vc.viewToDelete = transparentView
+//                                vc.mainView = getView()?.rootView as ViewGroup
+//                                vc.viewModel = viewModel
+//                                vc.fromSignUp = true
+//                                vc.show(childFragmentManager, "")
+//
+//                                // Add the transparent view to the RelativeLayout
+//                                val mainView = getView()?.rootView as ViewGroup
+//                                mainView.addView(transparentView, viewParams)
+//                            } else
+//                                resendCodeParam!!.onResend()
+//
+//                        }
+//                        fromResend = false
+//                    }
+//                }
+//            }
+//        })
+
+    }
+
+
+    private fun createSignature(secretKey: String, payload: String, timestamp: String): String {
+        val message = "$timestamp.$payload"
+        val hmacSHA256 = "HmacSHA256"
+        val secretKeySpec = SecretKeySpec(secretKey.toByteArray(), hmacSHA256)
+        val mac = Mac.getInstance(hmacSHA256)
+        mac.init(secretKeySpec)
+        val hash = mac.doFinal(message.toByteArray())
+        return hash.joinToString("") { String.format("%02x", it) }
+    }
 
 }

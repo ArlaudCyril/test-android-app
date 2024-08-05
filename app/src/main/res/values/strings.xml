@@ -7,7 +7,6 @@
    <!--            <string name="API_KEY">AIzaSyDILfqSYsVaOhqF8cSugU7ekCt8V4GSYyo</string>-->
 
    <!--    <string name="encodedKey">UVVsNllWTjVSRWxNWm5GVFdYTldZVTlvY1VZNFkxTjFaMVUzWld0RGREaFdORWRUV1hsdgo=</string>-->
-
     <string name="app_name">Lyber</string>
     <string name="lyber_investments_reinvented">Lyber, crypto at your fingertips.</string>
     <string name="diversified_regular_simple">Simple, secure and diversified investment.</string>
@@ -803,4 +802,9 @@
     <string name="amount_withdrawn">The amount has withdrawn from\nyour account.</string>
     <string name="receive">Receive</string>
     <string name="euro_amount">Euro amount</string>
+    <string name="today_l">Today</string>
+    <string name="yesterday_L">Yesterday</string>
+    <string name="you_have_to_wait">You have to wait %1$s seconds before sending another OTP.</string>
+    <string name="account_creation_failed">Your account creation has been blocked for compliance reasons. If you need further information, please contact support.</string>
+
 </resources>

@@ -23,6 +23,10 @@ import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
+import com.appsflyer.AFInAppEventParameterName
+import com.appsflyer.AFInAppEventType
+import com.appsflyer.AppsFlyerLib
+import com.appsflyer.attribution.AppsFlyerRequestListener
 import java.util.*
 
 class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>(),
@@ -47,15 +51,51 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         viewModel.investStrategyResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
-                findNavController().popBackStack(R.id.pickYourStrategyFragment, false)
+                val eventValues = HashMap<String, Any>()
+                eventValues[AFInAppEventParameterName.CONTENT_ID] = viewModel.amount.toDouble()
+                eventValues[AFInAppEventParameterName.CONTENT_TYPE] =
+                    Constants.APP_FLYER_TYPE_ACTIVATE_STRATEGY
+                AppsFlyerLib.getInstance().logEvent(requireContext().applicationContext,
+                    AFInAppEventType.PURCHASE, eventValues,
+                    object : AppsFlyerRequestListener {
+                        override fun onSuccess() {
+                            Log.d("LOG_TAG", "Event Activate Strategy  sent successfully")
+                        }
 
-//                findNavController().navigate(R.id.pickYourStrategyFragment)
+                        override fun onError(errorCode: Int, errorDesc: String) {
+                            Log.d(
+                                "LOG_TAG", "Event Activate Strategy  failed to be sent:\n" +
+                                        "Error code: " + errorCode + "\n"
+                                        + "Error description: " + errorDesc
+                            )
+                        }
+                    })
+                findNavController().popBackStack(R.id.pickYourStrategyFragment, false)
             }
         }
 
         viewModel.oneTimeStrategyDataResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
+                val eventValues = HashMap<String, Any>()
+                eventValues[AFInAppEventParameterName.CONTENT_ID] =viewModel.amount.toDouble()
+                eventValues[AFInAppEventParameterName.CONTENT_TYPE] =
+                    Constants.APP_FLYER_TYPE_STRATEGY_EXECUTION
+                AppsFlyerLib.getInstance().logEvent(requireContext().applicationContext,
+                    AFInAppEventType.PURCHASE, eventValues,
+                    object : AppsFlyerRequestListener {
+                        override fun onSuccess() {
+                            Log.d("LOG_TAG", "Event Strategy execution sent successfully")
+                        }
+
+                        override fun onError(errorCode: Int, errorDesc: String) {
+                            Log.d(
+                                "LOG_TAG", "Event Strategy execution failed to be sent:\n" +
+                                        "Error code: " + errorCode + "\n"
+                                        + "Error description: " + errorDesc
+                            )
+                        }
+                    })
                 Log.d("dataa", "${it.data.id}")
                 val bundle = Bundle()
                 bundle.putString("executionId", it.data.id)
@@ -133,12 +173,15 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         binding.apply {
             val buyValue = (viewModel.amount.toDouble() * (0.08)).toDouble()
             tvNestedAmountValue.text =
-                viewModel.amount.decimalPoint().commaFormattedDecimal(decimal) + " ${Constants.MAIN_ASSET_UPPER}"
+                viewModel.amount.decimalPoint()
+                    .commaFormattedDecimal(decimal) + " ${Constants.MAIN_ASSET_UPPER}"
             tvValueTotal.text =
                 (viewModel.amount.toFloat() + buyValue).toString()
-                    .decimalPoint().commaFormattedDecimal(decimal) + " ${Constants.MAIN_ASSET_UPPER}"
+                    .decimalPoint()
+                    .commaFormattedDecimal(decimal) + " ${Constants.MAIN_ASSET_UPPER}"
             tvValueLyberFee.text =
-                buyValue.toString().decimalPoint().commaFormattedDecimal(decimal)+ " ${Constants.MAIN_ASSET_UPPER}"
+                buyValue.toString().decimalPoint()
+                    .commaFormattedDecimal(decimal) + " ${Constants.MAIN_ASSET_UPPER}"
 
             when (viewModel.selectedOption) {
 
@@ -181,8 +224,8 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                         tvValueFrequency.text = viewModel.selectedFrequency
 
                     tvNestedAmountValue.text = (viewModel.amount.toDouble() - fee).toString()
-                        .decimalPoint().commaFormattedDecimal(decimal) + " ${Constants.MAIN_ASSET_UPPER}"
-
+                        .decimalPoint()
+                        .commaFormattedDecimal(decimal) + " ${Constants.MAIN_ASSET_UPPER}"
 
 
 //                    viewModel.amount.decimalPoint().commaFormatted + " ${Constants.MAIN_ASSET_UPPER}"

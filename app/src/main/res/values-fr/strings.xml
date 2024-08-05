@@ -804,5 +804,8 @@
     <string name="receive">Recevoir</string>
     <string name="euro_amount">Euro amount</string>
 
-
+    <string name="today_l">Aujourd\'hui</string>
+    <string name="yesterday_L">Hier</string>
+    <string name="you_have_to_wait">Vous devez attendre %1$s secondes avant d\'envoyer un autre OTP.</string>
+    <string name="account_creation_failed">Votre création de compte a été bloquée pour des raisons de conformité. Si vous avez besoin de plus d\'informations, veuillez contacter le support.</string>
 </resources>

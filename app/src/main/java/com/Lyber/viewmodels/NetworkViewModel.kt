@@ -1016,9 +1016,11 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun setPhone(countryCode: String, phone: String) {
+    fun setPhone(countryCode: String, phone: String,
+                 signature: String,
+                 timestamp: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get(Constants.NEW_BASE_URL)
+            val res = RestClient.setPhone(Constants.NEW_BASE_URL,signature, timestamp)
                 .setPhone(hashMapOf("countryCode" to countryCode.toInt(), "phoneNo" to phone))
             if (res.isSuccessful)
                 _setPhoneResponse.postValue(res.body())

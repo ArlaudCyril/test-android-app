@@ -22,7 +22,6 @@ import com.Lyber.databinding.ItemMyAssetBinding
 import com.Lyber.models.BalanceStrategy
 import com.Lyber.models.BalanceStrategyData
 import com.Lyber.ui.adapters.BaseAdapter
-import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.commaFormatted
 import com.Lyber.utils.CommonMethods.Companion.currencyFormatted
@@ -31,6 +30,7 @@ import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
+import com.Lyber.viewmodels.PortfolioViewModel
 import okhttp3.ResponseBody
 import java.math.RoundingMode
 
@@ -43,7 +43,7 @@ import java.math.RoundingMode
 class OrderStrategyExecutionFragment : BaseFragment<FragmentOrderStrategyExecutionBinding>(),
     OnClickListener {
     override fun bind() = FragmentOrderStrategyExecutionBinding.inflate(layoutInflater)
-   private val handler = Handler(Looper.getMainLooper())
+    private val handler = Handler(Looper.getMainLooper())
     private val delayMillis = 5000L // 5 seconds in milliseconds
     private var executionID = ""
     private lateinit var viewModel: PortfolioViewModel
@@ -52,7 +52,7 @@ class OrderStrategyExecutionFragment : BaseFragment<FragmentOrderStrategyExecuti
         super.onViewCreated(view, savedInstanceState)
         viewModel = CommonMethods.getViewModel(requireActivity())
         viewModel.listener = this
-        executionID =  requireArguments().getString("executionId").toString()
+        executionID = requireArguments().getString("executionId").toString()
         startRepeatingTask()
         binding.ivTopAction.setOnClickListener(this)
         binding.btnThanks.setOnClickListener(this)

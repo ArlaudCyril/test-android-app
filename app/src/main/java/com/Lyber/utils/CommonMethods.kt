@@ -307,7 +307,6 @@ class CommonMethods {
                         .error(placeHolderRes)
                         .listener(SvgSoftwareLayerSetter())
 
-
                 when (any) {
                     is String -> {
 //                        if (!any.contains("http"))

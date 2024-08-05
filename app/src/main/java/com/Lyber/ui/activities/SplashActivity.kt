@@ -35,14 +35,6 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
     lateinit var navController: NavController
     override fun bind() = ActivitySplashBinding.inflate(layoutInflater)
 
-//    private var checkPermission: Boolean = false
-//    override fun onResume() {
-//        super.onResume()
-//        if(checkPermission) {
-//            checkPermission=false
-//            checkAndRequest()
-//        }
-//    }
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         setIntent(intent)
@@ -93,6 +85,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
                     }
                 }
             })
+
 
         if (App.prefsManager != null && App.prefsManager.user != null && !App.prefsManager.user?.language.isNullOrEmpty()) {
             App.prefsManager.setLanguage(App.prefsManager.user?.language!!)
@@ -179,7 +172,6 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
         else navController.navigate(R.id.splashFragment)
 //        else splashFragmentFunction()
     }
-
     fun splashFragmentFunction() {
         if (App.prefsManager.tokenSavedAt.is30DaysOld()) {
             App.prefsManager.logout()
@@ -198,11 +190,8 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
             }
 
         }
-    }}
-
-
-
-
+    }
+}
 
 
 

@@ -26,6 +26,10 @@ import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.PortfolioViewModel
+import com.appsflyer.AFInAppEventParameterName
+import com.appsflyer.AFInAppEventType
+import com.appsflyer.AppsFlyerLib
+import com.appsflyer.attribution.AppsFlyerRequestListener
 import com.google.android.gms.wallet.button.ButtonConstants
 import com.google.android.gms.wallet.button.ButtonOptions
 import com.google.android.gms.wallet.button.PayButton
@@ -181,6 +185,21 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
                 stopTimer()
                 isGpayHit = false
                 viewModel.selectedAsset = CommonMethods.getAsset(Constants.MAIN_ASSET)
+                val eventValues = HashMap<String, Any>()
+                eventValues[AFInAppEventParameterName.CONTENT_TYPE] = Constants.APP_FLYER_TYPE_GPAY
+                eventValues[AFInAppEventParameterName.CONTENT_ID] = orderId
+                AppsFlyerLib.getInstance().logEvent( requireContext().applicationContext,
+                    AFInAppEventType.PURCHASE, eventValues,
+                    object : AppsFlyerRequestListener {
+                        override fun onSuccess() {
+                            Log.d("LOG_TAG", "Event sent successfully")
+                        }
+                        override fun onError(errorCode: Int, errorDesc: String) {
+                            Log.d("LOG_TAG", "Event failed to be sent:\n" +
+                                    "Error code: " + errorCode + "\n"
+                                    + "Error description: " + errorDesc)
+                        }
+                    })
                 val bundle = Bundle().apply {
                     putString(Constants.ORDER_ID, orderId)
                     putString(Constants.FROM_SWAP, PreviewMyPurchaseFragment::class.java.name)
@@ -284,7 +303,8 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
             val priceCoin = balance.balanceData.euroBalance.toDouble()
                 .div(balance.balanceData.balance.toDouble())
             tvValueDepositFee.text =
-                BigDecimal.valueOf(data.fromAmount.toDouble()).subtract(BigDecimal.valueOf(data.fromAmountDeductedFees.toDouble()))
+                BigDecimal.valueOf(data.fromAmount.toDouble())
+                    .subtract(BigDecimal.valueOf(data.fromAmountDeductedFees.toDouble()))
                     .toString()
 
 //                data.fees + Constants.EURO TODO
@@ -297,9 +317,15 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
             tvTotalAmount.text =
                 "${String.format(Locale.US, "%.2f", data.fromAmount.toFloat()) + Constants.EURO}"
 
-            tvValueDeposit.text =data.fromAmountDeductedFees + Constants.EURO
+            tvValueDeposit.text = data.fromAmountDeductedFees + Constants.EURO
+
 //                "" + (data.fromAmount.toDouble() - data.fees.toDouble()) + Constants.EURO TODO
-            tvAmount.text = "${data.toAmount.formattedAsset(priceCoin, RoundingMode.DOWN) + Constants.MAIN_ASSET_UPPER}"
+            tvAmount.text = "${
+                data.toAmount.formattedAsset(
+                    priceCoin,
+                    RoundingMode.DOWN
+                ) + Constants.MAIN_ASSET_UPPER
+            }"
             btnConfirmInvestment.isEnabled = true
             timer =
                 ((data.validTimestamp.toLong() - System.currentTimeMillis()) / 1000).toInt()

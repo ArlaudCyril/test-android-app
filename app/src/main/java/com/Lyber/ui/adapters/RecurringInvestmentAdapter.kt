@@ -13,7 +13,6 @@ import com.Lyber.utils.CommonMethods.Companion.decimalPoint
 import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
 import com.Lyber.utils.CommonMethods.Companion.toFormat
 import com.Lyber.utils.Constants
-import kotlin.math.abs
 
 class RecurringInvestmentAdapter(private val clickListener: (ActiveStrategyData) -> Unit = { _ -> }, private val context:Context) :
     BaseAdapter<ActiveStrategyData>() {

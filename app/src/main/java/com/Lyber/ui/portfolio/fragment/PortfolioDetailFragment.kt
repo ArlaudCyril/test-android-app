@@ -56,6 +56,10 @@ import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.utils.ItemOffsetDecoration
 import com.airbnb.lottie.LottieAnimationView
+import com.appsflyer.AFInAppEventParameterName
+import com.appsflyer.AFInAppEventType
+import com.appsflyer.AppsFlyerLib
+import com.appsflyer.attribution.AppsFlyerRequestListener
 import com.github.jinatonic.confetti.CommonConfetti
 import com.github.jinatonic.confetti.ConfettiManager
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -155,7 +159,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             tvAssetName.typeface = context?.resources?.getFont(R.font.mabry_pro_medium)
 
             var customUrl = ""
-            if (viewModel.selectedAsset?.id =="usdt")
+            if (viewModel.selectedAsset?.id == "usdt")
                 customUrl = Constants.SOCKET_BASE_URL + "eurusdt"
           else
                 customUrl = Constants.SOCKET_BASE_URL + "${viewModel.selectedAsset?.id}eur"
@@ -325,8 +329,24 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                         )
                     )
                         viewModel.getOrderApi(requireArguments().getString(Constants.ORDER_ID, ""))
-                    else
+                    else {
                         viewModel.confirmOrder(requireArguments().getString(Constants.ORDER_ID, ""))
+                        val eventValues = HashMap<String, Any>()
+                        eventValues[AFInAppEventParameterName.CONTENT_TYPE] = Constants.APP_FLYER_TYPE_CRYPTO
+                        eventValues[AFInAppEventParameterName.CONTENT_ID] = requireArguments().getString(Constants.ORDER_ID, "")
+                        AppsFlyerLib.getInstance().logEvent( requireContext().applicationContext,
+                            AFInAppEventType.PURCHASE, eventValues,
+                            object : AppsFlyerRequestListener {
+                                override fun onSuccess() {
+                                    Log.d("LOG_TAG", "Event sent successfully")
+                                }
+                                override fun onError(errorCode: Int, errorDesc: String) {
+                                    Log.d("LOG_TAG", "Event failed to be sent:\n" +
+                                            "Error code: " + errorCode + "\n"
+                                            + "Error description: " + errorDesc)
+                                }
+                            })
+                    }
                 }
             }
         }
@@ -423,7 +443,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                     btnBuy.visible()
                 if (balance != null)
                     btnSell.visible()
-                if ( (viewModel.selectedAsset!!.id.equals(
+                if ((viewModel.selectedAsset!!.id.equals(
                         "usdt",
                         ignoreCase = true
                     ))
@@ -569,7 +589,10 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                         )
                     ) {
                         if (BaseActivity.ribWalletList.isEmpty()) {
-                            findNavController().navigate(R.id.addRibFragment)
+                            val bundle = Bundle().apply {
+                                putString(Constants.FROM, PortfolioDetailFragment::class.java.name)
+                            }
+                            findNavController().navigate(R.id.addRibFragment, bundle)
                         } else {
                             findNavController().navigate(R.id.ribListingFragment)
 
@@ -600,336 +623,342 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
                 }
 
-                        llThreeDot -> {
-                            val portfolioThreeDotsFragment =
-                                PortfolioThreeDots(::menuOptionSelected)
-                            portfolioThreeDotsFragment.dismissListener =
-                                this@PortfolioDetailFragment
-                            if (CommonMethods.getBalance(viewModel.selectedAsset!!.id) != null) {
-                                portfolioThreeDotsFragment.typePopUp = "AssetPopUpWithdraw"
-                            } else {
-                                portfolioThreeDotsFragment.typePopUp = "AssetPopUpWithdraw"
-                            }
+                llThreeDot -> {
+                    val portfolioThreeDotsFragment =
+                        PortfolioThreeDots(::menuOptionSelected)
+                    portfolioThreeDotsFragment.dismissListener =
+                        this@PortfolioDetailFragment
+                    if (CommonMethods.getBalance(viewModel.selectedAsset!!.id) != null) {
+                        portfolioThreeDotsFragment.typePopUp = "AssetPopUpWithdraw"
+                    } else {
+                        portfolioThreeDotsFragment.typePopUp = "AssetPopUpWithdraw"
+                    }
 
-                            portfolioThreeDotsFragment.show(
-                                childFragmentManager,
-                                "PortfolioThreeDots"
-                            )
-                            grayOverlay = View(requireContext())
-                            grayOverlay?.setBackgroundColor(
-                                ContextCompat.getColor(
-                                    requireContext(),
-                                    R.color.semi_transparent_dark
-                                )
-                            )
-                            grayOverlay?.alpha = 1.0f
-                            screenContent.addView(grayOverlay)
-                        }
+                    portfolioThreeDotsFragment.show(
+                        childFragmentManager,
+                        "PortfolioThreeDots"
+                    )
+                    grayOverlay = View(requireContext())
+                    grayOverlay?.setBackgroundColor(
+                        ContextCompat.getColor(
+                            requireContext(),
+                            R.color.semi_transparent_dark
+                        )
+                    )
+                    grayOverlay?.alpha = 1.0f
+                    screenContent.addView(grayOverlay)
+                }
 
-                        ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
-                        tvAssetName -> {
-                            findNavController().popBackStack()
-                            val bundle = Bundle()
-                            bundle.putString(Constants.TYPE, "assets")
-                            findNavController().navigate(R.id.allAssetFragment, bundle)
-                        }
+                ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
+                tvAssetName -> {
+                    findNavController().popBackStack()
+                    val bundle = Bundle()
+                    bundle.putString(Constants.TYPE, "assets")
+                    findNavController().navigate(R.id.allAssetFragment, bundle)
+                }
 
-                        btnBuy -> {
-                            val balance =
-                                com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == Constants.MAIN_ASSET }
-                            viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
-                            if (viewModel.selectedAsset!!.id == Constants.MAIN_ASSET) {
-                                if (checkKyc())
-                                    findNavController().navigate(R.id.buyUsdt)
-                            } else if (balance != null) {
-                                viewModel.exchangeAssetTo = viewModel.selectedAsset!!.id
-                                viewModel.exchangeAssetFrom = Constants.MAIN_ASSET
-                                findNavController().navigate(R.id.addAmountForExchangeFragment)
-                            } else {
-                                if (App.prefsManager.user!!.kycStatus == "OK" && App.prefsManager.user!!.yousignStatus == "SIGNED")
-                                    showDialog()
-                                else checkKyc()
-                            }
-                        }
+                btnBuy -> {
+                    val balance =
+                        com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == Constants.MAIN_ASSET }
+                    viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
+                    if (viewModel.selectedAsset!!.id == Constants.MAIN_ASSET) {
+                        if (checkKyc())
+                            findNavController().navigate(R.id.buyUsdt)
+                    } else if (balance != null) {
+                        viewModel.exchangeAssetTo = viewModel.selectedAsset!!.id
+                        viewModel.exchangeAssetFrom = Constants.MAIN_ASSET
+                        findNavController().navigate(R.id.addAmountForExchangeFragment)
+                    } else {
+                        if (App.prefsManager.user!!.kycStatus == "OK" && App.prefsManager.user!!.yousignStatus == "SIGNED")
+                            showDialog()
+                        else checkKyc()
                     }
                 }
             }
-
-    //MARK:- Web Socket Listener
-    private inner class PortfolioDetailWebSocketListener : WebSocketListener() {
-        override fun onOpen(webSocket: WebSocket, response: Response) {
-            super.onOpen(webSocket, response)
-            socketOpen = true
         }
+    }
 
-        override fun onMessage(webSocket: WebSocket, text: String) {
-            if (!socketOpen) return
-            requireActivity().runOnUiThread {
-                val jsonObject = JSONObject(text)
-                if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                    var price = jsonObject.getString("Price")
+            //MARK:- Web Socket Listener
+            private inner class PortfolioDetailWebSocketListener : WebSocketListener() {
+                override fun onOpen(webSocket: WebSocket, response: Response) {
+                    super.onOpen(webSocket, response)
+                    socketOpen = true
+                }
+
+                override fun onMessage(webSocket: WebSocket, text: String) {
+                    if (!socketOpen) return
+                    requireActivity().runOnUiThread {
+                        val jsonObject = JSONObject(text)
+                        if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                            var price = jsonObject.getString("Price")
 //                    Log.d("price", "$price")
-                    if (viewModel.selectedAsset?.id == Constants.MAIN_ASSET)
-                        price = (1.0 / price.toFloat()).toString()
+                            if (viewModel.selectedAsset?.id == Constants.MAIN_ASSET)
+                                price = (1.0 / price.toFloat()).toString()
 //                    Log.d("price", "$price")
-                    if (updateSocketValue) {
-                        binding.tvValuePortfolioAndAssetPrice.text = price.currencyFormatted
-                        binding.lineChart.updateValueLastPoint(price.toFloat())
-                    }
-                    if (firstPrice != 0.0) {
-                        val percentChange = ((price.toDouble() / firstPrice) - 1) * 100
-                        val euroChange = price.toDouble() - firstPrice
+                            if (updateSocketValue) {
+                                binding.tvValuePortfolioAndAssetPrice.text = price.currencyFormatted
+                                binding.lineChart.updateValueLastPoint(price.toFloat())
+                            }
+                            if (firstPrice != 0.0) {
+                                val percentChange = ((price.toDouble() / firstPrice) - 1) * 100
+                                val euroChange = price.toDouble() - firstPrice
 
-                        if (percentChange >= 0.0) {
-                            binding.tvAssetVariation.text =
-                                "▲ + ${percentChange.absoluteValue.commaFormatted}% (${euroChange.commaFormatted}€)"
-                            binding.tvAssetVariation.setTextColor(
-                                ContextCompat.getColor(
-                                    requireContext(),
-                                    R.color.green_500
-                                )
-                            )
+                                if (percentChange >= 0.0) {
+                                    binding.tvAssetVariation.text =
+                                        "▲ + ${percentChange.absoluteValue.commaFormatted}% (${euroChange.commaFormatted}€)"
+                                    binding.tvAssetVariation.setTextColor(
+                                        ContextCompat.getColor(
+                                            requireContext(),
+                                            R.color.green_500
+                                        )
+                                    )
 
-                        } else {
-                            binding.tvAssetVariation.text =
-                                "▼ - ${percentChange.absoluteValue.commaFormatted}% (${euroChange.commaFormatted}€)"
-                            binding.tvAssetVariation.setTextColor(
-                                ContextCompat.getColor(
-                                    requireContext(),
-                                    R.color.red_500
-                                )
-                            )
+                                } else {
+                                    binding.tvAssetVariation.text =
+                                        "▼ - ${percentChange.absoluteValue.commaFormatted}% (${euroChange.commaFormatted}€)"
+                                    binding.tvAssetVariation.setTextColor(
+                                        ContextCompat.getColor(
+                                            requireContext(),
+                                            R.color.red_500
+                                        )
+                                    )
 
-                        }
+                                }
 //                        Log.d("Price", "$price")
 //                        Log.d("firstPrice", "$firstPrice")
 //                        Log.d("percent", "${percentChange.commaFormatted}")
+                            }
+                        }
                     }
                 }
+
+                override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
+                    super.onFailure(webSocket, t, response)
+                    Log.d("socket", "failed $response")
+                }
+
+                override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
+                    super.onClosed(webSocket, code, reason)
+                    socketOpen = false
+                }
             }
-        }
 
-        override fun onFailure(webSocket: WebSocket, t: Throwable, response: Response?) {
-            super.onFailure(webSocket, t, response)
-            Log.d("socket", "failed $response")
-        }
-
-        override fun onClosed(webSocket: WebSocket, code: Int, reason: String) {
-            super.onClosed(webSocket, code, reason)
-            socketOpen = false
-        }
-    }
-
-    override fun onRetrofitError(responseBody: ResponseBody?) {
-        super.onRetrofitError(responseBody)
-        updateSocketValue = true
-        dismissAlertDialog()
-        arguments = null
-        if (dialog != null) {
+            override fun onRetrofitError(responseBody: ResponseBody?) {
+                super.onRetrofitError(responseBody)
+                updateSocketValue = true
+                dismissAlertDialog()
+                arguments = null
+                if (dialog != null) {
 //            showLottieProgressDialog(requireActivity(), Constants.LOADING_FAILURE)
-            dismissProgress()
-            Handler().postDelayed({
-                dismissProgressDialog()
-            }, 1000)
-        }
-    }
-
-    fun dismissProgressDialog() {
-        dialog?.let {
-            try {
-                it.findViewById<ImageView>(R.id.progressImage).clearAnimation()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            it.dismiss()
-            dialog = null
-        }
-    }
-
-    override fun onPortfolioThreeDotsDismissed() {
-        // Code to remove the overlay view from the parent fragment's layout
-        binding.screenContent.removeView(grayOverlay)
-    }
-
-    private fun showProgress(context: Context) {
-
-        if (dialog == null) {
-            dialog = Dialog(context)
-            dialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
-            dialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            dialog!!.window!!.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-            dialog!!.window!!.setDimAmount(0.6F)
-            dialog!!.setCancelable(false)
-            dialog!!.setContentView(ProgressBarNewBinding.inflate(LayoutInflater.from(context)).root)
-        }
-        try {
-            dialog?.findViewById<ImageView>(R.id.progressImage)?.animation =
-                AnimationUtils.loadAnimation(context, R.anim.rotate_drawable)
-            dialog!!.show()
-        } catch (e: WindowManager.BadTokenException) {
-            Log.d("Exception", "showProgressDialog: ${e.message}")
-            dialog?.dismiss()
-            dialog = null
-        } catch (e: Exception) {
-            Log.d("Exception", "showProgressDialog: ${e.message}")
-        }
-
-    }
-
-    private fun dismissProgress() {
-        dialog?.let {
-            try {
-                it.findViewById<ImageView>(R.id.progressImage).clearAnimation()
-            } catch (e: Exception) {
-                e.printStackTrace()
-            }
-            it.dismiss()
-        }
-    }
-
-    private fun setTimer(timeFrame: String) {
-        var interval = 0.0
-        var date = Date(binding.lineChart.timeSeries.last()[0].toLong())
-        when (timeFrame) {
-            "1h" -> {
-                // Every minute
-                date = Calendar.getInstance().apply {
-                    time = date
-                    add(Calendar.MINUTE, 1)
-                }.time
-                interval = 60.0
-            }
-
-            "4h" -> {
-                // Every 5 minutes
-                date = Calendar.getInstance().apply {
-                    time = date
-                    add(Calendar.MINUTE, 5)
-                }.time
-                interval = 60.0 * 5.0
-            }
-
-            "1d" -> {
-                // Every 30 minutes
-                date = Calendar.getInstance().apply {
-                    time = date
-                    add(Calendar.MINUTE, 30)
-                }.time
-                interval = 60.0 * 30.0
-            }
-
-            "1w" -> {
-                // Every 4 hours
-                date = Calendar.getInstance().apply {
-                    time = date
-                    add(Calendar.HOUR_OF_DAY, 4)
-                }.time
-                interval = 60.0 * 60.0 * 4.0
-            }
-
-            "1m" -> {
-                // Every 12 hours
-                date = Calendar.getInstance().apply {
-                    time = date
-                    add(Calendar.HOUR_OF_DAY, 12)
-                }.time
-                interval = 60.0 * 60.0 * 12.0
-            }
-
-            "1y" -> {
-                // Every 7 days
-                date = Calendar.getInstance().apply {
-                    time = date
-                    add(Calendar.DAY_OF_YEAR, 7)
-                }.time
-                interval = 60.0 * 60.0 * 24.0 * 7.0
-            }
-
-            else -> {
-                println("timeFrame not recognized")
-            }
-        }
-
-        timer = Timer()
-        timer.schedule(object : TimerTask() {
-            override fun run() {
-                requireActivity().runOnUiThread() {
-                    if (isAdded)
-                        binding.lineChart.addPoint()
+                    dismissProgress()
+                    Handler().postDelayed({
+                        dismissProgressDialog()
+                    }, 1000)
                 }
             }
-        }, date, (interval * 1000).toLong())
 
-    }
+            fun dismissProgressDialog() {
+                dialog?.let {
+                    try {
+                        it.findViewById<ImageView>(R.id.progressImage).clearAnimation()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                    it.dismiss()
+                    dialog = null
+                }
+            }
 
-    private fun getPriceChart(assetId: String, duration: Duration) {
-        CommonMethods.checkInternet(requireContext()) {
-            binding.lineChart.animation =
-                AnimationUtils.loadAnimation(requireContext(), R.anim.blink)
-            viewModel.getPriceGraph(assetId, duration)
-        }
-    }
+            override fun onPortfolioThreeDotsDismissed() {
+                // Code to remove the overlay view from the parent fragment's layout
+                binding.screenContent.removeView(grayOverlay)
+            }
 
-    private fun showLottieProgressDialog(context: Context, typeOfLoader: Int) {
+            private fun showProgress(context: Context) {
 
-        if (dialog == null) {
-            dialog = Dialog(context)
-            dialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
-            dialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-            dialog!!.window!!.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-            dialog!!.window!!.setDimAmount(0.2F)
-            dialog!!.setCancelable(false)
-            val height = resources.getDimension(R.dimen.px_200)
-            val width = resources.getDimension(R.dimen.px_300)
-            dialog!!.setContentView(LottieViewBinding.inflate(LayoutInflater.from(context)).root)
+                if (dialog == null) {
+                    dialog = Dialog(context)
+                    dialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                    dialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                    dialog!!.window!!.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+                    dialog!!.window!!.setDimAmount(0.6F)
+                    dialog!!.setCancelable(false)
+                    dialog!!.setContentView(
+                        ProgressBarNewBinding.inflate(
+                            LayoutInflater.from(
+                                context
+                            )
+                        ).root
+                    )
+                }
+                try {
+                    dialog?.findViewById<ImageView>(R.id.progressImage)?.animation =
+                        AnimationUtils.loadAnimation(context, R.anim.rotate_drawable)
+                    dialog!!.show()
+                } catch (e: WindowManager.BadTokenException) {
+                    Log.d("Exception", "showProgressDialog: ${e.message}")
+                    dialog?.dismiss()
+                    dialog = null
+                } catch (e: Exception) {
+                    Log.d("Exception", "showProgressDialog: ${e.message}")
+                }
+
+            }
+
+            private fun dismissProgress() {
+                dialog?.let {
+                    try {
+                        it.findViewById<ImageView>(R.id.progressImage).clearAnimation()
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                    }
+                    it.dismiss()
+                }
+            }
+
+            private fun setTimer(timeFrame: String) {
+                var interval = 0.0
+                var date = Date(binding.lineChart.timeSeries.last()[0].toLong())
+                when (timeFrame) {
+                    "1h" -> {
+                        // Every minute
+                        date = Calendar.getInstance().apply {
+                            time = date
+                            add(Calendar.MINUTE, 1)
+                        }.time
+                        interval = 60.0
+                    }
+
+                    "4h" -> {
+                        // Every 5 minutes
+                        date = Calendar.getInstance().apply {
+                            time = date
+                            add(Calendar.MINUTE, 5)
+                        }.time
+                        interval = 60.0 * 5.0
+                    }
+
+                    "1d" -> {
+                        // Every 30 minutes
+                        date = Calendar.getInstance().apply {
+                            time = date
+                            add(Calendar.MINUTE, 30)
+                        }.time
+                        interval = 60.0 * 30.0
+                    }
+
+                    "1w" -> {
+                        // Every 4 hours
+                        date = Calendar.getInstance().apply {
+                            time = date
+                            add(Calendar.HOUR_OF_DAY, 4)
+                        }.time
+                        interval = 60.0 * 60.0 * 4.0
+                    }
+
+                    "1m" -> {
+                        // Every 12 hours
+                        date = Calendar.getInstance().apply {
+                            time = date
+                            add(Calendar.HOUR_OF_DAY, 12)
+                        }.time
+                        interval = 60.0 * 60.0 * 12.0
+                    }
+
+                    "1y" -> {
+                        // Every 7 days
+                        date = Calendar.getInstance().apply {
+                            time = date
+                            add(Calendar.DAY_OF_YEAR, 7)
+                        }.time
+                        interval = 60.0 * 60.0 * 24.0 * 7.0
+                    }
+
+                    else -> {
+                        println("timeFrame not recognized")
+                    }
+                }
+
+                timer = Timer()
+                timer.schedule(object : TimerTask() {
+                    override fun run() {
+                        requireActivity().runOnUiThread() {
+                            if (isAdded)
+                                binding.lineChart.addPoint()
+                        }
+                    }
+                }, date, (interval * 1000).toLong())
+
+            }
+
+            private fun getPriceChart(assetId: String, duration: Duration) {
+                CommonMethods.checkInternet(requireContext()) {
+                    binding.lineChart.animation =
+                        AnimationUtils.loadAnimation(requireContext(), R.anim.blink)
+                    viewModel.getPriceGraph(assetId, duration)
+                }
+            }
+
+            private fun showLottieProgressDialog(context: Context, typeOfLoader: Int) {
+
+                if (dialog == null) {
+                    dialog = Dialog(context)
+                    dialog!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                    dialog!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                    dialog!!.window!!.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+                    dialog!!.window!!.setDimAmount(0.2F)
+                    dialog!!.setCancelable(false)
+                    val height = resources.getDimension(R.dimen.px_200)
+                    val width = resources.getDimension(R.dimen.px_300)
+                    dialog!!.setContentView(LottieViewBinding.inflate(LayoutInflater.from(context)).root)
 //            dialog!!.getWindow()!!.setLayout(width.toInt(), height.toInt());
-        }
-        try {
-            val viewImage = dialog?.findViewById<LottieAnimationView>(R.id.animationView)
-            val imageView = dialog?.findViewById<ImageView>(R.id.ivCorrect)!!
-            when (typeOfLoader) {
-                Constants.LOADING -> {
-                    viewImage!!.setMinAndMaxProgress(0f, .32f)
                 }
+                try {
+                    val viewImage = dialog?.findViewById<LottieAnimationView>(R.id.animationView)
+                    val imageView = dialog?.findViewById<ImageView>(R.id.ivCorrect)!!
+                    when (typeOfLoader) {
+                        Constants.LOADING -> {
+                            viewImage!!.setMinAndMaxProgress(0f, .32f)
+                        }
 
-                Constants.LOADING_SUCCESS -> {
-                    imageView.visible()
-                    imageView.setImageResource(R.drawable.baseline_done_24)
-                }
+                        Constants.LOADING_SUCCESS -> {
+                            imageView.visible()
+                            imageView.setImageResource(R.drawable.baseline_done_24)
+                        }
 
-                Constants.LOADING_FAILURE -> {
-                    imageView.visible()
-                    imageView.setImageResource(R.drawable.baseline_clear_24)
-                }
-            }
-            /*(0f,.32f) for loader
+                        Constants.LOADING_FAILURE -> {
+                            imageView.visible()
+                            imageView.setImageResource(R.drawable.baseline_clear_24)
+                        }
+                    }
+                    /*(0f,.32f) for loader
             * (0f,.84f) for success
             * (0.84f,1f) for failure*/
-            viewImage!!.playAnimation()
+                    viewImage!!.playAnimation()
 
 
-            dialog!!.show()
-        } catch (e: WindowManager.BadTokenException) {
-            Log.d("Exception", "showProgressDialog: ${e.message}")
-            dialog?.dismiss()
-            dialog = null
-        } catch (e: Exception) {
-            Log.d("Exception", "showProgressDialog: ${e.message}")
+                    dialog!!.show()
+                } catch (e: WindowManager.BadTokenException) {
+                    Log.d("Exception", "showProgressDialog: ${e.message}")
+                    dialog?.dismiss()
+                    dialog = null
+                } catch (e: Exception) {
+                    Log.d("Exception", "showProgressDialog: ${e.message}")
+                }
+
+            }
+
+            private fun stopTimer() {
+                timer.cancel()
+            }
+
+            fun investMoneyClicked(toStrategy: Boolean) {
+                if (toStrategy) requireActivity().replaceFragment(
+                    R.id.flSplashActivity, PickYourStrategyFragment(), topBottom = true
+                )
+                else requireActivity().replaceFragment(
+                    R.id.flSplashActivity, SelectAnAssetFragment(), topBottom = true
+                )
+            }
+
         }
-
-    }
-
-    private fun stopTimer() {
-        timer.cancel()
-    }
-
-    fun investMoneyClicked(toStrategy: Boolean) {
-        if (toStrategy) requireActivity().replaceFragment(
-            R.id.flSplashActivity, PickYourStrategyFragment(), topBottom = true
-        )
-        else requireActivity().replaceFragment(
-            R.id.flSplashActivity, SelectAnAssetFragment(), topBottom = true
-        )
-    }
-
-}

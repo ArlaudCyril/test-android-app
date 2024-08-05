@@ -42,6 +42,10 @@ import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.Constants
 import com.Lyber.utils.LoaderObject
 import com.Lyber.viewmodels.PortfolioViewModel
+import com.appsflyer.AFInAppEventParameterName
+import com.appsflyer.AFInAppEventType
+import com.appsflyer.AppsFlyerLib
+import com.appsflyer.attribution.AppsFlyerRequestListener
 import okhttp3.ResponseBody
 import java.io.File
 import java.io.IOException
@@ -108,6 +112,20 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
                 getUser1()
                 App.prefsManager.personalDataSteps = 0
                 App.prefsManager.portfolioCompletionStep = 0
+                val eventValues = HashMap<String, Any>()
+                eventValues[AFInAppEventParameterName.REGISTRATION_METHOD] = "Lyber"
+                AppsFlyerLib.getInstance().logEvent( applicationContext,
+                    AFInAppEventType.COMPLETE_REGISTRATION, eventValues,
+                    object : AppsFlyerRequestListener {
+                        override fun onSuccess() {
+                            Log.d("LOG_TAG", "Event register sent successfully")
+                        }
+                        override fun onError(errorCode: Int, errorDesc: String) {
+                            Log.d("LOG_TAG", "Event registration failed to be sent:\n" +
+                                    "Error code: " + errorCode + "\n"
+                                    + "Error description: " + errorDesc)
+                        }
+                    })
                 val intent = Intent(this@WebViewActivity, SplashActivity::class.java)
                 intent.putExtra(
                     "fragment_to_show",
@@ -135,19 +153,6 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
                     applicationContext,
                     android.Manifest.permission.READ_MEDIA_IMAGES
                 ) != PackageManager.PERMISSION_GRANTED
-//                ||
-//                ActivityCompat.checkSelfPermission(
-//                    applicationContext,
-//                    android.Manifest.permission.READ_MEDIA_VIDEO
-//                ) != PackageManager.PERMISSION_GRANTED
-//                || ActivityCompat.checkSelfPermission(
-//                    applicationContext,
-//                    android.Manifest.permission.MODIFY_AUDIO_SETTINGS
-//                ) != PackageManager.PERMISSION_GRANTED
-//                || ActivityCompat.checkSelfPermission(
-//                    applicationContext,
-//                    android.Manifest.permission.RECORD_AUDIO
-//                ) != PackageManager.PERMISSION_GRANTED
 
             ) {
 
@@ -155,9 +160,6 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
                     arrayOf(
                         android.Manifest.permission.CAMERA,
                         android.Manifest.permission.READ_MEDIA_IMAGES
-//                        android.Manifest.permission.READ_MEDIA_VIDEO
-//                        android.Manifest.permission.MODIFY_AUDIO_SETTINGS,
-//                        android.Manifest.permission.RECORD_AUDIO
                     )
                 )
 
@@ -182,25 +184,13 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
                     applicationContext,
                     android.Manifest.permission.READ_EXTERNAL_STORAGE
                 ) != PackageManager.PERMISSION_GRANTED
-//                ||
-//                ActivityCompat.checkSelfPermission(
-//                    applicationContext,
-//                    android.Manifest.permission.MODIFY_AUDIO_SETTINGS
-//                ) != PackageManager.PERMISSION_GRANTED
-//                ||
-//                ActivityCompat.checkSelfPermission(
-//                    applicationContext,
-//                    android.Manifest.permission.RECORD_AUDIO
-//                ) != PackageManager.PERMISSION_GRANTED
             ) {
 
                 requestMultiplePermissions.launch(
                     arrayOf(
                         android.Manifest.permission.CAMERA,
                         android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        android.Manifest.permission.READ_EXTERNAL_STORAGE,
-//                        android.Manifest.permission.MODIFY_AUDIO_SETTINGS,
-//                        android.Manifest.permission.RECORD_AUDIO
+                        android.Manifest.permission.READ_EXTERNAL_STORAGE
                     )
                 )
 
@@ -220,9 +210,6 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                 if (permissions[android.Manifest.permission.CAMERA] == true
                     && permissions[android.Manifest.permission.READ_MEDIA_IMAGES] == true
-//                    && permissions[android.Manifest.permission.READ_MEDIA_VIDEO] == true
-//                    && permissions[android.Manifest.permission.MODIFY_AUDIO_SETTINGS] == true
-//                    && permissions[android.Manifest.permission.RECORD_AUDIO] == true
                 ) {
                     Log.d("requestMultiplePermissions", "Permission granted")
                     // isPermissionGranted=true
@@ -238,15 +225,6 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
                         } else permissionsDenied()
 
                     }
-//                    else if (permissions[android.Manifest.permission.READ_MEDIA_VIDEO] == false) {
-//                        if (!ActivityCompat.shouldShowRequestPermissionRationale(
-//                                this,
-//                                android.Manifest.permission.READ_MEDIA_VIDEO
-//                            )
-//                        ) {
-//                            checkAndRequest()
-//                        } else permissionsDenied()
-//                    }
                     else if (permissions[android.Manifest.permission.READ_MEDIA_IMAGES] == false) {
 
                         if (!ActivityCompat.shouldShowRequestPermissionRationale(
@@ -258,28 +236,6 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
                         } else permissionsDenied()
 
                     }
-//                    else if (permissions[android.Manifest.permission.MODIFY_AUDIO_SETTINGS] == false) {
-//
-//                        if (!ActivityCompat.shouldShowRequestPermissionRationale(
-//                                this,
-//                                android.Manifest.permission.MODIFY_AUDIO_SETTINGS
-//                            )
-//                        ) {
-//                            checkAndRequest()
-//                        } else permissionsDenied()
-//
-//                    } else if (permissions[android.Manifest.permission.RECORD_AUDIO] == false) {
-//
-//                        if (!ActivityCompat.shouldShowRequestPermissionRationale(
-//                                this,
-//                                android.Manifest.permission.RECORD_AUDIO
-//                            )
-//                        ) {
-//                            checkAndRequest()
-//                        } else permissionsDenied()
-//
-//                    }
-
                     Log.d("requestMultiplePermissions", "Permission not granted")
 
                 }
@@ -288,8 +244,6 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
 
                 if (permissions[android.Manifest.permission.CAMERA] == true && permissions[android.Manifest.permission.WRITE_EXTERNAL_STORAGE] == true
                     && permissions[android.Manifest.permission.READ_EXTERNAL_STORAGE] == true
-//                    && permissions[android.Manifest.permission.MODIFY_AUDIO_SETTINGS] == true
-//                    && permissions[android.Manifest.permission.RECORD_AUDIO] == true
                 ) {
                     Log.d("requestMultiplePermissions", "Permission granted")
                     // isPermissionGranted=true
@@ -324,25 +278,6 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
                             permissionsDenied()
                         }
                     }
-//                    else if (permissions[android.Manifest.permission.MODIFY_AUDIO_SETTINGS] == false
-//                        && permissions[android.Manifest.permission.RECORD_AUDIO] == false
-//                    ) {
-//                        if (!ActivityCompat.shouldShowRequestPermissionRationale(
-//                                this,
-//                                android.Manifest.permission.MODIFY_AUDIO_SETTINGS
-//                            )
-//                            && ActivityCompat.shouldShowRequestPermissionRationale(
-//                                this,
-//                                android.Manifest.permission.RECORD_AUDIO
-//                            )
-//                        ) {
-//                            checkAndRequest()
-//                        } else {
-//
-//                            permissionsDenied()
-//                        }
-//                    }
-
                     Log.d("requestMultiplePermissions", "Permission not granted")
 
                 }

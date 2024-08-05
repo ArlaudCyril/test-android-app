@@ -5,6 +5,7 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
+import android.provider.Settings
 import android.util.Log
 import android.view.MotionEvent
 import android.view.View
@@ -19,6 +20,10 @@ import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
+import com.appsflyer.AFInAppEventParameterName
+import com.appsflyer.AFInAppEventType
+import com.appsflyer.AppsFlyerLib
+import com.appsflyer.attribution.AppsFlyerRequestListener
 import kotlinx.coroutines.launch
 import java.util.Locale
 
@@ -51,6 +56,7 @@ class DiscoveryFragment : BaseFragment<FragmentDiscoveryBinding>(), OnClickListe
         binding.ivLanguage.setOnClickListener(this)
         binding.tvEnglish.setOnClickListener(this)
         binding.tvFrench.setOnClickListener(this)
+         Log.d("AndroidID","${Settings.Secure.getString(requireContext().contentResolver, Settings.Secure.ANDROID_ID)}")
 
 
         binding.root.setOnTouchListener { _, event ->
@@ -60,6 +66,7 @@ class DiscoveryFragment : BaseFragment<FragmentDiscoveryBinding>(), OnClickListe
                     binding.cvLanguage.visibility = View.GONE
                     true
                 }
+
                 else -> false
             }
         }
@@ -69,15 +76,24 @@ class DiscoveryFragment : BaseFragment<FragmentDiscoveryBinding>(), OnClickListe
         binding.apply {
             when (p0) {
                 btnSignUp -> {
-//                    val bundle = Bundle().apply {
-//                        putBoolean(Constants.FOR_LOGIN, false)
-//                    }
-//                    if ( App.prefsManager.portfolioCompletionStep !=-1) {
+                    val eventValues = HashMap<String, Any>()
+                    eventValues[AFInAppEventParameterName.CONTENT] = "RegistrationPage"
+                    AppsFlyerLib.getInstance().logEvent(requireContext().applicationContext,
+                        AFInAppEventType.CONTENT_VIEW, eventValues,
+                        object : AppsFlyerRequestListener {
+                            override fun onSuccess() {
+                                Log.d("LOG_TAG", "Event Register sent successfully")
+                            }
+
+                            override fun onError(errorCode: Int, errorDesc: String) {
+                                Log.d(
+                                    "LOG_TAG", "Event Register failed to be sent:\n" +
+                                            "Error code: " + errorCode + "\n"
+                                            + "Error description: " + errorDesc
+                                )
+                            }
+                        })
                     findNavController().navigate(R.id.completePortfolioFragment)
-//                    } else {
-////                findNavController().navigate(R.id.createAccountFragment, bundle)
-//                        findNavController().navigate(R.id.completePortfolioFragment)
-//                    }
                 }
 
                 tvLogin -> {
