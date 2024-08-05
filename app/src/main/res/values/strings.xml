@@ -7,7 +7,7 @@
     <!--            <string name="API_KEY">AIzaSyDILfqSYsVaOhqF8cSugU7ekCt8V4GSYyo</string>-->
 
     <!--    <string name="encodedKey">UVVsNllWTjVSRWxNWm5GVFdYTldZVTlvY1VZNFkxTjFaMVUzWld0RGREaFdORWRUV1hsdgo=</string>-->
-    <string name="app_name">Lyber Dev</string>
+    <string name="app_name">Lyber</string>
     <string name="lyber_investments_reinvented">Lyber, crypto at your fingertips.</string>
     <string name="diversified_regular_simple">Simple, secure and diversified investment.</string>
     <string name="sign_up">Sign up</string>
