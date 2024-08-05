@@ -25,6 +25,7 @@ import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
 import com.Lyber.dev.utils.CommonMethods.Companion.gone
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
+import com.Lyber.dev.utils.LoaderObject
 import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.Lyber.dev.viewmodels.SignUpViewModel
 import okhttp3.ResponseBody
@@ -386,6 +387,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
     override fun onRetrofitError(responseBody: ResponseBody?) {
         CommonMethods.dismissProgressDialog()
         CommonMethods.dismissAlertDialog()
+        LoaderObject.hideLoader()
         val code = CommonMethods.showErrorMessage(requireContext(), responseBody, binding.root)
         Log.d("errorCode", "$code")
         if (code == 7023 || code == 10041 || code == 7025 || code == 10043)

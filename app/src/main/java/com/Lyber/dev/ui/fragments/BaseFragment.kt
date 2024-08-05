@@ -159,6 +159,7 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
     override fun onRetrofitError(responseBody: ResponseBody?) {
         dismissProgressDialog()
         dismissAlertDialog()
+        LoaderObject.hideLoader()
         val code = CommonMethods.showErrorMessage(requireContext(), responseBody, binding.root)
         Log.d("errorCode", "$code")
         if (code == 7023 || code == 10041 || code == 7025 || code == 10043)

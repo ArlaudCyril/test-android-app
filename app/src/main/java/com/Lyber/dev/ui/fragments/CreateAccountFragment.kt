@@ -3,14 +3,12 @@ package com.Lyber.dev.ui.fragments
 //import java.util.Base64
 import android.annotation.SuppressLint
 import android.content.res.Configuration
-import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.view.ViewTreeObserver
 import android.widget.RelativeLayout
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
@@ -18,8 +16,6 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentCreateAccountBinding
-import com.Lyber.dev.models.SetPhoneResponse
-import com.Lyber.dev.network.RestClient
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.VerificationBottomSheet
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
@@ -35,22 +31,12 @@ import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.utils.EncryptionHelper
-import com.Lyber.dev.utils.KeystoreHelper
-import com.Lyber.dev.utils.resendCodeParam
 import com.Lyber.dev.viewmodels.SignUpViewModel
 import com.au.countrycodepicker.CountryPicker
-import com.google.gson.Gson
 import com.nimbusds.srp6.SRP6ClientSession
 import com.nimbusds.srp6.SRP6CryptoParams
 import com.nimbusds.srp6.SRP6VerifierGenerator
 import com.nimbusds.srp6.XRoutineWithUserIdentity
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.MediaType.Companion.toMediaTypeOrNull
-import okhttp3.Request
-import okhttp3.RequestBody
-import okhttp3.Response
-import java.io.IOException
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
@@ -195,6 +181,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
             }
         }
         viewModel.setPhoneResponse.observe(viewLifecycleOwner) {
+            App.prefsManager.userSmsTimestamps=System.currentTimeMillis()
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 App.prefsManager.accessToken = it.data.token
                 App.accessToken = it.data.token
@@ -613,95 +600,94 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
 
         val signature = createSignature(decryptedText, payload, timestamp)
 
-        val apiVersion = Constants.API_VERSION // or any other version
-
-        val okHttpClient = RestClient.getOkHttpClient2(
-            "",
-            apiVersion,
-            signature,
-            timestamp
+        viewModel.setPhone(
+            viewModel.countryCode.substring(1),
+            viewModel.mobileNumber, signature, timestamp
         )
-        val requestBody = RequestBody.create(
-            "application/json; charset=utf-8".toMediaTypeOrNull(),
-            payload
-        )
-
-        val request = Request.Builder()
-            .url(Constants.BASE_URL + "user-service/set-phone")
-            .post(requestBody)
-            .build()
-
-        okHttpClient.newCall(request).enqueue(object : Callback {
-            override fun onFailure(call: Call, e: IOException) {
-                // Handle failure
-                activity?.runOnUiThread {
-                    CommonMethods.dismissProgressDialog()
-                    CommonMethods.dismissAlertDialog()
-                    getString(R.string.unable_to_connect_to_the_server).showToast(requireContext())
-                }
-            }
-
-            override fun onResponse(call: Call, response: Response) {
-                // Handle response
-                if (!response.isSuccessful) {
-                    activity?.runOnUiThread {
-                        // Handle unsuccessful response
-                        CommonMethods.dismissProgressDialog()
-                        CommonMethods.dismissAlertDialog()
-//                    val errorBody = response.errorBody()?.string() ?: "Unknown error occurred"
-//                    CommonMethods.showErrorMessage(requireContext(), response.errorBody(), binding.root)
-                    }
-                    return
-                }
-                activity?.runOnUiThread {
-                    App.prefsManager.userSmsTimestamps=System.currentTimeMillis()
-
-                    // Parse the response body
-                    response.body?.let { responseBody ->
-                        val responseData = responseBody.string()
-                        val gson = Gson()
-                        val it = gson.fromJson(responseData, SetPhoneResponse::class.java)
-
-                        if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                            App.prefsManager.accessToken = it.data.token
-                            App.accessToken = it.data.token
-                            CommonMethods.dismissProgressDialog()
-                            CommonMethods.dismissAlertDialog()
-                            if (!fromResend) {
-                                val transparentView = View(context)
-                                transparentView.setBackgroundColor(
-                                    ContextCompat.getColor(
-                                        requireContext(),
-                                        R.color.semi_transparent_dark
-                                    )
-                                )
-
-                                // Set layout parameters for the transparent view
-                                val viewParams = RelativeLayout.LayoutParams(
-                                    RelativeLayout.LayoutParams.MATCH_PARENT,
-                                    RelativeLayout.LayoutParams.MATCH_PARENT
-                                )
-
-                                val vc = VerificationBottomSheet(::handle)
-
-                                vc.viewToDelete = transparentView
-                                vc.mainView = getView()?.rootView as ViewGroup
-                                vc.viewModel = viewModel
-                                vc.fromSignUp = true
-                                vc.show(childFragmentManager, "")
-
-                                // Add the transparent view to the RelativeLayout
-                                val mainView = getView()?.rootView as ViewGroup
-                                mainView.addView(transparentView, viewParams)
-                            } else
-                                resendCodeParam!!.onResend()
-
-                        }
-                        fromResend = false
-                    }
-                }
-            }
-        })
+//        val okHttpClient = RestClient.getOkHttpClient2(
+//            signature,
+//            timestamp
+//        )
+//        val requestBody = RequestBody.create(
+//            "application/json; charset=utf-8".toMediaTypeOrNull(),
+//            payload
+//        )
+//
+//        val request = Request.Builder()
+//            .url(Constants.BASE_URL + "user-service/set-phone")
+//            .post(requestBody)
+//            .build()
+//        okHttpClient.newCall(request).enqueue(object : Callback {
+//            override fun onFailure(call: Call, e: IOException) {
+//                // Handle failure
+//                activity?.runOnUiThread {
+//                    CommonMethods.dismissProgressDialog()
+//                    CommonMethods.dismissAlertDialog()
+//                    getString(R.string.unable_to_connect_to_the_server).showToast(requireContext())
+//                }
+//            }
+//
+//            override fun onResponse(call: Call, response: Response) {
+//                // Handle response
+//                if (!response.isSuccessful) {
+//                    activity?.runOnUiThread {
+//                        // Handle unsuccessful response
+//                        CommonMethods.dismissProgressDialog()
+//                        CommonMethods.dismissAlertDialog()
+////                    val errorBody = response.errorBody()?.string() ?: "Unknown error occurred"
+////                    CommonMethods.showErrorMessage(requireContext(), response.errorBody(), binding.root)
+//                    }
+//                    return
+//                }
+//                activity?.runOnUiThread {
+//                    App.prefsManager.userSmsTimestamps=System.currentTimeMillis()
+//
+//                    // Parse the response body
+//                    response.body?.let { responseBody ->
+//                        val responseData = responseBody.string()
+//                        val gson = Gson()
+//                        val it = gson.fromJson(responseData, SetPhoneResponse::class.java)
+//
+//                        if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+//                            App.prefsManager.accessToken = it.data.token
+//                            App.accessToken = it.data.token
+//                            CommonMethods.dismissProgressDialog()
+//                            CommonMethods.dismissAlertDialog()
+//                            if (!fromResend) {
+//                                val transparentView = View(context)
+//                                transparentView.setBackgroundColor(
+//                                    ContextCompat.getColor(
+//                                        requireContext(),
+//                                        R.color.semi_transparent_dark
+//                                    )
+//                                )
+//
+//                                // Set layout parameters for the transparent view
+//                                val viewParams = RelativeLayout.LayoutParams(
+//                                    RelativeLayout.LayoutParams.MATCH_PARENT,
+//                                    RelativeLayout.LayoutParams.MATCH_PARENT
+//                                )
+//
+//                                val vc = VerificationBottomSheet(::handle)
+//
+//                                vc.viewToDelete = transparentView
+//                                vc.mainView = getView()?.rootView as ViewGroup
+//                                vc.viewModel = viewModel
+//                                vc.fromSignUp = true
+//                                vc.show(childFragmentManager, "")
+//
+//                                // Add the transparent view to the RelativeLayout
+//                                val mainView = getView()?.rootView as ViewGroup
+//                                mainView.addView(transparentView, viewParams)
+//                            } else
+//                                resendCodeParam!!.onResend()
+//
+//                        }
+//                        fromResend = false
+//                    }
+//                }
+//            }
+//        })
 
     }
 

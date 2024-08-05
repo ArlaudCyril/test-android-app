@@ -4,10 +4,12 @@ import android.app.Application
 import android.content.Context
 import android.util.Base64
 import android.util.Log
+import androidx.core.content.PackageManagerCompat.LOG_TAG
 import com.Lyber.dev.R
 import com.google.android.libraries.places.api.Places
 import javax.crypto.SecretKey
-
+import com.appsflyer.AppsFlyerLib
+import com.appsflyer.attribution.AppsFlyerRequestListener
 
 class App : Application() {
 
@@ -26,15 +28,28 @@ class App : Application() {
         isSign = prefsManager.isSign
         isKyc = prefsManager.isKyc
         KeystoreHelper.generateAndStoreKey(this)
-
         // Get the stored key
         secretKey = KeystoreHelper.getSecretKey()
-
-
         // Encrypt data
-        encryptedKey = EncryptionHelper.encrypt(secretKey, Constants.k)
+        encryptedKey = EncryptionHelper.encrypt(secretKey, Constants.key)
 
         // Encrypt dat
+        AppsFlyerLib.getInstance().init(Constants.APP_FLYER_KEY, null, this)
+//        AppsFlyerLib.getInstance().start(this)
+        AppsFlyerLib.getInstance().setDebugLog(true)
+        AppsFlyerLib.getInstance().start(this, Constants.APP_FLYER_KEY, object :
+            AppsFlyerRequestListener {
+            override fun onSuccess() {
+                Log.d("LOG_TAG", "Launch sent successfully")
+            }
+
+            override fun onError(errorCode: Int, errorDesc: String) {
+                Log.d("LOG_TAG", "Launch failed to be sent:\n" +
+                        "Error code: " + errorCode + "\n"
+                        + "Error description: " + errorDesc)
+            }
+        })
+
 //        getEncodedApiKey()
     }
 

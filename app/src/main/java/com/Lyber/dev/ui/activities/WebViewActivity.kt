@@ -42,6 +42,10 @@ import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.utils.LoaderObject
 import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.appsflyer.AFInAppEventParameterName
+import com.appsflyer.AFInAppEventType
+import com.appsflyer.AppsFlyerLib
+import com.appsflyer.attribution.AppsFlyerRequestListener
 import okhttp3.ResponseBody
 import java.io.File
 import java.io.IOException
@@ -108,6 +112,20 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
                 getUser1()
                 App.prefsManager.personalDataSteps = 0
                 App.prefsManager.portfolioCompletionStep = 0
+                val eventValues = HashMap<String, Any>()
+                eventValues[AFInAppEventParameterName.REGISTRATION_METHOD] = "Lyber"
+                AppsFlyerLib.getInstance().logEvent( applicationContext,
+                    AFInAppEventType.COMPLETE_REGISTRATION, eventValues,
+                    object : AppsFlyerRequestListener {
+                        override fun onSuccess() {
+                            Log.d("LOG_TAG", "Event register sent successfully")
+                        }
+                        override fun onError(errorCode: Int, errorDesc: String) {
+                            Log.d("LOG_TAG", "Event registration failed to be sent:\n" +
+                                    "Error code: " + errorCode + "\n"
+                                    + "Error description: " + errorDesc)
+                        }
+                    })
                 val intent = Intent(this@WebViewActivity, SplashActivity::class.java)
                 intent.putExtra(
                     "fragment_to_show",

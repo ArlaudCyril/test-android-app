@@ -20,6 +20,7 @@ import androidx.core.content.ContextCompat.getColor
 import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -58,7 +59,7 @@ import java.util.Locale
 
 class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), ActivityCallbacks,
     View.OnClickListener, PortfolioFragmentActions {
-//    private val viewModel1: com.Lyber.dev.models.GetUserViewModal by activityViewModels()
+    //    private val viewModel1: com.Lyber.dev.models.GetUserViewModal by activityViewModels()
 
     /* adapters */
     private lateinit var adapterBalance: BalanceAdapter
@@ -72,7 +73,6 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
     private lateinit var viewModel: PortfolioViewModel
     private var apiStarted = false
-    var kycOK = false
     private var verificationVisible = false
     private lateinit var navController: NavController
     private var limit = 1
@@ -248,24 +248,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             })
 
         if (App.prefsManager.user?.kycStatus != "OK" || App.prefsManager.user?.yousignStatus != "SIGNED") {
-//          viewModel1.startFetchingUserData()
-//            GlobalScope.launch {
-//                // Run a loop infinitely
-//                while (!kycOK) {
-//                    // Call the function to fetch user data
-////                    Log.d("hitting Api","$kycOK")
-//                    if (App.prefsManager.accessToken.isNotEmpty()) {
-//                        viewModel.getUser()
-//                        // Delay for 10 seconds
-////                        if (App.prefsManager.user?.kycStatus == "STARTED" || App.prefsManager.user?.kycStatus == "NOT_STARTED")
-//                        delay(3 * 1000)
-////                        else
-////                            delay(10 * 1000)
-//                    }
-//                }
-//            }
-            // Prevent the program from terminating immediately
-//            readLine()
+
         }
 
     }
@@ -439,12 +422,20 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                     dismissProgressDialog()
                     kycOK = true
                     binding.tvVerification.gone()
+                    binding.tvAccountCreationFailed.gone()
                     binding.llVerification.gone()
                 } else {
                     verificationVisible = true
                     binding.tvVerification.visible()
                     binding.llVerification.visible()
+                    binding.tvAccountCreationFailed.gone()
                     when (it.data.kycStatus) {
+                        "LYBER_REFUSED" -> {
+                            kycOK = true // set it to true because we don't want to run getUser in loop
+                            binding.tvAccountCreationFailed.visible()
+                            binding.ivKyc.setImageResource(R.drawable.red_rejected_indicator)
+                        }
+
                         "NOT_STARTED", "STARTED" -> binding.ivKyc.setImageResource(R.drawable.arrow_right_purple)
                         "FAILED", "CANCELED" -> {
                             dismissProgressDialog()
@@ -553,12 +544,20 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                     dismissProgressDialog()
                     kycOK = true
                     binding.tvVerification.gone()
+                    binding.tvAccountCreationFailed.gone()
                     binding.llVerification.gone()
                 } else {
                     verificationVisible = true
                     binding.tvVerification.visible()
                     binding.llVerification.visible()
+                    binding.tvAccountCreationFailed.gone()
                     when (it.kycStatus) {
+                        "LYBER_REFUSED" -> {
+                            kycOK = true // set it to true because we don't want to run getUser in loop
+                            binding.tvAccountCreationFailed.visible()
+                            binding.ivKyc.setImageResource(R.drawable.red_rejected_indicator)
+                        }
+
                         "NOT_STARTED", "STARTED" -> binding.ivKyc.setImageResource(R.drawable.arrow_right_purple)
                         "FAILED", "CANCELED" -> {
                             dismissProgressDialog()
@@ -678,6 +677,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             }
         }
     }
+
 
     private fun String.toMilliS(): Long {
         val dateFormatter = SimpleDateFormat("yyyy-MM-dd'T'HH:mm", Locale.getDefault())
@@ -901,12 +901,17 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 }
 
                 llContract -> {
-                    if (App.prefsManager.user?.kycStatus == "OK" && App.prefsManager.user?.yousignStatus != "SIGNED")
-                        customDialog(7025)
+                    if (App.prefsManager.user?.kycStatus == "LYBER_REFUSED") {
+//do nothing
+                    } else
+                        if (App.prefsManager.user?.kycStatus == "OK" && App.prefsManager.user?.yousignStatus != "SIGNED")
+                            customDialog(7025)
                 }
 
                 llVerifyIdentity -> {
-                    if (App.prefsManager.user?.kycStatus == "CANCELED" || App.prefsManager.user?.kycStatus == "FAILED"
+                    if (App.prefsManager.user?.kycStatus == "LYBER_REFUSED") {
+                        //do nothing
+                    } else if (App.prefsManager.user?.kycStatus == "CANCELED" || App.prefsManager.user?.kycStatus == "FAILED"
                         || App.prefsManager.user?.kycStatus == "STARTED" || App.prefsManager.user?.kycStatus == "NOT_STARTED"
                     )
                         customDialog(7023)
@@ -1006,6 +1011,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
         private var _fragmentPortfolio: PortfolioHomeFragment? = null
         val fragmentPortfolio get() = _fragmentPortfolio!!
+        var kycOK = false
     }
 
 }

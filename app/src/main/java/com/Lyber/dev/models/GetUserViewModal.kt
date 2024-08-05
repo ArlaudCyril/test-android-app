@@ -1,14 +1,14 @@
 package com.Lyber.dev.models
 
-import android.content.Context
+import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import com.Lyber.dev.ui.portfolio.fragment.PortfolioHomeFragment
 import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.viewmodels.NetworkViewModel
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
@@ -37,9 +37,10 @@ class GetUserViewModal() : ViewModel() {
             Log.d("Loop", "Started")
             fetchingJob = viewModelScope.launch {
                 // Run a loop until kycOK becomes true
-                val kycOK =
-                    PortfolioHomeFragment().kycOK  // This should be passed or observed correctly
-                while (!kycOK) {
+//                val kycOK =
+//                    PortfolioHomeFragment().kycOK  // This should be passed or observed correctly
+               val kyc=PortfolioHomeFragment.kycOK
+                while (!PortfolioHomeFragment.kycOK ) {
                     // Check if the access token is not empty
                     if (App.prefsManager.accessToken.isNotEmpty()) {
                         getUser()
@@ -47,6 +48,15 @@ class GetUserViewModal() : ViewModel() {
                         delay(3 * 1000)
                     }
                 }
+
+//                sharedViewModel.kycOK.asFlow().collect { kycOK ->
+//                    while (!kycOK) {
+//                        if (App.prefsManager.accessToken.isNotEmpty()) {
+//                            getUser()
+//                            delay(3 * 1000)
+//                        }
+//                    }
+//                }
             }
         }
 

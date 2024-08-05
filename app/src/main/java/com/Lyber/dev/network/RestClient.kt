@@ -94,30 +94,28 @@ object RestClient {
     }
 
 
-    class RequestInterceptor(
-        private val accessToken: String,
-        private val apiVersion: String,
-        private val signature: String,
-        private val timestamp: String
-    ) :
-        Interceptor {
-        override fun intercept(chain: Interceptor.Chain): Response {
-            val request = chain.request().newBuilder()
-                .header("Authorization", "Bearer $accessToken")
-                .header("x-api-version", apiVersion)
-                .header("X-Signature", signature)
-                .header("X-Timestamp", timestamp.toString())
-                .build()
+//    class RequestInterceptor(
+//        private val accessToken: String,
+//        private val apiVersion: String,
+//        private val signature: String,
+//        private val timestamp: String
+//    ) :
+//        Interceptor {
+//        override fun intercept(chain: Interceptor.Chain): Response {
+//            val request = chain.request().newBuilder()
+//                .header("Authorization", "Bearer $accessToken")
+//                .header("x-api-version", apiVersion)
+//                .header("X-Signature", signature)
+//                .header("X-Timestamp", timestamp.toString())
+//                .build()
+//
+//            return chain.proceed(request)
+//        }
+//    }
 
-            return chain.proceed(request)
-        }
-    }
-
-     fun getOkHttpClient2(
-         accessToken: String,
-         apiVersion: String,
-         signature: String,
-         timestamp: String
+    fun getOkHttpClient2(
+        signature: String,
+        timestamp: String
     ): OkHttpClient {
         val httpLoggingInterceptor = HttpLoggingInterceptor()
         httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
@@ -129,9 +127,43 @@ object RestClient {
             .socketFactory(SocketFactory.getDefault())
             .retryOnConnectionFailure(true)
             .addNetworkInterceptor(httpLoggingInterceptor)
-            .addInterceptor(RequestInterceptor(accessToken, apiVersion, signature, timestamp))
+            .addInterceptor { chain ->
+                val request = chain.request()
+                val header = request.newBuilder().header(
+                    "Authorization",
+                    "Bearer " + ""
+                )
+                    .header("X-Signature", signature)
+                    .header("X-Timestamp", timestamp.toString())
+                    .header("x-api-version", Constants.API_VERSION)
+                val build = header.build()
+                chain.proceed(build)
+            }
+//            .addInterceptor(RequestInterceptor(accessToken, apiVersion, signature, timestamp))
             .build()
     }
 
+    fun setPhone(
+        baseUrl: String = Constants.BASE_URL,
+        signature: String,
+        timestamp: String
+    ): Api {
 
+        retrofit = Retrofit.Builder()
+            .baseUrl(baseUrl)
+            .client(getOkHttpClient2(signature, timestamp))
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(
+                GsonConverterFactory.create(
+                    GsonBuilder().setLenient()
+                        .disableHtmlEscaping()
+                        .create()
+                )
+            )
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .build()
+
+        REST_CLIENT = retrofit.create(Api::class.java)
+        return REST_CLIENT
+    }
 }
