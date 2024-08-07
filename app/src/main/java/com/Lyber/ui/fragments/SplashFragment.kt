@@ -12,6 +12,7 @@ import com.Lyber.databinding.FragmentSplashBinding
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.is30DaysOld
+import com.Lyber.utils.Constants
 
 class SplashFragment : BaseFragment<FragmentSplashBinding>() {
     private lateinit var handler: Handler
@@ -29,7 +30,7 @@ class SplashFragment : BaseFragment<FragmentSplashBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        CommonMethods.showDocumentDialog(requireActivity(), 3, true)
+        CommonMethods.showDocumentDialog(requireActivity(), Constants.LOADING_DISMISS, true)
 
         handler = Handler(Looper.getMainLooper())
         runnable = Runnable {

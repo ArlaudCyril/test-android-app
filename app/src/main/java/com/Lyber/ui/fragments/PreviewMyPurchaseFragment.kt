@@ -382,8 +382,10 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
     }
 
     private fun stopTimer() {
-        handler.removeCallbacks(runnable)
-        isTimerRunning = false
+        if(isAdded) {
+            handler.removeCallbacks(runnable)
+            isTimerRunning = false
+        }
     }
 
     private fun dismissList(clicked: Boolean) {
