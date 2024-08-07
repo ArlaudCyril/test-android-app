@@ -287,6 +287,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 
         val vc = VerificationBottomSheet2FA(::handle)
         vc.viewToDelete = transparentView
+        vc.viewModel = viewModelSignup
         vc.mainView = getView()?.rootView as ViewGroup
         vc.show(childFragmentManager, Constants.ACTION_CLOSE_ACCOUNT)
 
