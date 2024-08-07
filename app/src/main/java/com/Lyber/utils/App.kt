@@ -83,6 +83,7 @@ class App : Application() {
         var isLoader: Boolean = false
         lateinit var prefsManager: PreferenceManager
         lateinit var appContext: Context
+        var kycOK=false
     }
 
 

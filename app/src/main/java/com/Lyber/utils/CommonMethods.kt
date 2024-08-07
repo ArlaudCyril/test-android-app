@@ -1755,100 +1755,105 @@ class CommonMethods {
         }
 
         fun showDocumentDialog(context: Context, typeOfLoader: Int, tt: Boolean = false) {
-            if (dialogVerification == null && typeOfLoader != 3) {
-                dialogVerification = Dialog(context)
-                dialogVerification!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
-                dialogVerification!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
-                dialogVerification!!.window!!.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
-                dialogVerification!!.window!!.setDimAmount(0.3F)
-                dialogVerification!!.setCancelable(false)
-                dialogVerification!!.setContentView(
-                    DocumentBeingVerifiedBinding.inflate(
-                        LayoutInflater.from(
-                            context
-                        )
-                    ).root
-                )
-            }
-            if (dialogVerification != null && typeOfLoader == 3) {
-                val viewImage =
-                    dialogVerification!!.findViewById<LottieAnimationView>(R.id.animationView)
-                val tvDocVerified =
-                    dialogVerification!!.findViewById<TextView>(R.id.tvDocVerified)
-                val imageView = dialogVerification!!.findViewById<ImageView>(R.id.ivCorrect)!!
-
-                viewImage.clearAnimation()
-                tvDocVerified.gone()
-                viewImage.gone()
-                imageView.gone()
-                AppLifeCycleObserver.documentDialogVisible = false
-                dialogVerification!!.dismiss()
-            } else {
-                try {
+            try {
+                if (dialogVerification == null && typeOfLoader != Constants.LOADING_DISMISS) {
+                    dialogVerification = Dialog(context)
+                    dialogVerification!!.requestWindowFeature(Window.FEATURE_NO_TITLE)
+                    dialogVerification!!.window!!.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
+                    dialogVerification!!.window!!.addFlags(WindowManager.LayoutParams.FLAG_DIM_BEHIND)
+                    dialogVerification!!.window!!.setDimAmount(0.3F)
+                    dialogVerification!!.setCancelable(false)
+                    dialogVerification!!.setContentView(
+                        DocumentBeingVerifiedBinding.inflate(
+                            LayoutInflater.from(
+                                context
+                            )
+                        ).root
+                    )
+                }
+                if (dialogVerification != null && typeOfLoader == Constants.LOADING_DISMISS) {
                     val viewImage =
                         dialogVerification!!.findViewById<LottieAnimationView>(R.id.animationView)
-                   viewImage.visible()
                     val tvDocVerified =
                         dialogVerification!!.findViewById<TextView>(R.id.tvDocVerified)
-                    if (!tt)
-                        tvDocVerified.text = context.getString(R.string.kyc_under_verification_text)
-                    else
-                        tvDocVerified.text = context.getString(R.string.doc_being_verified)
-                    tvDocVerified.visible()
                     val imageView = dialogVerification!!.findViewById<ImageView>(R.id.ivCorrect)!!
-                    when (typeOfLoader) {
 
-
-                        Constants.LOADING -> {
-                            imageView.gone()
-                            viewImage!!.playAnimation()
-                            viewImage.setMinAndMaxProgress(0f, .32f)
-                        }
-
-                        Constants.LOADING_SUCCESS -> {
-                            viewImage.clearAnimation()
-                            tvDocVerified.gone()
-                            Handler(Looper.getMainLooper()).postDelayed({
-                                imageView.visible()
-                                imageView.setImageResource(R.drawable.baseline_done_24)
-                            }, 50)
-                            Handler(Looper.getMainLooper()).postDelayed({
-                                tvDocVerified.gone()
-                                dialogVerification!!.dismiss()
-                                AppLifeCycleObserver.documentDialogVisible = false
-                            }, 400)
-                        }
-
-                        Constants.LOADING_FAILURE -> {
-                            viewImage.clearAnimation()
-                            tvDocVerified.text = context.getString(R.string.kyc_refused_text)
-                            Handler(Looper.getMainLooper()).postDelayed({
-                                imageView.visible()
-                                imageView.setImageResource(R.drawable.baseline_clear_24)
-                            }, 50)
-                            Handler(Looper.getMainLooper()).postDelayed({
-                                tvDocVerified.gone()
-                                dialogVerification!!.dismiss()
-                                AppLifeCycleObserver.documentDialogVisible = false
-                            }, 400)
-                        }
-
-                    }
-
-
-                    /*(0f,.32f) for loader
-                    * (0f,.84f) for success
-                    * (0.84f,1f) for failure*/
-
-
-                    dialogVerification!!.show()
-                } catch (e: WindowManager.BadTokenException) {
-                    Log.d("Exception", "showProgressDialog: ${e.message}")
+                    viewImage.clearAnimation()
+                    tvDocVerified.gone()
+                    viewImage.gone()
+                    imageView.gone()
+                    AppLifeCycleObserver.documentDialogVisible = false
                     dialogVerification!!.dismiss()
-                } catch (e: Exception) {
-                    Log.d("Exception", "showProgressDialog: ${e.message}")
+                } else {
+                    try {
+                        val viewImage =
+                            dialogVerification!!.findViewById<LottieAnimationView>(R.id.animationView)
+                        viewImage.visible()
+                        val tvDocVerified =
+                            dialogVerification!!.findViewById<TextView>(R.id.tvDocVerified)
+                        if (!tt)
+                            tvDocVerified.text = context.getString(R.string.kyc_under_verification_text)
+                        else
+                            tvDocVerified.text = context.getString(R.string.doc_being_verified)
+                        tvDocVerified.visible()
+                        val imageView = dialogVerification!!.findViewById<ImageView>(R.id.ivCorrect)!!
+                        when (typeOfLoader) {
+
+
+                            Constants.LOADING -> {
+                                imageView.gone()
+                                viewImage!!.playAnimation()
+                                viewImage.setMinAndMaxProgress(0f, .32f)
+                            }
+
+                            Constants.LOADING_SUCCESS -> {
+                                viewImage.clearAnimation()
+                                tvDocVerified.gone()
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    imageView.visible()
+                                    imageView.setImageResource(R.drawable.baseline_done_24)
+                                }, 50)
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    tvDocVerified.gone()
+                                    dialogVerification!!.dismiss()
+                                    AppLifeCycleObserver.documentDialogVisible = false
+                                }, 400)
+                            }
+
+                            Constants.LOADING_FAILURE -> {
+                                viewImage.clearAnimation()
+                                tvDocVerified.text = context.getString(R.string.kyc_refused_text)
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    imageView.visible()
+                                    imageView.setImageResource(R.drawable.baseline_clear_24)
+                                }, 50)
+                                Handler(Looper.getMainLooper()).postDelayed({
+                                    tvDocVerified.gone()
+                                    dialogVerification!!.dismiss()
+                                    AppLifeCycleObserver.documentDialogVisible = false
+                                }, 400)
+                            }
+
+                        }
+
+
+                        /*(0f,.32f) for loader
+                        * (0f,.84f) for success
+                        * (0.84f,1f) for failure*/
+
+
+                        dialogVerification!!.show()
+                    } catch (e: WindowManager.BadTokenException) {
+                        Log.d("Exception", "showProgressDialog: ${e.message}")
+                        dialogVerification!!.dismiss()
+                    } catch (e: Exception) {
+                        Log.d("Exception", "showProgressDialog: ${e.message}")
+                    }
                 }
+            }catch (_:Exception){
+
             }
+
 
         }
 

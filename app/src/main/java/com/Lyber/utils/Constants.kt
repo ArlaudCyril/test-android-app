@@ -18,6 +18,7 @@ object Constants {
     const val LOADING: Int = 0
     const val LOADING_SUCCESS: Int = 1
     const val LOADING_FAILURE: Int = 2
+    const val LOADING_DISMISS: Int = 3
     const val FROM_SWAP: String = "from_swap"
     const val TO_SWAP: String = "to_swap"
     const val FROM: String = "from"

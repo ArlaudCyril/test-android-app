@@ -419,7 +419,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 App.prefsManager.withdrawalLockSecurity = it.data.withdrawalLock
                 if (it.data.kycStatus == "OK" && it.data.yousignStatus == "SIGNED" && !verificationVisible) {
                     dismissProgressDialog()
-                    kycOK = true
+                    App.kycOK = true
                     binding.tvVerification.gone()
                     binding.tvAccountCreationFailed.gone()
                     binding.llVerification.gone()
@@ -431,8 +431,14 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                     when (it.data.kycStatus) {
                         "LYBER_REFUSED" -> {
                             dismissProgressDialog()
-                            kycOK =
-                                true // set it to true because we don't want to run getUser in loop
+                            App.kycOK = true // set it to true because we don't want to run getUser in loop
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                CommonMethods.showDocumentDialog(
+                                    requireActivity(),
+                                    Constants.LOADING_FAILURE,
+                                    App.isSign
+                                )
+                            }, 1500)
                             binding.tvAccountCreationFailed.visible()
                             binding.ivKyc.setImageResource(R.drawable.red_rejected_indicator)
                         }
@@ -509,7 +515,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                         }
                     if (it.data.kycStatus == "OK" && it.data.yousignStatus == "SIGNED") {
                         Log.d("isSignedKy ", "$viewModel.isSign")
-                        kycOK = true
+                        App.kycOK = true
                         Handler(Looper.getMainLooper()).postDelayed({
                             verificationVisible = false
                         }, 2000)
@@ -543,7 +549,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 App.prefsManager.withdrawalLockSecurity = it.withdrawalLock
                 if (it.kycStatus == "OK" && it.yousignStatus == "SIGNED" && !verificationVisible) {
                     dismissProgressDialog()
-                    kycOK = true
+                    App.kycOK = true
                     binding.tvVerification.gone()
                     binding.tvAccountCreationFailed.gone()
                     binding.llVerification.gone()
@@ -555,10 +561,17 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                     when (it.kycStatus) {
                         "LYBER_REFUSED" -> {
                             dismissProgressDialog()
-                            kycOK =
-                                true // set it to true because we don't want to run getUser in loop
+                            App.kycOK = true // set it to true because we don't want to run getUser in loop
+                            Handler(Looper.getMainLooper()).postDelayed({
+                                CommonMethods.showDocumentDialog(
+                                    requireActivity(),
+                                    Constants.LOADING_FAILURE,
+                                    App.isSign
+                                )
+                            }, 1500)
                             binding.tvAccountCreationFailed.visible()
                             binding.ivKyc.setImageResource(R.drawable.red_rejected_indicator)
+
                         }
 
                         "NOT_STARTED", "STARTED" -> binding.ivKyc.setImageResource(R.drawable.arrow_right_purple)
@@ -633,7 +646,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                         }
                     if (it.kycStatus == "OK" && it.yousignStatus == "SIGNED") {
                         Log.d("isSignedKy ", "$viewModel.isSign")
-                        kycOK = true
+                        App.kycOK = true
                         Handler(Looper.getMainLooper()).postDelayed({
                             verificationVisible = false
                         }, 2000)
@@ -1014,7 +1027,6 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
         private var _fragmentPortfolio: PortfolioHomeFragment? = null
         val fragmentPortfolio get() = _fragmentPortfolio!!
-        var kycOK = false
     }
 
 }

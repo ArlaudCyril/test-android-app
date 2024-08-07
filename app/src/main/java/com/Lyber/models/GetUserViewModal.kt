@@ -38,8 +38,8 @@ class GetUserViewModal() : ViewModel() {
                 // Run a loop until kycOK becomes true
 //                val kycOK =
 //                    PortfolioHomeFragment().kycOK  // This should be passed or observed correctly
-                val kyc = PortfolioHomeFragment.kycOK
-                while (!PortfolioHomeFragment.kycOK) {
+//                while (!PortfolioHomeFragment.kycOK ) {
+                while (!App.kycOK ) {
                     // Check if the access token is not empty
                     if (App.prefsManager.accessToken.isNotEmpty()) {
                         getUser()
@@ -48,14 +48,6 @@ class GetUserViewModal() : ViewModel() {
                     }
                 }
 
-//                sharedViewModel.kycOK.asFlow().collect { kycOK ->
-//                    while (!kycOK) {
-//                        if (App.prefsManager.accessToken.isNotEmpty()) {
-//                            getUser()
-//                            delay(3 * 1000)
-//                        }
-//                    }
-//                }
             }
         }
 

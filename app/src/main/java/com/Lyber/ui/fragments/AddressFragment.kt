@@ -140,6 +140,7 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
                             }
                             if ("postal_code" in component.types) {
                                 zipcode = component.shortName
+                                zipcode = zipcode.filter { it.isDigit() }
                             }
                         }
                         if (place.name.isNotEmpty()) {
