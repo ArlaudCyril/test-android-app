@@ -181,9 +181,9 @@ class PersonalDataViewModel : NetworkViewModel() {
             _zipCode = value
             if (personalData != null) {
 //                if (value != personalData!!.zip_code.toString())
-                hashMap["zip_code"] = value.toLong()
+                hashMap["zip_code"] = value
             } else
-                hashMap["zip_code"] = value.toLong()
+                hashMap["zip_code"] = value
         }
 
     private var _country: String = ""
