@@ -15,6 +15,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentTransactionBinding
 import com.Lyber.dev.databinding.ItemTransactionBinding
+import com.Lyber.dev.databinding.ItemTransactionNewBinding
 import com.Lyber.dev.databinding.LoaderViewBinding
 import com.Lyber.dev.models.TransactionData
 import com.Lyber.dev.ui.adapters.BaseAdapter
@@ -188,7 +189,7 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             return when (viewType) {
                 ORDINARY_VIEW -> TransactionViewHolder(
-                    ItemTransactionBinding.inflate(
+                    ItemTransactionNewBinding.inflate(
                         LayoutInflater.from(parent.context), parent, false
                     )
                 )
@@ -318,7 +319,7 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
         }
 
 
-        inner class TransactionViewHolder(val binding: ItemTransactionBinding) :
+        inner class TransactionViewHolder(val binding: ItemTransactionNewBinding) :
             RecyclerView.ViewHolder(binding.root) {
             init {
                 binding.root.setOnClickListener {

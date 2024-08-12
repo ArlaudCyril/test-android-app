@@ -807,5 +807,7 @@
     <string name="yesterday_L">Yesterday</string>
     <string name="you_have_to_wait">You have to wait %1$s seconds before sending another OTP.</string>
     <string name="account_creation_failed">Your account creation has been blocked for compliance reasons. If you need further information, please contact support.</string>
-
+    <string name="oh_my">Oh, my !</string>
+    <string name="amount_invested_is_insufficient">Your amount invested in this strategy is insufficient. To activate this strategy, you need to increase your current amount (%1$s USDC) to %2$s USDC. \n
+        Do you agree to increase the amount you invest?</string>
 </resources>

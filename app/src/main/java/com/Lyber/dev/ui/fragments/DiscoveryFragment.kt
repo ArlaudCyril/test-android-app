@@ -97,6 +97,7 @@ class DiscoveryFragment : BaseFragment<FragmentDiscoveryBinding>(), OnClickListe
                 }
 
                 tvLogin -> {
+
                     val bundle = Bundle().apply {
                         putBoolean(Constants.FOR_LOGIN, true)
                     }

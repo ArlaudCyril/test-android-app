@@ -2,13 +2,16 @@ package com.Lyber.dev.ui.fragments.bottomsheetfragments
 
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.Log
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentConfirmationBinding
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.clearBackStack
 import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -16,6 +19,9 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
 
     private lateinit var viewModel: PortfolioViewModel
+    var reqAmount = 0f
+    var currentAmount = 0.0
+    var isEdit = false
     override fun bind() = FragmentConfirmationBinding.inflate(layoutInflater)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -27,6 +33,21 @@ class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
         }
 
         binding.btnThanks.setOnClickListener {
+            if (tag!!.isEmpty() && viewModel.selectedOption != "" && viewModel.selectedOption == Constants.ACTION_TAILOR_STRATEGY) {
+                CommonMethods.showProgressDialog(requireContext())
+//                viewModel.editOwnStrategy(viewModel.selectedStrategy!!.name)
+                isEdit = true
+                viewModel.editEnabledStrategy(
+                    viewModel.selectedStrategy!!.ownerUuid,
+                    viewModel.selectedStrategy!!.activeStrategy!!.frequency,
+                    reqAmount.toDouble(),
+                    viewModel.selectedStrategy!!.name
+                )
+                dismiss()
+            } else
+                dismiss()
+        }
+        binding.btnNo.setOnClickListener {
             dismiss()
         }
         if (tag!!.isNotEmpty()) {
@@ -47,6 +68,33 @@ class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
                     binding.tvInfoOne.text = getString(R.string.successfulMsg)
                 }
 
+                Constants.ACTION_TAILOR_STRATEGY -> {
+                    binding.root.setBackgroundTintList(
+                        ContextCompat.getColorStateList(
+                            requireContext(),
+                            R.color.orangeColor
+                        )
+                    )
+                    binding.tvTitle.text = getString(R.string.oh_my)
+                    binding.imgTick.visibility = View.GONE
+                    binding.imgOh.visibility = View.VISIBLE
+                    binding.tvInfoTwo.visibility = View.GONE
+                    binding.tvInfoOne.visibility = View.GONE
+                    binding.tvInfo.visibility = View.VISIBLE
+                    if (arguments != null) {
+                        reqAmount = requireArguments().getFloat("requiredAmount")
+                        currentAmount = requireArguments().getDouble("currentAmount")
+                    }
+                    val str = getString(
+                        R.string.amount_invested_is_insufficient,
+                        currentAmount.toString(),
+                        reqAmount.toString()
+                    )
+                    binding.tvInfo.text = str
+                    binding.btnNo.visible()
+                    binding.btnThanks.text = getString(R.string.yes_t)
+                }
+
                 else -> binding.tvInfoOne.text =
                     getString(R.string.your_investment_has_been_taken_into_account)
             }
@@ -64,8 +112,12 @@ class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
         } else if (viewModel.selectedOption != "" && viewModel.selectedOption == Constants.ACTION_WITHDRAW_EURO) {
             viewModel.selectedAsset = CommonMethods.getAsset(Constants.MAIN_ASSET)
             findNavController().navigate(R.id.action_withdrawUsdc_to_portfolioDetail)
-        }
-        else {
+        } else if (viewModel.selectedOption != "" && viewModel.selectedOption == Constants.ACTION_TAILOR_STRATEGY) {
+            viewModel.selectedOption = ""
+            if(!isEdit)
+            requireActivity().onBackPressed()
+//            dismiss()
+        } else {
             findNavController().popBackStack(R.id.portfolioHomeFragment, false)
         }
     }

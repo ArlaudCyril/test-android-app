@@ -33,6 +33,7 @@ import com.Lyber.dev.R
 import com.Lyber.dev.databinding.CustomDialogLayoutBinding
 import com.Lyber.dev.databinding.FragmentProfileBinding
 import com.Lyber.dev.databinding.ItemTransactionBinding
+import com.Lyber.dev.databinding.ItemTransactionNewBinding
 import com.Lyber.dev.models.Balance
 import com.Lyber.dev.models.TransactionData
 import com.Lyber.dev.ui.adapters.BaseAdapter
@@ -465,7 +466,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
             viewType: Int
         ): RecyclerView.ViewHolder {
             return TransactionViewHolder(
-                ItemTransactionBinding.inflate(
+                ItemTransactionNewBinding.inflate(
                     LayoutInflater.from(parent.context),
                     parent,
                     false
@@ -509,6 +510,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                                 rounding = RoundingMode.DOWN,8
                             )} ${it.toAsset.uppercase()}"
 
+                            tvEndTitleCenter.visibility=View.GONE
 
                         }
 
@@ -527,6 +529,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                                                     Locale.US
                                                 )
                                             }"
+                                        tvEndTitleCenter.visibility=View.VISIBLE
 
                                     } catch (ex: java.lang.Exception) {
 
@@ -542,6 +545,8 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                             tvStartSubTitle.text =
                                 it.status.lowercase().replaceFirstChar(Char::uppercase)
                             tvEndTitleCenter.text = "+${it.amount} ${it.asset.uppercase()}"
+                            tvEndTitleCenter.visibility=View.VISIBLE
+
                         }
 
                         Constants.WITHDRAW -> { // single asset
@@ -552,6 +557,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                             tvStartSubTitle.text =
                                 it.status.lowercase().replaceFirstChar(Char::uppercase)
                             tvEndTitleCenter.text = "-${it.amount} ${it.asset.uppercase()}"
+                            tvEndTitleCenter.visibility=View.VISIBLE
                             tvFailed.visibility = View.GONE
                             tvStartTitleCenter.visibility = View.GONE
 
@@ -563,12 +569,16 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                         Constants.WITHDRAW_EURO -> { // single asset
                             ivItem.setImageResource(R.drawable.ic_withdraw)
                             tvFailed.visibility = View.GONE
+//                            tvEndTitle.gone()
+//                            tvEndSubTitle.gone()
+
                             tvStartTitle.text =
                                 "EUR ${getString(R.string.withdrawal)}"
                             tvStartSubTitle.text =
                                 it.status.lowercase().replaceFirstChar(Char::uppercase)
                             tvEndTitleCenter.text = "-${it.amount} ${it.asset.uppercase()}"
-                            tvStartTitleCenter.visibility = View.GONE     }
+//                            tvEndTitleCenter.text = "-123456789 ${it.asset.uppercase()}"
+                              }
 
                         else -> root.gone()
                     }
@@ -576,7 +586,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
             }
         }
 
-        inner class TransactionViewHolder(val binding: ItemTransactionBinding) :
+        inner class TransactionViewHolder(val binding: ItemTransactionNewBinding) :
             RecyclerView.ViewHolder(binding.root) {
             init {
                 binding.root.setOnClickListener {

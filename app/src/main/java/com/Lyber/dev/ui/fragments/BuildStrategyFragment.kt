@@ -14,6 +14,7 @@ import android.view.Window
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +27,7 @@ import com.Lyber.dev.models.PriceServiceResume
 import com.Lyber.dev.ui.adapters.BuildStrategyAdapter
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.AddAssetBottomSheet
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.BaseBottomSheet
+import com.Lyber.dev.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.dev.utils.CommonMethods.Companion.dismissProgressDialog
@@ -38,6 +40,11 @@ import com.Lyber.dev.utils.CommonMethods.Companion.toPx
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.appsflyer.AFInAppEventParameterName
+import com.appsflyer.AFInAppEventType
+import com.appsflyer.AppsFlyerLib
+import com.appsflyer.attribution.AppsFlyerRequestListener
+import java.util.HashMap
 import kotlin.math.ceil
 import kotlin.math.roundToInt
 
@@ -76,7 +83,11 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                 requireActivity().onBackPressedDispatcher.onBackPressed()
             }
         }
-
+        viewModel.investStrategyResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                viewModel.editOwnStrategy(viewModel.selectedStrategy!!.name)
+            }
+        }
         adapter = BuildStrategyAdapter(binding.rvAssets, ::assetClicked)
         layoutManager = LinearLayoutManager(requireContext())
         binding.rvAssets.let {
@@ -259,27 +270,38 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                             if (viewModel.selectedStrategy!!.expectedYield != null) {
                                 showProgressDialog(requireContext())
                                 viewModel.buildOwnStrategy(viewModel.selectedStrategy!!.name + " (Copy)")
-                            }   else{
-                                if(viewModel.selectedStrategy?.activeStrategy != null) {
-                                    for (asset in viewModel.addedAsset){
+                            } else {
+                                if (viewModel.selectedStrategy?.activeStrategy != null) {
+                                    requiredAmount = 0f
+                                    for (asset in viewModel.addedAsset) {
                                         val newAmount =
                                             minInvestPerAsset / (asset.allocation / 100)
                                         if (newAmount > requiredAmount) {
                                             requiredAmount = newAmount
                                         }
                                     }
-                                    requiredAmount= ceil(requiredAmount)
-                                    if (requiredAmount > viewModel.selectedStrategy!!.activeStrategy!!.amount!!)
-//
-                                    CommonMethods.showSnackBar(binding.root, requireContext(), getString(R.string.tailorStrategyError))
-                                    else {
+                                    requiredAmount = ceil(requiredAmount)
+                                    if (requiredAmount > viewModel.selectedStrategy!!.activeStrategy!!.amount!!) {
+//                                        CommonMethods.showSnackBar(
+//                                            binding.root,
+//                                            requireContext(),
+//                                            getString(R.string.tailorStrategyError)
+//                                        )
+                                        viewModel.selectedOption = Constants.ACTION_TAILOR_STRATEGY
+                                        ConfirmationBottomSheet().apply {  arguments = Bundle().apply {
+                                            putDouble("currentAmount", viewModel.selectedStrategy!!.activeStrategy!!.amount!!)
+                                            putFloat("requiredAmount", requiredAmount)
+                                        } }.show(childFragmentManager, "")
+
+                                    } else {
                                         showProgressDialog(requireContext())
                                         viewModel.editOwnStrategy(viewModel.selectedStrategy!!.name)
-                                    }   }
-                                else {
+                                    }
+                                } else {
                                     showProgressDialog(requireContext())
                                     viewModel.editOwnStrategy(viewModel.selectedStrategy!!.name)
-                                }  }
+                                }
+                            }
 //                                viewModel.editOwnStrategy(viewModel.selectedStrategy!!.name)
                         }
                     } else {
@@ -340,22 +362,30 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                                 checkInternet(requireContext()) {
                                     showProgressDialog(requireContext())
                                     if (isEdit) {
-                                        if(viewModel.selectedStrategy?.activeStrategy != null) {
-                                            for (asset in viewModel.addedAsset){
+                                        if (viewModel.selectedStrategy?.activeStrategy != null) {
+                                            requiredAmount = 0f
+                                            for (asset in viewModel.addedAsset) {
                                                 val newAmount =
                                                     minInvestPerAsset / (asset.allocation / 100)
                                                 if (newAmount > requiredAmount) {
                                                     requiredAmount = newAmount
                                                 }
                                             }
-                                            requiredAmount= ceil(requiredAmount)
-                                            if (requiredAmount > viewModel.selectedStrategy!!.activeStrategy!!.amount!!)
-                                                CommonMethods.showSnackBar(binding.root, requireContext(), getString(R.string.tailorStrategyError))
-
-                                            else
+                                            requiredAmount = ceil(requiredAmount)
+                                            if (requiredAmount > viewModel.selectedStrategy!!.activeStrategy!!.amount!!) {
+//                                                CommonMethods.showSnackBar(
+//                                                    binding.root,
+//                                                    requireContext(),
+//                                                    getString(R.string.tailorStrategyError)
+//                                                )
+                                                viewModel.selectedOption = Constants.ACTION_TAILOR_STRATEGY
+                                                ConfirmationBottomSheet().apply {  arguments = Bundle().apply {
+                                                    putDouble("currentAmount", viewModel.selectedStrategy!!.activeStrategy!!.amount!!)
+                                                    putFloat("requiredAmount", requiredAmount)
+                                                } }.show(childFragmentManager, "")
+                                            } else
                                                 viewModel.editOwnStrategy(name)
-                                        }
-                                        else
+                                        } else
                                             viewModel.editOwnStrategy(name)
                                     } else {
                                         viewModel.buildOwnStrategy(name)

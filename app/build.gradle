@@ -19,7 +19,7 @@ android {
         applicationId "com.Lyber.dev"
         minSdk 24
         targetSdk 34
-        versionCode 18 // as new for development
+        versionCode 20 // as new for development
         versionName "1" // on studio pushed version up to 3 and 1
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -27,7 +27,7 @@ android {
 
     buildTypes {
         release {
-            debuggable true
+            debuggable false
             shrinkResources true
             minifyEnabled true
             signingConfig signingConfigs.release

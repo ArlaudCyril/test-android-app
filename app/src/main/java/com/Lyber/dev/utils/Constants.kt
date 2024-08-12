@@ -88,6 +88,7 @@ object Constants {
     const val EMAIL_SENT = "emailSent"
     const val EXPORT_DONE = "exportDone"
     const val STRATEGY_TYPE = "SingleAsset"
+    const val ACTION_TAILOR_STRATEGY = "tailorStrategy"
 
     /* icons */
     const val EURO = "€"
