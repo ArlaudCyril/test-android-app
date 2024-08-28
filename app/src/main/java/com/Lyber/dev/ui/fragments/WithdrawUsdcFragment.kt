@@ -82,7 +82,7 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
         prepareView()
         setObservers()
         binding.etAmount.addTextChangedListener(textOnTextChange)
-        CommonMethods.checkInternet(requireActivity()) {
+        CommonMethods.checkInternet(binding.root,requireActivity()) {
             CommonMethods.showProgressDialog(requireActivity())
             viewModel.getWalletRib()
             viewModel.getWithdrawEuroFee()
@@ -354,16 +354,14 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
                         com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
 
                     if (balance == null) {
-                        getString(R.string.you_do_not_have_this_asset).showToast(requireActivity())
+                        getString(R.string.you_do_not_have_this_asset).showToast(binding.root,requireActivity())
                     } else if (activate) {
                         if (focusedData.currency.contains(mCurrency)) {
                             if (maxValueAsset <= balance.balanceData.balance.toDouble()) {
                                 if (minAmount.toDouble() >= amountFinal.toDouble())
-                                    CommonMethods.showSnackBar(
-                                        binding.root,
-                                        requireContext(),
-                                        getString(R.string.withdrawal_amount_is_inferior)
-                                    )
+                                    
+                                        getString(R.string.withdrawal_amount_is_inferior).showToast(binding.root,requireContext())
+                                    
                                 else if (viewModel.ribDataAddress != null) {
                                     val bundle = Bundle().apply {
                                         putString(Constants.MAIN_ASSET, amountFinal)
@@ -376,23 +374,16 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
                                         R.id.confirmWithdrawalFragment, bundle
                                     )
                                 } else {
-                                    getString(R.string.select_address).showToast(requireActivity())
+                                    getString(R.string.select_address).showToast(binding.root,requireActivity())
                                 }
                             } else {
-                                CommonMethods.showSnackBar(
-                                    binding.root,
-                                    requireContext(),
-                                    getString(R.string.withdrawal_amount_exceeds_balance)
-                                )
+                                getString(R.string.withdrawal_amount_exceeds_balance).showToast(binding.root,requireContext())
+                                
                             }
                         } else if (focusedData.currency.contains(mConversionCurrency)) {
                             if (maxValueAsset <= maxValue) {
                                 if (minAmount.toDouble() >= amountFinal.toDouble())
-                                    CommonMethods.showSnackBar(
-                                        binding.root,
-                                        requireContext(),
-                                        getString(R.string.withdrawal_amount_is_inferior)
-                                    )
+                                        getString(R.string.withdrawal_amount_is_inferior).showToast(binding.root,requireContext())
                                 else
                                     if (viewModel.ribDataAddress != null) {
                                         val bundle = Bundle().apply {
@@ -406,21 +397,13 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
                                             R.id.confirmWithdrawalFragment, bundle
                                         )
                                     } else {
-                                        getString(R.string.select_address).showToast(requireActivity())
+                                        getString(R.string.select_address).showToast(binding.root,requireActivity())
                                     }
                             } else {
-                                CommonMethods.showSnackBar(
-                                    binding.root,
-                                    requireContext(),
-                                    getString(R.string.withdrawal_amount_exceeds_balance)
-                                )
+                                    getString(R.string.withdrawal_amount_exceeds_balance).showToast(binding.root,requireContext())
                             }
                         } else {
-                            CommonMethods.showSnackBar(
-                                binding.root,
-                                requireContext(),
-                                getString(R.string.withdrawal_amount_exceeds_balance)
-                            )
+                                getString(R.string.withdrawal_amount_exceeds_balance).showToast(binding.root,requireContext())
                         }
                     }
                 }

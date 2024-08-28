@@ -80,6 +80,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
     private lateinit var timeGraphList: MutableList<List<Double>>
     private var lastValueUpdated = false
     private var responseFrom = ""
+    private var isHide = false
 
     override fun bind() = FragmentPortfolioHomeBinding.inflate(layoutInflater)
 
@@ -104,7 +105,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
         /* initializing adapters for recycler views */
 
-        adapterBalance = BalanceAdapter(false, ::assetClicked)
+        adapterBalance = BalanceAdapter(false, ::assetClicked, true)
         adapterAllAsset = AvailableAssetAdapter(::availableAssetClicked)
         adapterRecurring =
             RecurringInvestmentAdapter(::recurringInvestmentClicked, requireActivity())
@@ -192,6 +193,12 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             })
         }
 
+//        isHide = App.prefsManager.hideAmount
+        if (App.prefsManager.hideAmount)
+            binding.ivShowHideAmount.setBackgroundResource(R.drawable.visibility_off)
+        else
+            binding.ivShowHideAmount.setBackgroundResource(R.drawable.visibility)
+
         /* onclick listeners */
         binding.tvViewAll.setOnClickListener(this)
         binding.llThreeDot.setOnClickListener(this)
@@ -202,6 +209,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         binding.llVerifyIdentity.setOnClickListener(this)
         binding.llContract.setOnClickListener(this)
         binding.tvBuyUSDC.setOnClickListener(this)
+        binding.ivShowHideAmount.setOnClickListener(this)
 
         /* pop up initialization */
         assetPopUpWindow = ListPopupWindow(requireContext()).apply {
@@ -218,13 +226,16 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         }
 
         binding.lineChart.clearYAxis()
+        binding.lineChart.hideAmount=true
 //        binding.lineChart.timeSeries = getLineData(viewModel.totalPortfolio)
 
         binding.tvInvestMoney.text = getString(R.string.invest_money)
         binding.tvPortfolioAssetPrice.text = getString(R.string.portfolio)
-        binding.tvValuePortfolioAndAssetPrice.text =
-            "${viewModel.totalPortfolio.commaFormatted}${Constants.EURO}"
-
+        if (!App.prefsManager.hideAmount)
+            binding.tvValuePortfolioAndAssetPrice.text =
+                "${viewModel.totalPortfolio.commaFormatted}${Constants.EURO}"
+        else
+            binding.tvValuePortfolioAndAssetPrice.text = "*****"
         addObservers()
 
         hitApis()
@@ -254,7 +265,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
     }
 
     private fun hitApis() {
-        checkInternet(requireContext()) {
+        checkInternet(binding.root,requireContext()) {
             if (viewModel.screenCount == 1) {
                 viewModel.getPrice(viewModel.chosenAssets?.id ?: "btc")
                 viewModel.getNews(viewModel.chosenAssets?.id ?: "btc")
@@ -357,8 +368,11 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                         )
                         binding.lineChart.timeSeries = timeGraphList
                     }
-                    binding.tvValuePortfolioAndAssetPrice.text =
-                        "${totalBalance.commaFormatted}${Constants.EURO}"
+                    if (!App.prefsManager.hideAmount)
+                        binding.tvValuePortfolioAndAssetPrice.text =
+                            "${totalBalance.commaFormatted}${Constants.EURO}"
+                    else
+                        binding.tvValuePortfolioAndAssetPrice.text = "*****"
 //                    binding.lineChart.updateValueLastPoint(totalBalance.commaFormatted.toFloat())
                     com.Lyber.dev.ui.activities.BaseActivity.balances = balances
                     balances.sortByDescending { it.balanceData.euroBalance.toDoubleOrNull() }
@@ -432,7 +446,8 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                     when (it.data.kycStatus) {
                         "LYBER_REFUSED" -> {
                             dismissProgressDialog()
-                            App.kycOK = true // set it to true because we don't want to run getUser in loop
+                            App.kycOK =
+                                true // set it to true because we don't want to run getUser in loop
                             Handler(Looper.getMainLooper()).postDelayed({
                                 CommonMethods.showDocumentDialog(
                                     requireActivity(),
@@ -562,7 +577,8 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                     when (it.kycStatus) {
                         "LYBER_REFUSED" -> {
                             dismissProgressDialog()
-                            App.kycOK = true // set it to true because we don't want to run getUser in loop
+                            App.kycOK =
+                                true // set it to true because we don't want to run getUser in loop
                             Handler(Looper.getMainLooper()).postDelayed({
                                 CommonMethods.showDocumentDialog(
                                     requireActivity(),
@@ -754,7 +770,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
     }
 
     override fun assetClicked(balance: Balance) {
-        checkInternet(requireContext()) {
+        checkInternet(binding.root,requireContext()) {
 
             navController.navigate(R.id.portfolioDetailFragment)
             viewModel.selectedAsset = CommonMethods.getAsset(balance.id)
@@ -763,7 +779,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
     }
 
     override fun availableAssetClicked(priceResume: PriceServiceResume) {
-        checkInternet(requireContext()) {
+        checkInternet(binding.root,requireContext()) {
             viewModel.selectedAsset = CommonMethods.getAsset(priceResume.id)
             viewModel.selectedBalance = CommonMethods.getBalance(priceResume.id)
             navController.navigate(R.id.portfolioDetailFragment)
@@ -939,6 +955,22 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                         putString(Constants.FROM, PortfolioHomeFragment::class.java.name)
                     }
                     findNavController().navigate(R.id.buyUsdt, arguments)
+                }
+
+                ivShowHideAmount -> {
+                    if (!App.prefsManager.hideAmount)
+                        ivShowHideAmount.setBackgroundResource(R.drawable.visibility_off)
+                    else
+                        ivShowHideAmount.setBackgroundResource(R.drawable.visibility)
+
+                    App.prefsManager.hideAmount = !App.prefsManager.hideAmount
+                    if (!App.prefsManager.hideAmount)
+                        binding.tvValuePortfolioAndAssetPrice.text =
+                            "${viewModel.totalPortfolio.commaFormatted}${Constants.EURO}"
+                    else
+                        binding.tvValuePortfolioAndAssetPrice.text = "*****"
+                    adapterBalance.notifyDataSetChanged()
+                    binding.lineChart.showHideAmount()
                 }
             }
         }

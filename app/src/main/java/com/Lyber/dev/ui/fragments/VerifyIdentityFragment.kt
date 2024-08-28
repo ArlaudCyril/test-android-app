@@ -149,7 +149,7 @@
 //
 //            dialogVerify("Verify identity",
 //                getString(R.string.it_will_open_ubble_link_to_verify_your_identity))
-//            /*checkInternet(requireContext()) {
+//            /*checkInternet(binding.root,requireContext()) {
 //                startClicked = true
 //                showProgressDialog(requireContext())
 //                verifyIdentityViewModel.initiatedKyc()
@@ -203,7 +203,7 @@
 //    override fun onResume() {
 //        super.onResume()
 //        if (startClicked)
-//            checkInternet(requireContext()) {
+//            checkInternet(binding.root,requireContext()) {
 //                showProgressDialog(requireContext())
 //                verifyIdentityViewModel.kycStatus()
 //            }

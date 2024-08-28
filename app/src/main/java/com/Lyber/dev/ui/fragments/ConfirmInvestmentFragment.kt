@@ -115,7 +115,7 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                     when (viewModel.selectedOption) {
                         Constants.USING_STRATEGY -> {
                             viewModel.selectedStrategy?.let {
-                                checkInternet(requireContext()) {
+                                checkInternet(binding.root,requireContext()) {
                                     /*frequency = "now" || "1d" || "1w" || "1m"*/
                                     val freq = when (viewModel.selectedFrequency) {
                                         "Once" -> null     //"now"

@@ -214,6 +214,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         /* pop up initialization */
 
         binding.lineChart.timeSeries = getLineData(viewModel.totalPortfolio)
+        binding.lineChart.hideAmount=false
 
         binding.tvValuePortfolioAndAssetPrice.text =
             "${viewModel.totalPortfolio.commaFormatted}${Constants.EURO}"
@@ -223,7 +224,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
     }
 
     private fun setView() {
-        CommonMethods.checkInternet(requireContext()) {
+        CommonMethods.checkInternet(binding.root,requireContext()) {
 
             if (arguments != null && requireArguments().containsKey(Constants.ORDER_ID)) {
                 updateSocketValue = false
@@ -399,11 +400,14 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 viewModel.selectedBalance = balance
                 val priceCoin = balance?.balanceData?.euroBalance?.toDouble()
                     ?.div(balance.balanceData.balance.toDouble() ?: 1.0)
-                if (balance?.balanceData?.euroBalance == null)
-                    it.tvAssetAmount.text = "0.0 ${Constants.EURO}"
-                else
-                    it.tvAssetAmount.text =
-                        balance.balanceData.euroBalance.currencyFormatted
+                if(!App.prefsManager.hideAmount) {
+                    if (balance?.balanceData?.euroBalance == null)
+                        it.tvAssetAmount.text = "0.0 ${Constants.EURO}"
+                    else
+                        it.tvAssetAmount.text =
+                            balance.balanceData.euroBalance.currencyFormatted
+                } else
+                    it.tvAssetAmount.text ="*****"
                 if (balance?.balanceData?.balance == null)
                     it.tvAssetAmountInCrypto.text = "0.00"
                 else it.tvAssetAmountInCrypto.text =
@@ -517,7 +521,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                     bundle.putString(Constants.TYPE, Constants.Exchange)
                     findNavController().navigate(R.id.allAssetFragment, bundle)
                 } else {
-                    getString(R.string.you_don_t_have_balance_to_exchange).showToast(requireActivity())
+                    getString(R.string.you_don_t_have_balance_to_exchange).showToast(binding.root,requireActivity())
                 }
             }
 
@@ -862,7 +866,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
     }
 
     private fun getPriceChart(assetId: String, duration: Duration) {
-        CommonMethods.checkInternet(requireContext()) {
+        CommonMethods.checkInternet(binding.root,requireContext()) {
             binding.lineChart.animation =
                 AnimationUtils.loadAnimation(requireContext(), R.anim.blink)
             viewModel.getPriceGraph(assetId, duration)

@@ -81,7 +81,7 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
 //            }
 //        })
         binding.tvResendCode.setOnClickListener {
-            CommonMethods.checkInternet(requireContext()) {
+            CommonMethods.checkInternet(binding.root,requireContext()) {
                 if (googleOTP.isNotEmpty()) {
                     googleOTP = ""
                     binding.tvResendCode.gone()

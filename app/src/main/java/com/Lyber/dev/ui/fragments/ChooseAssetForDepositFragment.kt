@@ -6,14 +6,12 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.ListPopupWindow
-import android.widget.Toast
 import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
@@ -22,20 +20,17 @@ import com.Lyber.dev.databinding.AppItemLayoutBinding
 import com.Lyber.dev.databinding.FragmentChooseAssetDepositBinding
 import com.Lyber.dev.databinding.LoaderViewBinding
 import com.Lyber.dev.models.AssetBaseData
-import com.Lyber.dev.models.ErrorResponse
 import com.Lyber.dev.models.NetworkDeposit
-import com.Lyber.dev.network.RestClient
-import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.fadeIn
 import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.dev.utils.CommonMethods.Companion.gone
 import com.Lyber.dev.utils.CommonMethods.Companion.loadCircleCrop
-import com.Lyber.dev.utils.CommonMethods.Companion.showErrorMessage
+import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
-import okhttp3.ResponseBody
+import com.Lyber.dev.viewmodels.PortfolioViewModel
 import java.util.*
 
 class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBinding>(),
@@ -80,7 +75,8 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                         binding.ivNetwork.visible()
                         binding.etAssets.updatePadding(0)
                         binding.etAssets.setText(
-                            "${sa.fullName.replaceFirstChar {
+                            "${
+                                sa.fullName.replaceFirstChar {
                                     if (it.isLowerCase()) it.titlecase(
                                         Locale.ROOT
                                     ) else it.toString()
@@ -90,8 +86,7 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                         if (sa.id.equals(Constants.MAIN_ASSET, ignoreCase = true)) {
                             binding.btnBuyTether.visible()
                             binding.tvOr.visible()
-                        }
-                        else {
+                        } else {
                             binding.btnBuyTether.gone()
                             binding.tvOr.gone()
                         }
@@ -104,7 +99,7 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
             }
         viewModel.getAddress.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                isAddress=false
+                isAddress = false
                 CommonMethods.dismissProgressDialog()
                 binding.etAddress.text = it.data.address
             }
@@ -118,7 +113,7 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                     if (networkq.isDepositActive) {
                         binding.etNetwork.text = networkq.fullName
                         CommonMethods.showProgressDialog(requireActivity())
-                        isAddress=true
+                        isAddress = true
                         viewModel.getAddress(networkq.id, network!!.id)
                         binding.tvNote.text = getString(
                             R.string.send_only_to_this_address_using_the_protocol,
@@ -149,8 +144,7 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                 if (it.id.equals(Constants.MAIN_ASSET, ignoreCase = true)) {
                     binding.btnBuyTether.visible()
                     binding.tvOr.visible()
-                }
-                else {
+                } else {
                     binding.btnBuyTether.gone()
                     binding.tvOr.gone()
                 }
@@ -164,7 +158,7 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
             assetAdapterNetwork.getItemAt(position)?.let {
                 binding.etNetwork.text = it.fullName
                 CommonMethods.showProgressDialog(requireActivity())
-                isAddress=true
+                isAddress = true
                 viewModel.getAddress(it.id, network!!.id)
                 binding.tvNote.text = getString(
                     R.string.send_only_to_this_address_using_the_protocol,
@@ -319,8 +313,9 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                     val arguments = Bundle().apply {
                         putString(Constants.FROM, ChooseAssetForDepositFragment::class.java.name)
                     }
-                    findNavController().navigate(R.id.buyUsdt,arguments)
+                    findNavController().navigate(R.id.buyUsdt, arguments)
                 }
+
                 ivCopy -> {
                     if (binding.etAddress.text.toString().isNotEmpty()) {
                         val clipboard =
@@ -331,21 +326,21 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                                 binding.etAddress.text.toString()
                             )
                         clipboard.setPrimaryClip(clip)
-                        Toast.makeText(
-                            requireActivity(),
-                            getString(R.string.adress_copied), Toast.LENGTH_SHORT
-                        ).show()
+                        getString(R.string.adress_copied).showToast(binding.root,requireContext())
                     }
                 }
+
                 etNetwork -> {
                     assetPopupNetwork.show()
                 }
+
                 etAssets -> {
                     if (assetAdapter.hasNoData()) {
                         assetAdapter.addProgress()
                     }
                     assetPopup.show()
                 }
+
                 ivScan -> {
                     if (binding.etAddress.text.toString().isNotEmpty())
                         startActivity(
@@ -359,6 +354,7 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                                 )
                         )
                 }
+
                 ivTopAction -> {
                     requireActivity().onBackPressed()
                 }

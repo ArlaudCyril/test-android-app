@@ -93,7 +93,7 @@ class ChooseLanguageFragment : BaseFragment<FragmentChooseLanguageBinding>(), On
                 rlEnglish -> {
                     hashMap.clear()
                     hashMap["language"] = Constants.ENGLISH
-                    CommonMethods.checkInternet(requireContext()) {
+                    CommonMethods.checkInternet(binding.root,requireContext()) {
                         CommonMethods.showProgressDialog(requireContext())
                         viewModel.updateUserInfo(hashMap)
                     }
@@ -102,7 +102,7 @@ class ChooseLanguageFragment : BaseFragment<FragmentChooseLanguageBinding>(), On
                 rlFrench -> {
                     hashMap.clear()
                     hashMap["language"] = Constants.FRENCH
-                    CommonMethods.checkInternet(requireContext()) {
+                    CommonMethods.checkInternet(binding.root,requireContext()) {
                         CommonMethods.showProgressDialog(requireContext())
                         viewModel.updateUserInfo(hashMap)
                     }

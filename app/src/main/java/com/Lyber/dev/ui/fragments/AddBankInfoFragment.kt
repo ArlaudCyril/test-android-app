@@ -43,17 +43,17 @@ class AddBankInfoFragment : BaseFragment<FragmentAddBankBinding>() {
             when {
 
                 iban.isEmpty() -> {
-                    getString(R.string.please_enter_iban_number).showToast(requireContext())
+                    getString(R.string.please_enter_iban_number).showToast(binding.root,requireContext())
                     binding.etIBan.requestFocus()
                 }
 
                 bic.isEmpty() -> {
-                    getString(R.string.please_enter_bic_number).showToast(requireContext())
+                    getString(R.string.please_enter_bic_number).showToast(binding.root,requireContext())
                     binding.etBicNumber.requestFocus()
                 }
 
                 else -> {
-                    checkInternet(requireContext()) {
+                    checkInternet(binding.root,requireContext()) {
                         showProgressDialog(requireContext())
                         viewModel.addBankInfo(iban, bic)
                     }

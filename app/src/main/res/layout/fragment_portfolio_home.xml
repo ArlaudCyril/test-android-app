@@ -38,7 +38,20 @@
                         android:id="@+id/tvPortfolioAssetPrice"
                         style="@style/SubheadMabryMedium"
                         android:text="@string/portfolio"
+                        android:gravity="center"
+                        android:layout_alignTop="@id/ivShowHideAmount"
+                        android:layout_alignBottom="@id/ivShowHideAmount"
                         android:textColor="@color/purple_gray_500" />
+                    <ImageView
+                        android:id="@+id/ivShowHideAmount"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="12dp"
+                        android:paddingHorizontal="4dp"
+                        android:backgroundTint="@color/purple_gray_500"
+                        android:background="@drawable/visibility"
+                        android:layout_toEndOf="@id/tvPortfolioAssetPrice"
+                       />
 
                     <TextView
                         android:id="@+id/tvValuePortfolioAndAssetPrice"

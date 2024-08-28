@@ -20,23 +20,19 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.CustomDialogVerticalLayoutBinding
 import com.Lyber.dev.databinding.DocumentBeingVerifiedBinding
 import com.Lyber.dev.network.RestClient
-import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.activities.WebViewActivity
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.utils.LoaderObject
+import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -134,7 +130,7 @@ abstract class BaseBottomSheet<viewBinding : ViewBinding> : BottomSheetDialogFra
 
     override fun onError() {
         CommonMethods.dismissProgressDialog()
-        "Error occurred!".showToast(requireContext())
+        "Error occurred!".showToast(binding.root,requireContext())
     }
 
     private lateinit var bottomDialog: BottomSheetDialog
@@ -157,7 +153,7 @@ abstract class BaseBottomSheet<viewBinding : ViewBinding> : BottomSheetDialogFra
                     dismiss()
                 }
                 binding.tvPositiveButton.setOnClickListener {
-                    CommonMethods.checkInternet(requireContext()) {
+                    CommonMethods.checkInternet(binding.root,requireContext()) {
                         CommonMethods.showProgressDialog(requireContext())
                         if (code == 7023 || code == 10041)
                             viewModel.startKyc()

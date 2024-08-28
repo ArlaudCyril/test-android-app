@@ -39,7 +39,7 @@ class ContactUsFragment : BaseFragment<FragmentContactUsBinding>(), OnClickListe
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 CommonMethods.dismissProgressDialog()
                 if (it.success) {
-                    getString(R.string.msgHasBeenSent).showToast(requireContext())
+                    getString(R.string.msgHasBeenSent).showToast(binding.root,requireContext())
                     requireActivity().onBackPressedDispatcher.onBackPressed()
                 }
             }
@@ -84,10 +84,10 @@ class ContactUsFragment : BaseFragment<FragmentContactUsBinding>(), OnClickListe
                 ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
                 btnSend -> {
                     if (binding.etMsg.text.trim().toString().isEmpty())
-                        getString(R.string.msgIsEmpty).showToast(requireContext())
+                        getString(R.string.msgIsEmpty).showToast(binding.root,requireContext())
                     else
                         try {
-                            CommonMethods.checkInternet(requireContext()) {
+                            CommonMethods.checkInternet(binding.root,requireContext()) {
                                 var msg = binding.etMsg.text.trim().toString()
                                 CommonMethods.showProgressDialog(requireContext())
                                 viewModel.contactSupport(msg)

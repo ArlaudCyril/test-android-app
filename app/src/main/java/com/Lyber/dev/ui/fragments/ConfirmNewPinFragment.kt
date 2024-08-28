@@ -66,12 +66,12 @@ class ConfirmNewPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
         }
         if (pinCount == 4) {
             if (viewModel.createPin == confirmPin) {
-                CommonMethods.checkInternet(requireContext()) {
+                CommonMethods.checkInternet(binding.root,requireContext()) {
                     showProgressDialog(requireContext())
                     viewModel.updatePin(confirmPin)
                     clearField()
                 }
-            } else getString(R.string.pin_doesn_t_matches).showToast(requireContext())
+            } else getString(R.string.pin_doesn_t_matches).showToast(binding.root,requireContext())
         }
     }
 

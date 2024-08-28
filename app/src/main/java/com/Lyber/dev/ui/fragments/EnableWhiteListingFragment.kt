@@ -101,7 +101,7 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
 //                1 -> Constants.HOURS_24
 //                else -> Constants.NO_EXTRA_SECURITY
 //            }
-            checkInternet(requireContext()) {
+            checkInternet(binding.root,requireContext()) {
                 showProgressDialog(requireContext())
                 viewModel.updateUserInfo(hashMap)
             }

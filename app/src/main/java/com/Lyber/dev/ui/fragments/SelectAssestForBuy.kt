@@ -217,7 +217,7 @@ class SelectAssestForBuy : BaseFragment<FragmentAllAssetsBinding>(), View.OnClic
     }
 
     private fun hitApi() {
-        CommonMethods.checkInternet(requireContext()) {
+        CommonMethods.checkInternet(binding.root,requireContext()) {
             CommonMethods.showProgressDialog(requireContext())
             viewModel.getAllPriceResume()
         }

@@ -182,7 +182,7 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
         }
 
     private fun hitAcpi() {
-        checkInternet(requireActivity()) {
+        checkInternet(binding.root,requireActivity()) {
             isApiHit = true
             binding.progress.visible()
             binding.progress.animation =

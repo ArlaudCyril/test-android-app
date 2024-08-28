@@ -60,7 +60,7 @@ class VerificationEmailAddressFragment : BaseFragment<FragmentVerificationEmailB
                 startActivity(Intent.createChooser(intent, "Email"))
                 canCheck = true
             } catch (e: ActivityNotFoundException) {
-                getString(R.string.application_not_found).showToast(requireContext())
+                getString(R.string.application_not_found).showToast(binding.root,requireContext())
             } catch (e: Exception) {
                 e.printStackTrace()
             }
@@ -70,10 +70,10 @@ class VerificationEmailAddressFragment : BaseFragment<FragmentVerificationEmailB
             showProgressDialog(requireContext())
             Handler(Looper.getMainLooper()).postDelayed({
                 CommonMethods.dismissProgressDialog()
-                getString(R.string.email_sent_successfully).showToast(requireContext())
+                getString(R.string.email_sent_successfully).showToast(binding.root,requireContext())
             }, 2000)
 
-//            CommonMethods.checkInternet(requireContext()) {
+//            CommonMethods.checkInternet(binding.root,requireContext()) {
 //                CommonMethods.showProgressDialog(requireContext())
 //                viewModel.sendEmail(true)
 //            }
@@ -82,7 +82,7 @@ class VerificationEmailAddressFragment : BaseFragment<FragmentVerificationEmailB
     }
 
     fun checkVerificationStatus() {
-        CommonMethods.checkInternet(requireContext()) {
+        CommonMethods.checkInternet(binding.root,requireContext()) {
             CommonMethods.showProgressDialog(requireContext())
             viewModel.emailVerification()
         }

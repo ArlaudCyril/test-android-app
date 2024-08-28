@@ -105,7 +105,7 @@ class EnableNotificationFragment : BaseFragment<FragmentEnableNotificationsBindi
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU)
                 askNotificationPermission()
             else
-                checkInternet(requireContext()) {
+                checkInternet(binding.root,requireContext()) {
                     showProgressDialog(requireContext())
                     if (fcmToken.isEmpty()) {
                         FirebaseMessaging.getInstance().token
@@ -145,7 +145,7 @@ class EnableNotificationFragment : BaseFragment<FragmentEnableNotificationsBindi
     ) { isGranted: Boolean ->
         if (isGranted) {
             // FCM SDK (and your app) can post notifications.
-            checkInternet(requireContext()) {
+            checkInternet(binding.root,requireContext()) {
                 showProgressDialog(requireContext())
                 if (fcmToken.isEmpty()) {
                     FirebaseMessaging.getInstance().token
@@ -183,7 +183,7 @@ class EnableNotificationFragment : BaseFragment<FragmentEnableNotificationsBindi
                 PackageManager.PERMISSION_GRANTED
             ) {
                 // FCM SDK (and your app) can post notifications.
-                checkInternet(requireContext()) {
+                checkInternet(binding.root,requireContext()) {
                     showProgressDialog(requireContext())
                     if(fcmToken.isEmpty()){
                         FirebaseMessaging.getInstance().token

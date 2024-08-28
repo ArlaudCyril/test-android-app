@@ -57,7 +57,6 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.Navigation.findNavController
 import com.Lyber.dev.R
-import com.Lyber.dev.databinding.CustomDialogVerticalLayoutBinding
 import com.Lyber.dev.databinding.DocumentBeingVerifiedBinding
 import com.Lyber.dev.databinding.ProgressBarBinding
 import com.Lyber.dev.models.AssetBaseData
@@ -68,9 +67,6 @@ import com.Lyber.dev.models.Network
 import com.Lyber.dev.models.PriceServiceResume
 import com.Lyber.dev.network.RestClient
 import com.Lyber.dev.utils.App.Companion.prefsManager
-import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
-import com.Lyber.dev.utils.CommonMethods.Companion.toFormat
-import com.Lyber.dev.utils.CommonMethods.Companion.toMilli
 import com.Lyber.dev.utils.Constants.CAP_RANGE
 import com.Lyber.dev.utils.Constants.SMALL_RANGE
 import com.airbnb.lottie.LottieAnimationView
@@ -122,12 +118,12 @@ class CommonMethods {
         }
 
         @JvmStatic
-        fun getScreenWidth(activity: Context?): Int {
-            val w = activity!!.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-            val size = Point()
-            w.defaultDisplay.getSize(size)
-            return size.x
-        }
+//        fun getScreenWidth(activity: Context?): Int {
+//            val w = activity!!.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+//            val size = Point()
+//            w.defaultDisplay.getSize(size)
+//            return size.x
+//        }
 
 
         fun showProgressDialog(context: Context) {
@@ -353,9 +349,9 @@ class CommonMethods {
             Glide.with(this).load(any).into(this)
         }
 
-        fun checkInternet(context: Context, handle: () -> Unit) {
+        fun checkInternet(view:View,context: Context, handle: () -> Unit) {
             if (isNetworkConnected(context)) handle()
-            else "Please check your internet connection".showToast(context)
+            else "Please check your internet connection".showToast(view,context)
         }
 
         @SuppressLint("NewApi", "MissingPermission")
@@ -397,25 +393,25 @@ class CommonMethods {
             } else if (errorRes?.code == 7023 || errorRes?.code == 10041 || errorRes?.code == 7025 || errorRes?.code == 10043) {
                 return errorRes.code
             } else if (errorRes?.code == 7024 || errorRes?.code == 10042) {
-                showSnackBar(root, context, null)
+                showSnack(root, context, null)
                 return errorRes.code
             } else
                 if ((errorRes?.error ?: "").isNotEmpty()) {
                     when (errorRes?.error) {
                         "Invalid UpdateExpression: Syntax error; token: \"0\", near: \", 0)\"" ->
-                            "Invalid OTP".showToast(context)
+                            "Invalid OTP".showToast(root,context)
 
-                        "Email already verified" -> "Email already exists".showToast(context)
-                        "Bad client credentials" -> "Invalid credentials".showToast(context)
+                        "Email already verified" -> "Email already exists".showToast(root,context)
+                        "Bad client credentials" -> "Invalid credentials".showToast(root,context)
                         "No user registerd with this email" -> "Invalid credentials".showToast(
-                            context
+                            root,context
                         )
 
                         else -> {
                             if (errorRes?.error!!.length <= 60)
-                                errorRes?.error?.showToast(context)
+                                errorRes?.error?.showToast(root,context)
                             else
-                                showSnackBar(root, context, errorRes?.error)
+                                showSnack(root, context, errorRes?.error)
                         }
                     }
                 }
@@ -699,12 +695,77 @@ class CommonMethods {
             return ViewModelProvider(owner)[T::class.java]
         }
 
-        fun <T> T.showToast(context: Context) {
-            Toast.makeText(context, toString(), Toast.LENGTH_SHORT).show()
+        fun <T> T.showToast(view: View,context: Context) {
+//            Toast.makeText(context, toString(), Toast.LENGTH_SHORT).show()
+            showSnackBar(view,context, toString())
+//            val customToastLayout = LayoutInflater.from(context)
+//                .inflate(R.layout.custom_toast, null)
+//            val textView = customToastLayout.findViewById<TextView>(R.id.tvToast)
+//            textView.text = toString()
+//            val customToast = Toast(context)
+//            customToast.view = customToastLayout
+//            customToast.setGravity(Gravity.TOP, 0, 152)
+//            customToast.duration = Toast.LENGTH_SHORT
+//            customToast.show()
+        }
+
+        private fun showSnackBar(view: View, context: Context, text: String) {
+            val snackbar = Snackbar.make(view, "", Snackbar.LENGTH_SHORT)
+            val params = snackbar.view.layoutParams as FrameLayout.LayoutParams
+            params.gravity = Gravity.TOP
+            params.setMargins(24, 158, 24, 0)
+            snackbar.view.layoutParams = params
+            snackbar.view.background =
+                context.getDrawable(R.drawable.curved_background_toast)
+
+            snackbar.animationMode = BaseTransientBottomBar.ANIMATION_MODE_FADE
+            val layout = snackbar.view as Snackbar.SnackbarLayout
+            val textView =
+                layout.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+            textView.visibility = View.INVISIBLE
+            val snackView =
+                LayoutInflater.from(context).inflate(R.layout.custom_toast, null)
+            val textViewMsg = snackView.findViewById<TextView>(R.id.tvToast)
+            val ivIcon = snackView.findViewById<ImageView>(R.id.ivIcon)
+            ivIcon.visible()
+            layout.setPadding(0, 0, 0, 0)
+            layout.addView(snackView, 0)
+            textViewMsg.text = text
+//                getString(R.string.new_pass_cannot_be_same_as_old) + getString(R.string.new_pass_cannot_be_same_as_old)
+            snackbar.show()
         }
 
         fun Fragment.showToast(string: String) {
             Toast.makeText(requireContext(), string, Toast.LENGTH_SHORT).show()
+        }
+
+        fun getTextLineCount(context: Context, text: String, textSizeInSp: Float): Int {
+            // Dynamically calculate the width (e.g., screen width minus padding)
+            val defaultPaddingDp = 16
+            val density = context.resources.displayMetrics.density
+            val padding = (defaultPaddingDp * density).toInt()
+            val textViewWidth =
+                getScreenWidth(context) - 2 * padding
+
+            // Create and measure the TextView as before
+            val textView = TextView(context)
+            textView.text = text
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSizeInSp)
+
+            val widthMeasureSpec =
+                View.MeasureSpec.makeMeasureSpec(textViewWidth, View.MeasureSpec.AT_MOST)
+            val heightMeasureSpec =
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+            textView.measure(widthMeasureSpec, heightMeasureSpec)
+
+            val totalHeight = textView.measuredHeight
+            val lineHeight = textView.lineHeight
+            return totalHeight / lineHeight
+        }
+
+        fun getScreenWidth(context: Context): Int {
+            val displayMetrics = context.resources.displayMetrics
+            return displayMetrics.widthPixels
         }
 
         fun EditText.requestKeyboard() {
@@ -1632,20 +1693,23 @@ class CommonMethods {
             return bMapRotate
         }
 
-        fun showSnackBar(root: View, context: Context, textMsg: String?) {
-            val snackbar = Snackbar.make(root, "", Snackbar.LENGTH_LONG)
+        fun showSnack(root: View, context: Context, textMsg: String?) {
+            val snackbar = Snackbar.make(root, "", Snackbar.LENGTH_SHORT)
             val params = snackbar.view.layoutParams as FrameLayout.LayoutParams
             params.gravity = Gravity.TOP
-            params.setMargins(0, 0, 0, 0)
+            params.setMargins(24, 158, 24, 0)
             snackbar.view.layoutParams = params
+            snackbar.view.background =
+                context.getDrawable(R.drawable.curved_background_toast)
+
             snackbar.animationMode = BaseTransientBottomBar.ANIMATION_MODE_FADE
             val layout = snackbar.view as Snackbar.SnackbarLayout
             val textView =
                 layout.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
             textView.visibility = View.INVISIBLE
             val snackView =
-                LayoutInflater.from(context).inflate(R.layout.custom_snackbar, null)
-            val textViewMsg = snackView.findViewById<TextView>(R.id.tvMsg)
+                LayoutInflater.from(context).inflate(R.layout.custom_toast, null)
+            val textViewMsg = snackView.findViewById<TextView>(R.id.tvToast)
             if (textMsg == null)
                 textViewMsg.text = context.getString(R.string.kyc_under_verification)
             else
@@ -1791,11 +1855,13 @@ class CommonMethods {
                         val tvDocVerified =
                             dialogVerification!!.findViewById<TextView>(R.id.tvDocVerified)
                         if (!tt)
-                            tvDocVerified.text = context.getString(R.string.kyc_under_verification_text)
+                            tvDocVerified.text =
+                                context.getString(R.string.kyc_under_verification_text)
                         else
                             tvDocVerified.text = context.getString(R.string.doc_being_verified)
                         tvDocVerified.visible()
-                        val imageView = dialogVerification!!.findViewById<ImageView>(R.id.ivCorrect)!!
+                        val imageView =
+                            dialogVerification!!.findViewById<ImageView>(R.id.ivCorrect)!!
                         when (typeOfLoader) {
 
 
@@ -1849,7 +1915,7 @@ class CommonMethods {
                         Log.d("Exception", "showProgressDialog: ${e.message}")
                     }
                 }
-            }catch (_:Exception){
+            } catch (_: Exception) {
 
             }
 
@@ -1877,14 +1943,18 @@ class CommonMethods {
                 else -> "0"
             }
         }
-         fun getTruncatedText(text: String, maxLength: Int): String {
+
+        fun getTruncatedText(text: String, maxLength: Int): String {
             try {
                 if (text.length <= maxLength) {
                     return text
                 }
                 val startLength = (maxLength - 3) / 2
                 val endLength = 6
-                return text.substring(0, startLength) + "..." + text.substring(text.length - endLength)
+                return text.substring(
+                    0,
+                    startLength
+                ) + "..." + text.substring(text.length - endLength)
 
             } catch (_: Exception) {
                 return text

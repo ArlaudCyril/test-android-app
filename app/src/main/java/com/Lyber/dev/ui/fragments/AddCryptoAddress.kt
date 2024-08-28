@@ -168,7 +168,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                     CommonMethods.dismissProgressDialog()
                     binding.etAddress.requestKeyboard()
                     binding.ttlAddress.helperText = getString(R.string.please_enter_valid_address)
-                    getString(R.string.please_enter_valid_address).showToast(requireContext())
+                    getString(R.string.please_enter_valid_address).showToast(binding.root,requireContext())
 
                 }
             }
@@ -297,7 +297,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
             }
         }
 
-        checkInternet(requireContext()) {
+        checkInternet(binding.root,requireContext()) {
             if (toEdit) {
                 showProgressDialog(requireContext())
             }
@@ -433,19 +433,19 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
 
                         addressName.isEmpty() -> {
                             binding.etAddressName.requestKeyboard()
-                            getString(R.string.please_enter_address_name).showToast(requireContext())
+                            getString(R.string.please_enter_address_name).showToast(binding.root,requireContext())
                         }
 
                         network == null -> {
                             binding.etNetwork.requestFocus()
-                            getString(R.string.please_select_a_network).showToast(requireContext())
+                            getString(R.string.please_select_a_network).showToast(binding.root,requireContext())
                         }
 
                         address.isEmpty() -> {
                             binding.etAddress.requestKeyboard()
                             binding.ttlAddress.helperText =
                                 getString(R.string.please_enter_address, network?.fullName ?: "")
-                            getString(R.string.please_enter_address_).showToast(requireContext())
+                            getString(R.string.please_enter_address_).showToast(binding.root,requireContext())
                         }
 
 
@@ -453,7 +453,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
 
                             if (originSelectedPosition == 0) {
                                 getString(R.string.please_select_a_exchange).showToast(
-                                    requireContext()
+                                    binding.root, requireContext()
                                 )
                             } else {
                                 addAddress()
@@ -493,7 +493,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
     }
 
     private fun addAddress() {
-        checkInternet(requireActivity()) {
+        checkInternet(binding.root,requireActivity()) {
             showProgressDialog(requireActivity())
             viewModel.getNetwork(network!!.id)
         }

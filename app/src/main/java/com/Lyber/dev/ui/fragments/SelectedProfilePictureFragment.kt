@@ -41,7 +41,7 @@ class SelectedProfilePictureFragment : BaseFragment<FragmentSelectedProfilePictu
             //requireActivity().supportFragmentManager.popBackStack()
         }
         binding.btnSave.setOnClickListener {
-            CommonMethods.checkInternet(requireActivity()) {
+            CommonMethods.checkInternet(binding.root,requireActivity()) {
                 CommonMethods.showProgressDialog(requireActivity())
                 App.prefsManager.defaultImage = profilePIc
                 viewModel.updateAvtaar(profilePIc.toString())

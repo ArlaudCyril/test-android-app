@@ -21,12 +21,9 @@ import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.Constants.SCANNED_ADDRESS
 import com.Lyber.dev.utils.Constants.SCAN_COMPLETE
 import com.budiyev.android.codescanner.*
-import com.google.android.material.snackbar.Snackbar
 import io.github.g00fy2.quickie.QRResult
 import io.github.g00fy2.quickie.ScanCustomCode
-import io.github.g00fy2.quickie.ScanQRCode
 import io.github.g00fy2.quickie.config.BarcodeFormat
-import io.github.g00fy2.quickie.config.ScannerConfig
 
 class CodeScannerFragment : BaseFragment<FragmentCodeScannerBinding>() {
 
@@ -92,7 +89,7 @@ class CodeScannerFragment : BaseFragment<FragmentCodeScannerBinding>() {
 //
         codeScanner.errorCallback = ErrorCallback { // or ErrorCallback.SUPPRESS
             Log.d("textError", "$it")
-            it.showToast(requireContext())
+            it.showToast(binding.root,requireContext())
 //            requireActivity().runOnUiThread {
 //                Toast.makeText(
 //                    requireContext(), "Camera initialization error: ${it.message}",

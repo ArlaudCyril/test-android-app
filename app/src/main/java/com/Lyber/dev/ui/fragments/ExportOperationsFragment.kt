@@ -147,7 +147,7 @@ class ExportOperationsFragment : BaseFragment<FragmentExportOperationsBinding>()
                 btnExport -> {
                     if (::selectedDate.isInitialized)
                         try {
-                            CommonMethods.checkInternet(requireContext()) {
+                            CommonMethods.checkInternet(binding.root,requireContext()) {
                                 CommonMethods.showProgressDialog(requireContext())
                                 viewModel.getExportOperations(selectedDate)
                             }

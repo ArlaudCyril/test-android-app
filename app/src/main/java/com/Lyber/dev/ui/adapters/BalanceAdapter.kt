@@ -7,6 +7,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.ItemMyAssetBinding
 import com.Lyber.dev.models.Balance
+import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods.Companion.commaFormatted
 import com.Lyber.dev.utils.CommonMethods.Companion.currencyFormatted
 import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
@@ -17,7 +18,7 @@ import java.math.RoundingMode
 
 class BalanceAdapter(
     private val isFromWithdraw:Boolean = false,private val listener: (Balance) -> Unit = { _ ->
-    },
+    },private val hideBalanceFeature:Boolean=false
 ) :
     BaseAdapter<Balance>() {
 
@@ -57,6 +58,9 @@ class BalanceAdapter(
                             tvAssetNameCode.visible()
                         }
                     }
+                    if(hideBalanceFeature && App.prefsManager.hideAmount)
+                    tvAssetAmount.text ="*****"
+                    else
                     tvAssetAmount.text = balance.euroBalance.commaFormatted.currencyFormatted
                     tvAssetAmountInCrypto.text =
                         balance.balance.formattedAsset(
@@ -87,6 +91,9 @@ class BalanceAdapter(
                                 tvAssetNameCode.visible()
                             }
                         }
+                        if(hideBalanceFeature && App.prefsManager.hideAmount)
+                            tvAssetAmount.text ="*****"
+                        else
                         tvAssetAmount.text = balance.euroBalance.commaFormatted.currencyFormatted
                         tvAssetAmountInCrypto.text =
                             balance.balance.formattedAsset(

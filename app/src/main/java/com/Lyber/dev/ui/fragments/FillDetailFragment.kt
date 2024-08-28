@@ -217,7 +217,7 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
 
             3 -> {
                 //TODO check if in use ornot
-//                checkInternet(requireContext()) {
+//                checkInternet(binding.root,requireContext()) {
 //                    showProgressDialog(requireContext())
 //                    viewModel.finishRegistration()
 //                }
@@ -262,7 +262,7 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
             0 -> (fragment as AddressFragment).let {
                 if (it.checkData()) {
 
-                    checkInternet(requireContext()) {
+                    checkInternet(binding.root,requireContext()) {
                         showProgressDialog(requireContext())
                         viewModel.setUserInfo(requireContext())
                         viewModel.setUserAddress(
@@ -280,7 +280,7 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
 
             1 -> (fragment as InvestmentExperienceFragment).let {
                if (it.checkData()) {
-                    checkInternet(requireContext()) {
+                    checkInternet(binding.root,requireContext()) {
                         showProgressDialog(requireContext())
                         viewModel.setInvestmentExp(
                             viewModel.cryptoExp,

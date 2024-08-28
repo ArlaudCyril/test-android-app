@@ -132,7 +132,7 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
                         findNavController().navigate(R.id.enableNotificationFragment)
                     }
 //                        showDialog() For now
-                    /*checkInternet(requireContext()) {
+                    /*checkInternet(binding.root,requireContext()) {
                         viewModel.confirmPin = pinConfirm
                         clearField()
                         showProgressDialog(requireContext())
@@ -141,7 +141,7 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
 
                 } else {
                     clearField()
-                    getString(R.string.please_enter_the_correct_pin).showToast(requireContext())
+                    getString(R.string.please_enter_the_correct_pin).showToast(binding.root,requireContext())
                 }
 
             }

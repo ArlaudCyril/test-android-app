@@ -182,7 +182,7 @@ class SelectAnAssetFragment : BaseFragment<FragmentSelectAnAssetBinding>() {
                     getCoins()
 //                        adapter.setResults()
                 } else
-                    checkInternet(requireContext()) {
+                    checkInternet(binding.root,requireContext()) {
                         getCoins()
                     }
             }
@@ -205,7 +205,7 @@ class SelectAnAssetFragment : BaseFragment<FragmentSelectAnAssetBinding>() {
     }
 
     private fun getCoins(category: String = Constants.VOLUME_DESC) {
-        checkInternet(requireContext()) {
+        checkInternet(binding.root,requireContext()) {
 //            if (page == 1)
 //                binding.rvRefresh.isRefreshing = true
             if (binding.etSearch.text.trim().isEmpty()) {

@@ -123,7 +123,7 @@ class EmailVerificationBottomSheet(private val handle: ((String) -> Unit?)? = nu
             btnCancel.text = getString(R.string.back)
 //            tvResendCode.visible()
             tvResendCode.setOnClickListener {
-                CommonMethods.checkInternet(requireContext()) {
+                CommonMethods.checkInternet(binding.root,requireContext()) {
                     CommonMethods.setProgressDialogAlert(requireContext())
                     handle!!.invoke("tg")
                     fromResend = true

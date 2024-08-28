@@ -689,7 +689,7 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
 
     override fun onError() {
         CommonMethods.dismissProgressDialog()
-        getString(R.string.unable_to_connect_to_the_server).showToast(this)
+        getString(R.string.unable_to_connect_to_the_server).showToast(binding.root,this)
 
     }
 

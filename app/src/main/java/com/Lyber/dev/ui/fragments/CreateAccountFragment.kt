@@ -122,7 +122,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                     client.step2(config, it.data.salt.toBigInteger(), it.data.B.toBigInteger())
 
 
-                checkInternet(requireContext()) {
+                checkInternet(binding.root,requireContext()) {
                     viewModel.authenticateUser(creds.A.toString(), creds.M1.toString())
                 }
 
@@ -181,7 +181,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
             }
         }
         viewModel.setPhoneResponse.observe(viewLifecycleOwner) {
-            App.prefsManager.userSmsTimestamps=System.currentTimeMillis()
+            App.prefsManager.userSmsTimestamps = System.currentTimeMillis()
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 App.prefsManager.accessToken = it.data.token
                 App.accessToken = it.data.token
@@ -307,7 +307,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                             etPhone.isShown -> when {
 
                                 verifyMobile() && verifyPassword() ->
-                                    checkInternet(requireContext()) {
+                                    checkInternet(binding.root,requireContext()) {
                                         showProgressDialog(requireContext())
                                         resendCode = 1
                                         val modifiedMobile =
@@ -334,7 +334,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                             // email case
                             else -> when {
                                 verifyEmail() && verifyPassword() ->
-                                    checkInternet(requireContext()) {
+                                    checkInternet(binding.root,requireContext()) {
                                         showProgressDialog(requireContext())
                                         resendCode = 2
                                         viewModel.email = email.lowercase()
@@ -354,7 +354,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                     else
                         when {
                             verifyMobile() ->
-                                checkInternet(requireContext()) {
+                                checkInternet(binding.root,requireContext()) {
                                     resendCode = 3
                                     val modifiedMobile =
                                         if (mobile.startsWith("0")) mobile.removeRange(
@@ -379,7 +379,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                                         getString(
                                             R.string.you_have_to_wait,
                                             seconds.toString()
-                                        ).showToast(requireContext())
+                                        ).showToast(binding.root,requireContext())
 
                                     }
 //                                    viewModel.setPhone(
@@ -420,12 +420,12 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         return when {
             mobile.isEmpty() -> {
                 binding.etPhone.requestKeyboard()
-                getString(R.string.please_enter_phone_number).showToast(requireContext())
+                getString(R.string.please_enter_phone_number).showToast(binding.root,requireContext())
                 false
             }
 
             mobile.length !in 7..15 -> {
-                getString(R.string.please_enter_valid_phone_number).showToast(requireContext())
+                getString(R.string.please_enter_valid_phone_number).showToast(binding.root,requireContext())
                 false
             }
 
@@ -437,12 +437,12 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         return when {
             email.isEmpty() -> {
                 binding.etEmail.requestKeyboard()
-                getString(R.string.please_enter_email_address).showToast(requireContext())
+                getString(R.string.please_enter_email_address).showToast(binding.root,requireContext())
                 false
             }
 
             !isValidEmail(email) -> {
-                getString(R.string.please_enter_valid_email).showToast(requireContext())
+                getString(R.string.please_enter_valid_email).showToast(binding.root,requireContext())
                 binding.etEmail.requestKeyboard()
                 false
             }
@@ -454,7 +454,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
     private fun verifyPassword(): Boolean {
         return when {
             password.isEmpty() -> {
-                getString(R.string.please_enter_password).showToast(requireContext())
+                getString(R.string.please_enter_password).showToast(binding.root,requireContext())
                 binding.etPassword.requestFocus()
                 false
             }
@@ -505,10 +505,10 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         super.onConfigurationChanged(newConfig)
 
         when (newConfig.hardKeyboardHidden) {
-            Configuration.HARDKEYBOARDHIDDEN_NO -> "closed".showToast(requireContext())
+            Configuration.HARDKEYBOARDHIDDEN_NO -> "closed".showToast(binding.root,requireContext())
 
             Configuration.HARDKEYBOARDHIDDEN_YES -> {
-                "opened".showToast(requireContext())
+                "opened".showToast(binding.root,requireContext())
                 /* (requireParentFragment() as SignUpFragment).view?.findViewById<ScrollView>(R.id.scrollView)
                      ?.let {
                          it.smoothScrollTo(0, it.height)
@@ -578,7 +578,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                     if (time > 0L)
                         seconds = (time / 1000) % 60
                     getString(R.string.you_have_to_wait, seconds.toString()).showToast(
-                        requireContext()
+                        binding.root,requireContext()
                     )
 //                    getString(R.string.wait_plz).showToast(requireContext())
                 }

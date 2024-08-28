@@ -155,7 +155,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
                 isGpayHit = true
                 googlePayLauncher.presentForPaymentIntent(clientSecret)
             } else
-                getString(R.string.you_must_install_gpay).showToast(requireContext())
+                getString(R.string.you_must_install_gpay).showToast(binding.root,requireContext())
         }
     }
 
@@ -250,7 +250,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
                         isGpayHit = true
                         googlePayLauncher.presentForPaymentIntent(clientSecret)
                     } else
-                        getString(R.string.you_must_install_gpay).showToast(requireContext())
+                        getString(R.string.you_must_install_gpay).showToast(binding.root,requireContext())
                 }
 
                 tvMoreDetails -> {
@@ -358,7 +358,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
 //            Log.d("timer", "$timer")
             if (timer < 2) {
                 if (!isApiHit) {
-                    CommonMethods.checkInternet(requireContext()) {
+                    CommonMethods.checkInternet(binding.root,requireContext()) {
                         isApiHit = true
 //                        CommonMethods.showProgressDialog(requireActivity())
                         viewModel.cancelQuote(hashMap)
@@ -390,7 +390,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
 
     private fun dismissList(clicked: Boolean) {
         if (clicked) {
-            checkInternet(requireActivity()) {
+            checkInternet(binding.root,requireActivity()) {
                 val data = Gson().fromJson(
                     requireArguments().getString(Constants.DATA_SELECTED),
                     DataQuote::class.java

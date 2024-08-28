@@ -83,7 +83,7 @@ class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnCli
     }
 
     private fun getData() {
-        CommonMethods.checkInternet(requireContext()) {
+        CommonMethods.checkInternet(binding.root,requireContext()) {
             CommonMethods.showProgressDialog(requireContext())
             viewModel.getBalance()
         }

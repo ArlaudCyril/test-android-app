@@ -5,14 +5,13 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
-import androidx.core.content.ContextCompat
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.BottomSheetAddressBookBinding
 import com.Lyber.dev.models.RIBData
 import com.Lyber.dev.models.WithdrawAddress
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.gone
+import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.CommonMethods.Companion.toFormat
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 
@@ -122,10 +121,7 @@ class AddAddressInfoBottomSheet(
                             binding.tvAddress.text.toString()
                         )
                     clipboard.setPrimaryClip(clip)
-                    Toast.makeText(
-                        requireActivity(),
-                        getString(R.string.adress_copied), Toast.LENGTH_SHORT
-                    ).show()
+                    getString(R.string.adress_copied).showToast(binding.root,requireContext())
                 }
 
                 llDelete -> {

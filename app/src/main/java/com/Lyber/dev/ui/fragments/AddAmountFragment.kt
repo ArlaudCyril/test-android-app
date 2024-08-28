@@ -226,7 +226,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
                 Constants.USING_WITHDRAW -> {
 
-                    checkInternet(requireContext()) {
+                    checkInternet(binding.root,requireContext()) {
                         viewModel.getWhiteListings()
                     }
 
@@ -297,7 +297,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                 Constants.USING_WITHDRAW_FIAT -> {
 
 
-                    checkInternet(requireContext()) {
+                    checkInternet(binding.root,requireContext()) {
                         viewModel.getWhiteListings()
                     }
 
@@ -408,7 +408,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                             Constants.USING_STRATEGY -> {
                                 if (selectedFrequency.isEmpty()) {
                                     getString(R.string.please_select_frequency).showToast(
-                                        requireContext()
+                                        binding.root,requireContext()
                                     )
                                     return
                                 } else viewModel.selectedFrequency = selectedFrequency
@@ -434,7 +434,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                             Constants.USING_WITHDRAW -> {
 
                                 if (viewModel.allMyPortfolio.isNotEmpty()) {
-                                    checkInternet(requireContext()) {
+                                    checkInternet(binding.root,requireContext()) {
                                         showProgressDialog(requireContext())
                                         viewModel.withdrawFiat(viewModel.amount)
                                     }
@@ -449,7 +449,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                             }
 
                             Constants.USING_WITHDRAW_FIAT -> {
-                                checkInternet(requireContext()) {
+                                checkInternet(binding.root,requireContext()) {
                                     showProgressDialog(requireContext())
                                     viewModel.withdrawFiat(viewModel.amount)
                                 }

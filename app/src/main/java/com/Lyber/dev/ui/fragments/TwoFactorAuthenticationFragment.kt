@@ -149,7 +149,7 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
         super.onRetrofitError(responseBody)
         dismissAlertDialog()
         if (showOtp) {
-            CommonMethods.checkInternet(requireContext()) {
+            CommonMethods.checkInternet(binding.root,requireContext()) {
                 isResend=true
                 CommonMethods.showProgressDialog(requireContext())
                 var json = """{"type2FA" : "google"}""".trimMargin()
@@ -213,15 +213,15 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
                             }
                         }
                     } else
-                        getString(R.string.you_must_install_authenticator).showToast(requireContext())
+                        getString(R.string.you_must_install_authenticator).showToast(binding.root,requireContext())
 
                 }
 
                 btnVerify -> {
-                    CommonMethods.checkInternet(requireContext()) {
+                    CommonMethods.checkInternet(binding.root,requireContext()) {
                         showOtp = false
                         CommonMethods.showProgressDialog(requireContext())
-                        var json = """{"type2FA" : "google"}""".trimMargin()
+                        val json = """{"type2FA" : "google"}""".trimMargin()
                         val detail = CommonMethods.encodeToBase64(json)
                         viewModel.switchOffAuthentication(detail, Constants.TYPE)
                     }
@@ -276,7 +276,7 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
     }
     fun handle(tx: String) {
         isResend = true
-        CommonMethods.checkInternet(requireContext()) {
+        CommonMethods.checkInternet(binding.root,requireContext()) {
             showOtp = false
             var json = """{"type2FA" : "google"}""".trimMargin()
             val detail = CommonMethods.encodeToBase64(json)

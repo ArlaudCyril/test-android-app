@@ -14,7 +14,6 @@ import android.view.Window
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -28,7 +27,6 @@ import com.Lyber.dev.ui.adapters.BuildStrategyAdapter
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.AddAssetBottomSheet
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.BaseBottomSheet
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
-import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.dev.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
@@ -40,11 +38,6 @@ import com.Lyber.dev.utils.CommonMethods.Companion.toPx
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.PortfolioViewModel
-import com.appsflyer.AFInAppEventParameterName
-import com.appsflyer.AFInAppEventType
-import com.appsflyer.AppsFlyerLib
-import com.appsflyer.attribution.AppsFlyerRequestListener
-import java.util.HashMap
 import kotlin.math.ceil
 import kotlin.math.roundToInt
 
@@ -266,7 +259,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                 ivTopAction -> requireActivity().onBackPressed()
                 btnSaveMyStrategy -> {
                     if (isEdit && canBuildStrategy) {
-                        checkInternet(requireContext()) {
+                        checkInternet(binding.root,requireContext()) {
                             if (viewModel.selectedStrategy!!.expectedYield != null) {
                                 showProgressDialog(requireContext())
                                 viewModel.buildOwnStrategy(viewModel.selectedStrategy!!.name + " (Copy)")
@@ -288,10 +281,15 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
 //                                            getString(R.string.tailorStrategyError)
 //                                        )
                                         viewModel.selectedOption = Constants.ACTION_TAILOR_STRATEGY
-                                        ConfirmationBottomSheet().apply {  arguments = Bundle().apply {
-                                            putDouble("currentAmount", viewModel.selectedStrategy!!.activeStrategy!!.amount!!)
-                                            putFloat("requiredAmount", requiredAmount)
-                                        } }.show(childFragmentManager, "")
+                                        ConfirmationBottomSheet().apply {
+                                            arguments = Bundle().apply {
+                                                putDouble(
+                                                    "currentAmount",
+                                                    viewModel.selectedStrategy!!.activeStrategy!!.amount!!
+                                                )
+                                                putFloat("requiredAmount", requiredAmount)
+                                            }
+                                        }.show(childFragmentManager, "")
 
                                     } else {
                                         showProgressDialog(requireContext())
@@ -350,16 +348,16 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                     when {
                         name.isEmpty() -> {
                             getString(R.string.please_enter_name_for_your_strategy).showToast(
-                                requireContext()
+                                binding.root, requireContext()
                             )
                             bind.etInput.requestKeyboard()
                         }
 
                         else -> {
-                            checkInternet(requireContext()) {
+                            checkInternet(binding.root,requireContext()) {
                                 mainView.removeView(transparentView)
                                 dismiss()
-                                checkInternet(requireContext()) {
+                                checkInternet(binding.root,requireContext()) {
                                     showProgressDialog(requireContext())
                                     if (isEdit) {
                                         if (viewModel.selectedStrategy?.activeStrategy != null) {
@@ -378,11 +376,17 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
 //                                                    requireContext(),
 //                                                    getString(R.string.tailorStrategyError)
 //                                                )
-                                                viewModel.selectedOption = Constants.ACTION_TAILOR_STRATEGY
-                                                ConfirmationBottomSheet().apply {  arguments = Bundle().apply {
-                                                    putDouble("currentAmount", viewModel.selectedStrategy!!.activeStrategy!!.amount!!)
-                                                    putFloat("requiredAmount", requiredAmount)
-                                                } }.show(childFragmentManager, "")
+                                                viewModel.selectedOption =
+                                                    Constants.ACTION_TAILOR_STRATEGY
+                                                ConfirmationBottomSheet().apply {
+                                                    arguments = Bundle().apply {
+                                                        putDouble(
+                                                            "currentAmount",
+                                                            viewModel.selectedStrategy!!.activeStrategy!!.amount!!
+                                                        )
+                                                        putFloat("requiredAmount", requiredAmount)
+                                                    }
+                                                }.show(childFragmentManager, "")
                                             } else
                                                 viewModel.editOwnStrategy(name)
                                         } else

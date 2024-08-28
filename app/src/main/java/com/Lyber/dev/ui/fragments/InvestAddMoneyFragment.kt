@@ -12,20 +12,18 @@ import com.Lyber.dev.databinding.FragmentInvestAddMoneyBinding
 import com.Lyber.dev.models.Balance
 import com.Lyber.dev.models.BalanceData
 import com.Lyber.dev.models.Strategy
-import com.Lyber.dev.models.TransactionData
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.FrequencyModel
-import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
 import com.Lyber.dev.utils.CommonMethods.Companion.setBackgroundTint
 import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.utils.OnTextChange
+import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import java.math.RoundingMode
 import kotlin.math.ceil
-import kotlin.math.round
 
 class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), View.OnClickListener {
     private var selectedFrequency: String = ""
@@ -81,8 +79,8 @@ class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), Vi
     private fun prepareView() {
         val selectedAsset =
             com.Lyber.dev.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == Constants.MAIN_ASSET } }
-       if(selectedAsset!=null)
-        decimal = selectedAsset.decimals
+        if (selectedAsset != null)
+            decimal = selectedAsset.decimals
         for (asset in viewModel.selectedStrategy?.bundle!!) {
             val newAmount = minInvestPerAsset / (asset.share / 100)
             if (newAmount > requiredAmount) {
@@ -118,7 +116,9 @@ class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), Vi
                 else -> getString(R.string.monthly)
             }
             binding.apply {
-                etAmount.text = "${data.activeStrategy!!.amount.toString().formattedAsset(0.0, RoundingMode.DOWN, decimal)
+                etAmount.text = "${
+                    data.activeStrategy!!.amount.toString()
+                        .formattedAsset(0.0, RoundingMode.DOWN, decimal)
                 }$mCurrency"
                 val assetAmount =
                     (data.activeStrategy!!.amount!!.toDouble() * valueConversion).toString()
@@ -204,14 +204,17 @@ class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), Vi
                 R.string.you_need_to_invest_at_least_per_asset_in_the_strategy,
                 requiredAmount.toString(),
                 mCurrency.uppercase()
-            ).showToast(requireActivity())
+            ).showToast(binding.root, requireActivity())
         } else if (finalAmount.toFloat() > amount) {
             getString(
                 R.string.you_don_t_have_enough_to_perform_this_action,
                 mCurrency.uppercase()
-            ).showToast(requireActivity())
+            ).showToast(binding.root, requireActivity())
         } else if (selectedFrequency.trim().isEmpty()) {
-            getString(R.string.please_select_the_frequency).showToast(requireActivity())
+            getString(R.string.please_select_the_frequency).showToast(
+                binding.root,
+                requireActivity()
+            )
         } else {
             viewModel.amount = finalAmount
             viewModel.selectedFrequency = selectedFrequency

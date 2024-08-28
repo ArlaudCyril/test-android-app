@@ -102,7 +102,7 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
             binding.etEmail.clearFocus()
             binding.etPassword.clearFocus()
             if (checkData()) {
-                checkInternet(requireActivity()) {
+                checkInternet(binding.root,requireActivity()) {
                     CommonMethods.showProgressDialog(requireContext())
 
                     val emailSalt = BigInteger(1, generator.generateRandomSalt())
@@ -187,7 +187,7 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
         binding.etEmail.clearFocus()
         binding.etPassword.clearFocus()
         if (checkData()) {
-            checkInternet(requireActivity()) {
+            checkInternet(binding.root,requireActivity()) {
                 val emailSalt = BigInteger(1, generator.generateRandomSalt())
                 val emailVerifier = generator.generateVerifier(
                     emailSalt,
@@ -214,12 +214,12 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
     fun checkData(): Boolean {
         when {
             email.isEmpty() -> {
-                getString(R.string.please_enter_your_email).showToast(requireContext())
+                getString(R.string.please_enter_your_email).showToast(binding.root,requireContext())
                 binding.etEmail.requestKeyboard()
             }
 
             !CommonMethods.isValidEmail(email) -> {
-                getString(R.string.please_enter_a_valid_email_address).showToast(requireContext())
+                getString(R.string.please_enter_a_valid_email_address).showToast(binding.root,requireContext())
                 binding.etEmail.requestKeyboard()
             }
 

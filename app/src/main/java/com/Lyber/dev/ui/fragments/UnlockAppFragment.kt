@@ -1,21 +1,14 @@
 package com.Lyber.dev.ui.fragments
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.biometric.BiometricManager
@@ -26,10 +19,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.transition.Fade
 import com.Lyber.dev.R
-import com.Lyber.dev.databinding.DownloadGoogleAuthenticatorBinding
 import com.Lyber.dev.databinding.FragmentUnlockAppBinding
-import com.Lyber.dev.ui.activities.SplashActivity
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
@@ -41,17 +31,10 @@ import com.Lyber.dev.utils.CommonMethods.Companion.logOut
 import com.Lyber.dev.utils.CommonMethods.Companion.setBiometricPromptInfo
 import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.dev.utils.CommonMethods.Companion.showToast
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.utils.OnTextChange
 import com.Lyber.dev.viewmodels.NetworkViewModel
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.firebase.messaging.FirebaseMessaging
-import com.google.firebase.messaging.FirebaseMessagingService
 import okhttp3.ResponseBody
 import java.util.Locale
-import java.util.concurrent.Executor
 
 class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClickListener {
 
@@ -87,22 +70,22 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
                 logOut(requireContext())
             }
         }
-       viewModel.getUserResponse.observe(viewLifecycleOwner) {
+        viewModel.getUserResponse.observe(viewLifecycleOwner) {
 //            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-               try {
-                   App.prefsManager.user = it.data
-                   if (it.data.language.isNotEmpty()) {
-                       App.prefsManager.setLanguage(it.data.language)
-                       val locale = Locale(it.data.language)
-                       Locale.setDefault(locale)
-                       val resources: Resources = resources
-                       val config: Configuration = resources.configuration
-                       config.setLocale(locale)
-                       resources.updateConfiguration(config, resources.displayMetrics)
-                   }
-               }catch (_:Exception){
+            try {
+                App.prefsManager.user = it.data
+                if (it.data.language.isNotEmpty()) {
+                    App.prefsManager.setLanguage(it.data.language)
+                    val locale = Locale(it.data.language)
+                    Locale.setDefault(locale)
+                    val resources: Resources = resources
+                    val config: Configuration = resources.configuration
+                    config.setLocale(locale)
+                    resources.updateConfiguration(config, resources.displayMetrics)
+                }
+            } catch (_: Exception) {
 
-               }
+            }
 
 //            }
         }
@@ -185,7 +168,7 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
             }
 
             App.prefsManager.refreshTokenSavedAt.is1DayOld() -> {
-                checkInternet(requireContext()) {
+                checkInternet(binding.root,requireContext()) {
                     showProgressDialog(requireContext())
                     viewModel.refreshToken()
                 }
@@ -224,7 +207,7 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
                 }
 
                 tvLogOut -> {
-                    CommonMethods.checkInternet(requireContext()) {
+                    CommonMethods.checkInternet(binding.root,requireContext()) {
                         CommonMethods.showProgressDialog(requireContext())
                         viewModel.logout()
                     }
@@ -257,7 +240,7 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
                     if (pin == App.prefsManager.userPin)
                         verified()
                     else {
-                        getString(R.string.incorrect_pin).showToast(requireContext())
+                        getString(R.string.incorrect_pin).showToast(binding.root,requireContext())
                         binding.etPin.setText("")
                     }
                 }, 200)

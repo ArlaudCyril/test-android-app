@@ -1,23 +1,18 @@
 package com.Lyber.dev.ui.fragments
 
-import android.content.res.ColorStateList
-import android.graphics.PorterDuff
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.View.OnClickListener
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentAddRibBinding
 import com.Lyber.dev.models.RIBData
-import com.Lyber.dev.models.Strategy
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.WithdrawalUsdcAddressBottomSheet
 import com.Lyber.dev.ui.portfolio.fragment.PortfolioDetailFragment
-import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.gone
 import com.Lyber.dev.utils.CommonMethods.Companion.showToast
@@ -122,19 +117,37 @@ class AddRibFragment : BaseFragment<FragmentAddRibBinding>(), OnClickListener {
                 tvBankCountry -> openCountryPicker()
                 btnAdd -> {
                     if (binding.etRibName.text.trim().toString().isEmpty())
-                        getString(R.string.please_complete_all_fields).showToast(requireContext())
+                        getString(R.string.please_complete_all_fields).showToast(
+                            binding.root,
+                            requireContext()
+                        )
                     else if (binding.etIBanNo.text.trim().toString().isEmpty())
-                        getString(R.string.please_complete_all_fields).showToast(requireContext())
+                        getString(R.string.please_complete_all_fields).showToast(
+                            binding.root,
+                            requireContext()
+                        )
                     else if (binding.etBic.text.trim().toString().isEmpty())
-                        getString(R.string.please_complete_all_fields).showToast(requireContext())
+                        getString(R.string.please_complete_all_fields).showToast(
+                            binding.root,
+                            requireContext()
+                        )
                     else if (binding.etOwnerName.text.trim().toString().isEmpty())
-                        getString(R.string.please_complete_all_fields).showToast(requireContext())
+                        getString(R.string.please_complete_all_fields).showToast(
+                            binding.root,
+                            requireContext()
+                        )
                     else if (selectedCountry.isEmpty())
-                        getString(R.string.please_complete_all_fields).showToast(requireContext())
+                        getString(R.string.please_complete_all_fields).showToast(
+                            binding.root,
+                            requireContext()
+                        )
                     else if (!isValidInput(binding.etOwnerName.text.trim().toString()))
-                        getString(R.string.owner_name_error).showToast(requireContext())
+                        getString(R.string.owner_name_error).showToast(
+                            binding.root,
+                            requireContext()
+                        )
                     else {
-                        CommonMethods.checkInternet(requireContext()) {
+                        CommonMethods.checkInternet(binding.root,requireContext()) {
                             CommonMethods.showProgressDialog(requireContext())
                             val hashMap = HashMap<String, Any>()
                             hashMap["iban"] = binding.etIBanNo.text.trim().toString()

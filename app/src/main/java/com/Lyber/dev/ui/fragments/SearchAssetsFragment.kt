@@ -75,7 +75,7 @@ class SearchAssetsFragment :
     }
 
     private fun getAssets(keyword: String = "") {
-        checkInternet(requireContext()) {
+        checkInternet(binding.root,requireContext()) {
             binding.rvRefresh.isRefreshing = true
             viewModel.assetsToChoose(keyword)
         }

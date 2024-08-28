@@ -163,7 +163,7 @@ class AddAssetBottomSheet(private val clickListener: (PriceServiceResume) -> Uni
 
         }
 
-        checkInternet(requireContext()) {
+        checkInternet(binding.root,requireContext()) {
             CommonMethods.showProgressDialog(requireContext())
             viewModel.getAllPriceResume()
         }

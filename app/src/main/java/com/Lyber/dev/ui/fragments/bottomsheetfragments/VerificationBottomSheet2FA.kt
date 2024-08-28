@@ -103,7 +103,7 @@ class VerificationBottomSheet2FA(private val handle: (String) -> Unit) :
             handler = Handler(Looper.getMainLooper())
 
         binding.tvResendCode.setOnClickListener {
-            CommonMethods.checkInternet(requireContext()){
+            CommonMethods.checkInternet(binding.root,requireContext()){
                 CommonMethods.setProgressDialogAlert(requireContext())
                fromResend=true
                 handle.invoke("Resend")

@@ -213,7 +213,7 @@ class OrderStrategyExecutionFragment : BaseFragment<FragmentOrderStrategyExecuti
         handler.postDelayed(object : Runnable {
             override fun run() {
                 // Your statement to be executed every 5 seconds
-                CommonMethods.checkInternet(requireContext()) {
+                CommonMethods.checkInternet(binding.root,requireContext()) {
                     viewModel.strategyStatus(executionID)
                 }
                 // Schedule the next execution after the delay

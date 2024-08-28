@@ -68,7 +68,7 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
         viewModel.deleteWhiteList.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
-                checkInternet(requireContext()) {
+                checkInternet(binding.root,requireContext()) {
                     viewModel.getWithdrawalAddresses()
                 }
             }
@@ -87,7 +87,7 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
             findNavController().navigate(R.id.enableWhiteListingFragment)
         }
 
-        checkInternet(requireContext()) {
+        checkInternet(binding.root,requireContext()) {
             viewModel.getWithdrawalAddresses()
         }
 
@@ -125,7 +125,7 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
         AddAddressInfoBottomSheet(true,requireActivity()) {
             if (it == 1) {
                 // delete
-                checkInternet(requireContext()) {
+                checkInternet(binding.root,requireContext()) {
                 showProgressDialog(requireContext())
                     viewModel.deleteWhiteList(data.address!!,data.network!!)
                 }
@@ -149,7 +149,7 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
         override fun afterTextChanged(s: Editable?) {
-            checkInternet(requireContext()) {
+            checkInternet(binding.root,requireContext()) {
                 adapter.setList(emptyList())
                 adapter.addProgress()
                 if (keyword.isNotEmpty())

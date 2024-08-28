@@ -179,7 +179,7 @@ class TransactionDetailsBottomSheetFragment :
                         requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
                     val clip = ClipData.newPlainText("label", textToCopy)
                     clipMan?.setPrimaryClip(clip)
-                    getString(R.string.copied).showToast(requireContext())
+                    getString(R.string.copied).showToast(binding.root,requireContext())
                 }
 
                 ivCopyFrom -> {
@@ -192,7 +192,7 @@ class TransactionDetailsBottomSheetFragment :
                         requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
                     val clip = ClipData.newPlainText("label", textToCopy)
                     clipMan?.setPrimaryClip(clip)
-                    getString(R.string.copied).showToast(requireContext())
+                    getString(R.string.copied).showToast(binding.root,requireContext())
                 }
 
                 ivTransactionHash -> {
@@ -202,7 +202,7 @@ class TransactionDetailsBottomSheetFragment :
                         requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
                     val clip = ClipData.newPlainText("label", textToCopy)
                     clipMan?.setPrimaryClip(clip)
-                    getString(R.string.copied).showToast(requireContext())
+                    getString(R.string.copied).showToast(binding.root,requireContext())
                 }
 
                 ivTopAction -> {

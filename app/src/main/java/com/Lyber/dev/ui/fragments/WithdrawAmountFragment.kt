@@ -76,7 +76,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
         prepareView()
         setObservers()
         binding.etAmount.addTextChangedListener(textOnTextChange)
-        CommonMethods.checkInternet(requireActivity()) {
+        CommonMethods.checkInternet(binding.root,requireActivity()) {
             CommonMethods.showProgressDialog(requireActivity())
             viewModel.getWithdrawalAddresses()
         }
@@ -345,7 +345,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                         com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
 
                     if (balance == null) {
-                        getString(R.string.you_do_not_have_this_asset).showToast(requireActivity())
+                        getString(R.string.you_do_not_have_this_asset).showToast(binding.root,requireActivity())
                     } else if (activate) {
                         if (focusedData.currency.contains(mCurrency)) {
                             if (maxValueAsset <= balance.balanceData.balance.toDouble()) {
@@ -357,10 +357,10 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                                         R.id.confirmWithdrawalFragment, bundle
                                     )
                                 } else {
-                                    getString(R.string.select_address).showToast(requireActivity())
+                                    getString(R.string.select_address).showToast(binding.root,requireActivity())
                                 }
                             } else {
-                                getString(R.string.insufficient_balance).showToast(requireActivity())
+                                getString(R.string.insufficient_balance).showToast(binding.root,requireActivity())
                             }
                         } else if (focusedData.currency.contains(mConversionCurrency)) {
                             if (maxValueAsset <= maxValue) {
@@ -372,13 +372,13 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                                         R.id.confirmWithdrawalFragment, bundle
                                     )
                                 } else {
-                                    getString(R.string.select_address).showToast(requireActivity())
+                                    getString(R.string.select_address).showToast(binding.root,requireActivity())
                                 }
                             } else {
-                                getString(R.string.insufficient_balance).showToast(requireActivity())
+                                getString(R.string.insufficient_balance).showToast(binding.root,requireActivity())
                             }
                         } else {
-                            getString(R.string.insufficient_balance).showToast(requireActivity())
+                            getString(R.string.insufficient_balance).showToast(binding.root,requireActivity())
                         }
                     }
                 }
@@ -388,7 +388,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                         requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
                     val clip = ClipData.newPlainText("label", addressId)
                     clipMan?.setPrimaryClip(clip)
-                    getString(R.string.copied).showToast(requireContext())
+                    getString(R.string.copied).showToast(binding.root,requireContext())
                 }
             }
         }

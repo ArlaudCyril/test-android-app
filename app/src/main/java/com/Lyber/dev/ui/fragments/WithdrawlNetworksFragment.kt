@@ -33,7 +33,7 @@ class WithdrawlNetworksFragment : BaseFragment<FragmentListingBinding>() {
         assetId = requireArguments().getString(Constants.ID, "")
         viewModel = CommonMethods.getViewModel(requireActivity())
         setObservers()
-        adapter = NetworkAdapter(requireActivity(), ::itemClicked)
+        adapter = NetworkAdapter(::itemClicked)
         val layoutManager = LinearLayoutManager(requireContext())
         binding.rvAddAsset.let {
             it.adapter = adapter
@@ -47,7 +47,7 @@ class WithdrawlNetworksFragment : BaseFragment<FragmentListingBinding>() {
     }
 
     private fun hitApi() {
-        CommonMethods.checkInternet(requireActivity()) {
+        CommonMethods.checkInternet(binding.root,requireActivity()) {
             CommonMethods.showProgressDialog(requireActivity())
             viewModel.getAssetDetailIncludeNetworks(assetId)
         }
@@ -82,7 +82,6 @@ class WithdrawlNetworksFragment : BaseFragment<FragmentListingBinding>() {
     }
 
     class NetworkAdapter(
-        private val context: Context,
         private val handle: (NetworkDeposit) -> Unit
     ) :
         BaseAdapter<NetworkDeposit>() {
@@ -94,7 +93,7 @@ class WithdrawlNetworksFragment : BaseFragment<FragmentListingBinding>() {
             RecyclerView.ViewHolder(binding.root) {
             init {
                 binding.root.setOnClickListener {
-                    handle(itemList[adapterPosition]!!)
+                    handle(itemList[absoluteAdapterPosition]!!)
                 }
             }
         }

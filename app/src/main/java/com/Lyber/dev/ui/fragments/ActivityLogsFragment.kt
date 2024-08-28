@@ -48,7 +48,7 @@ class ActivityLogsFragment : BaseFragment<FragmentActivityLogsBinding>() {
         }
     }
     private fun hitApis(){
-        CommonMethods.checkInternet(requireContext()) {
+        CommonMethods.checkInternet(binding.root,requireContext()) {
             CommonMethods.showProgressDialog(requireContext())
             viewModel.getActivityLogs(limit, offset)
         }
@@ -71,7 +71,7 @@ class ActivityLogsFragment : BaseFragment<FragmentActivityLogsBinding>() {
                         offset += limit + 1
                         isLoading = true
                         adapter.addProgress()
-                        CommonMethods.checkInternet(requireContext()) {
+                        CommonMethods.checkInternet(binding.root,requireContext()) {
                             viewModel.getActivityLogs(limit, offset)
                         }
                     }

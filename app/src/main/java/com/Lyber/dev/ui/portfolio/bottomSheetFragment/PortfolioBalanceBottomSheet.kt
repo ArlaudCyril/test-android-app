@@ -111,7 +111,7 @@ class PortfolioBalanceBottomSheet(private val clickListener: (BalanceInfo) -> Un
 
     private fun getTransactions() {
         viewModel.selectedAsset?.let {
-            checkInternet(requireContext()) {
+            checkInternet(binding.root,requireContext()) {
                 showProgress()
                 viewModel.getTransactions(page, limit, it.id)
             }

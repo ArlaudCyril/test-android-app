@@ -90,7 +90,7 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
 
         viewModel.pauseStrategyResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                checkInternet(requireContext()) {
+                checkInternet(binding.root,requireContext()) {
                     showProgressDialog(requireContext())
                     viewModel.getStrategies()
                 }
@@ -107,7 +107,7 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
         }
     }
     private fun hitApi(){
-        checkInternet(requireContext()) {
+        checkInternet(binding.root,requireContext()) {
             showProgressDialog(requireContext())
             viewModel.getStrategies()
         }
@@ -189,7 +189,7 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
 
             1 -> {
                 if(checkKyc())
-                checkInternet(requireActivity()) {
+                checkInternet(binding.root,requireActivity()) {
                     CommonMethods.showProgressDialog(requireActivity())
                     viewModel.pauseStrategy(
                         viewModel.selectedStrategy!!.ownerUuid,
@@ -199,7 +199,7 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
             }
 
             2 -> {
-                checkInternet(requireActivity()) {
+                checkInternet(binding.root,requireActivity()) {
                     CommonMethods.showProgressDialog(requireActivity())
                     viewModel.deleteStrategy(viewModel.selectedStrategy!!.name)
                 }

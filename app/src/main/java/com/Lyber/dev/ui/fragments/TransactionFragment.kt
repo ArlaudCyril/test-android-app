@@ -51,7 +51,7 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
     override fun bind() = FragmentTransactionBinding.inflate(layoutInflater)
 
     private fun hitApi() {
-        CommonMethods.checkInternet(requireContext()) {
+        CommonMethods.checkInternet(binding.root,requireContext()) {
             CommonMethods.showProgressDialog(requireContext())
             viewModel.getTransactions(limit, offset)
         }
@@ -86,7 +86,7 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
                         offset = offset + limit + 1
                         isLoading = true
                         adapter.addProgress()
-                        CommonMethods.checkInternet(requireContext()) {
+                        CommonMethods.checkInternet(binding.root,requireContext()) {
                             viewModel.getTransactions(limit, offset)
                         }
                     }

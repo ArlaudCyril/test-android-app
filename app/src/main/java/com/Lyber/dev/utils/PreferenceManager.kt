@@ -192,6 +192,10 @@ class PreferenceManager(context: Context) {
         get() = mSharedPreferences.getBoolean("faceIdEnabled", false)
         set(value) = mEditor.putBoolean("faceIdEnabled", value).apply()
 
+    var hideAmount: Boolean
+        get() = mSharedPreferences.getBoolean("showAmount", false)
+        set(value) = mEditor.putBoolean("showAmount", value).apply()
+
     fun logout() {
 //        mEditor.clear()
 //        mEditor.apply()

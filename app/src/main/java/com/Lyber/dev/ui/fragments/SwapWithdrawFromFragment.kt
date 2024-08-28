@@ -85,7 +85,7 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
     }
 
     private fun getData() {
-        checkInternet(requireContext()) {
+        checkInternet(binding.root,requireContext()) {
             showProgressDialog(requireContext())
             viewModel.getBalance()
         }

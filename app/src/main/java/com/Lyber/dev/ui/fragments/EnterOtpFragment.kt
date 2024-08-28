@@ -151,7 +151,7 @@ class EnterOtpFragment : BaseFragment<FragmentEnterOtpBinding>() {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             if (getCode().length == 4) {
-                checkInternet(requireContext()) {
+                checkInternet(binding.root,requireContext()) {
                     showProgressDialog(requireContext())
                     viewModel.verifyPhone(getCode())
 //                    onBoardingViewModel.enterOtp(getCode())

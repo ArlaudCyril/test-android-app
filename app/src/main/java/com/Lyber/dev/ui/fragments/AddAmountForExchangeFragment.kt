@@ -151,7 +151,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
             Log.d("Balance", "$balance")
             if (balance != null) {
                 decimalFrom = asset!!.decimals
-                mCurrency = " " + balance!!.id.uppercase()
+                mCurrency = " " + balance.id.uppercase()
                 tvTitle.text = "Exchange ${balance.id.uppercase()}"
                 val priceCoin = balance.balanceData.euroBalance.toDouble()
                     .div(balance.balanceData.balance.toDouble())
@@ -250,7 +250,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
 //                    if(etAmount.text.)
                     if (canPreview) {
                         if (assetAvail == 0.0)
-                            getString(R.string.do_not_have).showToast(requireActivity())
+                            getString(R.string.do_not_have).showToast(binding.root,requireActivity())
                         else
                             hitAPi()
                     }
@@ -320,7 +320,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                 amount.split(focusedData.currency)[0].pointFormat
             )
         } else {
-            getString(R.string.insufficient_balance).showToast(requireActivity())
+            getString(R.string.insufficient_balance).showToast(binding.root,requireActivity())
         }
 
 

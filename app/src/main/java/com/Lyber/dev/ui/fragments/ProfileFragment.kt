@@ -11,15 +11,12 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.provider.Settings
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.animation.AnimationUtils
-import android.widget.FrameLayout
 import android.widget.RelativeLayout
-import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
@@ -32,14 +29,12 @@ import androidx.recyclerview.widget.RecyclerView
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.CustomDialogLayoutBinding
 import com.Lyber.dev.databinding.FragmentProfileBinding
-import com.Lyber.dev.databinding.ItemTransactionBinding
 import com.Lyber.dev.databinding.ItemTransactionNewBinding
 import com.Lyber.dev.models.Balance
 import com.Lyber.dev.models.TransactionData
 import com.Lyber.dev.ui.adapters.BaseAdapter
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.TransactionDetailsBottomSheetFragment
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.VerificationBottomSheet2FA
-import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
@@ -57,10 +52,9 @@ import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
+import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.Lyber.dev.viewmodels.SignUpViewModel
 import com.caverock.androidsvg.BuildConfig
-import com.google.android.material.snackbar.BaseTransientBottomBar
-import com.google.android.material.snackbar.Snackbar
 import com.google.gson.GsonBuilder
 import java.io.File
 import java.math.BigDecimal
@@ -97,7 +91,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
             requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
 
-        CommonMethods.checkInternet(requireContext()) {
+        CommonMethods.checkInternet(binding.root,requireContext()) {
             binding.progressImage.animation =
                 AnimationUtils.loadAnimation(context, R.anim.rotate_drawable)
             viewModel.getTransactions(limit, offset)
@@ -204,7 +198,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         viewModel.uploadResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
 //                App.prefsManager.setProfileImage(it.s3Url)
-                checkInternet(requireContext()) {
+                checkInternet(binding.root,requireContext()) {
                     viewModel.updateUser(hashMapOf("profile_pic" to it.s3Url))
                 }
             }
@@ -251,7 +245,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         binding.switchFaceId.setOnCheckedChangeListener { button, isChecked ->
             if (button.isPressed) {
                 App.prefsManager.faceIdEnabled = isChecked
-//                checkInternet(requireContext()) {
+//                checkInternet(binding.root,requireContext()) {
 //                    showProgressDialog(requireContext())
 //                    viewModel.setFaceId(
 //                        getDeviceId(requireActivity().contentResolver),
@@ -298,7 +292,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
     }
 
     private fun handle(code: String) {
-        CommonMethods.checkInternet(requireContext()) {
+        CommonMethods.checkInternet(binding.root,requireContext()) {
             isResend = true
             viewModelSignup.getOtpForWithdraw(Constants.ACTION_CLOSE_ACCOUNT, null)
 
@@ -336,7 +330,12 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 it.tvTitle.text = getString(R.string.log_out)
                 it.tvMessage.text = getString(R.string.logout_message)
                 it.tvNegativeButton.text = getString(R.string.cancel)
-                it.tvPositiveButton.setTextColor(ContextCompat.getColor(requireContext(),R.color.red_500))
+                it.tvPositiveButton.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.red_500
+                    )
+                )
                 it.tvPositiveButton.text = getString(R.string.log_out_normal)
 
                 it.tvNegativeButton.setOnClickListener {
@@ -344,10 +343,10 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 }
                 it.tvPositiveButton.setOnClickListener {
                     dismiss()
-                        CommonMethods.checkInternet(requireContext()) {
-                            CommonMethods.showProgressDialog(requireContext())
-                            viewModel.logout()
-                        }
+                    CommonMethods.checkInternet(binding.root,requireContext()) {
+                        CommonMethods.showProgressDialog(requireContext())
+                        viewModel.logout()
+                    }
                 }
                 show()
             }
@@ -373,21 +372,25 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 it.tvPositiveButton.setOnClickListener {
                     if (com.Lyber.dev.ui.activities.BaseActivity.balances.size >= 1) {
 //                        getString(R.string.make_sure_withdraw).showToast(requireContext())
-                        val snackbar = Snackbar.make(binding.root, "", Snackbar.LENGTH_LONG)
-                        val params = snackbar.view.layoutParams as FrameLayout.LayoutParams
-                        params.gravity = Gravity.TOP
-                        params.setMargins(0, 0, 0, 0)
-                        snackbar.view.layoutParams = params
-                        snackbar.animationMode = BaseTransientBottomBar.ANIMATION_MODE_FADE
-                        val layout = snackbar.view as Snackbar.SnackbarLayout
-                        val textView =
-                            layout.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-                        textView.visibility = View.INVISIBLE
-                        val snackView =
-                            LayoutInflater.from(context).inflate(R.layout.custom_snackbar, null)
-                        layout.setPadding(0, 0, 0, 0)
-                        layout.addView(snackView, 0)
-                        snackbar.show()
+//                        val snackbar = Snackbar.make(binding.root, "", Snackbar.LENGTH_LONG)
+//                        val params = snackbar.view.layoutParams as FrameLayout.LayoutParams
+//                        params.gravity = Gravity.TOP
+//                        params.setMargins(0, 0, 0, 0)
+//                        snackbar.view.layoutParams = params
+//                        snackbar.animationMode = BaseTransientBottomBar.ANIMATION_MODE_FADE
+//                        val layout = snackbar.view as Snackbar.SnackbarLayout
+//                        val textView =
+//                            layout.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+//                        textView.visibility = View.INVISIBLE
+//                        val snackView =
+//                            LayoutInflater.from(context).inflate(R.layout.custom_snackbar, null)
+//                        layout.setPadding(0, 0, 0, 0)
+//                        layout.addView(snackView, 0)
+//                        snackbar.show()
+                        getString(R.string.make_sure_withdraw).showToast(
+                            binding.root,
+                            requireContext()
+                        ) // Set the text dynamically
                         dismiss()
                     } else {
                         CommonMethods.showProgressDialog(requireContext())
@@ -433,7 +436,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 tvViewAllTransaction ->
                     findNavController().navigate(R.id.transactionFragment)
 
-                llChangePin -> checkInternet(requireContext()) {
+                llChangePin -> checkInternet(binding.root,requireContext()) {
                     val bundle = Bundle().apply {
                         putBoolean(Constants.FOR_LOGIN, false)
                         putBoolean(Constants.IS_CHANGE_PIN, true)
@@ -505,12 +508,14 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 //
 //                            }
 
-                            tvEndSubTitle.text = "+${it.toAmount.formattedAsset(
-                                0.0,
-                                rounding = RoundingMode.DOWN,8
-                            )} ${it.toAsset.uppercase()}"
+                            tvEndSubTitle.text = "+${
+                                it.toAmount.formattedAsset(
+                                    0.0,
+                                    rounding = RoundingMode.DOWN, 8
+                                )
+                            } ${it.toAsset.uppercase()}"
 
-                            tvEndTitleCenter.visibility=View.GONE
+                            tvEndTitleCenter.visibility = View.GONE
 
                         }
 
@@ -529,7 +534,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                                                     Locale.US
                                                 )
                                             }"
-                                        tvEndTitleCenter.visibility=View.VISIBLE
+                                        tvEndTitleCenter.visibility = View.VISIBLE
 
                                     } catch (ex: java.lang.Exception) {
 
@@ -545,7 +550,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                             tvStartSubTitle.text =
                                 it.status.lowercase().replaceFirstChar(Char::uppercase)
                             tvEndTitleCenter.text = "+${it.amount} ${it.asset.uppercase()}"
-                            tvEndTitleCenter.visibility=View.VISIBLE
+                            tvEndTitleCenter.visibility = View.VISIBLE
 
                         }
 
@@ -557,7 +562,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                             tvStartSubTitle.text =
                                 it.status.lowercase().replaceFirstChar(Char::uppercase)
                             tvEndTitleCenter.text = "-${it.amount} ${it.asset.uppercase()}"
-                            tvEndTitleCenter.visibility=View.VISIBLE
+                            tvEndTitleCenter.visibility = View.VISIBLE
                             tvFailed.visibility = View.GONE
                             tvStartTitleCenter.visibility = View.GONE
 
@@ -566,6 +571,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 //                            tvEndSubTitle.text = it.type.lowercase().replaceFirstChar(Char::uppercase)
 
                         }
+
                         Constants.WITHDRAW_EURO -> { // single asset
                             ivItem.setImageResource(R.drawable.ic_withdraw)
                             tvFailed.visibility = View.GONE
@@ -577,8 +583,8 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                             tvStartSubTitle.text =
                                 it.status.lowercase().replaceFirstChar(Char::uppercase)
                             tvEndTitleCenter.text = "-${it.amount} ${it.asset.uppercase()}"
-//                            tvEndTitleCenter.text = "-123456789 ${it.asset.uppercase()}"
-                              }
+//                            tvEndTitleCenter.text = "-32.719467876 ${it.asset.uppercase()}"
+                        }
 
                         else -> root.gone()
                     }
@@ -613,7 +619,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
             if (it.resultCode == Activity.RESULT_OK) {
                 when (option) {
                     1 -> imageFile?.let { image ->
-                        checkInternet(requireContext()) {
+                        checkInternet(binding.root,requireContext()) {
                             showProgressDialog(requireContext())
                             viewModel.upload(image)
                         }
@@ -645,13 +651,13 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                                     imageFile =
                                         saveImageToExternalStorage(bitmap, requireContext())
 
-                                    checkInternet(requireContext()) {
+                                    checkInternet(binding.root,requireContext()) {
                                         showProgressDialog(requireContext())
                                         viewModel.upload(imageFile!!)
                                     }
 //                                        it.toFile("profile_image_${System.currentTimeMillis()}")
 //                                            ?.let { file ->
-//                                                checkInternet(requireContext()) {
+//                                                checkInternet(binding.root,requireContext()) {
 //                                                    showProgressDialog(requireContext())
 //                                                    viewModel.upload(file)
 //                                                }
@@ -661,9 +667,15 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                                 }
 
                             } catch (e: IllegalArgumentException) {
-                                getString(R.string.file_not_found).showToast(requireContext())
+                                getString(R.string.file_not_found).showToast(
+                                    binding.root,
+                                    requireContext()
+                                )
                             } catch (e: Exception) {
-                                getString(R.string.error_occurred).showToast(requireContext())
+                                getString(R.string.error_occurred).showToast(
+                                    binding.root,
+                                    requireContext()
+                                )
                             }
                         }
                     }

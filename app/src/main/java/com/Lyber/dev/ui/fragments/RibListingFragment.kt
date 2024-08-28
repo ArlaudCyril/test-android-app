@@ -43,7 +43,7 @@ class RibListingFragment : BaseFragment<FragmentRibListingBinding>(), OnClickLis
         adapter.setList(list)
         binding.ivBack.setOnClickListener(this)
         binding.btnAdd.setOnClickListener(this)
-        CommonMethods.checkInternet(requireActivity()) {
+        CommonMethods.checkInternet(binding.root,requireActivity()) {
             viewModel.getAssetDetailIncludeNetworks(Constants.MAIN_ASSET)
         }
         viewModel.getAssetDetail.observe(viewLifecycleOwner) {
@@ -72,14 +72,14 @@ class RibListingFragment : BaseFragment<FragmentRibListingBinding>(), OnClickLis
         AddAddressInfoBottomSheet(true, requireActivity()) {
             if (it == 1) {
                 // delete
-                CommonMethods.checkInternet(requireContext()) {
+                CommonMethods.checkInternet(binding.root,requireContext()) {
                     CommonMethods.showProgressDialog(requireContext())
                     viewModel.deleteRIB(ribData.ribId)
                 }
             } else if (it == 3) {
                 when (ribData!!.ribStatus.lowercase()) {
                     "pending" -> {
-                        CommonMethods.showSnackBar(
+                        CommonMethods.showSnack(
                             binding.root,
                             requireContext(),
                             getString(R.string.under_validation)
@@ -87,7 +87,7 @@ class RibListingFragment : BaseFragment<FragmentRibListingBinding>(), OnClickLis
                     }
 
                     "rejected" -> {
-                        CommonMethods.showSnackBar(
+                        CommonMethods.showSnack(
                             binding.root,
                             requireContext(),
                             getString(R.string.rejected_rib)
