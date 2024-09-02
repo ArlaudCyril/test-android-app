@@ -253,6 +253,7 @@ class CommonMethods {
 
         fun setBiometricPromptInfo(
             title: String,
+            enterPin:String,
             subtitle: String,
             description: String,
             allowDeviceCredential: Boolean
@@ -266,7 +267,7 @@ class CommonMethods {
             builder.apply {
                 if (allowDeviceCredential)
                     setAllowedAuthenticators(BIOMETRIC_WEAK)
-                else setNegativeButtonText("Cancel")
+                else setNegativeButtonText(enterPin)
             }
 
             return builder.build()

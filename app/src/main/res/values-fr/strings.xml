@@ -25,8 +25,8 @@
     <string name="confirm_pin">Confirmer le code PIN</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
     <string name="action_settings">Paramètres</string>
-    <string name="activate_face_id">Activer Face ID</string>
-    <string name="activate_face_message">Accédez à Lyber rapidement en vous connectant avec Face ID.</string>
+    <string name="activate_face_id">Activer Face ID / la biométrie</string>
+    <string name="activate_face_message">Accédez à Lyber rapidement en vous connectant avec Face ID / la biométrie.</string>
     <string name="decline">Refuser</string>
     <string name="activate">Activer</string>
     <string name="choose_strategy">Choisir une stratégie</string>
@@ -750,7 +750,7 @@
     <string name="withdrawal_security_settings">Paramètres de sécurité de retrait</string>
     <string name="you_donot_have_active_strategy">Vous n\'avez pas encore de stratégie active</string>
     <string name="activate_create"><u>Activer</u>/<u>créer un maintenant</u></string>
-    <string name="use_face_id">Utiliser Face Id</string>
+    <string name="use_face_id">Utiliser Face Id / la biométrie</string>
     <string name="on_my_crypto_wallet">Sur mon portefeuille crypto</string>
     <string name="on_my_bank_account">Sur mon compte bancaire</string>
     <string name="withdraw_on_my_bank_account">Retirer sur mon compte bancaire</string>
@@ -809,4 +809,5 @@
     <string name="oh_my">Oh, zut !</string>
     <string name="amount_invested_is_insufficient">Le montant que vous avez investi dans cette stratégie est insuffisant. Pour activer cette stratégie, vous devez augmenter votre montant actuel (%1$s USDC) à %2$s USDC. \n
         Acceptez-vous d\'augmenter votre montant à investir ?</string>
-    </resources>
+    <string name="authenticate">Authentifier</string>
+</resources>

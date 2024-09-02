@@ -218,6 +218,8 @@ class PreferenceManager(context: Context) {
         assetBaseDataResponse = null
         savedScreen = ""
         personalDataSteps = 0
+        hideAmount=false
+        faceIdEnabled=false
 //        setLanguage(BaseActivity.selectedLanguage)
     }
     var investmentExperienceLocalIds: InvestmentExperienceLocalIds?

@@ -8,7 +8,10 @@ import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
+import android.view.LayoutInflater
 import android.view.View
+import android.widget.TextView
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.biometric.BiometricManager
@@ -31,6 +34,7 @@ import com.Lyber.dev.utils.CommonMethods.Companion.logOut
 import com.Lyber.dev.utils.CommonMethods.Companion.setBiometricPromptInfo
 import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.dev.utils.CommonMethods.Companion.showToast
+import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.OnTextChange
 import com.Lyber.dev.viewmodels.NetworkViewModel
 import okhttp3.ResponseBody
@@ -101,7 +105,7 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
         binding.tvEight.setOnClickListener(this)
         binding.tvNine.setOnClickListener(this)
         binding.tvZero.setOnClickListener(this)
-//        binding.tvBioMetric.setOnClickListener(this)
+        binding.tvBioMetric.setOnClickListener(this)
         binding.tvBackArrow.setOnClickListener(this)
         binding.tvLogOut.setOnClickListener(this)
 //        val biometricManager = BiometricManager.from(requireContext())
@@ -125,12 +129,18 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
     override fun onResume() {
         super.onResume()
 //        if (CommonMethods.isFaceIdAvail(requireContext()) && CommonMethods.isBiometricReady(requireActivity())) {
-//            binding.tvOr.visible()
-//            binding.tvBioMetric.visible()
-//        } else {
+        if (App.prefsManager.faceIdEnabled && CommonMethods.isBiometricReady(requireActivity())) {
+            binding.tvOr.visible()
+            binding.tvBioMetric.visible()
+            val auth=getString(R.string.authenticate)
+            val enterPin=getString(R.string.enter_your_pin)
+            initBiometricPrompt(requireActivity() as AppCompatActivity).authenticate(
+                setBiometricPromptInfo(auth, enterPin,"", "", false)
+            )
+        } else {
         binding.tvOr.gone()
         binding.tvBioMetric.gone()
-//        }
+        }
     }
 
     private fun isFaceIdEnabled(context: Context): Boolean {
@@ -201,8 +211,10 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
                 }
 
                 tvBioMetric -> {
+                    val auth=getString(R.string.authenticate)
+                    val enterPin=getString(R.string.enter_your_pin)
                     initBiometricPrompt(requireActivity() as AppCompatActivity).authenticate(
-                        setBiometricPromptInfo("Authentications", "", "", false)
+                        setBiometricPromptInfo(auth, enterPin,"", "", false)
                     )
                 }
 

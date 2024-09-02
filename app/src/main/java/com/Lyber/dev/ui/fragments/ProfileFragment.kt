@@ -91,7 +91,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
             requireActivity().supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
         navController = navHostFragment.findNavController()
 
-        CommonMethods.checkInternet(binding.root,requireContext()) {
+        CommonMethods.checkInternet(binding.root, requireContext()) {
             binding.progressImage.animation =
                 AnimationUtils.loadAnimation(context, R.anim.rotate_drawable)
             viewModel.getTransactions(limit, offset)
@@ -163,6 +163,9 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 
         }
         binding.switchFaceId.isChecked = App.prefsManager.faceIdEnabled
+        binding.switchFaceId.setOnCheckedChangeListener { buttonView, isChecked ->
+            App.prefsManager.faceIdEnabled = isChecked
+        }
 
         if (App.prefsManager.getLanguage().isNotEmpty()) {
             val ln = App.prefsManager.getLanguage()
@@ -198,7 +201,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         viewModel.uploadResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
 //                App.prefsManager.setProfileImage(it.s3Url)
-                checkInternet(binding.root,requireContext()) {
+                checkInternet(binding.root, requireContext()) {
                     viewModel.updateUser(hashMapOf("profile_pic" to it.s3Url))
                 }
             }
@@ -292,7 +295,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
     }
 
     private fun handle(code: String) {
-        CommonMethods.checkInternet(binding.root,requireContext()) {
+        CommonMethods.checkInternet(binding.root, requireContext()) {
             isResend = true
             viewModelSignup.getOtpForWithdraw(Constants.ACTION_CLOSE_ACCOUNT, null)
 
@@ -343,7 +346,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 }
                 it.tvPositiveButton.setOnClickListener {
                     dismiss()
-                    CommonMethods.checkInternet(binding.root,requireContext()) {
+                    CommonMethods.checkInternet(binding.root, requireContext()) {
                         CommonMethods.showProgressDialog(requireContext())
                         viewModel.logout()
                     }
@@ -436,7 +439,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 tvViewAllTransaction ->
                     findNavController().navigate(R.id.transactionFragment)
 
-                llChangePin -> checkInternet(binding.root,requireContext()) {
+                llChangePin -> checkInternet(binding.root, requireContext()) {
                     val bundle = Bundle().apply {
                         putBoolean(Constants.FOR_LOGIN, false)
                         putBoolean(Constants.IS_CHANGE_PIN, true)
@@ -619,7 +622,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
             if (it.resultCode == Activity.RESULT_OK) {
                 when (option) {
                     1 -> imageFile?.let { image ->
-                        checkInternet(binding.root,requireContext()) {
+                        checkInternet(binding.root, requireContext()) {
                             showProgressDialog(requireContext())
                             viewModel.upload(image)
                         }
@@ -651,7 +654,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                                     imageFile =
                                         saveImageToExternalStorage(bitmap, requireContext())
 
-                                    checkInternet(binding.root,requireContext()) {
+                                    checkInternet(binding.root, requireContext()) {
                                         showProgressDialog(requireContext())
                                         viewModel.upload(imageFile!!)
                                     }

@@ -1,5 +1,6 @@
 package com.Lyber.dev.ui.fragments
 
+import android.app.Application
 import android.app.Dialog
 import android.content.res.Configuration
 import android.content.res.Resources
@@ -58,27 +59,27 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
             stopRegistrationDialog()
         }
         if (viewModel.forLogin)
-        viewModel.getUserResponse.observe(viewLifecycleOwner) {
+            viewModel.getUserResponse.observe(viewLifecycleOwner) {
 //            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-            try {
-                App.prefsManager.user = it.data
-                if (it.data.kycStatus != "OK" || it.data.yousignStatus != "SIGNED")
-                    startJob()
-                if (it.data.language.isNotEmpty()) {
-                    App.prefsManager.setLanguage(it.data.language)
-                    val locale = Locale(it.data.language)
-                    Locale.setDefault(locale)
-                    val resources: Resources = resources
-                    val config: Configuration = resources.configuration
-                    config.setLocale(locale)
-                    resources.updateConfiguration(config, resources.displayMetrics)
-                }
-            } catch (_: Exception) {
+                try {
+                    App.prefsManager.user = it.data
+                    if (it.data.kycStatus != "OK" || it.data.yousignStatus != "SIGNED")
+                        startJob()
+                    if (it.data.language.isNotEmpty()) {
+                        App.prefsManager.setLanguage(it.data.language)
+                        val locale = Locale(it.data.language)
+                        Locale.setDefault(locale)
+                        val resources: Resources = resources
+                        val config: Configuration = resources.configuration
+                        config.setLocale(locale)
+                        resources.updateConfiguration(config, resources.displayMetrics)
+                    }
+                } catch (_: Exception) {
 
-            }
+                }
 
 //            }
-        }
+            }
     }
 
 
@@ -117,19 +118,16 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
                     App.prefsManager.userPin = pinConfirm
 
                     if (viewModel.forLogin) {
-                        val bundle = Bundle().apply {
-                            putBoolean(Constants.FOR_LOGIN, viewModel.forLogin)
-                        }
-                        findNavController().navigate(R.id.enableNotificationFragment, bundle)
-                        clearField()
+                        showDialog()
                     } else if (requireArguments().containsKey(Constants.IS_CHANGE_PIN)
                         && requireArguments().getBoolean(Constants.IS_CHANGE_PIN)
                     ) {
                         findNavController().navigate(R.id.action_confirmPinFragment_to_profile)
                     } else {
-                        App.prefsManager.accountCreationSteps =
-                            Constants.Account_CREATION_STEP_CREATE_PIN
-                        findNavController().navigate(R.id.enableNotificationFragment)
+                        showDialog()
+//                        App.prefsManager.accountCreationSteps =
+//                            Constants.Account_CREATION_STEP_CREATE_PIN
+//                        findNavController().navigate(R.id.enableNotificationFragment)
                     }
 //                        showDialog() For now
                     /*checkInternet(binding.root,requireContext()) {
@@ -141,14 +139,17 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
 
                 } else {
                     clearField()
-                    getString(R.string.please_enter_the_correct_pin).showToast(binding.root,requireContext())
+                    getString(R.string.please_enter_the_correct_pin).showToast(
+                        binding.root,
+                        requireContext()
+                    )
                 }
 
             }
         }
     }
 
-    fun showDialog() {
+    private fun showDialog() {
         Dialog(requireActivity(), R.style.DialogTheme).apply {
             CustomDialogLayoutBinding.inflate(layoutInflater).let {
                 requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -161,22 +162,34 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
                 it.tvNegativeButton.text = getString(R.string.decline)
                 it.tvPositiveButton.text = getString(R.string.activate)
                 it.tvNegativeButton.setOnClickListener {
+                    App.prefsManager.faceIdEnabled = false
+                    if (viewModel.forLogin) {
+                        val bundle = Bundle().apply {
+                            putBoolean(Constants.FOR_LOGIN, viewModel.forLogin)
+                        }
+                        findNavController().navigate(R.id.enableNotificationFragment, bundle)
+                    } else {
+                        App.prefsManager.accountCreationSteps =
+                            Constants.Account_CREATION_STEP_CREATE_PIN
+                        findNavController().navigate(R.id.enableNotificationFragment)
+                    }
+                    clearField()
                     dismiss()
-                    findNavController().navigate(R.id.enableNotificationFragment)
-//                    CommonMethods.showProgressDialog(requireContext())
-//                    viewModel.setFaceId(
-//                        CommonMethods.getDeviceId(requireActivity().contentResolver),
-//                        false
-//                    )
                 }
                 it.tvPositiveButton.setOnClickListener {
+                    App.prefsManager.faceIdEnabled = true
+                    if (viewModel.forLogin) {
+                        val bundle = Bundle().apply {
+                            putBoolean(Constants.FOR_LOGIN, viewModel.forLogin)
+                        }
+                        findNavController().navigate(R.id.enableNotificationFragment, bundle)
+                    } else {
+                        App.prefsManager.accountCreationSteps =
+                            Constants.Account_CREATION_STEP_CREATE_PIN
+                        findNavController().navigate(R.id.enableNotificationFragment)
+                    }
+                    clearField()
                     dismiss()
-                    findNavController().navigate(R.id.enableNotificationFragment)
-//                    CommonMethods.showProgressDialog(requireContext())
-//                    viewModel.setFaceId(
-//                        CommonMethods.getDeviceId(requireActivity().contentResolver),
-//                        true
-//                    )
                 }
                 show()
             }
