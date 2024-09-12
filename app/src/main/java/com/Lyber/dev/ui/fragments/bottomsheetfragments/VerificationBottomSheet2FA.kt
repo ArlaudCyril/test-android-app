@@ -358,5 +358,53 @@ class VerificationBottomSheet2FA(private val handle: (String) -> Unit) :
 
         }
     }
+    fun showErrorOnBottomSheet(code: Int) {
+        when (code) {
+            18 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_18)
+            )
 
+            24 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_24)
+                )
+            }
+
+            38 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_38)
+                )
+            }
+
+            39 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_39)
+            )
+
+            43 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_43)
+            )
+
+            45 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_45)
+            )
+            10022 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_10022)
+            )
+        }
+
+    }
 }

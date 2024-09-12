@@ -57,6 +57,7 @@ import io.github.g00fy2.quickie.QRResult
 import io.github.g00fy2.quickie.ScanCustomCode
 import io.github.g00fy2.quickie.config.BarcodeFormat
 import io.github.g00fy2.quickie.config.ScannerConfig
+import okhttp3.ResponseBody
 
 class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.OnClickListener {
 
@@ -168,7 +169,10 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                     CommonMethods.dismissProgressDialog()
                     binding.etAddress.requestKeyboard()
                     binding.ttlAddress.helperText = getString(R.string.please_enter_valid_address)
-                    getString(R.string.please_enter_valid_address).showToast(binding.root,requireContext())
+                    getString(R.string.please_enter_valid_address).showToast(
+                        binding.root,
+                        requireContext()
+                    )
 
                 }
             }
@@ -297,7 +301,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
             }
         }
 
-        checkInternet(binding.root,requireContext()) {
+        checkInternet(binding.root, requireContext()) {
             if (toEdit) {
                 showProgressDialog(requireContext())
             }
@@ -433,19 +437,28 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
 
                         addressName.isEmpty() -> {
                             binding.etAddressName.requestKeyboard()
-                            getString(R.string.please_enter_address_name).showToast(binding.root,requireContext())
+                            getString(R.string.please_enter_address_name).showToast(
+                                binding.root,
+                                requireContext()
+                            )
                         }
 
                         network == null -> {
                             binding.etNetwork.requestFocus()
-                            getString(R.string.please_select_a_network).showToast(binding.root,requireContext())
+                            getString(R.string.please_select_a_network).showToast(
+                                binding.root,
+                                requireContext()
+                            )
                         }
 
                         address.isEmpty() -> {
                             binding.etAddress.requestKeyboard()
                             binding.ttlAddress.helperText =
                                 getString(R.string.please_enter_address, network?.fullName ?: "")
-                            getString(R.string.please_enter_address_).showToast(binding.root,requireContext())
+                            getString(R.string.please_enter_address_).showToast(
+                                binding.root,
+                                requireContext()
+                            )
                         }
 
 
@@ -493,7 +506,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
     }
 
     private fun addAddress() {
-        checkInternet(binding.root,requireActivity()) {
+        checkInternet(binding.root, requireActivity()) {
             showProgressDialog(requireActivity())
             viewModel.getNetwork(network!!.id)
         }
@@ -752,6 +765,52 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
         private const val TO_EDIT = "toEdit"
 
 
+    }
+
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        dismissProgressDialog()
+        when ( errorCode ) {
+            10024 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_10024,
+                        network!!.fullName)
+                )
+                if (toEdit)
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
+            10028 -> {
+
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_10028,
+                        network!!.fullName)
+                )
+                if (toEdit)
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
+
+            }
+
+            10048 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_10048)
+                )
+
+            }
+
+            18000 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_18000)
+            )
+
+            else ->  super.onRetrofitError(errorCode, msg)
+        }
     }
 
 }

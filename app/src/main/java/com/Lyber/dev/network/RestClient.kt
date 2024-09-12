@@ -3,10 +3,8 @@ package com.Lyber.dev.network
 import com.Lyber.dev.utils.App.Companion.prefsManager
 import com.Lyber.dev.utils.Constants
 import com.google.gson.GsonBuilder
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
-import okhttp3.Response
 import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -20,7 +18,8 @@ import javax.net.SocketFactory
 object RestClient {
 
     interface OnRetrofitError {
-        fun onRetrofitError(responseBody: ResponseBody?)
+        fun onRetrofitError(errorCode: Int, msg: String)
+//        fun onRetrofitError(errorCode: Int, responseBody: ResponseBody?)
         fun onError()
     }
 

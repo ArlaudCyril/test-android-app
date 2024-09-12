@@ -46,7 +46,7 @@ import java.util.Locale
 
 
 class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
-    View.OnClickListener, RestClient.OnRetrofitError {
+    View.OnClickListener {
     private var timer = 25
     private var isExpand = false
     private lateinit var clientSecret: String
@@ -405,8 +405,8 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
         }
     }
 
-    override fun onRetrofitError(responseBody: ResponseBody?) {
-        super.onRetrofitError(responseBody)
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        super.onRetrofitError(errorCode, msg)
         CommonMethods.dismissProgressDialog()
         dismissAlertDialog()
         if (isApiHit)

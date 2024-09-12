@@ -4,7 +4,6 @@ import android.app.Activity
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.activity.result.contract.ActivityResultContracts
@@ -18,7 +17,6 @@ import com.Lyber.dev.databinding.CustomDialogVerticalLayoutBinding
 import com.Lyber.dev.databinding.FragmentVerifyYourIdentityBinding
 import com.Lyber.dev.network.RestClient
 import com.Lyber.dev.ui.activities.WebViewActivity
-import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.dev.utils.CommonMethods.Companion.dismissAlertDialog
@@ -33,7 +31,7 @@ import okhttp3.ResponseBody
 
 
 class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBinding>(),
-    View.OnClickListener, RestClient.OnRetrofitError {
+    View.OnClickListener {
     private lateinit var navController: NavController
     private lateinit var verifyIdentityViewModel: VerifyIdentityViewModel
     private lateinit var portfolioViewModel: PortfolioViewModel
@@ -155,8 +153,8 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
     }
 
 
-    override fun onRetrofitError(responseBody: ResponseBody?) {
-        super.onRetrofitError(responseBody)
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        super.onRetrofitError(errorCode, msg)
         dismissAlertDialog()
         isApiHit = false
         dismissAnimation()

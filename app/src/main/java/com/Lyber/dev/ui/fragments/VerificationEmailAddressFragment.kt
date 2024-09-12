@@ -81,12 +81,12 @@ class VerificationEmailAddressFragment : BaseFragment<FragmentVerificationEmailB
         }
     }
 
-    fun checkVerificationStatus() {
-        CommonMethods.checkInternet(binding.root,requireContext()) {
-            CommonMethods.showProgressDialog(requireContext())
-            viewModel.emailVerification()
-        }
-    }
+//    fun checkVerificationStatus() {
+//        CommonMethods.checkInternet(binding.root,requireContext()) {
+//            CommonMethods.showProgressDialog(requireContext())
+//            viewModel.emailVerification()
+//        }
+//    }
 
     override fun onResume() {
         super.onResume()

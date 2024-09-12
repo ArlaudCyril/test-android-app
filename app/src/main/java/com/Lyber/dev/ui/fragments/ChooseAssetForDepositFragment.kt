@@ -27,10 +27,13 @@ import com.Lyber.dev.utils.CommonMethods.Companion.fadeIn
 import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.dev.utils.CommonMethods.Companion.gone
 import com.Lyber.dev.utils.CommonMethods.Companion.loadCircleCrop
+import com.Lyber.dev.utils.CommonMethods.Companion.returnErrorCode
+import com.Lyber.dev.utils.CommonMethods.Companion.showErrorMessage
 import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.PortfolioViewModel
+import okhttp3.ResponseBody
 import java.util.*
 
 class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBinding>(),
@@ -326,7 +329,7 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                                 binding.etAddress.text.toString()
                             )
                         clipboard.setPrimaryClip(clip)
-                        getString(R.string.adress_copied).showToast(binding.root,requireContext())
+                        getString(R.string.adress_copied).showToast(binding.root, requireContext())
                     }
                 }
 
@@ -356,9 +359,142 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                 }
 
                 ivTopAction -> {
-                    requireActivity().onBackPressed()
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
                 }
             }
+        }
+    }
+
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        when (errorCode) {
+            -1 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_1_negative)
+            )
+
+            10012 -> {
+                val asset=binding.etAssets.text.toString()
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_10012,asset)
+                )
+            }
+
+            10013 -> {
+                val transactionType=getString(R.string.deposit)
+                val network=binding.etNetwork.text.toString()
+                val asset=binding.etAssets.text.toString()
+
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_10013,transactionType,network,asset)
+                )
+            }
+
+            10030 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_10030)
+            )
+
+            15002 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_15002)
+            )
+
+            18000 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_18000)
+            )
+
+            26 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_26)
+                )
+                findNavController().navigate(R.id.action_choose_asset_for_deposit_to_home_fragment)
+            }
+
+            3000 -> {
+                val transactionType=getString(R.string.deposit)
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_3000,transactionType)
+                )
+                findNavController().navigate(R.id.action_choose_asset_for_deposit_to_home_fragment)
+            }
+
+            3006 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_3006)
+                )
+                findNavController().navigate(R.id.action_choose_asset_for_deposit_to_home_fragment)
+            }
+
+            10023 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_10023)
+                )
+                findNavController().navigate(R.id.action_choose_asset_for_deposit_to_home_fragment)
+            }
+
+            10034 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_10034)
+                )
+                findNavController().navigate(R.id.action_choose_asset_for_deposit_to_home_fragment)
+            }
+
+            10035 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_10035)
+                )
+                findNavController().navigate(R.id.action_choose_asset_for_deposit_to_home_fragment)
+            }
+
+            10036 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_10036)
+                )
+                findNavController().navigate(R.id.action_choose_asset_for_deposit_to_home_fragment)
+            }
+
+            10037 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_10037)
+                )
+                findNavController().navigate(R.id.action_choose_asset_for_deposit_to_home_fragment)
+            }
+
+            10042 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_10042)
+                )
+                findNavController().navigate(R.id.action_choose_asset_for_deposit_to_home_fragment)
+            }
+            else->  super.onRetrofitError(errorCode, msg)
+
         }
     }
 }

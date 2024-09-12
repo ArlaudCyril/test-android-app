@@ -36,7 +36,6 @@ import com.Lyber.dev.ui.fragments.AddAmountFragment
 import com.Lyber.dev.ui.fragments.BaseFragment
 import com.Lyber.dev.ui.fragments.PickYourStrategyFragment
 import com.Lyber.dev.ui.fragments.SelectAnAssetFragment
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.WithdrawalUsdcAddressBottomSheet
 import com.Lyber.dev.ui.portfolio.bottomSheetFragment.PortfolioThreeDots
 import com.Lyber.dev.ui.portfolio.bottomSheetFragment.PortfolioThreeDotsDismissListener
 import com.Lyber.dev.viewmodels.PortfolioViewModel
@@ -50,7 +49,10 @@ import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
 import com.Lyber.dev.utils.CommonMethods.Companion.gone
 import com.Lyber.dev.utils.CommonMethods.Companion.loadCircleCrop
 import com.Lyber.dev.utils.CommonMethods.Companion.replaceFragment
+import com.Lyber.dev.utils.CommonMethods.Companion.returnErrorCode
 import com.Lyber.dev.utils.CommonMethods.Companion.setBackgroundTint
+import com.Lyber.dev.utils.CommonMethods.Companion.showErrorMessage
+import com.Lyber.dev.utils.CommonMethods.Companion.showSnack
 import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.CommonMethods.Companion.toMilli
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
@@ -214,7 +216,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         /* pop up initialization */
 
         binding.lineChart.timeSeries = getLineData(viewModel.totalPortfolio)
-        binding.lineChart.hideAmount=false
+        binding.lineChart.hideAmount = false
 
         binding.tvValuePortfolioAndAssetPrice.text =
             "${viewModel.totalPortfolio.commaFormatted}${Constants.EURO}"
@@ -224,7 +226,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
     }
 
     private fun setView() {
-        CommonMethods.checkInternet(binding.root,requireContext()) {
+        CommonMethods.checkInternet(binding.root, requireContext()) {
 
             if (arguments != null && requireArguments().containsKey(Constants.ORDER_ID)) {
                 updateSocketValue = false
@@ -329,18 +331,23 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                     else {
                         viewModel.confirmOrder(requireArguments().getString(Constants.ORDER_ID, ""))
                         val eventValues = HashMap<String, Any>()
-                        eventValues[AFInAppEventParameterName.CONTENT_TYPE] = Constants.APP_FLYER_TYPE_CRYPTO
-                        eventValues[AFInAppEventParameterName.CONTENT_ID] = requireArguments().getString(Constants.ORDER_ID, "")
-                        AppsFlyerLib.getInstance().logEvent( requireContext().applicationContext,
+                        eventValues[AFInAppEventParameterName.CONTENT_TYPE] =
+                            Constants.APP_FLYER_TYPE_CRYPTO
+                        eventValues[AFInAppEventParameterName.CONTENT_ID] =
+                            requireArguments().getString(Constants.ORDER_ID, "")
+                        AppsFlyerLib.getInstance().logEvent(requireContext().applicationContext,
                             AFInAppEventType.PURCHASE, eventValues,
                             object : AppsFlyerRequestListener {
                                 override fun onSuccess() {
                                     Log.d("LOG_TAG", "Event sent successfully")
                                 }
+
                                 override fun onError(errorCode: Int, errorDesc: String) {
-                                    Log.d("LOG_TAG", "Event failed to be sent:\n" +
-                                            "Error code: " + errorCode + "\n"
-                                            + "Error description: " + errorDesc)
+                                    Log.d(
+                                        "LOG_TAG", "Event failed to be sent:\n" +
+                                                "Error code: " + errorCode + "\n"
+                                                + "Error description: " + errorDesc
+                                    )
                                 }
                             })
                     }
@@ -400,14 +407,14 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 viewModel.selectedBalance = balance
                 val priceCoin = balance?.balanceData?.euroBalance?.toDouble()
                     ?.div(balance.balanceData.balance.toDouble() ?: 1.0)
-                if(!App.prefsManager.hideAmount) {
+                if (!App.prefsManager.hideAmount) {
                     if (balance?.balanceData?.euroBalance == null)
                         it.tvAssetAmount.text = "0.0 ${Constants.EURO}"
                     else
                         it.tvAssetAmount.text =
                             balance.balanceData.euroBalance.currencyFormatted
                 } else
-                    it.tvAssetAmount.text ="*****"
+                    it.tvAssetAmount.text = "*****"
                 if (balance?.balanceData?.balance == null)
                     it.tvAssetAmountInCrypto.text = "0.00"
                 else it.tvAssetAmountInCrypto.text =
@@ -521,7 +528,10 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                     bundle.putString(Constants.TYPE, Constants.Exchange)
                     findNavController().navigate(R.id.allAssetFragment, bundle)
                 } else {
-                    getString(R.string.you_don_t_have_balance_to_exchange).showToast(binding.root,requireActivity())
+                    getString(R.string.you_don_t_have_balance_to_exchange).showToast(
+                        binding.root,
+                        requireActivity()
+                    )
                 }
             }
 
@@ -723,8 +733,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         }
     }
 
-    override fun onRetrofitError(responseBody: ResponseBody?) {
-        super.onRetrofitError(responseBody)
+    override fun onRetrofitError(errorCode: Int, msg: String) {
         updateSocketValue = true
         dismissAlertDialog()
         arguments = null
@@ -734,6 +743,11 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             Handler().postDelayed({
                 dismissProgressDialog()
             }, 1000)
+        }
+        when (errorCode) {
+            7007 -> showSnack(binding.root,requireContext(),getString(R.string.error_code_7007))
+            else -> super.onRetrofitError(errorCode, msg)
+
         }
     }
 
@@ -866,7 +880,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
     }
 
     private fun getPriceChart(assetId: String, duration: Duration) {
-        CommonMethods.checkInternet(binding.root,requireContext()) {
+        CommonMethods.checkInternet(binding.root, requireContext()) {
             binding.lineChart.animation =
                 AnimationUtils.loadAnimation(requireContext(), R.anim.blink)
             viewModel.getPriceGraph(assetId, duration)

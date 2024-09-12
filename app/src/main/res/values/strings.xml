@@ -785,19 +785,19 @@
     <string name="tailorStrategyError">The invested amount must be at least 10 USDC per asset in the strategy.</string>
     <string name="new_code">A new code can be returned in </string>
     <string name="no_assets_available_for_exchange">No assets available for exchange.</string>
-    <string name="your_new_rib">Your new RIB</string>
-    <string name="rib_name">RIB Name</string>
+    <string name="your_new_rib">Your new Bank account details</string>
+    <string name="rib_name">Bank account Name</string>
     <string name="iban">IBAN</string>
     <string name="bic">BIC</string>
     <string name="owner_name">Owner\'s name</string>
     <string name="bank_country">Bank country</string>
-    <string name="choose_the_rib">Choose the RIB on which you want\nto withdraw</string>
-    <string name="add_a_rib">Add a RIB</string>
+    <string name="choose_the_rib">Choose the Bank account on which you want\nto withdraw</string>
+    <string name="add_a_rib">Add a Bank account details</string>
     <string name="please_complete_all_fields">Please complete all fields</string>
     <string name="owner_name_error">The owner name field must contain only letters, spaces, and hyphens</string>
-    <string name="use_this_rib">Use this RIB</string>
-    <string name="under_validation">We are currently validating your RIB and will process it as soon as possible.</string>
-    <string name="rejected_rib">This RIB has been refused. Please try using another one or contact support if you need help.</string>
+    <string name="use_this_rib">Use this Bank account</string>
+    <string name="under_validation">We are currently validating your Bank account detailsBank account details and will process it as soon as possible.</string>
+    <string name="rejected_rib">This Bank account has been refused. Please try using another one or contact support if you need help.</string>
     <string name="withdrawal_amount_is_inferior">Your withdrawal amount is inferior to the minimum required</string>
     <string name="withdrawal_amount_exceeds_balance">Your withdrawal amount plus the fees exceeds your balance</string>
     <string name="amount_withdrawn">The amount has withdrawn from\nyour account.</string>
@@ -811,4 +811,121 @@
     <string name="amount_invested_is_insufficient">Your amount invested in this strategy is insufficient. To activate this strategy, you need to increase your current amount (%1$s USDC) to %2$s USDC. \n
         Do you agree to increase the amount you invest?</string>
     <string name="authenticate">Authenticate</string>
+
+    <!--    error messages-->
+
+    <string name="error_code_1_negative">A problem has occurred, please try again or contact support.</string>
+    <string name="error_code_1">An account already exists with this phone number.</string>
+    <string name="error_code_3">We encountered a problem during the verification process. Please try again.</string>
+    <string name="error_code_5">An account already exists with this e-mail address.</string>
+    <string name="error_code_6">We encountered a problem during the verification process. Please try again.</string>
+    <string name="error_code_7">We encountered a problem during the verification process. Please try again.</string>
+    <string name="error_code_8">Unable to create an account because your phone number is not verified, please try again.</string>
+    <string name="error_code_9">Unable to create an account because your e-mail address is not verified, please try again.</string>
+   <string name="error_code_10"> No account exists with this email address.</string>
+    <string name="error_code_11">No account exists with this phone number.</string>
+    <string name="error_code_12">Your account has been blocked. If you need help, please contact support on our website.</string>
+    <string name="error_code_13">A problem has occurred, please try again.</string>
+    <string name="error_code_14">Incorrect password.</string>
+    <string name="error_code_15">Something went wrong, please try again.</string>
+    <string name="error_code_16">No account exists for this user. Please make sure you finish your registration.</string>
+    <string name="error_code_18">This verification code has already been used.</string>
+    <string name="error_code_20">The 2FA is not active on your account.</string>
+    <string name="error_code_24">The code you have entered is incorrect.</string>
+    <string name="error_code_26">We could not find your account, if you need help please contact support.</string>
+    <string name="error_code_27">Unable to create an account because some information is missing, please try again.</string>
+    <string name="error_code_28">A problem has occurred, please try to login again.</string>
+    <string name="error_code_29">A problem has occurred, please try to login again.</string>
+    <string name="error_code_30">A problem has occurred, please try to login again.</string>
+    <string name="error_code_34">A problem has occurred, please try again.</string>
+    <string name="error_code_35">You have submitted too many wrong verification code today. Contact support if it wasn\'t you.</string>
+    <string name="error_code_37">There seems to be a configuration problem with your 2FA, please contact support.</string>
+    <string name="error_code_38">This verification code has expired.</string>
+    <string name="error_code_39">You may be using a code that does not correspond to this action.</string>
+    <string name="error_code_40">We have not been able to send you the verification code, please contact support if you need help.</string>
+    <string name="error_code_41">We have not been able to send you the verification code, please contact support if you need help.</string>
+    <string name="error_code_42">There seems to be a configuration problem with your Google Auth 2FA, please contact support.</string>
+    <string name="error_code_43">The code you have entered is incorrect.</string>
+    <string name="error_code_44">Your Google 2FA authentication is already configured.</string>
+    <string name="error_code_45">You must enter a verification code to perform this action.</string>
+    <string name="error_code_48">This password reset link has already been used.</string>
+    <string name="error_code_50">There seems to be a configuration problem with your 2FA, please contact support.</string>
+    <string name="error_code_52">We have detected that your account has already been created, please try to log in.</string>
+    <string name="error_code_53">We were unable to verify the integrity of your password, please try to login again.</string>
+    <string name="error_code_57">The withdrawal lock period has not expired, please try again later.</string>
+
+    <string name="error_code_1000">We were unable to get the price of the asset, please try again.</string>
+
+    <string name="error_code_3000">The asset you are trying to %1$s is not available, please contact support if you need help.</string>
+    <string name="error_code_3006">Fiat assets do not have networks.</string>
+
+    <string name="error_code_7000">%1$s is currently disabled for trading.</string>
+    <string name="error_code_7001">%1$s is currently disabled for trading.</string>
+    <string name="error_code_7002">You are not authorized to trade. If you have a question, please contact us via the contact form.</string>
+    <string name="error_code_7003">You don\'t have enough funds to complete this order.</string>
+    <string name="error_code_7006">A problem has occurred, please try again.</string>
+    <string name="error_code_7007">This order has been lost. If you need help, please contact us via the contact form.</string>
+    <string name="error_code_7008">This quote has already been accepted.</string>
+    <string name="error_code_7009">This quote has already been canceled.</string>
+    <string name="error_code_7010">This quote has expired, please try again.</string>
+    <string name="error_code_7014">USDC purchase is temporarily unavailable, please try again later.</string>
+    <string name="error_code_7015">The assets you are trying to trade must be different.</string>
+    <string name="error_code_7018">You have reached the maximum failed quote for the day, try again tomorrow.</string>
+    <string name="error_code_7019">There seems to have been a problem creating your account. Please contact support.</string>
+    <string name="error_code_7020">Your account is blocked for an indefinite period, for more information please contact support.</string>
+    <string name="error_code_7021">Your account is closed, please create a new one to access our services.</string>
+    <string name="error_code_7022">Your account is blocked for an indefinite period, for more information please contact support.</string>
+    <string name="error_code_7024">We are still checking your identity, please try again later.</string>
+    <string name="error_code_7026">The amount you are trying to trade does not respect the correct format.</string>
+    <string name="error_code_7027">The minimum purchase amount for USDC is 20 euros.</string>
+
+
+    <string name="error_code_10001">This address is not whitelisted. You are not allowed to withdraw to this address.</string>
+    <string name="error_code_10005">You can not withdraw more money than you have.</string>
+    <string name="error_code_10009">You are not authorized to make withdrawals. If you need help, please contact support.</string>
+    <string name="error_code_10012">%1$s is currently unavailable, please contact the support or try again later.</string>
+    <string name="error_code_10013">%1$s on network %2$s for asset %3$s is not possible.</string>
+    <string name="error_code_10018">Withdrawals are currently unavailable for this asset.</string>
+    <string name="error_code_10021">Minimum withdrawal amount is %1$s</string>
+    <string name="error_code_10022">An OTP was expected.</string>
+    <string name="error_code_10023">You are not authorized to make deposits. If you need help, please contact support.</string>
+    <string name="error_code_10024">%1$s network is currently unavailable, please choose another network or try again later.</string>
+    <string name="error_code_10025">We can\'t find the address you want to delete.</string>
+    <string name="error_code_10028">The address format does not match the expected format for %1$s network.</string>
+    <string name="error_code_10030">Only crypto asset are supported.</string>
+    <string name="error_code_10032">The withdrawal lock period has not expired, please try again later.</string>
+    <string name="error_code_10033">We were unable to get the price of the asset, please try again.</string>
+    <string name="error_code_10034">Your account is closed, please create a new one to access our services.</string>
+    <string name="error_code_10035">Your account is blocked for an indefinite period, for more information please contact support.</string>
+    <string name="error_code_10036">There seems to have been a problem creating your account. Please contact support.</string>
+    <string name="error_code_10037">Your account is blocked for an indefinite period, for more information please contact support.</string>
+    <string name="error_code_10042">We are still checking your identity, please try again later.</string>
+    <string name="error_code_10044">The bank account details you are trying to use cannot be found in our validated bank account details register.</string>
+    <string name="error_code_10045">The bank account details you are trying to use does not match the one we have validated.</string>
+    <string name="error_code_10048">The address you are trying to add already exists.</string>
+    <string name="error_code_10050">One of your bank account details already has this name.</string>
+    <string name="error_code_10051">One of your bank account details already has this IBAN.</string>
+
+
+
+    <string name="error_code_13001">Unable to find the strategy, please try again or contact support.</string>
+    <string name="error_code_13003">Unable to find the strategy, please try again or contact support.</string>
+    <string name="error_code_13006">This strategy requires a minimum investment of %1$s USDC.</string>
+    <string name="error_code_13009">You cannot enter the same asset twice in a strategy.</string>
+    <string name="error_code_13010">The sum of the percentages cannot exceed 100%.</string>
+    <string name="error_code_13011">One of the assets you are trying to trade is not available.</string>
+    <string name="error_code_13012">One of the assets you are trying to trade is not available.</string>
+    <string name="error_code_13013">The sum of the percentages cannot be less than 100%.</string>
+    <string name="error_code_13015">You can\'t invest in USDC using a strategy.</string>
+    <string name="error_code_13016">You are not authorized to execute the strategy. If you have a question, please contact us via the contact form.</string>
+    <string name="error_code_13017">There seems to have been a problem creating your account. Please contact support.</string>
+    <string name="error_code_13018">Your account is blocked for an indefinite period, for more information please contact support.</string>
+    <string name="error_code_13019">Your account is closed, please create a new one to access our services.</string>
+    <string name="error_code_13020">Your account is blocked for an indefinite period, for more information please contact support.</string>
+
+    <string name="error_code_15002">A problem has occurred, please try again or contact support.</string>
+
+    <string name="error_code_18000">This network seems to be unavailable, please contact support if you need help.</string>
+
 </resources>
+

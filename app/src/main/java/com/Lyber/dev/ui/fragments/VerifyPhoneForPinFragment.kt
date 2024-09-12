@@ -3,15 +3,9 @@ package com.Lyber.dev.ui.fragments
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
-import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.findNavController
-import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentEnterOtpBinding
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.dev.utils.CommonMethods.Companion.gone
@@ -112,8 +106,8 @@ class VerifyPhoneForPinFragment : BaseFragment<FragmentEnterOtpBinding>() {
         }
     }
 
-    override fun onRetrofitError(responseBody: ResponseBody?) {
-        super.onRetrofitError(responseBody)
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        super.onRetrofitError(errorCode, msg)
         clearFields()
     }
 

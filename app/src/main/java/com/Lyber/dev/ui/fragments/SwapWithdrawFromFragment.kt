@@ -10,7 +10,6 @@ import com.Lyber.dev.databinding.FragmentSwapFromBinding
 import com.Lyber.dev.models.Balance
 import com.Lyber.dev.ui.activities.BaseActivity
 import com.Lyber.dev.ui.adapters.BalanceAdapter
-import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.dev.utils.CommonMethods.Companion.commaFormatted
@@ -21,8 +20,10 @@ import com.Lyber.dev.utils.CommonMethods.Companion.gone
 import com.Lyber.dev.utils.CommonMethods.Companion.loadCircleCrop
 import com.Lyber.dev.utils.CommonMethods.Companion.replaceFragment
 import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
+import com.Lyber.dev.utils.CommonMethods.Companion.showSnack
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
+import com.Lyber.dev.viewmodels.PortfolioViewModel
 import java.math.RoundingMode
 
 class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnClickListener {
@@ -85,7 +86,7 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
     }
 
     private fun getData() {
-        checkInternet(binding.root,requireContext()) {
+        checkInternet(binding.root, requireContext()) {
             showProgressDialog(requireContext())
             viewModel.getBalance()
         }
@@ -139,6 +140,19 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
                 }
 
             }
+        }
+    }
+
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        dismissProgressDialog()
+        when (errorCode) {
+            3000 -> {
+                val transactionType=getString(R.string.withdraw)
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_3000,transactionType))
+            }
+            3006 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_3006))
+            else -> super.onRetrofitError(errorCode, msg)
+
         }
     }
 }

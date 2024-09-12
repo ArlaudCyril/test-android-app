@@ -61,56 +61,56 @@ class VerifyIdentityViewModel : ViewModel() {
     val verifyPinResponse get() = _verifyPinResponse
 
 
-    fun upload(file: File) {
-        viewModelScope.launch(exceptionHandler) {
-            val fileRequestBody = RequestBody.create("image/*".toMediaTypeOrNull(), file)
-            val multiPart = MultipartBody.Part.createFormData(
-                "file",
-                file.name,
-                fileRequestBody
-            )
-            val res = RestClient.get().upload(multiPart)
-            if (res.isSuccessful)
-                _uploadResponse.postValue(res.body())
-            else listener?.onRetrofitError(res.errorBody())
-        }
-    }
+//    fun upload(file: File) {
+//        viewModelScope.launch(exceptionHandler) {
+//            val fileRequestBody = RequestBody.create("image/*".toMediaTypeOrNull(), file)
+//            val multiPart = MultipartBody.Part.createFormData(
+//                "file",
+//                file.name,
+//                fileRequestBody
+//            )
+//            val res = RestClient.get().upload(multiPart)
+//            if (res.isSuccessful)
+//                _uploadResponse.postValue(res.body())
+//            else listener?.onRetrofitError(errorCode, res.errorBody())
+//        }
+//    }
 
-    fun initiatedKyc() {
-        viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().initiateKyc()
-            if (res.isSuccessful)
-                _kycInitiatedResponse.postValue(res.body())
-            else listener?.onRetrofitError(res.errorBody())
-        }
-    }
+//    fun initiatedKyc() {
+//        viewModelScope.launch(exceptionHandler) {
+//            val res = RestClient.get().initiateKyc()
+//            if (res.isSuccessful)
+//                _kycInitiatedResponse.postValue(res.body())
+//            else listener?.onRetrofitError(errorCode, res.errorBody())
+//        }
+//    }
 
-    fun kycStatus() {
-        viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().kycStatus()
-            if (res.isSuccessful)
-                _kycStatusResponse.postValue(res.body())
-            else listener?.onRetrofitError(res.errorBody())
-        }
-    }
+//    fun kycStatus() {
+//        viewModelScope.launch(exceptionHandler) {
+//            val res = RestClient.get().kycStatus()
+//            if (res.isSuccessful)
+//                _kycStatusResponse.postValue(res.body())
+//            else listener?.onRetrofitError(errorCode, res.errorBody())
+//        }
+//    }
 
-    fun treezorStatus(status: Int = 1) {
-        viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().treezorStatus(hashMapOf("status" to status))
-            if (res.isSuccessful)
-                _treezorStatusResponse.postValue(res.body())
-            else listener?.onRetrofitError(res.errorBody())
-        }
-    }
+//    fun treezorStatus(status: Int = 1) {
+//        viewModelScope.launch(exceptionHandler) {
+//            val res = RestClient.get().treezorStatus(hashMapOf("status" to status))
+//            if (res.isSuccessful)
+//                _treezorStatusResponse.postValue(res.body())
+//            else listener?.onRetrofitError(errorCode, res.errorBody())
+//        }
+//    }
 
 
-    fun verifyPin(pin: String) {
-        viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().verifyPin(hashMapOf("login_pin" to pin.toInt()))
-            if (res.isSuccessful)
-                _verifyPinResponse.postValue(res.body())
-            else listener?.onRetrofitError(res.errorBody())
-        }
-    }
+//    fun verifyPin(pin: String) {
+//        viewModelScope.launch(exceptionHandler) {
+//            val res = RestClient.get().verifyPin(hashMapOf("login_pin" to pin.toInt()))
+//            if (res.isSuccessful)
+//                _verifyPinResponse.postValue(res.body())
+//            else listener?.onRetrofitError(errorCode, res.errorBody())
+//        }
+//    }
 
 }

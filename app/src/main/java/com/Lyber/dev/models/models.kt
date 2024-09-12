@@ -16,7 +16,10 @@ data class ErrorResponse(
     val type: String,
     val code: Int
 )
-
+data class ErrorResponseNew(
+    val error: String,
+    val code: Int
+)
 data class CommonResponse(val success: String, val message: String, val withdrawalId: String)
 
 data class CommonResponseVerfiy(val success: String, val message: String, val withdrawalId: String)

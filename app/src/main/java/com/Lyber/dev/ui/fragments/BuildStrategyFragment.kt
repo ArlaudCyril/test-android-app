@@ -27,17 +27,21 @@ import com.Lyber.dev.ui.adapters.BuildStrategyAdapter
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.AddAssetBottomSheet
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.BaseBottomSheet
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
+import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.dev.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.dev.utils.CommonMethods.Companion.gone
 import com.Lyber.dev.utils.CommonMethods.Companion.requestKeyboard
+import com.Lyber.dev.utils.CommonMethods.Companion.showErrorMessage
 import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
+import com.Lyber.dev.utils.CommonMethods.Companion.showSnack
 import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.CommonMethods.Companion.toPx
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.PortfolioViewModel
+import okhttp3.ResponseBody
 import kotlin.math.ceil
 import kotlin.math.roundToInt
 
@@ -50,9 +54,6 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
 
     private var minInvestPerAsset = 10f
     private var requiredAmount = 0f
-//    private lateinit var viewModel: NetworkViewModel
-//    private val viewModel: PortfolioViewModel by viewModels()
-
 
     private var canBuildStrategy: Boolean = false
     private var isEdit = false
@@ -217,7 +218,6 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                     binding.tvAllocationInfo.text =
                         getString(R.string.your_strategy_is_ready_to_be_saved)
                     binding.btnSaveMyStrategy.setBackgroundResource(R.drawable.button_purple_500)
-//                        ContextCompat.getDrawable(requireContext(), R.drawable.button_purple_500)
                     canBuildStrategy = true
                 }
 
@@ -259,7 +259,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                 ivTopAction -> requireActivity().onBackPressed()
                 btnSaveMyStrategy -> {
                     if (isEdit && canBuildStrategy) {
-                        checkInternet(binding.root,requireContext()) {
+                        checkInternet(binding.root, requireContext()) {
                             if (viewModel.selectedStrategy!!.expectedYield != null) {
                                 showProgressDialog(requireContext())
                                 viewModel.buildOwnStrategy(viewModel.selectedStrategy!!.name + " (Copy)")
@@ -275,11 +275,6 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                                     }
                                     requiredAmount = ceil(requiredAmount)
                                     if (requiredAmount > viewModel.selectedStrategy!!.activeStrategy!!.amount!!) {
-//                                        CommonMethods.showSnackBar(
-//                                            binding.root,
-//                                            requireContext(),
-//                                            getString(R.string.tailorStrategyError)
-//                                        )
                                         viewModel.selectedOption = Constants.ACTION_TAILOR_STRATEGY
                                         ConfirmationBottomSheet().apply {
                                             arguments = Bundle().apply {
@@ -354,10 +349,10 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                         }
 
                         else -> {
-                            checkInternet(binding.root,requireContext()) {
+                            checkInternet(binding.root, requireContext()) {
                                 mainView.removeView(transparentView)
                                 dismiss()
-                                checkInternet(binding.root,requireContext()) {
+                                checkInternet(binding.root, requireContext()) {
                                     showProgressDialog(requireContext())
                                     if (isEdit) {
                                         if (viewModel.selectedStrategy?.activeStrategy != null) {
@@ -371,11 +366,6 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                                             }
                                             requiredAmount = ceil(requiredAmount)
                                             if (requiredAmount > viewModel.selectedStrategy!!.activeStrategy!!.amount!!) {
-//                                                CommonMethods.showSnackBar(
-//                                                    binding.root,
-//                                                    requireContext(),
-//                                                    getString(R.string.tailorStrategyError)
-//                                                )
                                                 viewModel.selectedOption =
                                                     Constants.ACTION_TAILOR_STRATEGY
                                                 ConfirmationBottomSheet().apply {
@@ -408,21 +398,21 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
 
     /* callbacks */
 
-    private fun clickListener(position: Int) {
-        viewModel.addedAsset[position].let {
-            val allocationValue = it.allocation.toInt()
-            val assest =
-                com.Lyber.dev.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.addedAsset[position].addAsset.id } }
-            val assetsName = assest!!.fullName + " (${assest.id.uppercase()})"
-            SpinnerBottomSheet(::manuallySelectedAllocation).apply {
-                arguments = Bundle().apply {
-                    putString("assetsName", assetsName)
-                    putInt("allocationValue", allocationValue)
-                    putInt("position", position)
-                }
-            }.show(parentFragmentManager, "")
-        }
-    }
+//    private fun clickListener(position: Int) {
+//        viewModel.addedAsset[position].let {
+//            val allocationValue = it.allocation.toInt()
+//            val assest =
+//                com.Lyber.dev.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.addedAsset[position].addAsset.id } }
+//            val assetsName = assest!!.fullName + " (${assest.id.uppercase()})"
+//            SpinnerBottomSheet(::manuallySelectedAllocation).apply {
+//                arguments = Bundle().apply {
+//                    putString("assetsName", assetsName)
+//                    putInt("allocationValue", allocationValue)
+//                    putInt("position", position)
+//                }
+//            }.show(parentFragmentManager, "")
+//        }
+//    }
 
     private fun manuallySelectedAllocation(value: Int, position: Int) {
         adapter.getItem(position)?.allocation = value.toFloat()
@@ -780,69 +770,21 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
 
         }
     }
-//    class SwipeController(private val adapter: BuildStrategyAdapter) : ItemTouchHelper.SimpleCallback(
-//        0, ItemTouchHelper.LEFT
-//    ) {
-//
-//        private val SWIPE_THRESHOLD = 0.5f
-//
-//        override fun onMove(
-//            recyclerView: RecyclerView,
-//            viewHolder: RecyclerView.ViewHolder,
-//            target: RecyclerView.ViewHolder
-//        ): Boolean {
-//            return false
-//        }
-//
-//        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-//            val position = viewHolder.adapterPosition
-//            val itemView = viewHolder.itemView
-//
-//            if (direction == ItemTouchHelper.LEFT) {
-//                // Calculate the swipe percentage
-//                val swipePercentage = (itemView.width - itemView.right) / itemView.width.toFloat()
-//
-//                // Show button on half swipe
-//                if (swipePercentage < SWIPE_THRESHOLD) {
-//                    adapter.showButton(position)
-//                } else {
-//                    // Delete item on full swipe
-//                    adapter.removeItem(position)
-//                }
-//            }
-//        }
-//
-//        override fun onChildDraw(
-//            c: Canvas,
-//            recyclerView: RecyclerView,
-//            viewHolder: RecyclerView.ViewHolder,
-//            dX: Float,
-//            dY: Float,
-//            actionState: Int,
-//            isCurrentlyActive: Boolean
-//        ) {
-//            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-//
-//            // Customize the drawing of the view during the swipe
-//            val itemView = viewHolder.itemView
-//            val icon = ContextCompat.getDrawable(itemView.context, R.drawable.ic_delete)!!
-//            val iconMargin = (itemView.height - icon.intrinsicHeight) / 2
-//
-//            // Calculate the swipe percentage
-//            val swipePercentage = (itemView.width - itemView.right) / itemView.width.toFloat()
-//
-//            // Show button on half swipe
-//            if (swipePercentage < SWIPE_THRESHOLD) {
-//                icon.setBounds(
-//                    itemView.left + iconMargin,
-//                    itemView.top + iconMargin,
-//                    itemView.left + iconMargin + icon.intrinsicWidth,
-//                    itemView.bottom - iconMargin
-//                )
-//                icon.draw(c)
-//            }
-//        }
-//    }
 
-
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        dismissProgressDialog()
+        when (errorCode) {
+            13009 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_13009))
+            13010 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_13010))
+            13011 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_13011))
+            13012 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_13012))
+            13013 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_13013))
+            13015 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_13015))
+            13001 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_13001))
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+            else -> super.onRetrofitError(errorCode, msg)
+        }
+    }
 }

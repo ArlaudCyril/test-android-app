@@ -1,6 +1,5 @@
 package com.Lyber.dev.ui.fragments
 
-import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.PorterDuff
 import android.os.Bundle
@@ -12,10 +11,10 @@ import android.view.View.OnClickListener
 import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
+import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentResetPasswordBinding
-import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.Constants
@@ -93,13 +92,7 @@ class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>(), OnCl
                 }
             }
         }
-//        viewModel.logoutResponse.observe(viewLifecycleOwner){
-//            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-//                App.prefsManager.logout()
-//                findNavController().popBackStack()
-//                findNavController().navigate(R.id.discoveryFragment)
-//            }
-//        }
+
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             // Handle back button press
             findNavController().popBackStack()
@@ -107,12 +100,30 @@ class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>(), OnCl
         }
     }
 
-    override fun onRetrofitError(responseBody: ResponseBody?) {
+    override fun onRetrofitError(errorCode: Int, msg: String) {
         CommonMethods.dismissProgressDialog()
         CommonMethods.dismissAlertDialog()
-         CommonMethods.showErrorMessage(requireContext(), responseBody, binding.root)
-//        if(code==7023 || code == 10041)
-//            customDialog(code)
+        when (errorCode) {
+            48 -> {
+                // Handle back button press
+                // Keep popping the stack until it can't pop anymore
+                while (findNavController().navigateUp()) {
+                }
+
+// Now navigate to ForgotPasswordFragment
+                findNavController().navigate(R.id.forgotPasswordFragment)
+
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_48)
+                )
+            }
+
+            else -> super.onRetrofitError(errorCode, msg)
+
+
+        }
     }
 
     private val onTextChange = object : TextWatcher {
@@ -129,7 +140,7 @@ class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>(), OnCl
                             )
                         )
                     binding.btnSendResetLink.backgroundTintList = colorStateList
-                    binding.tvPassValidMsg.text=getString(R.string.you_have_strong_password)
+                    binding.tvPassValidMsg.text = getString(R.string.you_have_strong_password)
                     binding.tvPassValidMsg.setTextColor(
                         ContextCompat.getColor(
                             requireContext(),
@@ -148,7 +159,7 @@ class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>(), OnCl
                             )
                         )
                     binding.btnSendResetLink.backgroundTintList = colorStateList
-                    binding.tvPassValidMsg.text=getString(R.string.pass_valid_msg)
+                    binding.tvPassValidMsg.text = getString(R.string.pass_valid_msg)
                     binding.tvPassValidMsg.setTextColor(
                         ContextCompat.getColor(
                             requireContext(),

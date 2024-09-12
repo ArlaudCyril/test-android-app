@@ -20,7 +20,6 @@ import androidx.core.content.ContextCompat.getColor
 import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -53,6 +52,7 @@ import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.messaging.FirebaseMessaging
+import okhttp3.ResponseBody
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -226,7 +226,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         }
 
         binding.lineChart.clearYAxis()
-        binding.lineChart.hideAmount=true
+        binding.lineChart.hideAmount = true
 //        binding.lineChart.timeSeries = getLineData(viewModel.totalPortfolio)
 
         binding.tvInvestMoney.text = getString(R.string.invest_money)
@@ -265,7 +265,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
     }
 
     private fun hitApis() {
-        checkInternet(binding.root,requireContext()) {
+        checkInternet(binding.root, requireContext()) {
             if (viewModel.screenCount == 1) {
                 viewModel.getPrice(viewModel.chosenAssets?.id ?: "btc")
                 viewModel.getNews(viewModel.chosenAssets?.id ?: "btc")
@@ -770,7 +770,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
     }
 
     override fun assetClicked(balance: Balance) {
-        checkInternet(binding.root,requireContext()) {
+        checkInternet(binding.root, requireContext()) {
 
             navController.navigate(R.id.portfolioDetailFragment)
             viewModel.selectedAsset = CommonMethods.getAsset(balance.id)
@@ -779,7 +779,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
     }
 
     override fun availableAssetClicked(priceResume: PriceServiceResume) {
-        checkInternet(binding.root,requireContext()) {
+        checkInternet(binding.root, requireContext()) {
             viewModel.selectedAsset = CommonMethods.getAsset(priceResume.id)
             viewModel.selectedBalance = CommonMethods.getBalance(priceResume.id)
             navController.navigate(R.id.portfolioDetailFragment)
@@ -1062,5 +1062,49 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         val fragmentPortfolio get() = _fragmentPortfolio!!
     }
 
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        when ( errorCode ) {
+            8 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_8)
+                )
+                CommonMethods.logOut(requireContext())
+            }
+
+            9 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_9)
+                )
+                CommonMethods.logOut(requireContext())
+            }
+
+            27 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_27)
+                )
+                CommonMethods.logOut(requireContext())
+            }
+
+
+            52 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_52)
+                )
+                CommonMethods.logOut(requireContext())
+            }
+
+            else ->  super.onRetrofitError(errorCode, msg)
+
+        }
+
+    }
 }
 

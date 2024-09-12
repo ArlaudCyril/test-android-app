@@ -77,6 +77,7 @@ class WithdrawlNetworksFragment : BaseFragment<FragmentListingBinding>() {
             val bundle = Bundle()
             viewModel.selectedNetworkDeposit = myAsset
             bundle.putString(Constants.ID, myAsset.id)
+            bundle.putString("assetIdWithdraw", assetId)
             findNavController().navigate(R.id.withdrawAmountFragment, bundle)
         }
     }

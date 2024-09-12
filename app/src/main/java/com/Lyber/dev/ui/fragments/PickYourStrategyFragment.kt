@@ -33,6 +33,7 @@ import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.utils.ItemOffsetDecoration
 import com.google.gson.GsonBuilder
+import okhttp3.ResponseBody
 import java.lang.Math.abs
 
 
@@ -254,16 +255,6 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
 
     class SlowLinearSmoothScroller(context: Context) : LinearSmoothScroller(context) {
 
-        //        companion object {
-//            private const val MILLISECONDS_PER_INCH = 1000f // Adjust as needed
-//        }
-//        private  val MILLISECONDS_PER_INCH = 50f // Adjust as needed
-//        private  val MAX_SCROLL_ON_FLING_DURATION = 500 // Adjust as needed
-//
-//
-//        override fun calculateSpeedPerPixel(displayMetrics: DisplayMetrics): Float {
-//            return MILLISECONDS_PER_INCH / displayMetrics.densityDpi
-//        }
         companion object {
             private const val SCROLL_DURATION =
                 300 // Adjust as needed (make it smaller for faster scrolling)
@@ -290,5 +281,19 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
         }
     }
 
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        CommonMethods.dismissProgressDialog()
+
+        when (errorCode) {
+            13003 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_13003)
+            )
+
+            else ->  super.onRetrofitError(errorCode, msg)
+
+        }
+    }
 
 }

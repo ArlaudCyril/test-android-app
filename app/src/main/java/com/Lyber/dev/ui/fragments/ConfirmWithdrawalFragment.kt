@@ -2,9 +2,6 @@ package com.Lyber.dev.ui.fragments
 
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
@@ -17,12 +14,12 @@ import com.Lyber.dev.databinding.FragmentConfirmInvestmentBinding
 import com.Lyber.dev.models.Balance
 import com.Lyber.dev.network.RestClient
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.VerificationBottomSheet
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.VerificationBottomSheet2FA
-import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
 import com.Lyber.dev.utils.CommonMethods.Companion.gone
+import com.Lyber.dev.utils.CommonMethods.Companion.returnErrorCode
+import com.Lyber.dev.utils.CommonMethods.Companion.showSnack
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.utils.LoaderObject
@@ -34,7 +31,7 @@ import java.math.RoundingMode
 import java.util.ArrayList
 
 class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>(),
-    View.OnClickListener, RestClient.OnRetrofitError {
+    View.OnClickListener {
     private lateinit var viewModel: PortfolioViewModel
     private lateinit var viewModelSignup: SignUpViewModel
     private var valueTotal: Double = 0.0
@@ -44,6 +41,8 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
     private var isResend = false
     private var withdrawUSDC = false
     private var withdrawEuroFee = 0.66
+    private lateinit var assetIdWithdraw: String
+    lateinit var bottomSheet: VerificationBottomSheet2FA
 
     override fun bind() = FragmentConfirmInvestmentBinding.inflate(layoutInflater)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -59,8 +58,11 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
             binding.title.text = getString(R.string.confirm_withdrawal)
             if (requireArguments().containsKey(Constants.FEE))
                 withdrawEuroFee = requireArguments().getDouble(Constants.FEE)
+
         } else
             withdrawUSDC = false
+        if (arguments != null && requireArguments().containsKey("assetIdWithdraw"))
+            assetIdWithdraw = requireArguments().getString("assetIdWithdraw").toString()
 
         binding.tvTotalAmount.gone()
         binding.ivSingleAsset.gone()
@@ -137,6 +139,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
             vc.show(childFragmentManager, "")
             val mainView = getView()?.rootView as ViewGroup
             mainView.addView(transparentView, viewParams)
+            bottomSheet = vc
         }
         isResend = false
     }
@@ -357,8 +360,13 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
     override fun onClick(v: View?) {
         binding.apply {
             when (v!!) {
-                ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
-                btnConfirmInvestment -> confirmButtonClick()
+                ivTopAction -> {
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                }
+                btnConfirmInvestment -> {
+                    confirmButtonClick()
+                }
+
                 tvMoreDetails -> {
                     if (isExpand) {
                         zzInfor.gone()
@@ -384,14 +392,196 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         }
     }
 
-    override fun onRetrofitError(responseBody: ResponseBody?) {
+    override fun onRetrofitError(errorCode: Int, msg: String) {
         CommonMethods.dismissProgressDialog()
         CommonMethods.dismissAlertDialog()
         LoaderObject.hideLoader()
-        val code = CommonMethods.showErrorMessage(requireContext(), responseBody, binding.root)
-        Log.d("errorCode", "$code")
-        if (code == 7023 || code == 10041 || code == 7025 || code == 10043)
-            customDialog(code)
+        when (errorCode) {
+            10044 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_10044))
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }10045 -> {
+            showSnack(binding.root, requireContext(), getString(R.string.error_code_10045))
+            requireActivity().onBackPressedDispatcher.onBackPressed()
+        }   26 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_26))
+            37 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_37))
+            40 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_40))
+            41 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_41))
+            57 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_57))
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
+            1000 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_1000))
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
+            10001 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_10001))
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
+            10005 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_10005))
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
+            10012 -> {
+                var asset=""
+                if (withdrawUSDC)
+                    asset="USDC"
+                else
+                   asset = viewModel.selectedAssetDetail!!.fullName
+
+                    showSnack(binding.root, requireContext(), getString(R.string.error_code_10012,asset))
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
+            10021 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_10021))
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
+            10030 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_10030))
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
+            10032 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_10032))
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
+            10033 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_10033))
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
+            10013 -> {
+                val transactionType=getString(R.string.withdrawal)
+                var network=""
+                if(viewModel.selectedNetworkDeposit!=null)
+                 network=  viewModel.selectedNetworkDeposit!!.id
+                var asset=""
+                if (withdrawUSDC)
+                    asset="USDC"
+                else
+                    asset = viewModel.selectedAssetDetail!!.fullName
+
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_10013,transactionType,network,asset))
+                if (::assetIdWithdraw.isInitialized) {
+                    val bundle = Bundle().apply {
+                        putString(Constants.ID, assetIdWithdraw)
+                    }
+                    findNavController().navigate(
+                        R.id.action_confirm_withdraw_to_withdraw_on,
+                        bundle
+                    )
+                }
+            }
+
+            10024 -> {
+                showSnack(
+                    binding.root, requireContext(), getString(
+                        R.string.error_code_10024,
+                        viewModel.selectedNetworkDeposit!!.fullName
+                    )
+                )
+                if (::assetIdWithdraw.isInitialized) {
+                    val bundle = Bundle().apply {
+                        putString(Constants.ID, assetIdWithdraw)
+                    }
+                    findNavController().navigate(
+                        R.id.action_confirm_withdraw_to_withdraw_on,
+                        bundle
+                    )
+                }
+            }
+
+            10009 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_10009))
+                findNavController().navigate(R.id.action_confirm_withdraw_to_home_fragment)
+            }
+
+            10018 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_10018))
+                findNavController().navigate(R.id.action_confirm_withdraw_to_home_fragment)
+            }
+
+            10034 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_10034))
+                findNavController().navigate(R.id.action_confirm_withdraw_to_home_fragment)
+            }
+
+            10035 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_10035))
+                findNavController().navigate(R.id.action_confirm_withdraw_to_home_fragment)
+            }
+
+            10036 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_10036))
+                findNavController().navigate(R.id.action_confirm_withdraw_to_home_fragment)
+            }
+
+            10037 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_10037))
+                findNavController().navigate(R.id.action_confirm_withdraw_to_home_fragment)
+            }
+
+            10042 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_10042))
+                findNavController().navigate(R.id.action_confirm_withdraw_to_home_fragment)
+            }
+            3000 -> {
+                val transactionType=getString(R.string.withdraw)
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_3000,transactionType))
+                findNavController().navigate(R.id.action_confirm_withdraw_to_home_fragment)
+            }
+
+            34 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_34))
+            }
+
+            35 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_35))
+            }
+
+            42 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_42))
+            }
+
+            24 -> bottomSheet.showErrorOnBottomSheet(24)
+            18 -> bottomSheet.showErrorOnBottomSheet(18)
+            38 -> bottomSheet.showErrorOnBottomSheet(38)
+            39 -> bottomSheet.showErrorOnBottomSheet(39)
+            43 -> bottomSheet.showErrorOnBottomSheet(43)
+            45 -> bottomSheet.showErrorOnBottomSheet(45)
+            10022 -> bottomSheet.showErrorOnBottomSheet(10022)
+            else ->  super.onRetrofitError(errorCode, msg)
+
+        }
     }
 
 }

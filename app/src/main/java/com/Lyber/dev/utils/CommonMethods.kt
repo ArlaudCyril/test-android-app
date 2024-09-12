@@ -45,6 +45,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK
 import androidx.biometric.BiometricPrompt
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
@@ -62,6 +63,7 @@ import com.Lyber.dev.databinding.ProgressBarBinding
 import com.Lyber.dev.models.AssetBaseData
 import com.Lyber.dev.models.Balance
 import com.Lyber.dev.models.ErrorResponse
+import com.Lyber.dev.models.ErrorResponseNew
 import com.Lyber.dev.models.MonthsList
 import com.Lyber.dev.models.Network
 import com.Lyber.dev.models.PriceServiceResume
@@ -377,6 +379,23 @@ class CommonMethods {
             return Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
         }
 
+        fun returnErrorCode(responseBody: ResponseBody?):ErrorResponseNew{
+            var errorCode=-100 // for dummy
+            try {
+                val errorConverter = RestClient.getRetrofitInstance()
+                    .responseBodyConverter<ErrorResponse>(
+                        ErrorResponse::class.java,
+                        arrayOfNulls<Annotation>(0)
+                    )
+
+                val errorRes: ErrorResponse? = errorConverter.convert(responseBody!!)
+//                errorCode= errorRes?.code!!
+                return ErrorResponseNew(errorRes!!.error,errorRes.code)
+            }
+            catch (_:Exception){
+                return ErrorResponseNew("",errorCode)
+            }
+        }
         fun showErrorMessage(context: Context, responseBody: ResponseBody?, root: View): Int {
 
             val errorConverter = RestClient.getRetrofitInstance()
@@ -418,6 +437,48 @@ class CommonMethods {
                 }
             if (errorRes?.error == "UNAUTHORIZED" || errorRes?.error == "Unauthorized") {
 
+                prefsManager.logout()
+                val intent =
+                    Intent(context, com.Lyber.dev.ui.activities.SplashActivity::class.java).apply {
+                        putExtra(Constants.IS_LOGOUT, true).flags =
+                            Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                                    Intent.FLAG_ACTIVITY_CLEAR_TASK or
+                                    Intent.FLAG_ACTIVITY_NEW_TASK
+                    }
+
+                ContextCompat.startActivity(context, intent, null)
+            }
+            return 0
+        }
+        fun showError(errorCode:Int,context: Context, msg:String, root: View): Int {
+
+             if (errorCode == 19006 || errorCode == 19007 || errorCode == 19004) {
+                logOut(context)
+            } else if (errorCode == 19002 || errorCode == 19003) {
+                findNavController(root).navigate(R.id.underMaintenanceFragment)
+            } else if (errorCode == 7023 || errorCode == 10041 || errorCode == 7025 || errorCode == 10043) {
+                return errorCode
+            } else if (errorCode == 7024 || errorCode == 10042) {
+                showSnack(root, context, null)
+                return errorCode
+            } else
+                if ((msg ?: "").isNotEmpty()) {
+                    when (msg) {
+                        "Invalid UpdateExpression: Syntax error; token: \"0\", near: \", 0)\"" ->
+                            "Invalid OTP".showToast(root,context)
+
+                        "Email already verified" -> "Email already exists".showToast(root,context)
+                        "Bad client credentials" -> "Invalid credentials".showToast(root,context)
+                        "No user registerd with this email" -> "Invalid credentials".showToast(
+                            root,context
+                        )
+
+                        else -> {
+                                showSnack(root, context, msg)
+                        }
+                    }
+                }
+            if (msg == "UNAUTHORIZED" || msg == "Unauthorized") {
                 prefsManager.logout()
                 val intent =
                     Intent(context, com.Lyber.dev.ui.activities.SplashActivity::class.java).apply {
@@ -1696,14 +1757,27 @@ class CommonMethods {
 
         fun showSnack(root: View, context: Context, textMsg: String?) {
             val snackbar = Snackbar.make(root, "", Snackbar.LENGTH_SHORT)
-            val params = snackbar.view.layoutParams as FrameLayout.LayoutParams
-            params.gravity = Gravity.TOP
-            params.setMargins(24, 158, 24, 0)
-            snackbar.view.layoutParams = params
+//            val params = snackbar.view.layoutParams as FrameLayout.LayoutParams
+//            params.gravity = Gravity.TOP
+//            params.setMargins(24, 158, 24, 0)
+            val params = snackbar.view.layoutParams
+            if (params is CoordinatorLayout.LayoutParams) {
+                // Correctly cast to CoordinatorLayout.LayoutParams
+                params.gravity = Gravity.TOP
+                params.setMargins(24, 158, 24, 0)
+                snackbar.view.layoutParams = params
+            } else if (params is FrameLayout.LayoutParams) {
+                // Use FrameLayout.LayoutParams as fallback
+                params.gravity = Gravity.TOP
+                params.setMargins(24, 158, 24, 0)
+                snackbar.view.layoutParams = params
+            }
+//            snackbar.view.layoutParams = params
             snackbar.view.background =
                 context.getDrawable(R.drawable.curved_background_toast)
 
             snackbar.animationMode = BaseTransientBottomBar.ANIMATION_MODE_FADE
+
             val layout = snackbar.view as Snackbar.SnackbarLayout
             val textView =
                 layout.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)

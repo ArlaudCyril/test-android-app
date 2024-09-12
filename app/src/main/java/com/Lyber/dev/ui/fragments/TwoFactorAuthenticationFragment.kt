@@ -6,6 +6,8 @@ import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
@@ -13,19 +15,20 @@ import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import com.Lyber.dev.R
-import com.Lyber.dev.databinding.CustomDialogVerticalLayoutBinding
 import com.Lyber.dev.databinding.DownloadGoogleAuthenticatorBinding
 import com.Lyber.dev.databinding.FragmentTwoFactorAuthenticationBinding
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.VerificationBottomSheet
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.dismissAlertDialog
+import com.Lyber.dev.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.SignUpViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
+import kotlinx.coroutines.delay
 import okhttp3.ResponseBody
 import java.net.MalformedURLException
 
@@ -35,6 +38,7 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
     override fun bind() = FragmentTwoFactorAuthenticationBinding.inflate(layoutInflater)
     var qrCodeUrl = ""
     private var isResend = false
+    private lateinit var bottomSheet: VerificationBottomSheet
 
     companion object {
         var showOtp = true
@@ -125,6 +129,7 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
                     vc.show(childFragmentManager, App.prefsManager.user?.type2FA)
                     val mainView = getView()?.rootView as ViewGroup
                     mainView.addView(transparentView, viewParams)
+                    bottomSheet=vc
                 }
                 isResend = false
             }
@@ -145,43 +150,113 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
         }
     }
 
-    override fun onRetrofitError(responseBody: ResponseBody?) {
-        super.onRetrofitError(responseBody)
+    override fun onRetrofitError(errorCode: Int, msg: String) {
         dismissAlertDialog()
-        if (showOtp) {
-            CommonMethods.checkInternet(binding.root,requireContext()) {
-                isResend=true
-                CommonMethods.showProgressDialog(requireContext())
-                var json = """{"type2FA" : "google"}""".trimMargin()
-                val detail = CommonMethods.encodeToBase64(json)
-                viewModel.switchOffAuthentication(detail, Constants.TYPE)
-            }
-            showOtp = false
-            val transparentView = View(context)
-            transparentView.setBackgroundColor(
-                ContextCompat.getColor(
-                    requireContext(), R.color.semi_transparent_dark
-                )
+        dismissProgressDialog()
+        when (errorCode) {
+          40 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_40)
             )
-            CommonMethods.dismissProgressDialog()
-            // Set layout parameters for the transparent view
-            val viewParams = RelativeLayout.LayoutParams(
-                RelativeLayout.LayoutParams.MATCH_PARENT,
-                RelativeLayout.LayoutParams.MATCH_PARENT
+            41 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_41)
             )
-            val vc = VerificationBottomSheet(::handle)
-            vc.viewToDelete = transparentView
-            vc.mainView = getView()?.rootView as ViewGroup
-            vc.viewModel = viewModel
-            vc.arguments = Bundle().apply {
-                putString(Constants.TYPE, Constants.GOOGLE)
-                putBoolean(Constants.GOOGLE, true)
-            }
-            vc.show(childFragmentManager, App.prefsManager.user?.type2FA)
-            val mainView = getView()?.rootView as ViewGroup
-            mainView.addView(transparentView, viewParams)
-        }
+           34 -> {
+               if (::bottomSheet.isInitialized) {
+                   try {
+                       bottomSheet.dismiss()
+                   } catch (_: Exception) {
 
+                   }
+               }
+               CommonMethods.showSnack(
+                   binding.root,
+                   requireContext(),
+                   getString(R.string.error_code_34)
+               )
+           }
+            35 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_35)
+                )
+            }
+            42 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_42)
+                )
+            }
+            24 -> bottomSheet.showErrorOnBottomSheet(24)
+            18 -> bottomSheet.showErrorOnBottomSheet(18)
+            38 -> bottomSheet.showErrorOnBottomSheet(38)
+            39 -> bottomSheet.showErrorOnBottomSheet(39)
+            43 -> bottomSheet.showErrorOnBottomSheet(43)
+            45 ->bottomSheet.showErrorOnBottomSheet(45)
+            else-> super.onRetrofitError(errorCode, msg)
+        }
+        Handler(Looper.getMainLooper()).postDelayed({
+            if (showOtp) {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                CommonMethods.checkInternet(binding.root,requireContext()) {
+                    isResend=true
+                    CommonMethods.showProgressDialog(requireContext())
+                    var json = """{"type2FA" : "google"}""".trimMargin()
+                    val detail = CommonMethods.encodeToBase64(json)
+                    viewModel.switchOffAuthentication(detail, Constants.TYPE)
+                }
+                showOtp = false
+                val transparentView = View(context)
+                transparentView.setBackgroundColor(
+                    ContextCompat.getColor(
+                        requireContext(), R.color.semi_transparent_dark
+                    )
+                )
+                CommonMethods.dismissProgressDialog()
+                // Set layout parameters for the transparent view
+                val viewParams = RelativeLayout.LayoutParams(
+                    RelativeLayout.LayoutParams.MATCH_PARENT,
+                    RelativeLayout.LayoutParams.MATCH_PARENT
+                )
+                val vc = VerificationBottomSheet(::handle)
+                vc.viewToDelete = transparentView
+                vc.mainView = getView()?.rootView as ViewGroup
+                vc.viewModel = viewModel
+                vc.arguments = Bundle().apply {
+                    putString(Constants.TYPE, Constants.GOOGLE)
+                    putBoolean(Constants.GOOGLE, true)
+                }
+                vc.show(childFragmentManager, App.prefsManager.user?.type2FA)
+                val mainView = getView()?.rootView as ViewGroup
+                mainView.addView(transparentView, viewParams)
+                bottomSheet=vc
+            }
+        }, 1500)
     }
 
 

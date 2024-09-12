@@ -13,6 +13,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Lifecycle
@@ -23,10 +24,12 @@ import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.gone
 import com.Lyber.dev.utils.CommonMethods.Companion.requestKeyboard
+import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.SignUpViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import okhttp3.ResponseBody
 
 class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
     BaseBottomSheet<BottomSheetVerificationBinding>() {
@@ -67,6 +70,13 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
             imm?.hideSoftInputFromWindow(view?.windowToken, 0)
             dismiss()
         }
+        binding.title.setOnClickListener {
+            CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_38)
+            )
+        }
 //        setOnResendCodeClickListener(object : OnResendCode {
 //
 //            override fun onResend() {
@@ -81,7 +91,7 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
 //            }
 //        })
         binding.tvResendCode.setOnClickListener {
-            CommonMethods.checkInternet(binding.root,requireContext()) {
+            CommonMethods.checkInternet(binding.root, requireContext()) {
                 if (googleOTP.isNotEmpty()) {
                     googleOTP = ""
                     binding.tvResendCode.gone()
@@ -376,7 +386,6 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
 
                             if (tag!!.isNotEmpty()) {
                                 if (arguments != null && requireArguments().containsKey("clickedOn")) {
-                                    dismiss()
                                     var args = requireArguments().getString("clickedOn")
                                     Log.d("text", args!!)
 
@@ -395,7 +404,6 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
                                 ) {
                                     var args = requireArguments().getString(Constants.TYPE)
                                     if (requireArguments().containsKey("changeType")) {
-                                        dismiss()
                                         Log.d("text", args!!)
                                         val hash = hashMapOf<String, Any>()
                                         hash["type2FA"] =
@@ -407,7 +415,6 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
                                     }
                                     if (args == Constants.GOOGLE) {
                                         if (googleOTP.isNotEmpty()) {
-                                            dismiss()
                                             Log.d("text", args)
                                             val hash = hashMapOf<String, Any>()
                                             hash["type2FA"] = args
@@ -443,7 +450,6 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
                                         }
 
                                     } else {
-                                        dismiss()
                                         Log.d("text", args!!)
                                         val hash = hashMapOf<String, Any>()
                                         hash["type2FA"] = args
@@ -454,15 +460,15 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
                                     }
                                 }
                             } else if (::typeVerification.isInitialized && typeVerification != null && typeVerification == Constants.CHANGE_PASSWORD) {
-                                dismiss()
+//                                dismiss()
                                 CommonMethods.showProgressDialog(requireContext())
                                 viewModel.verifyPasswordChange(code = getCode())
                             } else if (viewModel.forLogin) {
-                                dismiss()
+//                                dismiss()
                                 viewModel.verify2FA(code = getCode())
                             } else {
-                                dismiss()
-                                CommonMethods.showProgressDialog(requireContext())
+//                                dismiss()
+//                                CommonMethods.showProgressDialog(requireContext())
                                 viewModel.verifyPhone(getCode())
                             }
                         }
@@ -501,6 +507,51 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
         } catch (_: Exception) {
 
         }
+    }
+
+    fun showErrorOnBottomSheet(code: Int) {
+        when (code) {
+            18 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_18)
+            )
+
+            24 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_24)
+                )
+            }
+
+            38 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_38)
+                )
+            }
+
+            39 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_39)
+            )
+
+            43 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_43)
+            )
+
+            45 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_45)
+            )
+        }
+
     }
 
 }

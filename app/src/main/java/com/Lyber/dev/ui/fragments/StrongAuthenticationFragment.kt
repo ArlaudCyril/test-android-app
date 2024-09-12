@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
@@ -20,6 +19,9 @@ import com.Lyber.dev.utils.CommonMethods.Companion.dismissAlertDialog
 import com.Lyber.dev.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.dev.utils.CommonMethods.Companion.encodeToBase64
 import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.dev.utils.CommonMethods.Companion.returnErrorCode
+import com.Lyber.dev.utils.CommonMethods.Companion.showErrorMessage
+import com.Lyber.dev.utils.CommonMethods.Companion.showSnack
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.SignUpViewModel
 import okhttp3.ResponseBody
@@ -31,12 +33,13 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
     private lateinit var clickedOn: String
     private lateinit var clickedSwitch: String
     private lateinit var scopeType: String
+    private lateinit var bottomSheet: VerificationBottomSheet
 
 
     override fun bind() = FragmentStrongAuthenticationBinding.inflate(layoutInflater)
     private var switchOff: Boolean = false
     private var qrCodeUrl = ""
-     var resendCode = -1
+    var resendCode = -1
     private var resetView = false
 
     @SuppressLint("SuspiciousIndentation")
@@ -95,11 +98,12 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                         vc.show(childFragmentManager, App.prefsManager.user?.type2FA)
                         val mainView = getView()?.rootView as ViewGroup
                         mainView.addView(transparentView, viewParams)
+                        bottomSheet = vc
                     }
                     resetView = false
 
                 } else if (switchOff) {
-                    if(!resetView) {
+                    if (!resetView) {
                         val transparentView = View(context)
                         transparentView.setBackgroundColor(
                             ContextCompat.getColor(
@@ -124,8 +128,9 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                         vc.show(childFragmentManager, App.prefsManager.user?.type2FA)
                         val mainView = getView()?.rootView as ViewGroup
                         mainView.addView(transparentView, viewParams)
+                        bottomSheet = vc
                     }
-                    resetView=false
+                    resetView = false
                 } else {
                     viewModel.getUser()
                 }
@@ -133,6 +138,12 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
         }
         viewModel.updateAuthenticateResponse.observe(viewLifecycleOwner) {
             if (Lifecycle.State.RESUMED == lifecycle.currentState) {
+                if (::bottomSheet.isInitialized)
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
                 viewModel.getUser()
 
             }
@@ -189,7 +200,7 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                     viewModel.updateAuthentication(hash)
                 } else {
                     switchOff = true
-                    resendCode=4
+                    resendCode = 4
                     binding.switchValidateWithdraw.isChecked = true
                     CommonMethods.showProgressDialog(requireContext())
                     var json = ""
@@ -294,6 +305,7 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                             vc.show(childFragmentManager, App.prefsManager.user?.type2FA)
                             val mainView = getView()?.rootView as ViewGroup
                             mainView.addView(transparentView, viewParams)
+                            bottomSheet = vc
                         }
                     }
                 }
@@ -330,7 +342,7 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                             vc.show(childFragmentManager, App.prefsManager.user?.type2FA)
                             val mainView = getView()?.rootView as ViewGroup
                             mainView.addView(transparentView, viewParams)
-
+                            bottomSheet = vc
                         }
                     }
                 }
@@ -339,8 +351,53 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
     }
 
 
-    override fun onRetrofitError(responseBody: ResponseBody?) {
-        super.onRetrofitError(responseBody)
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        dismissProgressDialog()
+        dismissAlertDialog()
+        when (errorCode) {
+            26 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_26))
+            37 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_37))
+            40 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_40))
+            41 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_41))
+            44 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_44))
+            34 -> {
+                if (::bottomSheet.isInitialized)
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_34))
+            }
+
+            35 -> {
+                if (::bottomSheet.isInitialized)
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_35))
+            }
+
+            42 -> {
+                if (::bottomSheet.isInitialized)
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_42))
+            }
+
+            24 -> bottomSheet.showErrorOnBottomSheet(24)
+            18 -> bottomSheet.showErrorOnBottomSheet(18)
+            38 -> bottomSheet.showErrorOnBottomSheet(38)
+            39 -> bottomSheet.showErrorOnBottomSheet(39)
+            43 -> bottomSheet.showErrorOnBottomSheet(43)
+            45 -> bottomSheet.showErrorOnBottomSheet(45)
+            else -> super.onRetrofitError(errorCode, msg)
+        }
         if (App.prefsManager.user?.scope2FA != null && App.prefsManager.user?.scope2FA!!.isNotEmpty())
             for (i in App.prefsManager.user?.scope2FA!!) when (i) {
                 Constants.LOGIN -> binding.switchLoginAcc.isChecked = true
@@ -354,6 +411,7 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                 binding.switchValidateWithdraw.isChecked = false
         }
     }
+
     fun handle(txt: String) {
         resetView = true
         when (resendCode) {
@@ -389,7 +447,8 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                 scopeType = Constants.SCOPE
                 viewModel.switchOffAuthentication(detail, scopeType)
             }
-            4->{
+
+            4 -> {
                 switchOff = true
                 binding.switchValidateWithdraw.isChecked = true
                 var json = ""

@@ -11,6 +11,10 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior
 class ErrorResponseBottomSheet :  BaseBottomSheet<FragmentErrorResponseBottomSheetBinding>() {
 
     private lateinit var viewModel: PortfolioViewModel
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        TODO("Not yet implemented")
+    }
+
     override fun bind() = FragmentErrorResponseBottomSheetBinding.inflate(layoutInflater)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

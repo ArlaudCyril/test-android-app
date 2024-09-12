@@ -23,7 +23,10 @@ import com.Lyber.dev.utils.CommonMethods.Companion.fadeIn
 import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
 import com.Lyber.dev.utils.CommonMethods.Companion.gone
 import com.Lyber.dev.utils.CommonMethods.Companion.loadCircleCrop
+import com.Lyber.dev.utils.CommonMethods.Companion.returnErrorCode
 import com.Lyber.dev.utils.CommonMethods.Companion.setBackgroundTint
+import com.Lyber.dev.utils.CommonMethods.Companion.showErrorMessage
+import com.Lyber.dev.utils.CommonMethods.Companion.showSnack
 import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
@@ -33,7 +36,7 @@ import okhttp3.ResponseBody
 import java.math.RoundingMode
 
 class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
-    View.OnClickListener, RestClient.OnRetrofitError {
+    View.OnClickListener {
 
     /* display conversion */
     private val amount get() = binding.etAmount.text!!.trim().toString()
@@ -227,7 +230,10 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
         binding.apply {
             when (v!!) {
 
-                ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
+                ivTopAction -> {
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                }
+
                 tvBackArrow -> backspace()
                 tvDot -> type('.')
                 tvOne -> type('1')
@@ -250,7 +256,10 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
 //                    if(etAmount.text.)
                     if (canPreview) {
                         if (assetAvail == 0.0)
-                            getString(R.string.do_not_have).showToast(binding.root,requireActivity())
+                            getString(R.string.do_not_have).showToast(
+                                binding.root,
+                                requireActivity()
+                            )
                         else
                             hitAPi()
                     }
@@ -289,12 +298,135 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
         }
     }
 
-    override fun onRetrofitError(responseBody: ResponseBody?) {
-        super.onRetrofitError(responseBody)
+    override fun onRetrofitError(errorCode: Int, msg: String) {
         binding.progress.clearAnimation()
         binding.progress.visibility = View.GONE
+        CommonMethods.dismissProgressDialog()
         binding.btnPreviewInvestment.text = getString(R.string.preview_exchange)
+        when (errorCode) {
+            7003 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_7003))
+            7026 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_7026))
+            7015 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_7015))
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
 
+            7000 -> {
+                val data1 =
+                    com.Lyber.dev.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.exchangeAssetFrom } }
+
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_7000, data1!!.fullName)
+                )
+                findNavController().navigate(
+                    R.id.action_add_amount_exchange_to_home_fragment
+
+                )
+            }
+
+            7001 -> {
+                val data1 =
+                    com.Lyber.dev.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.exchangeAssetTo } }
+
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_7001, data1!!.fullName)
+                )
+                findNavController().navigate(
+                    R.id.action_add_amount_exchange_to_home_fragment
+
+                )
+            }
+
+            7002 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_7002)
+                )
+                findNavController().navigate(
+                    R.id.action_add_amount_exchange_to_home_fragment
+
+                )
+            }
+
+            7018 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_7018)
+                )
+                findNavController().navigate(
+                    R.id.action_add_amount_exchange_to_home_fragment
+
+                )
+            }
+
+            7019 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_7019)
+                )
+                findNavController().navigate(
+                    R.id.action_add_amount_exchange_to_home_fragment
+
+                )
+            }
+
+            7020 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_7020)
+                )
+                findNavController().navigate(
+                    R.id.action_add_amount_exchange_to_home_fragment
+
+                )
+            }
+
+            7021 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_7021)
+                )
+                findNavController().navigate(
+                    R.id.action_add_amount_exchange_to_home_fragment
+
+                )
+            }
+
+            7022 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_7022)
+                )
+                findNavController().navigate(
+                    R.id.action_add_amount_exchange_to_home_fragment
+
+                )
+            }
+
+            7024 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_7024)
+                )
+                findNavController().navigate(
+                    R.id.action_add_amount_exchange_to_home_fragment
+
+                )
+            }
+
+            else -> super.onRetrofitError(errorCode, msg)
+        }
     }
 
     private fun hitAPi() {
@@ -320,7 +452,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                 amount.split(focusedData.currency)[0].pointFormat
             )
         } else {
-            getString(R.string.insufficient_balance).showToast(binding.root,requireActivity())
+            getString(R.string.insufficient_balance).showToast(binding.root, requireActivity())
         }
 
 
@@ -341,7 +473,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
         val numberToAssets = (valueAmount * valueInEurosFromAsset) / (valuesInEurosToAsset)
         val priceCoin = valuesInEurosToAsset
             .div(numberToAssets)
-        return numberToAssets.toString().formattedAsset(priceCoin, RoundingMode.DOWN,decimalTo)
+        return numberToAssets.toString().formattedAsset(priceCoin, RoundingMode.DOWN, decimalTo)
 
     }
 

@@ -1,7 +1,6 @@
 package com.Lyber.dev.viewmodels
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
 import com.Lyber.dev.models.MessageResponse
 import com.Lyber.dev.models.User
 import com.Lyber.dev.network.RestClient
@@ -291,17 +290,20 @@ class PersonalDataViewModel : NetworkViewModel() {
     private var _treezorCreateUser = MutableLiveData<User>()
 
 
-    fun emailVerification() {
-        try {
-            CoroutineScope(Dispatchers.Main).launch(exceptionHandler) {
-                val res = RestClient.get().checkEmailVerification()
-                if (res.isSuccessful) _emailVerificationResponse.postValue(res.body())
-                else listener?.onRetrofitError(res.errorBody())
-            }
-        } catch (e: Exception) {
-            listener?.onError()
-        }
-    }
+//    fun emailVerification() {
+//        try {
+//            CoroutineScope(Dispatchers.Main).launch(exceptionHandler) {
+//                val res = RestClient.get().checkEmailVerification()
+//                if (res.isSuccessful) _emailVerificationResponse.postValue(res.body())
+//                else {
+//
+//                    listener?.onRetrofitError(errorCode, res.errorBody())
+//                }
+//            }
+//        } catch (e: Exception) {
+//            listener?.onError()
+//        }
+//    }
 
 
 

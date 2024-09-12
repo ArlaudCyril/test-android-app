@@ -4,12 +4,12 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.core.view.marginTop
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentConfirmInvestmentBinding
 import com.Lyber.dev.ui.portfolio.fragment.PortfolioHomeFragment
+import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.Lyber.dev.utils.CommonMethods.Companion.addFragment
 import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
@@ -27,8 +27,9 @@ import com.appsflyer.AFInAppEventParameterName
 import com.appsflyer.AFInAppEventType
 import com.appsflyer.AppsFlyerLib
 import com.appsflyer.attribution.AppsFlyerRequestListener
+import okhttp3.ResponseBody
 import java.util.*
-
+//TODO from invest add money : IAM
 class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>(),
     View.OnClickListener {
 
@@ -78,7 +79,7 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
                 val eventValues = HashMap<String, Any>()
-                eventValues[AFInAppEventParameterName.CONTENT_ID] =viewModel.amount.toDouble()
+                eventValues[AFInAppEventParameterName.CONTENT_ID] = viewModel.amount.toDouble()
                 eventValues[AFInAppEventParameterName.CONTENT_TYPE] =
                     Constants.APP_FLYER_TYPE_STRATEGY_EXECUTION
                 AppsFlyerLib.getInstance().logEvent(requireContext().applicationContext,
@@ -108,14 +109,16 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         binding.apply {
             when (v!!) {
 
-                ivTopAction -> requireActivity().onBackPressed()
+                ivTopAction -> {
+                    requireActivity().onBackPressed()
+                }
 
                 btnConfirmInvestment -> {
 
                     when (viewModel.selectedOption) {
                         Constants.USING_STRATEGY -> {
                             viewModel.selectedStrategy?.let {
-                                checkInternet(binding.root,requireContext()) {
+                                checkInternet(binding.root, requireContext()) {
                                     /*frequency = "now" || "1d" || "1w" || "1m"*/
                                     val freq = when (viewModel.selectedFrequency) {
                                         "Once" -> null     //"now"
@@ -248,5 +251,107 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         }
     }
 
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        dismissProgressDialog()
+        when (errorCode) {
+            13006 -> {
+                var minInvest=""
+                try {
+                     minInvest=viewModel.selectedStrategy?.minAmount?.toFloat()!!.toString()
 
+                }catch (_:Exception){
+                }
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_13006,minInvest)
+                )
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+            7024-> {
+                //IAM
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_7024)
+                )
+                findNavController().navigate(R.id.action_confirmInvestment_to_investment_strategies)
+
+            }
+           13001 -> {
+                //IAM
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_13001)
+                )
+                findNavController().navigate(R.id.action_confirmInvestment_to_investment_strategies)
+            }
+
+            13003 -> {
+                //IAM
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_13003)
+                )
+                findNavController().navigate(R.id.action_confirmInvestment_to_investment_strategies)
+            }
+
+            13016 -> {
+                //IAM
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_13016)
+                )
+                findNavController().navigate(R.id.action_confirmInvestment_to_investment_strategies)
+            }
+
+            13017 -> {
+                //IAM
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_13017)
+                )
+                findNavController().navigate(R.id.action_confirmInvestment_to_investment_strategies)
+            }
+
+            13018 -> {
+                //IAM
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_13018)
+                )
+                findNavController().navigate(R.id.action_confirmInvestment_to_investment_strategies)
+            }
+
+            13019 -> {
+                //IAM
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_13019)
+                )
+                findNavController().navigate(R.id.action_confirmInvestment_to_investment_strategies)
+
+            }
+
+            13020 -> {
+                //IAM
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_13020)
+                )
+                findNavController().navigate(R.id.action_confirmInvestment_to_investment_strategies)
+
+            }
+
+            else ->  super.onRetrofitError(errorCode, msg)
+
+        }
+    }
 }

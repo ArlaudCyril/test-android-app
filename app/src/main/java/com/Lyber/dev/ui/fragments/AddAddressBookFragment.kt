@@ -20,6 +20,7 @@ import com.Lyber.dev.models.WithdrawAddress
 import com.Lyber.dev.ui.adapters.BaseAdapter
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.AddAddressInfoBottomSheet
 import com.Lyber.dev.utils.App
+import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.dev.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
@@ -28,6 +29,7 @@ import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.ProfileViewModel
+import okhttp3.ResponseBody
 
 
 class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
@@ -35,7 +37,7 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
 
     private lateinit var viewModel: ProfileViewModel
     private lateinit var adapter: AddressesAdapter
-    private val completeList :MutableList<WithdrawAddress> = mutableListOf()
+    private val completeList: MutableList<WithdrawAddress> = mutableListOf()
     private val keyword get() = binding.etSearch.text.trim().toString()
 
     override fun bind() = FragmentCryptoAddressBookBinding.inflate(layoutInflater)
@@ -45,7 +47,7 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             requireActivity().window.setDecorFitsSystemWindows(false)
-        }else{
+        } else {
             requireActivity().window.clearFlags(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         }
 
@@ -68,7 +70,7 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
         viewModel.deleteWhiteList.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
-                checkInternet(binding.root,requireContext()) {
+                checkInternet(binding.root, requireContext()) {
                     viewModel.getWithdrawalAddresses()
                 }
             }
@@ -87,14 +89,15 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
             findNavController().navigate(R.id.enableWhiteListingFragment)
         }
 
-        checkInternet(binding.root,requireContext()) {
+        checkInternet(binding.root, requireContext()) {
             viewModel.getWithdrawalAddresses()
         }
 
         setSearchLogic()
     }
+
     private fun setSearchLogic() {
-        binding.etSearch.addTextChangedListener(object :TextWatcher{
+        binding.etSearch.addTextChangedListener(object : TextWatcher {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
 
             }
@@ -110,10 +113,11 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
         })
 
     }
+
     private fun searchingInList(newText: String) {
-        val dummyList  :MutableList<WithdrawAddress> = mutableListOf()
-        for (ina in completeList){
-            if (ina.name!!.contains(newText,true) || ina.address!!.contains(newText,true)){
+        val dummyList: MutableList<WithdrawAddress> = mutableListOf()
+        for (ina in completeList) {
+            if (ina.name!!.contains(newText, true) || ina.address!!.contains(newText, true)) {
                 dummyList.add(ina)
             }
         }
@@ -122,12 +126,12 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
 
 
     private fun showInfo(data: WithdrawAddress) {
-        AddAddressInfoBottomSheet(true,requireActivity()) {
+        AddAddressInfoBottomSheet(true, requireActivity()) {
             if (it == 1) {
                 // delete
-                checkInternet(binding.root,requireContext()) {
-                showProgressDialog(requireContext())
-                    viewModel.deleteWhiteList(data.address!!,data.network!!)
+                checkInternet(binding.root, requireContext()) {
+                    showProgressDialog(requireContext())
+                    viewModel.deleteWhiteList(data.address!!, data.network!!)
                 }
             } else {
                 //edit
@@ -135,7 +139,7 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
                 val bundle = Bundle().apply {
                     putBoolean(Constants.TO_EDIT, true)
                 }
-                findNavController().navigate(R.id.addCryptoAddress,bundle)
+                findNavController().navigate(R.id.addCryptoAddress, bundle)
             }
         }
             .setWhiteListing(data)
@@ -149,7 +153,7 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
         override fun afterTextChanged(s: Editable?) {
-            checkInternet(binding.root,requireContext()) {
+            checkInternet(binding.root, requireContext()) {
                 adapter.setList(emptyList())
                 adapter.addProgress()
                 if (keyword.isNotEmpty())
@@ -173,7 +177,7 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
         binding.tvDurationText.text = when (App.prefsManager.withdrawalLockSecurity) {
             Constants.HOURS_72 -> getString(R.string.active_during)
             Constants.HOURS_24 -> getString(R.string.active_during)
-            else ->  getString(R.string.no_security)
+            else -> getString(R.string.no_security)
         }
 
         super.onResume()
@@ -185,7 +189,7 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
 
                 ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
                 llAddAddress -> {
-                 findNavController().navigate(R.id.addCryptoAddress)
+                    findNavController().navigate(R.id.addCryptoAddress)
                 }
 
             }
@@ -232,9 +236,9 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
 
                     itemList[position]?.let {
                         val id = it.network
-                        com.Lyber.dev.ui.activities.BaseActivity.networkAddress.firstNotNullOfOrNull{ item -> item.takeIf {item.id == id}}
-                            ?.let {
-                                    it1 -> ivItem.loadCircleCrop(it1.imageUrl);
+                        com.Lyber.dev.ui.activities.BaseActivity.networkAddress.firstNotNullOfOrNull { item -> item.takeIf { item.id == id } }
+                            ?.let { it1 ->
+                                ivItem.loadCircleCrop(it1.imageUrl);
 
                             }
                         tvStartTitle.text = it.name
@@ -252,9 +256,22 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
     override fun onDestroyView() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             requireActivity().window.setDecorFitsSystemWindows(true)
-        }else{
+        } else {
             requireActivity().window.addFlags(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
         }
         super.onDestroyView()
+    }
+
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        dismissProgressDialog()
+        when (errorCode) {
+            10025 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_10025)
+            )
+            else->  super.onRetrofitError(errorCode, msg)
+
+        }
     }
 }

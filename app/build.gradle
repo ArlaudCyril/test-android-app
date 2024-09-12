@@ -19,7 +19,7 @@ android {
         applicationId "com.Lyber.dev"
         minSdk 24
         targetSdk 34
-        versionCode 25 // as new for development
+        versionCode 27 // as new for development
         versionName "1" // on studio pushed version up to 3 and 1
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -110,7 +110,8 @@ dependencies {
 
 //    implementation 'com.ms-square:expandableTextView:0.1.4'
 
-    implementation 'com.budiyev.android:code-scanner:2.1.0'
+//    implementation 'com.budiyev.android:code-scanner:2.3.0'
+    implementation 'com.github.yuriy-budiyev:code-scanner:2.3.0'
     implementation 'com.caverock:androidsvg-aar:1.4'
 //    implementation 'com.auth0.android:jwtdecode:2.0.1'
 

@@ -27,6 +27,7 @@ import com.Lyber.dev.utils.CommonMethods.Companion.gone
 import com.Lyber.dev.utils.CommonMethods.Companion.isValidEmail
 import com.Lyber.dev.utils.CommonMethods.Companion.requestKeyboard
 import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
+import com.Lyber.dev.utils.CommonMethods.Companion.showSnack
 import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
@@ -37,6 +38,7 @@ import com.nimbusds.srp6.SRP6ClientSession
 import com.nimbusds.srp6.SRP6CryptoParams
 import com.nimbusds.srp6.SRP6VerifierGenerator
 import com.nimbusds.srp6.XRoutineWithUserIdentity
+import okhttp3.ResponseBody
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
@@ -53,6 +55,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
     lateinit var client: SRP6ClientSession
     private var resendCode = -1
     private var fromResend = false
+    private lateinit var bottomSheet: VerificationBottomSheet
 
     // Define the secret key
 
@@ -98,7 +101,6 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
             binding.ivBack.visible()
         binding.ivBack.setOnClickListener(this)
         binding.tvLoginViaEmail.setOnClickListener(this)
-        binding.tvForgotPassword.setOnClickListener(this)
         binding.tvLoginViaPhone.setOnClickListener(this)
         binding.btnNext.setOnClickListener(this)
         binding.tvForgotPassword.setOnClickListener(this)
@@ -122,7 +124,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                     client.step2(config, it.data.salt.toBigInteger(), it.data.B.toBigInteger())
 
 
-                checkInternet(binding.root,requireContext()) {
+                checkInternet(binding.root, requireContext()) {
                     viewModel.authenticateUser(creds.A.toString(), creds.M1.toString())
                 }
 
@@ -131,9 +133,17 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         viewModel.userLoginResponse.observe(viewLifecycleOwner) {
 
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+
+
                 CommonMethods.dismissProgressDialog()
                 CommonMethods.dismissAlertDialog()
                 if (it.data.access_token != null) {
+                    if (::bottomSheet.isInitialized)
+                        try {
+                            bottomSheet.dismiss()
+                        } catch (_: Exception) {
+
+                        }
                     binding.etEmail.setText("")
                     binding.etPhone.setText("")
                     binding.etPassword.setText("")
@@ -175,7 +185,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                     // Add the transparent view to the RelativeLayout
                     val mainView = getView()?.rootView as ViewGroup
                     mainView.addView(transparentView, viewParams)
-
+                    bottomSheet = vc
                 }
                 fromResend = false
             }
@@ -213,6 +223,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                     // Add the transparent view to the RelativeLayout
                     val mainView = getView()?.rootView as ViewGroup
                     mainView.addView(transparentView, viewParams)
+                    bottomSheet = vc
                 }
             }
             fromResend = false
@@ -307,7 +318,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                             etPhone.isShown -> when {
 
                                 verifyMobile() && verifyPassword() ->
-                                    checkInternet(binding.root,requireContext()) {
+                                    checkInternet(binding.root, requireContext()) {
                                         showProgressDialog(requireContext())
                                         resendCode = 1
                                         val modifiedMobile =
@@ -334,7 +345,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                             // email case
                             else -> when {
                                 verifyEmail() && verifyPassword() ->
-                                    checkInternet(binding.root,requireContext()) {
+                                    checkInternet(binding.root, requireContext()) {
                                         showProgressDialog(requireContext())
                                         resendCode = 2
                                         viewModel.email = email.lowercase()
@@ -354,7 +365,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                     else
                         when {
                             verifyMobile() ->
-                                checkInternet(binding.root,requireContext()) {
+                                checkInternet(binding.root, requireContext()) {
                                     resendCode = 3
                                     val modifiedMobile =
                                         if (mobile.startsWith("0")) mobile.removeRange(
@@ -379,7 +390,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                                         getString(
                                             R.string.you_have_to_wait,
                                             seconds.toString()
-                                        ).showToast(binding.root,requireContext())
+                                        ).showToast(binding.root, requireContext())
 
                                     }
 //                                    viewModel.setPhone(
@@ -420,12 +431,18 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         return when {
             mobile.isEmpty() -> {
                 binding.etPhone.requestKeyboard()
-                getString(R.string.please_enter_phone_number).showToast(binding.root,requireContext())
+                getString(R.string.please_enter_phone_number).showToast(
+                    binding.root,
+                    requireContext()
+                )
                 false
             }
 
             mobile.length !in 7..15 -> {
-                getString(R.string.please_enter_valid_phone_number).showToast(binding.root,requireContext())
+                getString(R.string.please_enter_valid_phone_number).showToast(
+                    binding.root,
+                    requireContext()
+                )
                 false
             }
 
@@ -437,12 +454,18 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         return when {
             email.isEmpty() -> {
                 binding.etEmail.requestKeyboard()
-                getString(R.string.please_enter_email_address).showToast(binding.root,requireContext())
+                getString(R.string.please_enter_email_address).showToast(
+                    binding.root,
+                    requireContext()
+                )
                 false
             }
 
             !isValidEmail(email) -> {
-                getString(R.string.please_enter_valid_email).showToast(binding.root,requireContext())
+                getString(R.string.please_enter_valid_email).showToast(
+                    binding.root,
+                    requireContext()
+                )
                 binding.etEmail.requestKeyboard()
                 false
             }
@@ -454,7 +477,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
     private fun verifyPassword(): Boolean {
         return when {
             password.isEmpty() -> {
-                getString(R.string.please_enter_password).showToast(binding.root,requireContext())
+                getString(R.string.please_enter_password).showToast(binding.root, requireContext())
                 binding.etPassword.requestFocus()
                 false
             }
@@ -490,9 +513,6 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                     Log.d("ViewTreeObserver", "closed")
                 } else {
                     Log.d("ViewTreeObserver", "opened")
-                    /*(requireParentFragment() as SignUpFragment).binding.apply {
-                        scrollView.smoothScrollTo(0, scrollView.height)
-                    }*/
                 }
 
                 mLastContentHeight = currentContentHeight
@@ -505,14 +525,13 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         super.onConfigurationChanged(newConfig)
 
         when (newConfig.hardKeyboardHidden) {
-            Configuration.HARDKEYBOARDHIDDEN_NO -> "closed".showToast(binding.root,requireContext())
+            Configuration.HARDKEYBOARDHIDDEN_NO -> "closed".showToast(
+                binding.root,
+                requireContext()
+            )
 
             Configuration.HARDKEYBOARDHIDDEN_YES -> {
-                "opened".showToast(binding.root,requireContext())
-                /* (requireParentFragment() as SignUpFragment).view?.findViewById<ScrollView>(R.id.scrollView)
-                     ?.let {
-                         it.smoothScrollTo(0, it.height)
-                     }*/
+                "opened".showToast(binding.root, requireContext())
             }
 
             else -> {
@@ -541,7 +560,6 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                     password
                 )
                 viewModel.userChallenge(phone = "${countryCode}$modifiedMobile")
-//
             }
 
             2 -> {
@@ -560,10 +578,6 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
 
                 viewModel.mobileNumber = modifiedMobile
                 viewModel.countryCode = countryCode
-//                val payload = """{"countryCode":${viewModel.countryCode.substring(1)},"phoneNo":${viewModel.mobileNumber}}"""
-//
-//// Generate the signature
-//                val signature = createSignature(secretKey, payload, timestamp)
                 if (canSendSms())
                     makeApiRequest()
                 else {
@@ -578,14 +592,9 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                     if (time > 0L)
                         seconds = (time / 1000) % 60
                     getString(R.string.you_have_to_wait, seconds.toString()).showToast(
-                        binding.root,requireContext()
+                        binding.root, requireContext()
                     )
-//                    getString(R.string.wait_plz).showToast(requireContext())
                 }
-//                viewModel.setPhone(
-//                    viewModel.countryCode.substring(1),
-//                    viewModel.mobileNumber
-//                )
             }
         }
     }
@@ -604,93 +613,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
             viewModel.countryCode.substring(1),
             viewModel.mobileNumber, signature, timestamp
         )
-//        val okHttpClient = RestClient.getOkHttpClient2(
-//            signature,
-//            timestamp
-//        )
-//        val requestBody = RequestBody.create(
-//            "application/json; charset=utf-8".toMediaTypeOrNull(),
-//            payload
-//        )
-//
-//        val request = Request.Builder()
-//            .url(Constants.BASE_URL + "user-service/set-phone")
-//            .post(requestBody)
-//            .build()
-//        okHttpClient.newCall(request).enqueue(object : Callback {
-//            override fun onFailure(call: Call, e: IOException) {
-//                // Handle failure
-//                activity?.runOnUiThread {
-//                    CommonMethods.dismissProgressDialog()
-//                    CommonMethods.dismissAlertDialog()
-//                    getString(R.string.unable_to_connect_to_the_server).showToast(requireContext())
-//                }
-//            }
-//
-//            override fun onResponse(call: Call, response: Response) {
-//                // Handle response
-//                if (!response.isSuccessful) {
-//                    activity?.runOnUiThread {
-//                        // Handle unsuccessful response
-//                        CommonMethods.dismissProgressDialog()
-//                        CommonMethods.dismissAlertDialog()
-////                    val errorBody = response.errorBody()?.string() ?: "Unknown error occurred"
-////                    CommonMethods.showErrorMessage(requireContext(), response.errorBody(), binding.root)
-//                    }
-//                    return
-//                }
-//                activity?.runOnUiThread {
-//                    App.prefsManager.userSmsTimestamps=System.currentTimeMillis()
-//
-//                    // Parse the response body
-//                    response.body?.let { responseBody ->
-//                        val responseData = responseBody.string()
-//                        val gson = Gson()
-//                        val it = gson.fromJson(responseData, SetPhoneResponse::class.java)
-//
-//                        if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-//                            App.prefsManager.accessToken = it.data.token
-//                            App.accessToken = it.data.token
-//                            CommonMethods.dismissProgressDialog()
-//                            CommonMethods.dismissAlertDialog()
-//                            if (!fromResend) {
-//                                val transparentView = View(context)
-//                                transparentView.setBackgroundColor(
-//                                    ContextCompat.getColor(
-//                                        requireContext(),
-//                                        R.color.semi_transparent_dark
-//                                    )
-//                                )
-//
-//                                // Set layout parameters for the transparent view
-//                                val viewParams = RelativeLayout.LayoutParams(
-//                                    RelativeLayout.LayoutParams.MATCH_PARENT,
-//                                    RelativeLayout.LayoutParams.MATCH_PARENT
-//                                )
-//
-//                                val vc = VerificationBottomSheet(::handle)
-//
-//                                vc.viewToDelete = transparentView
-//                                vc.mainView = getView()?.rootView as ViewGroup
-//                                vc.viewModel = viewModel
-//                                vc.fromSignUp = true
-//                                vc.show(childFragmentManager, "")
-//
-//                                // Add the transparent view to the RelativeLayout
-//                                val mainView = getView()?.rootView as ViewGroup
-//                                mainView.addView(transparentView, viewParams)
-//                            } else
-//                                resendCodeParam!!.onResend()
-//
-//                        }
-//                        fromResend = false
-//                    }
-//                }
-//            }
-//        })
-
     }
-
 
     fun createSignature(secretKey: String, payload: String, timestamp: String): String {
         val message = "$timestamp.$payload"
@@ -702,4 +625,145 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         return hash.joinToString("") { String.format("%02x", it) }
     }
 
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        CommonMethods.dismissProgressDialog()
+        CommonMethods.dismissAlertDialog()
+
+        when (errorCode) {
+            1 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_1))
+            }
+
+            3 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_3))
+            }
+
+            10 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_10))
+            11 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_11))
+            12 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_12))
+            14 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_14))
+            15 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_15)
+                )
+            }
+
+            16 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_16))
+            18 -> bottomSheet.showErrorOnBottomSheet(18)
+            20 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_20)
+                )
+            }
+
+            24 -> bottomSheet.showErrorOnBottomSheet(24)
+            26 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_26))
+            28 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_28))
+            29 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_29))
+            30 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_30))
+            34 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_34)
+                )
+            }
+
+            35 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_35)
+                )
+            }
+
+            37 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_37))
+            38 -> bottomSheet.showErrorOnBottomSheet(38)
+            39 -> bottomSheet.showErrorOnBottomSheet(39)
+            40 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_40))
+            41 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_41))
+            42 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_42)
+                )
+            }
+
+            43 -> bottomSheet.showErrorOnBottomSheet(43)
+            45 -> bottomSheet.showErrorOnBottomSheet(45)
+            50 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_50))
+            53 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_53)
+                )
+            }
+
+            else -> super.onRetrofitError(errorCode, msg)
+
+
+        }
+    }
 }

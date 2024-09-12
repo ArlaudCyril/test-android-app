@@ -2,13 +2,11 @@ package com.Lyber.dev.ui.portfolio.bottomSheetFragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,8 +18,6 @@ import com.Lyber.dev.databinding.LoaderViewBinding
 import com.Lyber.dev.models.Transaction
 import com.Lyber.dev.ui.adapters.BaseAdapter
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.BaseBottomSheet
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.dev.utils.CommonMethods.Companion.decimalPoints
@@ -276,8 +272,8 @@ class PortfolioBalanceBottomSheet(private val clickListener: (BalanceInfo) -> Un
         }
     }
 
-    override fun onRetrofitError(responseBody: ResponseBody?) {
-        super.onRetrofitError(responseBody)
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        super.onRetrofitError(errorCode, msg)
         dismissProgress()
         dismissAlertDialog()
     }

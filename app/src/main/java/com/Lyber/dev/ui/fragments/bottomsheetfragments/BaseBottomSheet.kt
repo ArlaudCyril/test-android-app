@@ -118,16 +118,19 @@ abstract class BaseBottomSheet<viewBinding : ViewBinding> : BottomSheetDialogFra
             }
         }
 
-    override fun onRetrofitError(responseBody: ResponseBody?) {
+    override fun onRetrofitError(errorCode: Int, msg: String) {
         CommonMethods.dismissProgressDialog()
         CommonMethods.dismissAlertDialog()
         LoaderObject.hideLoader()
-        val code = CommonMethods.showErrorMessage(requireContext(), responseBody, binding.root)
-        Log.d("errorCode", "$code")
-        if (code == 7023 || code == 10041 || code == 7025 || code == 10043)
-            customDialog(code)
+        handleCommonErrors(errorCode, msg)
     }
-
+    private fun handleCommonErrors(errorCode: Int, msg: String) {
+        when (errorCode) {
+            7023, 10041 -> customDialog(7023)
+            7025, 10043 -> customDialog(7025)
+            else -> CommonMethods.showError(errorCode, requireContext(), msg, binding.root)
+        }
+    }
     override fun onError() {
         CommonMethods.dismissProgressDialog()
         "Error occurred!".showToast(binding.root,requireContext())

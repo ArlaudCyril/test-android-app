@@ -2,11 +2,8 @@ package com.Lyber.dev.ui.fragments
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.findNavController
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentConfirmPinBinding
-import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.dev.utils.CommonMethods.Companion.requestKeyboard
@@ -75,8 +72,9 @@ class ConfirmNewPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
         }
     }
 
-    override fun onRetrofitError(responseBody: ResponseBody?) {
+    override fun onRetrofitError(errorCode: Int, msg: String) {
           clearField()
+        super.onRetrofitError(errorCode,msg)
     }
 
 

@@ -17,6 +17,7 @@ import com.Lyber.dev.databinding.FragmentChangePasswordBinding
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.VerificationBottomSheet
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
+import com.Lyber.dev.utils.CommonMethods.Companion.showSnack
 import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.SignUpViewModel
@@ -24,6 +25,7 @@ import com.nimbusds.srp6.SRP6ClientSession
 import com.nimbusds.srp6.SRP6CryptoParams
 import com.nimbusds.srp6.SRP6VerifierGenerator
 import com.nimbusds.srp6.XRoutineWithUserIdentity
+import okhttp3.ResponseBody
 import java.math.BigInteger
 
 
@@ -35,6 +37,8 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
     lateinit var generator: SRP6VerifierGenerator
     lateinit var client: SRP6ClientSession
     private var resendCode = false
+    private lateinit var bottomSheet: VerificationBottomSheet
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = CommonMethods.getViewModel(this)
@@ -79,12 +83,20 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
                     // Add the transparent view to the RelativeLayout
                     val mainView = getView()?.rootView as ViewGroup
                     mainView.addView(transparentView, viewParams)
+                    bottomSheet = vc
                 }
                 resendCode = false
             }
         }
         viewModel.exportOperationResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
                 CommonMethods.dismissProgressDialog()
                 getString(R.string.pass_changed_success).showToast(binding.root, requireContext())
                 requireActivity().onBackPressedDispatcher.onBackPressed()
@@ -190,7 +202,7 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
     }
 
     private fun handle(txt: String) {
-        CommonMethods.checkInternet(binding.root,requireActivity()) {
+        CommonMethods.checkInternet(binding.root, requireActivity()) {
             resendCode = true
             viewModel.getPasswordChangeChallenge()
         }
@@ -201,28 +213,10 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
             when (v) {
                 ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
                 btnSavePass -> {
-//                    val snackbar = Snackbar.make(binding.root, "", Snackbar.LENGTH_LONG)
-//                    val params = snackbar.view.layoutParams as FrameLayout.LayoutParams
-//                    params.gravity = Gravity.TOP
-//                    params.setMargins(0, 0, 0, 0)
-//                    snackbar.view.layoutParams = params
-//
-//                    snackbar.animationMode = BaseTransientBottomBar.ANIMATION_MODE_FADE
-//                    val layout = snackbar.view as Snackbar.SnackbarLayout
-//                    val textView =
-//                        layout.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-//                    textView.visibility = View.INVISIBLE
-//                    val snackView =
-//                        LayoutInflater.from(context).inflate(R.layout.custom_snackbar, null)
-//                    val textViewMsg = snackView.findViewById<TextView>(R.id.tvMsg)
-//                    layout.setPadding(0, 0, 0, 0)
-//                    layout.addView(snackView, 0)
                     if (buttonClicked) {
                         if (binding.etPasswordOld.text.trim().toString()
                                 .equals(binding.etPassword.text.trim().toString())
                         ) {
-//                            textViewMsg.text= getString(R.string.new_pass_cannot_be_same_as_old)
-//                            snackbar.show()
                             getString(R.string.new_pass_cannot_be_same_as_old).showToast(
                                 binding.root,
                                 requireContext()
@@ -230,14 +224,12 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
                         } else if (!binding.etPassword.text.trim().toString()
                                 .equals(binding.etPasswordConfirm.text.trim().toString())
                         ) {
-//                            textViewMsg.text= getString(R.string.pass_should_be_same)
-//                            snackbar.show()
                             getString(R.string.pass_should_be_same).showToast(
                                 binding.root,
                                 requireContext()
                             )
                         } else {
-                            CommonMethods.checkInternet(binding.root,requireActivity()) {
+                            CommonMethods.checkInternet(binding.root, requireActivity()) {
                                 CommonMethods.showProgressDialog(requireContext())
                                 viewModel.getPasswordChangeChallenge()
                             }
@@ -248,6 +240,65 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
             }
         }
 
+    }
+
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        CommonMethods.dismissProgressDialog()
+        CommonMethods.dismissAlertDialog()
+        when (errorCode) {
+            13 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_13))
+            14 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_14))
+            18 -> bottomSheet.showErrorOnBottomSheet(18)
+            26 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_26))
+            }
+            34 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_34))
+            }
+            35 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_35))
+            }
+            37 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_37))
+            40 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_40))
+            41 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_41))
+            42 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_42))
+            }
+            24 -> bottomSheet.showErrorOnBottomSheet(24)
+            38 -> bottomSheet.showErrorOnBottomSheet(38)
+            39 -> bottomSheet.showErrorOnBottomSheet(39)
+            43 -> bottomSheet.showErrorOnBottomSheet(43)
+            45 -> bottomSheet.showErrorOnBottomSheet(45)
+            else -> super.onRetrofitError(errorCode, msg)
+        }
     }
 
 }

@@ -22,6 +22,7 @@ import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.au.countrycodepicker.CountryPicker
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import okhttp3.ResponseBody
 
 
 class AddRibFragment : BaseFragment<FragmentAddRibBinding>(), OnClickListener {
@@ -183,4 +184,23 @@ class AddRibFragment : BaseFragment<FragmentAddRibBinding>(), OnClickListener {
         val regex = Regex("^[a-zA-Z\\s-]+$")
         return regex.matches(input)
     }
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        when ( errorCode ) {
+            10050 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_10050)
+            )
+
+            10051 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_10051)
+            )
+
+            else->         super.onRetrofitError(errorCode, msg)
+
+        }
+    }
+
 }

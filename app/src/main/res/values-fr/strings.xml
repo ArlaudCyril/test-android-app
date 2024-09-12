@@ -25,8 +25,8 @@
     <string name="confirm_pin">Confirmer le code PIN</string>
     <string name="title_activity_scrolling">ScrollingActivity</string>
     <string name="action_settings">Paramètres</string>
-    <string name="activate_face_id">Activer Face ID / la biométrie</string>
-    <string name="activate_face_message">Accédez à Lyber rapidement en vous connectant avec Face ID / la biométrie.</string>
+    <string name="activate_face_id">Activer Face ID / Biométrie</string>
+    <string name="activate_face_message">Accédez à Lyber rapidement en vous connectant avec Face ID / Biométrie.</string>
     <string name="decline">Refuser</string>
     <string name="activate">Activer</string>
     <string name="choose_strategy">Choisir une stratégie</string>
@@ -414,7 +414,7 @@
     <string name="whitelisting_disabled">Liste blanche Désactivée</string>
     <string name="whitelisting_enabled">Liste blanche Activée</string>
     <string name="change_pin">Changer de code PIN</string>
-    <string name="face_id">Identification du visage</string>
+    <string name="face_id">Face ID / Biométrie</string>
     <string name="asset_name">Nom de l\'actif</string>
     <string name="asset_deposit">Dépôt d\'actifs</string>
     <string name="crypto">Crypto</string>
@@ -429,7 +429,7 @@
     <string name="all_my_portfolio">Tout mon portefeuille</string>
     <string name="lyber_portfolio">Portefeuille Lyber</string>
     <string name="list_of_all_operations_purchase_exchange_or_withdrawal_made_on_your_account">Liste de toutes les opérations (achat, échange ou retrait) effectuées sur votre compte.</string>
-    <string name="use_biometric">Utiliser l\'identification faciale</string>
+    <string name="use_biometric">Utiliser Face ID / Biométrie</string>
     <string name="enter_your_pin">Entrez votre code PIN</string>
     <string name="edit_personal_info">Modifier les informations personnelles</string>
     <string name="start">Démarrer</string>
@@ -750,7 +750,7 @@
     <string name="withdrawal_security_settings">Paramètres de sécurité de retrait</string>
     <string name="you_donot_have_active_strategy">Vous n\'avez pas encore de stratégie active</string>
     <string name="activate_create"><u>Activer</u>/<u>créer un maintenant</u></string>
-    <string name="use_face_id">Utiliser Face Id / la biométrie</string>
+    <string name="use_face_id">Utiliser Face Id / Biométrie</string>
     <string name="on_my_crypto_wallet">Sur mon portefeuille crypto</string>
     <string name="on_my_bank_account">Sur mon compte bancaire</string>
     <string name="withdraw_on_my_bank_account">Retirer sur mon compte bancaire</string>
@@ -810,4 +810,119 @@
     <string name="amount_invested_is_insufficient">Le montant que vous avez investi dans cette stratégie est insuffisant. Pour activer cette stratégie, vous devez augmenter votre montant actuel (%1$s USDC) à %2$s USDC. \n
         Acceptez-vous d\'augmenter votre montant à investir ?</string>
     <string name="authenticate">Authentifier</string>
+
+    <!--    error messages-->
+
+    <string name="error_code_1_negative">Un problème s\'est produit, veuillez réessayer ou contacter le service d\'assistance.</string>
+    <string name="error_code_1">Un compte existe déjà avec ce numéro de téléphone.</string>
+    <string name="error_code_3">Nous avons rencontré un problème lors de la procédure de vérification. Veuillez réessayer.</string>
+    <string name="error_code_5">Un compte existe déjà avec cette adresse e-mail.</string>
+    <string name="error_code_6">Nous avons rencontré un problème lors de la vérification. Veuillez réessayer.</string>
+    <string name="error_code_7">Nous avons rencontré un problème lors de la vérification. Veuillez réessayer.</string>
+    <string name="error_code_8">Impossible de créer un compte car votre numéro de téléphone n\'est pas vérifié, veuillez réessayer.</string>
+    <string name="error_code_9">Impossible de créer un compte car votre adresse e-mail n\'est pas vérifiée, veuillez réessayer.</string>
+    <string name="error_code_10">Aucun compte n\'existe avec cette adresse e-mail.</string>
+    <string name="error_code_11">Aucun compte n\'existe pour ce numéro de téléphone.</string>
+    <string name="error_code_12">Votre compte a été bloqué. Si vous avez besoin d\'aide, veuillez contacter l\'assistance sur notre site web.</string>
+    <string name="error_code_13">Un problème est survenu, veuillez réessayer.</string>
+    <string name="error_code_14">Mot de passe incorrect.</string>
+    <string name="error_code_15">Un problème s\'est produit, veuillez réessayer.</string>
+    <string name="error_code_16">Il n\'existe pas de compte pour cet utilisateur. Veillez à terminer votre inscription.</string>
+    <string name="error_code_18">Ce code de vérification a déjà été utilisé.</string>
+    <string name="error_code_20">Le 2FA n\'est pas actif sur votre compte.</string>
+    <string name="error_code_24">Le code que vous avez saisi est incorrect.</string>
+    <string name="error_code_26">Nous n\'avons pas trouvé votre compte, si vous avez besoin d\'aide, veuillez contacter le support.</string>
+    <string name="error_code_27">Impossible de créer un compte car certaines informations sont manquantes, veuillez réessayer.</string>
+    <string name="error_code_28">Un problème est survenu, veuillez essayer de vous connecter à nouveau.</string>
+    <string name="error_code_29">Un problème est survenu, veuillez essayer de vous connecter à nouveau.</string>
+    <string name="error_code_30">Un problème est survenu, veuillez essayer de vous connecter à nouveau.</string>
+    <string name="error_code_34">Un problème est survenu, veuillez réessayer.</string>
+    <string name="error_code_35">Vous avez soumis trop de codes de vérification erronés aujourd\'hui. Contactez le support si ce n\'est pas vous.</string>
+    <string name="error_code_37">Il semble y avoir un problème de configuration avec votre 2FA, veuillez contacter le support.</string>
+    <string name="error_code_38">Ce code de vérification a expiré.</string>
+    <string name="error_code_39">Vous utilisez peut-être un code qui ne correspond pas à cette action.</string>
+    <string name="error_code_40">Nous n\'avons pas pu vous envoyer le code de vérification, veuillez contacter le support si vous avez besoin d\'aide.</string>
+    <string name="error_code_41">Nous n\'avons pas été en mesure de vous envoyer le code de vérification, veuillez contacter le support si vous avez besoin d\'aide.</string>
+    <string name="error_code_42">Il semble y avoir un problème de configuration avec votre Google Auth 2FA, veuillez contacter le support.</string>
+    <string name="error_code_43">Le code que vous avez saisi est incorrect.</string>
+    <string name="error_code_44">Votre authentification Google 2FA est déjà configurée.</string>
+    <string name="error_code_45">Vous devez entrer un code de vérification pour effectuer cette action.</string>
+    <string name="error_code_48">Ce lien de réinitialisation de mot de passe a déjà été utilisé.</string>
+    <string name="error_code_50">Il semble y avoir un problème de configuration avec votre 2FA, veuillez contacter le support.</string>
+    <string name="error_code_52">Nous avons détecté que votre compte a déjà été créé, veuillez essayer de vous connecter.</string>
+    <string name="error_code_53">Nous n\'avons pas pu vérifier l\'intégrité de votre mot de passe, veuillez essayer de vous connecter à nouveau.</string>
+    <string name="error_code_57">La période de blocage du retrait n\'a pas expiré, veuillez réessayer plus tard.</string>
+
+    <string name="error_code_1000">Nous n\'avons pas pu obtenir le prix de l\'actif, veuillez réessayer.</string>
+
+    <string name="error_code_3000">L\'actif que vous essayez de %1$s n\'est pas disponible, veuillez contacter le support si vous avez besoin d\'aide.</string>
+    <string name="error_code_3006">Les actifs Fiat n\'ont pas de réseaux.</string>
+
+    <string name="error_code_7000">%1$s est actuellement désactivé pour le trading.</string>
+    <string name="error_code_7001">%1$s est actuellement désactivé pour le trading.</string>
+    <string name="error_code_7002">Vous n\'êtes pas autorisé à effectuer des transactions. Si vous avez une question, veuillez nous contacter via le formulaire de contact.</string>
+    <string name="error_code_7003">Vous n\'avez pas assez de fonds pour exécuter cet ordre.</string>
+    <string name="error_code_7006">Un problème est survenu, veuillez réessayer.</string>
+    <string name="error_code_7007">Cette ordre a été perdue. Si vous avez besoin d\'aide, veuillez nous contacter via le formulaire de contact.</string>
+    <string name="error_code_7008">Cette cotation a déjà été acceptée.</string>
+    <string name="error_code_7009">Cette cotation a déjà été annulé.</string>
+    <string name="error_code_7010">Cette cotation a expiré, veuillez réessayer.</string>
+    <string name="error_code_7014">L\'achat de USDC est temporairement indisponible, veuillez réessayer plus tard.</string>
+    <string name="error_code_7015">Les actifs que vous essayez d\'échanger doivent être différents.</string>
+    <string name="error_code_7018">Vous avez atteint le nombre maximum de cotations échouées pour la journée, réessayez demain.</string>
+    <string name="error_code_7019">Il semble y avoir eu un problème lors de la création de votre compte. Veuillez contacter le support.</string>>
+    <string name="error_code_7020">Votre compte est bloqué pour une durée indéterminée, pour plus d\'informations veuillez contacter le support.</string>
+    <string name="error_code_7021">Votre compte est fermé, veuillez en créer un nouveau pour accéder à nos services.</string>
+    <string name="error_code_7022">Votre compte est bloqué pour une durée indéterminée, pour plus d\'informations veuillez contacter le support.</string>
+    <string name="error_code_7024">Nous sommes en train de vérifier votre identité, veuillez réessayer plus tard.</string>
+    <string name="error_code_7026">Le montant que vous essayez d\'échanger ne respecte pas le format correct.</string>
+    <string name="error_code_7027">Le montant minimum d\'achat pour l\'USDC est de 20 euros.</string>
+
+
+    <string name="error_code_10001">Cette adresse n\'est pas sur la liste blanche. Vous n\'êtes pas autorisé à retirer sur cette adresse.</string>
+    <string name="error_code_10005">Vous ne pouvez pas retirer plus d\'argent que vous n\'en avez.</string>
+    <string name="error_code_10009">Vous n\'êtes pas autorisé à effectuer des retraits. Si vous avez besoin d\'aide, veuillez contacter le support.</string>
+    <string name="error_code_10012">%1$s est actuellement indisponible, veuillez contacter le support ou réessayer plus tard.</string>
+    <string name="error_code_10013">Le %1$s sur le réseau %2$s pour l\'actif %3$s n\'est pas disponible.</string>
+    <string name="error_code_10018">Les retraits sont actuellement indisponibles pour cet actif.</string>
+    <string name="error_code_10021">Le montant minimum de retrait est %1$s</string>
+    <string name="error_code_10022">Un OTP était attendu.</string>
+    <string name="error_code_10023">Vous n\'êtes pas autorisé à effectuer des dépôts. Si vous avez besoin d\'aide, veuillez contacter le support.</string>
+    <string name="error_code_10024">Le réseau %1$s est actuellement indisponible, veuillez choisir un autre réseau ou réessayer plus tard.</string>
+    <string name="error_code_10025">Nous ne trouvons pas l\'adresse que vous souhaitez supprimer.</string>
+    <string name="error_code_10028">Le format de l\'adresse ne correspond pas au format attendu pour le réseau %1$s.</string>
+    <string name="error_code_10030">Seuls les actifs crypto sont pris en charge.</string>
+    <string name="error_code_10032">La période de blocage des retraits n\'a pas expiré, veuillez réessayer plus tard.</string>
+    <string name="error_code_10033">Nous n\'avons pas pu obtenir le prix de l\'actif, veuillez réessayer.</string>
+    <string name="error_code_10034">Votre compte est fermé, veuillez en créer un nouveau pour accéder à nos services.</string>
+    <string name="error_code_10035">Votre compte est bloqué pour une durée indéterminée, pour plus d\'informations veuillez contacter le support.</string>
+    <string name="error_code_10036">Il semble y avoir eu un problème lors de la création de votre compte. Veuillez contacter le support.</string>
+    <string name="error_code_10037">Votre compte est bloqué pour une durée indéterminée, pour plus d\'informations veuillez contacter le support.</string>
+    <string name="error_code_10042">Nous sommes en train de vérifier votre identité, veuillez réessayer plus tard.</string>
+    <string name="error_code_10044">Le RIB que vous essayez d\'utiliser ne figure pas dans notre registre de RIB validé.</string>
+    <string name="error_code_10045">Le RIB que vous essayez d\'utiliser ne correspond pas à celui que nous avons validé.</string>
+    <string name="error_code_10048">L\'adresse que vous essayez d\'ajouter existe déjà.</string>
+    <string name="error_code_10050">Un de vos RIB porte déjà ce nom.</string>
+    <string name="error_code_10051">Un de vos RIB a déjà cet IBAN.</string>
+
+
+
+    <string name="error_code_13001">Impossible de trouver la stratégie, veuillez réessayer ou contacter le support.</string>
+    <string name="error_code_13003">Impossible de trouver la stratégie, veuillez réessayer ou contacter le support.</string>
+    <string name="error_code_13006">Cette stratégie requiert un investissement minimum de %1$s USDC.</string>
+    <string name="error_code_13009">Vous ne pouvez pas entrer le même actif deux fois dans une stratégie.</string>
+    <string name="error_code_13010">La somme des pourcentages ne peut pas dépasser 100%.</string>
+    <string name="error_code_13011">L\'un des actifs que vous essayez de négocier n\'est pas disponible.</string>
+    <string name="error_code_13012">L\'un des actifs que vous essayez de négocier n\'est pas disponible.</string>
+    <string name="error_code_13013">La somme des pourcentages ne peut être inférieure à 100%.</string>
+    <string name="error_code_13015">Vous ne pouvez pas investir en USDC en utilisant une stratégie.</string>
+    <string name="error_code_13016">Vous n\'êtes pas autorisé à exécuter la stratégie. Si vous avez une question, veuillez nous contacter via le formulaire de contact.</string>
+    <string name="error_code_13017">Il semble qu\'il y ait eu un problème lors de la création de votre compte. Veuillez contacter le support.</string>
+    <string name="error_code_13018">Votre compte est bloqué pour une durée indéterminée, pour plus d\'informations veuillez contacter le support.</string>
+    <string name="error_code_13019">Votre compte est fermé, veuillez en créer un nouveau pour accéder à nos services.</string>
+    <string name="error_code_13020">Votre compte est bloqué pour une durée indéterminée, pour plus d\'informations veuillez contacter le support.</string>
+
+    <string name="error_code_15002">Un problème est survenu, veuillez réessayer ou contacter l\'assistance.</string>
+
+    <string name="error_code_18000">Ce réseau semble être indisponible, veuillez contacter le support si vous avez besoin d\'aide.</string>
 </resources>

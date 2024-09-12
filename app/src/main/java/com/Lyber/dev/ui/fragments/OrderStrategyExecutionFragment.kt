@@ -31,10 +31,6 @@ import com.Lyber.dev.utils.CommonMethods.Companion.gone
 import com.Lyber.dev.utils.CommonMethods.Companion.loadCircleCrop
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
-import com.appsflyer.AFInAppEventParameterName
-import com.appsflyer.AFInAppEventType
-import com.appsflyer.AppsFlyerLib
-import com.appsflyer.attribution.AppsFlyerRequestListener
 import okhttp3.ResponseBody
 import java.math.RoundingMode
 
@@ -204,8 +200,8 @@ class OrderStrategyExecutionFragment : BaseFragment<FragmentOrderStrategyExecuti
         }
     }
 
-    override fun onRetrofitError(responseBody: ResponseBody?) {
-        super.onRetrofitError(responseBody)
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        super.onRetrofitError(errorCode, msg)
         stopRepeatingTask()
     }
 

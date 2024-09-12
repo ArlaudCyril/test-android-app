@@ -11,8 +11,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentConfirmInvestmentBinding
+import com.Lyber.dev.models.AssetBaseData
 import com.Lyber.dev.models.DataQuote
-import com.Lyber.dev.network.RestClient
 import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
@@ -20,18 +20,21 @@ import com.Lyber.dev.utils.CommonMethods.Companion.gone
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.google.gson.Gson
+import okhttp3.ResponseBody
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.Locale
 
-
+//TODO from confirmExchange
 class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>(),
-    View.OnClickListener, RestClient.OnRetrofitError {
+    View.OnClickListener {
     private var timer = 25
 
     private var isExpand = false
     private var orderId: String = ""
     private lateinit var viewModel: PortfolioViewModel
+    private lateinit var fromAsset : AssetBaseData
+    private lateinit var toAsset : AssetBaseData
     override fun bind() = FragmentConfirmInvestmentBinding.inflate(layoutInflater)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -87,7 +90,20 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
     override fun onClick(v: View?) {
         binding.apply {
             when (v!!) {
-                ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
+                ivTopAction -> {
+//                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                    CommonMethods.showSnack(
+                        binding.root,
+                        requireContext(),
+                        getString(R.string.error_code_7015)
+                    )
+                    viewModel.exchangeAssetFrom = fromAsset.id
+                    val bundle = Bundle()
+                    bundle.putString(Constants.TYPE, Constants.Exchange)
+                    findNavController().navigate(R.id.action_confirmExchangeFragment_to_all_asset_fragment,bundle)
+
+                }
+
                 btnConfirmInvestment -> {
                     viewModel.selectedAsset = CommonMethods.getAsset(viewModel.exchangeAssetTo!!)
                     val bundle = Bundle().apply {
@@ -126,11 +142,12 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
     @SuppressLint("SetTextI18n")
     private fun prepareView(data: DataQuote?) {
         binding.apply {
-            var assetTo =
+            val assetTo =
                 com.Lyber.dev.ui.activities.BaseActivity.assets.find { it1 -> it1.id == data!!.toAsset }
-            var assetFrom =
+            val assetFrom =
                 com.Lyber.dev.ui.activities.BaseActivity.assets.find { it1 -> it1.id == data!!.fromAsset }
-
+            fromAsset = assetFrom!!
+//            toAsset = assetTo!!
             tvNestedAmount.text = getString(R.string.ratio)
             val balance =
                 com.Lyber.dev.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
@@ -250,5 +267,158 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
         }
     }
 
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        when (errorCode) {
+            7006 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_7006)
+                )
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
 
+            7010 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_7010)
+                )
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
+            7007 -> {
+                //FromExch
+                viewModel.selectedAsset = CommonMethods.getAsset(viewModel.exchangeAssetTo!!)
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_7007)
+                )
+                findNavController().navigate(R.id.action_confirmExchangeFragment_to_deatil_fragment)
+            }
+
+            7008 -> {
+                //FromExch
+                viewModel.selectedAsset = CommonMethods.getAsset(viewModel.exchangeAssetTo!!)
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_7008)
+                )
+                findNavController().navigate(R.id.action_confirmExchangeFragment_to_deatil_fragment)
+            }
+
+            7009 -> {
+                //FromExch
+                viewModel.selectedAsset = CommonMethods.getAsset(viewModel.exchangeAssetTo!!)
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_7009)
+                )
+                findNavController().navigate(R.id.action_confirmExchangeFragment_to_deatil_fragment)
+            }
+
+            7000 -> {
+                val data1 =
+                    com.Lyber.dev.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.exchangeAssetFrom } }
+
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_7000, data1!!.fullName)
+                )
+                findNavController().navigate(R.id.action_confirmExchangeFragment_to_home_fragment)
+
+            }
+
+            7001 -> {
+                val data1 =
+                    com.Lyber.dev.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.exchangeAssetTo } }
+
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_7001, data1!!.fullName)
+                )
+                findNavController().navigate(R.id.action_confirmExchangeFragment_to_home_fragment)
+
+            }
+
+            7002 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_7002)
+                )
+                findNavController().navigate(R.id.action_confirmExchangeFragment_to_home_fragment)
+            }
+
+            7018 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_7018)
+                )
+                findNavController().navigate(R.id.action_confirmExchangeFragment_to_home_fragment)
+            }
+
+            7019 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_7019)
+                )
+                findNavController().navigate(R.id.action_confirmExchangeFragment_to_home_fragment)
+            }
+
+            7020 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_7020)
+                )
+                findNavController().navigate(R.id.action_confirmExchangeFragment_to_home_fragment)
+            }
+
+            7021 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_7021)
+                )
+                findNavController().navigate(R.id.action_confirmExchangeFragment_to_home_fragment)
+            }
+
+            7022 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_7022)
+                )
+                findNavController().navigate(R.id.action_confirmExchangeFragment_to_home_fragment)
+
+            }
+
+            7024 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_7024)
+                )
+                findNavController().navigate(R.id.action_confirmExchangeFragment_to_home_fragment)
+
+            }
+            7015 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_7015)
+                )
+                findNavController().navigate(R.id.action_confirmExchangeFragment_to_all_asset_fragment)
+            }
+            else ->   super.onRetrofitError(errorCode, msg)
+        }
+    }
 }

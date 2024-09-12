@@ -47,6 +47,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
     private var addressId: String = ""
     private var activate: Boolean = false
     private var decimal: Int = 3
+    private lateinit var assetIdWithdraw: String
     private val addresses: MutableList<WithdrawAddress> = mutableListOf()
     private val amount get() = binding.etAmount.text.trim().toString()
 
@@ -72,11 +73,12 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
         binding.ivMax.setOnClickListener(this)
         binding.btnPreviewInvestment.setOnClickListener(this)
         decimal = viewModel.selectedNetworkDeposit!!.decimals
-
+        if (arguments != null && requireArguments().containsKey("assetIdWithdraw"))
+            assetIdWithdraw = requireArguments().getString("assetIdWithdraw").toString()
         prepareView()
         setObservers()
         binding.etAmount.addTextChangedListener(textOnTextChange)
-        CommonMethods.checkInternet(binding.root,requireActivity()) {
+        CommonMethods.checkInternet(binding.root, requireActivity()) {
             CommonMethods.showProgressDialog(requireActivity())
             viewModel.getWithdrawalAddresses()
         }
@@ -345,40 +347,60 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                         com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
 
                     if (balance == null) {
-                        getString(R.string.you_do_not_have_this_asset).showToast(binding.root,requireActivity())
+                        getString(R.string.you_do_not_have_this_asset).showToast(
+                            binding.root,
+                            requireActivity()
+                        )
                     } else if (activate) {
                         if (focusedData.currency.contains(mCurrency)) {
                             if (maxValueAsset <= balance.balanceData.balance.toDouble()) {
                                 if (viewModel.withdrawAddress != null) {
                                     val bundle = Bundle().apply {
                                         putString(Constants.EURO, amountFinal)
+                                        putString("assetIdWithdraw", assetIdWithdraw)
                                     }
                                     findNavController().navigate(
                                         R.id.confirmWithdrawalFragment, bundle
                                     )
                                 } else {
-                                    getString(R.string.select_address).showToast(binding.root,requireActivity())
+                                    getString(R.string.select_address).showToast(
+                                        binding.root,
+                                        requireActivity()
+                                    )
                                 }
                             } else {
-                                getString(R.string.insufficient_balance).showToast(binding.root,requireActivity())
+                                getString(R.string.insufficient_balance).showToast(
+                                    binding.root,
+                                    requireActivity()
+                                )
                             }
                         } else if (focusedData.currency.contains(mConversionCurrency)) {
                             if (maxValueAsset <= maxValue) {
                                 if (viewModel.withdrawAddress != null) {
                                     val bundle = Bundle().apply {
                                         putString(Constants.EURO, amountFinal)
+                                        putString("assetIdWithdraw", assetIdWithdraw)
                                     }
                                     findNavController().navigate(
                                         R.id.confirmWithdrawalFragment, bundle
                                     )
                                 } else {
-                                    getString(R.string.select_address).showToast(binding.root,requireActivity())
+                                    getString(R.string.select_address).showToast(
+                                        binding.root,
+                                        requireActivity()
+                                    )
                                 }
                             } else {
-                                getString(R.string.insufficient_balance).showToast(binding.root,requireActivity())
+                                getString(R.string.insufficient_balance).showToast(
+                                    binding.root,
+                                    requireActivity()
+                                )
                             }
                         } else {
-                            getString(R.string.insufficient_balance).showToast(binding.root,requireActivity())
+                            getString(R.string.insufficient_balance).showToast(
+                                binding.root,
+                                requireActivity()
+                            )
                         }
                     }
                 }
@@ -388,7 +410,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                         requireActivity().getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager?
                     val clip = ClipData.newPlainText("label", addressId)
                     clipMan?.setPrimaryClip(clip)
-                    getString(R.string.copied).showToast(binding.root,requireContext())
+                    getString(R.string.copied).showToast(binding.root, requireContext())
                 }
             }
         }
@@ -587,7 +609,8 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                 binding.etAmount.text = ("${valueTwo}$mCurrency")
             } else {
                 val valueTwo = assetConversion.replace(mCurrency, "")
-                    .replace("~", "").pointFormat.decimalPoint().formattedAsset(1.06, RoundingMode.DOWN, decimal)
+                    .replace("~", "").pointFormat.decimalPoint()
+                    .formattedAsset(1.06, RoundingMode.DOWN, decimal)
                 binding.etAmount.text = ("${valueTwo}$mCurrency")
             }
             setAssetAmount(valueOne)

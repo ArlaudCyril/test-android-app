@@ -13,12 +13,15 @@ import com.Lyber.dev.databinding.FragmentManageWhitelistingBinding
 import com.Lyber.dev.databinding.ItemExtraSecurityBinding
 import com.Lyber.dev.ui.adapters.BaseAdapter
 import com.Lyber.dev.utils.App
+import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.dev.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
+import com.Lyber.dev.utils.CommonMethods.Companion.showSnack
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.NetworkViewModel
+import okhttp3.ResponseBody
 
 class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBinding>() {
 
@@ -43,7 +46,7 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
                     1 -> Constants.HOURS_24
                     else -> Constants.NO_EXTRA_SECURITY
                 }
-                App.prefsManager.user!!.withdrawalLock=security
+                App.prefsManager.user!!.withdrawalLock = security
                 App.prefsManager.withdrawalLockSecurity = security
                 requireActivity().onBackPressed()
             }
@@ -101,7 +104,7 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
 //                1 -> Constants.HOURS_24
 //                else -> Constants.NO_EXTRA_SECURITY
 //            }
-            checkInternet(binding.root,requireContext()) {
+            checkInternet(binding.root, requireContext()) {
                 showProgressDialog(requireContext())
                 viewModel.updateUserInfo(hashMap)
             }
@@ -204,7 +207,7 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
             init {
                 binding.root.setOnClickListener {
 //                    if (!App.prefsManager.isWhitelisting())
-                    itemClicked(adapterPosition)
+                    itemClicked(absoluteAdapterPosition)
                 }
             }
         }
@@ -212,4 +215,15 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
     }
 
     data class ExtraSecurity(val title: String, var isSelected: Boolean)
+
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        when (errorCode) {
+            57 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_57))
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
+            else -> super.onRetrofitError(errorCode, msg)
+        }
+    }
 }

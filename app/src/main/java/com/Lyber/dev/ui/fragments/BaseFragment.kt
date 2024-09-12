@@ -21,6 +21,7 @@ import androidx.viewbinding.ViewBinding
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.CustomDialogLayoutBinding
 import com.Lyber.dev.databinding.CustomDialogVerticalLayoutBinding
+import com.Lyber.dev.models.ErrorResponse
 import com.Lyber.dev.network.RestClient
 import com.Lyber.dev.ui.activities.WebViewActivity
 import com.Lyber.dev.utils.App
@@ -32,7 +33,6 @@ import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.utils.LoaderObject
 import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import okhttp3.ResponseBody
 
 abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.OnRetrofitError {
     val viewModel1: com.Lyber.dev.models.GetUserViewModal by activityViewModels()
@@ -108,7 +108,6 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
 //                }
 //            }
 //        }
-
         return binding.root
     }
 
@@ -144,14 +143,24 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
             }
         }
 
-    override fun onRetrofitError(responseBody: ResponseBody?) {
+    override fun onRetrofitError(errorCode: Int, msg: String) {
         dismissProgressDialog()
         dismissAlertDialog()
         LoaderObject.hideLoader()
-        val code = CommonMethods.showErrorMessage(requireContext(), responseBody, binding.root)
-        Log.d("errorCode", "$code")
-        if (code == 7023 || code == 10041 || code == 7025 || code == 10043)
-            customDialog(code)
+        handleCommonErrors(errorCode, msg)
+//        val code = CommonMethods.showErrorMessage(requireContext(), responseBody, binding.root)
+//        Log.d("errorCode", "$code")
+//        val code=CommonMethods.returnErrorCode(responseBody)
+//        if (code == 7023 || code == 10041 || code == 7025 || code == 10043)
+//            customDialog(code)
+    }
+
+    private fun handleCommonErrors(errorCode: Int, msg: String) {
+        when (errorCode) {
+            7023, 10041 -> customDialog(7023)
+            7025, 10043 -> customDialog(7025)
+            else -> CommonMethods.showError(errorCode, requireContext(), msg, binding.root)
+        }
     }
 
     override fun onError() {
@@ -213,7 +222,7 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
 
                 }
                 binding.tvPositiveButton.setOnClickListener {
-                    CommonMethods.checkInternet(binding.root,requireContext()) {
+                    CommonMethods.checkInternet(binding.root, requireContext()) {
                         LoaderObject.showLoader(requireContext())
 //                        showProgressDialog(requireContext())
                         if (code == 7023 || code == 10041) {

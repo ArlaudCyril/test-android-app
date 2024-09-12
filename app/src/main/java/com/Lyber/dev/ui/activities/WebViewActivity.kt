@@ -681,10 +681,10 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
         return null
     }
 
-    override fun onRetrofitError(responseBody: ResponseBody?) {
+    override fun onRetrofitError(errorCode: Int, msg: String) {
         CommonMethods.dismissAlertDialog()
         CommonMethods.dismissProgressDialog()
-        CommonMethods.showErrorMessage(this, responseBody, binding.root)
+        CommonMethods.showError(errorCode,this, msg, binding.root)
     }
 
     override fun onError() {
