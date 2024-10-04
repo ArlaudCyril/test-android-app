@@ -13,6 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentAddAmountBinding
 import com.Lyber.dev.network.RestClient
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.FrequencyModel
 import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.Lyber.dev.utils.CommonMethods
@@ -31,8 +32,11 @@ import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.utils.OnTextChange
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import com.google.gson.Gson
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import java.math.RoundingMode
 
 class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
@@ -446,11 +450,30 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
             binding.progress.animation =
                 AnimationUtils.loadAnimation(requireActivity(), R.anim.rotate_drawable)
             binding.btnPreviewInvestment.text = ""
-            viewModel.getQuote(
-                focusedData.currency.lowercase(),
-                unfocusedData.currency.lowercase(),
-                amount.split(focusedData.currency)[0].pointFormat
-            )
+            val jsonObject = JSONObject()
+            jsonObject.put("fromAsset",focusedData.currency.lowercase())
+            jsonObject.put("toAsset",unfocusedData.currency.lowercase())
+            jsonObject.put("fromAmount",amount.split(focusedData.currency)[0].pointFormat)
+            val jsonString = jsonObject.toString()
+            // Generate the request hash
+            val requestHash = CommonMethods.generateRequestHash(jsonString)
+            val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                SplashActivity.integrityTokenProvider?.request(
+                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                        .setRequestHash(requestHash)
+                        .build()
+                )
+            integrityTokenResponse1?.addOnSuccessListener { response ->
+                Log.d("token", "${response.token()}")
+                viewModel.getQuote(
+                    focusedData.currency.lowercase(),
+                    unfocusedData.currency.lowercase(),
+                    amount.split(focusedData.currency)[0].pointFormat,response.token()
+                )
+
+            }?.addOnFailureListener { exception ->
+                Log.d("token", "${exception}")
+            }
         } else {
             getString(R.string.insufficient_balance).showToast(binding.root, requireActivity())
         }

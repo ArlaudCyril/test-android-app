@@ -3,6 +3,7 @@ package com.Lyber.dev.ui.fragments
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
@@ -12,6 +13,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentEmailAddressBinding
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.EmailVerificationBottomSheet
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
@@ -21,10 +23,13 @@ import com.Lyber.dev.utils.CommonMethods.Companion.requestKeyboard
 import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.PersonalDataViewModel
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import com.nimbusds.srp6.SRP6CryptoParams
 import com.nimbusds.srp6.SRP6VerifierGenerator
 import com.nimbusds.srp6.XRoutineWithUserIdentity
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import java.math.BigInteger
 import java.util.regex.Pattern
 
@@ -114,14 +119,40 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
                     val phoneVerifier = generator.generateVerifier(
                         phoneSalt, App.prefsManager.getPhone(), binding.etPassword.text.toString()
                     )
+                  val jsonObject = JSONObject()
+                    jsonObject.put("email",binding.etEmail.text.toString().lowercase())
+                    jsonObject.put("emailSalt",emailSalt.toString())
+                    jsonObject.put("emailVerifier",emailVerifier.toString())
+                    jsonObject.put("phoneSalt",phoneSalt.toString())
+                    jsonObject.put("phoneVerifier",phoneVerifier.toString())
+                    val jsonString = jsonObject.toString()
+                    // Generate the request hash
+                    val requestHash = CommonMethods.generateRequestHash(jsonString)
 
-                    viewModel.setEmail(
-                        binding.etEmail.text.toString().lowercase(),
-                        emailSalt.toString(),
-                        emailVerifier.toString(),
-                        phoneSalt.toString(),
-                        phoneVerifier.toString()
-                    )
+                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                        SplashActivity.integrityTokenProvider?.request(
+                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                .setRequestHash(requestHash)
+                                .build()
+                        )
+                    integrityTokenResponse?.addOnSuccessListener { response ->
+                        Log.d("token", "${response.token()}")
+                        viewModel.setEmail(
+                            binding.etEmail.text.toString().lowercase(),
+                            emailSalt.toString(),
+                            emailVerifier.toString(),
+                            phoneSalt.toString(),
+                            phoneVerifier.toString(),response.token()
+                        )
+
+                    }?.addOnFailureListener { exception ->
+                        Log.d("token", "${exception}")
+                        CommonMethods.dismissProgressDialog()
+
+                    }
+
+
+
                 }
             }
         }
@@ -197,14 +228,33 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
                 val phoneVerifier = generator.generateVerifier(
                     phoneSalt, App.prefsManager.getPhone(), binding.etPassword.text.toString()
                 )
+               val jsonObject = JSONObject()
+                jsonObject.put("email",binding.etEmail.text.toString().lowercase())
+                jsonObject.put("emailSalt",emailSalt.toString())
+                jsonObject.put("emailVerifier",emailVerifier.toString())
+                jsonObject.put("phoneSalt",phoneSalt.toString())
+                jsonObject.put("phoneVerifier",phoneVerifier.toString())
+                val jsonString = jsonObject.toString()
+                // Generate the request hash
+                val requestHash = CommonMethods.generateRequestHash(jsonString)
 
-                viewModel.setEmail(
-                    binding.etEmail.text.toString().lowercase(),
-                    emailSalt.toString(),
-                    emailVerifier.toString(),
-                    phoneSalt.toString(),
-                    phoneVerifier.toString()
-                )
+                val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                    SplashActivity.integrityTokenProvider?.request(
+                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                            .setRequestHash(requestHash)
+                            .build()
+                    )
+                integrityTokenResponse?.addOnSuccessListener { response ->
+                    viewModel.setEmail(
+                        binding.etEmail.text.toString().lowercase(),
+                        emailSalt.toString(),
+                        emailVerifier.toString(),
+                        phoneSalt.toString(),
+                        phoneVerifier.toString(),response.token()
+                    )
+                }?.addOnFailureListener { exception ->
+                    Log.d("token", "${exception}")
+                }
             }
         }
     }

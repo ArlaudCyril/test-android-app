@@ -4,6 +4,7 @@ import android.app.Activity
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import androidx.activity.result.contract.ActivityResultContracts
@@ -16,6 +17,7 @@ import com.Lyber.dev.R
 import com.Lyber.dev.databinding.CustomDialogVerticalLayoutBinding
 import com.Lyber.dev.databinding.FragmentVerifyYourIdentityBinding
 import com.Lyber.dev.network.RestClient
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.activities.WebViewActivity
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
@@ -26,7 +28,9 @@ import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.Lyber.dev.viewmodels.VerifyIdentityViewModel
+import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import okhttp3.ResponseBody
 
 
@@ -166,18 +170,19 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
         binding.btnContinue.text = getString(R.string.start_identity_verifications)
     }
 
-    private var resultLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_FIRST_USER) {
-                val bundle = Bundle().apply {
-                    putBoolean(Constants.IS_REVIEW, true)
-                }
-                findNavController().navigate(R.id.fillDetailFragment, bundle)
-            } else if (result.resultCode == Activity.RESULT_OK) {
-                CommonMethods.showProgressDialog(requireContext())
-                portfolioViewModel.finishRegistration()
-            }
-        }
+//    private var resultLauncher =
+//        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+//            if (result.resultCode == Activity.RESULT_FIRST_USER) {
+//                val bundle = Bundle().apply {
+//                    putBoolean(Constants.IS_REVIEW, true)
+//                }
+//                findNavController().navigate(R.id.fillDetailFragment, bundle)
+//            } else if (result.resultCode == Activity.RESULT_OK) {
+//                CommonMethods.showProgressDialog(requireContext())
+//                portfolioViewModel.finishRegistration()
+//
+//            }
+//        }
 
     private fun hitAcpi() {
         checkInternet(binding.root,requireActivity()) {
@@ -186,7 +191,18 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
             binding.progress.animation =
                 AnimationUtils.loadAnimation(requireActivity(), R.anim.rotate_drawable)
             binding.btnContinue.text = ""
-            portfolioViewModel.startKYCIdentity()
+            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                SplashActivity.integrityTokenProvider?.request(
+                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                        .build()
+                )
+            integrityTokenResponse?.addOnSuccessListener { response ->
+                Log.d("token", "${response.token()}")
+                portfolioViewModel.startKYCIdentity(response.token())
+
+            }?.addOnFailureListener { exception ->
+                Log.d("token", "${exception}")
+            }
         }
 
     }

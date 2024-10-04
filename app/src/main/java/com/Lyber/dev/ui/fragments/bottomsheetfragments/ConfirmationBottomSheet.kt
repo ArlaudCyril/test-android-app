@@ -8,13 +8,17 @@ import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentConfirmationBinding
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.clearBackStack
 import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.play.core.integrity.StandardIntegrityManager
+import org.json.JSONObject
 
 class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
 
@@ -37,12 +41,34 @@ class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
                 CommonMethods.showProgressDialog(requireContext())
 //                viewModel.editOwnStrategy(viewModel.selectedStrategy!!.name)
                 isEdit = true
-                viewModel.editEnabledStrategy(
-                    viewModel.selectedStrategy!!.ownerUuid,
-                    viewModel.selectedStrategy!!.activeStrategy!!.frequency,
-                    reqAmount.toDouble(),
-                    viewModel.selectedStrategy!!.name
-                )
+                val jsonObject = JSONObject()
+                jsonObject.put("ownerUuid", viewModel.selectedStrategy!!.ownerUuid)
+                jsonObject.put("strategyName", viewModel.selectedStrategy!!.name)
+                jsonObject.put("amount", reqAmount.toDouble())
+                jsonObject.put("frequency", viewModel.selectedStrategy!!.activeStrategy!!.frequency)
+
+                val jsonString = jsonObject.toString()
+                // Generate the request hash
+                val requestHash =
+                    CommonMethods.generateRequestHash(jsonString)
+                val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                    SplashActivity.integrityTokenProvider?.request(
+                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                            .setRequestHash(requestHash)
+                            .build()
+                    )
+                integrityTokenResponse1?.addOnSuccessListener { response ->
+                    Log.d("token", "${response.token()}")
+                    viewModel.editEnabledStrategy(
+                        viewModel.selectedStrategy!!.ownerUuid,
+                        viewModel.selectedStrategy!!.activeStrategy!!.frequency,
+                        reqAmount.toDouble(),
+                        viewModel.selectedStrategy!!.name, response.token()
+                    )
+
+                }?.addOnFailureListener { exception ->
+                    Log.d("token", "${exception}")
+                }
                 dismiss()
             } else
                 dismiss()
@@ -114,8 +140,8 @@ class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
             findNavController().navigate(R.id.action_withdrawUsdc_to_portfolioDetail)
         } else if (viewModel.selectedOption != "" && viewModel.selectedOption == Constants.ACTION_TAILOR_STRATEGY) {
             viewModel.selectedOption = ""
-            if(!isEdit)
-            requireActivity().onBackPressed()
+            if (!isEdit)
+                requireActivity().onBackPressed()
 //            dismiss()
         } else {
             findNavController().popBackStack(R.id.portfolioHomeFragment, false)

@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
@@ -12,6 +13,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentStrongAuthenticationBinding
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.VerificationBottomSheet
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
@@ -24,7 +26,10 @@ import com.Lyber.dev.utils.CommonMethods.Companion.showErrorMessage
 import com.Lyber.dev.utils.CommonMethods.Companion.showSnack
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.SignUpViewModel
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import okhttp3.ResponseBody
+import org.json.JSONObject
 
 class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBinding>(),
     View.OnClickListener {
@@ -55,7 +60,23 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
             binding.tvNumber.text = "${getString(R.string.to)} +${App.prefsManager.user?.phoneNo}"
         setView()
         if (App.prefsManager.user?.type2FA != Constants.GOOGLE) {
-            viewModel.qrCodeUrl()
+                CommonMethods.checkInternet(binding.root, requireContext()) {
+                   val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                        SplashActivity.integrityTokenProvider?.request(
+                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                .build()
+                        )
+                    integrityTokenResponse?.addOnSuccessListener { response ->
+                        CommonMethods.showProgressDialog(requireContext())
+                        viewModel.qrCodeUrl(
+                            token = response.token()
+                        )
+
+                    }?.addOnFailureListener { exception ->
+                        Log.d("token", "${exception}")
+
+                    }
+                }
             viewModel.qrCodeResponse.observe(viewLifecycleOwner) {
                 if (Lifecycle.State.RESUMED == lifecycle.currentState) {
                     qrCodeUrl = it.data.url
@@ -132,7 +153,16 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                     }
                     resetView = false
                 } else {
-                    viewModel.getUser()
+                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                        SplashActivity.integrityTokenProvider?.request(
+                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                .build()
+                        )
+                    integrityTokenResponse?.addOnSuccessListener { response ->
+                        viewModel.getUser(response.token())
+                    }?.addOnFailureListener { exception ->
+                        Log.d("token", "${exception}")
+                    }
                 }
             }
         }
@@ -144,7 +174,16 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                     } catch (_: Exception) {
 
                     }
-                viewModel.getUser()
+                val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                    SplashActivity.integrityTokenProvider?.request(
+                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                            .build()
+                    )
+                integrityTokenResponse?.addOnSuccessListener { response ->
+                    viewModel.getUser(response.token())
+                }?.addOnFailureListener { exception ->
+                    Log.d("token", "${exception}")
+                }
 
             }
         }
@@ -161,29 +200,76 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
             if (button.isPressed) {
                 if (isChecked) {
                     switchOff = false
-                    CommonMethods.showProgressDialog(requireContext())
-                    val hash = hashMapOf<String, Any>()
-                    if (binding.switchValidateWithdraw.isChecked) hash["scope2FA"] =
-                        listOf(Constants.WHITELISTING, Constants.WITHDRAWAL)
-                    else hash["scope2FA"] = listOf(Constants.WHITELISTING)
-                    clickedSwitch = Constants.WHITELISTING
-                    viewModel.updateAuthentication(hash)
-                } else {
-                    switchOff = true
-                    binding.switchWhitelisting.isChecked = true
-                    resendCode = 3
-                    CommonMethods.showProgressDialog(requireContext())
-                    var json = ""
-                    if (binding.switchValidateWithdraw.isChecked) {
-                        json = """{"scope2FA":["withdrawal"]}""".trimMargin()
-                        clickedOn = Constants.WITHDRAWAL
-                    } else {
-                        json = """{"scope2FA":[]}""".trimMargin()
-                        clickedOn = ""
+                    CommonMethods.checkInternet(binding.root, requireContext()) {
+                        val hash = hashMapOf<String, Any>()
+                        if (binding.switchValidateWithdraw.isChecked) hash["scope2FA"] =
+                            listOf(Constants.WHITELISTING, Constants.WITHDRAWAL)
+                        else hash["scope2FA"] = listOf(Constants.WHITELISTING)
+                        clickedSwitch = Constants.WHITELISTING
+
+
+                        val jsonObject = JSONObject()
+                        jsonObject.put("scope2FA", hash["scope2FA"])
+                        val jsonString = jsonObject.toString()
+                        // Generate the request hash
+                        val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                            SplashActivity.integrityTokenProvider?.request(
+                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                    .setRequestHash(requestHash)
+                                    .build()
+                            )
+                        integrityTokenResponse?.addOnSuccessListener { response ->
+                            CommonMethods.showProgressDialog(requireContext())
+                            viewModel.updateAuthentication(hash, token = response.token())
+                        }?.addOnFailureListener { exception ->
+                            Log.d("token", "${exception}")
+
+                        }
                     }
-                    val detail = encodeToBase64(json)
-                    scopeType = Constants.SCOPE
-                    viewModel.switchOffAuthentication(detail, scopeType)
+                } else {
+                    CommonMethods.checkInternet(binding.root, requireContext()) {
+                        switchOff = true
+                        binding.switchWhitelisting.isChecked = true
+                        resendCode = 3
+                        var json = ""
+                        if (binding.switchValidateWithdraw.isChecked) {
+                            json = """{"scope2FA":["withdrawal"]}""".trimMargin()
+                            clickedOn = Constants.WITHDRAWAL
+                        } else {
+                            json = """{"scope2FA":[]}""".trimMargin()
+                            clickedOn = ""
+                        }
+                        val detail = encodeToBase64(json)
+                        scopeType = Constants.SCOPE
+
+                        val jsonObject = JSONObject()
+                        jsonObject.put("details", detail)
+                        jsonObject.put("action", scopeType)
+                        val jsonString = jsonObject.toString()
+                        // Generate the request hash
+                        val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                            SplashActivity.integrityTokenProvider?.request(
+                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                    .setRequestHash(requestHash)
+                                    .build()
+                            )
+                        integrityTokenResponse?.addOnSuccessListener { response ->
+                            CommonMethods.showProgressDialog(requireContext())
+                            viewModel.switchOffAuthentication(
+                                detail,
+                                scopeType,
+                                token = response.token()
+                            )
+
+                        }?.addOnFailureListener { exception ->
+                            Log.d("token", "${exception}")
+
+                        }
+                    }
                 }
             }
         }
@@ -191,29 +277,73 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
             if (button.isPressed) {
                 if (isChecked) {
                     switchOff = false
-                    CommonMethods.showProgressDialog(requireContext())
-                    val hash = hashMapOf<String, Any>()
-                    if (binding.switchWhitelisting.isChecked) hash["scope2FA"] =
-                        listOf(Constants.WHITELISTING, Constants.WITHDRAWAL)
-                    else hash["scope2FA"] = listOf(Constants.WITHDRAWAL)
-                    clickedSwitch = Constants.WITHDRAWAL
-                    viewModel.updateAuthentication(hash)
-                } else {
-                    switchOff = true
-                    resendCode = 4
-                    binding.switchValidateWithdraw.isChecked = true
-                    CommonMethods.showProgressDialog(requireContext())
-                    var json = ""
-                    if (binding.switchWhitelisting.isChecked) {
-                        json = """{"scope2FA":["whitelisting"]}""".trimMargin()
-                        clickedOn = Constants.WHITELISTING
-                    } else {
-                        json = """{"scope2FA":[]}""".trimMargin()
-                        clickedOn = ""
+                    CommonMethods.checkInternet(binding.root, requireContext()) {
+                        val hash = hashMapOf<String, Any>()
+                        if (binding.switchWhitelisting.isChecked) hash["scope2FA"] =
+                            listOf(Constants.WHITELISTING, Constants.WITHDRAWAL)
+                        else hash["scope2FA"] = listOf(Constants.WITHDRAWAL)
+                        clickedSwitch = Constants.WITHDRAWAL
+                        val jsonObject = JSONObject()
+                        jsonObject.put("scope2FA", hash["scope2FA"])
+                        val jsonString = jsonObject.toString()
+                        // Generate the request hash
+                        val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                            SplashActivity.integrityTokenProvider?.request(
+                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                    .setRequestHash(requestHash)
+                                    .build()
+                            )
+                        integrityTokenResponse?.addOnSuccessListener { response ->
+                            CommonMethods.showProgressDialog(requireContext())
+                            viewModel.updateAuthentication(hash, token = response.token())
+                        }?.addOnFailureListener { exception ->
+                            Log.d("token", "${exception}")
+
+                        }
                     }
-                    val detail = encodeToBase64(json)
-                    scopeType = Constants.SCOPE
-                    viewModel.switchOffAuthentication(detail, scopeType)
+                } else {
+                    CommonMethods.checkInternet(binding.root, requireContext()) {
+                        switchOff = true
+                        resendCode = 4
+                        binding.switchValidateWithdraw.isChecked = true
+                        var json = ""
+                        if (binding.switchWhitelisting.isChecked) {
+                            json = """{"scope2FA":["whitelisting"]}""".trimMargin()
+                            clickedOn = Constants.WHITELISTING
+                        } else {
+                            json = """{"scope2FA":[]}""".trimMargin()
+                            clickedOn = ""
+                        }
+                        val detail = encodeToBase64(json)
+                        scopeType = Constants.SCOPE
+                        val jsonObject = JSONObject()
+                        jsonObject.put("details", detail)
+                        jsonObject.put("action", scopeType)
+                        val jsonString = jsonObject.toString()
+                        // Generate the request hash
+                        val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                            SplashActivity.integrityTokenProvider?.request(
+                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                    .setRequestHash(requestHash)
+                                    .build()
+                            )
+                        integrityTokenResponse?.addOnSuccessListener { response ->
+                            CommonMethods.showProgressDialog(requireContext())
+                            viewModel.switchOffAuthentication(
+                                detail,
+                                scopeType,
+                                token = response.token()
+                            )
+
+                        }?.addOnFailureListener { exception ->
+                            Log.d("token", "${exception}")
+
+                        }
+                    }
                 }
             }
         }
@@ -276,13 +406,39 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                 rlEmail -> {
                     if (App.prefsManager.user?.type2FA != Constants.EMAIL) {
                         if (App.prefsManager.user?.type2FA != Constants.GOOGLE) {
-                            CommonMethods.showProgressDialog(requireContext())
-                            resendCode = 2
-                            var json = """{"type2FA" : "email"}""".trimMargin()
-                            val detail = encodeToBase64(json)
-                            scopeType = Constants.TYPE
-                            clickedOn = Constants.EMAIL
-                            viewModel.switchOffAuthentication(detail, scopeType)
+                            CommonMethods.checkInternet(binding.root, requireContext()) {
+                                CommonMethods.showProgressDialog(requireContext())
+                                resendCode = 2
+                                var json = """{"type2FA" : "email"}""".trimMargin()
+                                val detail = encodeToBase64(json)
+                                scopeType = Constants.TYPE
+                                clickedOn = Constants.EMAIL
+                                val jsonObject = JSONObject()
+                                jsonObject.put("details", detail)
+                                jsonObject.put("action", scopeType)
+                                val jsonString = jsonObject.toString()
+                                // Generate the request hash
+                                val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                                val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                                    SplashActivity.integrityTokenProvider?.request(
+                                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                            .setRequestHash(requestHash)
+                                            .build()
+                                    )
+                                integrityTokenResponse?.addOnSuccessListener { response ->
+                                    CommonMethods.showProgressDialog(requireContext())
+                                    viewModel.switchOffAuthentication(
+                                        detail,
+                                        scopeType,
+                                        token = response.token()
+                                    )
+
+                                }?.addOnFailureListener { exception ->
+                                    Log.d("token", "${exception}")
+
+                                }
+                            }
                         } else {
                             val transparentView = View(context)
                             transparentView.setBackgroundColor(
@@ -313,13 +469,38 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                 rlBySms -> {
                     if (App.prefsManager.user?.type2FA != Constants.PHONE) {
                         if (App.prefsManager.user?.type2FA != Constants.GOOGLE) {
-                            CommonMethods.showProgressDialog(requireContext())
-                            resendCode = 1
-                            var json = """{"type2FA" : "phone"}""".trimMargin()
-                            val detail = encodeToBase64(json)
-                            scopeType = Constants.TYPE
-                            clickedOn = Constants.PHONE
-                            viewModel.switchOffAuthentication(detail, scopeType)
+                            CommonMethods.checkInternet(binding.root, requireContext()) {
+                                resendCode = 1
+                                var json = """{"type2FA" : "phone"}""".trimMargin()
+                                val detail = encodeToBase64(json)
+                                scopeType = Constants.TYPE
+                                clickedOn = Constants.PHONE
+                                val jsonObject = JSONObject()
+                                jsonObject.put("details", detail)
+                                jsonObject.put("action", scopeType)
+                                val jsonString = jsonObject.toString()
+                                // Generate the request hash
+                                val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                                val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                                    SplashActivity.integrityTokenProvider?.request(
+                                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                            .setRequestHash(requestHash)
+                                            .build()
+                                    )
+                                integrityTokenResponse?.addOnSuccessListener { response ->
+                                    CommonMethods.showProgressDialog(requireContext())
+                                    viewModel.switchOffAuthentication(
+                                        detail,
+                                        scopeType,
+                                        token = response.token()
+                                    )
+
+                                }?.addOnFailureListener { exception ->
+                                    Log.d("token", "${exception}")
+
+                                }
+                            }
                         } else {
                             val transparentView = View(context)
                             transparentView.setBackgroundColor(
@@ -420,7 +601,7 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                 val detail = encodeToBase64(json)
                 scopeType = Constants.TYPE
                 clickedOn = Constants.PHONE
-                viewModel.switchOffAuthentication(detail, scopeType)
+                hitApi(detail, scopeType)
             }
 
             2 -> {
@@ -428,8 +609,7 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                 val detail = encodeToBase64(json)
                 scopeType = Constants.TYPE
                 clickedOn = Constants.EMAIL
-                viewModel.switchOffAuthentication(detail, scopeType)
-
+                hitApi(detail, scopeType)
             }
 
             3 -> {
@@ -445,7 +625,7 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                 }
                 val detail = encodeToBase64(json)
                 scopeType = Constants.SCOPE
-                viewModel.switchOffAuthentication(detail, scopeType)
+                hitApi(detail, scopeType)
             }
 
             4 -> {
@@ -461,9 +641,39 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                 }
                 val detail = encodeToBase64(json)
                 scopeType = Constants.SCOPE
-                viewModel.switchOffAuthentication(detail, scopeType)
+                hitApi(detail, scopeType)
             }
         }
     }
 
+    private fun hitApi(detail: String, scope: String) {
+        CommonMethods.checkInternet(binding.root, requireContext()) {
+            val jsonObject = JSONObject()
+            jsonObject.put("details", detail)
+            jsonObject.put("action", scope)
+            val jsonString = jsonObject.toString()
+            // Generate the request hash
+            val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                SplashActivity.integrityTokenProvider?.request(
+                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                        .setRequestHash(requestHash)
+                        .build()
+                )
+            integrityTokenResponse?.addOnSuccessListener { response ->
+                CommonMethods.showProgressDialog(requireContext())
+                viewModel.switchOffAuthentication(
+                    detail,
+                    scope,
+                    token = response.token()
+                )
+
+            }?.addOnFailureListener { exception ->
+                Log.d("token", "${exception}")
+
+            }
+        }
+
+    }
 }

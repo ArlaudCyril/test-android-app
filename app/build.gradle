@@ -19,15 +19,15 @@ android {
         applicationId "com.Lyber.dev"
         minSdk 24
         targetSdk 34
-        versionCode 27 // as new for development
-        versionName "1" // on studio pushed version up to 3 and 1
+        versionCode 29 // as new for development
+        versionName "2.9.0" // on studio pushed version up to 3 and 1
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            debuggable false
+            debuggable true
             shrinkResources true
             minifyEnabled true
             signingConfig signingConfigs.release
@@ -142,6 +142,7 @@ dependencies {
     implementation "androidx.security:security-crypto:1.1.0-alpha03"
     implementation 'com.appsflyer:af-android-sdk:6.13.1'
     implementation 'com.android.installreferrer:installreferrer:2.2'
+    implementation 'com.google.android.play:integrity:1.4.0'
 }
 configurations.all {
     resolutionStrategy {

@@ -16,6 +16,7 @@ import androidx.navigation.fragment.findNavController
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.CustomDialogLayoutBinding
 import com.Lyber.dev.databinding.FragmentConfirmPinBinding
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.dev.utils.CommonMethods.Companion.requestKeyboard
@@ -24,6 +25,8 @@ import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.utils.OnTextChange
 import com.Lyber.dev.viewmodels.SignUpViewModel
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import java.util.Locale
 
 class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
@@ -52,7 +55,16 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
             binding.llIndicators.visibility = View.GONE
         }
         if (viewModel.forLogin) {
-            viewModel.getUser()
+            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                SplashActivity.integrityTokenProvider?.request(
+                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                        .build()
+                )
+            integrityTokenResponse?.addOnSuccessListener { response ->
+                viewModel.getUser(response.token())
+            }?.addOnFailureListener { exception ->
+                Log.d("token", "${exception}")
+            }
         } else if (!requireArguments().containsKey(Constants.IS_CHANGE_PIN))
             binding.ivTopClose.visible()
         binding.ivTopClose.setOnClickListener {

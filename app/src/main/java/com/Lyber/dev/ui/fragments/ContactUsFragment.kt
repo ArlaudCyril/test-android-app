@@ -19,10 +19,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentContactUsBinding
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.showToast
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
+import org.json.JSONObject
 
 
 class ContactUsFragment : BaseFragment<FragmentContactUsBinding>(), OnClickListener {
@@ -87,12 +91,28 @@ class ContactUsFragment : BaseFragment<FragmentContactUsBinding>(), OnClickListe
                         getString(R.string.msgIsEmpty).showToast(binding.root,requireContext())
                     else
                         try {
-                            CommonMethods.checkInternet(binding.root,requireContext()) {
-                                var msg = binding.etMsg.text.trim().toString()
-                                CommonMethods.showProgressDialog(requireContext())
-                                viewModel.contactSupport(msg)
-                            }
+                            CommonMethods.checkInternet(binding.root, requireContext()) {
+                                val msg = binding.etMsg.text.trim().toString()
+                                val jsonObject = JSONObject()
+                                jsonObject.put("message", msg)
+                                val jsonString = jsonObject.toString()
+                                // Generate the request hash
+                                val requestHash = CommonMethods.generateRequestHash(jsonString)
 
+                                val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                                    SplashActivity.integrityTokenProvider?.request(
+                                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                            .setRequestHash(requestHash)
+                                            .build()
+                                    )
+                                integrityTokenResponse?.addOnSuccessListener { response ->
+                                    CommonMethods.showProgressDialog(requireContext())
+                                    viewModel.contactSupport(msg, token = response.token())
+                                }?.addOnFailureListener { exception ->
+                                    Log.d("token", "${exception}")
+
+                                }
+                            }
                         } catch (e: IndexOutOfBoundsException) {
                             Log.i("error", e.message.toString())
                         }

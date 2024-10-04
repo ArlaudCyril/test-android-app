@@ -13,7 +13,9 @@ import com.Lyber.dev.utils.CommonMethods.Companion.requestKeyboard
 import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.dev.viewmodels.ProfileViewModel
 import okhttp3.ResponseBody
-
+/*
+    //not in use
+ */
 class VerifyPhoneForPinFragment : BaseFragment<FragmentEnterOtpBinding>() {
 
     private lateinit var viewModel: ProfileViewModel

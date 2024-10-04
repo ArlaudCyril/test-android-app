@@ -168,7 +168,7 @@
     <string name="hint_enter_password">Entrez votre mot de passe</string>
     <string name="happy_to_see_you_back">Heureux de vous revoir !</string>
     <string name="phone_login_helper_text">Entrez votre numéro de téléphone pour vous connecter, nous vous enverrons un code de vérification.</string>
-    <string name="nice_to_see_you_again">Nice to see you again!</string>
+    <string name="nice_to_see_you_again">Ravi de vous revoir !</string>
     <string name="email_login_helper_text">Entrez votre adresse électronique pour vous connecter, nous vous enverrons un lien par courrier électronique.</string>
     <string name="hint_enter_phone_number">Numéro de téléphone</string>
     <string name="hint_enter_email_address">Entrer l\'adresse e-mail</string>
@@ -513,7 +513,7 @@
     <string name="sell_">Vendre</string>
     <string name="withdrawal_is_deactivated_on_this_asset">Le retrait est désactivé sur cet actif</string>
     <string name="select_address">Veuillez sélectionner l\'adresse</string>
-    <string name="no_security">Pas de sécurité"</string>
+    <string name="no_security">Pas de sécurité</string>
     <string name="enter_the_exchange_name">Entrez le nom de l\'échange</string>
     <string name="edit_address">Modifier l\'adresse</string>
     <string name="choose_an_operation">Choisissez une opération</string>
@@ -523,7 +523,7 @@
     <string name="review_my_informations">Revoir mes informations</string>
     <string name="change_my_informations">Changer mes informations</string>
     <string name="password_warning">Le mot de passe doit comporter au moins 10 caractères, 1 caractère spécial, 1 minuscule et 1 majuscule.</string>
-    <string name="you_have_strong_password">Vous avez un mot de passe fort</string>
+    <string name="you_have_strong_password">Vous avez un mot de passe fort!</string>
     <string name="please_enter_name_for_your_strategy">Veuillez saisir le nom de votre stratégie.</string>
     <string name="select_birth_date">Sélectionnez la date de naissance</string>
     <string name="done">Terminé</string>
@@ -561,8 +561,8 @@
     <string name="copied">Copié</string>
     <string name="low">Faible</string>
     <string name="high">Elevé</string>
-    <string name="oops">Oups !</string>
-    <string name="deadline_confirming_purchase_passed">Le délai pour confirmer votre achat est dépassé. Souhaitez vous obtenir une nouvelle proposition ?</string>
+    <string name="oops">Oups!</string>
+    <string name="deadline_confirming_purchase_passed">Le délai pour confirmer votre achat est dépassé. Souhaitez vous obtenir une nouvelle proposition?</string>
     <string name="close_account_message">Êtes-vous sûr de vouloir fermer votre compte ? Toutes vos données, y compris les préférences enregistrées, l’historique des transactions et les informations personnelles seront conservées pendant 5 ans à partir de la date de fermeture de votre compte. Si vous êtes certain, veuillez confirmer ci-dessous.\n\n
         Veillez à bien retirer tout l’argent que vous avez sur votre compte avant de\n le clôturer.</string>
     <string name="make_sure_withdraw">Veillez à bien retirer tout l’argent que vous avez sur votre compte avant de le clôturer.</string>
@@ -632,7 +632,7 @@
     <string name="edit_personal_data">Modifier les données personnelles</string>
     <string name="verification_in_progress">Vérification en cours</string>
     <string name="start_verification">Commencer la vérification</string>
-    <string name="label_cgu_conditions">J\'ai lu et j\'accepte les <u>Conditions Générales\et Conditions de Vente</u></string>
+    <string name="label_cgu_conditions">J\'ai lu et j\'accepte les <u>Conditions Générales et Conditions de Vente</u></string>
     <string name="label_privacy_policy">J\'ai lu et j\'accepte la <u>Politique de Confidentialité</u></string>
     <string name="cgu_conditions">Conditions Générales de Vente</string>
     <string name="privacy_policy">politique de confidentialité</string>
@@ -764,7 +764,7 @@
     <string name="certify_detail">J\'atteste sur l\'honneur que mes pièces d\'identité ont été délivrées par un pays membre de l\'Union européenne ou de l\'Espace économique européen, à l\'exception de Chypre, Malte, la Croatie, la Hongrie, le Liechtenstein, la Lettonie, la Roumanie et la Slovaquie.</string>
     <string name="yes_certify">Oui, je certifie</string>
     <string name="enter_the_code_received_at_email">Entrez le code que vous avez reçu sur votre adresse email.</string>
-    <string name="confirm_your_pin">Confirmez votre code PIN</string>
+    <string name="confirm_your_pin">Confirmer le code PIN</string>
     <string name="account_statement">Relevé de compte</string>
     <string name="add_manually_google_authenticator">Si vous ne parvenez pas à scanner le code QR, vous pouvez ajouter votre compte manuellement dans Google Authenticator avec la clé ci-dessous.</string>
     <string name="copy_key">Copier la clé</string>

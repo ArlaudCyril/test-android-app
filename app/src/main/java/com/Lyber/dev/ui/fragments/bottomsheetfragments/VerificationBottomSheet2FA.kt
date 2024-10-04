@@ -26,7 +26,10 @@ import com.Lyber.dev.utils.CommonMethods.Companion.requestKeyboard
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.SignUpViewModel
+import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.play.core.integrity.StandardIntegrityManager
+import org.json.JSONObject
 
 
 class VerificationBottomSheet2FA(private val handle: (String) -> Unit) :
@@ -279,17 +282,57 @@ class VerificationBottomSheet2FA(private val handle: (String) -> Unit) :
                     binding.etCodeSix -> {
                         if (getCode().length == 6) {
                             if(tag!=null && tag==Constants.ACTION_CLOSE_ACCOUNT){
-                                CommonMethods.showProgressDialog(requireContext())
-                                val hash = hashMapOf<String, Any>()
-                                hash["otp"] = getCode()
-                                Log.d("hash", "$hash")
-                                viewModel.closeAccount(hash)
+                                CommonMethods.checkInternet(binding.root,requireContext()) {
+                                    val hash = hashMapOf<String, Any>()
+                                    hash["otp"] = getCode()
+
+                                    val jsonObject = JSONObject()
+                                    jsonObject.put("otp", getCode())
+                                    val jsonString = jsonObject.toString()
+                                    val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                                        SplashActivity.integrityTokenProvider?.request(
+                                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                                .setRequestHash(requestHash)
+                                                .build()
+                                        )
+                                    integrityTokenResponse?.addOnSuccessListener { response ->
+                                        CommonMethods.showProgressDialog(requireContext())
+                                        viewModel.closeAccount(
+                                            hash, token = response.token()
+                                        )
+                                    }?.addOnFailureListener { exception ->
+                                        Log.d("token", "${exception}")
+
+                                    }
+                                }
                             }
                          else   {
                                  if (viewModel.forLogin) {
-                                CommonMethods.showProgressDialog(requireContext())
-                                viewModel.verify2FA(code = getCode())
-                            } else {
+                                    CommonMethods.checkInternet(binding.root, requireContext()) {
+                                         val jsonObject = JSONObject()
+                                         jsonObject.put("code", getCode())
+                                         val jsonString = jsonObject.toString()
+                                         // Generate the request hash
+                                         val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                                         val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                                             SplashActivity.integrityTokenProvider?.request(
+                                                 StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                                     .setRequestHash(requestHash)
+                                                     .build()
+                                             )
+                                         integrityTokenResponse?.addOnSuccessListener { response ->
+                                             CommonMethods.showProgressDialog(requireContext())
+                                             viewModel.verify2FA(code=getCode(), token = response.token())
+                                         }?.addOnFailureListener { exception ->
+                                             Log.d("token", "${exception}")
+
+                                         }
+                                     }
+
+                                 } else {
                                 dismiss()
                                 handle.invoke(getCode())
                             }

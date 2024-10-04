@@ -3,6 +3,7 @@ package com.Lyber.dev.ui.fragments
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
 import androidx.appcompat.app.AppCompatActivity
@@ -11,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentAddRibBinding
 import com.Lyber.dev.models.RIBData
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.WithdrawalUsdcAddressBottomSheet
 import com.Lyber.dev.ui.portfolio.fragment.PortfolioDetailFragment
 import com.Lyber.dev.utils.CommonMethods
@@ -20,9 +22,12 @@ import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.au.countrycodepicker.CountryPicker
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import okhttp3.ResponseBody
+import org.json.JSONObject
 
 
 class AddRibFragment : BaseFragment<FragmentAddRibBinding>(), OnClickListener {
@@ -67,7 +72,17 @@ class AddRibFragment : BaseFragment<FragmentAddRibBinding>(), OnClickListener {
         viewModel.booleanResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 if (it.success) {
-                    viewModel.getWalletRib()
+                    val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                        SplashActivity.integrityTokenProvider?.request(
+                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                .build()
+                        )
+                    integrityTokenResponse1?.addOnSuccessListener { response ->
+                        Log.d("token", "${response.token()}")
+                        viewModel.getWalletRib(response.token())
+                    }?.addOnFailureListener { exception ->
+                        Log.d("token", "${exception}")
+                    }
                 }
             }
         }
@@ -81,7 +96,30 @@ class AddRibFragment : BaseFragment<FragmentAddRibBinding>(), OnClickListener {
                     hashMap["name"] = binding.etRibName.text.trim().toString()
                     hashMap["userName"] = binding.etOwnerName.text.trim().toString()
                     hashMap["bankCountry"] = selectedCountry
-                    viewModel.addRib(hashMap)
+                    val jsonObject = JSONObject()
+                    jsonObject.put("iban", binding.etIBanNo.text.trim().toString())
+                    jsonObject.put("bic", binding.etBic.text.trim().toString())
+                    jsonObject.put("name", binding.etRibName.text.trim().toString())
+                    jsonObject.put("userName", binding.etOwnerName.text.trim().toString())
+                    jsonObject.put("bankCountry", selectedCountry)
+                    val jsonString = jsonObject.toString()
+                    // Generate the request hash
+                    val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                    val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                        SplashActivity.integrityTokenProvider?.request(
+                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                .setRequestHash(requestHash)
+                                .build()
+                        )
+                    integrityTokenResponse1?.addOnSuccessListener { response ->
+                        Log.d("token", "${response.token()}")
+                        viewModel.addRib(hashMap, response.token())
+
+                    }?.addOnFailureListener { exception ->
+                        Log.d("token", "${exception}")
+
+                    }
                 }
             }
         }
@@ -148,7 +186,7 @@ class AddRibFragment : BaseFragment<FragmentAddRibBinding>(), OnClickListener {
                             requireContext()
                         )
                     else {
-                        CommonMethods.checkInternet(binding.root,requireContext()) {
+                        CommonMethods.checkInternet(binding.root, requireContext()) {
                             CommonMethods.showProgressDialog(requireContext())
                             val hashMap = HashMap<String, Any>()
                             hashMap["iban"] = binding.etIBanNo.text.trim().toString()
@@ -157,10 +195,55 @@ class AddRibFragment : BaseFragment<FragmentAddRibBinding>(), OnClickListener {
                             hashMap["userName"] = binding.etOwnerName.text.trim().toString()
                             hashMap["bankCountry"] = selectedCountry
                             if (::ribData.isInitialized) {
-                                viewModel.deleteRIB(ribData.ribId)
-                            } else viewModel.addRib(
-                                hashMap
-                            )
+                                val jsonObject = JSONObject()
+                                jsonObject.put("ribId", ribData.ribId)
+                                val jsonString = jsonObject.toString()
+                                // Generate the request hash
+                                val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                                val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                                    SplashActivity.integrityTokenProvider?.request(
+                                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                            .setRequestHash(requestHash)
+                                            .build()
+                                    )
+                                integrityTokenResponse1?.addOnSuccessListener { response ->
+                                    Log.d("token", "${response.token()}")
+                                    viewModel.deleteRIB(ribData.ribId, response.token())
+
+                                }?.addOnFailureListener { exception ->
+                                    Log.d("token", "${exception}")
+
+                                }
+                            } else {
+                                val jsonObject = JSONObject()
+                                jsonObject.put("iban", binding.etIBanNo.text.trim().toString())
+                                jsonObject.put("bic", binding.etBic.text.trim().toString())
+                                jsonObject.put("name", binding.etRibName.text.trim().toString())
+                                jsonObject.put(
+                                    "userName",
+                                    binding.etOwnerName.text.trim().toString()
+                                )
+                                jsonObject.put("bankCountry", selectedCountry)
+                                val jsonString = jsonObject.toString()
+                                // Generate the request hash
+                                val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                                val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                                    SplashActivity.integrityTokenProvider?.request(
+                                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                            .setRequestHash(requestHash)
+                                            .build()
+                                    )
+                                integrityTokenResponse1?.addOnSuccessListener { response ->
+                                    Log.d("token", "${response.token()}")
+                                    viewModel.addRib(hashMap, response.token())
+
+                                }?.addOnFailureListener { exception ->
+                                    Log.d("token", "${exception}")
+
+                                }
+                            }
                         }
                     }
                 }
@@ -184,8 +267,9 @@ class AddRibFragment : BaseFragment<FragmentAddRibBinding>(), OnClickListener {
         val regex = Regex("^[a-zA-Z\\s-]+$")
         return regex.matches(input)
     }
+
     override fun onRetrofitError(errorCode: Int, msg: String) {
-        when ( errorCode ) {
+        when (errorCode) {
             10050 -> CommonMethods.showSnack(
                 binding.root,
                 requireContext(),
@@ -198,7 +282,7 @@ class AddRibFragment : BaseFragment<FragmentAddRibBinding>(), OnClickListener {
                 getString(R.string.error_code_10051)
             )
 
-            else->         super.onRetrofitError(errorCode, msg)
+            else -> super.onRetrofitError(errorCode, msg)
 
         }
     }

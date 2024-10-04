@@ -46,7 +46,10 @@ import com.appsflyer.AFInAppEventParameterName
 import com.appsflyer.AFInAppEventType
 import com.appsflyer.AppsFlyerLib
 import com.appsflyer.attribution.AppsFlyerRequestListener
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import java.io.File
 import java.io.IOException
 
@@ -425,8 +428,29 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
                     overridePendingTransition(0, 0)
 
                 } else {
-                    CommonMethods.showProgressDialog(this@WebViewActivity)
-                    portfolioViewModel.finishRegistration()
+                    CommonMethods.checkInternet(binding.root, this@WebViewActivity) {
+                        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                            SplashActivity.integrityTokenProvider?.request(
+                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                    .build()
+                            )
+                        integrityTokenResponse?.addOnSuccessListener { response ->
+                            Log.d("token", "${response.token()}")
+                            CommonMethods.showProgressDialog(this@WebViewActivity)
+                            portfolioViewModel.finishRegistration( response.token()
+                            )
+
+                        }?.addOnFailureListener { exception ->
+                            Log.d("token", "${exception}")
+
+                        }
+
+
+                    }
+
+
+
+
                 }
                 return true
             }

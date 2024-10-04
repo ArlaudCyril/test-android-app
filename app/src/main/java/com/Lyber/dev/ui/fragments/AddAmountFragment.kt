@@ -14,6 +14,7 @@ import com.Lyber.dev.R
 import com.Lyber.dev.databinding.ConfirmationDialogBinding
 import com.Lyber.dev.databinding.FragmentAddAmountBinding
 import com.Lyber.dev.models.Whitelistings
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.FrequencyModel
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.PayWithModel
 import com.Lyber.dev.viewmodels.PortfolioViewModel
@@ -33,6 +34,8 @@ import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.utils.OnTextChange
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 
 class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClickListener {
 
@@ -227,7 +230,19 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                 Constants.USING_WITHDRAW -> {
 
                     checkInternet(binding.root,requireContext()) {
-                        viewModel.getWhiteListings()
+                        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                            SplashActivity.integrityTokenProvider?.request(
+                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                    .build()
+                            )
+                        integrityTokenResponse?.addOnSuccessListener { response ->
+                            Log.d("token", "${response.token()}")
+                            viewModel.getWhiteListings(response.token())
+
+                        }?.addOnFailureListener { exception ->
+                            Log.d("token", "${exception}")
+                        }
+
                     }
 
                     btnAddFrequency.gone()
@@ -298,7 +313,19 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
 
                     checkInternet(binding.root,requireContext()) {
-                        viewModel.getWhiteListings()
+                        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                            SplashActivity.integrityTokenProvider?.request(
+                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                    .build()
+                            )
+                        integrityTokenResponse?.addOnSuccessListener { response ->
+                            Log.d("token", "${response.token()}")
+                            viewModel.getWhiteListings(response.token())
+
+                        }?.addOnFailureListener { exception ->
+                            Log.d("token", "${exception}")
+                        }
+
                     }
 
                     btnAddFrequency.gone()

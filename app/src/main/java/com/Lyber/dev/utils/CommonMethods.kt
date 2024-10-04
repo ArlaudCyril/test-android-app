@@ -85,6 +85,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.math.RoundingMode
+import java.security.MessageDigest
 import java.text.DateFormat
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
@@ -2034,6 +2035,10 @@ class CommonMethods {
             } catch (_: Exception) {
                 return text
             }
+        }
+         fun generateRequestHash(input: String): String {
+            val bytes = MessageDigest.getInstance("SHA-256").digest(input.toByteArray())
+            return bytes.joinToString("") { "%02x".format(it) }
         }
     }
 }

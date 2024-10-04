@@ -1,6 +1,7 @@
 package com.Lyber.dev.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentManageWhitelistingBinding
 import com.Lyber.dev.databinding.ItemExtraSecurityBinding
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.adapters.BaseAdapter
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
@@ -21,7 +23,10 @@ import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.dev.utils.CommonMethods.Companion.showSnack
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.NetworkViewModel
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import okhttp3.ResponseBody
+import org.json.JSONObject
 
 class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBinding>() {
 
@@ -72,7 +77,7 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
 
             0 -> {
                 binding.tvSecurityText.text =
-                    getString(R.string.selcted_72h)
+                    getString(R.string.a_delay_of_72_hours_will_be_required_before_you_can_withdraw_to_any_address_newly_added_to_your_address_book)
             }
 
             2 -> {
@@ -99,14 +104,26 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
                 1 -> hashMap["withdrawalLock"] = Constants.HOURS_24
                 else -> hashMap["withdrawalLock"] = Constants.NO_EXTRA_SECURITY
             }
-//            when (selectedPosition) {
-//                0 -> Constants.HOURS_72
-//                1 -> Constants.HOURS_24
-//                else -> Constants.NO_EXTRA_SECURITY
-//            }
-            checkInternet(binding.root, requireContext()) {
-                showProgressDialog(requireContext())
-                viewModel.updateUserInfo(hashMap)
+            val jsonObject = JSONObject()
+            jsonObject.put("withdrawalLock",hashMap["withdrawalLock"])
+            val jsonString = jsonObject.toString()
+            // Generate the request hash
+            val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                SplashActivity.integrityTokenProvider?.request(
+                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                        .setRequestHash(requestHash)
+                        .build()
+                )
+            integrityTokenResponse?.addOnSuccessListener { response ->
+                Log.d("token", "${response.token()}")
+                CommonMethods.showProgressDialog(requireActivity())
+                viewModel.updateUserInfo(hashMap, response.token())
+
+            }?.addOnFailureListener { exception ->
+                Log.d("token", "${exception}")
+
             }
         }
     }

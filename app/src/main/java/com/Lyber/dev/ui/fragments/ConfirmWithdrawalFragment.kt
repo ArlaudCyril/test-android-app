@@ -2,19 +2,23 @@ package com.Lyber.dev.ui.fragments
 
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
 import androidx.annotation.RequiresApi
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.ViewModel
 import androidx.navigation.fragment.findNavController
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentConfirmInvestmentBinding
 import com.Lyber.dev.models.Balance
 import com.Lyber.dev.network.RestClient
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.VerificationBottomSheet2FA
+import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
 import com.Lyber.dev.utils.CommonMethods.Companion.gone
@@ -25,6 +29,8 @@ import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.utils.LoaderObject
 import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.Lyber.dev.viewmodels.SignUpViewModel
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import java.math.RoundingMode
@@ -87,7 +93,17 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                     openOtpScreen()
                 } else {
                     if (withdrawUSDC) {
-                        viewModel.getBalance()
+                       val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                            SplashActivity.integrityTokenProvider?.request(
+                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                    .build()
+                            )
+                        integrityTokenResponse?.addOnSuccessListener { response ->
+                            viewModel.getBalance(response.token())
+                        }?.addOnFailureListener { exception ->
+                            Log.d("token", "${exception}")
+                        }
+
                         viewModel.selectedOption = Constants.ACTION_WITHDRAW_EURO
                     } else
                         viewModel.selectedOption = Constants.USING_WITHDRAW
@@ -152,19 +168,71 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
             CommonMethods.showProgressDialog(requireActivity())
             isOtpScreen = false
             if (withdrawUSDC) {
-                viewModel.createWithdrawalEuroRequest(
-                    viewModel.ribDataAddress!!.ribId,
-                    viewModel.ribDataAddress!!.iban, viewModel.ribDataAddress!!.bic,
-                    valueTotalEuro, code
-                )
-            } else
-                viewModel.createWithdrawalRequest(
-                    viewModel.selectedAssetDetail!!.id,
-                    valueTotal,
-                    viewModel.withdrawAddress!!.address!!,
-                    viewModel.selectedNetworkDeposit!!.id,
-                    code
-                )
+
+                val jsonObject = JSONObject()
+                jsonObject.put("ribId", viewModel.ribDataAddress!!.ribId)
+                jsonObject.put("iban", viewModel.ribDataAddress!!.iban)
+                jsonObject.put("bic", viewModel.ribDataAddress!!.bic)
+                jsonObject.put("amount", valueTotalEuro)
+                jsonObject.put("otp", code)
+                val jsonString = jsonObject.toString()
+                // Generate the request hash
+                val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                    SplashActivity.integrityTokenProvider?.request(
+                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                            .setRequestHash(requestHash)
+                            .build()
+                    )
+                integrityTokenResponse1?.addOnSuccessListener { response ->
+                    Log.d("token", "${response.token()}")
+                    viewModel.createWithdrawalEuroRequest(
+                        viewModel.ribDataAddress!!.ribId,
+                        viewModel.ribDataAddress!!.iban, viewModel.ribDataAddress!!.bic,
+                        valueTotalEuro, code,response.token()
+                    )
+                }?.addOnFailureListener { exception ->
+                    Log.d("token", "${exception}")
+
+                }
+
+
+            } else {
+                CommonMethods.checkInternet(binding.root, requireContext()) {
+                    val jsonObject = JSONObject()
+                    jsonObject.put("asset", viewModel.selectedAssetDetail!!.id)
+                    jsonObject.put("amount", valueTotal)
+                    jsonObject.put("destination", viewModel.withdrawAddress!!.address!!)
+                    jsonObject.put("network", viewModel.selectedNetworkDeposit!!.id)
+                    jsonObject.put("otp", code)
+                    val jsonString = jsonObject.toString()
+                    // Generate the request hash
+                    val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                        SplashActivity.integrityTokenProvider?.request(
+                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                .setRequestHash(requestHash)
+                                .build()
+                        )
+                    integrityTokenResponse?.addOnSuccessListener { response ->
+                        Log.d("token", "${response.token()}")
+                        viewModel.createWithdrawalRequest(
+                            viewModel.selectedAssetDetail!!.id,
+                            valueTotal,
+                            viewModel.withdrawAddress!!.address!!,
+                            viewModel.selectedNetworkDeposit!!.id,
+                            code,response.token()
+                        )
+
+                    }?.addOnFailureListener { exception ->
+                        Log.d("token", "${exception}")
+
+                    }
+                }
+
+            }
         }
     }
 
@@ -199,16 +267,35 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                 android.util.Base64.encodeToString(bytes, android.util.Base64.DEFAULT)
         }
         if (withdrawUSDC) {
-            if (isResend)
-                viewModelSignup.getOtpForWithdraw(Constants.ACTION_WITHDRAW_EURO, encoded)
-            else
-                viewModel.getOtpForWithdraw(Constants.ACTION_WITHDRAW_EURO, encoded)
-
+            hitOtpWithdraw(Constants.ACTION_WITHDRAW_EURO, encoded, isResend)
         } else {
+            hitOtpWithdraw(Constants.ACTION_WITHDRAW, encoded, isResend)
+        }
+    }
+
+    private fun hitOtpWithdraw(action: String, details: String, isResend: Boolean) {
+        val jsonObject = JSONObject()
+        jsonObject.put("action", action)
+        jsonObject.put("details", details)
+        val jsonString = jsonObject.toString()
+        // Generate the request hash
+        val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+            SplashActivity.integrityTokenProvider?.request(
+                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                    .setRequestHash(requestHash)
+                    .build()
+            )
+        integrityTokenResponse?.addOnSuccessListener { response ->
+            Log.d("token", "${response.token()}")
             if (isResend)
-                viewModelSignup.getOtpForWithdraw(Constants.ACTION_WITHDRAW, encoded)
+                viewModelSignup.getOtpForWithdraw(response.token(), action, details)
             else
-                viewModel.getOtpForWithdraw(Constants.ACTION_WITHDRAW, encoded)
+                viewModel.getOtpForWithdraw(response.token(), action, details)
+
+        }?.addOnFailureListener { exception ->
+            Log.d("token", "${exception}")
         }
     }
 
@@ -363,6 +450,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                 ivTopAction -> {
                     requireActivity().onBackPressedDispatcher.onBackPressed()
                 }
+
                 btnConfirmInvestment -> {
                     confirmButtonClick()
                 }
@@ -400,10 +488,14 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
             10044 -> {
                 showSnack(binding.root, requireContext(), getString(R.string.error_code_10044))
                 requireActivity().onBackPressedDispatcher.onBackPressed()
-            }10045 -> {
-            showSnack(binding.root, requireContext(), getString(R.string.error_code_10045))
-            requireActivity().onBackPressedDispatcher.onBackPressed()
-        }   26 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_26))
+            }
+
+            10045 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_10045))
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
+            26 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_26))
             37 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_37))
             40 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_40))
             41 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_41))
@@ -428,13 +520,17 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
             }
 
             10012 -> {
-                var asset=""
+                var asset = ""
                 if (withdrawUSDC)
-                    asset="USDC"
+                    asset = "USDC"
                 else
-                   asset = viewModel.selectedAssetDetail!!.fullName
+                    asset = viewModel.selectedAssetDetail!!.fullName
 
-                    showSnack(binding.root, requireContext(), getString(R.string.error_code_10012,asset))
+                showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_10012, asset)
+                )
                 requireActivity().onBackPressedDispatcher.onBackPressed()
             }
 
@@ -459,17 +555,21 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
             }
 
             10013 -> {
-                val transactionType=getString(R.string.withdrawal)
-                var network=""
-                if(viewModel.selectedNetworkDeposit!=null)
-                 network=  viewModel.selectedNetworkDeposit!!.id
-                var asset=""
+                val transactionType = getString(R.string.withdrawal)
+                var network = ""
+                if (viewModel.selectedNetworkDeposit != null)
+                    network = viewModel.selectedNetworkDeposit!!.id
+                var asset = ""
                 if (withdrawUSDC)
-                    asset="USDC"
+                    asset = "USDC"
                 else
                     asset = viewModel.selectedAssetDetail!!.fullName
 
-                showSnack(binding.root, requireContext(), getString(R.string.error_code_10013,transactionType,network,asset))
+                showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_10013, transactionType, network, asset)
+                )
                 if (::assetIdWithdraw.isInitialized) {
                     val bundle = Bundle().apply {
                         putString(Constants.ID, assetIdWithdraw)
@@ -533,9 +633,14 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                 showSnack(binding.root, requireContext(), getString(R.string.error_code_10042))
                 findNavController().navigate(R.id.action_confirm_withdraw_to_home_fragment)
             }
+
             3000 -> {
-                val transactionType=getString(R.string.withdraw)
-                showSnack(binding.root, requireContext(), getString(R.string.error_code_3000,transactionType))
+                val transactionType = getString(R.string.withdraw)
+                showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_3000, transactionType)
+                )
                 findNavController().navigate(R.id.action_confirm_withdraw_to_home_fragment)
             }
 
@@ -579,7 +684,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
             43 -> bottomSheet.showErrorOnBottomSheet(43)
             45 -> bottomSheet.showErrorOnBottomSheet(45)
             10022 -> bottomSheet.showErrorOnBottomSheet(10022)
-            else ->  super.onRetrofitError(errorCode, msg)
+            else -> super.onRetrofitError(errorCode, msg)
 
         }
     }

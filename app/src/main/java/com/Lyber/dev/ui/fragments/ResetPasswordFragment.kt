@@ -15,15 +15,19 @@ import androidx.navigation.NavOptions
 import androidx.navigation.fragment.findNavController
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentResetPasswordBinding
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.SignUpViewModel
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import com.nimbusds.srp6.SRP6ClientSession
 import com.nimbusds.srp6.SRP6CryptoParams
 import com.nimbusds.srp6.SRP6VerifierGenerator
 import com.nimbusds.srp6.XRoutineWithUserIdentity
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import java.math.BigInteger
 
 
@@ -60,7 +64,6 @@ class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>(), OnCl
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
 //                CommonMethods.dismissProgressDialog()
                 val password = binding.etPassword.text!!.trim().toString()
-                Log.d("res", "${it.data}")
                 val emailSalt = BigInteger(1, generator.generateRandomSalt())
                 val emailVerifier = generator.generateVerifier(
                     emailSalt, it.data.email.lowercase(), password
@@ -70,14 +73,35 @@ class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>(), OnCl
                 val phoneVerifier = generator.generateVerifier(
                     phoneSalt, it.data.phoneNo, password
                 )
-                Log.d("emailSalt", "$emailSalt")
-                Log.d("emailVerifier", " $emailVerifier  ")
-                Log.d("phoneSalt", "  $phoneSalt ")
-                Log.d("phoneVerifier", "   $phoneVerifier")
-                viewModel.resetNewPass(
-                    emailSalt.toString(), emailVerifier.toString(),
-                    phoneSalt.toString(), phoneVerifier.toString()
-                )
+                CommonMethods.checkInternet(binding.root,requireContext()) {
+                    val jsonObject = JSONObject()
+                    jsonObject.put("emailSalt", emailSalt.toString())
+                    jsonObject.put("emailVerifier", emailVerifier.toString())
+                    jsonObject.put("phoneSalt", phoneSalt.toString())
+                    jsonObject.put("phoneVerifier", phoneVerifier.toString())
+                    val jsonString = jsonObject.toString()
+                    // Generate the request hash
+                    val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                        SplashActivity.integrityTokenProvider?.request(
+                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                .setRequestHash(requestHash)
+                                .build()
+                        )
+                    integrityTokenResponse?.addOnSuccessListener { response ->
+                        viewModel.resetNewPass(
+                            emailSalt.toString(),emailVerifier.toString(),
+                            phoneSalt.toString(),phoneVerifier.toString(),
+                            token = response.token()
+                        )
+//                            viewModel.switchOffAuthentication(detail, Constants.TYPE)
+
+                    }?.addOnFailureListener { exception ->
+                        Log.d("token", "${exception}")
+
+                    }
+                }
             }
         }
         viewModel.booleanResponse.observe(viewLifecycleOwner) {
@@ -184,9 +208,24 @@ class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>(), OnCl
                 ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
                 btnSendResetLink -> {
                     if (buttonClicked) {
-                        CommonMethods.showProgressDialog(requireContext())
-                        App.prefsManager.accessToken = resetToken
-                        viewModel.getResetPass()
+                         CommonMethods.checkInternet(binding.root,requireContext()) {
+                            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                                SplashActivity.integrityTokenProvider?.request(
+                                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                        .build()
+                                )
+                            integrityTokenResponse?.addOnSuccessListener { response ->
+                                CommonMethods.showProgressDialog(requireContext())
+                                App.prefsManager.accessToken = resetToken
+                                viewModel.getResetPass(
+                                     token = response.token()
+                                )
+                            }?.addOnFailureListener { exception ->
+                                Log.d("token", "${exception}")
+
+                            }
+                        }
+
                     }
 
                 }

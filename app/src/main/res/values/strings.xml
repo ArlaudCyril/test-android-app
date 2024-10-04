@@ -169,7 +169,7 @@
     <string name="happy_to_see_you_back">Happy to see you back!</string>
     <string name="phone_login_helper_text">Enter your phone number to login, we’ll send you a verification code.</string>
     <string name="nice_to_see_you_again">Nice to see you again!</string>
-    <string name="email_login_helper_text">Enter your email to login, we’ll send you a link by email.</string>
+    <string name="email_login_helper_text">Enter your email to login, we’ll send you a verification code.</string>
     <string name="hint_enter_phone_number">Enter phone number</string>
     <string name="hint_enter_email_address">Enter email address</string>
     <string name="back_button">back button</string>
@@ -523,7 +523,7 @@
     <string name="review_my_informations">Review my informations</string>
     <string name="change_my_informations">Change my informations</string>
     <string name="password_warning">The password must have at least 10 characters, 1 special character, 1 lower case and 1 upper case.</string>
-    <string name="you_have_strong_password">You have a strong password</string>
+    <string name="you_have_strong_password">You have a strong password!</string>
     <string name="please_enter_name_for_your_strategy">Please enter name for your strategy.</string>
     <string name="select_birth_date">Select Birth Date</string>
     <string name="done">Done</string>
@@ -765,7 +765,7 @@
     <string name="certify_detail">I certify on my honor that my identity documents were issued by a member country of the European Union or the European Economic Area, with the exception of Cyprus, Malta, Croatia, Hungary, Liechtenstein, Latvia, Romania and Slovakia.</string>
     <string name="yes_certify">Yes, I certify</string>
     <string name="enter_the_code_received_at_email">Enter the code you received at your email address.</string>
-    <string name="confirm_your_pin">Confirm your PIN</string>
+    <string name="confirm_your_pin">Confirm PIN</string>
     <string name="account_statement">Account statement</string>
     <string name="add_manually_google_authenticator">If you can\'t scan the QR code, you can add your account manually in Google Authenticator with the key below.</string>
     <string name="copy_key">Copy Key</string>
@@ -791,11 +791,11 @@
     <string name="bic">BIC</string>
     <string name="owner_name">Owner\'s name</string>
     <string name="bank_country">Bank country</string>
-    <string name="choose_the_rib">Choose the Bank account on which you want\nto withdraw</string>
-    <string name="add_a_rib">Add a Bank account details</string>
+    <string name="choose_the_rib">Choose the bank details on which you want to withdraw</string>
+    <string name="add_a_rib">Add a bank account details</string>
     <string name="please_complete_all_fields">Please complete all fields</string>
     <string name="owner_name_error">The owner name field must contain only letters, spaces, and hyphens</string>
-    <string name="use_this_rib">Use this Bank account</string>
+    <string name="use_this_rib">Use this bank details</string>
     <string name="under_validation">We are currently validating your Bank account detailsBank account details and will process it as soon as possible.</string>
     <string name="rejected_rib">This Bank account has been refused. Please try using another one or contact support if you need help.</string>
     <string name="withdrawal_amount_is_inferior">Your withdrawal amount is inferior to the minimum required</string>

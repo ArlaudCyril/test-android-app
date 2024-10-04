@@ -1,17 +1,25 @@
 package com.Lyber.dev.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.Lifecycle
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentEnterWalletAddressBinding
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
+import com.Lyber.dev.utils.App
+import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.dev.utils.CommonMethods.Companion.requestKeyboard
 import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.dev.utils.CommonMethods.Companion.showToast
+import com.Lyber.dev.utils.EncryptionHelper
 import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
+import org.json.JSONObject
 
 class EnterWalletAddressFragment : BaseFragment<FragmentEnterWalletAddressBinding>() {
 
@@ -53,7 +61,29 @@ class EnterWalletAddressFragment : BaseFragment<FragmentEnterWalletAddressBindin
                         viewModel.withdrawFiat(viewModel.amount)
                     else {
                         viewModel.selectedAsset?.let {
-                            viewModel.withdraw(it.id,viewModel.amount,viewModel.assetAmount.toFloat(),address)
+
+                            val jsonObject = JSONObject()
+                            jsonObject.put("asset_id",it.id)
+                            jsonObject.put("amount", viewModel.amount)
+                            jsonObject.put("asset_amount", viewModel.assetAmount.toFloat())
+                            jsonObject.put("wallet_address", address)
+                            val jsonString = jsonObject.toString()
+                            // Generate the request hash
+                            val requestHash = CommonMethods.generateRequestHash(jsonString)
+                            val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                                SplashActivity.integrityTokenProvider?.request(
+                                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                        .setRequestHash(requestHash)
+                                        .build()
+                                )
+                            integrityTokenResponse1?.addOnSuccessListener { response ->
+                                Log.d("token", "${response.token()}")
+                                viewModel.withdraw(it.id,viewModel.amount,viewModel.assetAmount.toFloat(),address,response.token())
+
+
+                            }?.addOnFailureListener { exception ->
+                                Log.d("token", "${exception}")
+                            }
                         }
                     }
                 }

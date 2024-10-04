@@ -18,6 +18,7 @@ import com.Lyber.dev.databinding.ItemTransactionBinding
 import com.Lyber.dev.databinding.ItemTransactionNewBinding
 import com.Lyber.dev.databinding.LoaderViewBinding
 import com.Lyber.dev.models.TransactionData
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.adapters.BaseAdapter
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.TransactionDetailsBottomSheetFragment
 import com.Lyber.dev.utils.AppLifeCycleObserver
@@ -31,7 +32,10 @@ import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.utils.PaginationListener
 import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import com.google.gson.GsonBuilder
+import org.json.JSONObject
 import java.math.BigDecimal
 import java.math.RoundingMode
 import java.text.SimpleDateFormat
@@ -52,8 +56,32 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
 
     private fun hitApi() {
         CommonMethods.checkInternet(binding.root,requireContext()) {
-            CommonMethods.showProgressDialog(requireContext())
-            viewModel.getTransactions(limit, offset)
+            val jsonObject = JSONObject()
+            jsonObject.put("limit", limit)
+            jsonObject.put("offset", offset)
+            val jsonString = jsonObject.toString()
+            // Generate the request hash
+            val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                SplashActivity.integrityTokenProvider?.request(
+                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                        .setRequestHash(requestHash)
+                        .build()
+                )
+            integrityTokenResponse?.addOnSuccessListener { response ->
+                CommonMethods.showProgressDialog(requireContext())
+                viewModel.getTransactionsListing(
+                    limit,
+                    offset,
+                    token = response.token()
+                )
+//                            viewModel.switchOffAuthentication(detail, Constants.TYPE)
+
+            }?.addOnFailureListener { exception ->
+                Log.d("token", "${exception}")
+
+            }
         }
     }
 
@@ -87,8 +115,31 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
                         isLoading = true
                         adapter.addProgress()
                         CommonMethods.checkInternet(binding.root,requireContext()) {
-                            viewModel.getTransactions(limit, offset)
+                            val jsonObject = JSONObject()
+                            jsonObject.put("limit", limit)
+                            jsonObject.put("offset", offset)
+                            val jsonString = jsonObject.toString()
+                            // Generate the request hash
+                            val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                                SplashActivity.integrityTokenProvider?.request(
+                                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                        .setRequestHash(requestHash)
+                                        .build()
+                                )
+                            integrityTokenResponse?.addOnSuccessListener { response ->
+                                viewModel.getTransactionsListing(
+                                    limit,
+                                    offset,
+                                    token = response.token()
+                                )
+                            }?.addOnFailureListener { exception ->
+                                Log.d("token", "${exception}")
+
+                            }
                         }
+
                     }
                 }
 
@@ -107,7 +158,34 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
             binding.rvRefresh.isRefreshing = true
             offset = 0
             positionList.clear()
-            viewModel.getTransactions(limit, offset)
+            CommonMethods.checkInternet(binding.root,requireContext()) {
+                val jsonObject = JSONObject()
+                jsonObject.put("limit", limit)
+                jsonObject.put("offset", offset)
+                val jsonString = jsonObject.toString()
+                // Generate the request hash
+                val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                    SplashActivity.integrityTokenProvider?.request(
+                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                            .setRequestHash(requestHash)
+                            .build()
+                    )
+                integrityTokenResponse?.addOnSuccessListener { response ->
+                    viewModel.getTransactionsListing(
+                        limit,
+                        offset,
+                        token = response.token()
+                    )
+//                            viewModel.switchOffAuthentication(detail, Constants.TYPE)
+
+                }?.addOnFailureListener { exception ->
+                    Log.d("token", "${exception}")
+
+                }
+            }
+
         }
         viewModel.getTransactionListingResponse.observe(viewLifecycleOwner) { response ->
             response?.let {

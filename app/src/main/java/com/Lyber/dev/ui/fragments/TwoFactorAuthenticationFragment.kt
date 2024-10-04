@@ -8,6 +8,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
+import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
@@ -17,6 +18,7 @@ import androidx.lifecycle.Lifecycle
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.DownloadGoogleAuthenticatorBinding
 import com.Lyber.dev.databinding.FragmentTwoFactorAuthenticationBinding
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.VerificationBottomSheet
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
@@ -25,11 +27,14 @@ import com.Lyber.dev.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.SignUpViewModel
+import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomsheet.BottomSheetDialog
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
 import kotlinx.coroutines.delay
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import java.net.MalformedURLException
 
 
@@ -68,7 +73,23 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
                     )
                 )
             } else {
-                viewModel.qrCodeUrl()
+               CommonMethods.checkInternet(binding.root, requireContext()) {
+                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                        SplashActivity.integrityTokenProvider?.request(
+                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                .build()
+                        )
+                    integrityTokenResponse?.addOnSuccessListener { response ->
+                        CommonMethods.showProgressDialog(requireContext())
+                        viewModel.qrCodeUrl(
+                            token = response.token()
+                        )
+
+                    }?.addOnFailureListener { exception ->
+                        Log.d("token", "${exception}")
+
+                    }
+                }
 
             }
         }
@@ -86,7 +107,16 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
         viewModel.updateAuthenticateResponse.observe(viewLifecycleOwner) {
             if (Lifecycle.State.RESUMED == lifecycle.currentState) {
                 showOtp = false
-                viewModel.getUser()
+                val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                    SplashActivity.integrityTokenProvider?.request(
+                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                            .build()
+                    )
+                integrityTokenResponse?.addOnSuccessListener { response ->
+                    viewModel.getUser(response.token())
+                }?.addOnFailureListener { exception ->
+                    Log.d("token", "${exception}")
+                }
 
             }
         }
@@ -129,7 +159,7 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
                     vc.show(childFragmentManager, App.prefsManager.user?.type2FA)
                     val mainView = getView()?.rootView as ViewGroup
                     mainView.addView(transparentView, viewParams)
-                    bottomSheet=vc
+                    bottomSheet = vc
                 }
                 isResend = false
             }
@@ -154,30 +184,33 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
         dismissAlertDialog()
         dismissProgressDialog()
         when (errorCode) {
-          40 -> CommonMethods.showSnack(
+            40 -> CommonMethods.showSnack(
                 binding.root,
                 requireContext(),
                 getString(R.string.error_code_40)
             )
+
             41 -> CommonMethods.showSnack(
                 binding.root,
                 requireContext(),
                 getString(R.string.error_code_41)
             )
-           34 -> {
-               if (::bottomSheet.isInitialized) {
-                   try {
-                       bottomSheet.dismiss()
-                   } catch (_: Exception) {
 
-                   }
-               }
-               CommonMethods.showSnack(
-                   binding.root,
-                   requireContext(),
-                   getString(R.string.error_code_34)
-               )
-           }
+            34 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_34)
+                )
+            }
+
             35 -> {
                 if (::bottomSheet.isInitialized) {
                     try {
@@ -192,6 +225,7 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
                     getString(R.string.error_code_35)
                 )
             }
+
             42 -> {
                 if (::bottomSheet.isInitialized) {
                     try {
@@ -206,13 +240,14 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
                     getString(R.string.error_code_42)
                 )
             }
+
             24 -> bottomSheet.showErrorOnBottomSheet(24)
             18 -> bottomSheet.showErrorOnBottomSheet(18)
             38 -> bottomSheet.showErrorOnBottomSheet(38)
             39 -> bottomSheet.showErrorOnBottomSheet(39)
             43 -> bottomSheet.showErrorOnBottomSheet(43)
-            45 ->bottomSheet.showErrorOnBottomSheet(45)
-            else-> super.onRetrofitError(errorCode, msg)
+            45 -> bottomSheet.showErrorOnBottomSheet(45)
+            else -> super.onRetrofitError(errorCode, msg)
         }
         Handler(Looper.getMainLooper()).postDelayed({
             if (showOtp) {
@@ -223,12 +258,39 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
 
                     }
                 }
-                CommonMethods.checkInternet(binding.root,requireContext()) {
-                    isResend=true
-                    CommonMethods.showProgressDialog(requireContext())
+                CommonMethods.checkInternet(binding.root, requireContext()) {
+                    isResend = true
+
                     var json = """{"type2FA" : "google"}""".trimMargin()
                     val detail = CommonMethods.encodeToBase64(json)
-                    viewModel.switchOffAuthentication(detail, Constants.TYPE)
+
+                    val jsonObject = JSONObject()
+                    jsonObject.put("details", detail)
+                    jsonObject.put("action", Constants.TYPE)
+                    val jsonString = jsonObject.toString()
+                    // Generate the request hash
+                    val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                        SplashActivity.integrityTokenProvider?.request(
+                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                .setRequestHash(requestHash)
+                                .build()
+                        )
+                    integrityTokenResponse?.addOnSuccessListener { response ->
+                        CommonMethods.showProgressDialog(requireContext())
+                        viewModel.switchOffAuthentication(
+                            detail,
+                            Constants.TYPE,
+                            token = response.token()
+                        )
+//                            viewModel.switchOffAuthentication(detail, Constants.TYPE)
+
+                    }?.addOnFailureListener { exception ->
+                        Log.d("token", "${exception}")
+
+                    }
+
                 }
                 showOtp = false
                 val transparentView = View(context)
@@ -254,7 +316,7 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
                 vc.show(childFragmentManager, App.prefsManager.user?.type2FA)
                 val mainView = getView()?.rootView as ViewGroup
                 mainView.addView(transparentView, viewParams)
-                bottomSheet=vc
+                bottomSheet = vc
             }
         }, 1500)
     }
@@ -288,17 +350,44 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
                             }
                         }
                     } else
-                        getString(R.string.you_must_install_authenticator).showToast(binding.root,requireContext())
+                        getString(R.string.you_must_install_authenticator).showToast(
+                            binding.root,
+                            requireContext()
+                        )
 
                 }
 
                 btnVerify -> {
-                    CommonMethods.checkInternet(binding.root,requireContext()) {
+                    CommonMethods.checkInternet(binding.root, requireContext()) {
                         showOtp = false
                         CommonMethods.showProgressDialog(requireContext())
                         val json = """{"type2FA" : "google"}""".trimMargin()
                         val detail = CommonMethods.encodeToBase64(json)
-                        viewModel.switchOffAuthentication(detail, Constants.TYPE)
+                        val jsonObject = JSONObject()
+                        jsonObject.put("details", detail)
+                        jsonObject.put("action", Constants.TYPE)
+                        val jsonString = jsonObject.toString()
+                        // Generate the request hash
+                        val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                            SplashActivity.integrityTokenProvider?.request(
+                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                    .setRequestHash(requestHash)
+                                    .build()
+                            )
+                        integrityTokenResponse?.addOnSuccessListener { response ->
+                            CommonMethods.showProgressDialog(requireContext())
+                            viewModel.switchOffAuthentication(
+                                detail,
+                                Constants.TYPE,
+                                token = response.token()
+                            )
+
+                        }?.addOnFailureListener { exception ->
+                            Log.d("token", "${exception}")
+
+                        }
                     }
                 }
 
@@ -314,7 +403,7 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
     fun customDialog1() {
         bottomDialog = BottomSheetDialog(requireContext(), R.style.CustomDialogBottomSheet).apply {
             DownloadGoogleAuthenticatorBinding.inflate(layoutInflater).let { binding ->
-                val dimmedBackgroundColor = Color.argb(82,0,0,0)//alpha = .32F
+                val dimmedBackgroundColor = Color.argb(82, 0, 0, 0)//alpha = .32F
 
 //                window?.apply {
 //                    setDimAmount(0f)// remove dimmed back on older devices
@@ -349,13 +438,33 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
             }
         }
     }
+
     fun handle(tx: String) {
         isResend = true
-        CommonMethods.checkInternet(binding.root,requireContext()) {
+        CommonMethods.checkInternet(binding.root, requireContext()) {
             showOtp = false
             var json = """{"type2FA" : "google"}""".trimMargin()
             val detail = CommonMethods.encodeToBase64(json)
-            viewModel.switchOffAuthentication(detail, Constants.TYPE)
+            val jsonObject = JSONObject()
+            jsonObject.put("details", detail)
+            jsonObject.put("action", Constants.TYPE)
+            val jsonString = jsonObject.toString()
+            // Generate the request hash
+            val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                SplashActivity.integrityTokenProvider?.request(
+                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                        .setRequestHash(requestHash)
+                        .build()
+                )
+            integrityTokenResponse?.addOnSuccessListener { response ->
+                viewModel.switchOffAuthentication(detail,Constants.TYPE, token = response.token())
+
+            }?.addOnFailureListener { exception ->
+                Log.d("token", "${exception}")
+
+            }
         }
     }
 }

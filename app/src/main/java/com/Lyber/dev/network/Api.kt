@@ -13,7 +13,6 @@ import com.Lyber.dev.models.GetAddress
 import com.Lyber.dev.models.GetAssetsResponse
 import com.Lyber.dev.models.GetQuoteResponse
 import com.Lyber.dev.models.GetUserResponse
-import com.Lyber.dev.models.InitiateKycResponse
 import com.Lyber.dev.models.KYCResponse
 import com.Lyber.dev.models.KycStatusResponse
 import com.Lyber.dev.models.MessageResponse
@@ -44,57 +43,15 @@ import retrofit2.http.*
 
 interface Api {
 
-
-    @POST("user/signup")
-    suspend fun enterPhone(@Body hashMap: HashMap<String, Any>): Response<EnterPhoneResponse>
-
-    @POST("user/verify/phone")
-    suspend fun enterOtp(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
-
-    @POST("user/set_login_pin")
-    suspend fun setPin(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
-
-    @POST("user/resend/phone-verification-otp")
-    suspend fun resendOtp(): Response<MessageResponse>
-
-    @POST("user/activate/face-id")
-    suspend fun setFaceId(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
-
-//    @PUT("user/reset/notification")
-//    suspend fun enableNotification(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
-
-    @POST("/user/resend/email")
-    suspend fun sendEmail(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
-
-    @GET("user/check_email_verification")
-    suspend fun checkEmailVerification(): Response<MessageResponse>
-
-    @POST("user/personal-info")
-    suspend fun fillPersonalData(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
-
-    @POST("user/login")
-    suspend fun login(@Body hashMap: HashMap<String, Any>): Response<EnterPhoneResponse>
-
     @Multipart
     @POST("upload")
     suspend fun upload(@Part filePart: MultipartBody.Part): Response<UploadResponse>
 
-    @GET("user/personal_info")
-    suspend fun getPersonalInfo(): Response<User>
-
     @POST("kyc-service/kyc")
     suspend fun startKyc(): Response<KYCResponse>
 
-    @GET("treezor/kyc-liveness")
-    suspend fun initiateKyc(): Response<InitiateKycResponse>
 
-    @GET("treezor/kyc-status")
-    suspend fun kycStatus(): Response<KycStatusResponse>
-
-    @PUT("treezor/user")
-    suspend fun updatePersonalInfo(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
-
-    @POST("user/invest/education")
+    @POST("user/invest/education") // may be not in use
     suspend fun educationStrategy(): Response<MessageResponse>
 
     @GET("strategy-service/strategies")
@@ -102,13 +59,6 @@ interface Api {
 
     @POST("strategy-service/strategy")
     suspend fun chooseStrategy(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
-
-    @GET("coingecko/coins")
-    suspend fun trendingCoins(
-        @Query("page") page: Int,
-        @Query("limit") limit: Int,
-        @Query("order") order: String
-    ): Response<CoinsResponse>
 
     @GET("coingecko/coins")
     suspend fun trendingCoins(
@@ -123,26 +73,11 @@ interface Api {
         @Query("limit") limit: Int = 100
     ): Response<CoinsResponse>
 
-    @PUT("user/treezor-status")
-    suspend fun treezorStatus(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
-
-    @POST("user/verify/pin")
-    suspend fun verifyPin(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
-
     @POST("order-service/quote")
     suspend fun getQuote(@Body hashMap: HashMap<String, Any>): Response<GetQuoteResponse>
 
     @POST("user-service/logout")
     suspend fun logout(): Response<BooleanResponse>
-
-    @POST("user/personal-info")
-    suspend fun personalInfo(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
-
-    @POST("treezor/user")
-    suspend fun createUser(): Response<User>
-
-    @POST("user/invest-on-asset")
-    suspend fun investOnSingleAsset(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
 
     @PATCH("strategy-service/strategy")
     suspend fun editStrategy(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
@@ -155,10 +90,6 @@ interface Api {
 
     @HTTP(method = "DELETE", path = "strategy-service/strategy", hasBody = true)
     suspend fun deleteStrategy(@Body hashMap: HashMap<String, Any>): Response<MessageResponsePause>
-
-
-    @POST("user/swap-crypto")
-    suspend fun swapCrypto(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
 
     @POST("order-service/accept-quote")
     suspend fun acceptQuote(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
@@ -181,41 +112,21 @@ interface Api {
     ): Response<TransactionResponse>
 
 
-    @GET("user/assets")
-    suspend fun getAssets(): Response<MyAssetResponse>
-
-    /* change pin */
-
-//    @POST("user/pin/otp")
-//    suspend fun sendOtpForChangePin(): Response<MessageResponse>
-
-    @POST("user/pin/verify-phone")
+    @POST("user/pin/verify-phone") // not in use
     suspend fun verifyPhoneForPinChange(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
 
-    @PUT("user/pin")
+    @PUT("user/pin") // not in use
     suspend fun updatePin(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
 
-    @GET("user/investments")
-    suspend fun getRecurringInvestments(): Response<RecurringInvestmentResponse>
 
-    @GET("user/investments")
-    suspend fun getRecurringInvestments(@Query("id") id: String): Response<RecurringInvestmentResponse>
-
-    @POST("user/bank-info")
+    @POST("user/bank-info")  // to confirm
     suspend fun addBank(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
 
 
     /* strong authentication */
 
-    @POST("user/enable/strong-auth")
-    suspend fun enableStrongAuthentication(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
-
-    @POST("user/verify/strong-auth")
+    @POST("user/verify/strong-auth") // not in use
     suspend fun verifyStrongAuthentication(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
-
-    @POST("user/enable/whitelisting")
-    suspend fun enableWhitelisting(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
-
 
     @GET("aplo/venues")
     suspend fun getExchangeListing(): Response<ExchangeListingResponse>
@@ -225,9 +136,6 @@ interface Api {
 
     @GET("user/whitelisted-addresses")
     suspend fun getWhitelistedAddress(): Response<WhitelistingResponse>
-
-    @GET("user/whitelisted-addresses")
-    suspend fun getWhitelistsAddress(@Query("asset") assetId: String): Response<WhitelistingResponse>
 
     @GET("user/whitelisted-addresses")
     suspend fun getWhitelistedAddress(@Query("keyword") keyword: String): Response<WhitelistingResponse>
@@ -240,9 +148,6 @@ interface Api {
 
     @HTTP(method = "DELETE", path = "wallet-service/withdrawal-address", hasBody = true)
     suspend fun deleteWhiteListing(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
-
-    @PUT("user/whitelist-address")
-    suspend fun updateWhiteList(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
 
     @PUT("user")
     suspend fun updateUser(@Body hashMap: HashMap<String, Any>): Response<MessageResponse>
@@ -353,10 +258,6 @@ interface Api {
     @POST("user-service/contact-support")
     suspend fun contactSupport(@Body hashMap: HashMap<String, Any>): Response<BooleanResponse>
 
-
-    //patch
-
-
     @PATCH("user-service/user")
     suspend fun updateUserAuthentication(@Body hashMap: HashMap<String, Any>): Response<UpdateAuthenticateResponse>
 
@@ -369,9 +270,6 @@ interface Api {
     @GET("user-service/google-otp")
     suspend fun getQrUrl(): Response<QrCodeResponse>
 
-
-    @POST("user-service/verify-2FA")
-    suspend fun verify2FAWithdraw(@Body hashMap: HashMap<String, Any>): Response<CommonResponseVerfiy>
 
     @POST("wallet-service/withdraw")
     suspend fun createWithdrawalRequest(@Body hashMap: HashMap<String, Any>): Response<CommonResponse>
@@ -450,7 +348,7 @@ interface Api {
     suspend fun enableNotification(@Body hashMap: HashMap<String, Any>): Response<BooleanResponse>
 
     @GET("wallet-service/ribs")
-    suspend fun getWalletServices():Response<RIBResponse>
+    suspend fun getWalletServices(): Response<RIBResponse>
 
     @POST("wallet-service/rib")
     suspend fun addRib(@Body hashMap: HashMap<String, Any>): Response<BooleanResponse>
@@ -462,6 +360,6 @@ interface Api {
     suspend fun withdrawEuroRequest(@Body hashMap: HashMap<String, Any>): Response<CommonResponse>
 
     @GET("wallet-service/withdraw-euro-info")
-    suspend fun getWithdrawEuroFee():Response<WithdrawEuroFee>
+    suspend fun getWithdrawEuroFee(): Response<WithdrawEuroFee>
 
 }

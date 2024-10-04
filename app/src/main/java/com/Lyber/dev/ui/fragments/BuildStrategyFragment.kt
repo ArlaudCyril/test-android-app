@@ -23,6 +23,7 @@ import com.Lyber.dev.databinding.CustomDialogLayoutBinding
 import com.Lyber.dev.databinding.FragmentBuildStrategyBinding
 import com.Lyber.dev.models.AddedAsset
 import com.Lyber.dev.models.PriceServiceResume
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.adapters.BuildStrategyAdapter
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.AddAssetBottomSheet
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.BaseBottomSheet
@@ -41,7 +42,10 @@ import com.Lyber.dev.utils.CommonMethods.Companion.toPx
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import kotlin.math.ceil
 import kotlin.math.roundToInt
 
@@ -262,7 +266,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                         checkInternet(binding.root, requireContext()) {
                             if (viewModel.selectedStrategy!!.expectedYield != null) {
                                 showProgressDialog(requireContext())
-                                viewModel.buildOwnStrategy(viewModel.selectedStrategy!!.name + " (Copy)")
+                                viewModel.buildOwnStrategy(viewModel.selectedStrategy!!.name)
                             } else {
                                 if (viewModel.selectedStrategy?.activeStrategy != null) {
                                     requiredAmount = 0f
@@ -784,6 +788,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                 showSnack(binding.root, requireContext(), getString(R.string.error_code_13001))
                 requireActivity().onBackPressedDispatcher.onBackPressed()
             }
+
             else -> super.onRetrofitError(errorCode, msg)
         }
     }

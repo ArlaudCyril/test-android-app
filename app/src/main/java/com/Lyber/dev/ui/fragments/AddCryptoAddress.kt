@@ -37,6 +37,8 @@ import com.Lyber.dev.databinding.CustomDialogLayoutBinding
 import com.Lyber.dev.databinding.FragmentAddBitcoinAddressBinding
 import com.Lyber.dev.databinding.LoaderViewBinding
 import com.Lyber.dev.models.Network
+import com.Lyber.dev.ui.activities.SplashActivity
+import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.addressMatched
 import com.Lyber.dev.utils.CommonMethods.Companion.checkFormat
@@ -53,11 +55,14 @@ import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.ProfileViewModel
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import io.github.g00fy2.quickie.QRResult
 import io.github.g00fy2.quickie.ScanCustomCode
 import io.github.g00fy2.quickie.config.BarcodeFormat
 import io.github.g00fy2.quickie.config.ScannerConfig
 import okhttp3.ResponseBody
+import org.json.JSONObject
 
 class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.OnClickListener {
 
@@ -157,14 +162,37 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                 val format = address.addressMatched(it.data.addressRegex)
                 if (format) {
 //                    Log.d("network","$network")
-                    viewModel.addAddress(
-                        addressName,
-                        network?.id ?: "",
-                        address,
-                        origin,
-                        binding.etExchange.text.toString() ?: "",
-                        network?.imageUrl ?: ""
-                    )
+                    val jsonObject = JSONObject()
+                    jsonObject.put("name", addressName)
+                    jsonObject.put("network", network?.id ?: "")
+                    jsonObject.put("address", address)
+                    jsonObject.put("origin", origin)
+                    if (origin.lowercase() == "exchange")
+                    jsonObject.put("exchange",binding.etExchange.text.toString() ?: "")
+                    val jsonString = jsonObject.toString()
+                    // Generate the request hash
+                    val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                        SplashActivity.integrityTokenProvider?.request(
+                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                .setRequestHash(requestHash)
+                                .build()
+                        )
+                    integrityTokenResponse?.addOnSuccessListener { response ->
+                        Log.d("token", "${response.token()}")
+                        viewModel.addAddress(
+                            addressName,
+                            network?.id ?: "",
+                            address,
+                            origin,
+                            binding.etExchange.text.toString() ?: "",
+                            response.token()
+                        )
+
+                    }?.addOnFailureListener { exception ->
+                        Log.d("token", "${exception}")
+                    }
                 } else {
                     CommonMethods.dismissProgressDialog()
                     binding.etAddress.requestKeyboard()
@@ -769,13 +797,15 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
 
     override fun onRetrofitError(errorCode: Int, msg: String) {
         dismissProgressDialog()
-        when ( errorCode ) {
+        when (errorCode) {
             10024 -> {
                 CommonMethods.showSnack(
                     binding.root,
                     requireContext(),
-                    getString(R.string.error_code_10024,
-                        network!!.fullName)
+                    getString(
+                        R.string.error_code_10024,
+                        network!!.fullName
+                    )
                 )
                 if (toEdit)
                     requireActivity().onBackPressedDispatcher.onBackPressed()
@@ -786,8 +816,10 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                 CommonMethods.showSnack(
                     binding.root,
                     requireContext(),
-                    getString(R.string.error_code_10028,
-                        network!!.fullName)
+                    getString(
+                        R.string.error_code_10028,
+                        network!!.fullName
+                    )
                 )
                 if (toEdit)
                     requireActivity().onBackPressedDispatcher.onBackPressed()
@@ -809,7 +841,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
                 getString(R.string.error_code_18000)
             )
 
-            else ->  super.onRetrofitError(errorCode, msg)
+            else -> super.onRetrofitError(errorCode, msg)
         }
     }
 

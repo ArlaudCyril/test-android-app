@@ -29,6 +29,7 @@ import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentPortfolioHomeBinding
 import com.Lyber.dev.databinding.LoaderViewBinding
 import com.Lyber.dev.models.*
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.adapters.*
 import com.Lyber.dev.ui.fragments.BaseFragment
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.InvestBottomSheet
@@ -50,9 +51,12 @@ import com.Lyber.dev.utils.CommonMethods.Companion.visibleFromLeft
 import com.Lyber.dev.utils.CommonMethods.Companion.zoomIn
 import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.google.android.gms.tasks.OnCompleteListener
+import com.google.android.gms.tasks.Task
 import com.google.android.material.tabs.TabLayout
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import com.google.firebase.messaging.FirebaseMessaging
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Locale
 
@@ -116,9 +120,19 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             binding.rvRefresh.isRefreshing = true
             responseFrom = ""
             lastValueUpdated = false
-            viewModel.getWalletHistoryPrice(daily, limit)
-            viewModel.getUser()
-            viewModel.getBalance()
+//            viewModel.getWalletHistoryPrice(daily, limit)
+            hitWalletApi()
+            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                SplashActivity.integrityTokenProvider?.request(
+                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                        .build()
+                )
+            integrityTokenResponse?.addOnSuccessListener { response ->
+                viewModel.getUser(response.token())
+                viewModel.getBalance(response.token())
+            }?.addOnFailureListener { exception ->
+                Log.d("token", "${exception}")
+            }
             viewModel.getAllPriceResume()
         }
 
@@ -183,7 +197,8 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                             daily = true
                         }
                     }
-                    viewModel.getWalletHistoryPrice(daily, limit)
+//                    viewModel.getWalletHistoryPrice(daily, limit)
+                    hitWalletApi()
                 }
 
                 override fun onTabUnselected(tab: TabLayout.Tab?) {}
@@ -281,17 +296,48 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 App.isLoader = false
             lastValueUpdated = false
             responseFrom = ""
-            viewModel.getUser()
+            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                SplashActivity.integrityTokenProvider?.request(
+                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                        .build()
+                )
+            integrityTokenResponse?.addOnSuccessListener { response ->
+                viewModel.getUser(response.token())
+                viewModel.getBalance(response.token())
+                viewModel.getWalletRib(response.token())
+                viewModel.getActiveStrategies(response.token())
+            }?.addOnFailureListener { exception ->
+                Log.d("token", "${exception}")
+            }
             viewModel.getAllAssets()
             viewModel.getNetworks()
-            viewModel.getActiveStrategies()
-            viewModel.getWalletHistoryPrice(daily, limit)
-            viewModel.getBalance()
+            hitWalletApi()
             viewModel.getAllPriceResume()
-            viewModel.getWalletRib()
         }
     }
+    private fun hitWalletApi(){
+        val jsonObject = JSONObject()
+        jsonObject.put("daily",daily)
+        jsonObject.put("limit", limit)
+        val jsonString = jsonObject.toString()
+        // Generate the request hash
+        val requestHash = CommonMethods.generateRequestHash(jsonString)
 
+        val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+            SplashActivity.integrityTokenProvider?.request(
+                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                    .setRequestHash(requestHash)
+                    .build()
+            )
+        integrityTokenResponse1?.addOnSuccessListener { response ->
+            Log.d("token", "${response.token()}")
+            viewModel.getWalletHistoryPrice(response.token(),daily,limit)
+
+        }?.addOnFailureListener { exception ->
+            Log.d("token", "${exception}")
+
+        }
+    }
     private fun addObservers() {
 
         viewModel.newsResponse.observe(viewLifecycleOwner) {
@@ -894,6 +940,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 ivProfile -> navController.navigate(R.id.profileFragment)
                 ivProfile -> navController.navigate(R.id.profileFragment)
                 llThreeDot -> {
+                    viewModel.selectedAsset=null
                     PortfolioThreeDots(::menuOptionSelected).show(
                         childFragmentManager,
                         ""

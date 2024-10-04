@@ -1,13 +1,18 @@
 package com.Lyber.dev.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.Lifecycle
 import com.Lyber.dev.databinding.FragmentSelectedProfilePictureBinding
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.Constants
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
+import org.json.JSONObject
 
 class SelectedProfilePictureFragment : BaseFragment<FragmentSelectedProfilePictureBinding>() {
 
@@ -41,16 +46,36 @@ class SelectedProfilePictureFragment : BaseFragment<FragmentSelectedProfilePictu
             //requireActivity().supportFragmentManager.popBackStack()
         }
         binding.btnSave.setOnClickListener {
-            CommonMethods.checkInternet(binding.root,requireActivity()) {
-                CommonMethods.showProgressDialog(requireActivity())
+            CommonMethods.checkInternet(binding.root, requireActivity()) {
                 App.prefsManager.defaultImage = profilePIc
-                viewModel.updateAvtaar(profilePIc.toString())
+                val jsonObject = JSONObject()
+                jsonObject.put("avatar", profilePIc.toString())
+                val jsonString = jsonObject.toString()
+                // Generate the request hash
+                val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                    SplashActivity.integrityTokenProvider?.request(
+                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                            .setRequestHash(requestHash)
+                            .build()
+                    )
+                integrityTokenResponse?.addOnSuccessListener { response ->
+                    Log.d("token", "${response.token()}")
+                    CommonMethods.showProgressDialog(requireActivity())
+                    viewModel.updateAvtaar(profilePIc.toString(), response.token())
+
+                }?.addOnFailureListener { exception ->
+                    Log.d("token", "${exception}")
+
+                }
+
             }
         }
 
 
-        viewModel.updateUserInfoResponse.observe(viewLifecycleOwner){
-            if (lifecycle.currentState == Lifecycle.State.RESUMED){
+        viewModel.updateUserInfoResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 CommonMethods.dismissProgressDialog()
                 requireActivity().supportFragmentManager.popBackStack()
                 requireActivity().supportFragmentManager.popBackStack()

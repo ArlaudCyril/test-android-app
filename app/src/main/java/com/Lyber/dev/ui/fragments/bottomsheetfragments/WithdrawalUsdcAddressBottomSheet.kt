@@ -13,13 +13,9 @@ import com.Lyber.dev.databinding.AppItemLayoutBinding
 import com.Lyber.dev.databinding.BottomsheetWithdrawalAddressesBinding
 import com.Lyber.dev.databinding.LoaderViewBinding
 import com.Lyber.dev.models.RIBData
-import com.Lyber.dev.models.WithdrawAddress
-import com.Lyber.dev.ui.activities.BaseActivity
 import com.Lyber.dev.ui.adapters.BaseAdapter
-import com.Lyber.dev.ui.fragments.AddAddressBookFragment
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.loadCircleCrop
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 
@@ -58,10 +54,10 @@ class WithdrawalUsdcAddressBottomSheet(
         }
         binding.includeAddCryptoAddress.root.setOnClickListener {
             val bundle = Bundle().apply {
-                putString(Constants.FROM,WithdrawalUsdcAddressBottomSheet::class.java.name)
+                putString(Constants.FROM, WithdrawalUsdcAddressBottomSheet::class.java.name)
             }
             dismiss()
-            findNavController().navigate(R.id.addRibFragment,bundle)
+            findNavController().navigate(R.id.addRibFragment, bundle)
         }
     }
 

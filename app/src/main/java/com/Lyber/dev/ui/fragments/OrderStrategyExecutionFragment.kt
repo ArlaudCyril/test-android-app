@@ -21,6 +21,7 @@ import com.Lyber.dev.databinding.FragmentOrderStrategyExecutionBinding
 import com.Lyber.dev.databinding.ItemMyAssetBinding
 import com.Lyber.dev.models.BalanceStrategy
 import com.Lyber.dev.models.BalanceStrategyData
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.adapters.BaseAdapter
 import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.Lyber.dev.utils.CommonMethods
@@ -31,7 +32,10 @@ import com.Lyber.dev.utils.CommonMethods.Companion.gone
 import com.Lyber.dev.utils.CommonMethods.Companion.loadCircleCrop
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import java.math.RoundingMode
 
 
@@ -43,7 +47,7 @@ import java.math.RoundingMode
 class OrderStrategyExecutionFragment : BaseFragment<FragmentOrderStrategyExecutionBinding>(),
     OnClickListener {
     override fun bind() = FragmentOrderStrategyExecutionBinding.inflate(layoutInflater)
-   private val handler = Handler(Looper.getMainLooper())
+    private val handler = Handler(Looper.getMainLooper())
     private val delayMillis = 5000L // 5 seconds in milliseconds
     private var executionID = ""
     private lateinit var viewModel: PortfolioViewModel
@@ -52,7 +56,7 @@ class OrderStrategyExecutionFragment : BaseFragment<FragmentOrderStrategyExecuti
         super.onViewCreated(view, savedInstanceState)
         viewModel = CommonMethods.getViewModel(requireActivity())
         viewModel.listener = this
-        executionID =  requireArguments().getString("executionId").toString()
+        executionID = requireArguments().getString("executionId").toString()
         startRepeatingTask()
         binding.ivTopAction.setOnClickListener(this)
         binding.btnThanks.setOnClickListener(this)
@@ -209,8 +213,29 @@ class OrderStrategyExecutionFragment : BaseFragment<FragmentOrderStrategyExecuti
         handler.postDelayed(object : Runnable {
             override fun run() {
                 // Your statement to be executed every 5 seconds
-                CommonMethods.checkInternet(binding.root,requireContext()) {
-                    viewModel.strategyStatus(executionID)
+                CommonMethods.checkInternet(binding.root, requireContext()) {
+                    val jsonObject = JSONObject()
+                    jsonObject.put("executionId", executionID)
+                    val jsonString = jsonObject.toString()
+                    // Generate the request hash
+                    val requestHash =
+                        CommonMethods.generateRequestHash(jsonString)
+                    val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                        SplashActivity.integrityTokenProvider?.request(
+                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                .setRequestHash(requestHash)
+                                .build()
+                        )
+                    integrityTokenResponse1?.addOnSuccessListener { response ->
+                        Log.d("token", "${response.token()}")
+                        viewModel.strategyStatus(
+                            executionID,
+                            response.token()
+                        )
+
+                    }?.addOnFailureListener { exception ->
+                        Log.d("token", "${exception}")
+                    }
                 }
                 // Schedule the next execution after the delay
                 handler.postDelayed(this, delayMillis)

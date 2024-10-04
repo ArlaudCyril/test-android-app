@@ -11,6 +11,7 @@ import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
 import android.provider.Settings
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -32,6 +33,7 @@ import com.Lyber.dev.databinding.FragmentProfileBinding
 import com.Lyber.dev.databinding.ItemTransactionNewBinding
 import com.Lyber.dev.models.Balance
 import com.Lyber.dev.models.TransactionData
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.adapters.BaseAdapter
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.TransactionDetailsBottomSheetFragment
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.VerificationBottomSheet2FA
@@ -55,7 +57,10 @@ import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.Lyber.dev.viewmodels.SignUpViewModel
 import com.caverock.androidsvg.BuildConfig
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import com.google.gson.GsonBuilder
+import org.json.JSONObject
 import java.io.File
 import java.math.BigDecimal
 import java.math.RoundingMode
@@ -94,7 +99,31 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         CommonMethods.checkInternet(binding.root, requireContext()) {
             binding.progressImage.animation =
                 AnimationUtils.loadAnimation(context, R.anim.rotate_drawable)
-            viewModel.getTransactions(limit, offset)
+            val jsonObject = JSONObject()
+            jsonObject.put("limit", limit)
+            jsonObject.put("offset", offset)
+            val jsonString = jsonObject.toString()
+            // Generate the request hash
+            val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                SplashActivity.integrityTokenProvider?.request(
+                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                        .setRequestHash(requestHash)
+                        .build()
+                )
+            integrityTokenResponse?.addOnSuccessListener { response ->
+                viewModel.getTransactionsListing(
+                    limit,
+                   offset,
+                    token = response.token()
+                )
+//                            viewModel.switchOffAuthentication(detail, Constants.TYPE)
+
+            }?.addOnFailureListener { exception ->
+                Log.d("token", "${exception}")
+
+            }
         }
 
 //        if (CommonMethods.isFaceIdAvail(requireContext()))
@@ -202,7 +231,25 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
 //                App.prefsManager.setProfileImage(it.s3Url)
                 checkInternet(binding.root, requireContext()) {
-                    viewModel.updateUser(hashMapOf("profile_pic" to it.s3Url))
+                    val jsonObject = JSONObject()
+                    jsonObject.put("profile_pic",it.s3Url)
+                    val jsonString = jsonObject.toString()
+                    // Generate the request hash
+                    val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                        SplashActivity.integrityTokenProvider?.request(
+                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                .setRequestHash(requestHash)
+                                .build()
+                        )
+                    integrityTokenResponse?.addOnSuccessListener { response ->
+                        Log.d("token", "${response.token()}")
+                        viewModel.updateUser(hashMapOf("profile_pic" to it.s3Url), response.token())
+
+                    }?.addOnFailureListener { exception ->
+                        Log.d("token", "${exception}")
+                    }
                 }
             }
         }
@@ -295,11 +342,35 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
     }
 
     private fun handle(code: String) {
-        CommonMethods.checkInternet(binding.root, requireContext()) {
-            isResend = true
-            viewModelSignup.getOtpForWithdraw(Constants.ACTION_CLOSE_ACCOUNT, null)
+        checkInternet(binding.root, requireContext()) {
+            val jsonObject = JSONObject()
+            jsonObject.put("action", Constants.ACTION_CLOSE_ACCOUNT)
+            val jsonString = jsonObject.toString()
+            // Generate the request hash
+            val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                SplashActivity.integrityTokenProvider?.request(
+                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                        .setRequestHash(requestHash)
+                        .build()
+                )
+            integrityTokenResponse?.addOnSuccessListener { response ->
+                Log.d("token", "${response.token()}")
+                isResend = true
+                viewModel.getOtpForWithdraw(
+                    response.token(),
+                    Constants.ACTION_CLOSE_ACCOUNT, null
+                )
+
+            }?.addOnFailureListener { exception ->
+                Log.d("token", "${exception}")
+
+            }
+
 
         }
+
 
     }
 
@@ -346,9 +417,19 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 }
                 it.tvPositiveButton.setOnClickListener {
                     dismiss()
-                    CommonMethods.checkInternet(binding.root, requireContext()) {
-                        CommonMethods.showProgressDialog(requireContext())
-                        viewModel.logout()
+                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                        SplashActivity.integrityTokenProvider?.request(
+                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                .build()
+                        )
+                    integrityTokenResponse?.addOnSuccessListener { response ->
+                        Log.d("token", "${response.token()}")
+                        CommonMethods.showProgressDialog(requireActivity())
+                        viewModel.logout(response.token())
+
+                    }?.addOnFailureListener { exception ->
+                        Log.d("token", "${exception}")
+
                     }
                 }
                 show()
@@ -358,7 +439,18 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 
     private fun showCloseAccountDialog() {
         if (com.Lyber.dev.ui.activities.BaseActivity.balances.size == 0)
-            viewModel.getBalance()
+            {
+                val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                    SplashActivity.integrityTokenProvider?.request(
+                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                            .build()
+                    )
+                integrityTokenResponse?.addOnSuccessListener { response ->
+                    viewModel.getBalance(response.token())
+                }?.addOnFailureListener { exception ->
+                    Log.d("token", "${exception}")
+                }
+            }
         Dialog(requireActivity(), R.style.DialogTheme).apply {
             CustomDialogLayoutBinding.inflate(layoutInflater).let {
                 requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -398,7 +490,35 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                     } else {
                         CommonMethods.showProgressDialog(requireContext())
                         dismiss()
-                        viewModel.getOtpForWithdraw(Constants.ACTION_CLOSE_ACCOUNT, null)
+                        checkInternet(binding.root, requireContext()) {
+                            val jsonObject = JSONObject()
+                            jsonObject.put("action", Constants.ACTION_CLOSE_ACCOUNT)
+                            val jsonString = jsonObject.toString()
+                            // Generate the request hash
+                            val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                                SplashActivity.integrityTokenProvider?.request(
+                                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                        .setRequestHash(requestHash)
+                                        .build()
+                                )
+                            integrityTokenResponse?.addOnSuccessListener { response ->
+                                Log.d("token", "${response.token()}")
+                                viewModel.getOtpForWithdraw(
+                                    response.token(),
+                                    Constants.ACTION_CLOSE_ACCOUNT, null
+                                )
+
+                            }?.addOnFailureListener { exception ->
+                                Log.d("token", "${exception}")
+                                CommonMethods.dismissProgressDialog()
+
+                            }
+
+
+                        }
+
                     }
                 }
                 show()

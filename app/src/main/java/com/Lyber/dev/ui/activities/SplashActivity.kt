@@ -26,6 +26,8 @@ import com.Lyber.dev.utils.ActivityCallbacks
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods.Companion.is30DaysOld
 import com.Lyber.dev.utils.Constants
+import com.google.android.play.core.integrity.IntegrityManagerFactory
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import java.util.Locale
 
 
@@ -65,6 +67,25 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
 //        installSplashScreen().setKeepOnScreenCondition { keepSplashOnScreen }
 //        Handler(Looper.getMainLooper()).postDelayed({ keepSplashOnScreen = false }, delay)
         super.onCreate(savedInstanceState)
+        //        // Create an instance of a manager.
+        val standardIntegrityManager: StandardIntegrityManager =
+            IntegrityManagerFactory.createStandard(this.applicationContext)
+
+        val cloudProjectNumber: Long = 672116436946 // console id
+
+// Prepare integrity token. Can be called once in a while to keep internal state fresh.
+        standardIntegrityManager.prepareIntegrityToken(
+            StandardIntegrityManager.PrepareIntegrityTokenRequest.builder()
+                .setCloudProjectNumber(cloudProjectNumber)
+                .build()
+        ).addOnSuccessListener { tokenProvider ->
+            integrityTokenProvider = tokenProvider
+            Log.d("Token", "$integrityTokenProvider")
+        }.addOnFailureListener { exception ->
+//                        handleError(exception)
+            Log.d("Exception", "$exception")
+
+        }
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -123,6 +144,8 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
             set(value) {
                 _activityCallbacks = value
             }
+        var integrityTokenProvider: StandardIntegrityManager.StandardIntegrityTokenProvider? = null
+
     }
 
     private fun handleExtras() {

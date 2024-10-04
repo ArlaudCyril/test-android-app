@@ -13,23 +13,24 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Lifecycle
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.BottomSheetVerificationBinding
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.fragments.TwoFactorAuthenticationFragment
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.gone
 import com.Lyber.dev.utils.CommonMethods.Companion.requestKeyboard
-import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.SignUpViewModel
+import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-import okhttp3.ResponseBody
+import com.google.android.play.core.integrity.StandardIntegrityManager
+import org.json.JSONObject
 
 class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
     BaseBottomSheet<BottomSheetVerificationBinding>() {
@@ -386,44 +387,127 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
 
                             if (tag!!.isNotEmpty()) {
                                 if (arguments != null && requireArguments().containsKey("clickedOn")) {
-                                    var args = requireArguments().getString("clickedOn")
-                                    Log.d("text", args!!)
+                                    CommonMethods.checkInternet(binding.root, requireContext()) {
+                                        val args = requireArguments().getString("clickedOn")
+                                        val hash = hashMapOf<String, Any>()
+                                        if (args == "")
+                                            hash["scope2FA"] = listOf("login")
+                                        else
+                                            hash["scope2FA"] = listOf(args)
+                                        hash["otp"] = getCode()
 
-                                    val hash = hashMapOf<String, Any>()
-                                    if (args == "")
-                                        hash["scope2FA"] = listOf("login")
-                                    else
-                                        hash["scope2FA"] = listOf(args)
-                                    hash["otp"] = getCode()
-                                    Log.d("hash", "$hash")
-                                    CommonMethods.showProgressDialog(requireContext())
-                                    viewModel.updateAuthentication(hash)
+                                        val jsonObject = JSONObject()
+                                        jsonObject.put("scope2FA", hash["scope2FA"])
+                                        jsonObject.put("otp", getCode())
+                                        val jsonString = jsonObject.toString()
+                                        // Generate the request hash
+                                        val requestHash =
+                                            CommonMethods.generateRequestHash(jsonString)
+
+                                        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                                            SplashActivity.integrityTokenProvider?.request(
+                                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                                    .setRequestHash(requestHash)
+                                                    .build()
+                                            )
+                                        integrityTokenResponse?.addOnSuccessListener { response ->
+                                            CommonMethods.showProgressDialog(requireContext())
+                                            viewModel.updateAuthentication(
+                                                hash,
+                                                token = response.token()
+                                            )
+                                        }?.addOnFailureListener { exception ->
+                                            Log.d("token", "${exception}")
+                                            CommonMethods.dismissProgressDialog()
+                                        }
+                                    }
                                 } else if (arguments != null && requireArguments().containsKey(
                                         Constants.TYPE
                                     )
                                 ) {
                                     var args = requireArguments().getString(Constants.TYPE)
                                     if (requireArguments().containsKey("changeType")) {
-                                        Log.d("text", args!!)
-                                        val hash = hashMapOf<String, Any>()
-                                        hash["type2FA"] =
-                                            requireArguments().getString("changeType").toString()
-                                        hash["otp"] = getCode()
-                                        Log.d("hash", "$hash")
-                                        CommonMethods.showProgressDialog(requireContext())
-                                        viewModel.updateAuthentication(hash)
+                                      CommonMethods.checkInternet(
+                                            binding.root,
+                                            requireContext()
+                                        ) {
+                                            Log.d("text", args!!)
+                                            val hash = hashMapOf<String, Any>()
+                                            hash["type2FA"] =
+                                                requireArguments().getString("changeType").toString()
+                                            hash["otp"] = getCode()
+                                            Log.d("hash", "$hash")
+
+                                            val jsonObject = JSONObject()
+                                            jsonObject.put("type2FA", hash["type2FA"])
+                                            jsonObject.put("otp", getCode())
+                                            val jsonString = jsonObject.toString()
+                                            // Generate the request hash
+                                            val requestHash =
+                                                CommonMethods.generateRequestHash(jsonString)
+
+                                            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                                                SplashActivity.integrityTokenProvider?.request(
+                                                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                                        .setRequestHash(requestHash)
+                                                        .build()
+                                                )
+                                            integrityTokenResponse?.addOnSuccessListener { response ->
+                                                CommonMethods.showProgressDialog(requireContext())
+                                                viewModel.updateAuthentication(
+                                                    hash,
+                                                    token = response.token()
+                                                )
+                                            }?.addOnFailureListener { exception ->
+                                                Log.d("token", "${exception}")
+                                                CommonMethods.dismissProgressDialog()
+                                            }
+                                        }
+
+
+
                                     }
                                     if (args == Constants.GOOGLE) {
                                         if (googleOTP.isNotEmpty()) {
-                                            Log.d("text", args)
-                                            val hash = hashMapOf<String, Any>()
-                                            hash["type2FA"] = args
-                                            hash["otp"] = getCode()
-                                            hash["googleOtp"] = googleOTP
-                                            Log.d("hash", "$hash")
-                                            TwoFactorAuthenticationFragment.showOtp = true
-                                            CommonMethods.showProgressDialog(requireContext())
-                                            viewModel.updateAuthentication(hash)
+                                       CommonMethods.checkInternet(
+                                                binding.root,
+                                                requireContext()
+                                            ) {
+                                                val hash = hashMapOf<String, Any>()
+                                                hash["type2FA"] = args
+                                                hash["otp"] = getCode()
+                                                hash["googleOtp"] = googleOTP
+                                                Log.d("hash", "$hash")
+                                                TwoFactorAuthenticationFragment.showOtp = true
+
+                                                val jsonObject = JSONObject()
+                                                jsonObject.put("type2FA", hash["type2FA"])
+                                                jsonObject.put("otp", getCode())
+                                                jsonObject.put("googleOtp", googleOTP)
+                                                val jsonString = jsonObject.toString()
+                                                // Generate the request hash
+                                                val requestHash =
+                                                    CommonMethods.generateRequestHash(jsonString)
+
+                                                val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                                                    SplashActivity.integrityTokenProvider?.request(
+                                                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                                            .setRequestHash(requestHash)
+                                                            .build()
+                                                    )
+                                                integrityTokenResponse?.addOnSuccessListener { response ->
+                                                    CommonMethods.showProgressDialog(requireContext())
+                                                    viewModel.updateAuthentication(
+                                                        hash,
+                                                        token = response.token()
+                                                    )
+                                                }?.addOnFailureListener { exception ->
+                                                    Log.d("token", "${exception}")
+                                                    CommonMethods.dismissProgressDialog()
+                                                }
+                                            }
+
+
                                         } else {
                                             googleOTP = getCode()
                                             if (App.prefsManager.user!!.type2FA == Constants.EMAIL)
@@ -450,26 +534,110 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
                                         }
 
                                     } else {
-                                        Log.d("text", args!!)
-                                        val hash = hashMapOf<String, Any>()
-                                        hash["type2FA"] = args
-                                        hash["otp"] = getCode()
-                                        Log.d("hash", "$hash")
-                                        CommonMethods.showProgressDialog(requireContext())
-                                        viewModel.updateAuthentication(hash)
+                                        CommonMethods.checkInternet(
+                                            binding.root,
+                                            requireContext()
+                                        ) {
+                                            val hash = hashMapOf<String, Any>()
+                                            hash["type2FA"] = args!!
+                                            hash["otp"] = getCode()
+                                            Log.d("hash", "$hash")
+                                            val jsonObject = JSONObject()
+                                            jsonObject.put("type2FA", hash["type2FA"])
+                                            jsonObject.put("otp", getCode())
+                                            val jsonString = jsonObject.toString()
+                                            // Generate the request hash
+                                            val requestHash =
+                                                CommonMethods.generateRequestHash(jsonString)
+
+                                            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                                                SplashActivity.integrityTokenProvider?.request(
+                                                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                                        .setRequestHash(requestHash)
+                                                        .build()
+                                                )
+                                            integrityTokenResponse?.addOnSuccessListener { response ->
+                                                CommonMethods.showProgressDialog(requireContext())
+                                                viewModel.updateAuthentication(
+                                                    hash,
+                                                    token = response.token()
+                                                )
+                                            }?.addOnFailureListener { exception ->
+                                                Log.d("token", "${exception}")
+                                                CommonMethods.dismissProgressDialog()
+                                            }
+                                        }
                                     }
                                 }
                             } else if (::typeVerification.isInitialized && typeVerification != null && typeVerification == Constants.CHANGE_PASSWORD) {
-//                                dismiss()
-                                CommonMethods.showProgressDialog(requireContext())
-                                viewModel.verifyPasswordChange(code = getCode())
+                                CommonMethods.checkInternet(binding.root,requireContext()) {
+                                    val jsonObject = JSONObject()
+                                    jsonObject.put("code", getCode())
+                                    val jsonString = jsonObject.toString()
+                                    // Generate the request hash
+                                    val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                                        SplashActivity.integrityTokenProvider?.request(
+                                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                                .setRequestHash(requestHash)
+                                                .build()
+                                        )
+                                    integrityTokenResponse?.addOnSuccessListener { response ->
+                                        CommonMethods.showProgressDialog(requireContext())
+                                        viewModel.verifyPasswordChange(
+                                            getCode(), token = response.token()
+                                        )
+                                    }?.addOnFailureListener { exception ->
+                                        Log.d("token", "${exception}")
+
+                                    }
+                                }
                             } else if (viewModel.forLogin) {
-//                                dismiss()
-                                viewModel.verify2FA(code = getCode())
+                                CommonMethods.checkInternet(binding.root, requireContext()) {
+                                    val jsonObject = JSONObject()
+                                    jsonObject.put("code", getCode())
+                                    val jsonString = jsonObject.toString()
+                                    // Generate the request hash
+                                    val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                                        SplashActivity.integrityTokenProvider?.request(
+                                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                                .setRequestHash(requestHash)
+                                                .build()
+                                        )
+                                    integrityTokenResponse?.addOnSuccessListener { response ->
+                                        viewModel.verify2FA(
+                                            code = getCode(),
+                                            token = response.token()
+                                        )
+                                    }?.addOnFailureListener { exception ->
+                                        Log.d("token", "${exception}")
+
+                                    }
+                                }
                             } else {
-//                                dismiss()
-//                                CommonMethods.showProgressDialog(requireContext())
-                                viewModel.verifyPhone(getCode())
+                                CommonMethods.checkInternet(binding.root, requireContext()) {
+                                    val jsonObject = JSONObject()
+                                    jsonObject.put("code", getCode())
+                                    val jsonString = jsonObject.toString()
+                                    // Generate the request hash
+                                    val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                                        SplashActivity.integrityTokenProvider?.request(
+                                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                                .setRequestHash(requestHash)
+                                                .build()
+                                        )
+                                    integrityTokenResponse?.addOnSuccessListener { response ->
+                                        viewModel.verifyPhone(getCode(), response.token())
+                                    }?.addOnFailureListener { exception ->
+                                        Log.d("token", "${exception}")
+
+                                    }
+                                }
                             }
                         }
                     }

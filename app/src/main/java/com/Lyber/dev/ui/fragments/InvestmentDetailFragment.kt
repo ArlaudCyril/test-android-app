@@ -1,6 +1,7 @@
 package com.Lyber.dev.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,8 +15,10 @@ import com.Lyber.dev.databinding.FragmentInvestmentDetailBinding
 import com.Lyber.dev.databinding.LoaderViewBinding
 import com.Lyber.dev.models.InvestmentStrategyAsset
 import com.Lyber.dev.models.Transaction
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.adapters.BaseAdapter
 import com.Lyber.dev.utils.AppLifeCycleObserver
+import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.dev.utils.CommonMethods.Companion.commaFormatted
 import com.Lyber.dev.utils.CommonMethods.Companion.decimalPoints
@@ -26,6 +29,9 @@ import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.NetworkViewModel
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
+import org.json.JSONObject
 
 class InvestmentDetailFragment : BaseFragment<FragmentInvestmentDetailBinding>() {
 
@@ -112,7 +118,25 @@ class InvestmentDetailFragment : BaseFragment<FragmentInvestmentDetailBinding>()
         binding.btnCancelInvestment.setOnClickListener {
             checkInternet(binding.root,requireContext()) {
                 showProgressDialog(requireContext())
-                viewModel.cancelRecurringInvestment(investmentId)
+                val jsonObject = JSONObject()
+                jsonObject.put("id",investmentId)
+                val jsonString = jsonObject.toString()
+                // Generate the request hash
+                val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                    SplashActivity.integrityTokenProvider?.request(
+                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                            .setRequestHash(requestHash)
+                            .build()
+                    )
+                integrityTokenResponse?.addOnSuccessListener { response ->
+                    Log.d("token", "${response.token()}")
+                    viewModel.cancelRecurringInvestment(investmentId, response.token())
+
+                }?.addOnFailureListener { exception ->
+                    Log.d("token", "${exception}")
+                }
             }
         }
 
@@ -134,7 +158,25 @@ class InvestmentDetailFragment : BaseFragment<FragmentInvestmentDetailBinding>()
     private fun hitApi() {
         checkInternet(binding.root,requireContext()) {
             showProgressDialog(requireContext())
-            viewModel.getRecurringInvestmentDetail(investmentId)
+            val jsonObject = JSONObject()
+            jsonObject.put("id",investmentId)
+            val jsonString = jsonObject.toString()
+            // Generate the request hash
+            val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                SplashActivity.integrityTokenProvider?.request(
+                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                        .setRequestHash(requestHash)
+                        .build()
+                )
+            integrityTokenResponse?.addOnSuccessListener { response ->
+                Log.d("token", "${response.token()}")
+                viewModel.getRecurringInvestmentDetail(investmentId, response.token())
+
+            }?.addOnFailureListener { exception ->
+                Log.d("token", "${exception}")
+            }
         }
     }
     // adapter for history items

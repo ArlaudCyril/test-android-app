@@ -1,6 +1,7 @@
 package com.Lyber.dev.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
@@ -9,6 +10,7 @@ import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentSwapFromBinding
 import com.Lyber.dev.models.Balance
 import com.Lyber.dev.ui.activities.BaseActivity
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.adapters.BalanceAdapter
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
@@ -24,6 +26,8 @@ import com.Lyber.dev.utils.CommonMethods.Companion.showSnack
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import java.math.RoundingMode
 
 class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnClickListener {
@@ -87,8 +91,17 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
 
     private fun getData() {
         checkInternet(binding.root, requireContext()) {
-            showProgressDialog(requireContext())
-            viewModel.getBalance()
+            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                SplashActivity.integrityTokenProvider?.request(
+                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                        .build()
+                )
+            integrityTokenResponse?.addOnSuccessListener { response ->
+                showProgressDialog(requireContext())
+                viewModel.getBalance(response.token())
+            }?.addOnFailureListener { exception ->
+                Log.d("token", "${exception}")
+            }
         }
     }
 

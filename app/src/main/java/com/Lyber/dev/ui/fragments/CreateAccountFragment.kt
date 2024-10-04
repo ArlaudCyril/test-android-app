@@ -16,12 +16,14 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentCreateAccountBinding
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.VerificationBottomSheet
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.dev.utils.CommonMethods.Companion.fadeIn
 import com.Lyber.dev.utils.CommonMethods.Companion.fadeOut
+import com.Lyber.dev.utils.CommonMethods.Companion.generateRequestHash
 import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.dev.utils.CommonMethods.Companion.gone
 import com.Lyber.dev.utils.CommonMethods.Companion.isValidEmail
@@ -34,11 +36,17 @@ import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.utils.EncryptionHelper
 import com.Lyber.dev.viewmodels.SignUpViewModel
 import com.au.countrycodepicker.CountryPicker
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.IntegrityManagerFactory
+import com.google.android.play.core.integrity.StandardIntegrityManager
+import com.google.gson.Gson
 import com.nimbusds.srp6.SRP6ClientSession
 import com.nimbusds.srp6.SRP6CryptoParams
 import com.nimbusds.srp6.SRP6VerifierGenerator
 import com.nimbusds.srp6.XRoutineWithUserIdentity
 import okhttp3.ResponseBody
+import org.json.JSONObject
+import java.security.MessageDigest
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
@@ -116,16 +124,36 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
     private fun setObservers() {
         viewModel.userChallengeResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-
-                App.prefsManager.accessToken = it.data.token
-                App.accessToken = it.data.token
-
-                val creds =
-                    client.step2(config, it.data.salt.toBigInteger(), it.data.B.toBigInteger())
-
-
                 checkInternet(binding.root, requireContext()) {
-                    viewModel.authenticateUser(creds.A.toString(), creds.M1.toString())
+                    App.prefsManager.accessToken = it.data.token
+                    App.accessToken = it.data.token
+
+
+                    val creds =
+                        client.step2(config, it.data.salt.toBigInteger(), it.data.B.toBigInteger())
+
+                    val jsonObject = JSONObject()
+                    jsonObject.put("method", "srp")
+                    jsonObject.put("A", creds.A.toString())
+                    jsonObject.put("M1", creds.M1.toString())
+
+                    val jsonString = jsonObject.toString()
+                    // Generate the request hash
+                    val requestHash = generateRequestHash(jsonString)
+                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                        SplashActivity.integrityTokenProvider?.request(
+                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                .setRequestHash(requestHash)
+                                .build()
+                        )
+                    integrityTokenResponse?.addOnSuccessListener { response ->
+                        Log.d("token", "${response.token()}")
+                         viewModel.authenticateUser(creds.A.toString(), creds.M1.toString(),response.token())
+                    }?.addOnFailureListener { exception ->
+                        Log.d("token", "${exception}")
+
+                    }
+
                 }
 
             }
@@ -243,6 +271,10 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         }
     }
 
+    data class UserRequest(
+        val email: String
+    )
+
 
     override fun onClick(v: View?) {
 
@@ -302,7 +334,6 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                 }
 
                 btnNext -> {
-
                     // login case
                     if (viewModel.forLogin) {
                         App.prefsManager.accessToken = ""
@@ -319,8 +350,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
 
                                 verifyMobile() && verifyPassword() ->
                                     checkInternet(binding.root, requireContext()) {
-                                        showProgressDialog(requireContext())
-                                        resendCode = 1
+
                                         val modifiedMobile =
                                             if (mobile.startsWith("0")) mobile.removeRange(
                                                 0,
@@ -330,31 +360,69 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                                         viewModel.mobileNumber = modifiedMobile
                                         viewModel.countryCode = countryCode
                                         viewModel.password = password
-
-                                        client.step1(
-                                            countryCode.substring(1) + modifiedMobile,
-                                            password
-                                        )
-                                        viewModel.userChallenge(phone = "${countryCode}$modifiedMobile")
-//                                        viewModel.userChallenge(phone = mobile)
-
+                                        val mobNo="${countryCode}$modifiedMobile"
+                                        val jsonObject = JSONObject()
+                                        jsonObject.put("phoneNo", mobNo)
+                                        val jsonString = jsonObject.toString()
+                                        // Generate the request hash
+                                        val requestHash = generateRequestHash(jsonString)
+                                        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                                            SplashActivity.integrityTokenProvider?.request(
+                                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                                    .setRequestHash(requestHash)
+                                                    .build()
+                                            )
+                                        integrityTokenResponse?.addOnSuccessListener { response ->
+                                            Log.d("token", "${response.token()}")
+                                            showProgressDialog(requireContext())
+                                            resendCode = 1
+                                            client.step1(
+                                                countryCode.substring(1) + modifiedMobile,
+                                                password
+                                            )
+                                            viewModel.userChallenge(phone = "${countryCode}$modifiedMobile", token = response.token())
+//
+                                        }?.addOnFailureListener { exception ->
+                                            Log.d("token", "${exception}")
+                                        }
                                     }
-
                             }
 
                             // email case
                             else -> when {
                                 verifyEmail() && verifyPassword() ->
                                     checkInternet(binding.root, requireContext()) {
-                                        showProgressDialog(requireContext())
-                                        resendCode = 2
-                                        viewModel.email = email.lowercase()
-                                        viewModel.password = password
-                                        client.step1(
-                                            email.lowercase(),
-                                            password
-                                        )
-                                        viewModel.userChallenge(email = viewModel.email)
+                                        val jsonObject = JSONObject()
+                                        jsonObject.put("email", email.lowercase())
+
+                                        val jsonString = jsonObject.toString()
+                                        // Generate the request hash
+                                        val requestHash = generateRequestHash(jsonString)
+                                        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                                            SplashActivity.integrityTokenProvider?.request(
+                                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                                    .setRequestHash(requestHash)
+                                                    .build()
+                                            )
+                                        integrityTokenResponse?.addOnSuccessListener { response ->
+                                            Log.d("token", "${response.token()}")
+                                            showProgressDialog(requireContext())
+                                            resendCode = 2
+                                            viewModel.email = email.lowercase()
+                                            viewModel.password = password
+                                            client.step1(
+                                                email.lowercase(),
+                                                password
+                                            )
+                                            viewModel.userChallenge(
+                                                email = viewModel.email,
+                                                token = response.token()
+                                            )
+                                        }?.addOnFailureListener { exception ->
+                                            Log.d("token", "${exception}")
+
+                                        }
+
                                     }
                             }
 
@@ -554,22 +622,62 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                 viewModel.mobileNumber = modifiedMobile
                 viewModel.countryCode = countryCode
                 viewModel.password = password
+                val mobNo="${countryCode}$modifiedMobile"
+                val jsonObject = JSONObject()
+                jsonObject.put("phoneNo", mobNo)
+                val jsonString = jsonObject.toString()
+                // Generate the request hash
+                val requestHash = generateRequestHash(jsonString)
+                val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                    SplashActivity.integrityTokenProvider?.request(
+                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                            .setRequestHash(requestHash)
+                            .build()
+                    )
+                integrityTokenResponse?.addOnSuccessListener { response ->
+                    Log.d("token", "${response.token()}")
+                    client.step1(
+                        countryCode.substring(1) + modifiedMobile,
+                        password
+                    )
+                    viewModel.userChallenge(phone = "${countryCode}$modifiedMobile", token = response.token())
+                }?.addOnFailureListener { exception ->
+                    Log.d("token", "${exception}")
+                }
 
-                client.step1(
-                    countryCode.substring(1) + modifiedMobile,
-                    password
-                )
-                viewModel.userChallenge(phone = "${countryCode}$modifiedMobile")
+
+
             }
 
             2 -> {
-                viewModel.email = email.lowercase()
-                viewModel.password = password
-                client.step1(
-                    email.lowercase(),
-                    password
-                )
-                viewModel.userChallenge(email = viewModel.email)
+                val jsonObject = JSONObject()
+                jsonObject.put("email", email.lowercase())
+                val jsonString = jsonObject.toString()
+                // Generate the request hash
+                val requestHash = generateRequestHash(jsonString)
+                val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                    SplashActivity.integrityTokenProvider?.request(
+                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                            .setRequestHash(requestHash)
+                            .build()
+                    )
+                integrityTokenResponse?.addOnSuccessListener { response ->
+                    Log.d("token", "${response.token()}")
+                    viewModel.email = email.lowercase()
+                    viewModel.password = password
+                    client.step1(
+                        email.lowercase(),
+                        password
+                    )
+                    viewModel.userChallenge(
+                        email = viewModel.email,
+                        token = response.token()
+                    )
+                }?.addOnFailureListener { exception ->
+                    Log.d("token", "${exception}")
+
+                }
+
             }
 
             3 -> {
@@ -600,19 +708,34 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
     }
 
     private fun makeApiRequest() {
-        val timestamp = (System.currentTimeMillis() / 1000).toString()
+         val jsonObject = JSONObject()
+        jsonObject.put("countryCode",  viewModel.countryCode.substring(1))
+        jsonObject.put("phoneNo", viewModel.mobileNumber)
+        val jsonString = jsonObject.toString()
+        // Generate the request hash
+        val requestHash =generateRequestHash(jsonString)
+        val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+            SplashActivity.integrityTokenProvider?.request(
+                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                    .setRequestHash(requestHash)
+                    .build()
+            )
+        integrityTokenResponse1?.addOnSuccessListener { response ->
+            Log.d("token", "${response.token()}")
+            val timestamp = (System.currentTimeMillis() / 1000).toString()
 //        val timestamp = Instant.now().epochSecond.toString()
-        val payload =
-            """{"countryCode":${viewModel.countryCode.substring(1)},"phoneNo":"${viewModel.mobileNumber}"}"""
+            val payload =
+                """{"countryCode":${viewModel.countryCode.substring(1)},"phoneNo":"${viewModel.mobileNumber}"}"""
+            val decryptedText = EncryptionHelper.decrypt(App.secretKey, App.encryptedKey)
+            val signature = createSignature(decryptedText, payload, timestamp)
+            viewModel.setPhone(
+                viewModel.countryCode.substring(1),
+                viewModel.mobileNumber, signature, timestamp,response.token()
+            )
 
-        val decryptedText = EncryptionHelper.decrypt(App.secretKey, App.encryptedKey)
-
-        val signature = createSignature(decryptedText, payload, timestamp)
-
-        viewModel.setPhone(
-            viewModel.countryCode.substring(1),
-            viewModel.mobileNumber, signature, timestamp
-        )
+        }?.addOnFailureListener { exception ->
+            Log.d("token", "${exception}")
+        }
     }
 
     fun createSignature(secretKey: String, payload: String, timestamp: String): String {

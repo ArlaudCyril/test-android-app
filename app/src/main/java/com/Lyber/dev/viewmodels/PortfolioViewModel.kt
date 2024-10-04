@@ -1,16 +1,23 @@
 package com.Lyber.dev.viewmodels
 
+import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import com.Lyber.dev.models.AddedAsset
 import com.Lyber.dev.models.AssetBaseData
 import com.Lyber.dev.models.AssetDetailBaseData
 import com.Lyber.dev.models.Balance
+import com.Lyber.dev.models.ChooseAssets
 import com.Lyber.dev.models.NetworkDeposit
 import com.Lyber.dev.models.PersonalDataResponse
 import com.Lyber.dev.models.PriceServiceResume
 import com.Lyber.dev.models.RIBData
 import com.Lyber.dev.models.Strategy
 import com.Lyber.dev.models.WithdrawAddress
+import com.Lyber.dev.ui.activities.SplashActivity
+import com.Lyber.dev.utils.CommonMethods
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
+import org.json.JSONObject
 
 class PortfolioViewModel : NetworkViewModel() {
 
@@ -20,17 +27,17 @@ class PortfolioViewModel : NetworkViewModel() {
         set(value) {
             _selectedAsset = value
         }
-    private var _withdrawAddress: WithdrawAddress?=null
+    private var _withdrawAddress: WithdrawAddress? = null
     var withdrawAddress
         get() = _withdrawAddress
-        set(value){
+        set(value) {
             _withdrawAddress = value
         }
-    private var _ribAddress: RIBData?=null
+    private var _ribAddress: RIBData? = null
 
     var ribDataAddress
         get() = _ribAddress
-        set(value){
+        set(value) {
             _ribAddress = value
         }
 
@@ -51,10 +58,10 @@ class PortfolioViewModel : NetworkViewModel() {
     var selectedNetworkDeposit
         get() = _selectedNetworkDeposit
         set(value) {
-            _selectedNetworkDeposit= value
+            _selectedNetworkDeposit = value
         }
 
-    var selectedBalance : Balance? = null
+    var selectedBalance: Balance? = null
 
     private var _personalData: PersonalDataResponse? = null
     var personalData
@@ -122,7 +129,6 @@ class PortfolioViewModel : NetworkViewModel() {
     /* to check whether the live data instance contains data or not */
 
 
-
     private var _totalPortfolio: Double = 0.0
     var totalPortfolio
         get() = _totalPortfolio
@@ -169,7 +175,6 @@ class PortfolioViewModel : NetworkViewModel() {
         }
 
 
-
     private var _exchangeAssetFrom: String? = null
     var exchangeAssetFrom
         get() = _exchangeAssetFrom
@@ -183,7 +188,6 @@ class PortfolioViewModel : NetworkViewModel() {
         set(value) {
             _exchangeAssetTo = value
         }
-
 
 
     var allMyPortfolio: String = ""
@@ -208,35 +212,95 @@ class PortfolioViewModel : NetworkViewModel() {
 
     /* apis */
 
-    fun chooseStrategy() {
-        selectedStrategy?.let {
-            chooseStrategy(it)
-        }
-    }
-    fun startKyc(){
-        startKYC()
+    //    fun chooseStrategy() {
+//        selectedStrategy?.let {
+//            chooseStrategy(it)
+//        }
+//    }
+    fun startKyc(token: String) {
+        startKYC(token)
     }
 
     fun buildOwnStrategy(strategyName: String) {
-        buildOwnStrategy(strategyName, addedAsset)
+        val jsonObject = JSONObject()
+        val list = arrayListOf<ChooseAssets>()
+        var total = 0
+        for (i in addedAsset) {
+            total += i.allocation.toInt()
+            list.add(
+                ChooseAssets(
+                    i.addAsset.id,
+                    i.allocation.toInt()
+                )
+            )
+        }
+        jsonObject.put("bundle", list)
+        jsonObject.put("strategyType", "MultiAsset")
+        jsonObject.put("strategyName", strategyName)
+        val jsonString = jsonObject.toString()
+        // Generate the request hash
+        val requestHash = CommonMethods.generateRequestHash(jsonString)
+        val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+            SplashActivity.integrityTokenProvider?.request(
+                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                    .setRequestHash(requestHash)
+                    .build()
+            )
+        integrityTokenResponse1?.addOnSuccessListener { response ->
+            Log.d("token", "${response.token()}")
+            buildOwnStrategy(strategyName, addedAsset, response.token())
+
+        }?.addOnFailureListener { exception ->
+            Log.d("token", "${exception}")
+        }
     }
+
     fun editOwnStrategy(strategyName: String) {
-        editOwnStrategy(strategyName, addedAsset)
+        val jsonObject = JSONObject()
+        val list = arrayListOf<ChooseAssets>()
+        var total = 0
+        for (i in addedAsset) {
+            total += i.allocation.toInt()
+            list.add(
+                ChooseAssets(
+                    i.addAsset.id,
+                    i.allocation.toInt()
+                )
+            )
+        }
+        jsonObject.put("bundle", list)
+        jsonObject.put("strategyType", "MultiAsset")
+        jsonObject.put("strategyName", strategyName)
+        val jsonString = jsonObject.toString()
+        // Generate the request hash
+        val requestHash = CommonMethods.generateRequestHash(jsonString)
+        val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+            SplashActivity.integrityTokenProvider?.request(
+                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                    .setRequestHash(requestHash)
+                    .build()
+            )
+        integrityTokenResponse1?.addOnSuccessListener { response ->
+            Log.d("token", "${response.token()}")
+            editOwnStrategy(strategyName, addedAsset, response.token())
+
+        }?.addOnFailureListener { exception ->
+            Log.d("token", "${exception}")
+        }
     }
 
-    fun getBalance(){
-        getBalanceApi()
+    fun getBalance(token: String) {
+        getBalanceApi(token)
     }
 
-    fun getExportOperations(date: String) {
-        getExportOperation(date)
+    fun getExportOperations(date: String, token: String) {
+        getExportOperation(date, token)
     }
 
 
-    fun contactSupport(msg: String) {
-        sendMsgToSupport(msg)
+    fun contactSupport(msg: String, token: String) {
+        sendMsgToSupport(msg, token)
     }
-
 
 
 }

@@ -14,6 +14,7 @@ import com.Lyber.dev.models.Balance
 import com.Lyber.dev.models.BalanceData
 import com.Lyber.dev.models.DataQuote
 import com.Lyber.dev.network.RestClient
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.ErrorBottomSheet
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
@@ -30,9 +31,11 @@ import com.appsflyer.AFInAppEventParameterName
 import com.appsflyer.AFInAppEventType
 import com.appsflyer.AppsFlyerLib
 import com.appsflyer.attribution.AppsFlyerRequestListener
+import com.google.android.gms.tasks.Task
 import com.google.android.gms.wallet.button.ButtonConstants
 import com.google.android.gms.wallet.button.ButtonOptions
 import com.google.android.gms.wallet.button.PayButton
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import com.google.gson.Gson
 import com.stripe.android.PaymentConfiguration
 import com.stripe.android.googlepaylauncher.GooglePayEnvironment
@@ -361,7 +364,27 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
                     CommonMethods.checkInternet(binding.root,requireContext()) {
                         isApiHit = true
 //                        CommonMethods.showProgressDialog(requireActivity())
-                        viewModel.cancelQuote(hashMap)
+                        val jsonObject = JSONObject()
+                        jsonObject.put("paymentIntentId", hashMap["paymentIntentId"])
+                        jsonObject.put("orderId",hashMap["orderId"])
+                        jsonObject.put("userUuid", App.prefsManager.user?.uuid.toString())
+                        val jsonString = jsonObject.toString()
+                        // Generate the request hash
+                        val requestHash = CommonMethods.generateRequestHash(jsonString)
+                        val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                            SplashActivity.integrityTokenProvider?.request(
+                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                    .setRequestHash(requestHash)
+                                    .build()
+                            )
+                        integrityTokenResponse1?.addOnSuccessListener { response ->
+                            Log.d("token", "${response.token()}")
+                            viewModel.cancelQuote(hashMap, response.token())
+
+                        }?.addOnFailureListener { exception ->
+                            Log.d("token", "${exception}")
+
+                        }
                     }
                 }
             }
@@ -396,11 +419,30 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
                     DataQuote::class.java
                 )
                 CommonMethods.showProgressDialog(requireActivity())
-                viewModel.getQuote(
-                    "eur",
-                    Constants.MAIN_ASSET,
-                    data.fromAmount
-                )
+                val jsonObject = JSONObject()
+                jsonObject.put("fromAsset","eur")
+                jsonObject.put("toAsset",Constants.MAIN_ASSET)
+                jsonObject.put("fromAmount",data.fromAmount)
+                val jsonString = jsonObject.toString()
+                // Generate the request hash
+                val requestHash = CommonMethods.generateRequestHash(jsonString)
+                val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                    SplashActivity.integrityTokenProvider?.request(
+                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                            .setRequestHash(requestHash)
+                            .build()
+                    )
+                integrityTokenResponse1?.addOnSuccessListener { response ->
+                    Log.d("token", "${response.token()}")
+                    viewModel.getQuote(
+                        "eur",
+                        Constants.MAIN_ASSET,
+                        data.fromAmount,response.token()
+                    )
+
+                }?.addOnFailureListener { exception ->
+                    Log.d("token", "${exception}")
+                }
             }
         }
     }

@@ -414,7 +414,7 @@
 
         <ImageView
             style="@style/ButtonStyle"
-            android:layout_width="56dp"
+            android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:padding="16dp"
             android:src="@drawable/ic_three_dots" />

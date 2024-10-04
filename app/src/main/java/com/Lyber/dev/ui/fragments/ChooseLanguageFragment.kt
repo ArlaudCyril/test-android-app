@@ -4,15 +4,20 @@ import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
 import androidx.lifecycle.Lifecycle
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentChooseLanguageBinding
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.NetworkViewModel
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
+import org.json.JSONObject
 import java.util.Locale
 
 
@@ -91,20 +96,54 @@ class ChooseLanguageFragment : BaseFragment<FragmentChooseLanguageBinding>(), On
             when (v) {
                 ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
                 rlEnglish -> {
-                    hashMap.clear()
-                    hashMap["language"] = Constants.ENGLISH
-                    CommonMethods.checkInternet(binding.root,requireContext()) {
-                        CommonMethods.showProgressDialog(requireContext())
-                        viewModel.updateUserInfo(hashMap)
+                    val jsonObject = JSONObject()
+                    jsonObject.put("language",Constants.ENGLISH)
+                    val jsonString = jsonObject.toString()
+                    // Generate the request hash
+                    val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                        SplashActivity.integrityTokenProvider?.request(
+                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                .setRequestHash(requestHash)
+                                .build()
+                        )
+                    integrityTokenResponse?.addOnSuccessListener { response ->
+                        Log.d("token", "${response.token()}")
+                        hashMap.clear()
+                        hashMap["language"] = Constants.ENGLISH
+                        CommonMethods.showProgressDialog(requireActivity())
+                        viewModel.updateUserInfo(hashMap, response.token())
+
+                    }?.addOnFailureListener { exception ->
+                        Log.d("token", "${exception}")
+
                     }
                 }
 
                 rlFrench -> {
-                    hashMap.clear()
-                    hashMap["language"] = Constants.FRENCH
-                    CommonMethods.checkInternet(binding.root,requireContext()) {
-                        CommonMethods.showProgressDialog(requireContext())
-                        viewModel.updateUserInfo(hashMap)
+                    val jsonObject = JSONObject()
+                    jsonObject.put("language",Constants.FRENCH)
+                    val jsonString = jsonObject.toString()
+                    // Generate the request hash
+                    val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                        SplashActivity.integrityTokenProvider?.request(
+                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                .setRequestHash(requestHash)
+                                .build()
+                        )
+                    integrityTokenResponse?.addOnSuccessListener { response ->
+                        Log.d("token", "${response.token()}")
+                        hashMap.clear()
+                        hashMap["language"] = Constants.FRENCH
+                        CommonMethods.showProgressDialog(requireActivity())
+                        viewModel.updateUserInfo(hashMap, response.token())
+
+                    }?.addOnFailureListener { exception ->
+                        Log.d("token", "${exception}")
+
                     }
 
                 }

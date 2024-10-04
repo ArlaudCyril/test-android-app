@@ -1,6 +1,5 @@
 package com.Lyber.dev.viewmodels
 
-import android.content.Context
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -111,15 +110,6 @@ open class NetworkViewModel : ViewModel() {
     private var _trendingCoinResponse = MutableLiveData<CoinsResponse>()
     val trendingCoinResponse get() = _trendingCoinResponse
 
-    /*    private var _topGainerResponse = MutableLiveData<CoinsResponse>()
-        val topGainerResponse get() = _topGainerResponse
-
-        private var _topLooserResponse = MutableLiveData<CoinsResponse>()
-        val topLooserResponse get() = _topLooserResponse
-
-        private var _stableResponse = MutableLiveData<CoinsResponse>()
-        val stableResponse get() = _stableResponse*/
-
     private var _investSingleAssetResponse = MutableLiveData<MessageResponse>()
     val investSingleAssetResponse get() = _investSingleAssetResponse
 
@@ -143,35 +133,16 @@ open class NetworkViewModel : ViewModel() {
     private var _transactionResponse = MutableLiveData<TransactionResponse>()
     val transactionResponse get() = _transactionResponse
 
-    private var _otpForPinChangeResponse = MutableLiveData<MessageResponse>()
-    val otpPinChangeResponse get() = _otpForPinChangeResponse
-
     private var _verifyPhoneForPinResponse = MutableLiveData<MessageResponse>()
     val verifyPhoneForPinResponse get() = _verifyPhoneForPinResponse
 
     private var _updatePinResponse = MutableLiveData<MessageResponse>()
     val updatePinResponse get() = _updatePinResponse
 
-    private var _getAssetsResponse = MutableLiveData<MyAssetResponse>()
-    val getAssetResponse get() = _getAssetsResponse
-
-    private var _recurringInvestmentResponse = MutableLiveData<RecurringInvestmentResponse>()
-    val recurringInvestmentResponse get() = _recurringInvestmentResponse
-
-    private var _faceIdResponse = MutableLiveData<MessageResponse>()
-    val faceIdResponse get() = _faceIdResponse
-
-    private var _addBankResponse = MutableLiveData<MessageResponse>()
+     private var _addBankResponse = MutableLiveData<MessageResponse>()
     val addBankAccount get() = _addBankResponse
 
-    private var _enableStrongAuthentication = MutableLiveData<MessageResponse>()
-    val enableStrongAuthentication get() = _enableStrongAuthentication
-
     private var _verifyStrongAuthentication = MutableLiveData<MessageResponse>()
-    val verifyStrongAuthentication get() = _verifyStrongAuthentication
-
-    private var _enableWhitelisting = MutableLiveData<MessageResponse>()
-    val enableWhitelisting get() = _enableWhitelisting
 
     private var _networksResponse = MutableLiveData<NetworksResponse>()
     val networkResponse get() = _networksResponse
@@ -180,7 +151,6 @@ open class NetworkViewModel : ViewModel() {
     val singleNetworkResponse get() = _networksResponseSingle
 
     private var _exchangeListingResponse = MutableLiveData<ExchangeListingResponse>()
-    val exchangeListingResponse get() = _exchangeListingResponse
 
     private var _addWhitelistResponse = MutableLiveData<MessageResponse>()
     val addWhitelistResponse get() = _addWhitelistResponse
@@ -191,10 +161,6 @@ open class NetworkViewModel : ViewModel() {
     val getWhiteListing get() = _getWhiteListing
 
     private var _searchWhitelisting = MutableLiveData<WhitelistingResponse>()
-    val searchWhitelisting get() = _searchWhitelisting
-
-    private var _assetsWhitelisting = MutableLiveData<WhitelistingResponse>()
-    val assetsWhitelisting get() = _assetsWhitelisting
 
     private var _uploadResponse = MutableLiveData<UploadResponse>()
     val uploadResponse get() = _uploadResponse
@@ -232,7 +198,6 @@ open class NetworkViewModel : ViewModel() {
     val cancelRecurringInvestment get() = _cancelRecurringInvestment
 
     private val _priceGraphResponse = MutableLiveData<PriceGraphResponse>()
-    val priceGraphResponse get() = _priceGraphResponse
 
     private val _withdrawFiatResponse = MutableLiveData<MessageResponse>()
     val withdrawFiatResponse get() = _withdrawFiatResponse
@@ -242,7 +207,6 @@ open class NetworkViewModel : ViewModel() {
     val userChallengeResponse get() = _userChallengeResponse
 
     private val _userLoginResponse = MutableLiveData<UserLoginResponse>()
-    val commonResponseWithdraw = MutableLiveData<CommonResponseVerfiy>()
     val userLoginResponse get() = _userLoginResponse
 
     private val _setPhoneResponse = MutableLiveData<SetPhoneResponse>()
@@ -262,9 +226,6 @@ open class NetworkViewModel : ViewModel() {
 
     private val _getUserResponse = MutableLiveData<GetUserResponse>()
     val getUserResponse get() = _getUserResponse
-
-    private val _getUserSignResponse = MutableLiveData<GetUserResponse>()
-    val getUserSignResponse get() = _getUserSignResponse
 
     private val _setUserAddressResponse = MutableLiveData<MessageResponse>()
     val setUserAddressResponse get() = _setUserAddressResponse
@@ -346,6 +307,7 @@ open class NetworkViewModel : ViewModel() {
 
     }
 
+    //API HITTING
     fun educationStrategy() {
         viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().educationStrategy()
@@ -360,11 +322,11 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun getStrategies() {
+    fun getStrategies(token: String) {
         viewModelScope.launch(exceptionHandler) {
             val map = HashMap<String, Any>()
             map.put("type", "all")
-            val res = RestClient.get().getStrategies(map)
+            val res = RestClient.getRetrofitInstanceSecure(token).getStrategies(map)
             if (res.isSuccessful)
                 _getStrategiesResponse.postValue(res.body())
             else {
@@ -376,6 +338,7 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
+    //TODO check it if it is right
     fun chooseStrategy(strategy: Strategy?) {
         strategy?.let {
             val hashMap = hashMapOf<String, Any>()
@@ -396,8 +359,7 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun editOwnStrategy(strategyName: String, addedAsset: List<AddedAsset>) {
-
+    fun editOwnStrategy(strategyName: String, addedAsset: List<AddedAsset>,token: String) {
         val list = arrayListOf<ChooseAssets>()
         var total = 0
         for (i in addedAsset) {
@@ -419,7 +381,7 @@ open class NetworkViewModel : ViewModel() {
 //        hashMap["strategyType"] = "SingleAsset"
 
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().editStrategy(hashMap)
+            val res = RestClient.getRetrofitInstanceSecure(token).editStrategy(hashMap)
             if (res.isSuccessful)
                 _buildStrategyResponse.postValue(res.body())
             else {
@@ -432,8 +394,7 @@ open class NetworkViewModel : ViewModel() {
 
     }
 
-    fun buildOwnStrategy(strategyName: String, addedAsset: List<AddedAsset>) {
-
+    fun buildOwnStrategy(strategyName: String, addedAsset: List<AddedAsset>,token: String) {
         val list = arrayListOf<ChooseAssets>()
         var total = 0
         for (i in addedAsset) {
@@ -452,10 +413,9 @@ open class NetworkViewModel : ViewModel() {
         hashMap["bundle"] = list
         hashMap["strategyType"] = "MultiAsset"
         hashMap["strategyName"] = strategyName
-        Log.d("list", "$list")
 
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().chooseStrategy(hashMap)
+            val res = RestClient.getRetrofitInstanceSecure(token).     chooseStrategy(hashMap)
             if (res.isSuccessful)
                 _buildStrategyResponse.postValue(res.body())
             else {
@@ -490,50 +450,21 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun investSingleAsset(
-        coinDetail: AssetBaseData?,
-        amount: Int,
-        assetAmount: Float,
-        frequency: String
-    ) {
-        coinDetail?.let {
-            val hashMap: HashMap<String, Any> = hashMapOf()
-            hashMap["asset_id"] = it.id
-            hashMap["amount"] = amount
-            hashMap["asset_name"] = it.fullName
-            hashMap["asset_amount"] = assetAmount
-            if (frequency.isNotEmpty())
-                hashMap["frequency"] = frequency
-            viewModelScope.launch(exceptionHandler) {
-                val res = RestClient.get().investOnSingleAsset(hashMap)
-                if (res.isSuccessful)
-                    _investSingleAssetResponse.postValue(res.body())
-                else {
-                    val errorBody = res.errorBody()
-                    val errorCode =
-                        CommonMethods.returnErrorCode(errorBody) // Extract the code from the body if needed
-                    _listener?.onRetrofitError(errorCode.code, errorCode.error)
-                }
-            }
-        }
-    }
-
-
     fun investStrategy(
         strategyId: String,
         frequency: String?,
         amount: Double,
-        strateggyName: String
+        strategyName: String,token: String
     ) {
         viewModelScope.launch(exceptionHandler) {
             val hash = hashMapOf<String, Any>()
-            hash["strategyName"] = strateggyName
+            hash["strategyName"] = strategyName
             hash["ownerUuid"] = strategyId
             if (frequency != null)
                 hash["frequency"] = frequency
             hash["amount"] = amount
             Log.d("logData", "$hash")
-            val res = RestClient.get().investOnStrategy(hash)
+            val res = RestClient.getRetrofitInstanceSecure(token).investOnStrategy(hash)
             if (res.isSuccessful)
                 _investStrategyResponse.postValue(res.body())
             else {
@@ -545,9 +476,9 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun pauseStrategy(strategyId: String, strateggyName: String) {
+    fun pauseStrategy(strategyId: String, strateggyName: String,token: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().pauseStrategy(
+            val res = RestClient.getRetrofitInstanceSecure(token).pauseStrategy(
                 hashMapOf(
                     "strategyName" to strateggyName,
                     "ownerUuid" to strategyId
@@ -564,9 +495,9 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun deleteStrategy(strateggyName: String) {
+    fun deleteStrategy(strateggyName: String,token: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().deleteStrategy(
+            val res = RestClient.getRetrofitInstanceSecure(token).deleteStrategy(
                 hashMapOf(
                     "strategyName" to strateggyName
                 )
@@ -582,14 +513,14 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun withdraw(assetId: String, amount: String, assetAmount: Float, wallet_address: String) {
+    fun withdraw(assetId: String, amount: String, assetAmount: Float, wallet_address: String,token: String) {
         viewModelScope.launch(exceptionHandler) {
             val hash = hashMapOf<String, Any>()
             hash["asset_id"] = assetId
             hash["amount"] = amount
             hash["asset_amount"] = assetAmount
             hash["wallet_address"] = wallet_address
-            val res = RestClient.get().withdrawCryptos(hash)
+            val res = RestClient.getRetrofitInstanceSecure(token).withdrawCryptos(hash)
             if (res.isSuccessful)
                 _withdrawResponse.postValue(res.body())
             else {
@@ -601,11 +532,11 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun confirmOrder(order: String) {
+    fun confirmOrder(order: String,token: String) {
         viewModelScope.launch(exceptionHandler) {
             val hashMap = hashMapOf<String, Any>()
             hashMap["orderId"] = order
-            val res = RestClient.get().acceptQuote(hashMap)
+            val res = RestClient.getRetrofitInstanceSecure(token).acceptQuote(hashMap)
             if (res.isSuccessful)
                 exchangeResponse.postValue(res.body())
             else {
@@ -617,36 +548,17 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-//    fun exchange(
-//        assetIdFrom: String,
-//        assetIdTo: String,
-//        exchangeFromAmount: String,
-//        exchangeToAmount: String
-//    ) {
-//        viewModelScope.launch(exceptionHandler) {
-//            val hashMap = hashMapOf<String, Any>()
-//            hashMap["exchange_from"] = assetIdFrom.lowercase()
-//            hashMap["exchange_to"] = assetIdTo.lowercase()
-//            hashMap["exchange_from_amount"] = exchangeFromAmount
-//            hashMap["exchange_to_amount"] = exchangeToAmount
-//            val res = RestClient.get().swapCrypto(hashMap)
-//            if (res.isSuccessful)
-//                exchangeResponse.postValue(res.body())
-//            else listener?.onRetrofitError(res.errorBody())
-//        }
-//    }
-
     fun getQuote(
         assetIdFrom: String,
         assetIdTo: String,
-        exchangeFromAmount: String
+        exchangeFromAmount: String,token: String
     ) {
         viewModelScope.launch(exceptionHandler) {
             val hashMap = hashMapOf<String, Any>()
             hashMap["fromAsset"] = assetIdFrom.trim().lowercase()
             hashMap["toAsset"] = assetIdTo.trim().lowercase()
             hashMap["fromAmount"] = exchangeFromAmount
-            val res = RestClient.get().getQuote(hashMap)
+            val res = RestClient.getRetrofitInstanceSecure(token).getQuote(hashMap)
             if (res.isSuccessful)
                 getQuoteResponse.postValue(res.body())
             else {
@@ -658,11 +570,11 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun getTransactions(page: Int = 1, limit: Int = 10, assetId: String = "") {
+    fun getTransactions(token: String,page: Int = 1, limit: Int = 10, assetId: String = "") {
         viewModelScope.launch(exceptionHandler) {
-            val res = if (assetId.isEmpty()) RestClient.get()
+            val res = if (assetId.isEmpty()) RestClient.getRetrofitInstanceSecure(token)
                 .getTransactions(page, limit)
-            else RestClient.get()
+            else RestClient.getRetrofitInstanceSecure(token)
                 .getTransactions(assetId, page, limit)
             if (res.isSuccessful)
                 _transactionResponse.postValue(res.body())
@@ -675,9 +587,9 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun logout() {
+    fun logout(token: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().logout()
+            val res = RestClient.getRetrofitInstanceSecure(token).logout()
             if (res.isSuccessful)
                 _logoutResponse.postValue(res.body())
             else {
@@ -689,14 +601,7 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-//    fun sendOtpPinChange() {
-//        viewModelScope.launch(exceptionHandler) {
-//            val res = RestClient.get().sendOtpForChangePin()
-//            if (res.isSuccessful)
-//                _otpForPinChangeResponse.postValue(res.body())
-//            else listener?.onRetrofitError(res.errorBody())
-//        }
-//    }
+
 
     fun verifyPhoneForPin(otp: String) {
         viewModelScope.launch(exceptionHandler) {
@@ -726,50 +631,6 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun getAssets() {
-        viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().getAssets()
-            if (res.isSuccessful)
-                _getAssetsResponse.postValue(res.body())
-            else {
-                val errorBody = res.errorBody()
-                val errorCode =
-                    CommonMethods.returnErrorCode(errorBody) // Extract the code from the body if needed
-                _listener?.onRetrofitError(errorCode.code, errorCode.error)
-            }
-        }
-    }
-
-    fun getRecurringInvestments() {
-        viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().getRecurringInvestments()
-            if (res.isSuccessful) _recurringInvestmentResponse.postValue(res.body())
-            else {
-                val errorBody = res.errorBody()
-                val errorCode =
-                    CommonMethods.returnErrorCode(errorBody) // Extract the code from the body if needed
-                _listener?.onRetrofitError(errorCode.code, errorCode.error)
-            }
-        }
-    }
-
-    fun setFaceId(faceId: String, enableFaceId: Boolean) {
-        val hashMap = hashMapOf<String, Any>()
-        hashMap["face_id"] = faceId
-        hashMap["enable_face_id"] = if (enableFaceId) 1 else 0
-        viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().setFaceId(hashMap)
-            if (res.isSuccessful)
-                _faceIdResponse.postValue(res.body())
-            else {
-                val errorBody = res.errorBody()
-                val errorCode =
-                    CommonMethods.returnErrorCode(errorBody) // Extract the code from the body if needed
-                _listener?.onRetrofitError(errorCode.code, errorCode.error)
-            }
-        }
-    }
-
     fun addBankInfo(iban: String, bic: String) {
 
         viewModelScope.launch(exceptionHandler) {
@@ -788,19 +649,7 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun enableStrongAuthentication(enable: Boolean) {
-        viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().enableStrongAuthentication(hashMapOf("enable" to enable))
-            if (res.isSuccessful)
-                _enableStrongAuthentication.postValue(res.body())
-            else {
-                val errorBody = res.errorBody()
-                val errorCode =
-                    CommonMethods.returnErrorCode(errorBody) // Extract the code from the body if needed
-                _listener?.onRetrofitError(errorCode.code, errorCode.error)
-            }
-        }
-    }
+
 
     fun verifyStrongAuthentication(otp: String) {
         viewModelScope.launch(exceptionHandler) {
@@ -814,26 +663,6 @@ open class NetworkViewModel : ViewModel() {
                     CommonMethods.returnErrorCode(errorBody) // Extract the code from the body if needed
                 _listener?.onRetrofitError(errorCode.code, errorCode.error)
             }
-        }
-    }
-
-    fun enableWhitelisting(enable: Boolean, extraSecurity: String) {
-        viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().enableWhitelisting(
-                hashMapOf(
-                    "enable" to enable,
-                    "extra_security" to extraSecurity
-                )
-            )
-            if (res.isSuccessful)
-                _enableWhitelisting.postValue(res.body())
-            else {
-                val errorBody = res.errorBody()
-                val errorCode =
-                    CommonMethods.returnErrorCode(errorBody) // Extract the code from the body if needed
-                _listener?.onRetrofitError(errorCode.code, errorCode.error)
-            }
-
         }
     }
 
@@ -866,27 +695,12 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun getExchangeListing() {
-        viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().getExchangeListing()
-            if (res.isSuccessful)
-                _exchangeListingResponse.postValue(res.body())
-            else {
-                val errorBody = res.errorBody()
-                val errorCode =
-                    CommonMethods.returnErrorCode(errorBody) // Extract the code from the body if needed
-                _listener?.onRetrofitError(errorCode.code, errorCode.error)
-            }
-        }
-    }
-
     fun addAddress(
         name: String,
         network: String,
         address: String,
         origin: String,
-        exchange: String,
-        logo: String
+        exchange: String,token: String
     ) {
         viewModelScope.launch(exceptionHandler) {
             val hashMap: HashMap<String, Any> = hashMapOf()
@@ -896,7 +710,7 @@ open class NetworkViewModel : ViewModel() {
             hashMap["origin"] = origin.lowercase()
             if (origin.lowercase() == "exchange")
                 hashMap["exchange"] = exchange
-            val res = RestClient.get().addWhitelistingAddress(hashMap)
+            val res = RestClient.getRetrofitInstanceSecure(token).addWhitelistingAddress(hashMap)
             if (res.isSuccessful)
                 _addWhitelistResponse.postValue(res.body())
             else {
@@ -909,12 +723,10 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun updateUserInfo(
-        hashMap: HashMap<String, Any>
+        hashMap: HashMap<String, Any>,token: String
     ) {
         viewModelScope.launch(exceptionHandler) {
-//            val hashMap: HashMap<String, Any> = hashMapOf()
-//            hashMap["withdrawalLock"] = lock
-            val res = RestClient.get().updateUserInfo(hashMap)
+     val res = RestClient.getRetrofitInstanceSecure(token).updateUserInfo(hashMap)
             if (res.isSuccessful)
                 _updateUserInfoResponse.postValue(res.body())
             else {
@@ -927,12 +739,13 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun updateAvtaar(
-        lock: String
+        lock: String,
+        token:String
     ) {
         viewModelScope.launch(exceptionHandler) {
             val hashMap: HashMap<String, Any> = hashMapOf()
             hashMap["avatar"] = lock
-            val res = RestClient.get().updateUserInfo(hashMap)
+            val res = RestClient.getRetrofitInstanceSecure(token).updateUserInfo(hashMap)
             if (res.isSuccessful)
                 _updateUserInfoResponse.postValue(res.body())
             else {
@@ -944,9 +757,9 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun getWhiteListings() {
+    fun getWhiteListings(token: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().getWhitelistedAddress()
+            val res = RestClient.getRetrofitInstanceSecure(token).getWhitelistedAddress()
             if (res.isSuccessful)
                 _getWhiteListing.postValue(res.body())
             else {
@@ -959,9 +772,9 @@ open class NetworkViewModel : ViewModel() {
     }
 
 
-    fun searchWhitelist(keyword: String) {
+    fun searchWhitelist(keyword: String,token: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().getWhitelistedAddress(keyword = keyword)
+            val res = RestClient.getRetrofitInstanceSecure(token).getWhitelistedAddress(keyword = keyword)
             if (res.isSuccessful)
                 _searchWhitelisting.postValue(res.body())
             else {
@@ -993,12 +806,12 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun deleteWhiteList(address: String, network: String) {
+    fun deleteWhiteList(address: String, network: String,token: String) {
         viewModelScope.launch(exceptionHandler) {
             val map = HashMap<String, Any>()
             map["network"] = network
             map["address"] = address
-            val res = RestClient.get().deleteWhiteListing(map)
+            val res = RestClient.getRetrofitInstanceSecure(token).deleteWhiteListing(map)
             if (res.isSuccessful) _deleteWhiteListResponse.postValue(res.body())
             else {
                 val errorBody = res.errorBody()
@@ -1009,23 +822,10 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun updateWhiteList(hashMap: HashMap<String, Any>) {
-        viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().updateWhiteList(hashMap)
-            if (res.isSuccessful)
-                _updateWhiteListResponse.postValue(res.body())
-            else {
-                val errorBody = res.errorBody()
-                val errorCode =
-                    CommonMethods.returnErrorCode(errorBody) // Extract the code from the body if needed
-                _listener?.onRetrofitError(errorCode.code, errorCode.error)
-            }
-        }
-    }
 
-    fun updateUser(hashMap: HashMap<String, Any>) {
+    fun updateUser(hashMap: HashMap<String, Any>,token: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().updateUser(hashMap)
+            val res = RestClient.getRetrofitInstanceSecure(token).updateUser(hashMap)
             if (res.isSuccessful)
                 _updateUserResponse.postValue(res.body())
             else {
@@ -1085,9 +885,9 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun getWithdrawalAddresses() {
+    fun getWithdrawalAddresses(token: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().getWithdrawalAddress()
+            val res = RestClient.getRetrofitInstanceSecure(token).getWithdrawalAddress()
             if (res.isSuccessful) _withdrawalAddresses.postValue(res.body())
             else {
                 val errorBody = res.errorBody()
@@ -1124,9 +924,9 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun getAddress(network: String, assetId: String) {
+    fun getAddress(network: String, assetId: String,token: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().getAddress(network, assetId)
+            val res = RestClient.getRetrofitInstanceSecure(token).getAddress(network, assetId)
             if (res.isSuccessful) _getAddress.postValue(res.body())
             else {
                 val errorBody = res.errorBody()
@@ -1137,9 +937,9 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun getRecurringInvestmentDetail(investmentId: String) {
+    fun getRecurringInvestmentDetail(investmentId: String,token: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().getRecurringInvestmentDetail(investmentId)
+            val res = RestClient.getRetrofitInstanceSecure(token).getRecurringInvestmentDetail(investmentId)
             if (res.isSuccessful)
                 _recurringInvestmentDetail.postValue(res.body())
             else {
@@ -1151,10 +951,10 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun cancelRecurringInvestment(investmentId: String) {
+    fun cancelRecurringInvestment(investmentId: String,token: String) {
         viewModelScope.launch(exceptionHandler) {
             val res =
-                RestClient.get().cancelRecurringInvestment(hashMapOf("id" to investmentId))
+                RestClient.getRetrofitInstanceSecure(token).cancelRecurringInvestment(hashMapOf("id" to investmentId))
             if (res.isSuccessful) _cancelRecurringInvestment.postValue(res.body())
             else {
                 val errorBody = res.errorBody()
@@ -1193,14 +993,14 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun userChallenge(phone: String = "", email: String = "") {
+    fun userChallenge(phone: String = "", email: String = "", token: String) {
         viewModelScope.launch(exceptionHandler) {
             var phoneNumber = ""
             if (phone.isNotEmpty()) phoneNumber = phone.substring(1)//remove the "+"
             val param = phoneNumber.ifEmpty { email }
             val key = if (phone.isEmpty()) "email" else "phoneNo"
-            val res =
-                RestClient.get(Constants.NEW_BASE_URL).userChallenge(hashMapOf(key to param))
+
+            val res = RestClient.getRetrofitInstanceSecure(token).userChallenge(hashMapOf(key to param))
             if (res.isSuccessful)
                 _userChallengeResponse.postValue(res.body())
             else {
@@ -1212,7 +1012,7 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun authenticateUser(a: String, m1: String) {
+    fun authenticateUser(a: String, m1: String,token: String) {
         viewModelScope.launch(exceptionHandler) {
 
             val param = hashMapOf<String, Any>()
@@ -1220,7 +1020,7 @@ open class NetworkViewModel : ViewModel() {
             param["A"] = a
             param["M1"] = m1
 
-            val res = RestClient.get(Constants.NEW_BASE_URL).userLogin(param)
+            val res = RestClient.getRetrofitInstanceSecure(token).userLogin(param)
             if (res.isSuccessful)
                 _userLoginResponse.postValue(res.body())
             else {
@@ -1233,11 +1033,11 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun verify2FA(code: String) {
+    fun verify2FA(code: String,token: String) {
         viewModelScope.launch(exceptionHandler) {
             val hash = hashMapOf<String, Any>()
             hash["code"] = code
-            val res = RestClient.get(Constants.NEW_BASE_URL).verify2FA(hash)
+            val res = RestClient.getRetrofitInstanceSecure(token).verify2FA(hash)
             if (res.isSuccessful)
                 _userLoginResponse.postValue(res.body())
             else {
@@ -1249,29 +1049,13 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun verify2FAWithdraw(code: String) {
-        viewModelScope.launch(exceptionHandler) {
-            val hash = hashMapOf<String, Any>()
-            hash["code"] = code
-            val res = RestClient.get(Constants.NEW_BASE_URL).verify2FAWithdraw(hash)
-            if (res.isSuccessful)
-                commonResponseWithdraw.postValue(res.body())
-            else {
-                val errorBody = res.errorBody()
-                val errorCode =
-                    CommonMethods.returnErrorCode(errorBody) // Extract the code from the body if needed
-                _listener?.onRetrofitError(errorCode.code, errorCode.error)
-            }
-        }
-    }
 
-
-    fun refreshToken() {
+    fun refreshToken(token: String) {
         viewModelScope.launch(exceptionHandler) {
             val hashMap = hashMapOf<String, Any>()
             hashMap["method"] = "refresh_token"
             hashMap["refresh_token"] = App.prefsManager.refreshToken
-            val res = RestClient.get(Constants.NEW_BASE_URL).userLogin(hashMap)
+            val res = RestClient.getRetrofitInstanceSecure(token).userLogin(hashMap)
             if (res.isSuccessful)
                 _userLoginResponse.postValue(res.body())
             else {
@@ -1286,10 +1070,10 @@ open class NetworkViewModel : ViewModel() {
     fun setPhone(
         countryCode: String, phone: String,
         signature: String,
-        timestamp: String
+        timestamp: String,token: String
     ) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.setPhone(Constants.NEW_BASE_URL, signature, timestamp)
+            val res = RestClient.setPhoneInstance(token, signature, timestamp)
                 .setPhone(hashMapOf("countryCode" to countryCode.toInt(), "phoneNo" to phone))
             if (res.isSuccessful)
                 _setPhoneResponse.postValue(res.body())
@@ -1302,9 +1086,9 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun verifyPhone(code: String) {
+    fun verifyPhone(code: String,token: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get(Constants.NEW_BASE_URL)
+            val res = RestClient.getRetrofitInstanceSecure(token)
                 .verifyPhone(hashMapOf("code" to code.toString()))
             if (res.isSuccessful)
                 _verifyPhoneResponse.postValue(res.body())
@@ -1318,21 +1102,10 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun setUserInfo(
-        context: Context
+        hashMap: HashMap<String, Any>, token: String
     ) {
         viewModelScope.launch(exceptionHandler) {
-
-            val hashMap = hashMapOf<String, Any>()
-            if (App.prefsManager.getLanguage().isNotEmpty())
-                hashMap["language"] = App.prefsManager.getLanguage()
-            else {
-                val configuration = context.resources.configuration.locales[0]
-                if (configuration.language.uppercase() == Constants.FRENCH)
-                    hashMap["language"] = Constants.FRENCH
-                else
-                    hashMap["language"] = Constants.ENGLISH
-            }
-            val res = RestClient.get(Constants.NEW_BASE_URL).setUserInfo(hashMap)
+            val res = RestClient.getRetrofitInstanceSecure(token).setUserInfo(hashMap)
             if (res.isSuccessful)
                 _setUserInfoResponse.postValue(res.body())
             else {
@@ -1349,7 +1122,8 @@ open class NetworkViewModel : ViewModel() {
         emailSalt: String,
         emailVerifier: String,
         phoneSalt: String,
-        phoneVerifier: String
+        phoneVerifier: String,
+        token: String
     ) {
         viewModelScope.launch(exceptionHandler) {
             val hashMap = hashMapOf<String, Any>()
@@ -1359,7 +1133,7 @@ open class NetworkViewModel : ViewModel() {
             hashMap["phoneSalt"] = phoneSalt
             hashMap["phoneVerifier"] = phoneVerifier
 
-            val res = RestClient.get(Constants.NEW_BASE_URL).setEmail(hashMap)
+            val res = RestClient.getRetrofitInstanceSecure(token).setEmail(hashMap)
             if (res.isSuccessful)
                 _setUpEmailResponse.postValue(res.body())
             else {
@@ -1372,14 +1146,13 @@ open class NetworkViewModel : ViewModel() {
     }
 
 
-    fun verifyEmail(/*uuid: String,*/ code: String) {
+    fun verifyEmail( code: String,token: String) {
         viewModelScope.launch(exceptionHandler) {
 
             val hash = hashMapOf<String, Any>()
-//            hash["uuid"] = uuid
             hash["code"] = code
             try {
-                val res = RestClient.get(Constants.NEW_BASE_URL).verifyEmail(hash)
+                val res = RestClient.getRetrofitInstanceSecure(token).verifyEmail(hash)
                 if (res.isSuccessful)
                     _verifyEmailResponse.postValue(res.body())
                 else {
@@ -1397,26 +1170,10 @@ open class NetworkViewModel : ViewModel() {
 
 
     fun setUserAddress(
-        streetNumber: String,
-        street: String,
-        city: String,
-        zipCode: String,
-        country: String,
-        isUSCitizen: Boolean
+       hashMap: HashMap<String, Any>, token: String
     ) {
         viewModelScope.launch(exceptionHandler) {
-            val hash = hashMapOf<String, Any>()
-            if (streetNumber.isNotEmpty())
-                hash["streetNumber"] = streetNumber
-//            if (street.isNotEmpty())
-            hash["street"] = street.toString()
-            hash["city"] = city
-            hash["zipCode"] = zipCode
-            hash["country"] = country
-            hash["isUSCitizen"] = isUSCitizen
-
-
-            val res = RestClient.get(Constants.NEW_BASE_URL).setUserAddress(hash)
+            val res = RestClient.getRetrofitInstanceSecure(token).setUserAddress(hashMap)
             if (res.isSuccessful)
                 _setUserAddressResponse.postValue(res.body())
             else {
@@ -1428,9 +1185,9 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun finishRegistration() {
+    fun finishRegistration(token: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get(Constants.NEW_BASE_URL).finishRegistration()
+            val res = RestClient.getRetrofitInstanceSecure(token).finishRegistration()
             if (res.isSuccessful)
                 _finishRegistrationResponse.postValue(res.body())
             else {
@@ -1447,7 +1204,8 @@ open class NetworkViewModel : ViewModel() {
         incomeSource: String,
         occupation: String,
         incomeRange: String,
-        personalAssets: String
+        personalAssets: String,
+        token: String
     ) {
         viewModelScope.launch(exceptionHandler) {
             val hash = hashMapOf<String, Any>()
@@ -1456,7 +1214,7 @@ open class NetworkViewModel : ViewModel() {
             hash["occupation"] = occupation
             hash["incomeRange"] = incomeRange
             hash["mainUse"] = personalAssets
-            val res = RestClient.get(Constants.NEW_BASE_URL).setInvestmentExp(hash)
+            val res = RestClient.getRetrofitInstanceSecure(token).setInvestmentExp(hash)
             if (res.isSuccessful)
                 _setInvestmentExpResponse.postValue(res.body())
             else {
@@ -1469,9 +1227,9 @@ open class NetworkViewModel : ViewModel() {
 
     }
 
-    fun getUser() {
+    fun getUser(token: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get(Constants.NEW_BASE_URL).getUser()
+            val res = RestClient.getRetrofitInstanceSecure(token).getUser()
             if (res.isSuccessful)
                 _getUserResponse.postValue(res.body())
             else {
@@ -1485,7 +1243,7 @@ open class NetworkViewModel : ViewModel() {
 
     fun getNews(id: String = "btc") {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get(Constants.NEW_BASE_URL).getNews(id)
+            val res = RestClient.get().getNews(id)
             if (res.isSuccessful)
                 _newsResponse.postValue(res.body())
             else {
@@ -1499,7 +1257,7 @@ open class NetworkViewModel : ViewModel() {
 
     fun getPrice(id: String = "btc", tf: String = "1h") {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get(Constants.NEW_BASE_URL).getPrice(id, tf)
+            val res = RestClient.get().getPrice(id, tf)
             if (res.isSuccessful)
                 _priceResponse.postValue(res.body())
             else {
@@ -1516,7 +1274,7 @@ open class NetworkViewModel : ViewModel() {
         amount: Double,
         destination: String,
         network: String,
-        code: String
+        code: String,token: String
     ) {
         viewModelScope.launch(exceptionHandler) {
             val map = HashMap<String, Any>()
@@ -1525,7 +1283,7 @@ open class NetworkViewModel : ViewModel() {
             map["destination"] = destination
             map["network"] = network
             map["otp"] = code
-            val res = RestClient.get(Constants.NEW_BASE_URL).createWithdrawalRequest(map)
+            val res = RestClient.getRetrofitInstanceSecure(token).createWithdrawalRequest(map)
             if (res.isSuccessful) {
                 _commonResponse.postValue(res.body())
             } else {
@@ -1537,29 +1295,26 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun getOtpForWithdraw(action: String, details: String?) {
+    fun getOtpForWithdraw(token: String,action: String, details: String?) {
         viewModelScope.launch(exceptionHandler) {
             val map = HashMap<String, Any>()
             map["action"] = action
             if (details != null)
                 map["details"] = details
-            val res = RestClient.get(Constants.NEW_BASE_URL).getOtpForWithdraw(map)
+            val res = RestClient.getRetrofitInstanceSecure(token).getOtpForWithdraw(map)
             if (res.isSuccessful) {
                 _commonResponse.postValue(res.body())
             } else {
                  val errorBody = res.errorBody()
-                val errorCode =
-                    CommonMethods.returnErrorCode(errorBody) // Extract the code from the body if needed
+                val errorCode = CommonMethods.returnErrorCode(errorBody) // Extract the code from the body if needed
                                 listener!!.onRetrofitError(errorCode.code, errorCode.error)
-
-            
             }
         }
     }
 
-    fun startKYC() {
+    fun startKYC(token: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get(Constants.NEW_BASE_URL).startKyc()
+            val res = RestClient.getRetrofitInstanceSecure(token).startKyc()
             if (res.isSuccessful) {
                 _kycResponse.postValue(res.body())
             } else {
@@ -1572,9 +1327,9 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun getBalanceApi() {
+    fun getBalanceApi(token: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get(Constants.NEW_BASE_URL).getBalance()
+            val res = RestClient.getRetrofitInstanceSecure(token).getBalance()
             if (res.isSuccessful)
                 _balanceResponse.postValue(res.body())
             else {
@@ -1586,9 +1341,9 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun getOrderApi(id: String) {
+    fun getOrderApi(id: String,token: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get(Constants.NEW_BASE_URL).getOrder(id)
+            val res = RestClient.getRetrofitInstanceSecure(token).getOrder(id)
             if (res.isSuccessful)
                 _getOrderResponse.postValue(res.body())
             else {
@@ -1600,10 +1355,10 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun updateAuthentication(hash: HashMap<String, Any>) {
+    fun updateAuthentication(hash: HashMap<String, Any>,token: String) {
         viewModelScope.launch(exceptionHandler) {
 
-            val res = RestClient.get(Constants.NEW_BASE_URL).updateUserAuthentication(hash)
+            val res = RestClient.getRetrofitInstanceSecure(token).updateUserAuthentication(hash)
             if (res.isSuccessful)
                 _updateAuthenticateResponse.postValue(res.body())
             else {
@@ -1615,10 +1370,10 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun switchOffAuthentication(detail: String, scope: String) {
+    fun switchOffAuthentication(detail: String, action: String,token: String) {
         viewModelScope.launch(exceptionHandler) {
             val res =
-                RestClient.get(Constants.NEW_BASE_URL).switchOffAuthentication(detail, scope)
+                RestClient.getRetrofitInstanceSecure(token).switchOffAuthentication(detail, action)
             if (res.isSuccessful)
                 _booleanResponse.postValue(res.body())
             else {
@@ -1630,10 +1385,10 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun getExportOperation(date: String) {
+    fun getExportOperation(date: String,token: String) {
         try {
             viewModelScope.launch(exceptionHandler) {
-                val res = RestClient.get().getOperationExport(date)
+                val res = RestClient.getRetrofitInstanceSecure(token).getOperationExport(date)
                 if (res.isSuccessful)
                     _exportOperationResponse.postValue(res.body())
                 else {
@@ -1647,20 +1402,26 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun qrCodeUrl() {
+    fun qrCodeUrl(token: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get(Constants.NEW_BASE_URL).getQrUrl()
+            val res = RestClient.getRetrofitInstanceSecure(token).getQrUrl()
             if (res.isSuccessful)
                 _qrCodeResponse.postValue(res.body())
+            else {
+            val errorBody = res.errorBody()
+            val errorCode =
+                CommonMethods.returnErrorCode(errorBody) // Extract the code from the body if needed
+            _listener?.onRetrofitError(errorCode.code, errorCode.error)
+        }
         }
     }
 
-    fun sendMsgToSupport(msg: String) {
+    fun sendMsgToSupport(msg: String,token: String) {
         try {
             viewModelScope.launch(exceptionHandler) {
                 val hash = hashMapOf<String, Any>()
                 hash["message"] = msg
-                val res = RestClient.get().contactSupport(hash)
+                val res = RestClient.getRetrofitInstanceSecure(token).contactSupport(hash)
                 if (res.isSuccessful)
                     _msgResponse.postValue(res.body())
                 else {
@@ -1676,9 +1437,9 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun getTransactions(limit: Int, offset: Int) {
+    fun getTransactionsListing(limit: Int, offset: Int,token: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().getTransactionsList(limit, offset)
+            val res = RestClient.getRetrofitInstanceSecure(token).getTransactionsList(limit, offset)
             if (res.isSuccessful)
                 _getTransactionListing.postValue(res.body())
             else {
@@ -1690,12 +1451,12 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun forgotPass(email: String) {
+    fun forgotPass(email: String,token: String) {
         try {
             viewModelScope.launch(exceptionHandler) {
                 val hash = hashMapOf<String, Any>()
                 hash["email"] = email
-                val res = RestClient.get().forgotPassword(hash)
+                val res = RestClient.getRetrofitInstanceSecure(token).forgotPassword(hash)
                 if (res.isSuccessful)
                     _booleanResponse.postValue(res.body())
                 else {
@@ -1715,7 +1476,7 @@ open class NetworkViewModel : ViewModel() {
         emailSalt: String,
         emailVerifier: String,
         phoneSalt: String,
-        phoneVerifier: String
+        phoneVerifier: String,token: String
     ) {
         try {
             viewModelScope.launch(exceptionHandler) {
@@ -1724,7 +1485,7 @@ open class NetworkViewModel : ViewModel() {
                 hashMap["emailVerifier"] = emailVerifier
                 hashMap["phoneSalt"] = phoneSalt
                 hashMap["phoneVerifier"] = phoneVerifier
-                val res = RestClient.get().resetNewPassword(hashMap)
+                val res = RestClient.getRetrofitInstanceSecure(token).resetNewPassword(hashMap)
                 if (res.isSuccessful)
                     _booleanResponse.postValue(res.body())
                 else {
@@ -1739,10 +1500,10 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun getResetPass() {
+    fun getResetPass(token: String) {
         try {
             viewModelScope.launch(exceptionHandler) {
-                val res = RestClient.get().getResetPassword()
+                val res = RestClient.getRetrofitInstanceSecure(token).getResetPassword()
                 if (res.isSuccessful)
                     _resetPassResponse.postValue(res.body())
                 else {
@@ -1758,10 +1519,10 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun getPasswordChangeChallenge() {
+    fun getPasswordChangeChallenge(token: String) {
         try {
             viewModelScope.launch(exceptionHandler) {
-                val res = RestClient.get().getPasswordChangeChallenge()
+                val res = RestClient.getRetrofitInstanceSecure(token).getPasswordChangeChallenge()
                 if (res.isSuccessful)
                     _changePassResponse.postValue(res.body())
                 else {
@@ -1777,10 +1538,10 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun changePassword(hash: HashMap<String, Any>) {
+    fun changePassword(hash: HashMap<String, Any>,token: String) {
         try {
             viewModelScope.launch(exceptionHandler) {
-                val res = RestClient.get().changePassword(hash)
+                val res = RestClient.getRetrofitInstanceSecure(token).changePassword(hash)
                 if (res.isSuccessful)
                     _booleanResponse.postValue(res.body())
                 else {
@@ -1796,12 +1557,12 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun verifyPasswordChange(code: String) {
+    fun verifyPasswordChange(code: String,token: String) {
         try {
             viewModelScope.launch(exceptionHandler) {
                 val hash = hashMapOf<String, Any>()
                 hash["code"] = code
-                val res = RestClient.get().verifyPasswordChange(hash)
+                val res = RestClient.getRetrofitInstanceSecure(token).verifyPasswordChange(hash)
                 if (res.isSuccessful)
                     _exportOperationResponse.postValue(res.body())
                 else {
@@ -1816,14 +1577,14 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun oneTimeOrderStrategy(strategyName: String, amount: Double, ownerUuid: String) {
+    fun oneTimeOrderStrategy(strategyName: String, amount: Double, ownerUuid: String,token: String) {
         viewModelScope.launch(exceptionHandler) {
             val map = HashMap<String, Any>()
             map["strategyName"] = strategyName
             map["amount"] = amount
             map["ownerUuid"] = ownerUuid
             val res =
-                RestClient.get(Constants.NEW_BASE_URL).oneTimeStrategyExecution(map)
+                RestClient.getRetrofitInstanceSecure(token).oneTimeStrategyExecution(map)
             if (res.isSuccessful) {
                 _oneTimeStrategyDataResponse.postValue(res.body())
             } else {
@@ -1837,10 +1598,10 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun strategyStatus(executionId: String) {
+    fun strategyStatus(executionId: String,token: String) {
         viewModelScope.launch(exceptionHandler) {
             val res =
-                RestClient.get(Constants.NEW_BASE_URL).checkStrategyStatus(executionId)
+                RestClient.getRetrofitInstanceSecure(token).checkStrategyStatus(executionId)
             if (res.isSuccessful) {
                 _strategyExecutionResponse.postValue(res.body())
             } else {
@@ -1854,9 +1615,9 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun cancelQuote(hashMap: HashMap<String, Any>) {
+    fun cancelQuote(hashMap: HashMap<String, Any>,token: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get(Constants.NEW_BASE_URL).cancelQuote(hashMap)
+            val res = RestClient.getRetrofitInstanceSecure(token).cancelQuote(hashMap)
             if (res.isSuccessful) {
                 _booleanResponse.postValue(res.body())
             } else {
@@ -1884,10 +1645,10 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun closeAccount(hash: HashMap<String, Any>) {
+    fun closeAccount(hash: HashMap<String, Any>,token: String) {
         viewModelScope.launch(exceptionHandler) {
 
-            val res = RestClient.get(Constants.NEW_BASE_URL).closeAccount(hash)
+            val res = RestClient.getRetrofitInstanceSecure(token).closeAccount(hash)
             if (res.isSuccessful)
                 _booleanResponse.postValue(res.body())
             else {
@@ -1900,9 +1661,9 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun startSignUrl() {
+    fun startSignUrl(token: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get(Constants.NEW_BASE_URL).startSignUrl()
+            val res = RestClient.getRetrofitInstanceSecure(token).startSignUrl()
             if (res.isSuccessful) {
                 _signUrlResponse.postValue(res.body())
             } else {
@@ -1915,9 +1676,9 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun startKYCIdentity() {
+    fun startKYCIdentity(token: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get(Constants.NEW_BASE_URL).startKyc()
+            val res = RestClient.getRetrofitInstanceSecure(token).startKyc()
             if (res.isSuccessful) {
                 _kycResponseIdentity.postValue(res.body())
             } else {
@@ -1930,9 +1691,9 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun getWalletHistoryPrice(daily: Boolean = true, limit: Int = 500) {
+    fun getWalletHistoryPrice(token: String,daily: Boolean = true, limit: Int = 500) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get(Constants.NEW_BASE_URL).getWalletHistory(limit, daily)
+            val res = RestClient.getRetrofitInstanceSecure(token).getWalletHistory(limit, daily)
             if (res.isSuccessful)
                 _walletHistoryResponse.postValue(res.body())
             else {
@@ -1944,9 +1705,9 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun getActiveStrategies() {
+    fun getActiveStrategies(token: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get(Constants.NEW_BASE_URL).activeStrategies()
+            val res = RestClient.getRetrofitInstanceSecure(token).activeStrategies()
             if (res.isSuccessful)
                 _activeStrategyResponse.postValue(res.body())
             else {
@@ -1960,7 +1721,7 @@ open class NetworkViewModel : ViewModel() {
 
     fun getPriceResumeById(id: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get(Constants.NEW_BASE_URL).getPriceResumeId(id)
+            val res = RestClient.get().getPriceResumeId(id)
             if (res.isSuccessful)
                 _priceResumeIdResponse.postValue(res.body())
             else {
@@ -1976,17 +1737,17 @@ open class NetworkViewModel : ViewModel() {
         strategyId: String,
         frequency: String?,
         amount: Double,
-        strateggyName: String
+        strategyName: String,token: String
     ) {
         viewModelScope.launch(exceptionHandler) {
             val hash = hashMapOf<String, Any>()
-            hash["strategyName"] = strateggyName
+            hash["strategyName"] = strategyName
             hash["ownerUuid"] = strategyId
             if (frequency != null)
                 hash["frequency"] = frequency
             hash["amount"] = amount
             Log.d("logData", "$hash")
-            val res = RestClient.get().editEnabledStrategy(hash)
+            val res = RestClient.getRetrofitInstanceSecure(token).editEnabledStrategy(hash)
             if (res.isSuccessful)
                 _investStrategyResponse.postValue(res.body())
             else {
@@ -2017,23 +1778,10 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun getUserSign() {
-        viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get(Constants.NEW_BASE_URL).getUser()
-            if (res.isSuccessful)
-                _getUserSignResponse.postValue(res.body())
-            else {
-                val errorBody = res.errorBody()
-                val errorCode =
-                    CommonMethods.returnErrorCode(errorBody) // Extract the code from the body if needed
-                _listener?.onRetrofitError(errorCode.code, errorCode.error)
-            }
-        }
-    }
 
-    fun getWalletRib() {
+    fun getWalletRib(token: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get(Constants.NEW_BASE_URL).getWalletServices()
+            val res = RestClient.getRetrofitInstanceSecure(token).getWalletServices()
             if (res.isSuccessful)
                 _getWalletRibResponse.postValue(res.body())
             else {
@@ -2046,10 +1794,10 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun addRib(
-        hash: HashMap<String, Any>
+        hash: HashMap<String, Any>, token: String
     ) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get().addRib(hash)
+            val res = RestClient.getRetrofitInstanceSecure(token).addRib(hash)
             if (res.isSuccessful)
                 _booleanResponse.postValue(res.body())
             else {
@@ -2062,12 +1810,12 @@ open class NetworkViewModel : ViewModel() {
     }
 
     fun deleteRIB(
-        ribID: String
+        ribID: String,token: String
     ) {
         viewModelScope.launch(exceptionHandler) {
             val hash = HashMap<String, Any>()
             hash["ribId"] = ribID
-            val res = RestClient.get().deleteRIB(hash)
+            val res = RestClient.getRetrofitInstanceSecure(token).deleteRIB(hash)
             if (res.isSuccessful)
                 _exportOperationResponse.postValue(res.body())
             else {
@@ -2084,7 +1832,7 @@ open class NetworkViewModel : ViewModel() {
         iban: String,
         bic: String,
         amount: Double,
-        code: String
+        code: String, token: String
     ) {
         viewModelScope.launch(exceptionHandler) {
             val map = HashMap<String, Any>()
@@ -2093,7 +1841,7 @@ open class NetworkViewModel : ViewModel() {
             map["bic"] = bic
             map["amount"] = amount
             map["otp"] = code
-            val res = RestClient.get(Constants.NEW_BASE_URL).withdrawEuroRequest(map)
+            val res = RestClient.getRetrofitInstanceSecure(token).withdrawEuroRequest(map)
             if (res.isSuccessful) {
                 _commonResponse.postValue(res.body())
             } else {
@@ -2106,9 +1854,9 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun getWithdrawEuroFee() {
+    fun getWithdrawEuroFee(token: String) {
         viewModelScope.launch(exceptionHandler) {
-            val res = RestClient.get(Constants.NEW_BASE_URL).getWithdrawEuroFee()
+            val res = RestClient.getRetrofitInstanceSecure(token).getWithdrawEuroFee()
             if (res.isSuccessful)
                 _getWithdrawEuroFeeResponse.postValue(res.body())
             else {

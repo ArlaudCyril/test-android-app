@@ -6,6 +6,7 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
@@ -21,6 +22,7 @@ import com.Lyber.dev.databinding.FragmentChooseAssetDepositBinding
 import com.Lyber.dev.databinding.LoaderViewBinding
 import com.Lyber.dev.models.AssetBaseData
 import com.Lyber.dev.models.NetworkDeposit
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.fadeIn
@@ -33,7 +35,10 @@ import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import java.util.*
 
 class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBinding>(),
@@ -115,9 +120,33 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                 for (networkq in it.data.networks) {
                     if (networkq.isDepositActive) {
                         binding.etNetwork.text = networkq.fullName
-                        CommonMethods.showProgressDialog(requireActivity())
-                        isAddress = true
-                        viewModel.getAddress(networkq.id, network!!.id)
+                        val jsonObject = JSONObject()
+                        jsonObject.put("network", networkq.id)
+                        jsonObject.put("asset", network?.id ?: "")
+                        val jsonString = jsonObject.toString()
+                        // Generate the request hash
+                        val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                            SplashActivity.integrityTokenProvider?.request(
+                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                    .setRequestHash(requestHash)
+                                    .build()
+                            )
+                        integrityTokenResponse?.addOnSuccessListener { response ->
+                            Log.d("token", "${response.token()}")
+                            isAddress = true
+                            CommonMethods.showProgressDialog(requireActivity())
+                            viewModel.getAddress(
+                                networkq.id,
+                                network!!.id,
+                                response.token()
+                            )
+
+                        }?.addOnFailureListener { exception ->
+                            Log.d("token", "${exception}")
+                        }
+
                         binding.tvNote.text = getString(
                             R.string.send_only_to_this_address_using_the_protocol,
                             network!!.fullName,
@@ -160,9 +189,33 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
         assetPopupNetwork.setOnItemClickListener { _, _, position, _ ->
             assetAdapterNetwork.getItemAt(position)?.let {
                 binding.etNetwork.text = it.fullName
-                CommonMethods.showProgressDialog(requireActivity())
-                isAddress = true
-                viewModel.getAddress(it.id, network!!.id)
+                  val jsonObject = JSONObject()
+                jsonObject.put("network", it.id)
+                jsonObject.put("asset", network?.id ?: "")
+               val jsonString = jsonObject.toString()
+                // Generate the request hash
+                val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                    SplashActivity.integrityTokenProvider?.request(
+                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                            .setRequestHash(requestHash)
+                            .build()
+                    )
+                integrityTokenResponse?.addOnSuccessListener { response ->
+                    Log.d("token", "${response.token()}")
+                    CommonMethods.showProgressDialog(requireActivity())
+                    isAddress=true
+                    viewModel.getAddress(
+                        it.id,
+                        network?.id ?: "",
+                        response.token()
+                    )
+
+                }?.addOnFailureListener { exception ->
+                    Log.d("token", "${exception}")
+                }
+
                 binding.tvNote.text = getString(
                     R.string.send_only_to_this_address_using_the_protocol,
                     network!!.fullName,
@@ -374,23 +427,23 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
             )
 
             10012 -> {
-                val asset=binding.etAssets.text.toString()
+                val asset = binding.etAssets.text.toString()
                 CommonMethods.showSnack(
                     binding.root,
                     requireContext(),
-                    getString(R.string.error_code_10012,asset)
+                    getString(R.string.error_code_10012, asset)
                 )
             }
 
             10013 -> {
-                val transactionType=getString(R.string.deposit)
-                val network=binding.etNetwork.text.toString()
-                val asset=binding.etAssets.text.toString()
+                val transactionType = getString(R.string.deposit)
+                val network = binding.etNetwork.text.toString()
+                val asset = binding.etAssets.text.toString()
 
                 CommonMethods.showSnack(
                     binding.root,
                     requireContext(),
-                    getString(R.string.error_code_10013,transactionType,network,asset)
+                    getString(R.string.error_code_10013, transactionType, network, asset)
                 )
             }
 
@@ -422,11 +475,11 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
             }
 
             3000 -> {
-                val transactionType=getString(R.string.deposit)
+                val transactionType = getString(R.string.deposit)
                 CommonMethods.showSnack(
                     binding.root,
                     requireContext(),
-                    getString(R.string.error_code_3000,transactionType)
+                    getString(R.string.error_code_3000, transactionType)
                 )
                 findNavController().navigate(R.id.action_choose_asset_for_deposit_to_home_fragment)
             }
@@ -493,7 +546,8 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                 )
                 findNavController().navigate(R.id.action_choose_asset_for_deposit_to_home_fragment)
             }
-            else->  super.onRetrofitError(errorCode, msg)
+
+            else -> super.onRetrofitError(errorCode, msg)
 
         }
     }

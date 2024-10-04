@@ -14,6 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentChangePasswordBinding
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.VerificationBottomSheet
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
@@ -21,11 +22,14 @@ import com.Lyber.dev.utils.CommonMethods.Companion.showSnack
 import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.SignUpViewModel
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import com.nimbusds.srp6.SRP6ClientSession
 import com.nimbusds.srp6.SRP6CryptoParams
 import com.nimbusds.srp6.SRP6VerifierGenerator
 import com.nimbusds.srp6.XRoutineWithUserIdentity
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import java.math.BigInteger
 
 
@@ -121,12 +125,6 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
                 val phoneVerifier = generator.generateVerifier(
                     phoneSalt, App.prefsManager.user?.phoneNo, password
                 )
-                Log.d("A", creds.A.toString())
-                Log.d("M1", creds.M1.toString())
-                Log.d("emailSalt", "$emailSalt")
-                Log.d("emailVerifier", " $emailVerifier  ")
-                Log.d("phoneSalt", "  $phoneSalt ")
-                Log.d("phoneVerifier", "   $phoneVerifier")
                 val hashMap = hashMapOf<String, Any>()
                 hashMap["A"] = creds.A.toString()
                 hashMap["M1"] = creds.M1.toString()
@@ -134,7 +132,34 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
                 hashMap["emailVerifier"] = emailVerifier.toString()
                 hashMap["phoneSalt"] = phoneSalt.toString()
                 hashMap["phoneVerifier"] = phoneVerifier.toString()
-                viewModel.changePassword(hashMap)
+
+                val jsonObject = JSONObject()
+                jsonObject.put("A", creds.A.toString())
+                jsonObject.put("M1", creds.M1.toString())
+                jsonObject.put("emailSalt", emailSalt.toString())
+                jsonObject.put("emailVerifier", emailVerifier.toString())
+                jsonObject.put("phoneSalt", phoneSalt.toString())
+                jsonObject.put("phoneVerifier", phoneVerifier.toString())
+
+                val jsonString = jsonObject.toString()
+                // Generate the request hash
+                val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                    SplashActivity.integrityTokenProvider?.request(
+                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                            .setRequestHash(requestHash)
+                            .build()
+                    )
+                integrityTokenResponse?.addOnSuccessListener { response ->
+                    viewModel.changePassword(
+                        hashMap,
+                        token = response.token()
+                    )
+                }?.addOnFailureListener { exception ->
+                    Log.d("token", "${exception}")
+
+                }
             }
         }
 
@@ -203,9 +228,22 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
 
     private fun handle(txt: String) {
         CommonMethods.checkInternet(binding.root, requireActivity()) {
-            resendCode = true
-            viewModel.getPasswordChangeChallenge()
+            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                SplashActivity.integrityTokenProvider?.request(
+                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                        .build()
+                )
+            integrityTokenResponse?.addOnSuccessListener { response ->
+                resendCode = true
+                viewModel.getPasswordChangeChallenge(
+                    token = response.token()
+                )
+            }?.addOnFailureListener { exception ->
+                Log.d("token", "${exception}")
+
+            }
         }
+
     }
 
     override fun onClick(v: View?) {
@@ -230,9 +268,22 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
                             )
                         } else {
                             CommonMethods.checkInternet(binding.root, requireActivity()) {
-                                CommonMethods.showProgressDialog(requireContext())
-                                viewModel.getPasswordChangeChallenge()
+                                val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                                    SplashActivity.integrityTokenProvider?.request(
+                                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                            .build()
+                                    )
+                                integrityTokenResponse?.addOnSuccessListener { response ->
+                                    CommonMethods.showProgressDialog(requireContext())
+                                    viewModel.getPasswordChangeChallenge(
+                                        token = response.token()
+                                    )
+                                }?.addOnFailureListener { exception ->
+                                    Log.d("token", "${exception}")
+
+                                }
                             }
+
                         }
                     }
                 }
@@ -259,6 +310,7 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
                 }
                 showSnack(binding.root, requireContext(), getString(R.string.error_code_26))
             }
+
             34 -> {
                 if (::bottomSheet.isInitialized) {
                     try {
@@ -269,6 +321,7 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
                 }
                 showSnack(binding.root, requireContext(), getString(R.string.error_code_34))
             }
+
             35 -> {
                 if (::bottomSheet.isInitialized) {
                     try {
@@ -279,6 +332,7 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
                 }
                 showSnack(binding.root, requireContext(), getString(R.string.error_code_35))
             }
+
             37 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_37))
             40 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_40))
             41 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_41))
@@ -292,6 +346,7 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
                 }
                 showSnack(binding.root, requireContext(), getString(R.string.error_code_42))
             }
+
             24 -> bottomSheet.showErrorOnBottomSheet(24)
             38 -> bottomSheet.showErrorOnBottomSheet(38)
             39 -> bottomSheet.showErrorOnBottomSheet(39)

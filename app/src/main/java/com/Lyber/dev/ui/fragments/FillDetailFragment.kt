@@ -1,17 +1,16 @@
 package com.Lyber.dev.ui.fragments
 
-import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.View
-import android.view.Window
 import android.widget.ImageView
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.Lyber.dev.R
-import com.Lyber.dev.databinding.CustomDialogLayoutBinding
 import com.Lyber.dev.databinding.FragmentTestFillDetailBinding
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.utils.ActivityCallbacks
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.App.Companion.prefsManager
@@ -26,9 +25,12 @@ import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.PersonalDataViewModel
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import com.nimbusds.srp6.SRP6CryptoParams
 import com.nimbusds.srp6.SRP6VerifierGenerator
 import com.nimbusds.srp6.XRoutineWithUserIdentity
+import org.json.JSONObject
 
 class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.OnClickListener,
     ActivityCallbacks {
@@ -253,6 +255,47 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
         }
     }
 
+    fun hitSetUser(){
+        val hashMap = hashMapOf<String, Any>()
+       if (viewModel.streetNumber.isNotEmpty())
+           hashMap["streetNumber"] = viewModel.streetNumber
+//            if (street.isNotEmpty())
+        hashMap["street"] = viewModel.street.toString()
+        hashMap["city"] = viewModel.city
+        hashMap["zipCode"] = viewModel.zipCode
+        hashMap["country"] = viewModel.country
+        hashMap["isUSCitizen"] = false
+
+        val jsonObject = JSONObject()
+        if (viewModel.streetNumber.isNotEmpty())
+        jsonObject.put("streetNumber",viewModel.streetNumber)
+        jsonObject.put("street",viewModel.street)
+        jsonObject.put("city",viewModel.city)
+        jsonObject.put("zipCode",viewModel.zipCode)
+        jsonObject.put("country",viewModel.country)
+        jsonObject.put("isUSCitizen",false)
+        val jsonString = jsonObject.toString()
+        // Generate the request hash
+        val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+            SplashActivity.integrityTokenProvider?.request(
+                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                    .setRequestHash(requestHash)
+                    .build()
+            )
+        integrityTokenResponse?.addOnSuccessListener { response ->
+            Log.d("token", "${response.token()}")
+            showProgressDialog(requireActivity())
+           viewModel.setUserAddress(
+               hashMap,response.token()
+            )
+
+        }?.addOnFailureListener { exception ->
+            Log.d("token", "${exception}")
+
+        }
+    }
 
     private fun buttonClicked(position: Int) {
 
@@ -261,34 +304,78 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
         when (position) {
             0 -> (fragment as AddressFragment).let {
                 if (it.checkData()) {
+                    val hashMap = hashMapOf<String, Any>()
+                    if (App.prefsManager.getLanguage().isNotEmpty())
+                        hashMap["language"] = App.prefsManager.getLanguage()
+                    else {
+                        val configuration = requireContext().resources.configuration.locales[0]
+                        if (configuration.language.uppercase() == Constants.FRENCH)
+                            hashMap["language"] = Constants.FRENCH
+                        else
+                            hashMap["language"] = Constants.ENGLISH
+                    }
+                    val jsonObject = JSONObject()
+                    jsonObject.put("language",hashMap["language"])
+                    val jsonString = jsonObject.toString()
+                    // Generate the request hash
+                    val requestHash = CommonMethods.generateRequestHash(jsonString)
 
-                    checkInternet(binding.root,requireContext()) {
-                        showProgressDialog(requireContext())
-                        viewModel.setUserInfo(requireContext())
-                        viewModel.setUserAddress(
-                            viewModel.streetNumber,
-                            viewModel.street,
-                            viewModel.city,
-                            viewModel.zipCode,
-                            viewModel.country,false
+                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                        SplashActivity.integrityTokenProvider?.request(
+                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                .setRequestHash(requestHash)
+                                .build()
                         )
+                    integrityTokenResponse?.addOnSuccessListener { response ->
+                        Log.d("token", "${response.token()}")
+                        showProgressDialog(requireActivity())
+                        viewModel.setUserInfo(hashMap, response.token())
+                        hitSetUser()
+
+                    }?.addOnFailureListener { exception ->
+                        Log.d("token", "${exception}")
 
                     }
-
                 }
             }
 
             1 -> (fragment as InvestmentExperienceFragment).let {
                if (it.checkData()) {
                     checkInternet(binding.root,requireContext()) {
-                        showProgressDialog(requireContext())
-                        viewModel.setInvestmentExp(
-                            viewModel.cryptoExp,
-                            viewModel.sourceOfIncome,
-                            viewModel.workIndustry,
-                            viewModel.annualIncome,
-                            viewModel.personalAssets
-                        )
+                       val jsonObject = JSONObject()
+                        jsonObject.put("investmentExperience",viewModel.cryptoExp)
+                        jsonObject.put("incomeSource",viewModel.sourceOfIncome)
+                        jsonObject.put("occupation",viewModel.workIndustry)
+                        jsonObject.put("incomeRange",viewModel.annualIncome)
+                        jsonObject.put("mainUse",viewModel.personalAssets)
+                        val jsonString = jsonObject.toString()
+                        // Generate the request hash
+                        val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                            SplashActivity.integrityTokenProvider?.request(
+                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                    .setRequestHash(requestHash)
+                                    .build()
+                            )
+                        integrityTokenResponse?.addOnSuccessListener { response ->
+                            Log.d("token", "${response.token()}")
+                            showProgressDialog(requireContext())
+                            viewModel.setInvestmentExp(
+                                viewModel.cryptoExp,
+                                viewModel.sourceOfIncome,
+                                viewModel.workIndustry,
+                                viewModel.annualIncome,
+                                viewModel.personalAssets,response.token()
+                            )
+
+                        }?.addOnFailureListener { exception ->
+                            Log.d("token", "${exception}")
+
+                        }
+
+
+
                     }
                 }
             }

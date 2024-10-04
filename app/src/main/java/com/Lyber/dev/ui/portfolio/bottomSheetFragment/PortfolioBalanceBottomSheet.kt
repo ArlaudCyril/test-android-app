@@ -2,6 +2,7 @@ package com.Lyber.dev.ui.portfolio.bottomSheetFragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,8 +17,10 @@ import com.Lyber.dev.databinding.ItemBalanceDetailPortfolioBinding
 import com.Lyber.dev.databinding.ItemBalancePortfolioHistoryBinding
 import com.Lyber.dev.databinding.LoaderViewBinding
 import com.Lyber.dev.models.Transaction
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.adapters.BaseAdapter
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.BaseBottomSheet
+import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.dev.utils.CommonMethods.Companion.decimalPoints
@@ -28,7 +31,11 @@ import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.CommonMethods.Companion.zoomIn
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.utils.ItemOffsetDecoration
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import okhttp3.ResponseBody
+import org.json.JSONObject
+import retrofit2.http.Query
 
 class PortfolioBalanceBottomSheet(private val clickListener: (BalanceInfo) -> Unit = { _ -> }) :
     BaseBottomSheet<BottomSheetBalanceDetailBinding>() {
@@ -109,7 +116,28 @@ class PortfolioBalanceBottomSheet(private val clickListener: (BalanceInfo) -> Un
         viewModel.selectedAsset?.let {
             checkInternet(binding.root,requireContext()) {
                 showProgress()
-                viewModel.getTransactions(page, limit, it.id)
+
+                val jsonObject = JSONObject()
+                jsonObject.put("page",page)
+                jsonObject.put("limit", limit)
+                jsonObject.put("asset_id", it.id)
+                val jsonString = jsonObject.toString()
+                // Generate the request hash
+                val requestHash = CommonMethods.generateRequestHash(jsonString)
+                val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                    SplashActivity.integrityTokenProvider?.request(
+                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                            .setRequestHash(requestHash)
+                            .build()
+                    )
+                integrityTokenResponse1?.addOnSuccessListener { response ->
+                    Log.d("token", "${response.token()}")
+                    viewModel.getTransactions(response.token(),page, limit, it.id)
+
+
+                }?.addOnFailureListener { exception ->
+                    Log.d("token", "${exception}")
+                }
             }
         }
     }

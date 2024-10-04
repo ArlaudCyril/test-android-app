@@ -7,9 +7,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.portfolio.fragment.PortfolioHomeFragment
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.viewmodels.NetworkViewModel
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -60,7 +63,16 @@ class GetUserViewModal() : ViewModel() {
         // For example:
         // kycOK = fetchedData.kycStatus == "COMPLETED"
 
-        networkViewModel.getUser() // Assuming this returns a User object
+        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+            SplashActivity.integrityTokenProvider?.request(
+                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                    .build()
+            )
+        integrityTokenResponse?.addOnSuccessListener { response ->
+            networkViewModel.getUser(response.token()) //  this returns a User object
+        }?.addOnFailureListener { exception ->
+            Log.d("token", "${exception}")
+        }
         networkViewModel.getUserResponse.observeForever { user ->
             _userLiveData.postValue(user.data)
             // Assuming user?.kycStatus is the desired check for kycOK

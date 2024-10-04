@@ -30,6 +30,7 @@ import com.Lyber.dev.databinding.ProgressBarNewBinding
 import com.Lyber.dev.models.Balance
 import com.Lyber.dev.models.Duration
 import com.Lyber.dev.ui.activities.BaseActivity
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.adapters.BalanceAdapter
 import com.Lyber.dev.ui.adapters.ResourcesAdapter
 import com.Lyber.dev.ui.fragments.AddAmountFragment
@@ -65,8 +66,10 @@ import com.appsflyer.AppsFlyerLib
 import com.appsflyer.attribution.AppsFlyerRequestListener
 import com.github.jinatonic.confetti.CommonConfetti
 import com.github.jinatonic.confetti.ConfettiManager
+import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.tabs.TabLayout
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import okhttp3.Response
@@ -266,7 +269,16 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         viewModel.exchangeResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 Handler(Looper.getMainLooper()).postDelayed({
-                    viewModel.getBalance()
+                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                        SplashActivity.integrityTokenProvider?.request(
+                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                .build()
+                        )
+                    integrityTokenResponse?.addOnSuccessListener { response ->
+                        viewModel.getBalance(response.token())
+                    }?.addOnFailureListener { exception ->
+                        Log.d("token", "${exception}")
+                    }
                 }, 4000)
             }
         }
@@ -326,10 +338,46 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                     if (requireArguments().containsKey(Constants.FROM_SWAP) || requireArguments().containsKey(
                             Constants.TO_SWAP
                         )
-                    )
-                        viewModel.getOrderApi(requireArguments().getString(Constants.ORDER_ID, ""))
+                    ) {
+                        val jsonObject = JSONObject()
+                        jsonObject.put("orderId", requireArguments().getString(Constants.ORDER_ID, ""))
+                       val jsonString = jsonObject.toString()
+                        // Generate the request hash
+                        val requestHash = CommonMethods.generateRequestHash(jsonString)
+                        val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                            SplashActivity.integrityTokenProvider?.request(
+                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                    .setRequestHash(requestHash)
+                                    .build()
+                            )
+                        integrityTokenResponse1?.addOnSuccessListener { response ->
+                            Log.d("token", "${response.token()}")
+                            viewModel.getOrderApi(requireArguments().getString(Constants.ORDER_ID, ""),response.token())
+
+
+                        }?.addOnFailureListener { exception ->
+                            Log.d("token", "${exception}")
+                        }
+                    }
                     else {
-                        viewModel.confirmOrder(requireArguments().getString(Constants.ORDER_ID, ""))
+                        val jsonObject = JSONObject()
+                        jsonObject.put("orderId",requireArguments().getString(Constants.ORDER_ID, ""))
+                        val jsonString = jsonObject.toString()
+                        // Generate the request hash
+                        val requestHash = CommonMethods.generateRequestHash(jsonString)
+                        val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                            SplashActivity.integrityTokenProvider?.request(
+                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                    .setRequestHash(requestHash)
+                                    .build()
+                            )
+                        integrityTokenResponse1?.addOnSuccessListener { response ->
+                            Log.d("token", "${response.token()}")
+                            viewModel.confirmOrder(requireArguments().getString(Constants.ORDER_ID, ""),response.token())
+                        }?.addOnFailureListener { exception ->
+                            Log.d("token", "${exception}")
+                        }
+
                         val eventValues = HashMap<String, Any>()
                         eventValues[AFInAppEventParameterName.CONTENT_TYPE] =
                             Constants.APP_FLYER_TYPE_CRYPTO
@@ -379,16 +427,49 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         }
         viewModel.orderResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-
                 if (it.data.orderStatus == "PENDING") {
-                    viewModel.getOrderApi(requireArguments().getString(Constants.ORDER_ID, ""))
+                    val jsonObject = JSONObject()
+                    jsonObject.put("orderId", requireArguments().getString(Constants.ORDER_ID, ""))
+                    val jsonString = jsonObject.toString()
+                    // Generate the request hash
+                    val requestHash = CommonMethods.generateRequestHash(jsonString)
+                    val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                        SplashActivity.integrityTokenProvider?.request(
+                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                .setRequestHash(requestHash)
+                                .build()
+                        )
+                    integrityTokenResponse1?.addOnSuccessListener { response ->
+                        Log.d("token", "${response.token()}")
+                        viewModel.getOrderApi(requireArguments().getString(Constants.ORDER_ID, ""),response.token())
+                    }?.addOnFailureListener { exception ->
+                        Log.d("token", "${exception}")
+                    }
                 } else if (it.data.orderStatus == "VALIDATED")
                     Handler(Looper.getMainLooper()).postDelayed({
-                        viewModel.getBalance()
+                        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                            SplashActivity.integrityTokenProvider?.request(
+                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                    .build()
+                            )
+                        integrityTokenResponse?.addOnSuccessListener { response ->
+                            viewModel.getBalance(response.token())
+                        }?.addOnFailureListener { exception ->
+                            Log.d("token", "${exception}")
+                        }
                     }, 4000)
                 else  //TODO for now
                     Handler(Looper.getMainLooper()).postDelayed({
-                        viewModel.getBalance()
+                        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                            SplashActivity.integrityTokenProvider?.request(
+                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                    .build()
+                            )
+                        integrityTokenResponse?.addOnSuccessListener { response ->
+                            viewModel.getBalance(response.token())
+                        }?.addOnFailureListener { exception ->
+                            Log.d("token", "${exception}")
+                        }
                     }, 4000)
             }
         }

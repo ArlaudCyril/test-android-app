@@ -8,6 +8,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentConfirmInvestmentBinding
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.portfolio.fragment.PortfolioHomeFragment
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.viewmodels.PortfolioViewModel
@@ -27,8 +28,12 @@ import com.appsflyer.AFInAppEventParameterName
 import com.appsflyer.AFInAppEventType
 import com.appsflyer.AppsFlyerLib
 import com.appsflyer.attribution.AppsFlyerRequestListener
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import java.util.*
+
 //TODO from invest add money : IAM
 class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>(),
     View.OnClickListener {
@@ -129,30 +134,96 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                                     }
                                     showProgressDialog(requireContext())
                                     if (freq == "none") {
-                                        viewModel.oneTimeOrderStrategy(
-                                            viewModel.selectedStrategy!!.name,
-                                            viewModel.amount.toDouble(),
-                                            it.ownerUuid,
-                                        )
+                                        val jsonObject = JSONObject()
+                                        jsonObject.put("ownerUuid", it.ownerUuid)
+                                        jsonObject.put("strategyName", viewModel.selectedStrategy!!.name)
+                                        jsonObject.put("amount",  viewModel.amount.toDouble() )
+                                        val jsonString = jsonObject.toString()
+                                        // Generate the request hash
+                                        val requestHash =
+                                            CommonMethods.generateRequestHash(jsonString)
+                                        val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                                            SplashActivity.integrityTokenProvider?.request(
+                                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                                    .setRequestHash(requestHash)
+                                                    .build()
+                                            )
+                                        integrityTokenResponse1?.addOnSuccessListener { response ->
+                                            Log.d("token", "${response.token()}")
+                                            viewModel.oneTimeOrderStrategy( viewModel.selectedStrategy!!.name,
+                                               viewModel.amount.toDouble(), it.ownerUuid,
+                                                response.token()
+                                            )
+
+                                        }?.addOnFailureListener { exception ->
+                                            Log.d("token", "${exception}")
+                                        }
                                     } else {
                                         if (arguments != null && requireArguments().getBoolean(
                                                 Constants.EDIT_ACTIVE_STRATEGY
                                             )
-                                        )
-                                            viewModel.editEnabledStrategy(
-                                                it.ownerUuid,
-                                                freq,
-                                                viewModel.amount.toDouble(),
-                                                viewModel.selectedStrategy!!.name
-                                            )
-                                        else
+                                        ) {
+                                            val jsonObject = JSONObject()
+                                            jsonObject.put("ownerUuid", it.ownerUuid)
+                                            jsonObject.put("strategyName", viewModel.selectedStrategy!!.name)
+                                            jsonObject.put("amount",  viewModel.amount.toDouble() )
+                                            if (freq != null)
+                                                jsonObject.put("frequency",  freq )
 
-                                            viewModel.investStrategy(
-                                                it.ownerUuid,
-                                                freq,
-                                                viewModel.amount.toDouble(),
-                                                viewModel.selectedStrategy!!.name
-                                            )
+                                            val jsonString = jsonObject.toString()
+                                            // Generate the request hash
+                                            val requestHash =
+                                                CommonMethods.generateRequestHash(jsonString)
+                                            val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                                                SplashActivity.integrityTokenProvider?.request(
+                                                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                                        .setRequestHash(requestHash)
+                                                        .build()
+                                                )
+                                            integrityTokenResponse1?.addOnSuccessListener { response ->
+                                                Log.d("token", "${response.token()}")
+                                                viewModel.editEnabledStrategy(
+                                                    it.ownerUuid,
+                                                    freq,
+                                                    viewModel.amount.toDouble(),
+                                                    viewModel.selectedStrategy!!.name,response.token()
+                                                )
+
+                                            }?.addOnFailureListener { exception ->
+                                                Log.d("token", "${exception}")
+                                            }
+                                        }
+                                        else {
+                                            val jsonObject = JSONObject()
+                                            jsonObject.put("ownerUuid", it.ownerUuid)
+                                            jsonObject.put("strategyName", viewModel.selectedStrategy!!.name)
+                                            jsonObject.put("amount",  viewModel.amount.toDouble() )
+                                            if (freq != null)
+                                                jsonObject.put("frequency",  freq )
+                                            val jsonString = jsonObject.toString()
+                                            // Generate the request hash
+                                            val requestHash =
+                                                CommonMethods.generateRequestHash(jsonString)
+                                            val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                                                SplashActivity.integrityTokenProvider?.request(
+                                                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                                        .setRequestHash(requestHash)
+                                                        .build()
+                                                )
+                                            integrityTokenResponse1?.addOnSuccessListener { response ->
+                                                Log.d("token", "${response.token()}")
+                                                viewModel.investStrategy(
+                                                    it.ownerUuid,
+                                                    freq,
+                                                    viewModel.amount.toDouble(),
+                                                    viewModel.selectedStrategy!!.name,
+                                                    response.token()
+                                                )
+
+                                            }?.addOnFailureListener { exception ->
+                                                Log.d("token", "${exception}")
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -255,20 +326,21 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         dismissProgressDialog()
         when (errorCode) {
             13006 -> {
-                var minInvest=""
+                var minInvest = ""
                 try {
-                     minInvest=viewModel.selectedStrategy?.minAmount?.toFloat()!!.toString()
+                    minInvest = viewModel.selectedStrategy?.minAmount?.toFloat()!!.toString()
 
-                }catch (_:Exception){
+                } catch (_: Exception) {
                 }
                 CommonMethods.showSnack(
                     binding.root,
                     requireContext(),
-                    getString(R.string.error_code_13006,minInvest)
+                    getString(R.string.error_code_13006, minInvest)
                 )
                 requireActivity().onBackPressedDispatcher.onBackPressed()
             }
-            7024-> {
+
+            7024 -> {
                 //IAM
                 CommonMethods.showSnack(
                     binding.root,
@@ -278,7 +350,8 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                 findNavController().navigate(R.id.action_confirmInvestment_to_investment_strategies)
 
             }
-           13001 -> {
+
+            13001 -> {
                 //IAM
                 CommonMethods.showSnack(
                     binding.root,
@@ -350,7 +423,7 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
 
             }
 
-            else ->  super.onRetrofitError(errorCode, msg)
+            else -> super.onRetrofitError(errorCode, msg)
 
         }
     }

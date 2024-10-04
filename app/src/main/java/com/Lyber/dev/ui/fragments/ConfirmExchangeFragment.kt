@@ -91,16 +91,16 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
         binding.apply {
             when (v!!) {
                 ivTopAction -> {
-//                    requireActivity().onBackPressedDispatcher.onBackPressed()
-                    CommonMethods.showSnack(
-                        binding.root,
-                        requireContext(),
-                        getString(R.string.error_code_7015)
-                    )
-                    viewModel.exchangeAssetFrom = fromAsset.id
-                    val bundle = Bundle()
-                    bundle.putString(Constants.TYPE, Constants.Exchange)
-                    findNavController().navigate(R.id.action_confirmExchangeFragment_to_all_asset_fragment,bundle)
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
+//                    CommonMethods.showSnack(
+//                        binding.root,
+//                        requireContext(),
+//                        getString(R.string.error_code_7015)
+//                    )
+//                    viewModel.exchangeAssetFrom = fromAsset.id
+//                    val bundle = Bundle()
+//                    bundle.putString(Constants.TYPE, Constants.Exchange)
+//                    findNavController().navigate(R.id.action_confirmExchangeFragment_to_all_asset_fragment,bundle)
 
                 }
 

@@ -1,6 +1,7 @@
 package com.Lyber.dev.ui.fragments
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
@@ -13,6 +14,7 @@ import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentRibListingBinding
 import com.Lyber.dev.databinding.ItemMyAssetBinding
 import com.Lyber.dev.models.RIBData
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.adapters.BaseAdapter
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.AddAddressInfoBottomSheet
 import com.Lyber.dev.utils.CommonMethods
@@ -20,7 +22,10 @@ import com.Lyber.dev.utils.CommonMethods.Companion.gone
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import com.google.gson.GsonBuilder
+import org.json.JSONObject
 
 class RibListingFragment : BaseFragment<FragmentRibListingBinding>(), OnClickListener {
     override fun bind() = FragmentRibListingBinding.inflate(layoutInflater)
@@ -43,7 +48,7 @@ class RibListingFragment : BaseFragment<FragmentRibListingBinding>(), OnClickLis
         adapter.setList(list)
         binding.ivBack.setOnClickListener(this)
         binding.btnAdd.setOnClickListener(this)
-        CommonMethods.checkInternet(binding.root,requireActivity()) {
+        CommonMethods.checkInternet(binding.root, requireActivity()) {
             viewModel.getAssetDetailIncludeNetworks(Constants.MAIN_ASSET)
         }
         viewModel.getAssetDetail.observe(viewLifecycleOwner) {
@@ -54,7 +59,19 @@ class RibListingFragment : BaseFragment<FragmentRibListingBinding>(), OnClickLis
         }
         viewModel.exportOperationResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                viewModel.getWalletRib()
+                val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                    SplashActivity.integrityTokenProvider?.request(
+                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                            .build()
+                    )
+                integrityTokenResponse1?.addOnSuccessListener { response ->
+                    Log.d("token", "${response.token()}")
+                    viewModel.getWalletRib(response.token())
+
+                }?.addOnFailureListener { exception ->
+                    Log.d("token", "${exception}")
+
+                }
             }
         }
         viewModel.walletRibResponse.observe(viewLifecycleOwner) {
@@ -72,12 +89,31 @@ class RibListingFragment : BaseFragment<FragmentRibListingBinding>(), OnClickLis
         AddAddressInfoBottomSheet(true, requireActivity()) {
             if (it == 1) {
                 // delete
-                CommonMethods.checkInternet(binding.root,requireContext()) {
+                CommonMethods.checkInternet(binding.root, requireContext()) {
                     CommonMethods.showProgressDialog(requireContext())
-                    viewModel.deleteRIB(ribData.ribId)
+                    val jsonObject = JSONObject()
+                    jsonObject.put("ribId", ribData.ribId)
+                    val jsonString = jsonObject.toString()
+                    // Generate the request hash
+                    val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                    val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                        SplashActivity.integrityTokenProvider?.request(
+                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                .setRequestHash(requestHash)
+                                .build()
+                        )
+                    integrityTokenResponse1?.addOnSuccessListener { response ->
+                        Log.d("token", "${response.token()}")
+                        viewModel.deleteRIB(ribData.ribId, response.token())
+
+                    }?.addOnFailureListener { exception ->
+                        Log.d("token", "${exception}")
+
+                    }
                 }
             } else if (it == 3) {
-                when (ribData!!.ribStatus.lowercase()) {
+                when (ribData.ribStatus.lowercase()) {
                     "pending" -> {
                         CommonMethods.showSnack(
                             binding.root,

@@ -20,6 +20,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.transition.Fade
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentUnlockAppBinding
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
@@ -34,7 +35,10 @@ import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.OnTextChange
 import com.Lyber.dev.viewmodels.NetworkViewModel
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import java.util.Locale
 
 class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClickListener {
@@ -54,7 +58,16 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
         super.onViewCreated(view, savedInstanceState)
         viewModel = getViewModel(this)
         viewModel.listener = this
-        viewModel.getUser()
+        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+            SplashActivity.integrityTokenProvider?.request(
+                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                    .build()
+            )
+        integrityTokenResponse?.addOnSuccessListener { response ->
+            viewModel.getUser(response.token())
+        }?.addOnFailureListener { exception ->
+            Log.d("token", "${exception}")
+        }
         viewModel.userLoginResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
@@ -176,8 +189,28 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
 
             App.prefsManager.refreshTokenSavedAt.is1DayOld() -> {
                 checkInternet(binding.root,requireContext()) {
-                    showProgressDialog(requireContext())
-                    viewModel.refreshToken()
+                   val jsonObject = JSONObject()
+                    jsonObject.put("method","refresh_token")
+                    jsonObject.put("refresh_token", App.prefsManager.refreshToken)
+                    val jsonString = jsonObject.toString()
+                    // Generate the request hash
+                    val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                        SplashActivity.integrityTokenProvider?.request(
+                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                .setRequestHash(requestHash)
+                                .build()
+                        )
+                    integrityTokenResponse?.addOnSuccessListener { response ->
+                        Log.d("token", "${response.token()}")
+                        CommonMethods.showProgressDialog(requireActivity())
+                        viewModel.refreshToken(response.token())
+
+                    }?.addOnFailureListener { exception ->
+                        Log.d("token", "${exception}")
+
+                    }
                 }
             }
 
@@ -216,9 +249,22 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
                 }
 
                 tvLogOut -> {
+
                     CommonMethods.checkInternet(binding.root,requireContext()) {
-                        CommonMethods.showProgressDialog(requireContext())
-                        viewModel.logout()
+                        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                            SplashActivity.integrityTokenProvider?.request(
+                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                    .build()
+                            )
+                        integrityTokenResponse?.addOnSuccessListener { response ->
+                            Log.d("token", "${response.token()}")
+                            CommonMethods.showProgressDialog(requireActivity())
+                            viewModel.logout(response.token())
+
+                        }?.addOnFailureListener { exception ->
+                            Log.d("token", "${exception}")
+
+                        }
                     }
                 }
 

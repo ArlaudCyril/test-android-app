@@ -17,6 +17,7 @@ import com.Lyber.dev.models.RIBData
 import com.Lyber.dev.models.WithdrawAddress
 import com.Lyber.dev.models.WithdrawEuroData
 import com.Lyber.dev.models.WithdrawEuroFee
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.WithdrawalUsdcAddressBottomSheet
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.decimalPoint
@@ -29,6 +30,9 @@ import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.utils.OnTextChange
 import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
+import org.json.JSONObject
 import java.math.RoundingMode
 import kotlin.math.min
 
@@ -83,9 +87,19 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
         setObservers()
         binding.etAmount.addTextChangedListener(textOnTextChange)
         CommonMethods.checkInternet(binding.root,requireActivity()) {
-            CommonMethods.showProgressDialog(requireActivity())
-            viewModel.getWalletRib()
-            viewModel.getWithdrawEuroFee()
+            val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                SplashActivity.integrityTokenProvider?.request(
+                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                        .build()
+                )
+            integrityTokenResponse1?.addOnSuccessListener { response ->
+                Log.d("token", "${response.token()}")
+                CommonMethods.showProgressDialog(requireActivity())
+                viewModel.getWalletRib(response.token())
+                viewModel.getWithdrawEuroFee(response.token())
+            }?.addOnFailureListener { exception ->
+                Log.d("token", "${exception}")
+            }
         }
     }
 

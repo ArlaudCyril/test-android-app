@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Bundle
 import android.os.PersistableBundle
+import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
 import com.Lyber.dev.models.AssetBaseData
@@ -15,6 +16,8 @@ import com.Lyber.dev.models.RIBResponse
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import java.util.Locale
 
 abstract class BaseActivity<viewBinding : ViewBinding> : AppCompatActivity() {
@@ -70,7 +73,16 @@ abstract class BaseActivity<viewBinding : ViewBinding> : AppCompatActivity() {
     }
 
     fun getUser1() {
-        viewModel1.getUser()
+        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+            SplashActivity.integrityTokenProvider?.request(
+                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                    .build()
+            )
+        integrityTokenResponse?.addOnSuccessListener { response ->
+            viewModel1.getUser(response.token())
+        }?.addOnFailureListener { exception ->
+            Log.d("token", "${exception}")
+        }
     }
 
 

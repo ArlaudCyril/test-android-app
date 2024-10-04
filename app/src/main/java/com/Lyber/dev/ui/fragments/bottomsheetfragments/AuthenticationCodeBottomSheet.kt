@@ -16,7 +16,9 @@ import com.Lyber.dev.utils.CommonMethods.Companion.gone
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.viewmodels.ProfileViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-
+/*
+    * not in use
+ */
 class AuthenticationCodeBottomSheet : BaseBottomSheet<BottomSheetEnterCodeBinding>() {
 
     private val codeOne: String get() = binding.etCodeOne.text.trim().toString()

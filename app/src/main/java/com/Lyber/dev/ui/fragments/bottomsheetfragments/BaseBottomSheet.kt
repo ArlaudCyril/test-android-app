@@ -25,6 +25,7 @@ import com.Lyber.dev.R
 import com.Lyber.dev.databinding.CustomDialogVerticalLayoutBinding
 import com.Lyber.dev.databinding.DocumentBeingVerifiedBinding
 import com.Lyber.dev.network.RestClient
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.activities.WebViewActivity
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.gone
@@ -34,9 +35,11 @@ import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.utils.LoaderObject
 import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.airbnb.lottie.LottieAnimationView
+import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import okhttp3.ResponseBody
 
 abstract class BaseBottomSheet<viewBinding : ViewBinding> : BottomSheetDialogFragment(),
@@ -158,10 +161,33 @@ abstract class BaseBottomSheet<viewBinding : ViewBinding> : BottomSheetDialogFra
                 binding.tvPositiveButton.setOnClickListener {
                     CommonMethods.checkInternet(binding.root,requireContext()) {
                         CommonMethods.showProgressDialog(requireContext())
-                        if (code == 7023 || code == 10041)
-                            viewModel.startKyc()
-                        else if (code == 7025 || code == 10043)
-                            viewModel.startSignUrl()
+                        if (code == 7023 || code == 10041) {
+                            val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                                SplashActivity.integrityTokenProvider?.request(
+                                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                        .build()
+                                )
+                            integrityTokenResponse1?.addOnSuccessListener { response ->
+                                Log.d("token", "${response.token()}")
+                                viewModel.startKyc(response.token())
+                            }?.addOnFailureListener { exception ->
+                                Log.d("token", "${exception}")
+                            }
+                        }
+                        else if (code == 7025 || code == 10043) {
+                            val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                                SplashActivity.integrityTokenProvider?.request(
+                                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                        .build()
+                                )
+                            integrityTokenResponse1?.addOnSuccessListener { response ->
+                                Log.d("token", "${response.token()}")
+                                viewModel.startSignUrl(response.token())
+
+                            }?.addOnFailureListener { exception ->
+                                Log.d("token", "${exception}")
+                            }
+                        }
                     }
                 }
                 show()
