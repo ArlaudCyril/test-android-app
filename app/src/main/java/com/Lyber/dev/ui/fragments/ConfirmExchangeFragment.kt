@@ -25,7 +25,6 @@ import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.Locale
 
-//TODO from confirmExchange
 class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>(),
     View.OnClickListener {
     private var timer = 25

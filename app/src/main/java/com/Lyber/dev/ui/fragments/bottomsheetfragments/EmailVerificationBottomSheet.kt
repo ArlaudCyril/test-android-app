@@ -268,7 +268,6 @@ class EmailVerificationBottomSheet(private val handle: ((String) -> Unit?)? = nu
                                             .build()
                                     )
                                 integrityTokenResponse?.addOnSuccessListener { response ->
-                                    CommonMethods.showProgressDialog(requireContext())
                                     viewModel.verifyEmail(getCode(),response.token())
                                 }?.addOnFailureListener { exception ->
                                     Log.d("token", "${exception}")

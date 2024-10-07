@@ -67,7 +67,6 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                                 .build()
                         )
                     integrityTokenResponse?.addOnSuccessListener { response ->
-                        CommonMethods.showProgressDialog(requireContext())
                         viewModel.qrCodeUrl(
                             token = response.token()
                         )

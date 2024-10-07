@@ -16,6 +16,7 @@ import com.Lyber.dev.databinding.FragmentWithdrawAmountBinding
 import com.Lyber.dev.models.Balance
 import com.Lyber.dev.models.BalanceData
 import com.Lyber.dev.models.WithdrawAddress
+import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.WithdrawalAddressBottomSheet
 import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.Lyber.dev.utils.CommonMethods
@@ -27,6 +28,8 @@ import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.utils.OnTextChange
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import java.math.RoundingMode
 import kotlin.math.round
 
@@ -80,7 +83,16 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
         binding.etAmount.addTextChangedListener(textOnTextChange)
         CommonMethods.checkInternet(binding.root, requireActivity()) {
             CommonMethods.showProgressDialog(requireActivity())
-            viewModel.getWithdrawalAddresses()
+            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                SplashActivity.integrityTokenProvider?.request(
+                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                        .build()
+                )
+            integrityTokenResponse?.addOnSuccessListener { response ->
+                viewModel.getWithdrawalAddresses(response.token())
+            }?.addOnFailureListener { exception ->
+                Log.d("token", "${exception}")
+            }
         }
     }
 
@@ -90,7 +102,8 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                 CommonMethods.dismissProgressDialog()
                 addresses.clear()
                 for (address in it.data!!) {
-                    if (address.network == viewModel.selectedNetworkDeposit!!.id) {
+//                    if (address.network == viewModel.selectedNetworkDeposit!!.id) {
+                    if (address.network!!.lowercase() == viewModel.selectedNetworkDeposit!!.fullName.lowercase()) {
                         addresses.add(address)
                     }
                 }

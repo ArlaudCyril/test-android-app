@@ -191,7 +191,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
                         putString("resetToken", token)
                     }
                     navController.popBackStack(navController.graph.startDestinationId, false)
-                    navController.navigate(R.id.splashFragment, arguments) //todo
+                    navController.navigate(R.id.splashFragment, arguments)
 
 //                    navController.navigate(R.id.resetPasswordFragment, arguments)
                 } else {
