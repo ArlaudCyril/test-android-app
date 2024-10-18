@@ -931,3 +931,12 @@ data class WithdrawEuroData(
     val withdrawEuroFees: Double,
     val withdrawEuroMin: Double
 )
+data class UserByPhoneResponse(
+    val `data`: UserByPhone
+)
+
+data class UserByPhone(
+    val firstName: String,
+    val lastName: String,
+    val phoneNo: String
+)

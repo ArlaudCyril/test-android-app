@@ -362,4 +362,10 @@ interface Api {
     @GET("wallet-service/withdraw-euro-info")
     suspend fun getWithdrawEuroFee(): Response<WithdrawEuroFee>
 
+    @GET("user-service/user-by-phone")
+    suspend fun getUserNameByPhone(@Query("phone") phone: String): Response<UserByPhoneResponse>
+
+    @POST("wallet-service/transfer-to-friend")
+    suspend fun transferToFriend(@Body hashMap: HashMap<String, Any>): Response<BooleanResponse>
+
 }

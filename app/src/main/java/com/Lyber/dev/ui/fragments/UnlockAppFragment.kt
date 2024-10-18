@@ -21,6 +21,7 @@ import androidx.transition.Fade
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentUnlockAppBinding
 import com.Lyber.dev.ui.activities.SplashActivity
+import com.Lyber.dev.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
@@ -33,6 +34,7 @@ import com.Lyber.dev.utils.CommonMethods.Companion.setBiometricPromptInfo
 import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
+import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.utils.OnTextChange
 import com.Lyber.dev.viewmodels.NetworkViewModel
 import com.google.android.gms.tasks.Task

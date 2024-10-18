@@ -33,6 +33,7 @@ import com.google.android.gms.tasks.Task
 import com.google.android.play.core.integrity.StandardIntegrityManager
 import okhttp3.ResponseBody
 import org.json.JSONObject
+import java.math.BigDecimal
 import java.math.RoundingMode
 import java.util.ArrayList
 
@@ -41,13 +42,17 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
     private lateinit var viewModel: PortfolioViewModel
     private lateinit var viewModelSignup: SignUpViewModel
     private var valueTotal: Double = 0.0
+    private lateinit var valueTotalBigDecimal: BigDecimal
     private var valueTotalEuro: Double = 0.0
     private var isExpand = false
     private var isOtpScreen = false
     private var isResend = false
     private var withdrawUSDC = false
+    private var sendMoney = false
     private var withdrawEuroFee = 0.66
     private lateinit var assetIdWithdraw: String
+    private lateinit var selectedAssetForSend: String
+    private lateinit var phoneNo: String
     lateinit var bottomSheet: VerificationBottomSheet2FA
 
     override fun bind() = FragmentConfirmInvestmentBinding.inflate(layoutInflater)
@@ -57,13 +62,44 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         viewModelSignup = CommonMethods.getViewModel(requireActivity())
         viewModel.listener = this
         viewModelSignup.listener = this
-        if (arguments != null && requireArguments().containsKey(Constants.FROM) &&
-            requireArguments().getString(Constants.FROM) == WithdrawUsdcFragment::class.java.name
+        if (arguments != null && requireArguments().containsKey(Constants.FROM)
         ) {
-            withdrawUSDC = true
-            binding.title.text = getString(R.string.confirm_withdrawal)
-            if (requireArguments().containsKey(Constants.FEE))
-                withdrawEuroFee = requireArguments().getDouble(Constants.FEE)
+            if (requireArguments().getString(Constants.FROM) == WithdrawUsdcFragment::class.java.name) {
+                withdrawUSDC = true
+                binding.title.text = getString(R.string.confirm_withdrawal)
+                if (requireArguments().containsKey(Constants.FEE))
+                    withdrawEuroFee = requireArguments().getDouble(Constants.FEE)
+            } else if (requireArguments().getString(Constants.FROM) == SendAmountFragment::class.java.name) {
+                sendMoney = true
+                binding.title.text = getString(R.string.confirm_sending)
+                binding.btnConfirmInvestment.text = getString(R.string.confirm_sending)
+                binding.tvMoreDetails.gone()
+                binding.zzInfor.visible()
+                binding.tvAssetPrice.text = getString(R.string.surname)
+                binding.tvValueAssetPrice.text = requireArguments().getString("lastName")
+                binding.tvNestedAmount.text = getString(R.string.firstname)
+                binding.tvNestedAmountValue.text = requireArguments().getString("firstName")
+                selectedAssetForSend = requireArguments().getString("asset").toString()
+                phoneNo = requireArguments().getString("phoneNo").toString()
+                binding.tvFrequency.text = getString(R.string.total_assets, selectedAssetForSend)
+                val assetAm = requireArguments().getString("assetAmount")!!.trim().toString()
+                valueTotalBigDecimal = BigDecimal(assetAm)
+                binding.tvValueFrequency.text = "$valueTotalBigDecimal $selectedAssetForSend"
+                valueTotalEuro = requireArguments().getString("euroAmount")!!.toDouble()
+                binding.tvValueTotal.text =
+                    "$valueTotalEuro ${Constants.EUR}"
+                binding.tvAmount.text = "${valueTotalEuro} ${Constants.EURO}"
+
+                binding.tvLyberFee.gone()
+                binding.tvValueLyberFee.gone()
+                binding.tvDeposit.gone()
+                binding.tvValueDeposit.gone()
+                binding.tvDepositFee.gone()
+                binding.tvValueDepositFee.gone()
+                binding.tvAllocation.gone()
+                binding.allocationView.gone()
+                binding.tvInfo.gone()
+            }
 
         } else
             withdrawUSDC = false
@@ -93,7 +129,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                     openOtpScreen()
                 } else {
                     if (withdrawUSDC) {
-                       val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
                             SplashActivity.integrityTokenProvider?.request(
                                 StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
                                     .build()
@@ -124,13 +160,15 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
             }
         }
 
-//        viewModel.logoutResponse.observe(viewLifecycleOwner){
-//            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-//                App.prefsManager.logout()
-//                findNavController().popBackStack()
-//                findNavController().navigate(R.id.discoveryFragment)
-//            }
-//        }
+        viewModel.booleanResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                CommonMethods.dismissProgressDialog()
+                if (it.success) {
+                    viewModel.selectedOption = Constants.USING_SEND_MONEY
+                    ConfirmationBottomSheet().show(childFragmentManager, "")
+                }
+            }
+        }
     }
 
     private fun openOtpScreen() {
@@ -190,7 +228,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                     viewModel.createWithdrawalEuroRequest(
                         viewModel.ribDataAddress!!.ribId,
                         viewModel.ribDataAddress!!.iban, viewModel.ribDataAddress!!.bic,
-                        valueTotalEuro, code,response.token()
+                        valueTotalEuro, code, response.token()
                     )
                 }?.addOnFailureListener { exception ->
                     Log.d("token", "${exception}")
@@ -223,7 +261,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                             valueTotal,
                             viewModel.withdrawAddress!!.address!!,
                             viewModel.selectedNetworkDeposit!!.id,
-                            code,response.token()
+                            code, response.token()
                         )
 
                     }?.addOnFailureListener { exception ->
@@ -238,38 +276,70 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
 
     //    @RequiresApi(Build.VERSION_CODES.O)
     private fun confirmButtonClick() {
-        if (!isResend)
-            CommonMethods.showProgressDialog(requireActivity())
-        val map = HashMap<Any?, Any?>()
-        if (withdrawUSDC) {
-            map["destination"] = viewModel.ribDataAddress!!.iban
-            map["asset"] = "usdc"
+        if (sendMoney) {
+            val map = HashMap<String, Any>()
+            map["phone"] = phoneNo
+            map["asset"] = selectedAssetForSend
+            map["amount"] = valueTotalBigDecimal
+
+            val jsonObject = JSONObject()
+            jsonObject.put("phone", phoneNo)
+            jsonObject.put("asset", selectedAssetForSend)
+            jsonObject.put("amount", valueTotalBigDecimal)
+            val jsonString = jsonObject.toString()
+            // Generate the request hash
+            val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                SplashActivity.integrityTokenProvider?.request(
+                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                        .setRequestHash(requestHash)
+                        .build()
+                )
+            integrityTokenResponse?.addOnSuccessListener { response ->
+                Log.d("token", "${response.token()}")
+                CommonMethods.showProgressDialog(requireContext())
+                viewModel.transferToFriend(map,response.token())
+
+            }?.addOnFailureListener { exception ->
+                Log.d("token", "${exception}")
+            }
+
+        } else {
+            if (!isResend)
+                CommonMethods.showProgressDialog(requireActivity())
+            val map = HashMap<Any?, Any?>()
+            if (withdrawUSDC) {
+                map["destination"] = viewModel.ribDataAddress!!.iban
+                map["asset"] = "usdc"
 //            map["amount"] = valueTotal
-            map["amount"] = valueTotalEuro
-        } else {
-            map["asset"] = viewModel.selectedAssetDetail!!.id
-            map["amount"] = valueTotal
-            map["destination"] = viewModel.withdrawAddress!!.address
-            map["network"] = viewModel.selectedNetworkDeposit!!.id
-        }
-        val jso = JSONObject(map)
+                map["amount"] = valueTotalEuro
+            } else {
+                map["asset"] = viewModel.selectedAssetDetail!!.id
+                map["amount"] = valueTotal
+                map["destination"] = viewModel.withdrawAddress!!.address
+                map["network"] = viewModel.selectedNetworkDeposit!!.id
+            }
+            val jso = JSONObject(map)
 
-        isOtpScreen = true
-        var encoded = ""
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            encoded = String(java.util.Base64.getEncoder().encode(jso.toString(4).toByteArray()))
-        else {
-            val jsonString = jso.toString(4) // Convert JSONObject to string with indentation
+            isOtpScreen = true
+            var encoded = ""
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                encoded =
+                    String(java.util.Base64.getEncoder().encode(jso.toString(4).toByteArray()))
+            else {
+                val jsonString = jso.toString(4) // Convert JSONObject to string with indentation
 
-            val bytes = jsonString.toByteArray() // Convert string to bytes
+                val bytes = jsonString.toByteArray() // Convert string to bytes
 
-            encoded =
-                android.util.Base64.encodeToString(bytes, android.util.Base64.DEFAULT)
-        }
-        if (withdrawUSDC) {
-            hitOtpWithdraw(Constants.ACTION_WITHDRAW_EURO, encoded, isResend)
-        } else {
-            hitOtpWithdraw(Constants.ACTION_WITHDRAW, encoded, isResend)
+                encoded =
+                    android.util.Base64.encodeToString(bytes, android.util.Base64.DEFAULT)
+            }
+            if (withdrawUSDC) {
+                hitOtpWithdraw(Constants.ACTION_WITHDRAW_EURO, encoded, isResend)
+            } else {
+                hitOtpWithdraw(Constants.ACTION_WITHDRAW, encoded, isResend)
+            }
         }
     }
 
@@ -354,6 +424,8 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                     Constants.MAIN_ASSET,
                     ""
                 ) + Constants.MAIN_ASSET_UPPER
+
+            } else if (sendMoney) {
 
             } else {
                 listOf(

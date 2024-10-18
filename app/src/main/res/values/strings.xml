@@ -811,6 +811,25 @@
     <string name="amount_invested_is_insufficient">Your amount invested in this strategy is insufficient. To activate this strategy, you need to increase your current amount (%1$s USDC) to %2$s USDC. \n
         Do you agree to increase the amount you invest?</string>
     <string name="authenticate">Authenticate</string>
+    <string name="send_money_no_fee">Send %1$s (no fees)</string>
+    <string name="send_money_to_friends">Send %1$s to your friends</string>
+    <string name="money">money</string>
+    <string name="by_what_means">By what means?</string>
+    <string name="phone_no">Phone Number</string>
+    <string name="qr_code">QR Code</string>
+    <string name="nfc">NFC</string>
+    <string name="i_want_to_send">I want to send</string>
+    <string name="enter_rec_phone_no">Enter Recipient\'s Phone Number</string>
+    <string name="please_enter_phn_no_person">Please enter the phone number of the person you want to send the crypto to.</string>
+    <string name="send_crypto">Send Crypto</string>
+    <string name="confirm_sending">Confirm Sending</string>
+    <string name="surname">Surname</string>
+    <string name="firstname">Firstname</string>
+    <string name="total_assets">Total %1$s</string>
+    <string name="shipment_success">Your shipment was successful.</string>
+    <string name="rec_has_received">The recipient has received his cryptos on his\n Lyber account!</string>
+    <string name="please_scan_valid_qr">The scanned QR code is in the wrong format</string>
+
 
     <!--    error messages-->
 
@@ -822,7 +841,7 @@
     <string name="error_code_7">We encountered a problem during the verification process. Please try again.</string>
     <string name="error_code_8">Unable to create an account because your phone number is not verified, please try again.</string>
     <string name="error_code_9">Unable to create an account because your e-mail address is not verified, please try again.</string>
-   <string name="error_code_10"> No account exists with this email address.</string>
+    <string name="error_code_10"> No account exists with this email address.</string>
     <string name="error_code_11">No account exists with this phone number.</string>
     <string name="error_code_12">Your account has been blocked. If you need help, please contact support on our website.</string>
     <string name="error_code_13">A problem has occurred, please try again.</string>
@@ -907,7 +926,6 @@
     <string name="error_code_10051">One of your bank account details already has this IBAN.</string>
 
 
-
     <string name="error_code_13001">Unable to find the strategy, please try again or contact support.</string>
     <string name="error_code_13003">Unable to find the strategy, please try again or contact support.</string>
     <string name="error_code_13006">This strategy requires a minimum investment of %1$s USDC.</string>
@@ -926,6 +944,7 @@
     <string name="error_code_15002">A problem has occurred, please try again or contact support.</string>
 
     <string name="error_code_18000">This network seems to be unavailable, please contact support if you need help.</string>
+
 
 </resources>
 

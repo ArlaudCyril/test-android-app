@@ -121,6 +121,14 @@ class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
                     binding.btnThanks.text = getString(R.string.yes_t)
                 }
 
+                Constants.USING_SEND_MONEY -> {
+                    binding.view1.visible()
+                    binding.view2.visible()
+                    binding.tvInfoOne.text = getString(R.string.shipment_success)
+                    binding.tvInfoTwo.text =getString(R.string.rec_has_received)
+
+                }
+
                 else -> binding.tvInfoOne.text =
                     getString(R.string.your_investment_has_been_taken_into_account)
             }
@@ -142,6 +150,10 @@ class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
             viewModel.selectedOption = ""
             if (!isEdit)
                 requireActivity().onBackPressed()
+//            dismiss()
+        } else if (viewModel.selectedOption != "" && viewModel.selectedOption == Constants.USING_SEND_MONEY) {
+            viewModel.selectedOption = ""
+            findNavController().navigate(R.id.action_confirm_withdraw_to_home_fragment)
 //            dismiss()
         } else {
             findNavController().popBackStack(R.id.portfolioHomeFragment, false)

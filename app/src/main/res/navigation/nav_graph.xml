@@ -423,7 +423,13 @@
     <fragment
         android:id="@+id/codeScannerFragment"
         android:name="com.Lyber.dev.ui.fragments.CodeScannerFragment"
-        android:label="CodeScannerFragment" />
+        android:label="CodeScannerFragment">
+        <action
+            android:id="@+id/action_code_scanner_to_swap_withdraw"
+            app:destination="@id/swapWithdrawFromFragment"
+            app:popUpTo="@id/codeScannerFragment"
+            app:popUpToInclusive="true" />
+    </fragment>
     <fragment
         android:id="@+id/enableWhiteListingFragment"
         android:name="com.Lyber.dev.ui.fragments.EnableWhiteListingFragment"
@@ -512,9 +518,24 @@
         android:id="@+id/withdrawUsdcFragment"
         android:name="com.Lyber.dev.ui.fragments.WithdrawUsdcFragment"
         android:label="WithdrawUsdcFragment" >
+ </fragment>
+    <fragment
+        android:id="@+id/sendMoneyOptionsFragment"
+        android:name="com.Lyber.dev.ui.fragments.SendMoneyOptionsFragment"
+        android:label="SendMoneyOptionsFragment" />
+    <fragment
+        android:id="@+id/sendAmountFragment"
+        android:name="com.Lyber.dev.ui.fragments.SendAmountFragment"
+        android:label="SendAmountFragment" />
+    <fragment
+        android:id="@+id/enterPhoneNumberBottomSheetFragment"
+        android:name="com.Lyber.dev.ui.fragments.bottomsheetfragments.EnterPhoneNumberBottomSheetFragment"
+        android:label="EnterPhoneNumberBottomSheetFragment" />
+ <fragment
+        android:id="@+id/qRCodeFragment"
+        android:name="com.Lyber.dev.ui.fragments.QRCodeFragment"
+        android:label="QRCodeFragment" />
 
-
-    </fragment>
     <dialog
         android:id="@+id/portfolioThreeDots"
         android:name="com.Lyber.dev.ui.portfolio.bottomSheetFragment.PortfolioThreeDots"

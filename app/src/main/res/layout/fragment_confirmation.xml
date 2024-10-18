@@ -38,6 +38,11 @@
         android:layout_marginBottom="150dp"
         android:gravity="center"
         android:orientation="vertical">
+        <View
+            android:id="@+id/view1"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="74dp"/>
 
         <ImageView
             android:id="@+id/imgTick"
@@ -54,6 +59,7 @@
             android:visibility="gone"
             android:layout_marginBottom="20dp"
             android:src="@drawable/oh_emoji" />
+
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -92,6 +98,12 @@
                 android:text="@string/you_can_now_see_its_effect_on_your_portfolio"
                 android:textColor="@color/purple_gray_00" />
         </LinearLayout>
+        <View
+            android:id="@+id/view2"
+            android:visibility="gone"
+            android:layout_width="match_parent"
+            android:layout_height="64dp"/>
+
     </LinearLayout>
 
 

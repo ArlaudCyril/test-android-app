@@ -79,6 +79,7 @@ object Constants {
     const val TO_EDIT = "toEdit"
     const val USING_EXCHANGE = "using_exchange"
     const val USING_SELL = "using_sell"
+    const val USING_SEND_MONEY = "send_money"
     const val NAME = "name"
     const val USING_ALL_PORTFOLIO = "using_all_portfolio"
     const val USING_WITHDRAW_FIAT = "using_withdraw_fiat"
@@ -115,6 +116,7 @@ object Constants {
     const val BASE_IMAGE_URL_MEDIUM: String = "https://lyberblob.blob.core.windows.net/medium/"
 
     const val SCAN_COMPLETE = "scan-complete"
+    const val SCAN_QR = "scan-qr"
     const val SCANNED_ADDRESS = "scanned-address"
     const val ONE_TIME = "oneTime"
 
@@ -224,6 +226,7 @@ object Constants {
     const val WHITELISTING = "whitelisting"
     const val GOOGLE = "google"
     const val PHONE = "phone"
+    const val QR = "qrCode"
     const val EMAIL = "email"
     const val SCOPE = "scope"
     const val WITHDRAW = "withdraw"
@@ -302,4 +305,5 @@ object Constants {
     const val APP_FLYER_TYPE_ACTIVATE_STRATEGY="ActivateStrategy"
     const val APP_FLYER_TYPE_STRATEGY_EXECUTION="ExecuteStrategy"
 
+    const val SELECTED_METHOD="selectedMethod"
 }

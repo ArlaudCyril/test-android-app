@@ -12,6 +12,7 @@
         android:layout_height="28dp"
         android:layout_centerVertical="true"
         android:layout_marginStart="8dp"
+        android:layout_marginEnd="16dp"
         android:layout_marginTop="@dimen/dp_4"
         android:layout_marginBottom="@dimen/dp_4"
         android:visibility="visible"
@@ -25,6 +26,7 @@
         android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
         android:gravity="start"
         android:layout_margin="8dp"
+        android:lineSpacingExtra="2dp"
         android:layout_toRightOf="@id/ivIcon"
         android:textColor="@color/white"
         android:layout_centerVertical="true"/>

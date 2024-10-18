@@ -51,6 +51,7 @@ import com.Lyber.dev.models.TransactionList
 import com.Lyber.dev.models.TransactionResponse
 import com.Lyber.dev.models.UpdateAuthenticateResponse
 import com.Lyber.dev.models.UploadResponse
+import com.Lyber.dev.models.UserByPhoneResponse
 import com.Lyber.dev.models.UserChallengeResponse
 import com.Lyber.dev.models.UserLoginResponse
 import com.Lyber.dev.models.WalletHistoryResponse
@@ -303,6 +304,8 @@ open class NetworkViewModel : ViewModel() {
 
     private val _getWithdrawEuroFeeResponse = MutableLiveData<WithdrawEuroFee>()
     val withdrawEuroFeeResponse get() = _getWithdrawEuroFeeResponse
+    private val _getUserByPhoneResponse = MutableLiveData<UserByPhoneResponse>()
+    val userByPhoneResponse get() = _getUserByPhoneResponse
     fun cancelJob() {
 
     }
@@ -1859,6 +1862,35 @@ open class NetworkViewModel : ViewModel() {
             val res = RestClient.getRetrofitInstanceSecure(token).getWithdrawEuroFee()
             if (res.isSuccessful)
                 _getWithdrawEuroFeeResponse.postValue(res.body())
+            else {
+                val errorBody = res.errorBody()
+                val errorCode =
+                    CommonMethods.returnErrorCode(errorBody) // Extract the code from the body if needed
+                _listener?.onRetrofitError(errorCode.code, errorCode.error)
+            }
+        }
+    }
+
+    fun getUserNameByPhone(phone: String,token: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().getUserNameByPhone(phone)
+//            val res = RestClient.getRetrofitInstanceSecure(token).getUserNameByPhone(phone)
+            if (res.isSuccessful)
+                _getUserByPhoneResponse.postValue(res.body())
+            else {
+                val errorBody = res.errorBody()
+                val errorCode =
+                    CommonMethods.returnErrorCode(errorBody) // Extract the code from the body if needed
+                _listener?.onRetrofitError(errorCode.code, errorCode.error)
+            }
+        }
+    }
+    fun transferToFriend(hashMap: HashMap<String,Any>,token: String) {
+        viewModelScope.launch(exceptionHandler) {
+//            val res = RestClient.getRetrofitInstanceSecure(token).transferToFriend(hashMap)
+            val res = RestClient.get().transferToFriend(hashMap)
+            if (res.isSuccessful)
+                _booleanResponse.postValue(res.body())
             else {
                 val errorBody = res.errorBody()
                 val errorCode =

@@ -52,6 +52,9 @@
     <include
         android:id="@+id/llDepositFiat"
         layout="@layout/app_item_layout" />
+    <include
+        android:id="@+id/llSendMoney"
+        layout="@layout/app_item_layout" />
 
 
 </LinearLayout>

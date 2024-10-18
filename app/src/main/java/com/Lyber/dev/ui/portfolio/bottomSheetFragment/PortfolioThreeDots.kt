@@ -45,7 +45,7 @@ class PortfolioThreeDots(private val listenItemClicked: (String, String) -> Unit
         prepareView()
         if (tag!!.isNotEmpty())
             binding.llSell.root.gone()
-        if(viewModel.selectedAsset?.id!=null && viewModel.selectedAsset?.id=="usdt")
+        if (viewModel.selectedAsset?.id != null && viewModel.selectedAsset?.id == "usdt")
             binding.llBuy.root.gone()
         binding.llWithdraw.root.setOnClickListener(this)
         binding.llExchange.root.setOnClickListener(this)
@@ -53,6 +53,7 @@ class PortfolioThreeDots(private val listenItemClicked: (String, String) -> Unit
         binding.llBuy.root.setOnClickListener(this)
         binding.llSell.root.setOnClickListener(this)
         binding.ivTopAction.setOnClickListener(this)
+        binding.llSendMoney.root.setOnClickListener(this)
 
     }
 
@@ -155,6 +156,19 @@ class PortfolioThreeDots(private val listenItemClicked: (String, String) -> Unit
                 it.ivEndIcon.setImageResource(R.drawable.ic_right_arrow_grey)
             } else it.root.gone()
         }
+        binding.llSendMoney.let {
+            it.root.updatePadding(left = 0, right = 0)
+            it.ivItem.setImageResource(R.drawable.send_money_f)
+            it.ivEndIcon.setImageResource(R.drawable.ic_right_arrow_grey)
+            if (this.typePopUp == "AssetPopUp" || this.typePopUp == "AssetPopUpWithdraw") {
+                it.tvStartTitle.text = getString(R.string.send_money_no_fee,viewModel.selectedAsset?.id?.uppercase())
+                it.tvStartSubTitle.text =
+                    getString(R.string.send_money_to_friends, viewModel.selectedAsset?.id?.uppercase())
+            } else {
+                it.tvStartTitle.text = getString(R.string.send_money_no_fee,getString(R.string.money))
+                it.tvStartSubTitle.text = getString(R.string.send_money_to_friends,getString(R.string.money))
+            }
+        }
 
     }
 
@@ -186,6 +200,10 @@ class PortfolioThreeDots(private val listenItemClicked: (String, String) -> Unit
 
                 llSell.root -> {
                     listenItemClicked(tag ?: "PortfolioThreeDots", "sell")
+                    dismiss()
+                }
+                llSendMoney.root -> {
+                    listenItemClicked(tag ?: "PortfolioThreeDots", Constants.USING_SEND_MONEY)
                     dismiss()
                 }
 

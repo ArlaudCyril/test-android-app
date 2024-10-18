@@ -32,6 +32,8 @@ import com.Lyber.dev.models.*
 import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.adapters.*
 import com.Lyber.dev.ui.fragments.BaseFragment
+import com.Lyber.dev.ui.fragments.SendMoneyOptionsFragment
+import com.Lyber.dev.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.InvestBottomSheet
 import com.Lyber.dev.ui.portfolio.action.PortfolioFragmentActions
 import com.Lyber.dev.ui.portfolio.bottomSheetFragment.PortfolioThreeDots
@@ -44,6 +46,7 @@ import com.Lyber.dev.utils.CommonMethods.Companion.fadeOut
 import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.dev.utils.CommonMethods.Companion.gone
 import com.Lyber.dev.utils.CommonMethods.Companion.px
+import com.Lyber.dev.utils.CommonMethods.Companion.replaceFragment
 import com.Lyber.dev.utils.CommonMethods.Companion.setProfile
 import com.Lyber.dev.utils.CommonMethods.Companion.toFormat
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
@@ -225,6 +228,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         binding.llContract.setOnClickListener(this)
         binding.tvBuyUSDC.setOnClickListener(this)
         binding.ivShowHideAmount.setOnClickListener(this)
+        binding.ivQrCode.setOnClickListener(this)
 
         /* pop up initialization */
         assetPopUpWindow = ListPopupWindow(requireContext()).apply {
@@ -315,9 +319,10 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             viewModel.getAllPriceResume()
         }
     }
-    private fun hitWalletApi(){
+
+    private fun hitWalletApi() {
         val jsonObject = JSONObject()
-        jsonObject.put("daily",daily)
+        jsonObject.put("daily", daily)
         jsonObject.put("limit", limit)
         val jsonString = jsonObject.toString()
         // Generate the request hash
@@ -331,13 +336,14 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             )
         integrityTokenResponse1?.addOnSuccessListener { response ->
             Log.d("token", "${response.token()}")
-            viewModel.getWalletHistoryPrice(response.token(),daily,limit)
+            viewModel.getWalletHistoryPrice(response.token(), daily, limit)
 
         }?.addOnFailureListener { exception ->
             Log.d("token", "${exception}")
 
         }
     }
+
     private fun addObservers() {
 
         viewModel.newsResponse.observe(viewLifecycleOwner) {
@@ -861,6 +867,11 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 viewModel.selectedOption = Constants.USING_SELL
                 navController.navigate(R.id.addAmountFragment)
             }
+
+            Constants.USING_SEND_MONEY -> {
+                viewModel.selectedOption = Constants.USING_SEND_MONEY
+                navController.navigate(R.id.sendMoneyOptionsFragment)
+            }
         }
     }
 
@@ -938,9 +949,8 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 }
 
                 ivProfile -> navController.navigate(R.id.profileFragment)
-                ivProfile -> navController.navigate(R.id.profileFragment)
                 llThreeDot -> {
-                    viewModel.selectedAsset=null
+                    viewModel.selectedAsset = null
                     PortfolioThreeDots(::menuOptionSelected).show(
                         childFragmentManager,
                         ""
@@ -1018,6 +1028,10 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                         binding.tvValuePortfolioAndAssetPrice.text = "*****"
                     adapterBalance.notifyDataSetChanged()
                     binding.lineChart.showHideAmount()
+                }
+
+                ivQrCode -> {
+                    navController.navigate(R.id.qRCodeFragment)
                 }
             }
         }
@@ -1110,7 +1124,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
     }
 
     override fun onRetrofitError(errorCode: Int, msg: String) {
-        when ( errorCode ) {
+        when (errorCode) {
             8 -> {
                 CommonMethods.showSnack(
                     binding.root,
@@ -1148,7 +1162,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 CommonMethods.logOut(requireContext())
             }
 
-            else ->  super.onRetrofitError(errorCode, msg)
+            else -> super.onRetrofitError(errorCode, msg)
 
         }
 

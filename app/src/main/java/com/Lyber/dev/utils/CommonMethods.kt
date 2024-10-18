@@ -774,10 +774,26 @@ class CommonMethods {
 
         private fun showSnackBar(view: View, context: Context, text: String) {
             val snackbar = Snackbar.make(view, "", Snackbar.LENGTH_SHORT)
-            val params = snackbar.view.layoutParams as FrameLayout.LayoutParams
-            params.gravity = Gravity.TOP
-            params.setMargins(24, 158, 24, 0)
-            snackbar.view.layoutParams = params
+//            val params = snackbar.view.layoutParams as FrameLayout.LayoutParams
+//            params.gravity = Gravity.TOP
+//            params.setMargins(24, 158, 24, 0)
+//
+//
+            val params = snackbar.view.layoutParams
+            if (params is CoordinatorLayout.LayoutParams) {
+                // Correctly cast to CoordinatorLayout.LayoutParams
+                params.gravity = Gravity.TOP
+                params.setMargins(32, 158, 32, 0)
+                snackbar.view.layoutParams = params
+            } else if (params is FrameLayout.LayoutParams) {
+                // Use FrameLayout.LayoutParams as fallback
+                params.gravity = Gravity.TOP
+                params.setMargins(32, 158, 32, 0)
+                snackbar.view.layoutParams = params
+            }
+
+
+
             snackbar.view.background =
                 context.getDrawable(R.drawable.curved_background_toast)
 
@@ -791,7 +807,7 @@ class CommonMethods {
             val textViewMsg = snackView.findViewById<TextView>(R.id.tvToast)
             val ivIcon = snackView.findViewById<ImageView>(R.id.ivIcon)
             ivIcon.visible()
-            layout.setPadding(0, 0, 0, 0)
+            layout.setPadding(16, 32, 16, 32)
             layout.addView(snackView, 0)
             textViewMsg.text = text
 //                getString(R.string.new_pass_cannot_be_same_as_old) + getString(R.string.new_pass_cannot_be_same_as_old)

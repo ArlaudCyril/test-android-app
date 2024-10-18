@@ -810,6 +810,27 @@
     <string name="amount_invested_is_insufficient">Le montant que vous avez investi dans cette stratégie est insuffisant. Pour activer cette stratégie, vous devez augmenter votre montant actuel (%1$s USDC) à %2$s USDC. \n
         Acceptez-vous d\'augmenter votre montant à investir ?</string>
     <string name="authenticate">Authentifier</string>
+    <string name="send_money_no_fee">Envoyer de %1$s (sans frais)</string>
+    <string name="send_money_to_friends">Envoyez de %1$s à vos amis</string>
+    <string name="money">l\'argent</string>
+    <string name="by_what_means">Par quels moyens ?</string>
+    <string name="phone_no">Numéro de téléphone</string>
+    <string name="qr_code">Code QR</string>
+    <string name="nfc">NFC</string>
+    <string name="i_want_to_send">Je veux envoyer</string>
+    <string name="enter_rec_phone_no">Entrez le numéro de téléphone du destinataire</string>
+    <string name="please_enter_phn_no_person">Veuillez saisir le numéro de téléphone de la personne à qui vous souhaitez envoyer la crypto.</string>
+    <string name="send_crypto">Envoyer des cryptomonnaies</string>
+    <string name="confirm_sending">Confirmer l\'envoi</string>
+    <string name="surname">Nom de famille</string>
+    <string name="firstname">Prénom</string>
+    <string name="total_assets">Totaux %1$s</string>
+    <string name="shipment_success">Votre envoi s\'est déroulé avec succès.</string>
+    <string name="rec_has_received">Le destinataire a reçu ses cryptos sur son\ncompte Lyber !</string>
+    <string name="please_scan_valid_qr">Le code QR scanné n\'est pas au bon format</string>
+
+
+
 
     <!--    error messages-->
 

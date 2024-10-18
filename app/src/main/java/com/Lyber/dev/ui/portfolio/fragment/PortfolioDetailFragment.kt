@@ -37,6 +37,7 @@ import com.Lyber.dev.ui.fragments.AddAmountFragment
 import com.Lyber.dev.ui.fragments.BaseFragment
 import com.Lyber.dev.ui.fragments.PickYourStrategyFragment
 import com.Lyber.dev.ui.fragments.SelectAnAssetFragment
+import com.Lyber.dev.ui.fragments.SendMoneyOptionsFragment
 import com.Lyber.dev.ui.portfolio.bottomSheetFragment.PortfolioThreeDots
 import com.Lyber.dev.ui.portfolio.bottomSheetFragment.PortfolioThreeDotsDismissListener
 import com.Lyber.dev.viewmodels.PortfolioViewModel
@@ -340,28 +341,10 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                         )
                     ) {
                         val jsonObject = JSONObject()
-                        jsonObject.put("orderId", requireArguments().getString(Constants.ORDER_ID, ""))
-                       val jsonString = jsonObject.toString()
-                        // Generate the request hash
-                        val requestHash = CommonMethods.generateRequestHash(jsonString)
-                        val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                            SplashActivity.integrityTokenProvider?.request(
-                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                    .setRequestHash(requestHash)
-                                    .build()
-                            )
-                        integrityTokenResponse1?.addOnSuccessListener { response ->
-                            Log.d("token", "${response.token()}")
-                            viewModel.getOrderApi(requireArguments().getString(Constants.ORDER_ID, ""),response.token())
-
-
-                        }?.addOnFailureListener { exception ->
-                            Log.d("token", "${exception}")
-                        }
-                    }
-                    else {
-                        val jsonObject = JSONObject()
-                        jsonObject.put("orderId",requireArguments().getString(Constants.ORDER_ID, ""))
+                        jsonObject.put(
+                            "orderId",
+                            requireArguments().getString(Constants.ORDER_ID, "")
+                        )
                         val jsonString = jsonObject.toString()
                         // Generate the request hash
                         val requestHash = CommonMethods.generateRequestHash(jsonString)
@@ -373,7 +356,40 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                             )
                         integrityTokenResponse1?.addOnSuccessListener { response ->
                             Log.d("token", "${response.token()}")
-                            viewModel.confirmOrder(requireArguments().getString(Constants.ORDER_ID, ""),response.token())
+                            viewModel.getOrderApi(
+                                requireArguments().getString(
+                                    Constants.ORDER_ID,
+                                    ""
+                                ), response.token()
+                            )
+
+
+                        }?.addOnFailureListener { exception ->
+                            Log.d("token", "${exception}")
+                        }
+                    } else {
+                        val jsonObject = JSONObject()
+                        jsonObject.put(
+                            "orderId",
+                            requireArguments().getString(Constants.ORDER_ID, "")
+                        )
+                        val jsonString = jsonObject.toString()
+                        // Generate the request hash
+                        val requestHash = CommonMethods.generateRequestHash(jsonString)
+                        val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                            SplashActivity.integrityTokenProvider?.request(
+                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                    .setRequestHash(requestHash)
+                                    .build()
+                            )
+                        integrityTokenResponse1?.addOnSuccessListener { response ->
+                            Log.d("token", "${response.token()}")
+                            viewModel.confirmOrder(
+                                requireArguments().getString(
+                                    Constants.ORDER_ID,
+                                    ""
+                                ), response.token()
+                            )
                         }?.addOnFailureListener { exception ->
                             Log.d("token", "${exception}")
                         }
@@ -441,7 +457,10 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                         )
                     integrityTokenResponse1?.addOnSuccessListener { response ->
                         Log.d("token", "${response.token()}")
-                        viewModel.getOrderApi(requireArguments().getString(Constants.ORDER_ID, ""),response.token())
+                        viewModel.getOrderApi(
+                            requireArguments().getString(Constants.ORDER_ID, ""),
+                            response.token()
+                        )
                     }?.addOnFailureListener { exception ->
                         Log.d("token", "${exception}")
                     }
@@ -621,6 +640,19 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                 requireActivity().replaceFragment(
                     R.id.flSplashActivity, AddAmountFragment()
                 )
+            }
+
+            Constants.USING_SEND_MONEY -> {
+                viewModel.selectedOption = Constants.USING_SEND_MONEY
+                val bundle = Bundle()
+                bundle.putString(Constants.ID, viewModel.selectedAsset?.id)
+                bundle.putString(Constants.FROM, PortfolioDetailFragment::class.java.name)
+                 findNavController().navigate(R.id.sendMoneyOptionsFragment,bundle)
+//                val bundle = Bundle()
+//                bundle.putString(Constants.ID, viewModel.selectedAsset?.id)
+//                                bundle.putString(Constants.FROM, PortfolioDetailFragment::class.java.name)
+//                findNavController().navigate(R.id.sendAmountFragment,bundle)
+
             }
         }
     }
@@ -826,7 +858,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
             }, 1000)
         }
         when (errorCode) {
-            7007 -> showSnack(binding.root,requireContext(),getString(R.string.error_code_7007))
+            7007 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_7007))
             else -> super.onRetrofitError(errorCode, msg)
 
         }
