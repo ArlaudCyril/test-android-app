@@ -136,8 +136,8 @@ class CodeScannerFragment(private val handle: (String, Boolean) -> Unit
 
     fun isQRCodeValid(scannedText: String): Boolean {
         // Define the regular expression for the format ABC-1234-XYZ
-//        val regexPattern = Regex("^[a-z]{3}-[:]{1}-\\d{12}$")
-        val regexPattern = Regex("^tel:\\d{12}$")
+//        val regexPattern = Regex("^tel:\\d{12}$")
+        val regexPattern = Regex("^tel:[0-9+]{5,15}$")
 
         // Check if the scanned text matches the pattern
         return regexPattern.matches(scannedText)

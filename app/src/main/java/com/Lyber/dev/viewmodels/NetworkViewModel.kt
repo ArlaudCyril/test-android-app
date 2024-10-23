@@ -729,7 +729,8 @@ open class NetworkViewModel : ViewModel() {
         hashMap: HashMap<String, Any>,token: String
     ) {
         viewModelScope.launch(exceptionHandler) {
-     val res = RestClient.getRetrofitInstanceSecure(token).updateUserInfo(hashMap)
+//     val res = RestClient.getRetrofitInstanceSecure(token).updateUserInfo(hashMap)
+     val res = RestClient.get().updateUserInfo(hashMap)
             if (res.isSuccessful)
                 _updateUserInfoResponse.postValue(res.body())
             else {

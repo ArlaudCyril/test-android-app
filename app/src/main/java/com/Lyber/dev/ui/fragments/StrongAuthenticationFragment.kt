@@ -21,8 +21,6 @@ import com.Lyber.dev.utils.CommonMethods.Companion.dismissAlertDialog
 import com.Lyber.dev.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.dev.utils.CommonMethods.Companion.encodeToBase64
 import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.returnErrorCode
-import com.Lyber.dev.utils.CommonMethods.Companion.showErrorMessage
 import com.Lyber.dev.utils.CommonMethods.Companion.showSnack
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.SignUpViewModel

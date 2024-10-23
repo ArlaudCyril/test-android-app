@@ -24,7 +24,7 @@
         style="@style/SubheadMabry"
         android:layout_height="0dp"
         android:gravity="center"
-        android:lineSpacingExtra="5sp"
+        android:lineSpacingExtra="5dp"
         android:text="@string/invest_in_strategies_or_a_single_nasset"
         android:textColor="#423D33"
         app:layout_constraintBottom_toBottomOf="@id/ivTopAction"

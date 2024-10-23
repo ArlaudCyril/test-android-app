@@ -1032,6 +1032,14 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
                 ivQrCode -> {
                     navController.navigate(R.id.qRCodeFragment)
+//                    viewModel.selectedOption = Constants.ACTION_TAILOR_STRATEGY
+////                    Constants.ACTION_WITHDRAW_EURO
+////                    Constants.USING_WITHDRAW
+////                    Constants.EXPORT_DONE
+////                    Constants.ACTION_TAILOR_STRATEGY
+//
+//                    ConfirmationBottomSheet().show(childFragmentManager, "")
+
                 }
             }
         }

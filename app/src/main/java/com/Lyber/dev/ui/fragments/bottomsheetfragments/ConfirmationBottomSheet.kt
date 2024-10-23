@@ -2,8 +2,10 @@ package com.Lyber.dev.ui.fragments.bottomsheetfragments
 
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.util.Log
 import android.view.View
+import android.view.ViewGroup
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.findNavController
 import com.Lyber.dev.R
@@ -12,6 +14,7 @@ import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.clearBackStack
 import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.dev.utils.CommonMethods.Companion.gone
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.PortfolioViewModel
@@ -30,6 +33,23 @@ class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        // Step 1: Get the screen height in pixels
+        val displayMetrics = DisplayMetrics()
+        requireActivity().windowManager.defaultDisplay.getMetrics(displayMetrics)
+        val screenHeight = displayMetrics.heightPixels
+
+        // Step 2: Convert 40dp to pixels
+        val marginInDp = 50
+        val marginInPx = (marginInDp * displayMetrics.density).toInt()
+
+        // Step 3: Set the height of the BottomSheet dynamically
+        val bottomSheet = binding.root.parent as ViewGroup
+        val layoutParams = bottomSheet.layoutParams
+        layoutParams.height = screenHeight - marginInPx
+        bottomSheet.layoutParams = layoutParams
+
+        behavior.state = BottomSheetBehavior.STATE_EXPANDED
+
 
         viewModel = getViewModel(requireActivity())
         binding.ivTopAction.setOnClickListener {
@@ -37,6 +57,43 @@ class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
         }
 
         binding.btnThanks.setOnClickListener {
+            if (tag!!.isEmpty() && viewModel.selectedOption != "" && viewModel.selectedOption == Constants.ACTION_TAILOR_STRATEGY) {
+                CommonMethods.showProgressDialog(requireContext())
+//                viewModel.editOwnStrategy(viewModel.selectedStrategy!!.name)
+                isEdit = true
+                val jsonObject = JSONObject()
+                jsonObject.put("ownerUuid", viewModel.selectedStrategy!!.ownerUuid)
+                jsonObject.put("strategyName", viewModel.selectedStrategy!!.name)
+                jsonObject.put("amount", reqAmount.toDouble())
+                jsonObject.put("frequency", viewModel.selectedStrategy!!.activeStrategy!!.frequency)
+
+                val jsonString = jsonObject.toString()
+                // Generate the request hash
+                val requestHash =
+                    CommonMethods.generateRequestHash(jsonString)
+                val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                    SplashActivity.integrityTokenProvider?.request(
+                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                            .setRequestHash(requestHash)
+                            .build()
+                    )
+                integrityTokenResponse1?.addOnSuccessListener { response ->
+                    Log.d("token", "${response.token()}")
+                    viewModel.editEnabledStrategy(
+                        viewModel.selectedStrategy!!.ownerUuid,
+                        viewModel.selectedStrategy!!.activeStrategy!!.frequency,
+                        reqAmount.toDouble(),
+                        viewModel.selectedStrategy!!.name, response.token()
+                    )
+
+                }?.addOnFailureListener { exception ->
+                    Log.d("token", "${exception}")
+                }
+                dismiss()
+            } else
+                dismiss()
+        }
+        binding.btnYes.setOnClickListener {
             if (tag!!.isEmpty() && viewModel.selectedOption != "" && viewModel.selectedOption == Constants.ACTION_TAILOR_STRATEGY) {
                 CommonMethods.showProgressDialog(requireContext())
 //                viewModel.editOwnStrategy(viewModel.selectedStrategy!!.name)
@@ -117,13 +174,14 @@ class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
                         reqAmount.toString()
                     )
                     binding.tvInfo.text = str
-                    binding.btnNo.visible()
-                    binding.btnThanks.text = getString(R.string.yes_t)
+                    binding.btnThanks.gone()
+                    binding.llBtns.visible()
                 }
 
                 Constants.USING_SEND_MONEY -> {
-                    binding.view1.visible()
-                    binding.view2.visible()
+                    binding.tvTitle.text=getString(R.string.congrats)
+//                    binding.view1.visible()
+//                    binding.view2.visible()
                     binding.tvInfoOne.text = getString(R.string.shipment_success)
                     binding.tvInfoTwo.text =getString(R.string.rec_has_received)
 
@@ -133,7 +191,6 @@ class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
                     getString(R.string.your_investment_has_been_taken_into_account)
             }
         }
-        behavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
 

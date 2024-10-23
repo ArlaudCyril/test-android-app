@@ -18,9 +18,11 @@ import android.widget.TextView
 import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.Lifecycle
 import com.Lyber.dev.databinding.FragmentExportOperationsBinding
+import com.Lyber.dev.models.DataQuote
 import com.Lyber.dev.models.MonthsList
 import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
+import com.Lyber.dev.ui.fragments.bottomsheetfragments.ErrorBottomSheet
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.ErrorResponseBottomSheet
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
@@ -28,6 +30,7 @@ import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.google.android.gms.tasks.Task
 import com.google.android.play.core.integrity.StandardIntegrityManager
+import com.google.gson.Gson
 import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.time.LocalDate
@@ -149,6 +152,7 @@ class ExportOperationsFragment : BaseFragment<FragmentExportOperationsBinding>()
                 }
 
                 btnExport -> {
+
                     if (::selectedDate.isInitialized)
                         try {
                             CommonMethods.checkInternet(binding.root, requireContext()) {

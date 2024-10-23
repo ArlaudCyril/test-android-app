@@ -828,6 +828,7 @@
     <string name="shipment_success">Votre envoi s\'est déroulé avec succès.</string>
     <string name="rec_has_received">Le destinataire a reçu ses cryptos sur son\ncompte Lyber !</string>
     <string name="please_scan_valid_qr">Le code QR scanné n\'est pas au bon format</string>
+    <string name="congrats">Félicitations</string>
 
 
 

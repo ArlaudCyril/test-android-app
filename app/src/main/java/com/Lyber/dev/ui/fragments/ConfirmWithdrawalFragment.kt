@@ -525,7 +525,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
 
                 btnConfirmInvestment -> {
                     confirmButtonClick()
-                }
+                   }
 
                 tvMoreDetails -> {
                     if (isExpand) {

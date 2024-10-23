@@ -7,8 +7,6 @@
     android:backgroundTint="@color/green_500"
     android:orientation="vertical"
     android:padding="24dp">
-
-
     <ImageView
         android:id="@+id/ivTopAction"
         android:layout_width="wrap_content"
@@ -16,18 +14,16 @@
         android:padding="4dp"
         android:src="@drawable/ic_close"
         app:tint="@color/purple_gray_00" />
-
     <TextView
         android:id="@+id/tvTitle"
         style="@style/TitleTextAtypText"
-        android:layout_marginTop="-8dp"
         android:layout_below="@id/ivTopAction"
         android:layout_gravity="center"
+        android:layout_marginTop="42dp"
         android:layout_centerHorizontal="true"
         android:text="@string/confirmation"
         android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
         android:textColor="@color/purple_gray_00" />
-
 
     <LinearLayout
         android:id="@+id/llContent"
@@ -38,27 +34,29 @@
         android:layout_marginBottom="150dp"
         android:gravity="center"
         android:orientation="vertical">
+
         <View
             android:id="@+id/view1"
-            android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="74dp"/>
+            android:layout_height="134dp"
+            android:visibility="gone" />
 
         <ImageView
             android:id="@+id/imgTick"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginVertical="20dp"
-            android:visibility="visible"
-            android:src="@drawable/ic_green_large_tick" />
+            android:src="@drawable/ic_green_large_tick"
+            android:visibility="visible" />
+
         <ImageView
             android:id="@+id/imgOh"
             android:layout_width="120dp"
             android:layout_height="120dp"
             android:layout_marginTop="-12dp"
-            android:visibility="gone"
             android:layout_marginBottom="20dp"
-            android:src="@drawable/oh_emoji" />
+            android:src="@drawable/oh_emoji"
+            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="wrap_content"
@@ -71,11 +69,11 @@
                 android:id="@+id/tvInfo"
                 style="@style/SubheadMabryMedium"
                 android:layout_width="match_parent"
-                android:gravity="start"
+                android:layout_marginHorizontal="10dp"
                 android:layout_marginBottom="20dp"
                 android:alpha="0.9"
+                android:gravity="start"
                 android:lineSpacingExtra="2dp"
-                android:layout_marginHorizontal="10dp"
                 android:text="@string/amount_invested_is_insufficient"
                 android:textColor="@color/purple_gray_00"
                 android:visibility="gone" />
@@ -95,36 +93,50 @@
                 android:layout_marginTop="4dp"
                 android:alpha="0.8"
                 android:gravity="center"
+                android:lineSpacingExtra="4dp"
                 android:text="@string/you_can_now_see_its_effect_on_your_portfolio"
                 android:textColor="@color/purple_gray_00" />
         </LinearLayout>
+
         <View
             android:id="@+id/view2"
-            android:visibility="gone"
             android:layout_width="match_parent"
-            android:layout_height="64dp"/>
+            android:layout_height="134dp"
+            android:visibility="gone" />
 
     </LinearLayout>
-
-
     <Button
         android:id="@+id/btnThanks"
         style="@style/ButtonStyleMabryMedium"
-        android:layout_below="@id/llContent"
         android:background="@drawable/curved_button"
         android:backgroundTint="@color/purple_gray_00"
+        android:layout_alignParentBottom="true"
         android:text="@string/thanks"
-        android:layout_marginBottom="4dp"
         android:textColor="@color/purple_gray_700" />
-    <Button
-        android:id="@+id/btnNo"
-        style="@style/ButtonStyleMabryMedium"
-        android:layout_below="@id/btnThanks"
-        android:background="@drawable/curved_button"
-        android:backgroundTint="@color/purple_gray_00"
-        android:text="@string/no_t"
+    <LinearLayout
+        android:id="@+id/llBtns"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
         android:visibility="gone"
-        android:layout_marginTop="12dp"
-        android:layout_marginBottom="4dp"
-        android:textColor="@color/purple_gray_700" />
+        android:layout_alignParentBottom="true">
+        <Button
+            android:id="@+id/btnYes"
+            style="@style/ButtonStyleMabryMedium"
+            android:background="@drawable/curved_button"
+            android:backgroundTint="@color/purple_gray_00"
+            android:text="@string/yes_t"
+            android:textColor="@color/purple_gray_700" />
+        <Button
+            android:id="@+id/btnNo"
+            style="@style/ButtonStyleMabryMedium"
+            android:background="@drawable/curved_button"
+            android:backgroundTint="@color/purple_gray_00"
+            android:text="@string/no_t"
+            android:visibility="visible"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="4dp"
+            android:textColor="@color/purple_gray_700" />
+    </LinearLayout>
+
 </RelativeLayout>
