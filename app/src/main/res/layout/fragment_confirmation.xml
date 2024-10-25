@@ -16,13 +16,12 @@
         app:tint="@color/purple_gray_00" />
     <TextView
         android:id="@+id/tvTitle"
-        style="@style/TitleTextAtypText"
+        style="@style/TitleText"
         android:layout_below="@id/ivTopAction"
         android:layout_gravity="center"
         android:layout_marginTop="42dp"
         android:layout_centerHorizontal="true"
         android:text="@string/confirmation"
-        android:textAppearance="@style/TextAppearance.MaterialComponents.Headline5"
         android:textColor="@color/purple_gray_00" />
 
     <LinearLayout
@@ -83,6 +82,7 @@
                 style="@style/SubheadMabryMedium"
                 android:layout_width="wrap_content"
                 android:gravity="center"
+                android:fontFamily="@font/mabry_pro"
                 android:text="@string/your_deposit_has_been_taken_into_account"
                 android:textColor="@color/purple_gray_00" />
 
@@ -94,6 +94,7 @@
                 android:alpha="0.8"
                 android:gravity="center"
                 android:lineSpacingExtra="4dp"
+                android:fontFamily="@font/mabry_pro"
                 android:text="@string/you_can_now_see_its_effect_on_your_portfolio"
                 android:textColor="@color/purple_gray_00" />
         </LinearLayout>

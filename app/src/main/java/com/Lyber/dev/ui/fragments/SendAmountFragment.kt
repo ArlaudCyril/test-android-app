@@ -163,6 +163,17 @@ class SendAmountFragment : BaseFragment<FragmentSendAmountBinding>(), OnClickLis
 
     }
 
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        when (errorCode) {
+            26 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.account_cant_be_found)
+            )
+            else -> super.onRetrofitError(errorCode, msg)
+        }
+    }
+
     private fun setAssetAmount(assetAmount: String) {
         val valueAmount =
             if (amount.contains(mCurrency)) amount.replace(mCurrency, "").pointFormat.toDouble()
@@ -478,9 +489,9 @@ class SendAmountFragment : BaseFragment<FragmentSendAmountBinding>(), OnClickLis
 
     }
 
-    private fun handle(phoneNo: String,error:Boolean) {
-        if(error)
-            phoneNo.showToast(binding.root,requireContext())
+    private fun handle(phoneNo: String, error: Boolean) {
+        if (error)
+            phoneNo.showToast(binding.root, requireContext())
         else {
             CommonMethods.checkInternet(binding.root, requireActivity()) {
                 val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
@@ -497,7 +508,8 @@ class SendAmountFragment : BaseFragment<FragmentSendAmountBinding>(), OnClickLis
                     Log.d("token", "${exception}")
                 }
             }
-        }    }
+        }
+    }
 
 
     private val String.pointFormat
