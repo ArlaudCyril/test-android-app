@@ -129,18 +129,8 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                     openOtpScreen()
                 } else {
                     if (withdrawUSDC) {
-                        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                            SplashActivity.integrityTokenProvider?.request(
-                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                    .build()
-                            )
-                        integrityTokenResponse?.addOnSuccessListener { response ->
-                            viewModel.getBalance(response.token())
-                        }?.addOnFailureListener { exception ->
-                            Log.d("token", "${exception}")
-                        }
-
-                        viewModel.selectedOption = Constants.ACTION_WITHDRAW_EURO
+                         viewModel.getBalance()
+                      viewModel.selectedOption = Constants.ACTION_WITHDRAW_EURO
                     } else
                         viewModel.selectedOption = Constants.USING_WITHDRAW
                     ConfirmationBottomSheet().show(childFragmentManager, "")
@@ -213,7 +203,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                 jsonObject.put("bic", viewModel.ribDataAddress!!.bic)
                 jsonObject.put("amount", valueTotalEuro)
                 jsonObject.put("otp", code)
-                val jsonString = jsonObject.toString()
+                val jsonString = CommonMethods.sortAndFormatJson(jsonObject)
                 // Generate the request hash
                 val requestHash = CommonMethods.generateRequestHash(jsonString)
 
@@ -244,7 +234,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                     jsonObject.put("destination", viewModel.withdrawAddress!!.address!!)
                     jsonObject.put("network", viewModel.selectedNetworkDeposit!!.id)
                     jsonObject.put("otp", code)
-                    val jsonString = jsonObject.toString()
+                    val jsonString = CommonMethods.sortAndFormatJson(jsonObject)
                     // Generate the request hash
                     val requestHash = CommonMethods.generateRequestHash(jsonString)
 
@@ -286,7 +276,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
             jsonObject.put("phone", phoneNo)
             jsonObject.put("asset", selectedAssetForSend)
             jsonObject.put("amount", valueTotalBigDecimal)
-            val jsonString = jsonObject.toString()
+            val jsonString = CommonMethods.sortAndFormatJson(jsonObject)
             // Generate the request hash
             val requestHash = CommonMethods.generateRequestHash(jsonString)
 

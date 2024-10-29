@@ -80,6 +80,7 @@ import com.github.mikephil.charting.data.Entry
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
@@ -2056,6 +2057,44 @@ class CommonMethods {
             val bytes = MessageDigest.getInstance("SHA-256").digest(input.toByteArray())
             return bytes.joinToString("") { "%02x".format(it) }
         }
+
+//        fun sortAndFormatJson(jsonObject: JSONObject): String {
+//            // Get keys, sort them alphabetically, and convert to a list for reusability
+//            val sortedKeys = jsonObject.keys().asSequence().sorted().toList()
+//
+//            // Create a new JSON string in the sorted order
+//            val sortedJsonString = StringBuilder("{")
+//            sortedKeys.forEachIndexed { index, key ->
+//                sortedJsonString.append("\"$key\":\"${jsonObject.get(key)}\"")
+//                if (index < sortedKeys.size - 1) {
+//                    sortedJsonString.append(",")
+//                }
+//            }
+//            sortedJsonString.append("}")
+//            return sortedJsonString.toString()
+//        }
+        fun sortAndFormatJson(jsonObject: JSONObject): String {
+            // Get keys, sort them alphabetically, and convert to a list for reusability
+            val sortedKeys = jsonObject.keys().asSequence().sorted().toList()
+
+            // Create a new JSON string in the sorted order
+            val sortedJsonString = StringBuilder("{")
+            sortedKeys.forEachIndexed { index, key ->
+                val value = jsonObject.get(key)
+                // Check if the value is a number (Int, Double, etc.) and format it accordingly
+                if (value is Number) {
+                    sortedJsonString.append("\"$key\":$value")
+                } else {
+                    sortedJsonString.append("\"$key\":\"$value\"")
+                }
+                if (index < sortedKeys.size - 1) {
+                    sortedJsonString.append(",")
+                }
+            }
+            sortedJsonString.append("}")
+            return sortedJsonString.toString()
+        }
+
     }
 }
 

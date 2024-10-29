@@ -30,7 +30,6 @@ import com.appsflyer.AppsFlyerLib
 import com.appsflyer.attribution.AppsFlyerRequestListener
 import com.google.android.gms.tasks.Task
 import com.google.android.play.core.integrity.StandardIntegrityManager
-import okhttp3.ResponseBody
 import org.json.JSONObject
 import java.util.*
 
@@ -136,9 +135,19 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                                     if (freq == "none") {
                                         val jsonObject = JSONObject()
                                         jsonObject.put("ownerUuid", it.ownerUuid)
-                                        jsonObject.put("strategyName", viewModel.selectedStrategy!!.name)
-                                        jsonObject.put("amount",  viewModel.amount.toDouble() )
-                                        val jsonString = jsonObject.toString()
+                                        jsonObject.put(
+                                            "strategyName",
+                                            viewModel.selectedStrategy!!.name
+                                        )
+                                        val amountValue = viewModel.amount.toDouble()
+                                        val formattedAmount =
+                                            if (amountValue == amountValue.toInt().toDouble()) {
+                                                amountValue.toInt() // Convert to Int if there's no decimal part
+                                            } else {
+                                                amountValue // Keep as Double if it has decimals
+                                            }
+                                        jsonObject.put("amount", formattedAmount)
+                                        val jsonString = CommonMethods.sortAndFormatJson(jsonObject)
                                         // Generate the request hash
                                         val requestHash =
                                             CommonMethods.generateRequestHash(jsonString)
@@ -150,8 +159,9 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                                             )
                                         integrityTokenResponse1?.addOnSuccessListener { response ->
                                             Log.d("token", "${response.token()}")
-                                            viewModel.oneTimeOrderStrategy( viewModel.selectedStrategy!!.name,
-                                               viewModel.amount.toDouble(), it.ownerUuid,
+                                            viewModel.oneTimeOrderStrategy(
+                                                viewModel.selectedStrategy!!.name,
+                                                formattedAmount, it.ownerUuid,
                                                 response.token()
                                             )
 
@@ -164,13 +174,24 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                                             )
                                         ) {
                                             val jsonObject = JSONObject()
+                                            val amountValue = viewModel.amount.toDouble()
+                                            val formattedAmount =
+                                                if (amountValue == amountValue.toInt().toDouble()) {
+                                                    amountValue.toInt() // Convert to Int if there's no decimal part
+                                                } else {
+                                                    amountValue // Keep as Double if it has decimals
+                                                }
                                             jsonObject.put("ownerUuid", it.ownerUuid)
-                                            jsonObject.put("strategyName", viewModel.selectedStrategy!!.name)
-                                            jsonObject.put("amount",  viewModel.amount.toDouble() )
+                                            jsonObject.put(
+                                                "strategyName",
+                                                viewModel.selectedStrategy!!.name
+                                            )
+                                            jsonObject.put("amount",formattedAmount)
                                             if (freq != null)
-                                                jsonObject.put("frequency",  freq )
+                                                jsonObject.put("frequency", freq)
 
-                                            val jsonString = jsonObject.toString()
+                                            val jsonString =
+                                                CommonMethods.sortAndFormatJson(jsonObject)
                                             // Generate the request hash
                                             val requestHash =
                                                 CommonMethods.generateRequestHash(jsonString)
@@ -185,26 +206,38 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                                                 viewModel.editEnabledStrategy(
                                                     it.ownerUuid,
                                                     freq,
-                                                    viewModel.amount.toDouble(),
-                                                    viewModel.selectedStrategy!!.name,response.token()
+                                                    formattedAmount,
+                                                    viewModel.selectedStrategy!!.name,
+                                                    response.token()
                                                 )
 
                                             }?.addOnFailureListener { exception ->
                                                 Log.d("token", "${exception}")
                                             }
-                                        }
-                                        else {
+                                        } else {
                                             val jsonObject = JSONObject()
+                                            val amountValue = viewModel.amount.toDouble()
+                                            val formattedAmount =
+                                                if (amountValue == amountValue.toInt().toDouble()) {
+                                                    amountValue.toInt() // Convert to Int if there's no decimal part
+                                                } else {
+                                                    amountValue // Keep as Double if it has decimals
+                                                }
+                                            jsonObject.put("amount", formattedAmount)
                                             jsonObject.put("ownerUuid", it.ownerUuid)
-                                            jsonObject.put("strategyName", viewModel.selectedStrategy!!.name)
-                                            jsonObject.put("amount",  viewModel.amount.toDouble() )
+                                            jsonObject.put(
+                                                "strategyName",
+                                                viewModel.selectedStrategy!!.name
+                                            )
+//                                            jsonObject.put("amount",  viewModel.amount.toDouble() )
                                             if (freq != null)
-                                                jsonObject.put("frequency",  freq )
-                                            val jsonString = jsonObject.toString()
+                                                jsonObject.put("frequency", freq)
+                                            val jsonString =
+                                                CommonMethods.sortAndFormatJson(jsonObject)
                                             // Generate the request hash
                                             val requestHash =
                                                 CommonMethods.generateRequestHash(jsonString)
-                                            val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                                         val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
                                                 SplashActivity.integrityTokenProvider?.request(
                                                     StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
                                                         .setRequestHash(requestHash)
@@ -215,7 +248,7 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                                                 viewModel.investStrategy(
                                                     it.ownerUuid,
                                                     freq,
-                                                    viewModel.amount.toDouble(),
+                                                    formattedAmount,
                                                     viewModel.selectedStrategy!!.name,
                                                     response.token()
                                                 )

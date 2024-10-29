@@ -12,7 +12,6 @@ import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentConfirmationBinding
 import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.clearBackStack
 import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.dev.utils.CommonMethods.Companion.gone
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
@@ -67,7 +66,7 @@ class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
                 jsonObject.put("amount", reqAmount.toDouble())
                 jsonObject.put("frequency", viewModel.selectedStrategy!!.activeStrategy!!.frequency)
 
-                val jsonString = jsonObject.toString()
+                val jsonString = CommonMethods.sortAndFormatJson(jsonObject)
                 // Generate the request hash
                 val requestHash =
                     CommonMethods.generateRequestHash(jsonString)
@@ -104,7 +103,7 @@ class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
                 jsonObject.put("amount", reqAmount.toDouble())
                 jsonObject.put("frequency", viewModel.selectedStrategy!!.activeStrategy!!.frequency)
 
-                val jsonString = jsonObject.toString()
+                val jsonString = CommonMethods.sortAndFormatJson(jsonObject)
                 // Generate the request hash
                 val requestHash =
                     CommonMethods.generateRequestHash(jsonString)

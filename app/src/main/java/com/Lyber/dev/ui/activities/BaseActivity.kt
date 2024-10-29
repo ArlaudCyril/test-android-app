@@ -73,16 +73,7 @@ abstract class BaseActivity<viewBinding : ViewBinding> : AppCompatActivity() {
     }
 
     fun getUser1() {
-        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-            SplashActivity.integrityTokenProvider?.request(
-                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                    .build()
-            )
-        integrityTokenResponse?.addOnSuccessListener { response ->
-            viewModel1.getUser(response.token())
-        }?.addOnFailureListener { exception ->
-            Log.d("token", "${exception}")
-        }
+       viewModel1.getUser()
     }
 
 

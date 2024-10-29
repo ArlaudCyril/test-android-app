@@ -829,7 +829,6 @@
     <string name="rec_has_received">Le destinataire a reçu ses cryptos sur son\ncompte Lyber !</string>
     <string name="please_scan_valid_qr">Le code QR scanné n\'est pas au bon format</string>
     <string name="congrats">Félicitations</string>
-    <string name="account_cant_be_found">Ce compte est introuvable, si vous avez besoin d\'aide, veuillez contacter le support.</string>
 
 
 
@@ -854,7 +853,7 @@
     <string name="error_code_18">Ce code de vérification a déjà été utilisé.</string>
     <string name="error_code_20">Le 2FA n\'est pas actif sur votre compte.</string>
     <string name="error_code_24">Le code que vous avez saisi est incorrect.</string>
-    <string name="error_code_26">Nous n\'avons pas trouvé votre compte, si vous avez besoin d\'aide, veuillez contacter le support.</string>
+    <string name="error_code_26">Ce compte est introuvable, si vous avez besoin d\'aide, veuillez contacter le support.</string>
     <string name="error_code_27">Impossible de créer un compte car certaines informations sont manquantes, veuillez réessayer.</string>
     <string name="error_code_28">Un problème est survenu, veuillez essayer de vous connecter à nouveau.</string>
     <string name="error_code_29">Un problème est survenu, veuillez essayer de vous connecter à nouveau.</string>

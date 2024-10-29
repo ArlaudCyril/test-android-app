@@ -42,7 +42,6 @@ import retrofit2.Response
 import retrofit2.http.*
 
 interface Api {
-
     @Multipart
     @POST("upload")
     suspend fun upload(@Part filePart: MultipartBody.Part): Response<UploadResponse>

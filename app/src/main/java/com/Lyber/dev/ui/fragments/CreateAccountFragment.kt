@@ -31,6 +31,7 @@ import com.Lyber.dev.utils.CommonMethods.Companion.requestKeyboard
 import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.dev.utils.CommonMethods.Companion.showSnack
 import com.Lyber.dev.utils.CommonMethods.Companion.showToast
+import com.Lyber.dev.utils.CommonMethods.Companion.sortAndFormatJson
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.utils.EncryptionHelper
@@ -120,7 +121,6 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         setObservers()
 
     }
-
     private fun setObservers() {
         viewModel.userChallengeResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
@@ -137,7 +137,8 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                     jsonObject.put("A", creds.A.toString())
                     jsonObject.put("M1", creds.M1.toString())
 
-                    val jsonString = jsonObject.toString()
+                    val jsonString = sortAndFormatJson(jsonObject)
+//                        jsonObject.toString()
                     // Generate the request hash
                     val requestHash = generateRequestHash(jsonString)
                     val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
@@ -709,9 +710,10 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
 
     private fun makeApiRequest() {
          val jsonObject = JSONObject()
-        jsonObject.put("countryCode",  viewModel.countryCode.substring(1))
+        jsonObject.put("countryCode",  viewModel.countryCode.substring(1).toInt())
         jsonObject.put("phoneNo", viewModel.mobileNumber)
-        val jsonString = jsonObject.toString()
+        val jsonString = sortAndFormatJson(jsonObject)
+
         // Generate the request hash
         val requestHash =generateRequestHash(jsonString)
         val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
@@ -725,11 +727,11 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
             val timestamp = (System.currentTimeMillis() / 1000).toString()
 //        val timestamp = Instant.now().epochSecond.toString()
             val payload =
-                """{"countryCode":${viewModel.countryCode.substring(1)},"phoneNo":"${viewModel.mobileNumber}"}"""
+                """{"countryCode":${viewModel.countryCode.substring(1).toInt()},"phoneNo":"${viewModel.mobileNumber}"}"""
             val decryptedText = EncryptionHelper.decrypt(App.secretKey, App.encryptedKey)
             val signature = createSignature(decryptedText, payload, timestamp)
             viewModel.setPhone(
-                viewModel.countryCode.substring(1),
+                viewModel.countryCode.substring(1).toInt(),
                 viewModel.mobileNumber, signature, timestamp,response.token()
             )
 

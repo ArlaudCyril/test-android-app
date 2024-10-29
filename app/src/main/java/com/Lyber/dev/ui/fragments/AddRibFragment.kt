@@ -72,17 +72,7 @@ class AddRibFragment : BaseFragment<FragmentAddRibBinding>(), OnClickListener {
         viewModel.booleanResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 if (it.success) {
-                    val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                        SplashActivity.integrityTokenProvider?.request(
-                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                .build()
-                        )
-                    integrityTokenResponse1?.addOnSuccessListener { response ->
-                        Log.d("token", "${response.token()}")
-                        viewModel.getWalletRib(response.token())
-                    }?.addOnFailureListener { exception ->
-                        Log.d("token", "${exception}")
-                    }
+                       viewModel.getWalletRib()
                 }
             }
         }

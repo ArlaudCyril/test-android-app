@@ -270,16 +270,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         viewModel.exchangeResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 Handler(Looper.getMainLooper()).postDelayed({
-                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                        SplashActivity.integrityTokenProvider?.request(
-                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                .build()
-                        )
-                    integrityTokenResponse?.addOnSuccessListener { response ->
-                        viewModel.getBalance(response.token())
-                    }?.addOnFailureListener { exception ->
-                        Log.d("token", "${exception}")
-                    }
+                   viewModel.getBalance()
                 }, 4000)
             }
         }
@@ -373,7 +364,8 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                             "orderId",
                             requireArguments().getString(Constants.ORDER_ID, "")
                         )
-                        val jsonString = jsonObject.toString()
+                        val jsonString =  CommonMethods.sortAndFormatJson(jsonObject)
+//                            jsonObject.toString()
                         // Generate the request hash
                         val requestHash = CommonMethods.generateRequestHash(jsonString)
                         val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
@@ -466,29 +458,11 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                     }
                 } else if (it.data.orderStatus == "VALIDATED")
                     Handler(Looper.getMainLooper()).postDelayed({
-                        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                            SplashActivity.integrityTokenProvider?.request(
-                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                    .build()
-                            )
-                        integrityTokenResponse?.addOnSuccessListener { response ->
-                            viewModel.getBalance(response.token())
-                        }?.addOnFailureListener { exception ->
-                            Log.d("token", "${exception}")
-                        }
+                        viewModel.getBalance()
                     }, 4000)
                 else  //TODO for now
                     Handler(Looper.getMainLooper()).postDelayed({
-                        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                            SplashActivity.integrityTokenProvider?.request(
-                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                    .build()
-                            )
-                        integrityTokenResponse?.addOnSuccessListener { response ->
-                            viewModel.getBalance(response.token())
-                        }?.addOnFailureListener { exception ->
-                            Log.d("token", "${exception}")
-                        }
+                       viewModel.getBalance()
                     }, 4000)
             }
         }
@@ -503,7 +477,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         binding.apply {
             includedMyAsset.let {
                 val balance =
-                    com.Lyber.dev.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.selectedAsset!!.id }
+                    BaseActivity.balances.find { it1 -> it1.id == viewModel.selectedAsset!!.id }
                 viewModel.selectedBalance = balance
                 val priceCoin = balance?.balanceData?.euroBalance?.toDouble()
                     ?.div(balance.balanceData.balance.toDouble() ?: 1.0)

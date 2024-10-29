@@ -34,6 +34,7 @@ class ForgotPasswordFragment : BaseFragment<FragmentForgotPasswordBinding>(), On
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = CommonMethods.getViewModel(this)
+        viewModel.listener=this
         binding.etEmail.addTextChangedListener(onTextChange)
         binding.btnSendResetLink.setOnClickListener(this)
         binding.ivTopAction.setOnClickListener(this)

@@ -164,11 +164,12 @@ class SendAmountFragment : BaseFragment<FragmentSendAmountBinding>(), OnClickLis
     }
 
     override fun onRetrofitError(errorCode: Int, msg: String) {
+        CommonMethods.dismissProgressDialog()
         when (errorCode) {
             26 -> CommonMethods.showSnack(
                 binding.root,
                 requireContext(),
-                getString(R.string.account_cant_be_found)
+                getString(R.string.error_code_26)
             )
             else -> super.onRetrofitError(errorCode, msg)
         }

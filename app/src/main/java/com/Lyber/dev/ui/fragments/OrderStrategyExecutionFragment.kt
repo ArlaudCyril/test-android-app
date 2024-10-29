@@ -216,7 +216,7 @@ class OrderStrategyExecutionFragment : BaseFragment<FragmentOrderStrategyExecuti
                 CommonMethods.checkInternet(binding.root, requireContext()) {
                     val jsonObject = JSONObject()
                     jsonObject.put("executionId", executionID)
-                    val jsonString = jsonObject.toString()
+                    val jsonString = CommonMethods.sortAndFormatJson(jsonObject)
                     // Generate the request hash
                     val requestHash =
                         CommonMethods.generateRequestHash(jsonString)

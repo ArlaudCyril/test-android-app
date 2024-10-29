@@ -125,17 +125,8 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             lastValueUpdated = false
 //            viewModel.getWalletHistoryPrice(daily, limit)
             hitWalletApi()
-            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                SplashActivity.integrityTokenProvider?.request(
-                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                        .build()
-                )
-            integrityTokenResponse?.addOnSuccessListener { response ->
-                viewModel.getUser(response.token())
-                viewModel.getBalance(response.token())
-            }?.addOnFailureListener { exception ->
-                Log.d("token", "${exception}")
-            }
+            viewModel.getUser()
+            viewModel.getBalance()
             viewModel.getAllPriceResume()
         }
 
@@ -300,15 +291,15 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 App.isLoader = false
             lastValueUpdated = false
             responseFrom = ""
+            viewModel.getUser()
+            viewModel.getBalance()
+            viewModel.getWalletRib()
             val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
                 SplashActivity.integrityTokenProvider?.request(
                     StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
                         .build()
                 )
             integrityTokenResponse?.addOnSuccessListener { response ->
-                viewModel.getUser(response.token())
-                viewModel.getBalance(response.token())
-                viewModel.getWalletRib(response.token())
                 viewModel.getActiveStrategies(response.token())
             }?.addOnFailureListener { exception ->
                 Log.d("token", "${exception}")

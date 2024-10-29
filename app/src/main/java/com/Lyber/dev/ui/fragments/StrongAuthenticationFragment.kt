@@ -150,16 +150,7 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                     }
                     resetView = false
                 } else {
-                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                        SplashActivity.integrityTokenProvider?.request(
-                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                .build()
-                        )
-                    integrityTokenResponse?.addOnSuccessListener { response ->
-                        viewModel.getUser(response.token())
-                    }?.addOnFailureListener { exception ->
-                        Log.d("token", "${exception}")
-                    }
+                        viewModel.getUser()
                 }
             }
         }
@@ -171,17 +162,7 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                     } catch (_: Exception) {
 
                     }
-                val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                    SplashActivity.integrityTokenProvider?.request(
-                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                            .build()
-                    )
-                integrityTokenResponse?.addOnSuccessListener { response ->
-                    viewModel.getUser(response.token())
-                }?.addOnFailureListener { exception ->
-                    Log.d("token", "${exception}")
-                }
-
+                viewModel.getUser()
             }
         }
         viewModel.getUserResponse.observe(viewLifecycleOwner) {

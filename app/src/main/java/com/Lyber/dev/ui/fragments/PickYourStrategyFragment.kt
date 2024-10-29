@@ -235,7 +235,7 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
                     val jsonObject = JSONObject()
                     jsonObject.put("ownerUuid", viewModel.selectedStrategy!!.ownerUuid)
                     jsonObject.put("strategyName", viewModel.selectedStrategy!!.name)
-                    val jsonString = jsonObject.toString()
+                    val jsonString =CommonMethods.sortAndFormatJson(jsonObject)
                     // Generate the request hash
                     val requestHash =
                         CommonMethods.generateRequestHash(jsonString)

@@ -18,6 +18,7 @@ import com.Lyber.dev.databinding.FragmentResetPasswordBinding
 import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
+import com.Lyber.dev.utils.CommonMethods.Companion.sortAndFormatJson
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.viewmodels.SignUpViewModel
 import com.google.android.gms.tasks.Task
@@ -79,7 +80,7 @@ class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>(), OnCl
                     jsonObject.put("emailVerifier", emailVerifier.toString())
                     jsonObject.put("phoneSalt", phoneSalt.toString())
                     jsonObject.put("phoneVerifier", phoneVerifier.toString())
-                    val jsonString = jsonObject.toString()
+                    val jsonString = sortAndFormatJson(jsonObject)
                     // Generate the request hash
                     val requestHash = CommonMethods.generateRequestHash(jsonString)
 

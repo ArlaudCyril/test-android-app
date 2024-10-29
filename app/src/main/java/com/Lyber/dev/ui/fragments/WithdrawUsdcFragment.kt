@@ -95,7 +95,7 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
             integrityTokenResponse1?.addOnSuccessListener { response ->
                 Log.d("token", "${response.token()}")
                 CommonMethods.showProgressDialog(requireActivity())
-                viewModel.getWalletRib(response.token())
+                viewModel.getWalletRib()
                 viewModel.getWithdrawEuroFee(response.token())
             }?.addOnFailureListener { exception ->
                 Log.d("token", "${exception}")

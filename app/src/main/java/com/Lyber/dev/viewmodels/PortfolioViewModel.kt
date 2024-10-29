@@ -289,8 +289,8 @@ class PortfolioViewModel : NetworkViewModel() {
         }
     }
 
-    fun getBalance(token: String) {
-        getBalanceApi(token)
+    fun getBalance() {
+        getBalanceApi()
     }
 
     fun getExportOperations(date: String, token: String) {

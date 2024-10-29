@@ -141,7 +141,8 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
                 jsonObject.put("phoneSalt", phoneSalt.toString())
                 jsonObject.put("phoneVerifier", phoneVerifier.toString())
 
-                val jsonString = jsonObject.toString()
+                val jsonString = CommonMethods.sortAndFormatJson(jsonObject)
+
                 // Generate the request hash
                 val requestHash = CommonMethods.generateRequestHash(jsonString)
 

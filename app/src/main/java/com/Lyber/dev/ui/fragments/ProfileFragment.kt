@@ -440,16 +440,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
     private fun showCloseAccountDialog() {
         if (com.Lyber.dev.ui.activities.BaseActivity.balances.size == 0)
             {
-                val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                    SplashActivity.integrityTokenProvider?.request(
-                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                            .build()
-                    )
-                integrityTokenResponse?.addOnSuccessListener { response ->
-                    viewModel.getBalance(response.token())
-                }?.addOnFailureListener { exception ->
-                    Log.d("token", "${exception}")
-                }
+                   viewModel.getBalance()
             }
         Dialog(requireActivity(), R.style.DialogTheme).apply {
             CustomDialogLayoutBinding.inflate(layoutInflater).let {

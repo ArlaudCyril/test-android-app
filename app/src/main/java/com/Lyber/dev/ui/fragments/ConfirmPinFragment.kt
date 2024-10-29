@@ -55,16 +55,7 @@ class ConfirmPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
             binding.llIndicators.visibility = View.GONE
         }
         if (viewModel.forLogin) {
-            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                SplashActivity.integrityTokenProvider?.request(
-                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                        .build()
-                )
-            integrityTokenResponse?.addOnSuccessListener { response ->
-                viewModel.getUser(response.token())
-            }?.addOnFailureListener { exception ->
-                Log.d("token", "${exception}")
-            }
+           viewModel.getUser()
         } else if (!requireArguments().containsKey(Constants.IS_CHANGE_PIN))
             binding.ivTopClose.visible()
         binding.ivTopClose.setOnClickListener {

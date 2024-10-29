@@ -59,19 +59,7 @@ class RibListingFragment : BaseFragment<FragmentRibListingBinding>(), OnClickLis
         }
         viewModel.exportOperationResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                    SplashActivity.integrityTokenProvider?.request(
-                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                            .build()
-                    )
-                integrityTokenResponse1?.addOnSuccessListener { response ->
-                    Log.d("token", "${response.token()}")
-                    viewModel.getWalletRib(response.token())
-
-                }?.addOnFailureListener { exception ->
-                    Log.d("token", "${exception}")
-
-                }
+                  viewModel.getWalletRib()
             }
         }
         viewModel.walletRibResponse.observe(viewLifecycleOwner) {

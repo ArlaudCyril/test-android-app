@@ -88,17 +88,8 @@ class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnCli
 
     private fun getData() {
         CommonMethods.checkInternet(binding.root,requireContext()) {
-           val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                SplashActivity.integrityTokenProvider?.request(
-                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                        .build()
-                )
-            integrityTokenResponse?.addOnSuccessListener { response ->
-                CommonMethods.showProgressDialog(requireContext())
-                viewModel.getBalance(response.token())
-            }?.addOnFailureListener { exception ->
-                Log.d("token", "${exception}")
-            }
+            CommonMethods.showProgressDialog(requireContext())
+                viewModel.getBalance()
         }
     }
 

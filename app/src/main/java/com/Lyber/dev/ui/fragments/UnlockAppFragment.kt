@@ -60,16 +60,8 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
         super.onViewCreated(view, savedInstanceState)
         viewModel = getViewModel(this)
         viewModel.listener = this
-        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-            SplashActivity.integrityTokenProvider?.request(
-                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                    .build()
-            )
-        integrityTokenResponse?.addOnSuccessListener { response ->
-            viewModel.getUser(response.token())
-        }?.addOnFailureListener { exception ->
-            Log.d("token", "${exception}")
-        }
+        viewModel.getUser()
+
         viewModel.userLoginResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
@@ -194,7 +186,7 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
                    val jsonObject = JSONObject()
                     jsonObject.put("method","refresh_token")
                     jsonObject.put("refresh_token", App.prefsManager.refreshToken)
-                    val jsonString = jsonObject.toString()
+                    val jsonString = CommonMethods.sortAndFormatJson(jsonObject)
                     // Generate the request hash
                     val requestHash = CommonMethods.generateRequestHash(jsonString)
 

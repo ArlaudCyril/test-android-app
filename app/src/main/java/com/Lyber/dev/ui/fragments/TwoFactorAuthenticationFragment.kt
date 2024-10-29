@@ -107,17 +107,7 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
         viewModel.updateAuthenticateResponse.observe(viewLifecycleOwner) {
             if (Lifecycle.State.RESUMED == lifecycle.currentState) {
                 showOtp = false
-                val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                    SplashActivity.integrityTokenProvider?.request(
-                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                            .build()
-                    )
-                integrityTokenResponse?.addOnSuccessListener { response ->
-                    viewModel.getUser(response.token())
-                }?.addOnFailureListener { exception ->
-                    Log.d("token", "${exception}")
-                }
-
+                 viewModel.getUser()
             }
         }
         viewModel.getUserResponse.observe(viewLifecycleOwner) {

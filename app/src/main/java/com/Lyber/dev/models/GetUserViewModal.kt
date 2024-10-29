@@ -63,16 +63,8 @@ class GetUserViewModal() : ViewModel() {
         // For example:
         // kycOK = fetchedData.kycStatus == "COMPLETED"
 
-        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-            SplashActivity.integrityTokenProvider?.request(
-                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                    .build()
-            )
-        integrityTokenResponse?.addOnSuccessListener { response ->
-            networkViewModel.getUser(response.token()) //  this returns a User object
-        }?.addOnFailureListener { exception ->
-            Log.d("token", "${exception}")
-        }
+           networkViewModel.getUser() //  this returns a User object
+
         networkViewModel.getUserResponse.observeForever { user ->
             _userLiveData.postValue(user.data)
             // Assuming user?.kycStatus is the desired check for kycOK

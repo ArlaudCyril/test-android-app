@@ -91,17 +91,8 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
 
     private fun getData() {
         checkInternet(binding.root, requireContext()) {
-            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                SplashActivity.integrityTokenProvider?.request(
-                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                        .build()
-                )
-            integrityTokenResponse?.addOnSuccessListener { response ->
-                showProgressDialog(requireContext())
-                viewModel.getBalance(response.token())
-            }?.addOnFailureListener { exception ->
-                Log.d("token", "${exception}")
-            }
+             showProgressDialog(requireContext())
+                viewModel.getBalance()
         }
     }
 
