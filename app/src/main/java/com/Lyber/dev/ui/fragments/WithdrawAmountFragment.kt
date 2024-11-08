@@ -102,8 +102,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                 CommonMethods.dismissProgressDialog()
                 addresses.clear()
                 for (address in it.data!!) {
-//                    if (address.network == viewModel.selectedNetworkDeposit!!.id) {
-                    if (address.network!!.lowercase() == viewModel.selectedNetworkDeposit!!.fullName.lowercase()) {
+                    if (address.network == viewModel.selectedNetworkDeposit!!.id) {
                         addresses.add(address)
                     }
                 }

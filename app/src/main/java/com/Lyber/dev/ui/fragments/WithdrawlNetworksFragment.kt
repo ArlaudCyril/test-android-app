@@ -43,11 +43,16 @@ class WithdrawlNetworksFragment : BaseFragment<FragmentListingBinding>() {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
         hitApi()
+        binding.rvRefresh.setOnRefreshListener {
+            binding.rvRefresh.isRefreshing = true
+           hitApi()
+        }
 
     }
 
     private fun hitApi() {
         CommonMethods.checkInternet(binding.root,requireActivity()) {
+            if(!binding.rvRefresh.isRefreshing)
             CommonMethods.showProgressDialog(requireActivity())
             viewModel.getAssetDetailIncludeNetworks(assetId)
         }
@@ -64,6 +69,7 @@ class WithdrawlNetworksFragment : BaseFragment<FragmentListingBinding>() {
     private fun setObservers() {
         viewModel.getAssetDetail.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                binding.rvRefresh.isRefreshing=false
                 CommonMethods.dismissProgressDialog()
                 viewModel.selectedAssetDetail = it.data
                 adapter.setList(it.data.networks)

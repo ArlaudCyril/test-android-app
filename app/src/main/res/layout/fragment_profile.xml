@@ -47,7 +47,14 @@
                     android:layout_marginEnd="12dp"
                     android:layout_toStartOf="@+id/ivProfile"
                     android:text="Frida Kahlo"
-                    android:textSize="40sp" />
+                    android:textSize="40sp"
+                    android:maxLines="1"
+                    android:gravity="center_vertical"
+                    android:ellipsize="end"
+                    android:autoSizeTextType="uniform"
+                    android:autoSizeMinTextSize="12sp"
+                    android:autoSizeMaxTextSize="40sp"
+                    android:autoSizeStepGranularity="2sp"/>
 
                 <TextView
                     android:id="@+id/tvEmail"

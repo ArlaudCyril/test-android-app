@@ -487,15 +487,19 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                     else
                         it.tvAssetAmount.text =
                             balance.balanceData.euroBalance.currencyFormatted
-                } else
+
+                    if (balance?.balanceData?.balance == null)
+                        it.tvAssetAmountInCrypto.text = "0.00"
+                    else it.tvAssetAmountInCrypto.text =
+                        balance.balanceData.balance.formattedAsset(
+                            price = priceCoin,
+                            rounding = RoundingMode.DOWN, viewModel.selectedAsset!!.decimals
+                        )
+                } else {
                     it.tvAssetAmount.text = "*****"
-                if (balance?.balanceData?.balance == null)
-                    it.tvAssetAmountInCrypto.text = "0.00"
-                else it.tvAssetAmountInCrypto.text =
-                    balance.balanceData.balance.formattedAsset(
-                        price = priceCoin,
-                        rounding = RoundingMode.DOWN, viewModel.selectedAsset!!.decimals
-                    )
+                    it.tvAssetAmountInCrypto.text = "*****"
+                }
+
                 try {
                     it.tvAssetName.text = viewModel.selectedAsset!!.fullName
                     viewModel.selectedAsset?.imageUrl?.let { it1 ->

@@ -58,6 +58,9 @@ import com.google.android.gms.tasks.Task
 import com.google.android.material.tabs.TabLayout
 import com.google.android.play.core.integrity.StandardIntegrityManager
 import com.google.firebase.messaging.FirebaseMessaging
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import org.json.JSONObject
 import java.text.SimpleDateFormat
@@ -88,6 +91,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
     private var lastValueUpdated = false
     private var responseFrom = ""
     private var isHide = false
+    private var isRefresh = false
 
     override fun bind() = FragmentPortfolioHomeBinding.inflate(layoutInflater)
 
@@ -124,7 +128,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             responseFrom = ""
             lastValueUpdated = false
 //            viewModel.getWalletHistoryPrice(daily, limit)
-            hitWalletApi()
+//            hitWalletApi()
             viewModel.getUser()
             viewModel.getBalance()
             viewModel.getAllPriceResume()
@@ -292,47 +296,23 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             lastValueUpdated = false
             responseFrom = ""
             viewModel.getUser()
+
             viewModel.getBalance()
             viewModel.getWalletRib()
-            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                SplashActivity.integrityTokenProvider?.request(
-                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                        .build()
-                )
-            integrityTokenResponse?.addOnSuccessListener { response ->
-                viewModel.getActiveStrategies(response.token())
-            }?.addOnFailureListener { exception ->
-                Log.d("token", "${exception}")
-            }
+            viewModel.getActiveStrategies()
             viewModel.getAllAssets()
             viewModel.getNetworks()
-            hitWalletApi()
+//            hitWalletApi()
             viewModel.getAllPriceResume()
         }
     }
-
     private fun hitWalletApi() {
         val jsonObject = JSONObject()
         jsonObject.put("daily", daily)
         jsonObject.put("limit", limit)
         val jsonString = jsonObject.toString()
         // Generate the request hash
-        val requestHash = CommonMethods.generateRequestHash(jsonString)
-
-        val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-            SplashActivity.integrityTokenProvider?.request(
-                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                    .setRequestHash(requestHash)
-                    .build()
-            )
-        integrityTokenResponse1?.addOnSuccessListener { response ->
-            Log.d("token", "${response.token()}")
-            viewModel.getWalletHistoryPrice(response.token(), daily, limit)
-
-        }?.addOnFailureListener { exception ->
-            Log.d("token", "${exception}")
-
-        }
+         viewModel.getWalletHistoryPrice( daily, limit)
     }
 
     private fun addObservers() {
@@ -422,10 +402,33 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                     adapterBalance.setList(balances)
                     responseFrom = "balance"
 
-                } else {
+                } else
+                {
                     binding.tvNoAssets.visible()
                     binding.tvBuyUSDC.visible()
+                    val totalBalance = 0.0
+                    viewModel.totalPortfolio = totalBalance
+//                    if(timeGraphList.isNotEmpty() && timeGraphList[timeGraphList.size-1][1]!=viewModel.totalPortfolio){
+//                        timeGraphList.removeAt(timeGraphList.size - 1)
+//                        timeGraphList.add(
+//                            listOf(
+//                                System.currentTimeMillis().toDouble(),
+//                                viewModel.totalPortfolio
+//                            )
+//                        )
+//                    }
+
+                    if (!App.prefsManager.hideAmount)
+                        binding.tvValuePortfolioAndAssetPrice.text =
+                            "${totalBalance.commaFormatted}${Constants.EURO}"
+                    else
+                        binding.tvValuePortfolioAndAssetPrice.text = "*****"
+                    val balances = ArrayList<Balance>()
+                    adapterBalance.setList(balances)
+                    responseFrom = "balance"
+
                 }
+                hitWalletApi()
             }
         }
 
@@ -447,19 +450,34 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 } as MutableList
                 Log.d("timeseries", "$timeSeries1")
                 timeGraphList = timeSeries1
-                if (responseFrom.isNotEmpty() && responseFrom == "balance" && viewModel.totalPortfolio != 0.0) {
-                    lastValueUpdated = true
-                    timeGraphList.add(
-                        listOf(
-                            System.currentTimeMillis().toDouble(),
-                            viewModel.totalPortfolio
+//                if (responseFrom.isNotEmpty() && responseFrom == "balance" && viewModel.totalPortfolio != 0.0) {
+//                    lastValueUpdated = true
+//                    timeGraphList.add(
+//                        listOf(
+//                            System.currentTimeMillis().toDouble(),
+//                            viewModel.totalPortfolio
+//                        )
+//                    )
+//                }
+//                if(isRefresh){
+//                    isRefresh=false
+                    if(timeGraphList[timeGraphList.size-1][1]!=viewModel.totalPortfolio){
+                        timeGraphList.removeAt(timeGraphList.size - 1)
+                        timeGraphList.add(
+                            listOf(
+                                System.currentTimeMillis().toDouble(),
+                                viewModel.totalPortfolio
+                            )
                         )
-                    )
-                }
+                    }
+//                }
+
                 if (timeSeries1.isEmpty())
                     binding.lineChart.timeSeries = getLineData(viewModel.totalPortfolio)
-                else
+                else {
+                    timeGraphList = timeGraphList.filter { it[1].isFinite() }.toMutableList()
                     binding.lineChart.timeSeries = timeGraphList
+                }
 
                 responseFrom = "history"
             }

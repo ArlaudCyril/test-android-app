@@ -364,27 +364,28 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
                     CommonMethods.checkInternet(binding.root,requireContext()) {
                         isApiHit = true
 //                        CommonMethods.showProgressDialog(requireActivity())
-                        val jsonObject = JSONObject()
-                        jsonObject.put("paymentIntentId", hashMap["paymentIntentId"])
-                        jsonObject.put("orderId",hashMap["orderId"])
-                        jsonObject.put("userUuid", App.prefsManager.user?.uuid.toString())
-                        val jsonString = jsonObject.toString()
-                        // Generate the request hash
-                        val requestHash = CommonMethods.generateRequestHash(jsonString)
-                        val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                            SplashActivity.integrityTokenProvider?.request(
-                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                    .setRequestHash(requestHash)
-                                    .build()
-                            )
-                        integrityTokenResponse1?.addOnSuccessListener { response ->
-                            Log.d("token", "${response.token()}")
-                            viewModel.cancelQuote(hashMap, response.token())
-
-                        }?.addOnFailureListener { exception ->
-                            Log.d("token", "${exception}")
-
-                        }
+                        viewModel.cancelQuote(hashMap)
+//                        val jsonObject = JSONObject()
+//                        jsonObject.put("paymentIntentId", hashMap["paymentIntentId"])
+//                        jsonObject.put("orderId",hashMap["orderId"])
+//                        jsonObject.put("userUuid", App.prefsManager.user?.uuid.toString())
+//                        val jsonString = jsonObject.toString()
+//                        // Generate the request hash
+//                        val requestHash = CommonMethods.generateRequestHash(jsonString)
+//                        val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+//                            SplashActivity.integrityTokenProvider?.request(
+//                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+//                                    .setRequestHash(requestHash)
+//                                    .build()
+//                            )
+//                        integrityTokenResponse1?.addOnSuccessListener { response ->
+//                            Log.d("token", "${response.token()}")
+//                            viewModel.cancelQuote(hashMap)
+//
+//                        }?.addOnFailureListener { exception ->
+//                            Log.d("token", "${exception}")
+//
+//                        }
                     }
                 }
             }
@@ -419,30 +420,30 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
                     DataQuote::class.java
                 )
                 CommonMethods.showProgressDialog(requireActivity())
-                val jsonObject = JSONObject()
-                jsonObject.put("fromAsset","eur")
-                jsonObject.put("toAsset",Constants.MAIN_ASSET)
-                jsonObject.put("fromAmount",data.fromAmount)
-                val jsonString = jsonObject.toString()
-                // Generate the request hash
-                val requestHash = CommonMethods.generateRequestHash(jsonString)
-                val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                    SplashActivity.integrityTokenProvider?.request(
-                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                            .setRequestHash(requestHash)
-                            .build()
-                    )
-                integrityTokenResponse1?.addOnSuccessListener { response ->
-                    Log.d("token", "${response.token()}")
+//                val jsonObject = JSONObject()
+//                jsonObject.put("fromAsset","eur")
+//                jsonObject.put("toAsset",Constants.MAIN_ASSET)
+//                jsonObject.put("fromAmount",data.fromAmount)
+//                val jsonString = jsonObject.toString()
+//                // Generate the request hash
+//                val requestHash = CommonMethods.generateRequestHash(jsonString)
+//                val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+//                    SplashActivity.integrityTokenProvider?.request(
+//                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+//                            .setRequestHash(requestHash)
+//                            .build()
+//                    )
+//                integrityTokenResponse1?.addOnSuccessListener { response ->
+//                    Log.d("token", "${response.token()}")
                     viewModel.getQuote(
                         "eur",
                         Constants.MAIN_ASSET,
-                        data.fromAmount,response.token()
+                        data.fromAmount
                     )
-
-                }?.addOnFailureListener { exception ->
-                    Log.d("token", "${exception}")
-                }
+//
+//                }?.addOnFailureListener { exception ->
+//                    Log.d("token", "${exception}")
+//                }
             }
         }
     }

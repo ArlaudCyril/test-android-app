@@ -468,7 +468,7 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
                 viewModel.getQuote(
                     focusedData.currency.lowercase(),
                     unfocusedData.currency.lowercase(),
-                    amount.split(focusedData.currency)[0].pointFormat,response.token()
+                    amount.split(focusedData.currency)[0].pointFormat
                 )
 
             }?.addOnFailureListener { exception ->

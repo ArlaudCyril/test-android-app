@@ -84,7 +84,7 @@
     <string name="hint_choose">Choisissez</string>
     <string name="hint_source_income">Votre source de revenus</string>
     <string name="hint_work_industry">Votre secteur d\'activité</string>
-    <string name="hint_annual_income">Votre revenu annuel</string>
+    <string name="hint_annual_income">Votre revenu mensuel</string>
     <string name="bottom_sheet_cypto_exp_title">Quelle est votre expérience en matière d\'investissement dans les cryptomonnaies?</string>
     <string name="verification_ongoing">Verification ongoing …</string>
     <string name="identity_verification">Vérification de l\'identité</string>
@@ -252,7 +252,7 @@
     <string name="please_tell_us_your_investment_experience_with_crypto">Veuillez choisir votre expérience en matière d\'investissement dans les cryptomonnaies</string>
     <string name="please_tell_us_your_source_of_income">Veuillez sélectionner votre source de revenus</string>
     <string name="please_tell_us_which_work_industry_your_are_working">Veuillez sélectionner votre secteur d\'activité</string>
-    <string name="please_tell_us_your_annual_income">Veuillez sélectionner votre revenu annuel</string>
+    <string name="please_tell_us_your_annual_income">Veuillez sélectionner votre revenu mensuel</string>
     <string name="today">AUJOURD\'HUI</string>
     <string name="yesterday">HIER</string>
     <string name="please_enter_your_first_name">Veuillez saisir votre prénom</string>
@@ -523,7 +523,7 @@
     <string name="review_my_informations">Revoir mes informations</string>
     <string name="change_my_informations">Changer mes informations</string>
     <string name="password_warning">Le mot de passe doit comporter au moins 10 caractères, 1 caractère spécial, 1 minuscule et 1 majuscule.</string>
-    <string name="you_have_strong_password">Vous avez un mot de passe fort!</string>
+    <string name="you_have_strong_password">Vous avez un mot de passe fort !</string>
     <string name="please_enter_name_for_your_strategy">Veuillez saisir le nom de votre stratégie.</string>
     <string name="select_birth_date">Sélectionnez la date de naissance</string>
     <string name="done">Terminé</string>

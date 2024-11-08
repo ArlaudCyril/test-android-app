@@ -306,4 +306,12 @@ object Constants {
     const val APP_FLYER_TYPE_STRATEGY_EXECUTION="ExecuteStrategy"
 
     const val SELECTED_METHOD="selectedMethod"
+
+//    APP_ID_DEV: sandbox-sq0idb-EXkM4DtCjCk44_OX5ux5qw
+//    APP_ID_PROD:sq0idp-XH6VB8q8rZysqg6RIMCB6w
+//    LOCATION_ID_DEV:LHQ5F3FFV8X4J
+//    LOCATION ID PROD:LYYK7HFJV28KJ (edited)
+
+
+
 }

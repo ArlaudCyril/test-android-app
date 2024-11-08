@@ -338,7 +338,7 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
             viewModel.getQuote(
                 "eur",
                 Constants.MAIN_ASSET,
-                amount.split(focusedData.currency)[0].pointFormat,response.token()
+                amount.split(focusedData.currency)[0].pointFormat
             )
 
         }?.addOnFailureListener { exception ->

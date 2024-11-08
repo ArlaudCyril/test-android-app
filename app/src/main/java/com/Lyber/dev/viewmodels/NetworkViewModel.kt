@@ -550,7 +550,7 @@ open class NetworkViewModel : ViewModel() {
     fun getQuote(
         assetIdFrom: String,
         assetIdTo: String,
-        exchangeFromAmount: String,token: String
+        exchangeFromAmount: String
     ) {
         viewModelScope.launch(exceptionHandler) {
             val hashMap = hashMapOf<String, Any>()
@@ -1616,7 +1616,7 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun cancelQuote(hashMap: HashMap<String, Any>,token: String) {
+    fun cancelQuote(hashMap: HashMap<String, Any>) {
         viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().cancelQuote(hashMap)
             if (res.isSuccessful) {
@@ -1692,7 +1692,7 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun getWalletHistoryPrice(token: String,daily: Boolean = true, limit: Int = 500) {
+    fun getWalletHistoryPrice(daily: Boolean = true, limit: Int = 500) {
         viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().getWalletHistory(limit, daily)
             if (res.isSuccessful)
@@ -1706,7 +1706,7 @@ open class NetworkViewModel : ViewModel() {
         }
     }
 
-    fun getActiveStrategies(token: String) {
+    fun getActiveStrategies() {
         viewModelScope.launch(exceptionHandler) {
             val res = RestClient.get().activeStrategies()
             if (res.isSuccessful)

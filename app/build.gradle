@@ -19,8 +19,8 @@ android {
         applicationId "com.Lyber.dev"
         minSdk 24
         targetSdk 34
-        versionCode 41 // as new for development
-        versionName "4.1.0" // on studio pushed version up to 3 and 1
+        versionCode 45 // as new for development
+        versionName "4.5.0" // on studio pushed version up to 3 and 1
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
