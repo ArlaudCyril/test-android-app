@@ -161,38 +161,14 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 val format = address.addressMatched(it.data.addressRegex)
                 if (format) {
-//                    Log.d("network","$network")
-                    val jsonObject = JSONObject()
-                    jsonObject.put("name", addressName)
-                    jsonObject.put("network", network?.id ?: "")
-                    jsonObject.put("address", address)
-                    jsonObject.put("origin", origin)
-                    if (origin.lowercase() == "exchange")
-                    jsonObject.put("exchange",binding.etExchange.text.toString() ?: "")
-                    val jsonString = jsonObject.toString()
-                    // Generate the request hash
-                    val requestHash = CommonMethods.generateRequestHash(jsonString)
-
-                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                        SplashActivity.integrityTokenProvider?.request(
-                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                .setRequestHash(requestHash)
-                                .build()
-                        )
-                    integrityTokenResponse?.addOnSuccessListener { response ->
-                        Log.d("token", "${response.token()}")
-                        viewModel.addAddress(
+                     viewModel.addAddress(
                             addressName,
                             network?.id ?: "",
                             address,
                             origin,
-                            binding.etExchange.text.toString() ?: "",
-                            response.token()
+                            binding.etExchange.text.toString() ?: ""
                         )
 
-                    }?.addOnFailureListener { exception ->
-                        Log.d("token", "${exception}")
-                    }
                 } else {
                     CommonMethods.dismissProgressDialog()
                     binding.etAddress.requestKeyboard()

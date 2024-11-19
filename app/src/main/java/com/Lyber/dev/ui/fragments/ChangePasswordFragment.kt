@@ -229,20 +229,8 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
 
     private fun handle(txt: String) {
         CommonMethods.checkInternet(binding.root, requireActivity()) {
-            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                SplashActivity.integrityTokenProvider?.request(
-                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                        .build()
-                )
-            integrityTokenResponse?.addOnSuccessListener { response ->
-                resendCode = true
-                viewModel.getPasswordChangeChallenge(
-                    token = response.token()
-                )
-            }?.addOnFailureListener { exception ->
-                Log.d("token", "${exception}")
-
-            }
+             resendCode = true
+                viewModel.getPasswordChangeChallenge()
         }
 
     }
@@ -269,20 +257,8 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
                             )
                         } else {
                             CommonMethods.checkInternet(binding.root, requireActivity()) {
-                                val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                                    SplashActivity.integrityTokenProvider?.request(
-                                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                            .build()
-                                    )
-                                integrityTokenResponse?.addOnSuccessListener { response ->
-                                    CommonMethods.showProgressDialog(requireContext())
-                                    viewModel.getPasswordChangeChallenge(
-                                        token = response.token()
-                                    )
-                                }?.addOnFailureListener { exception ->
-                                    Log.d("token", "${exception}")
-
-                                }
+                                   CommonMethods.showProgressDialog(requireContext())
+                                    viewModel.getPasswordChangeChallenge()
                             }
 
                         }

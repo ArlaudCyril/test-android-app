@@ -74,21 +74,8 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
                 )
             } else {
                CommonMethods.checkInternet(binding.root, requireContext()) {
-                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                        SplashActivity.integrityTokenProvider?.request(
-                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                .build()
-                        )
-                    integrityTokenResponse?.addOnSuccessListener { response ->
-                        CommonMethods.showProgressDialog(requireContext())
-                        viewModel.qrCodeUrl(
-                            token = response.token()
-                        )
-
-                    }?.addOnFailureListener { exception ->
-                        Log.d("token", "${exception}")
-
-                    }
+                      CommonMethods.showProgressDialog(requireContext())
+                        viewModel.qrCodeUrl()
                 }
 
             }
@@ -250,36 +237,13 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
                 }
                 CommonMethods.checkInternet(binding.root, requireContext()) {
                     isResend = true
-
                     var json = """{"type2FA" : "google"}""".trimMargin()
                     val detail = CommonMethods.encodeToBase64(json)
-
-                    val jsonObject = JSONObject()
-                    jsonObject.put("details", detail)
-                    jsonObject.put("action", Constants.TYPE)
-                    val jsonString = jsonObject.toString()
-                    // Generate the request hash
-                    val requestHash = CommonMethods.generateRequestHash(jsonString)
-
-                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                        SplashActivity.integrityTokenProvider?.request(
-                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                .setRequestHash(requestHash)
-                                .build()
-                        )
-                    integrityTokenResponse?.addOnSuccessListener { response ->
-                        CommonMethods.showProgressDialog(requireContext())
+                    CommonMethods.showProgressDialog(requireContext())
                         viewModel.switchOffAuthentication(
                             detail,
-                            Constants.TYPE,
-                            token = response.token()
+                            Constants.TYPE
                         )
-//                            viewModel.switchOffAuthentication(detail, Constants.TYPE)
-
-                    }?.addOnFailureListener { exception ->
-                        Log.d("token", "${exception}")
-
-                    }
 
                 }
                 showOtp = false
@@ -353,31 +317,12 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
                         CommonMethods.showProgressDialog(requireContext())
                         val json = """{"type2FA" : "google"}""".trimMargin()
                         val detail = CommonMethods.encodeToBase64(json)
-                        val jsonObject = JSONObject()
-                        jsonObject.put("details", detail)
-                        jsonObject.put("action", Constants.TYPE)
-                        val jsonString = jsonObject.toString()
-                        // Generate the request hash
-                        val requestHash = CommonMethods.generateRequestHash(jsonString)
-
-                        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                            SplashActivity.integrityTokenProvider?.request(
-                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                    .setRequestHash(requestHash)
-                                    .build()
-                            )
-                        integrityTokenResponse?.addOnSuccessListener { response ->
-                            CommonMethods.showProgressDialog(requireContext())
+                        CommonMethods.showProgressDialog(requireContext())
                             viewModel.switchOffAuthentication(
                                 detail,
-                                Constants.TYPE,
-                                token = response.token()
+                                Constants.TYPE
                             )
 
-                        }?.addOnFailureListener { exception ->
-                            Log.d("token", "${exception}")
-
-                        }
                     }
                 }
 
@@ -435,26 +380,8 @@ class TwoFactorAuthenticationFragment : BaseFragment<FragmentTwoFactorAuthentica
             showOtp = false
             var json = """{"type2FA" : "google"}""".trimMargin()
             val detail = CommonMethods.encodeToBase64(json)
-            val jsonObject = JSONObject()
-            jsonObject.put("details", detail)
-            jsonObject.put("action", Constants.TYPE)
-            val jsonString = jsonObject.toString()
-            // Generate the request hash
-            val requestHash = CommonMethods.generateRequestHash(jsonString)
+            viewModel.switchOffAuthentication(detail,Constants.TYPE)
 
-            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                SplashActivity.integrityTokenProvider?.request(
-                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                        .setRequestHash(requestHash)
-                        .build()
-                )
-            integrityTokenResponse?.addOnSuccessListener { response ->
-                viewModel.switchOffAuthentication(detail,Constants.TYPE, token = response.token())
-
-            }?.addOnFailureListener { exception ->
-                Log.d("token", "${exception}")
-
-            }
         }
     }
 }

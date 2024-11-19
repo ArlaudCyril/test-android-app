@@ -83,16 +83,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
         binding.etAmount.addTextChangedListener(textOnTextChange)
         CommonMethods.checkInternet(binding.root, requireActivity()) {
             CommonMethods.showProgressDialog(requireActivity())
-            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                SplashActivity.integrityTokenProvider?.request(
-                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                        .build()
-                )
-            integrityTokenResponse?.addOnSuccessListener { response ->
-                viewModel.getWithdrawalAddresses(response.token())
-            }?.addOnFailureListener { exception ->
-                Log.d("token", "${exception}")
-            }
+            viewModel.getWithdrawalAddresses()
         }
     }
 

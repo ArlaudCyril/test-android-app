@@ -334,29 +334,11 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
     }
 
     private fun hitOtpWithdraw(action: String, details: String, isResend: Boolean) {
-        val jsonObject = JSONObject()
-        jsonObject.put("action", action)
-        jsonObject.put("details", details)
-        val jsonString = jsonObject.toString()
-        // Generate the request hash
-        val requestHash = CommonMethods.generateRequestHash(jsonString)
-
-        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-            SplashActivity.integrityTokenProvider?.request(
-                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                    .setRequestHash(requestHash)
-                    .build()
-            )
-        integrityTokenResponse?.addOnSuccessListener { response ->
-            Log.d("token", "${response.token()}")
-            if (isResend)
-                viewModelSignup.getOtpForWithdraw(response.token(), action, details)
+      if (isResend)
+                viewModelSignup.getOtpForWithdraw( action, details)
             else
-                viewModel.getOtpForWithdraw(response.token(), action, details)
+                viewModel.getOtpForWithdraw( action, details)
 
-        }?.addOnFailureListener { exception ->
-            Log.d("token", "${exception}")
-        }
     }
 
     private fun prepareView() {

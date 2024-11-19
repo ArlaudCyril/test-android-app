@@ -97,25 +97,8 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 checkInternet(binding.root,requireContext()) {
                     showProgressDialog(requireContext())
-                    val jsonObject = JSONObject()
-                    jsonObject.put("type","all")
-                    val jsonString = jsonObject.toString()
-                    // Generate the request hash
-                    val requestHash = CommonMethods.generateRequestHash(jsonString)
-                    val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                        SplashActivity.integrityTokenProvider?.request(
-                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                .setRequestHash(requestHash)
-                                .build()
-                        )
-                    integrityTokenResponse1?.addOnSuccessListener { response ->
-                        Log.d("token", "${response.token()}")
-                        viewModel.getStrategies(response.token()
-                        )
+                   viewModel.getStrategies()
 
-                    }?.addOnFailureListener { exception ->
-                        Log.d("token", "${exception}")
-                    }
                 }
             }
         }
@@ -132,25 +115,8 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
     private fun hitApi(){
         checkInternet(binding.root,requireContext()) {
             showProgressDialog(requireContext())
-            val jsonObject = JSONObject()
-            jsonObject.put("type","all")
-            val jsonString = jsonObject.toString()
-            // Generate the request hash
-            val requestHash = CommonMethods.generateRequestHash(jsonString)
-            val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                SplashActivity.integrityTokenProvider?.request(
-                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                        .setRequestHash(requestHash)
-                        .build()
-                )
-            integrityTokenResponse1?.addOnSuccessListener { response ->
-                Log.d("token", "${response.token()}")
-                viewModel.getStrategies(response.token()
-                )
+            viewModel.getStrategies()
 
-            }?.addOnFailureListener { exception ->
-                Log.d("token", "${exception}")
-            }
         }
     }
 
@@ -232,58 +198,21 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
                 if(checkKyc())
                 checkInternet(binding.root,requireActivity()) {
                     CommonMethods.showProgressDialog(requireActivity())
-                    val jsonObject = JSONObject()
-                    jsonObject.put("ownerUuid", viewModel.selectedStrategy!!.ownerUuid)
-                    jsonObject.put("strategyName", viewModel.selectedStrategy!!.name)
-                    val jsonString =CommonMethods.sortAndFormatJson(jsonObject)
-                    // Generate the request hash
-                    val requestHash =
-                        CommonMethods.generateRequestHash(jsonString)
-                    val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                        SplashActivity.integrityTokenProvider?.request(
-                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                .setRequestHash(requestHash)
-                                .build()
-                        )
-                    integrityTokenResponse1?.addOnSuccessListener { response ->
-                        Log.d("token", "${response.token()}")
-                        viewModel.pauseStrategy(
+                     viewModel.pauseStrategy(
                            viewModel.selectedStrategy!!.ownerUuid,
-                            viewModel.selectedStrategy!!.name,
-                            response.token()
+                            viewModel.selectedStrategy!!.name
                         )
 
-                    }?.addOnFailureListener { exception ->
-                        Log.d("token", "${exception}")
-                    }
                 }
             }
 
             2 -> {
                 checkInternet(binding.root,requireActivity()) {
                     CommonMethods.showProgressDialog(requireActivity())
-                    val jsonObject = JSONObject()
-                    jsonObject.put("strategyName", viewModel.selectedStrategy!!.name)
-                    val jsonString = jsonObject.toString()
-                    // Generate the request hash
-                    val requestHash =
-                        CommonMethods.generateRequestHash(jsonString)
-                    val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                        SplashActivity.integrityTokenProvider?.request(
-                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                .setRequestHash(requestHash)
-                                .build()
-                        )
-                    integrityTokenResponse1?.addOnSuccessListener { response ->
-                        Log.d("token", "${response.token()}")
-                        viewModel.deleteStrategy(
-                            viewModel.selectedStrategy!!.name,
-                            response.token()
+                   viewModel.deleteStrategy(
+                            viewModel.selectedStrategy!!.name
                         )
 
-                    }?.addOnFailureListener { exception ->
-                        Log.d("token", "${exception}")
-                    }
                 }
             }
 

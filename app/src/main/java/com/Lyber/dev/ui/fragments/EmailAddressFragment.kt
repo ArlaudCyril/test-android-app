@@ -119,39 +119,13 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
                     val phoneVerifier = generator.generateVerifier(
                         phoneSalt, App.prefsManager.getPhone(), binding.etPassword.text.toString()
                     )
-                  val jsonObject = JSONObject()
-                    jsonObject.put("email",binding.etEmail.text.toString().lowercase())
-                    jsonObject.put("emailSalt",emailSalt.toString())
-                    jsonObject.put("emailVerifier",emailVerifier.toString())
-                    jsonObject.put("phoneSalt",phoneSalt.toString())
-                    jsonObject.put("phoneVerifier",phoneVerifier.toString())
-                    val jsonString = jsonObject.toString()
-                    // Generate the request hash
-                    val requestHash = CommonMethods.generateRequestHash(jsonString)
-
-                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                        SplashActivity.integrityTokenProvider?.request(
-                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                .setRequestHash(requestHash)
-                                .build()
-                        )
-                    integrityTokenResponse?.addOnSuccessListener { response ->
-                        Log.d("token", "${response.token()}")
-                        viewModel.setEmail(
+                 viewModel.setEmail(
                             binding.etEmail.text.toString().lowercase(),
                             emailSalt.toString(),
                             emailVerifier.toString(),
                             phoneSalt.toString(),
-                            phoneVerifier.toString(),response.token()
+                            phoneVerifier.toString()
                         )
-
-                    }?.addOnFailureListener { exception ->
-                        Log.d("token", "${exception}")
-                        CommonMethods.dismissProgressDialog()
-
-                    }
-
-
 
                 }
             }
@@ -228,33 +202,14 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
                 val phoneVerifier = generator.generateVerifier(
                     phoneSalt, App.prefsManager.getPhone(), binding.etPassword.text.toString()
                 )
-               val jsonObject = JSONObject()
-                jsonObject.put("email",binding.etEmail.text.toString().lowercase())
-                jsonObject.put("emailSalt",emailSalt.toString())
-                jsonObject.put("emailVerifier",emailVerifier.toString())
-                jsonObject.put("phoneSalt",phoneSalt.toString())
-                jsonObject.put("phoneVerifier",phoneVerifier.toString())
-                val jsonString = jsonObject.toString()
-                // Generate the request hash
-                val requestHash = CommonMethods.generateRequestHash(jsonString)
-
-                val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                    SplashActivity.integrityTokenProvider?.request(
-                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                            .setRequestHash(requestHash)
-                            .build()
-                    )
-                integrityTokenResponse?.addOnSuccessListener { response ->
-                    viewModel.setEmail(
+                   viewModel.setEmail(
                         binding.etEmail.text.toString().lowercase(),
                         emailSalt.toString(),
                         emailVerifier.toString(),
                         phoneSalt.toString(),
-                        phoneVerifier.toString(),response.token()
+                        phoneVerifier.toString()
                     )
-                }?.addOnFailureListener { exception ->
-                    Log.d("token", "${exception}")
-                }
+
             }
         }
     }

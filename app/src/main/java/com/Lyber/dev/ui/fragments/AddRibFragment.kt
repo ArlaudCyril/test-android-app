@@ -86,30 +86,8 @@ class AddRibFragment : BaseFragment<FragmentAddRibBinding>(), OnClickListener {
                     hashMap["name"] = binding.etRibName.text.trim().toString()
                     hashMap["userName"] = binding.etOwnerName.text.trim().toString()
                     hashMap["bankCountry"] = selectedCountry
-                    val jsonObject = JSONObject()
-                    jsonObject.put("iban", binding.etIBanNo.text.trim().toString())
-                    jsonObject.put("bic", binding.etBic.text.trim().toString())
-                    jsonObject.put("name", binding.etRibName.text.trim().toString())
-                    jsonObject.put("userName", binding.etOwnerName.text.trim().toString())
-                    jsonObject.put("bankCountry", selectedCountry)
-                    val jsonString = jsonObject.toString()
-                    // Generate the request hash
-                    val requestHash = CommonMethods.generateRequestHash(jsonString)
+                   viewModel.addRib(hashMap)
 
-                    val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                        SplashActivity.integrityTokenProvider?.request(
-                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                .setRequestHash(requestHash)
-                                .build()
-                        )
-                    integrityTokenResponse1?.addOnSuccessListener { response ->
-                        Log.d("token", "${response.token()}")
-                        viewModel.addRib(hashMap, response.token())
-
-                    }?.addOnFailureListener { exception ->
-                        Log.d("token", "${exception}")
-
-                    }
                 }
             }
         }
@@ -185,54 +163,10 @@ class AddRibFragment : BaseFragment<FragmentAddRibBinding>(), OnClickListener {
                             hashMap["userName"] = binding.etOwnerName.text.trim().toString()
                             hashMap["bankCountry"] = selectedCountry
                             if (::ribData.isInitialized) {
-                                val jsonObject = JSONObject()
-                                jsonObject.put("ribId", ribData.ribId)
-                                val jsonString = jsonObject.toString()
-                                // Generate the request hash
-                                val requestHash = CommonMethods.generateRequestHash(jsonString)
-
-                                val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                                    SplashActivity.integrityTokenProvider?.request(
-                                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                            .setRequestHash(requestHash)
-                                            .build()
-                                    )
-                                integrityTokenResponse1?.addOnSuccessListener { response ->
-                                    Log.d("token", "${response.token()}")
-                                    viewModel.deleteRIB(ribData.ribId, response.token())
-
-                                }?.addOnFailureListener { exception ->
-                                    Log.d("token", "${exception}")
-
-                                }
+                               viewModel.deleteRIB(ribData.ribId)
                             } else {
-                                val jsonObject = JSONObject()
-                                jsonObject.put("iban", binding.etIBanNo.text.trim().toString())
-                                jsonObject.put("bic", binding.etBic.text.trim().toString())
-                                jsonObject.put("name", binding.etRibName.text.trim().toString())
-                                jsonObject.put(
-                                    "userName",
-                                    binding.etOwnerName.text.trim().toString()
-                                )
-                                jsonObject.put("bankCountry", selectedCountry)
-                                val jsonString = jsonObject.toString()
-                                // Generate the request hash
-                                val requestHash = CommonMethods.generateRequestHash(jsonString)
+                                viewModel.addRib(hashMap)
 
-                                val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                                    SplashActivity.integrityTokenProvider?.request(
-                                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                            .setRequestHash(requestHash)
-                                            .build()
-                                    )
-                                integrityTokenResponse1?.addOnSuccessListener { response ->
-                                    Log.d("token", "${response.token()}")
-                                    viewModel.addRib(hashMap, response.token())
-
-                                }?.addOnFailureListener { exception ->
-                                    Log.d("token", "${exception}")
-
-                                }
                             }
                         }
                     }

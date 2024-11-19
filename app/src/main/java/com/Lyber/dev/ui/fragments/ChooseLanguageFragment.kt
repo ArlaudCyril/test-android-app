@@ -96,56 +96,18 @@ class ChooseLanguageFragment : BaseFragment<FragmentChooseLanguageBinding>(), On
             when (v) {
                 ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
                 rlEnglish -> {
-                    val jsonObject = JSONObject()
-                    jsonObject.put("language",Constants.ENGLISH)
-                    val jsonString = jsonObject.toString()
-                    // Generate the request hash
-                    val requestHash = CommonMethods.generateRequestHash(jsonString)
-
-                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                        SplashActivity.integrityTokenProvider?.request(
-                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                .setRequestHash(requestHash)
-                                .build()
-                        )
-                    integrityTokenResponse?.addOnSuccessListener { response ->
-                        Log.d("token", "${response.token()}")
                         hashMap.clear()
                         hashMap["language"] = Constants.ENGLISH
                         CommonMethods.showProgressDialog(requireActivity())
-                        viewModel.updateUserInfo(hashMap, response.token())
+                        viewModel.updateUserInfo(hashMap)
 
-                    }?.addOnFailureListener { exception ->
-                        Log.d("token", "${exception}")
-
-                    }
                 }
 
                 rlFrench -> {
-                    val jsonObject = JSONObject()
-                    jsonObject.put("language",Constants.FRENCH)
-                    val jsonString = jsonObject.toString()
-                    // Generate the request hash
-                    val requestHash = CommonMethods.generateRequestHash(jsonString)
-
-                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                        SplashActivity.integrityTokenProvider?.request(
-                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                .setRequestHash(requestHash)
-                                .build()
-                        )
-                    integrityTokenResponse?.addOnSuccessListener { response ->
-                        Log.d("token", "${response.token()}")
-                        hashMap.clear()
+                      hashMap.clear()
                         hashMap["language"] = Constants.FRENCH
                         CommonMethods.showProgressDialog(requireActivity())
-                        viewModel.updateUserInfo(hashMap, response.token())
-
-                    }?.addOnFailureListener { exception ->
-                        Log.d("token", "${exception}")
-
-                    }
-
+                        viewModel.updateUserInfo(hashMap)
                 }
             }
         }

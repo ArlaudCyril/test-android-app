@@ -162,31 +162,11 @@ abstract class BaseBottomSheet<viewBinding : ViewBinding> : BottomSheetDialogFra
                     CommonMethods.checkInternet(binding.root,requireContext()) {
                         CommonMethods.showProgressDialog(requireContext())
                         if (code == 7023 || code == 10041) {
-                            val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                                SplashActivity.integrityTokenProvider?.request(
-                                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                        .build()
-                                )
-                            integrityTokenResponse1?.addOnSuccessListener { response ->
-                                Log.d("token", "${response.token()}")
-                                viewModel.startKyc(response.token())
-                            }?.addOnFailureListener { exception ->
-                                Log.d("token", "${exception}")
-                            }
+                              viewModel.startKyc()
+
                         }
                         else if (code == 7025 || code == 10043) {
-                            val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                                SplashActivity.integrityTokenProvider?.request(
-                                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                        .build()
-                                )
-                            integrityTokenResponse1?.addOnSuccessListener { response ->
-                                Log.d("token", "${response.token()}")
-                                viewModel.startSignUrl(response.token())
-
-                            }?.addOnFailureListener { exception ->
-                                Log.d("token", "${exception}")
-                            }
+                            viewModel.startSignUrl()
                         }
                     }
                 }

@@ -210,21 +210,11 @@ class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>(), OnCl
                 btnSendResetLink -> {
                     if (buttonClicked) {
                          CommonMethods.checkInternet(binding.root,requireContext()) {
-                            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                                SplashActivity.integrityTokenProvider?.request(
-                                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                        .build()
-                                )
-                            integrityTokenResponse?.addOnSuccessListener { response ->
-                                CommonMethods.showProgressDialog(requireContext())
+                          CommonMethods.showProgressDialog(requireContext())
                                 App.prefsManager.accessToken = resetToken
                                 viewModel.getResetPass(
-                                     token = response.token()
                                 )
-                            }?.addOnFailureListener { exception ->
-                                Log.d("token", "${exception}")
 
-                            }
                         }
 
                     }

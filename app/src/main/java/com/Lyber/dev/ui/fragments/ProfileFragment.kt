@@ -99,31 +99,10 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         CommonMethods.checkInternet(binding.root, requireContext()) {
             binding.progressImage.animation =
                 AnimationUtils.loadAnimation(context, R.anim.rotate_drawable)
-            val jsonObject = JSONObject()
-            jsonObject.put("limit", limit)
-            jsonObject.put("offset", offset)
-            val jsonString = jsonObject.toString()
-            // Generate the request hash
-            val requestHash = CommonMethods.generateRequestHash(jsonString)
-
-            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                SplashActivity.integrityTokenProvider?.request(
-                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                        .setRequestHash(requestHash)
-                        .build()
-                )
-            integrityTokenResponse?.addOnSuccessListener { response ->
-                viewModel.getTransactionsListing(
+           viewModel.getTransactionsListing(
                     limit,
-                   offset,
-                    token = response.token()
+                   offset
                 )
-//                            viewModel.switchOffAuthentication(detail, Constants.TYPE)
-
-            }?.addOnFailureListener { exception ->
-                Log.d("token", "${exception}")
-
-            }
         }
 
 //        if (CommonMethods.isFaceIdAvail(requireContext()))
@@ -231,25 +210,8 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
 //                App.prefsManager.setProfileImage(it.s3Url)
                 checkInternet(binding.root, requireContext()) {
-                    val jsonObject = JSONObject()
-                    jsonObject.put("profile_pic",it.s3Url)
-                    val jsonString = jsonObject.toString()
-                    // Generate the request hash
-                    val requestHash = CommonMethods.generateRequestHash(jsonString)
+                    viewModel.updateUser(hashMapOf("profile_pic" to it.s3Url))
 
-                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                        SplashActivity.integrityTokenProvider?.request(
-                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                .setRequestHash(requestHash)
-                                .build()
-                        )
-                    integrityTokenResponse?.addOnSuccessListener { response ->
-                        Log.d("token", "${response.token()}")
-                        viewModel.updateUser(hashMapOf("profile_pic" to it.s3Url), response.token())
-
-                    }?.addOnFailureListener { exception ->
-                        Log.d("token", "${exception}")
-                    }
                 }
             }
         }
@@ -343,32 +305,10 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 
     private fun handle(code: String) {
         checkInternet(binding.root, requireContext()) {
-            val jsonObject = JSONObject()
-            jsonObject.put("action", Constants.ACTION_CLOSE_ACCOUNT)
-            val jsonString = jsonObject.toString()
-            // Generate the request hash
-            val requestHash = CommonMethods.generateRequestHash(jsonString)
-
-            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                SplashActivity.integrityTokenProvider?.request(
-                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                        .setRequestHash(requestHash)
-                        .build()
-                )
-            integrityTokenResponse?.addOnSuccessListener { response ->
-                Log.d("token", "${response.token()}")
-                isResend = true
+            isResend = true
                 viewModel.getOtpForWithdraw(
-                    response.token(),
                     Constants.ACTION_CLOSE_ACCOUNT, null
                 )
-
-            }?.addOnFailureListener { exception ->
-                Log.d("token", "${exception}")
-
-            }
-
-
         }
 
 
@@ -417,20 +357,9 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 }
                 it.tvPositiveButton.setOnClickListener {
                     dismiss()
-                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                        SplashActivity.integrityTokenProvider?.request(
-                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                .build()
-                        )
-                    integrityTokenResponse?.addOnSuccessListener { response ->
-                        Log.d("token", "${response.token()}")
-                        CommonMethods.showProgressDialog(requireActivity())
-                        viewModel.logout(response.token())
+                    CommonMethods.showProgressDialog(requireActivity())
+                        viewModel.logout()
 
-                    }?.addOnFailureListener { exception ->
-                        Log.d("token", "${exception}")
-
-                    }
                 }
                 show()
             }
@@ -482,32 +411,9 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                         CommonMethods.showProgressDialog(requireContext())
                         dismiss()
                         checkInternet(binding.root, requireContext()) {
-                            val jsonObject = JSONObject()
-                            jsonObject.put("action", Constants.ACTION_CLOSE_ACCOUNT)
-                            val jsonString = jsonObject.toString()
-                            // Generate the request hash
-                            val requestHash = CommonMethods.generateRequestHash(jsonString)
-
-                            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                                SplashActivity.integrityTokenProvider?.request(
-                                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                        .setRequestHash(requestHash)
-                                        .build()
-                                )
-                            integrityTokenResponse?.addOnSuccessListener { response ->
-                                Log.d("token", "${response.token()}")
-                                viewModel.getOtpForWithdraw(
-                                    response.token(),
+                            viewModel.getOtpForWithdraw(
                                     Constants.ACTION_CLOSE_ACCOUNT, null
                                 )
-
-                            }?.addOnFailureListener { exception ->
-                                Log.d("token", "${exception}")
-                                CommonMethods.dismissProgressDialog()
-
-                            }
-
-
                         }
 
                     }
@@ -598,7 +504,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                     when (it.type) {
                         Constants.ORDER -> {
                             ivItem.setImageResource(R.drawable.ic_exchange)
-                            tvStartTitle.text = "Exchange"
+                            tvStartTitle.text = getString(R.string.exchange)
                             tvStartSubTitle.text =
                                 "${it.fromAsset.uppercase()} -> ${it.toAsset.uppercase()}"
                             var roundedNumber = BigDecimal(it.fromAmount)
@@ -634,22 +540,16 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                         }
 
                         Constants.STRATEGY -> {
-                            ivItem.setImageResource(R.drawable.strategy)
-                            tvStartTitleCenter.text =
-                                "${it.strategyName.replaceFirstChar(Char::uppercase)}"
+                           ivItem.setImageResource(R.drawable.strategy)
+                            tvStartTitleCenter.text = "${it.strategyName.replaceFirstChar(Char::uppercase)}"
                             if (it.status == Constants.FAILURE)
                                 tvFailed.visibility = View.VISIBLE
                             else {
                                 if (it.successfulBundleEntries.isNotEmpty()) {
                                     try {
                                         tvEndTitleCenter.text =
-                                            "${it.successfulBundleEntries[0].assetAmount} ${
-                                                it.successfulBundleEntries[0].asset.uppercase(
-                                                    Locale.US
-                                                )
-                                            }"
+                                            "${it.successfulBundleEntries[0].assetAmount}"
                                         tvEndTitleCenter.visibility = View.VISIBLE
-
                                     } catch (ex: java.lang.Exception) {
 
                                     }
@@ -665,10 +565,10 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                                 it.status.lowercase().replaceFirstChar(Char::uppercase)
                             tvEndTitleCenter.text = "+${it.amount} ${it.asset.uppercase()}"
                             tvEndTitleCenter.visibility = View.VISIBLE
-
                         }
 
                         Constants.WITHDRAW -> { // single asset
+                            rl2.visible()
 
                             ivItem.setImageResource(R.drawable.ic_withdraw)
                             tvStartTitle.text =
@@ -680,6 +580,15 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                             tvFailed.visibility = View.GONE
                             tvStartTitleCenter.visibility = View.GONE
 
+//                            tvStartTitle1.text =
+//                                "${it.asset.uppercase()} ${getString(R.string.withdrawal)}${getString(R.string.withdrawal)}"
+//                            tvStartSubTitle1.text =
+//                                it.status.lowercase().replaceFirstChar(Char::uppercase)
+//                            tvEndTitleCenter1.text = "-${it.amount} ${it.asset.uppercase()}"
+//                            tvEndTitleCenter1.visibility = View.VISIBLE
+//                            tvFailed1.visibility = View.GONE
+//                            tvStartTitleCenter1.visibility = View.GONE
+
 
 //                            tvEndTitle.text = it.type.lowercase().replaceFirstChar(Char::uppercase)
 //                            tvEndSubTitle.text = it.type.lowercase().replaceFirstChar(Char::uppercase)
@@ -687,16 +596,19 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                         }
 
                         Constants.WITHDRAW_EURO -> { // single asset
+                            rl2.visible()
+
                             ivItem.setImageResource(R.drawable.ic_withdraw)
                             tvFailed.visibility = View.GONE
 //                            tvEndTitle.gone()
 //                            tvEndSubTitle.gone()
 
-                            tvStartTitle.text =
-                                "EUR ${getString(R.string.withdrawal)}"
-                            tvStartSubTitle.text =
-                                it.status.lowercase().replaceFirstChar(Char::uppercase)
+                            tvStartTitle.text = "EUR ${getString(R.string.withdrawal)}"
+                            tvStartSubTitle.text = it.status.lowercase().replaceFirstChar(Char::uppercase)
                             tvEndTitleCenter.text = "-${it.amount} ${it.asset.uppercase()}"
+//                            tvStartTitle1.text = "EUR ${getString(R.string.withdrawal)}"
+//                            tvStartSubTitle1.text = it.status.lowercase().replaceFirstChar(Char::uppercase)
+//                            tvEndTitleCenter1.text = "-${it.amount} ${it.asset.uppercase()}"
 //                            tvEndTitleCenter.text = "-32.719467876 ${it.asset.uppercase()}"
                         }
 

@@ -61,29 +61,7 @@ class EnterWalletAddressFragment : BaseFragment<FragmentEnterWalletAddressBindin
                         viewModel.withdrawFiat(viewModel.amount)
                     else {
                         viewModel.selectedAsset?.let {
-
-                            val jsonObject = JSONObject()
-                            jsonObject.put("asset_id",it.id)
-                            jsonObject.put("amount", viewModel.amount)
-                            jsonObject.put("asset_amount", viewModel.assetAmount.toFloat())
-                            jsonObject.put("wallet_address", address)
-                            val jsonString = jsonObject.toString()
-                            // Generate the request hash
-                            val requestHash = CommonMethods.generateRequestHash(jsonString)
-                            val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                                SplashActivity.integrityTokenProvider?.request(
-                                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                        .setRequestHash(requestHash)
-                                        .build()
-                                )
-                            integrityTokenResponse1?.addOnSuccessListener { response ->
-                                Log.d("token", "${response.token()}")
-                                viewModel.withdraw(it.id,viewModel.amount,viewModel.assetAmount.toFloat(),address,response.token())
-
-
-                            }?.addOnFailureListener { exception ->
-                                Log.d("token", "${exception}")
-                            }
+                          viewModel.withdraw(it.id,viewModel.amount,viewModel.assetAmount.toFloat(),address)
                         }
                     }
                 }

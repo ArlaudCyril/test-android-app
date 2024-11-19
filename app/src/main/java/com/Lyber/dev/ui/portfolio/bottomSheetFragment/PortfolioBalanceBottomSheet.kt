@@ -116,28 +116,8 @@ class PortfolioBalanceBottomSheet(private val clickListener: (BalanceInfo) -> Un
         viewModel.selectedAsset?.let {
             checkInternet(binding.root,requireContext()) {
                 showProgress()
+                 viewModel.getTransactions(page, limit, it.id)
 
-                val jsonObject = JSONObject()
-                jsonObject.put("page",page)
-                jsonObject.put("limit", limit)
-                jsonObject.put("asset_id", it.id)
-                val jsonString = jsonObject.toString()
-                // Generate the request hash
-                val requestHash = CommonMethods.generateRequestHash(jsonString)
-                val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                    SplashActivity.integrityTokenProvider?.request(
-                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                            .setRequestHash(requestHash)
-                            .build()
-                    )
-                integrityTokenResponse1?.addOnSuccessListener { response ->
-                    Log.d("token", "${response.token()}")
-                    viewModel.getTransactions(response.token(),page, limit, it.id)
-
-
-                }?.addOnFailureListener { exception ->
-                    Log.d("token", "${exception}")
-                }
             }
         }
     }

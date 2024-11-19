@@ -76,16 +76,7 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
                 checkInternet(binding.root, requireContext()) {
-                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                        SplashActivity.integrityTokenProvider?.request(
-                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                .build()
-                        )
-                    integrityTokenResponse?.addOnSuccessListener { response ->
-                        viewModel.getWithdrawalAddresses(response.token())
-                    }?.addOnFailureListener { exception ->
-                        Log.d("token", "${exception}")
-                    }
+                      viewModel.getWithdrawalAddresses()
                 }
             }
         }
@@ -104,16 +95,7 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
         }
 
         checkInternet(binding.root, requireContext()) {
-            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                SplashActivity.integrityTokenProvider?.request(
-                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                        .build()
-                )
-            integrityTokenResponse?.addOnSuccessListener { response ->
-                viewModel.getWithdrawalAddresses(response.token())
-            }?.addOnFailureListener { exception ->
-                Log.d("token", "${exception}")
-            }
+               viewModel.getWithdrawalAddresses()
         }
 
         setSearchLogic()
@@ -153,31 +135,10 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
             if (it == 1) {
                 // delete
                 checkInternet(binding.root, requireContext()) {
-                   val jsonObject = JSONObject()
-                    jsonObject.put("network", data.network)
-                    jsonObject.put("address", data.address)
-                   val jsonString = jsonObject.toString()
-                    // Generate the request hash
-                    val requestHash = CommonMethods.generateRequestHash(jsonString)
-
-                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                        SplashActivity.integrityTokenProvider?.request(
-                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                .setRequestHash(requestHash)
-                                .build()
-                        )
-                    integrityTokenResponse?.addOnSuccessListener { response ->
-                        Log.d("token", "${response.token()}")
-                        showProgressDialog(requireContext())
-                        viewModel.deleteWhiteList(
+                   viewModel.deleteWhiteList(
                             data.address!!,
-                            data.network!!,
-                            response.token()
+                            data.network!!
                         )
-
-                    }?.addOnFailureListener { exception ->
-                        Log.d("token", "${exception}")
-                    }
                 }
             } else {
                 //edit
@@ -203,38 +164,11 @@ class AddAddressBookFragment : BaseFragment<FragmentCryptoAddressBookBinding>(),
                 adapter.setList(emptyList())
                 adapter.addProgress()
                 if (keyword.isNotEmpty()) {
-                    val jsonObject = JSONObject()
-                    jsonObject.put("keyword",keyword)
-                    val jsonString = jsonObject.toString()
-                    // Generate the request hash
-                    val requestHash = CommonMethods.generateRequestHash(jsonString)
-
-                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                        SplashActivity.integrityTokenProvider?.request(
-                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                .setRequestHash(requestHash)
-                                .build()
-                        )
-                    integrityTokenResponse?.addOnSuccessListener { response ->
-                        Log.d("token", "${response.token()}")
-                        viewModel.searchWhitelist(keyword, response.token())
-
-                    }?.addOnFailureListener { exception ->
-                        Log.d("token", "${exception}")
-                    }
+                        viewModel.searchWhitelist(keyword)
                 }
 
                 else {
-                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                        SplashActivity.integrityTokenProvider?.request(
-                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                .build()
-                        )
-                    integrityTokenResponse?.addOnSuccessListener { response ->
-                        viewModel.getWithdrawalAddresses(response.token())
-                    }?.addOnFailureListener { exception ->
-                        Log.d("token", "${exception}")
-                    }
+                   viewModel.getWithdrawalAddresses()
                 }
 
 

@@ -232,17 +232,18 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             //anchorView = binding.tvAssetName
             width = 240.px
             height = 420.px
-            setOnItemClickListener { _, _, position, _ ->
-                assetPopupAdapter.getItemAt(position)?.let {
+          setOnItemClickListener { _, _, position, _ ->
+                val actualItem = assetPopupAdapter.getItemAt(position)
+                if (actualItem != null) {
                     dismiss()
+                } else {
+                    Log.e("Error", "Invalid position or item is null.")
                 }
             }
         }
 
         binding.lineChart.clearYAxis()
         binding.lineChart.hideAmount = true
-//        binding.lineChart.timeSeries = getLineData(viewModel.totalPortfolio)
-
         binding.tvInvestMoney.text = getString(R.string.invest_money)
         binding.tvPortfolioAssetPrice.text = getString(R.string.portfolio)
         if (!App.prefsManager.hideAmount)
@@ -1070,9 +1071,13 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         private val list = mutableListOf<GetAssetsResponseItem?>()
 
         fun getItemAt(position: Int): GetAssetsResponseItem? {
-            return list[position]
+            try {
+                return list[position]
+            }catch (ex:Exception){
+                Log.d("Exc","${ex}")
+                return  null
+            }
         }
-
         fun hasNoData(): Boolean {
             return list.isEmpty()
         }

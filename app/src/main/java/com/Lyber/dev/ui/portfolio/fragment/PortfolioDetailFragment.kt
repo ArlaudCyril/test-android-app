@@ -331,33 +331,12 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                             Constants.TO_SWAP
                         )
                     ) {
-                        val jsonObject = JSONObject()
-                        jsonObject.put(
-                            "orderId",
-                            requireArguments().getString(Constants.ORDER_ID, "")
-                        )
-                        val jsonString = jsonObject.toString()
-                        // Generate the request hash
-                        val requestHash = CommonMethods.generateRequestHash(jsonString)
-                        val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                            SplashActivity.integrityTokenProvider?.request(
-                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                    .setRequestHash(requestHash)
-                                    .build()
-                            )
-                        integrityTokenResponse1?.addOnSuccessListener { response ->
-                            Log.d("token", "${response.token()}")
-                            viewModel.getOrderApi(
+                                                viewModel.getOrderApi(
                                 requireArguments().getString(
                                     Constants.ORDER_ID,
                                     ""
-                                ), response.token()
+                                )
                             )
-
-
-                        }?.addOnFailureListener { exception ->
-                            Log.d("token", "${exception}")
-                        }
                     } else {
                         val jsonObject = JSONObject()
                         jsonObject.put(
@@ -375,7 +354,6 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                                     .build()
                             )
                         integrityTokenResponse1?.addOnSuccessListener { response ->
-                            Log.d("token", "${response.token()}")
                             viewModel.confirmOrder(
                                 requireArguments().getString(
                                     Constants.ORDER_ID,
@@ -436,26 +414,9 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
         viewModel.orderResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 if (it.data.orderStatus == "PENDING") {
-                    val jsonObject = JSONObject()
-                    jsonObject.put("orderId", requireArguments().getString(Constants.ORDER_ID, ""))
-                    val jsonString = jsonObject.toString()
-                    // Generate the request hash
-                    val requestHash = CommonMethods.generateRequestHash(jsonString)
-                    val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                        SplashActivity.integrityTokenProvider?.request(
-                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                .setRequestHash(requestHash)
-                                .build()
+                       viewModel.getOrderApi(
+                            requireArguments().getString(Constants.ORDER_ID, "")
                         )
-                    integrityTokenResponse1?.addOnSuccessListener { response ->
-                        Log.d("token", "${response.token()}")
-                        viewModel.getOrderApi(
-                            requireArguments().getString(Constants.ORDER_ID, ""),
-                            response.token()
-                        )
-                    }?.addOnFailureListener { exception ->
-                        Log.d("token", "${exception}")
-                    }
                 } else if (it.data.orderStatus == "VALIDATED")
                     Handler(Looper.getMainLooper()).postDelayed({
                         viewModel.getBalance()

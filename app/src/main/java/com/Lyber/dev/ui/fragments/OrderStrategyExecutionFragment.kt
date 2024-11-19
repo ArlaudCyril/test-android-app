@@ -214,28 +214,9 @@ class OrderStrategyExecutionFragment : BaseFragment<FragmentOrderStrategyExecuti
             override fun run() {
                 // Your statement to be executed every 5 seconds
                 CommonMethods.checkInternet(binding.root, requireContext()) {
-                    val jsonObject = JSONObject()
-                    jsonObject.put("executionId", executionID)
-                    val jsonString = CommonMethods.sortAndFormatJson(jsonObject)
-                    // Generate the request hash
-                    val requestHash =
-                        CommonMethods.generateRequestHash(jsonString)
-                    val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                        SplashActivity.integrityTokenProvider?.request(
-                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                .setRequestHash(requestHash)
-                                .build()
+                    viewModel.strategyStatus(
+                            executionID
                         )
-                    integrityTokenResponse1?.addOnSuccessListener { response ->
-                        Log.d("token", "${response.token()}")
-                        viewModel.strategyStatus(
-                            executionID,
-                            response.token()
-                        )
-
-                    }?.addOnFailureListener { exception ->
-                        Log.d("token", "${exception}")
-                    }
                 }
                 // Schedule the next execution after the delay
                 handler.postDelayed(this, delayMillis)

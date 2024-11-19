@@ -47,7 +47,6 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
 
     private val pin get() = binding.etPin.text.trim().toString()
     private lateinit var viewModel: NetworkViewModel
-
     override fun bind() = FragmentUnlockAppBinding.inflate(layoutInflater)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -112,23 +111,7 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
         binding.tvBioMetric.setOnClickListener(this)
         binding.tvBackArrow.setOnClickListener(this)
         binding.tvLogOut.setOnClickListener(this)
-//        val biometricManager = BiometricManager.from(requireContext())
-//        when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK or BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
-//            BiometricManager.BIOMETRIC_SUCCESS ->
-//                ("Biometric authentication is available").showToast(requireContext())
-//
-//            BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE ->
-//                ("This device doesn't support biometric authentication").showToast(requireContext())
-//
-//            BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE ->
-//                ("Biometric authentication is currently unavailable").showToast(requireContext())
-//
-//            BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED ->
-//                ("No biometric credentials are enrolled").showToast(requireContext())
-//        }
-//        "face id enabled: ${isFaceIdEnabled(requireContext())}".showToast(requireContext())
-
-    }
+  }
 
     override fun onResume() {
         super.onResume()
@@ -138,20 +121,19 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
             binding.tvBioMetric.visible()
             val auth=getString(R.string.authenticate)
             val enterPin=getString(R.string.enter_your_pin)
-            initBiometricPrompt(requireActivity() as AppCompatActivity).authenticate(
-                setBiometricPromptInfo(auth, enterPin,"", "", false)
-            )
+            try {
+
+                initBiometricPrompt(requireActivity() as AppCompatActivity).authenticate(
+                    setBiometricPromptInfo(auth, enterPin,"", "", false)
+                )
+            }catch (_:Exception){
+
+            }
         } else {
         binding.tvOr.gone()
         binding.tvBioMetric.gone()
         }
     }
-
-    private fun isFaceIdEnabled(context: Context): Boolean {
-        val biometricManager = BiometricManager.from(context)
-        return biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK) == BiometricManager.BIOMETRIC_SUCCESS
-    }
-
 
     private val onTextChange = object : OnTextChange {
         override fun onTextChange() {
@@ -243,22 +225,9 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
                 }
 
                 tvLogOut -> {
-
                     CommonMethods.checkInternet(binding.root,requireContext()) {
-                        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                            SplashActivity.integrityTokenProvider?.request(
-                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                    .build()
-                            )
-                        integrityTokenResponse?.addOnSuccessListener { response ->
-                            Log.d("token", "${response.token()}")
-                            CommonMethods.showProgressDialog(requireActivity())
-                            viewModel.logout(response.token())
-
-                        }?.addOnFailureListener { exception ->
-                            Log.d("token", "${exception}")
-
-                        }
+                          CommonMethods.showProgressDialog(requireActivity())
+                            viewModel.logout()
                     }
                 }
 

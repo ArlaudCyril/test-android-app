@@ -1,110 +1,227 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/llRoot"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/llRoot"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/tvDate"
-        android:visibility="gone"
         style="@style/HeadingStyle"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingHorizontal="12dp"
-        android:paddingVertical="16dp" />
+        android:paddingVertical="16dp"
+        android:visibility="gone" />
 
-    <LinearLayout
+<!--    <LinearLayout-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:paddingHorizontal="12dp"-->
+<!--        android:paddingVertical="16dp">-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/ivItem"-->
+<!--            android:layout_width="32dp"-->
+<!--            android:layout_height="32dp"-->
+<!--            android:layout_gravity="center"-->
+<!--            android:src="@drawable/ic_withdraw" />-->
+
+<!--        <RelativeLayout-->
+<!--            android:id="@+id/rlStart"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="12dp"-->
+<!--            android:layout_marginEnd="6dp">-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/tvStartTitleCenter"-->
+<!--                style="@style/SubheadMabryMedium"-->
+<!--                android:layout_centerVertical="true" />-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/tvStartTitle"-->
+<!--                style="@style/SubheadMabryMedium"-->
+<!--               android:textColor="@color/purple_gray_700"-->
+<!--                tools:text="USDC WITHDRAWAL" />-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/tvStartSubTitle"-->
+<!--                style="@style/BodyMabry"-->
+<!--                android:layout_below="@id/tvStartTitle"-->
+<!--                android:textColor="@color/purple_gray_500"-->
+<!--                tools:text="Pending" />-->
+
+<!--        </RelativeLayout>-->
+
+<!--        <RelativeLayout-->
+<!--            android:id="@+id/rlEnd"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_marginStart="6dp"-->
+<!--            android:layout_marginEnd="12dp"-->
+<!--            android:layout_weight="1">-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/tvEndTitleCenter"-->
+<!--                style="@style/SubheadMabryMedium"-->
+<!--                android:layout_alignParentEnd="true"-->
+<!--                android:layout_centerVertical="true"-->
+<!--                android:gravity="end"-->
+<!--                android:text="50.8 USDC" />-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/tvEndTitle"-->
+<!--                style="@style/SubheadMabryMedium"-->
+<!--                android:layout_alignParentEnd="true"-->
+<!--                android:textColor="@color/purple_gray_700" />-->
+
+<!--            <TextView-->
+<!--                android:id="@+id/tvEndSubTitle"-->
+<!--                style="@style/BodyMabry"-->
+<!--                android:layout_below="@id/tvEndTitle"-->
+<!--                android:layout_alignParentEnd="true"-->
+<!--                android:textColor="@color/purple_gray_500" />-->
+
+
+<!--            <TextView-->
+<!--                android:id="@+id/tvFailed"-->
+<!--                style="@style/SubheadMabryMedium"-->
+<!--                android:layout_alignParentEnd="true"-->
+<!--                android:layout_centerVertical="true"-->
+<!--                android:background="@drawable/curved_layout_4_dp"-->
+<!--                android:backgroundTint="@color/red_500"-->
+<!--                android:drawablePadding="2dp"-->
+<!--                android:padding="4dp"-->
+<!--                android:text="@string/failed"-->
+<!--                android:textColor="@color/white"-->
+<!--                android:visibility="gone"-->
+<!--                app:drawableStartCompat="@drawable/ic_close_white" />-->
+
+<!--        </RelativeLayout>-->
+
+<!--        <ImageView-->
+<!--            android:id="@+id/ivEndIcon"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:layout_gravity="center"-->
+<!--            tools:src="@drawable/ic_right_arrow_grey" />-->
+<!--    </LinearLayout>-->
+
+    <RelativeLayout
+        android:id="@+id/rl2"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:paddingHorizontal="12dp"
-        android:paddingVertical="16dp"
-        android:orientation="horizontal">
+        android:paddingVertical="16dp">
+
         <ImageView
             android:id="@+id/ivItem"
             android:layout_width="32dp"
             android:layout_height="32dp"
+            android:layout_centerVertical="true"
             android:layout_gravity="center"
             android:src="@drawable/ic_withdraw" />
+
         <RelativeLayout
-            android:id="@+id/rlStart"
-            android:layout_width="wrap_content"
+            android:id="@+id/rlStart1"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="12dp"
             android:layout_marginEnd="6dp"
-            >
-            <TextView
-                android:id="@+id/tvStartTitleCenter"
-                style="@style/SubheadMabryMedium"
-                android:layout_centerVertical="true"/>
+            android:layout_toStartOf="@id/ivEndIcon"
+            android:layout_toEndOf="@id/ivItem">
 
-            <TextView
-                android:id="@+id/tvStartTitle"
-                style="@style/SubheadMabryMedium"
-                android:textColor="@color/purple_gray_700"
-                tools:text="PayPal" />
-            <TextView
-                android:id="@+id/tvStartSubTitle"
-                style="@style/BodyMabry"
-                android:textColor="@color/purple_gray_500"
-                android:layout_below="@id/tvStartTitle"
-                tools:text="Pending" />
+            <RelativeLayout
+                android:id="@+id/rlEnd1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentEnd="true"
+                android:layout_marginStart="6dp"
+                android:layout_marginEnd="12dp">
+
+                <TextView
+                    android:id="@+id/tvEndTitleCenter"
+                    style="@style/SubheadMabryMedium"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:gravity="end"
+                    android:visibility="visible" />
+
+                <TextView
+                    android:id="@+id/tvEndTitle"
+                    style="@style/SubheadMabryMedium"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_alignEnd="@id/tvEndSubTitle"
+                    android:textColor="@color/purple_gray_700" />
+
+                <TextView
+                    android:id="@+id/tvEndSubTitle"
+                    style="@style/BodyMabry"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/tvEndTitle"
+                    android:gravity="end"
+                    android:textColor="@color/purple_gray_500" />
+
+
+                <TextView
+                    android:id="@+id/tvFailed"
+                    style="@style/SubheadMabryMedium"
+                    android:layout_centerVertical="true"
+                    android:background="@drawable/curved_layout_4_dp"
+                    android:backgroundTint="@color/red_500"
+                    android:drawablePadding="2dp"
+                    android:padding="4dp"
+                    android:text="@string/failed"
+                    android:textColor="@color/white"
+                    android:visibility="gone"
+                    app:drawableStartCompat="@drawable/ic_close_white" />
+
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:layout_toStartOf="@+id/rlEnd1">
+
+                <TextView
+                    android:id="@+id/tvStartTitleCenter"
+                    style="@style/SubheadMabryMedium"
+                    android:layout_centerVertical="true" />
+
+                <TextView
+                    android:id="@+id/tvStartTitle"
+                    style="@style/SubheadMabryMedium"
+                    android:ellipsize="end"
+                    android:singleLine="true"
+                    android:maxLines="1"
+                    android:textColor="@color/purple_gray_700"
+                    tools:text="USDC WITHDRAWAL" />
+
+                <TextView
+                    android:id="@+id/tvStartSubTitle"
+                    style="@style/BodyMabry"
+                    android:layout_below="@id/tvStartTitle"
+                    android:textColor="@color/purple_gray_500"
+                    tools:text="Pending" />
+            </RelativeLayout>
 
         </RelativeLayout>
-        <RelativeLayout
-            android:id="@+id/rlEnd"
-            android:layout_marginStart="6dp"
-            android:layout_width="0dp"
-            android:layout_weight="1"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="12dp"
-            >
-            <TextView
-                android:id="@+id/tvEndTitleCenter"
-                style="@style/SubheadMabryMedium"
-                android:gravity="end"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"/>
-            <TextView
-                android:id="@+id/tvEndTitle"
-                style="@style/SubheadMabryMedium"
-                android:textColor="@color/purple_gray_700"
-                android:layout_alignParentEnd="true"
-                 />
 
-            <TextView
-                android:id="@+id/tvEndSubTitle"
-                style="@style/BodyMabry"
-                android:textColor="@color/purple_gray_500"
-                android:layout_below="@id/tvEndTitle"
-                android:layout_alignParentEnd="true"
-                 />
-
-
-            <TextView
-                android:id="@+id/tvFailed"
-                style="@style/SubheadMabryMedium"
-                android:text="@string/failed"
-                android:background="@drawable/curved_layout_4_dp"
-                android:backgroundTint="@color/red_500"
-                android:padding="4dp"
-                android:layout_alignParentEnd="true"
-                android:layout_centerVertical="true"
-                android:drawablePadding="2dp"
-                android:visibility="gone"
-                android:textColor="@color/white"
-                app:drawableStartCompat="@drawable/ic_close_white" />
-
-        </RelativeLayout>
         <ImageView
             android:id="@+id/ivEndIcon"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_alignParentEnd="true"
+            android:layout_centerVertical="true"
             android:layout_gravity="center"
             tools:src="@drawable/ic_right_arrow_grey" />
-    </LinearLayout>
+    </RelativeLayout>
 
 
 </LinearLayout>

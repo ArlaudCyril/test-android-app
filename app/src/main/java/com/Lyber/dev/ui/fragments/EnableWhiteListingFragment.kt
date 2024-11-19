@@ -104,27 +104,9 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
                 1 -> hashMap["withdrawalLock"] = Constants.HOURS_24
                 else -> hashMap["withdrawalLock"] = Constants.NO_EXTRA_SECURITY
             }
-            val jsonObject = JSONObject()
-            jsonObject.put("withdrawalLock",hashMap["withdrawalLock"])
-            val jsonString = jsonObject.toString()
-            // Generate the request hash
-            val requestHash = CommonMethods.generateRequestHash(jsonString)
+           CommonMethods.showProgressDialog(requireActivity())
+                viewModel.updateUserInfo(hashMap)
 
-            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                SplashActivity.integrityTokenProvider?.request(
-                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                        .setRequestHash(requestHash)
-                        .build()
-                )
-            integrityTokenResponse?.addOnSuccessListener { response ->
-                Log.d("token", "${response.token()}")
-                CommonMethods.showProgressDialog(requireActivity())
-                viewModel.updateUserInfo(hashMap, response.token())
-
-            }?.addOnFailureListener { exception ->
-                Log.d("token", "${exception}")
-
-            }
         }
     }
 

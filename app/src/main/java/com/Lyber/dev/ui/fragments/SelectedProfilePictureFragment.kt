@@ -48,27 +48,9 @@ class SelectedProfilePictureFragment : BaseFragment<FragmentSelectedProfilePictu
         binding.btnSave.setOnClickListener {
             CommonMethods.checkInternet(binding.root, requireActivity()) {
                 App.prefsManager.defaultImage = profilePIc
-                val jsonObject = JSONObject()
-                jsonObject.put("avatar", profilePIc.toString())
-                val jsonString = jsonObject.toString()
-                // Generate the request hash
-                val requestHash = CommonMethods.generateRequestHash(jsonString)
+               CommonMethods.showProgressDialog(requireActivity())
+                    viewModel.updateAvtaar(profilePIc.toString())
 
-                val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                    SplashActivity.integrityTokenProvider?.request(
-                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                            .setRequestHash(requestHash)
-                            .build()
-                    )
-                integrityTokenResponse?.addOnSuccessListener { response ->
-                    Log.d("token", "${response.token()}")
-                    CommonMethods.showProgressDialog(requireActivity())
-                    viewModel.updateAvtaar(profilePIc.toString(), response.token())
-
-                }?.addOnFailureListener { exception ->
-                    Log.d("token", "${exception}")
-
-                }
 
             }
         }

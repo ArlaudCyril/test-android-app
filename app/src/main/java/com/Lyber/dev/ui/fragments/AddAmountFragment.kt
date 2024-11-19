@@ -230,19 +230,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                 Constants.USING_WITHDRAW -> {
 
                     checkInternet(binding.root,requireContext()) {
-                        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                            SplashActivity.integrityTokenProvider?.request(
-                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                    .build()
-                            )
-                        integrityTokenResponse?.addOnSuccessListener { response ->
-                            Log.d("token", "${response.token()}")
-                            viewModel.getWhiteListings(response.token())
-
-                        }?.addOnFailureListener { exception ->
-                            Log.d("token", "${exception}")
-                        }
-
+                          viewModel.getWhiteListings()
                     }
 
                     btnAddFrequency.gone()
@@ -310,24 +298,9 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                 }
 
                 Constants.USING_WITHDRAW_FIAT -> {
-
-
                     checkInternet(binding.root,requireContext()) {
-                        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                            SplashActivity.integrityTokenProvider?.request(
-                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                    .build()
-                            )
-                        integrityTokenResponse?.addOnSuccessListener { response ->
-                            Log.d("token", "${response.token()}")
-                            viewModel.getWhiteListings(response.token())
-
-                        }?.addOnFailureListener { exception ->
-                            Log.d("token", "${exception}")
-                        }
-
+                        viewModel.getWhiteListings()
                     }
-
                     btnAddFrequency.gone()
                     ivMax.visible()
                     tvAssetConversion.gone()

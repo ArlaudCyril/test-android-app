@@ -120,33 +120,12 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                 for (networkq in it.data.networks) {
                     if (networkq.isDepositActive) {
                         binding.etNetwork.text = networkq.fullName
-                        val jsonObject = JSONObject()
-                        jsonObject.put("network", networkq.id)
-                        jsonObject.put("asset", network?.id ?: "")
-                        val jsonString = jsonObject.toString()
-                        // Generate the request hash
-                        val requestHash = CommonMethods.generateRequestHash(jsonString)
-
-                        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                            SplashActivity.integrityTokenProvider?.request(
-                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                    .setRequestHash(requestHash)
-                                    .build()
-                            )
-                        integrityTokenResponse?.addOnSuccessListener { response ->
-                            Log.d("token", "${response.token()}")
-                            isAddress = true
+                         isAddress = true
                             CommonMethods.showProgressDialog(requireActivity())
                             viewModel.getAddress(
                                 networkq.id,
-                                network!!.id,
-                                response.token()
+                                network!!.id
                             )
-
-                        }?.addOnFailureListener { exception ->
-                            Log.d("token", "${exception}")
-                        }
-
                         binding.tvNote.text = getString(
                             R.string.send_only_to_this_address_using_the_protocol,
                             network!!.fullName,
@@ -189,33 +168,12 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
         assetPopupNetwork.setOnItemClickListener { _, _, position, _ ->
             assetAdapterNetwork.getItemAt(position)?.let {
                 binding.etNetwork.text = it.fullName
-                  val jsonObject = JSONObject()
-                jsonObject.put("network", it.id)
-                jsonObject.put("asset", network?.id ?: "")
-               val jsonString = jsonObject.toString()
-                // Generate the request hash
-                val requestHash = CommonMethods.generateRequestHash(jsonString)
-
-                val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                    SplashActivity.integrityTokenProvider?.request(
-                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                            .setRequestHash(requestHash)
-                            .build()
-                    )
-                integrityTokenResponse?.addOnSuccessListener { response ->
-                    Log.d("token", "${response.token()}")
-                    CommonMethods.showProgressDialog(requireActivity())
+                CommonMethods.showProgressDialog(requireActivity())
                     isAddress=true
                     viewModel.getAddress(
                         it.id,
                         network?.id ?: "",
-                        response.token()
                     )
-
-                }?.addOnFailureListener { exception ->
-                    Log.d("token", "${exception}")
-                }
-
                 binding.tvNote.text = getString(
                     R.string.send_only_to_this_address_using_the_protocol,
                     network!!.fullName,

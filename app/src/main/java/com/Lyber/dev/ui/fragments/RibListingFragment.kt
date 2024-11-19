@@ -79,26 +79,7 @@ class RibListingFragment : BaseFragment<FragmentRibListingBinding>(), OnClickLis
                 // delete
                 CommonMethods.checkInternet(binding.root, requireContext()) {
                     CommonMethods.showProgressDialog(requireContext())
-                    val jsonObject = JSONObject()
-                    jsonObject.put("ribId", ribData.ribId)
-                    val jsonString = jsonObject.toString()
-                    // Generate the request hash
-                    val requestHash = CommonMethods.generateRequestHash(jsonString)
-
-                    val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                        SplashActivity.integrityTokenProvider?.request(
-                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                .setRequestHash(requestHash)
-                                .build()
-                        )
-                    integrityTokenResponse1?.addOnSuccessListener { response ->
-                        Log.d("token", "${response.token()}")
-                        viewModel.deleteRIB(ribData.ribId, response.token())
-
-                    }?.addOnFailureListener { exception ->
-                        Log.d("token", "${exception}")
-
-                    }
+                    viewModel.deleteRIB(ribData.ribId)
                 }
             } else if (it == 3) {
                 when (ribData.ribStatus.lowercase()) {

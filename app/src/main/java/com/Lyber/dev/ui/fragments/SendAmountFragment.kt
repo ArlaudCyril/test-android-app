@@ -495,19 +495,8 @@ class SendAmountFragment : BaseFragment<FragmentSendAmountBinding>(), OnClickLis
             phoneNo.showToast(binding.root, requireContext())
         else {
             CommonMethods.checkInternet(binding.root, requireActivity()) {
-                val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                    SplashActivity.integrityTokenProvider?.request(
-                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                            .build()
-                    )
-                integrityTokenResponse1?.addOnSuccessListener { response ->
-                    Log.d("token", "${response.token()}")
-                    CommonMethods.showProgressDialog(requireActivity())
-//                viewModel.getWalletRib(response.token())
-                    viewModel.getUserNameByPhone(phoneNo, response.token())
-                }?.addOnFailureListener { exception ->
-                    Log.d("token", "${exception}")
-                }
+                CommonMethods.showProgressDialog(requireActivity())
+                    viewModel.getUserNameByPhone(phoneNo)
             }
         }
     }

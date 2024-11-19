@@ -93,25 +93,9 @@ class ContactUsFragment : BaseFragment<FragmentContactUsBinding>(), OnClickListe
                         try {
                             CommonMethods.checkInternet(binding.root, requireContext()) {
                                 val msg = binding.etMsg.text.trim().toString()
-                                val jsonObject = JSONObject()
-                                jsonObject.put("message", msg)
-                                val jsonString = jsonObject.toString()
-                                // Generate the request hash
-                                val requestHash = CommonMethods.generateRequestHash(jsonString)
+                                 CommonMethods.showProgressDialog(requireContext())
+                                    viewModel.contactSupport(msg)
 
-                                val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                                    SplashActivity.integrityTokenProvider?.request(
-                                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                            .setRequestHash(requestHash)
-                                            .build()
-                                    )
-                                integrityTokenResponse?.addOnSuccessListener { response ->
-                                    CommonMethods.showProgressDialog(requireContext())
-                                    viewModel.contactSupport(msg, token = response.token())
-                                }?.addOnFailureListener { exception ->
-                                    Log.d("token", "${exception}")
-
-                                }
                             }
                         } catch (e: IndexOutOfBoundsException) {
                             Log.i("error", e.message.toString())

@@ -156,24 +156,8 @@ class ExportOperationsFragment : BaseFragment<FragmentExportOperationsBinding>()
                     if (::selectedDate.isInitialized)
                         try {
                             CommonMethods.checkInternet(binding.root, requireContext()) {
-                                val jsonObject = JSONObject()
-                                jsonObject.put("date", selectedDate)
-                                val jsonString = jsonObject.toString()
-                                // Generate the request hash
-                                val requestHash = CommonMethods.generateRequestHash(jsonString)
-
-                                val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                                    SplashActivity.integrityTokenProvider?.request(
-                                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                            .setRequestHash(requestHash)
-                                            .build()
-                                    )
-                                integrityTokenResponse?.addOnSuccessListener { response ->
-                                    CommonMethods.showProgressDialog(requireContext())
-                                    viewModel.getExportOperations(selectedDate, token = response.token())
-                                }?.addOnFailureListener { exception ->
-                                    Log.d("token", "${exception}")
-                                }
+                                 CommonMethods.showProgressDialog(requireContext())
+                                    viewModel.getExportOperations(selectedDate)
                             }
                         } catch (e: IndexOutOfBoundsException) {
                             Log.i("error", e.message.toString())

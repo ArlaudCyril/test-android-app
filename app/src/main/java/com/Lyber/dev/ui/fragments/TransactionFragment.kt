@@ -56,32 +56,11 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
 
     private fun hitApi() {
         CommonMethods.checkInternet(binding.root,requireContext()) {
-            val jsonObject = JSONObject()
-            jsonObject.put("limit", limit)
-            jsonObject.put("offset", offset)
-            val jsonString = jsonObject.toString()
-            // Generate the request hash
-            val requestHash = CommonMethods.generateRequestHash(jsonString)
-
-            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                SplashActivity.integrityTokenProvider?.request(
-                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                        .setRequestHash(requestHash)
-                        .build()
-                )
-            integrityTokenResponse?.addOnSuccessListener { response ->
-                CommonMethods.showProgressDialog(requireContext())
+            CommonMethods.showProgressDialog(requireContext())
                 viewModel.getTransactionsListing(
                     limit,
-                    offset,
-                    token = response.token()
+                    offset
                 )
-//                            viewModel.switchOffAuthentication(detail, Constants.TYPE)
-
-            }?.addOnFailureListener { exception ->
-                Log.d("token", "${exception}")
-
-            }
         }
     }
 
@@ -115,29 +94,10 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
                         isLoading = true
                         adapter.addProgress()
                         CommonMethods.checkInternet(binding.root,requireContext()) {
-                            val jsonObject = JSONObject()
-                            jsonObject.put("limit", limit)
-                            jsonObject.put("offset", offset)
-                            val jsonString = jsonObject.toString()
-                            // Generate the request hash
-                            val requestHash = CommonMethods.generateRequestHash(jsonString)
-
-                            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                                SplashActivity.integrityTokenProvider?.request(
-                                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                        .setRequestHash(requestHash)
-                                        .build()
-                                )
-                            integrityTokenResponse?.addOnSuccessListener { response ->
-                                viewModel.getTransactionsListing(
+                          viewModel.getTransactionsListing(
                                     limit,
-                                    offset,
-                                    token = response.token()
+                                    offset
                                 )
-                            }?.addOnFailureListener { exception ->
-                                Log.d("token", "${exception}")
-
-                            }
                         }
 
                     }
@@ -159,31 +119,10 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
             offset = 0
             positionList.clear()
             CommonMethods.checkInternet(binding.root,requireContext()) {
-                val jsonObject = JSONObject()
-                jsonObject.put("limit", limit)
-                jsonObject.put("offset", offset)
-                val jsonString = jsonObject.toString()
-                // Generate the request hash
-                val requestHash = CommonMethods.generateRequestHash(jsonString)
-
-                val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                    SplashActivity.integrityTokenProvider?.request(
-                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                            .setRequestHash(requestHash)
-                            .build()
-                    )
-                integrityTokenResponse?.addOnSuccessListener { response ->
-                    viewModel.getTransactionsListing(
+                viewModel.getTransactionsListing(
                         limit,
-                        offset,
-                        token = response.token()
+                        offset
                     )
-//                            viewModel.switchOffAuthentication(detail, Constants.TYPE)
-
-                }?.addOnFailureListener { exception ->
-                    Log.d("token", "${exception}")
-
-                }
             }
 
         }

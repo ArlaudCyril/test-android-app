@@ -255,24 +255,7 @@ class EmailVerificationBottomSheet(private val handle: ((String) -> Unit?)? = nu
                         if (getCode().length == 6) {
                             dismiss()
                              CommonMethods.checkInternet(binding.root, requireContext()) {
-                                val jsonObject = JSONObject()
-                                jsonObject.put("code", getCode())
-                                val jsonString = jsonObject.toString()
-                                // Generate the request hash
-                                val requestHash = CommonMethods.generateRequestHash(jsonString)
-
-                                val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                                    SplashActivity.integrityTokenProvider?.request(
-                                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                            .setRequestHash(requestHash)
-                                            .build()
-                                    )
-                                integrityTokenResponse?.addOnSuccessListener { response ->
-                                    viewModel.verifyEmail(getCode(),response.token())
-                                }?.addOnFailureListener { exception ->
-                                    Log.d("token", "${exception}")
-
-                                }
+                                  viewModel.verifyEmail(getCode())
                             }
 
 

@@ -217,12 +217,11 @@ class PortfolioViewModel : NetworkViewModel() {
 //            chooseStrategy(it)
 //        }
 //    }
-    fun startKyc(token: String) {
-        startKYC(token)
+    fun startKyc() {
+        startKYC()
     }
 
     fun buildOwnStrategy(strategyName: String) {
-        val jsonObject = JSONObject()
         val list = arrayListOf<ChooseAssets>()
         var total = 0
         for (i in addedAsset) {
@@ -234,29 +233,12 @@ class PortfolioViewModel : NetworkViewModel() {
                 )
             )
         }
-        jsonObject.put("bundle", list)
-        jsonObject.put("strategyType", "MultiAsset")
-        jsonObject.put("strategyName", strategyName)
-        val jsonString = jsonObject.toString()
         // Generate the request hash
-        val requestHash = CommonMethods.generateRequestHash(jsonString)
-        val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-            SplashActivity.integrityTokenProvider?.request(
-                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                    .setRequestHash(requestHash)
-                    .build()
-            )
-        integrityTokenResponse1?.addOnSuccessListener { response ->
-            Log.d("token", "${response.token()}")
-            buildOwnStrategy(strategyName, addedAsset, response.token())
+           buildOwnStrategy(strategyName, addedAsset)
 
-        }?.addOnFailureListener { exception ->
-            Log.d("token", "${exception}")
-        }
     }
 
     fun editOwnStrategy(strategyName: String) {
-        val jsonObject = JSONObject()
         val list = arrayListOf<ChooseAssets>()
         var total = 0
         for (i in addedAsset) {
@@ -268,38 +250,21 @@ class PortfolioViewModel : NetworkViewModel() {
                 )
             )
         }
-        jsonObject.put("bundle", list)
-        jsonObject.put("strategyType", "MultiAsset")
-        jsonObject.put("strategyName", strategyName)
-        val jsonString = jsonObject.toString()
-        // Generate the request hash
-        val requestHash = CommonMethods.generateRequestHash(jsonString)
-        val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-            SplashActivity.integrityTokenProvider?.request(
-                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                    .setRequestHash(requestHash)
-                    .build()
-            )
-        integrityTokenResponse1?.addOnSuccessListener { response ->
-            Log.d("token", "${response.token()}")
-            editOwnStrategy(strategyName, addedAsset, response.token())
+      editOwnStrategy(strategyName, addedAsset)
 
-        }?.addOnFailureListener { exception ->
-            Log.d("token", "${exception}")
-        }
     }
 
     fun getBalance() {
         getBalanceApi()
     }
 
-    fun getExportOperations(date: String, token: String) {
-        getExportOperation(date, token)
+    fun getExportOperations(date: String) {
+        getExportOperation(date)
     }
 
 
-    fun contactSupport(msg: String, token: String) {
-        sendMsgToSupport(msg, token)
+    fun contactSupport(msg: String) {
+        sendMsgToSupport(msg)
     }
 
 

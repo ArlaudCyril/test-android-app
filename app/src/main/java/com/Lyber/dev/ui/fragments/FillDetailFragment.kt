@@ -255,46 +255,21 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
         }
     }
 
-    fun hitSetUser(){
+    fun hitSetUser() {
         val hashMap = hashMapOf<String, Any>()
-       if (viewModel.streetNumber.isNotEmpty())
-           hashMap["streetNumber"] = viewModel.streetNumber
+        if (viewModel.streetNumber.isNotEmpty())
+            hashMap["streetNumber"] = viewModel.streetNumber
 //            if (street.isNotEmpty())
         hashMap["street"] = viewModel.street.toString()
         hashMap["city"] = viewModel.city
         hashMap["zipCode"] = viewModel.zipCode
         hashMap["country"] = viewModel.country
         hashMap["isUSCitizen"] = false
+        showProgressDialog(requireActivity())
+        viewModel.setUserAddress(
+            hashMap
+        )
 
-        val jsonObject = JSONObject()
-        if (viewModel.streetNumber.isNotEmpty())
-        jsonObject.put("streetNumber",viewModel.streetNumber)
-        jsonObject.put("street",viewModel.street)
-        jsonObject.put("city",viewModel.city)
-        jsonObject.put("zipCode",viewModel.zipCode)
-        jsonObject.put("country",viewModel.country)
-        jsonObject.put("isUSCitizen",false)
-        val jsonString = jsonObject.toString()
-        // Generate the request hash
-        val requestHash = CommonMethods.generateRequestHash(jsonString)
-
-        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-            SplashActivity.integrityTokenProvider?.request(
-                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                    .setRequestHash(requestHash)
-                    .build()
-            )
-        integrityTokenResponse?.addOnSuccessListener { response ->
-            Log.d("token", "${response.token()}")
-            showProgressDialog(requireActivity())
-           viewModel.setUserAddress(
-               hashMap,response.token()
-            )
-
-        }?.addOnFailureListener { exception ->
-            Log.d("token", "${exception}")
-
-        }
     }
 
     private fun buttonClicked(position: Int) {
@@ -314,67 +289,24 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
                         else
                             hashMap["language"] = Constants.ENGLISH
                     }
-                    val jsonObject = JSONObject()
-                    jsonObject.put("language",hashMap["language"])
-                    val jsonString = jsonObject.toString()
-                    // Generate the request hash
-                    val requestHash = CommonMethods.generateRequestHash(jsonString)
-
-                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                        SplashActivity.integrityTokenProvider?.request(
-                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                .setRequestHash(requestHash)
-                                .build()
-                        )
-                    integrityTokenResponse?.addOnSuccessListener { response ->
-                        Log.d("token", "${response.token()}")
-                        showProgressDialog(requireActivity())
-                        viewModel.setUserInfo(hashMap, response.token())
+                       showProgressDialog(requireActivity())
+                        viewModel.setUserInfo(hashMap)
                         hitSetUser()
 
-                    }?.addOnFailureListener { exception ->
-                        Log.d("token", "${exception}")
-
-                    }
                 }
             }
 
             1 -> (fragment as InvestmentExperienceFragment).let {
-               if (it.checkData()) {
-                    checkInternet(binding.root,requireContext()) {
-                       val jsonObject = JSONObject()
-                        jsonObject.put("investmentExperience",viewModel.cryptoExp)
-                        jsonObject.put("incomeSource",viewModel.sourceOfIncome)
-                        jsonObject.put("occupation",viewModel.workIndustry)
-                        jsonObject.put("incomeRange",viewModel.annualIncome)
-                        jsonObject.put("mainUse",viewModel.personalAssets)
-                        val jsonString = jsonObject.toString()
-                        // Generate the request hash
-                        val requestHash = CommonMethods.generateRequestHash(jsonString)
-
-                        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                            SplashActivity.integrityTokenProvider?.request(
-                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                    .setRequestHash(requestHash)
-                                    .build()
-                            )
-                        integrityTokenResponse?.addOnSuccessListener { response ->
-                            Log.d("token", "${response.token()}")
-                            showProgressDialog(requireContext())
+                if (it.checkData()) {
+                    checkInternet(binding.root, requireContext()) {
+                         showProgressDialog(requireContext())
                             viewModel.setInvestmentExp(
                                 viewModel.cryptoExp,
                                 viewModel.sourceOfIncome,
                                 viewModel.workIndustry,
                                 viewModel.annualIncome,
-                                viewModel.personalAssets,response.token()
+                                viewModel.personalAssets
                             )
-
-                        }?.addOnFailureListener { exception ->
-                            Log.d("token", "${exception}")
-
-                        }
-
-
 
                     }
                 }

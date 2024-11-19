@@ -87,19 +87,10 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
         setObservers()
         binding.etAmount.addTextChangedListener(textOnTextChange)
         CommonMethods.checkInternet(binding.root,requireActivity()) {
-            val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                SplashActivity.integrityTokenProvider?.request(
-                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                        .build()
-                )
-            integrityTokenResponse1?.addOnSuccessListener { response ->
-                Log.d("token", "${response.token()}")
-                CommonMethods.showProgressDialog(requireActivity())
+           CommonMethods.showProgressDialog(requireActivity())
                 viewModel.getWalletRib()
-                viewModel.getWithdrawEuroFee(response.token())
-            }?.addOnFailureListener { exception ->
-                Log.d("token", "${exception}")
-            }
+                viewModel.getWithdrawEuroFee()
+
         }
     }
 

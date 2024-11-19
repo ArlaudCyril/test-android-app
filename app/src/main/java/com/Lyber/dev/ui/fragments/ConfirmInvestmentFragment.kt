@@ -173,7 +173,6 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                                                 Constants.EDIT_ACTIVE_STRATEGY
                                             )
                                         ) {
-                                            val jsonObject = JSONObject()
                                             val amountValue = viewModel.amount.toDouble()
                                             val formattedAmount =
                                                 if (amountValue == amountValue.toInt().toDouble()) {
@@ -181,39 +180,13 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                                                 } else {
                                                     amountValue // Keep as Double if it has decimals
                                                 }
-                                            jsonObject.put("ownerUuid", it.ownerUuid)
-                                            jsonObject.put(
-                                                "strategyName",
-                                                viewModel.selectedStrategy!!.name
-                                            )
-                                            jsonObject.put("amount",formattedAmount)
-                                            if (freq != null)
-                                                jsonObject.put("frequency", freq)
 
-                                            val jsonString =
-                                                CommonMethods.sortAndFormatJson(jsonObject)
-                                            // Generate the request hash
-                                            val requestHash =
-                                                CommonMethods.generateRequestHash(jsonString)
-                                            val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                                                SplashActivity.integrityTokenProvider?.request(
-                                                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                                        .setRequestHash(requestHash)
-                                                        .build()
-                                                )
-                                            integrityTokenResponse1?.addOnSuccessListener { response ->
-                                                Log.d("token", "${response.token()}")
-                                                viewModel.editEnabledStrategy(
+                                           viewModel.editEnabledStrategy(
                                                     it.ownerUuid,
                                                     freq,
                                                     formattedAmount,
-                                                    viewModel.selectedStrategy!!.name,
-                                                    response.token()
+                                                    viewModel.selectedStrategy!!.name
                                                 )
-
-                                            }?.addOnFailureListener { exception ->
-                                                Log.d("token", "${exception}")
-                                            }
                                         } else {
                                             val jsonObject = JSONObject()
                                             val amountValue = viewModel.amount.toDouble()

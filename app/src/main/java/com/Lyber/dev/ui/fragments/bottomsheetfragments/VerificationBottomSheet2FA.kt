@@ -311,27 +311,9 @@ class VerificationBottomSheet2FA(private val handle: (String) -> Unit) :
                          else   {
                                  if (viewModel.forLogin) {
                                     CommonMethods.checkInternet(binding.root, requireContext()) {
-                                         val jsonObject = JSONObject()
-                                         jsonObject.put("code", getCode())
-                                         val jsonString = jsonObject.toString()
-                                         // Generate the request hash
-                                         val requestHash = CommonMethods.generateRequestHash(jsonString)
-
-                                         val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                                             SplashActivity.integrityTokenProvider?.request(
-                                                 StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                                     .setRequestHash(requestHash)
-                                                     .build()
-                                             )
-                                         integrityTokenResponse?.addOnSuccessListener { response ->
-                                             CommonMethods.showProgressDialog(requireContext())
-                                             viewModel.verify2FA(code=getCode(), token = response.token())
-                                         }?.addOnFailureListener { exception ->
-                                             Log.d("token", "${exception}")
-
-                                         }
+                                         CommonMethods.showProgressDialog(requireContext())
+                                             viewModel.verify2FA(code=getCode())
                                      }
-
                                  } else {
                                 dismiss()
                                 handle.invoke(getCode())

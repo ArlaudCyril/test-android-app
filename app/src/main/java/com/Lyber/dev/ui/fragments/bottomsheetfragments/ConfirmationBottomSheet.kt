@@ -60,34 +60,13 @@ class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
                 CommonMethods.showProgressDialog(requireContext())
 //                viewModel.editOwnStrategy(viewModel.selectedStrategy!!.name)
                 isEdit = true
-                val jsonObject = JSONObject()
-                jsonObject.put("ownerUuid", viewModel.selectedStrategy!!.ownerUuid)
-                jsonObject.put("strategyName", viewModel.selectedStrategy!!.name)
-                jsonObject.put("amount", reqAmount.toDouble())
-                jsonObject.put("frequency", viewModel.selectedStrategy!!.activeStrategy!!.frequency)
-
-                val jsonString = CommonMethods.sortAndFormatJson(jsonObject)
-                // Generate the request hash
-                val requestHash =
-                    CommonMethods.generateRequestHash(jsonString)
-                val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                    SplashActivity.integrityTokenProvider?.request(
-                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                            .setRequestHash(requestHash)
-                            .build()
-                    )
-                integrityTokenResponse1?.addOnSuccessListener { response ->
-                    Log.d("token", "${response.token()}")
-                    viewModel.editEnabledStrategy(
+               viewModel.editEnabledStrategy(
                         viewModel.selectedStrategy!!.ownerUuid,
                         viewModel.selectedStrategy!!.activeStrategy!!.frequency,
                         reqAmount.toDouble(),
-                        viewModel.selectedStrategy!!.name, response.token()
+                        viewModel.selectedStrategy!!.name
                     )
 
-                }?.addOnFailureListener { exception ->
-                    Log.d("token", "${exception}")
-                }
                 dismiss()
             } else
                 dismiss()
@@ -97,34 +76,14 @@ class ConfirmationBottomSheet : BaseBottomSheet<FragmentConfirmationBinding>() {
                 CommonMethods.showProgressDialog(requireContext())
 //                viewModel.editOwnStrategy(viewModel.selectedStrategy!!.name)
                 isEdit = true
-                val jsonObject = JSONObject()
-                jsonObject.put("ownerUuid", viewModel.selectedStrategy!!.ownerUuid)
-                jsonObject.put("strategyName", viewModel.selectedStrategy!!.name)
-                jsonObject.put("amount", reqAmount.toDouble())
-                jsonObject.put("frequency", viewModel.selectedStrategy!!.activeStrategy!!.frequency)
-
-                val jsonString = CommonMethods.sortAndFormatJson(jsonObject)
-                // Generate the request hash
-                val requestHash =
-                    CommonMethods.generateRequestHash(jsonString)
-                val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                    SplashActivity.integrityTokenProvider?.request(
-                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                            .setRequestHash(requestHash)
-                            .build()
-                    )
-                integrityTokenResponse1?.addOnSuccessListener { response ->
-                    Log.d("token", "${response.token()}")
-                    viewModel.editEnabledStrategy(
+                 // Generate the request hash
+               viewModel.editEnabledStrategy(
                         viewModel.selectedStrategy!!.ownerUuid,
                         viewModel.selectedStrategy!!.activeStrategy!!.frequency,
                         reqAmount.toDouble(),
-                        viewModel.selectedStrategy!!.name, response.token()
+                        viewModel.selectedStrategy!!.name
                     )
 
-                }?.addOnFailureListener { exception ->
-                    Log.d("token", "${exception}")
-                }
                 dismiss()
             } else
                 dismiss()

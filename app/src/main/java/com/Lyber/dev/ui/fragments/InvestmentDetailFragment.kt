@@ -118,25 +118,8 @@ class InvestmentDetailFragment : BaseFragment<FragmentInvestmentDetailBinding>()
         binding.btnCancelInvestment.setOnClickListener {
             checkInternet(binding.root,requireContext()) {
                 showProgressDialog(requireContext())
-                val jsonObject = JSONObject()
-                jsonObject.put("id",investmentId)
-                val jsonString = jsonObject.toString()
-                // Generate the request hash
-                val requestHash = CommonMethods.generateRequestHash(jsonString)
+                viewModel.cancelRecurringInvestment(investmentId)
 
-                val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                    SplashActivity.integrityTokenProvider?.request(
-                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                            .setRequestHash(requestHash)
-                            .build()
-                    )
-                integrityTokenResponse?.addOnSuccessListener { response ->
-                    Log.d("token", "${response.token()}")
-                    viewModel.cancelRecurringInvestment(investmentId, response.token())
-
-                }?.addOnFailureListener { exception ->
-                    Log.d("token", "${exception}")
-                }
             }
         }
 
@@ -158,25 +141,8 @@ class InvestmentDetailFragment : BaseFragment<FragmentInvestmentDetailBinding>()
     private fun hitApi() {
         checkInternet(binding.root,requireContext()) {
             showProgressDialog(requireContext())
-            val jsonObject = JSONObject()
-            jsonObject.put("id",investmentId)
-            val jsonString = jsonObject.toString()
-            // Generate the request hash
-            val requestHash = CommonMethods.generateRequestHash(jsonString)
+             viewModel.getRecurringInvestmentDetail(investmentId)
 
-            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                SplashActivity.integrityTokenProvider?.request(
-                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                        .setRequestHash(requestHash)
-                        .build()
-                )
-            integrityTokenResponse?.addOnSuccessListener { response ->
-                Log.d("token", "${response.token()}")
-                viewModel.getRecurringInvestmentDetail(investmentId, response.token())
-
-            }?.addOnFailureListener { exception ->
-                Log.d("token", "${exception}")
-            }
         }
     }
     // adapter for history items

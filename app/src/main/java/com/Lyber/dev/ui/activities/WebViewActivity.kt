@@ -429,28 +429,9 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
 
                 } else {
                     CommonMethods.checkInternet(binding.root, this@WebViewActivity) {
-                        val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                            SplashActivity.integrityTokenProvider?.request(
-                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                                    .build()
-                            )
-                        integrityTokenResponse?.addOnSuccessListener { response ->
-                            Log.d("token", "${response.token()}")
-                            CommonMethods.showProgressDialog(this@WebViewActivity)
-                            portfolioViewModel.finishRegistration( response.token()
-                            )
-
-                        }?.addOnFailureListener { exception ->
-                            Log.d("token", "${exception}")
-
-                        }
-
-
+                        CommonMethods.showProgressDialog(this@WebViewActivity)
+                        portfolioViewModel.finishRegistration()
                     }
-
-
-
-
                 }
                 return true
             }

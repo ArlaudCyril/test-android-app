@@ -191,18 +191,8 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
             binding.progress.animation =
                 AnimationUtils.loadAnimation(requireActivity(), R.anim.rotate_drawable)
             binding.btnContinue.text = ""
-            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
-                SplashActivity.integrityTokenProvider?.request(
-                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
-                        .build()
-                )
-            integrityTokenResponse?.addOnSuccessListener { response ->
-                Log.d("token", "${response.token()}")
-                portfolioViewModel.startKYCIdentity(response.token())
+              portfolioViewModel.startKYCIdentity()
 
-            }?.addOnFailureListener { exception ->
-                Log.d("token", "${exception}")
-            }
         }
 
     }
