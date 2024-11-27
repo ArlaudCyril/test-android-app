@@ -367,4 +367,6 @@ interface Api {
     @POST("wallet-service/transfer-to-friend")
     suspend fun transferToFriend(@Body hashMap: HashMap<String, Any>): Response<BooleanResponse>
 
+    @GET("price-service/lastPrice")
+    suspend fun getCurrentPrice(@Query("id") id: String): Response<CurrentPriceResponse>
 }

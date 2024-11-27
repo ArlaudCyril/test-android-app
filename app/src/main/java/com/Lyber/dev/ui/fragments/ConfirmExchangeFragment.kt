@@ -34,6 +34,8 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
     private lateinit var viewModel: PortfolioViewModel
     private lateinit var fromAsset : AssetBaseData
     private lateinit var toAsset : AssetBaseData
+    private var exchangeFromPrice: Double = 0.0
+    private var exchangeToPrice: Double = 0.0
     override fun bind() = FragmentConfirmInvestmentBinding.inflate(layoutInflater)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -82,6 +84,8 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
                 DataQuote::class.java
             )
             prepareView(data)
+            exchangeFromPrice=requireArguments().getDouble("FromPrice")
+            exchangeToPrice=requireArguments().getDouble("ToPrice")
         }
 
     }
@@ -176,14 +180,14 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
                         .formattedAsset(priceCoin, RoundingMode.DOWN, 8)
                 } ${data.fromAsset.uppercase()}"
 
-            val balanceFrom =
-                com.Lyber.dev.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
-            val balanceTo =
-                com.Lyber.dev.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetTo }
-            val balanceFromPrice = balanceFrom!!.priceServiceResumeData.lastPrice
-            val balanceToPrice = balanceTo!!.priceServiceResumeData.lastPrice
+//            val balanceFrom =
+//                com.Lyber.dev.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
+//            val balanceTo =
+//                com.Lyber.dev.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetTo }
+//            val balanceFromPrice = balanceFrom!!.priceServiceResumeData.lastPrice
+//            val balanceToPrice = balanceTo!!.priceServiceResumeData.lastPrice
             val valuesInEurosToAsset =
-                (if (data.fromAsset == viewModel.exchangeAssetTo!!) balanceToPrice else balanceFromPrice).toDouble()
+                (if (data.fromAsset == viewModel.exchangeAssetTo!!) exchangeToPrice else exchangeFromPrice).toDouble()
             priceCoin = valuesInEurosToAsset
                 .div(data.toAmount.toDouble())
 //            tvExchangeTo.text=getString(R.string.lyber_fees)

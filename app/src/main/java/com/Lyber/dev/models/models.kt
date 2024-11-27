@@ -940,3 +940,10 @@ data class UserByPhone(
     val lastName: String,
     val phoneNo: String
 )
+data class CurrentPriceResponse(
+    val `data`: CurrentPrice
+)
+
+data class CurrentPrice(
+    val price: String
+)

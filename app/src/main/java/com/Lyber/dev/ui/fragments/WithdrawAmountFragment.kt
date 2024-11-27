@@ -30,6 +30,11 @@ import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.utils.OnTextChange
 import com.google.android.gms.tasks.Task
 import com.google.android.play.core.integrity.StandardIntegrityManager
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import java.math.RoundingMode
 import kotlin.math.round
 
@@ -53,6 +58,9 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
     private lateinit var assetIdWithdraw: String
     private val addresses: MutableList<WithdrawAddress> = mutableListOf()
     private val amount get() = binding.etAmount.text.trim().toString()
+    private var debounceJob: Job? = null // To hold the debounce coroutine job
+    private val debounceDelay = 700L // Delay in milliseconds (0.7 seconds)
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -127,6 +135,15 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
     private val textOnTextChange = object : OnTextChange {
         @SuppressLint("SetTextI18n")
         override fun onTextChange() {
+//
+//            val input = amount.toString().trim()
+//
+//            debounceJob?.cancel() // Cancel any ongoing debounce job
+//            debounceJob = CoroutineScope(Dispatchers.Main).launch {
+//                delay(debounceDelay) // Wait for 0.7 seconds
+//                fetchPriceAndConvert(input) // Call the function to fetch price and perform conversion
+//            }
+//
             val valueAmount =
                 if (amount.contains(mCurrency)) amount.replace(mCurrency, "").pointFormat.toDouble()
                 else amount.replace(mConversionCurrency, "").pointFormat.toDouble()
@@ -263,13 +280,13 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
 //                    viewModel.selectedAssetDetail!!.id.equals("usdt", ignoreCase = true) ||
                     viewModel.selectedAssetDetail!!.id.equals(Constants.EURO, ignoreCase = true))
                     roundDigits = 2
-                "${
+                ("${
                     balance.balanceData.balance.formattedAsset(
                         priceCoin,
                         RoundingMode.DOWN,
                         roundDigits
                     )
-                } Available".also { tvSubTitle.text = it }
+                } " +getString(R.string.available)).also { tvSubTitle.text = it }
                 valueConversion =
                     (balance.balanceData.balance.toDouble() / balance.balanceData.euroBalance.toDouble()).toString()
                         .formattedAsset(

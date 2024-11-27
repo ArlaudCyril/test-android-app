@@ -13,6 +13,7 @@ import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentBuyUsdtBinding
 import com.Lyber.dev.models.Balance
 import com.Lyber.dev.models.BalanceData
+import com.Lyber.dev.models.CurrentPriceResponse
 import com.Lyber.dev.network.RestClient
 import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.utils.CommonMethods
@@ -29,8 +30,13 @@ import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.google.android.gms.tasks.Task
 import com.google.android.play.core.integrity.StandardIntegrityManager
 import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
 import org.json.JSONObject
+import retrofit2.Response
 import java.math.RoundingMode
 
 class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickListener {
@@ -74,6 +80,17 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
 //                findNavController().navigate(R.id.discoveryFragment)
 //            }
 //        }
+        viewModel.getCurrentPrice(Constants.MAIN_ASSET)
+        viewModel.currentPriceResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                val lastPrice = it.data.price.toDouble()
+                val balance =
+                    com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == Constants.MAIN_ASSET } }
+                if (balance != null && balance.balanceData.balance == "0") {
+                    valueConversion = 1.0 / lastPrice
+                }
+            }
+        }
         viewModel.getQuoteResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 binding.progress.clearAnimation()
@@ -149,12 +166,20 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
             7026 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_7026))
             7027 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_7026))
             7000 -> {
-                showSnack(binding.root, requireContext(), getString(R.string.error_code_7000,"USDC"))
+                showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_7000, "USDC")
+                )
                 findNavController().navigate(R.id.action_buy_usdc_to_home_fragment)
             }
 
             7001 -> {
-                showSnack(binding.root, requireContext(), getString(R.string.error_code_7001,"USDC"))
+                showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_7001, "USDC")
+                )
                 findNavController().navigate(R.id.action_buy_usdc_to_home_fragment)
             }
 
@@ -203,7 +228,7 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
                 findNavController().navigate(R.id.action_buy_usdc_to_home_fragment)
             }
 
-            else ->  super.onRetrofitError(errorCode, msg)
+            else -> super.onRetrofitError(errorCode, msg)
 
         }
     }
@@ -271,6 +296,7 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
 
                 valueConversion = 1.0 / balanceResume!!.priceServiceResumeData.lastPrice.toDouble()
             }
+
             setAssetAmount("0.0")
 
             viewModel.selectedNetworkDeposit.let {
@@ -284,6 +310,12 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
 
             }
         }
+    }
+
+    private suspend fun fetchAssetPrice(assetId: String): Response<CurrentPriceResponse> {
+        // Example API call using a suspend function (use Retrofit, OkHttp, etc.)
+        val apiService = RestClient.get() // Replace with your actual API service
+        return apiService.getCurrentPrice(assetId)
     }
 
     override fun onClick(v: View?) {
@@ -320,10 +352,10 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
         binding.progress.animation =
             AnimationUtils.loadAnimation(requireActivity(), R.anim.rotate_drawable)
         binding.btnPreviewInvestment.text = ""
-       val jsonObject = JSONObject()
-        jsonObject.put("fromAsset","eur")
-        jsonObject.put("toAsset",Constants.MAIN_ASSET)
-        jsonObject.put("fromAmount",amount.split(focusedData.currency)[0].pointFormat)
+        val jsonObject = JSONObject()
+        jsonObject.put("fromAsset", "eur")
+        jsonObject.put("toAsset", Constants.MAIN_ASSET)
+        jsonObject.put("fromAmount", amount.split(focusedData.currency)[0].pointFormat)
         val jsonString = jsonObject.toString()
         // Generate the request hash
         val requestHash = CommonMethods.generateRequestHash(jsonString)

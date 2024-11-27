@@ -16,6 +16,7 @@ import com.Lyber.dev.models.ChangePasswordData
 import com.Lyber.dev.models.ChooseAssets
 import com.Lyber.dev.models.CoinsResponse
 import com.Lyber.dev.models.CommonResponse
+import com.Lyber.dev.models.CurrentPriceResponse
 import com.Lyber.dev.models.Duration
 import com.Lyber.dev.models.ExchangeListingResponse
 import com.Lyber.dev.models.ExportResponse
@@ -302,6 +303,8 @@ open class NetworkViewModel : ViewModel() {
     val withdrawEuroFeeResponse get() = _getWithdrawEuroFeeResponse
     private val _getUserByPhoneResponse = MutableLiveData<UserByPhoneResponse>()
     val userByPhoneResponse get() = _getUserByPhoneResponse
+    private val _getCurrentPriceResponse = MutableLiveData<CurrentPriceResponse>()
+    val currentPriceResponse get() = _getCurrentPriceResponse
     fun cancelJob() {
 
     }
@@ -1885,6 +1888,19 @@ open class NetworkViewModel : ViewModel() {
 //            val res = RestClient.get().transferToFriend(hashMap)
             if (res.isSuccessful)
                 _booleanResponse.postValue(res.body())
+            else {
+                val errorBody = res.errorBody()
+                val errorCode =
+                    CommonMethods.returnErrorCode(errorBody) // Extract the code from the body if needed
+                _listener?.onRetrofitError(errorCode.code, errorCode.error)
+            }
+        }
+    }
+    fun getCurrentPrice(id: String) {
+        viewModelScope.launch(exceptionHandler) {
+            val res = RestClient.get().getCurrentPrice(id)
+            if (res.isSuccessful)
+                _getCurrentPriceResponse.postValue(res.body())
             else {
                 val errorBody = res.errorBody()
                 val errorCode =
