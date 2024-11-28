@@ -1,7 +1,12 @@
 package com.Lyber.dev.ui.fragments
 
+import android.animation.Keyframe
+import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.util.Log
 import android.view.View
@@ -17,9 +22,11 @@ import com.Lyber.dev.models.CurrentPriceResponse
 import com.Lyber.dev.network.RestClient
 import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.utils.CommonMethods
+import com.Lyber.dev.utils.CommonMethods.Companion.commaFormatted
 import com.Lyber.dev.utils.CommonMethods.Companion.decimalPoint
 import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
 import com.Lyber.dev.utils.CommonMethods.Companion.gone
+import com.Lyber.dev.utils.CommonMethods.Companion.invisible
 import com.Lyber.dev.utils.CommonMethods.Companion.returnErrorCode
 import com.Lyber.dev.utils.CommonMethods.Companion.showErrorMessage
 import com.Lyber.dev.utils.CommonMethods.Companion.showSnack
@@ -32,6 +39,7 @@ import com.google.android.play.core.integrity.StandardIntegrityManager
 import com.google.gson.Gson
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
@@ -49,6 +57,9 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
     private var mCurrency: String = ""
     private var mConversionCurrency: String = ""
     private lateinit var from: String
+    private var debounceJob: Job? = null // To hold the debounce coroutine job
+    private val debounceDelay = 700L // Delay in milliseconds (0.7 seconds)
+
     private val amount get() = binding.etAmount.text.trim().toString()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -80,17 +91,6 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
 //                findNavController().navigate(R.id.discoveryFragment)
 //            }
 //        }
-        viewModel.getCurrentPrice(Constants.MAIN_ASSET)
-        viewModel.currentPriceResponse.observe(viewLifecycleOwner) {
-            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                val lastPrice = it.data.price.toDouble()
-                val balance =
-                    com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == Constants.MAIN_ASSET } }
-                if (balance != null && balance.balanceData.balance == "0") {
-                    valueConversion = 1.0 / lastPrice
-                }
-            }
-        }
         viewModel.getQuoteResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 binding.progress.clearAnimation()
@@ -111,50 +111,139 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
 
         @SuppressLint("SetTextI18n")
         override fun onTextChange() {
-
-
             val valueAmount =
-                if (amount.contains(mCurrency)) amount.replace(mCurrency, "").pointFormat.toDouble()
-                else amount.replace(mConversionCurrency, "").pointFormat.toDouble()
+                try {
+                    if (amount.contains(focusedData.currency)) amount.split(focusedData.currency)[0].pointFormat.toDouble()
+                    else amount.split(unfocusedData.currency)[0].pointFormat.toDouble()
+                } catch (e: Exception) {
+                    0.0
+                }
+            if (valueAmount == 0.0) {
+                debounceJob?.cancel()
+                binding.tvAssetConversion.visible()
+                binding.ivCircularProgress.gone()
+                activateButton(false)
+                when (focusedData.currency) {
+                    mCurrency -> {
+                        binding.tvAssetConversion.text = "0$mConversionCurrency"
+                    }
 
-
-            when {
-
-                valueAmount > 0 -> {
-                    if (focusedData.currency.contains(mCurrency)) {
-                        val assetAmount = (valueAmount * valueConversion).toString()
-                        viewModel.assetAmount = assetAmount
-                        setAssetAmount(assetAmount)
-                    } else {
-                        val convertedValue = valueAmount / valueConversion
-                        setAssetAmount(convertedValue.toString())
+                    else -> {
+                        binding.tvAssetConversion.text = "0$mCurrency"
                     }
                 }
-
-                else -> {
-
-                    activateButton(false)
-
-                    viewModel.assetAmount = "0"
-
-                    setAssetAmount("0")
-                }
-            }
-            if (focusedData.currency.contains(mCurrency)) {
-                val valueAmountNew =
-                    if (assetConversion.contains(mCurrency)) assetConversion.replace(mCurrency, "")
-                        .replace("~", "").pointFormat.toDouble()
-                    else assetConversion.replace(mConversionCurrency, "")
-                        .replace("~", "").pointFormat.toDouble()
-                activateButton(true)
             } else {
-                activateButton(true)
+                val input = amount.toString().trim()
+                binding.tvAssetConversion.invisible()
+                binding.ivCircularProgress.visible()
+                debounceJob?.cancel() // Cancel any ongoing debounce job
+                debounceJob = CoroutineScope(Dispatchers.Main).launch {
+                    delay(debounceDelay) // Wait for 0.7 seconds
+                    fetchPriceAndConvert(input) // Call the function to fetch price and perform conversion
+                }
             }
 
         }
 
         override fun afterTextChanged(s: Editable?) {
 
+        }
+    }
+
+    private suspend fun fetchAssetPrice(assetId: String): Response<CurrentPriceResponse> {
+        // Example API call using a suspend function (use Retrofit, OkHttp, etc.)
+        val apiService = RestClient.get() // Replace with your actual API service
+        return apiService.getCurrentPrice(assetId)
+    }
+
+    fun View.shake() {
+        val keyframe1 = Keyframe.ofFloat(0f, 0f)
+        val keyframe2 = Keyframe.ofFloat(0.25f, 30f)
+        val keyframe3 = Keyframe.ofFloat(0.5f, -30f)
+        val keyframe4 = Keyframe.ofFloat(0.75f, 30f)
+        val keyframe5 = Keyframe.ofFloat(1f, 0f)
+
+        val propertyValuesHolder = PropertyValuesHolder.ofKeyframe(
+            "translationX",
+            keyframe1,
+            keyframe2,
+            keyframe3,
+            keyframe4,
+            keyframe5
+        )
+        val animator = ObjectAnimator.ofPropertyValuesHolder(this, propertyValuesHolder)
+        animator.duration = 500 // Duration in milliseconds
+        animator.start()
+    }
+
+    private suspend fun fetchPriceAndConvert(amount: String) {
+        val valueAmount =
+            if (amount.contains(mCurrency)) amount.replace(mCurrency, "").pointFormat.toDouble()
+            else amount.replace(mConversionCurrency, "").pointFormat.toDouble()
+
+        if (amount.isEmpty()) return // Ignore empty input
+
+        try {
+            // Make the API call (example using a suspend function)
+            val balanceFromPrice = fetchAssetPrice(Constants.MAIN_ASSET)
+
+            // Check if the response is successful
+            if (balanceFromPrice.isSuccessful) {
+                val body = balanceFromPrice.body()
+                if (body?.data?.price != null) {
+                    val price = body.data.price.toDouble()
+                    valueConversion = 1 / price
+                    when {
+                        valueAmount > 0 -> {
+                            if (focusedData.currency.contains(mCurrency)) {
+                                val assetAmount = (valueAmount * valueConversion).toString()
+                                viewModel.assetAmount = assetAmount
+                                setAssetAmount(assetAmount)
+                            } else {
+                                val convertedValue = valueAmount / valueConversion
+                                setAssetAmount(convertedValue.toString())
+                            }
+                        }
+
+                        else -> {
+
+                            activateButton(false)
+
+                            viewModel.assetAmount = "0"
+
+                            setAssetAmount("0")
+                        }
+                    }
+                    if (focusedData.currency.contains(mCurrency)) {
+                        val valueAmountNew =
+                            if (assetConversion.contains(mCurrency)) assetConversion.replace(
+                                mCurrency,
+                                ""
+                            )
+                                .replace("~", "").pointFormat.toDouble()
+                            else assetConversion.replace(mConversionCurrency, "")
+                                .replace("~", "").pointFormat.toDouble()
+                        activateButton(true)
+                    } else {
+                        activateButton(true)
+                    }
+
+                } else {
+                    // Handle case where price is null or not present
+                    println("Error: Price data is null")
+                    val errorBody = balanceFromPrice.errorBody()
+                    val errorCode =
+                        CommonMethods.returnErrorCode(errorBody) // Extract the code from the body if needed
+                    super.onRetrofitError(errorCode.code, errorCode.error)
+                }
+            } else {
+                // Handle API error responses
+                println("Error: API call failed with status code ${balanceFromPrice.code()} and message ${balanceFromPrice.message()}")
+            }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            // Handle error (e.g., show error message)
         }
     }
 
@@ -234,6 +323,8 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
     }
 
     private fun setAssetAmount(assetAmount: String) {
+        binding.ivCircularProgress.gone()
+
         val valueAmount =
             if (amount.contains(mCurrency)) amount.replace(mCurrency, "").pointFormat.toDouble()
             else amount.replace(mConversionCurrency, "").pointFormat.toDouble()
@@ -249,7 +340,8 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
             binding.tvAssetConversion.text =
                 "~${assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN)} $mCurrency"
         }
-
+        binding.etAmount.visible()
+        binding.tvAssetConversion.visible()
 
     }
 
@@ -285,17 +377,7 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
                 val balanceData = BalanceData("0", "0")
                 balance = Balance("0", balanceData)
             }
-            var priceCoin = balance!!.balanceData.euroBalance.toDouble()
-                .div(balance.balanceData.balance.toDouble())
 
-            valueConversion =
-                (balance.balanceData.balance.toDouble() / balance.balanceData.euroBalance.toDouble())
-            if (balance.balanceData.balance == "0") {
-                val balanceResume =
-                    com.Lyber.dev.ui.activities.BaseActivity.balanceResume.firstNotNullOfOrNull { item -> item.takeIf { item.id == Constants.MAIN_ASSET } }
-
-                valueConversion = 1.0 / balanceResume!!.priceServiceResumeData.lastPrice.toDouble()
-            }
 
             setAssetAmount("0.0")
 
@@ -310,12 +392,6 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
 
             }
         }
-    }
-
-    private suspend fun fetchAssetPrice(assetId: String): Response<CurrentPriceResponse> {
-        // Example API call using a suspend function (use Retrofit, OkHttp, etc.)
-        val apiService = RestClient.get() // Replace with your actual API service
-        return apiService.getCurrentPrice(assetId)
     }
 
     override fun onClick(v: View?) {
@@ -451,6 +527,8 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
 
     @SuppressLint("SetTextI18n")
     private fun swapConversion() {
+        binding.tvAssetConversion.invisible()
+        binding.ivCircularProgress.visible()
         if (focusedData.currency.contains(mCurrency)) {
             val currency = focusedData.currency
             focusedData.currency = unfocusedData.currency
@@ -460,7 +538,7 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
                 .replace("~", "").pointFormat.decimalPoint()
             binding.etAmount.text = ("${valueTwo}$mConversionCurrency")
 
-            setAssetAmount(valueOne.toString())
+//            setAssetAmount(valueOne.toString())
         } else {
             val currency = focusedData.currency
             focusedData.currency = unfocusedData.currency
@@ -471,7 +549,7 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
 
             binding.etAmount.text = ("${valueTwo}$mCurrency")
 
-            setAssetAmount(valueOne.toString())
+//            setAssetAmount(valueOne.toString())
         }
 
 

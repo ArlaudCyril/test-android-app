@@ -36,7 +36,7 @@
 
 
     <TextView
-        app:layout_constraintBottom_toTopOf="@id/tvAssetConversion"
+        app:layout_constraintBottom_toTopOf="@id/rlConversion"
         app:layout_constraintTop_toBottomOf="@id/ivTopAction"
         app:layout_constraintVertical_chainStyle="packed"
         android:id="@+id/etAmount"
@@ -46,31 +46,47 @@
         android:layout_width="match_parent"
         android:gravity="center"
         android:fontFamily="@font/atypdisplay_medium"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
+        android:textSize="40sp"
         app:autoSizeMinTextSize="12sp"
-        app:autoSizeMaxTextSize="60sp"
+        app:autoSizeMaxTextSize="40sp"
         app:autoSizeStepGranularity="2sp"
         app:autoSizeTextType="uniform"
         android:maxLines="1"
         />
-
-    <TextView
-        android:id="@+id/tvAssetConversion"
-        style="@style/SubheadMabry"
-        android:text="0.0BTC"
-        android:layout_marginTop="8dp"
-        android:textColor="@color/purple_gray_500"
-        android:visibility="visible"
+    <RelativeLayout
+        android:id="@+id/rlConversion"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         app:layout_constraintBottom_toTopOf="@id/etAmount"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/etAmount" />
+        app:layout_constraintTop_toBottomOf="@id/etAmount">
+        <TextView
+            android:id="@+id/tvAssetConversion"
+            style="@style/SubheadMabry"
+            android:layout_marginTop="8dp"
+            android:text="0 BTC"
+            android:layout_centerInParent="true"
+            android:textColor="@color/purple_gray_500"
+            android:visibility="visible" />
 
-
-
-
-
-
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/ivCircularProgress"
+            android:layout_centerInParent="true"
+            android:progress="46"
+            android:visibility="gone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:indicatorSize="20dp"
+            app:trackThickness="3dp"
+            android:indeterminate="true"
+            app:indicatorColor="@color/purple_500"
+            app:indicatorDirectionCircular="clockwise"
+            app:indicatorInset="5dp"
+            app:trackColor="@color/transparent"
+            app:trackCornerRadius="5dp" />
+    </RelativeLayout>
 
     <!-- swap fragment -->
 
@@ -86,7 +102,7 @@
         android:padding="8dp"
         android:src="@drawable/ic_repeat"
         android:visibility="visible"
-        app:layout_constraintBottom_toBottomOf="@+id/tvAssetConversion"
+        app:layout_constraintBottom_toBottomOf="@+id/rlConversion"
         app:layout_constraintEnd_toEndOf="parent" />
 
 

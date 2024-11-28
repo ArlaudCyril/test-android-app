@@ -1,28 +1,39 @@
 package com.Lyber.dev.ui.fragments
 
+import android.animation.Keyframe
+import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
 import android.annotation.SuppressLint
 import android.content.ClipData
 import android.content.ClipboardManager
 import android.content.Context
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.util.Log
 import android.view.View
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.Lyber.dev.R
 import com.Lyber.dev.databinding.FragmentWithdrawAmountBinding
 import com.Lyber.dev.models.Balance
 import com.Lyber.dev.models.BalanceData
+import com.Lyber.dev.models.CurrentPriceResponse
 import com.Lyber.dev.models.WithdrawAddress
+import com.Lyber.dev.network.RestClient
 import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.WithdrawalAddressBottomSheet
 import com.Lyber.dev.viewmodels.PortfolioViewModel
 import com.Lyber.dev.utils.CommonMethods
+import com.Lyber.dev.utils.CommonMethods.Companion.commaFormatted
 import com.Lyber.dev.utils.CommonMethods.Companion.decimalPoint
 import com.Lyber.dev.utils.CommonMethods.Companion.decimalPointUptoTwoPlaces
 import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
+import com.Lyber.dev.utils.CommonMethods.Companion.gone
+import com.Lyber.dev.utils.CommonMethods.Companion.invisible
 import com.Lyber.dev.utils.CommonMethods.Companion.load
 import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
@@ -35,6 +46,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import retrofit2.Response
 import java.math.RoundingMode
 import kotlin.math.round
 
@@ -60,6 +72,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
     private val amount get() = binding.etAmount.text.trim().toString()
     private var debounceJob: Job? = null // To hold the debounce coroutine job
     private val debounceDelay = 700L // Delay in milliseconds (0.7 seconds)
+    private var onMaxClick: Boolean = false
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -91,11 +104,20 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
         binding.etAmount.addTextChangedListener(textOnTextChange)
         CommonMethods.checkInternet(binding.root, requireActivity()) {
             CommonMethods.showProgressDialog(requireActivity())
+            viewModel.getCurrentPrice(viewModel.selectedAssetDetail!!.id)
             viewModel.getWithdrawalAddresses()
         }
     }
 
     private fun setObservers() {
+        viewModel.currentPriceResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                val lastPrice = it.data.price.toDouble()
+                valueConversion = 1.0 / lastPrice
+                Log.d("Conversion Price 2", "$valueConversion")
+                setValues()
+            }
+        }
         viewModel.withdrawalAddresses.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 CommonMethods.dismissProgressDialog()
@@ -135,58 +157,40 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
     private val textOnTextChange = object : OnTextChange {
         @SuppressLint("SetTextI18n")
         override fun onTextChange() {
-//
-//            val input = amount.toString().trim()
-//
-//            debounceJob?.cancel() // Cancel any ongoing debounce job
-//            debounceJob = CoroutineScope(Dispatchers.Main).launch {
-//                delay(debounceDelay) // Wait for 0.7 seconds
-//                fetchPriceAndConvert(input) // Call the function to fetch price and perform conversion
-//            }
-//
+
             val valueAmount =
                 if (amount.contains(mCurrency)) amount.replace(mCurrency, "").pointFormat.toDouble()
                 else amount.replace(mConversionCurrency, "").pointFormat.toDouble()
+            if (valueAmount == 0.0) {
+                activate = false
+                activateButton()
+               debounceJob?.cancel()
+                binding.tvAssetConversion.visible()
+//                binding.tvAssetFees.visible()
+                binding.ivCircularProgress.gone()
+                binding.ivCenterProgress.gone()
+//                activateButton(false)
+                when (focusedData.currency) {
+                    mCurrency -> {
+                        binding.tvAssetConversion.text = "0$mConversionCurrency"
+                    }
 
-            when {
-                valueAmount > 0 -> {
-                    if (focusedData.currency.contains(mCurrency)) {
-                        val assetAmount = (valueAmount * valueConversion).toString()
-                        viewModel.assetAmount = assetAmount
-                        setAssetAmount(assetAmount)
-                    } else {
-                        val convertedValue = valueAmount / valueConversion
-                        setAssetAmount(convertedValue.toString())
+                    else -> {
+                        binding.tvAssetConversion.text = "0$mCurrency"
                     }
                 }
-
-                else -> {
-                    activate = false
-                    activateButton()
-                    viewModel.assetAmount = "0"
-                    setAssetAmount("0")
-                }
-            }
-            if (focusedData.currency.contains(mCurrency)) {
-                val valueAmountNew =
-                    if (assetConversion.contains(mCurrency)) assetConversion.replace(mCurrency, "")
-                        .replace("~", "").pointFormat.toDouble()
-                    else assetConversion.replace(mConversionCurrency, "")
-                        .replace("~", "").pointFormat.toDouble()
-                if (valueAmountNew >= minAmount.toDouble()) {
-                    activate = true
-                    activateButton()
-                } else {
-                    activate = false
-                    activateButton()
-                }
             } else {
-                if (valueAmount >= minAmount.toDouble()) {
-                    activate = true
-                    activateButton()
-                } else {
-                    activate = false
-                    activateButton()
+                val input = amount.toString().trim()
+                binding.tvAssetConversion.invisible()
+//                binding.tvAssetFees.invisible()
+                if (!onMaxClick)
+                    binding.ivCircularProgress.visible()
+                onMaxClick = false
+
+                debounceJob?.cancel() // Cancel any ongoing debounce job
+                debounceJob = CoroutineScope(Dispatchers.Main).launch {
+                    delay(debounceDelay) // Wait for 0.7 seconds
+                    fetchPriceAndConvert(input) // Call the function to fetch price and perform conversion
                 }
             }
 
@@ -195,6 +199,127 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
         override fun afterTextChanged(s: Editable?) {
         }
     }
+
+    private suspend fun fetchAssetPrice(assetId: String): Response<CurrentPriceResponse> {
+        // Example API call using a suspend function (use Retrofit, OkHttp, etc.)
+        val apiService = RestClient.get() // Replace with your actual API service
+        return apiService.getCurrentPrice(assetId)
+    }
+
+    fun View.shake() {
+        val keyframe1 = Keyframe.ofFloat(0f, 0f)
+        val keyframe2 = Keyframe.ofFloat(0.25f, 30f)
+        val keyframe3 = Keyframe.ofFloat(0.5f, -30f)
+        val keyframe4 = Keyframe.ofFloat(0.75f, 30f)
+        val keyframe5 = Keyframe.ofFloat(1f, 0f)
+
+        val propertyValuesHolder = PropertyValuesHolder.ofKeyframe(
+            "translationX",
+            keyframe1,
+            keyframe2,
+            keyframe3,
+            keyframe4,
+            keyframe5
+        )
+        val animator = ObjectAnimator.ofPropertyValuesHolder(this, propertyValuesHolder)
+        animator.duration = 500 // Duration in milliseconds
+        animator.start()
+    }
+
+    private suspend fun fetchPriceAndConvert(amount: String) {
+        val valueAmount =
+            try {
+                if (amount.contains(focusedData.currency)) amount.split(focusedData.currency)[0].pointFormat.toDouble()
+                else amount.split(unfocusedData.currency)[0].pointFormat.toDouble()
+            } catch (e: Exception) {
+                0.0
+            }
+        if (amount.isEmpty()) return // Ignore empty input
+
+        try {
+            val balanceToPrice = fetchAssetPrice(viewModel.selectedAssetDetail!!.id)
+
+            // Check if the response is successful
+            if (balanceToPrice.isSuccessful) {
+                val body = balanceToPrice.body()
+
+                if (body?.data?.price != null) {
+                    val price = body.data.price.toDouble()
+                    valueConversion = 1 / price
+                    when {
+                        valueAmount > 0 -> {
+                            if (focusedData.currency.contains(mCurrency)) {
+                                val assetAmount = (valueAmount * valueConversion).toString()
+                                viewModel.assetAmount = assetAmount
+                                setAssetAmount(assetAmount)
+                            } else {
+                                val convertedValue = valueAmount / valueConversion
+                                setAssetAmount(convertedValue.toString())
+                            }
+                        }
+
+                        else -> {
+                            activate = false
+                            activateButton()
+                            viewModel.assetAmount = "0"
+                            setAssetAmount("0")
+                        }
+                    }
+                    if (focusedData.currency.contains(mCurrency)) {
+                        val valueAmountNew =
+                            if (assetConversion.contains(mCurrency)) assetConversion.replace(mCurrency, "")
+                                .replace("~", "").pointFormat.toDouble()
+                            else assetConversion.replace(mConversionCurrency, "")
+                                .replace("~", "").pointFormat.toDouble()
+                        if (valueAmountNew >= minAmount.toDouble()) {
+                            activate = true
+                            activateButton()
+                        } else {
+                            activate = false
+                            activateButton()
+                        }
+                        if (valueAmount <= maxValue.toDouble()) {
+                            binding.ivCircularProgress.gone()
+                            binding.ivCenterProgress.gone()
+                            binding.tvAssetConversion.visible()
+//                binding.tvAssetFees.visible()
+                            binding.etAmount.visible()
+                        }
+                    } else {
+                        if (valueAmount >= minAmount.toDouble()) {
+                            activate = true
+                            activateButton()
+                        } else {
+                            activate = false
+                            activateButton()
+                        }
+                        if (valueAmount <= maxValueOther.toDouble()) {
+                            binding.ivCircularProgress.gone()
+                            binding.ivCenterProgress.gone()
+                            binding.tvAssetConversion.visible()
+//                binding.tvAssetFees.visible()
+                            binding.etAmount.visible()
+                        }
+                    }
+                } else {
+                    // Handle case where price is null or not present
+                    println("Error: Price data is null")
+                    val errorBody = balanceToPrice.errorBody()
+                    val errorCode =
+                        CommonMethods.returnErrorCode(errorBody) // Extract the code from the body if needed
+                    super.onRetrofitError(errorCode.code, errorCode.error)
+                }
+            } else {
+                // Handle API error responses
+                println("Error: API call failed with status code ${balanceToPrice.code()} and message ${balanceToPrice.message()}")
+            }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            // Handle error (e.g., show error message)
+        }
+    }
+
 
     private fun setAssetAmount(assetAmount: String) {
         val valueAmount =
@@ -221,6 +346,17 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                 } $mConversionCurrency"
             maxValueAsset =
                 assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN, roundDigits).toDouble()
+
+            if (valueAmount > maxValue.toDouble()) {
+                binding.etAmount.visible()
+                binding.etAmount.shake()
+                binding.ivCircularProgress.gone()
+                binding.ivCenterProgress.gone()
+                binding.tvAssetConversion.visible()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    setMaxValue()
+                }, 700)
+            }
         } else {
             var roundDigits = decimal
             if (mCurrency == Constants.EURO
@@ -238,6 +374,16 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                 } $mCurrency"
             maxValueAsset =
                 assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN, roundDigits).toDouble()
+            if (valueAmount > maxValueOther.toDouble()) {
+                binding.etAmount.visible()
+                binding.etAmount.shake()
+                binding.ivCircularProgress.gone()
+                binding.ivCenterProgress.gone()
+                binding.tvAssetConversion.visible()
+                Handler(Looper.getMainLooper()).postDelayed({
+                    setMaxValue()
+                }, 700)
+            }
         }
     }
 
@@ -259,83 +405,164 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
             includedAsset.tvAssetName.text = getString(R.string.add_address)
             includedAsset.tvAssetAddress.text = getString(R.string.unlimited_withdrawl)
             includedAsset.tvAssetAddress.visible()
-            viewModel.selectedAssetDetail.let {
-                mCurrency = Constants.EURO
-                mConversionCurrency = it!!.id.uppercase()
-                focusedData.currency = mCurrency
-                unfocusedData.currency = mConversionCurrency
-
-                "${getString(R.string.withdraw)} ${it.id.uppercase()}".also { tvTitle.text = it }
-                // calculate available balance and value conversion
-                var balance =
-                    com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
-                if (balance == null) {
-                    val balanceData = BalanceData("0", "0")
-                    balance = Balance("0", balanceData)
-                }
-                val priceCoin = balance.balanceData.euroBalance.toDouble()
-                    .div(balance.balanceData.balance.toDouble())
-                var roundDigits = decimal
-                if (
-//                    viewModel.selectedAssetDetail!!.id.equals("usdt", ignoreCase = true) ||
-                    viewModel.selectedAssetDetail!!.id.equals(Constants.EURO, ignoreCase = true))
-                    roundDigits = 2
-                ("${
-                    balance.balanceData.balance.formattedAsset(
-                        priceCoin,
-                        RoundingMode.DOWN,
-                        roundDigits
-                    )
-                } " +getString(R.string.available)).also { tvSubTitle.text = it }
-                valueConversion =
-                    (balance.balanceData.balance.toDouble() / balance.balanceData.euroBalance.toDouble()).toString()
-                        .formattedAsset(
-                            priceCoin,
-                            RoundingMode.DOWN,
-                            10
-                        ).toDouble()
-                if (balance.balanceData.balance == "0") {
-                    val balanceResume =
-                        com.Lyber.dev.ui.activities.BaseActivity.balanceResume.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
-                    valueConversion =
-                        1.0 / balanceResume!!.priceServiceResumeData.lastPrice.toDouble()
-                }
-                setAssetAmount("0.0")
-            }
-            viewModel.selectedNetworkDeposit.let {
-                var balance =
-                    com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
-                if (balance == null) {
-                    val balanceData = BalanceData("0", "0")
-                    balance = Balance("0", balanceData)
-                }
-                val priceCoin = balance!!.balanceData.euroBalance.toDouble()
-                    .div(balance!!.balanceData.balance.toDouble())
-
-                "${getString(R.string.fees)} ${
-                    it!!.withdrawFee.formattedAsset(
-                        priceCoin,
-                        RoundingMode.DOWN,
-                        3
-                    )
-                } ${balance!!.id.uppercase()}".also {
-                    tvAssetFees.text = it
-                }
-                //calculating max value of asset euro
-                maxValue = balance!!.balanceData.balance.toDouble() / valueConversion //59.48
-                if (maxValue < 0) {
-                    maxValue = 0.0
-                }
-                //calculating max value of other asset
-                maxValueOther =
-                    (balance!!.balanceData.euroBalance.toDouble() * valueConversion) //64.35370783
-                //setting minimum withdrawal amount
-                minAmount = it.withdrawMin.formattedAsset(priceCoin, RoundingMode.DOWN)
-                (getString(R.string.minimum_withdrawl) + ": " + minAmount + " " + balance!!.id.uppercase()).also {
-                    tvMinAmount.text = it
-                }
-            }
+//            viewModel.selectedAssetDetail.let {
+//                mCurrency = Constants.EURO
+//                mConversionCurrency = it!!.id.uppercase()
+//                focusedData.currency = mCurrency
+//                unfocusedData.currency = mConversionCurrency
+//
+//                "${getString(R.string.withdraw)} ${it.id.uppercase()}".also { tvTitle.text = it }
+//                // calculate available balance and value conversion
+//                var balance =
+//                    com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
+//                if (balance == null) {
+//                    val balanceData = BalanceData("0", "0")
+//                    balance = Balance("0", balanceData)
+//                }
+//                val priceCoin = balance.balanceData.euroBalance.toDouble()
+//                    .div(balance.balanceData.balance.toDouble())
+//                var roundDigits = decimal
+//                if (
+////                    viewModel.selectedAssetDetail!!.id.equals("usdt", ignoreCase = true) ||
+//                    viewModel.selectedAssetDetail!!.id.equals(Constants.EURO, ignoreCase = true))
+//                    roundDigits = 2
+//                ("${
+//                    balance.balanceData.balance.formattedAsset(
+//                        priceCoin,
+//                        RoundingMode.DOWN,
+//                        roundDigits
+//                    )
+//                } " + getString(R.string.available)).also { tvSubTitle.text = it }
+////                valueConversion =
+////                    (balance.balanceData.balance.toDouble() / balance.balanceData.euroBalance.toDouble()).toString()
+////                        .formattedAsset(
+////                            priceCoin,
+////                            RoundingMode.DOWN,
+////                            10
+////                        ).toDouble()
+////                Log.d("Conversion Price", "$valueConversion")
+////                if (balance.balanceData.balance == "0") {
+////                    val balanceResume =
+////                        com.Lyber.dev.ui.activities.BaseActivity.balanceResume.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
+////                    valueConversion =
+////                        1.0 / balanceResume!!.priceServiceResumeData.lastPrice.toDouble()
+////                }
+//                setAssetAmount("0.0")
+//            }
+//            viewModel.selectedNetworkDeposit.let {
+//                var balance =
+//                    com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
+//                if (balance == null) {
+//                    val balanceData = BalanceData("0", "0")
+//                    balance = Balance("0", balanceData)
+//                }
+//                val priceCoin = balance!!.balanceData.euroBalance.toDouble()
+//                    .div(balance!!.balanceData.balance.toDouble())
+//
+//                "${getString(R.string.fees)} ${
+//                    it!!.withdrawFee.formattedAsset(
+//                        priceCoin,
+//                        RoundingMode.DOWN,
+//                        3
+//                    )
+//                } ${balance!!.id.uppercase()}".also {
+//                    tvAssetFees.text = it
+//                }
+//                //calculating max value of asset euro
+//                maxValue = balance!!.balanceData.balance.toDouble() / valueConversion //59.48
+//                if (maxValue < 0) {
+//                    maxValue = 0.0
+//                }
+//                //calculating max value of other asset
+//                maxValueOther =
+//                    (balance!!.balanceData.euroBalance.toDouble() * valueConversion) //64.35370783
+//                //setting minimum withdrawal amount
+//                minAmount = it.withdrawMin.formattedAsset(priceCoin, RoundingMode.DOWN)
+//                (getString(R.string.minimum_withdrawl) + ": " + minAmount + " " + balance!!.id.uppercase()).also {
+//                    tvMinAmount.text = it
+//                }
+//            }
         }
+    }
+    private fun setValues(){
+        binding.apply {
+        viewModel.selectedAssetDetail.let {
+            mCurrency = Constants.EURO
+            mConversionCurrency = it!!.id.uppercase()
+            focusedData.currency = mCurrency
+            unfocusedData.currency = mConversionCurrency
+
+            "${getString(R.string.withdraw)} ${it.id.uppercase()}".also { tvTitle.text = it }
+            // calculate available balance and value conversion
+            var balance =
+                com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
+            if (balance == null) {
+                val balanceData = BalanceData("0", "0")
+                balance = Balance("0", balanceData)
+            }
+            val priceCoin = balance.balanceData.euroBalance.toDouble()
+                .div(balance.balanceData.balance.toDouble())
+            var roundDigits = decimal
+            if (
+//                    viewModel.selectedAssetDetail!!.id.equals("usdt", ignoreCase = true) ||
+                viewModel.selectedAssetDetail!!.id.equals(Constants.EURO, ignoreCase = true))
+                roundDigits = 2
+            ("${
+                balance.balanceData.balance.formattedAsset(
+                    priceCoin,
+                    RoundingMode.DOWN,
+                    roundDigits
+                )
+            } " + getString(R.string.available)).also { tvSubTitle.text = it }
+//                valueConversion =
+//                    (balance.balanceData.balance.toDouble() / balance.balanceData.euroBalance.toDouble()).toString()
+//                        .formattedAsset(
+//                            priceCoin,
+//                            RoundingMode.DOWN,
+//                            10
+//                        ).toDouble()
+//                Log.d("Conversion Price", "$valueConversion")
+//                if (balance.balanceData.balance == "0") {
+//                    val balanceResume =
+//                        com.Lyber.dev.ui.activities.BaseActivity.balanceResume.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
+//                    valueConversion =
+//                        1.0 / balanceResume!!.priceServiceResumeData.lastPrice.toDouble()
+//                }
+            setAssetAmount("0.0")
+        }
+        viewModel.selectedNetworkDeposit.let {
+            var balance =
+                com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
+            if (balance == null) {
+                val balanceData = BalanceData("0", "0")
+                balance = Balance("0", balanceData)
+            }
+            val priceCoin = balance!!.balanceData.euroBalance.toDouble()
+                .div(balance!!.balanceData.balance.toDouble())
+
+            "${getString(R.string.fees)} ${
+                it!!.withdrawFee.formattedAsset(
+                    priceCoin,
+                    RoundingMode.DOWN,
+                    3
+                )
+            } ${balance!!.id.uppercase()}".also {
+                tvAssetFees.text = it
+            }
+            //calculating max value of asset euro
+            maxValue = balance!!.balanceData.balance.toDouble() / valueConversion //59.48
+            if (maxValue < 0) {
+                maxValue = 0.0
+            }
+            //calculating max value of other asset
+            maxValueOther =
+                (balance!!.balanceData.euroBalance.toDouble() * valueConversion) //64.35370783
+            //setting minimum withdrawal amount
+            minAmount = it.withdrawMin.formattedAsset(priceCoin, RoundingMode.DOWN)
+            (getString(R.string.minimum_withdrawl) + ": " + minAmount + " " + balance!!.id.uppercase()).also {
+                tvMinAmount.text = it
+            }
+        }}
     }
 
     override fun onClick(v: View?) {
@@ -358,6 +585,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                 ivRepeat -> swapConversion()
                 llAddress -> openAddressSheet()
                 btnPreviewInvestment -> {
+
                     val amountFinal = if (focusedData.currency.contains(mCurrency)) {
                         assetConversion.replace(mConversionCurrency, "").replace("~", "")
                     } else {
@@ -371,19 +599,49 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                             binding.root,
                             requireActivity()
                         )
-                    } else if (activate) {
-                        if (focusedData.currency.contains(mCurrency)) {
-                            if (maxValueAsset <= balance.balanceData.balance.toDouble()) {
-                                if (viewModel.withdrawAddress != null) {
-                                    val bundle = Bundle().apply {
-                                        putString(Constants.EURO, amountFinal)
-                                        putString("assetIdWithdraw", assetIdWithdraw)
+                    }
+                    else if (activate) {
+                    if(!binding.ivCenterProgress.isVisible && !binding.ivCircularProgress.isVisible)    {
+                            if (focusedData.currency.contains(mCurrency)) {
+                                if (maxValueAsset <= balance.balanceData.balance.toDouble()) {
+                                    if (viewModel.withdrawAddress != null) {
+                                        val bundle = Bundle().apply {
+                                            putString(Constants.EURO, amountFinal)
+                                            putString("assetIdWithdraw", assetIdWithdraw)
+                                        }
+                                        findNavController().navigate(
+                                            R.id.confirmWithdrawalFragment, bundle
+                                        )
+                                    } else {
+                                        getString(R.string.select_address).showToast(
+                                            binding.root,
+                                            requireActivity()
+                                        )
                                     }
-                                    findNavController().navigate(
-                                        R.id.confirmWithdrawalFragment, bundle
-                                    )
                                 } else {
-                                    getString(R.string.select_address).showToast(
+                                    getString(R.string.insufficient_balance).showToast(
+                                        binding.root,
+                                        requireActivity()
+                                    )
+                                }
+                            } else if (focusedData.currency.contains(mConversionCurrency)) {
+                                if (maxValueAsset <= maxValue) {
+                                    if (viewModel.withdrawAddress != null) {
+                                        val bundle = Bundle().apply {
+                                            putString(Constants.EURO, amountFinal)
+                                            putString("assetIdWithdraw", assetIdWithdraw)
+                                        }
+                                        findNavController().navigate(
+                                            R.id.confirmWithdrawalFragment, bundle
+                                        )
+                                    } else {
+                                        getString(R.string.select_address).showToast(
+                                            binding.root,
+                                            requireActivity()
+                                        )
+                                    }
+                                } else {
+                                    getString(R.string.insufficient_balance).showToast(
                                         binding.root,
                                         requireActivity()
                                     )
@@ -394,33 +652,6 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                                     requireActivity()
                                 )
                             }
-                        } else if (focusedData.currency.contains(mConversionCurrency)) {
-                            if (maxValueAsset <= maxValue) {
-                                if (viewModel.withdrawAddress != null) {
-                                    val bundle = Bundle().apply {
-                                        putString(Constants.EURO, amountFinal)
-                                        putString("assetIdWithdraw", assetIdWithdraw)
-                                    }
-                                    findNavController().navigate(
-                                        R.id.confirmWithdrawalFragment, bundle
-                                    )
-                                } else {
-                                    getString(R.string.select_address).showToast(
-                                        binding.root,
-                                        requireActivity()
-                                    )
-                                }
-                            } else {
-                                getString(R.string.insufficient_balance).showToast(
-                                    binding.root,
-                                    requireActivity()
-                                )
-                            }
-                        } else {
-                            getString(R.string.insufficient_balance).showToast(
-                                binding.root,
-                                requireActivity()
-                            )
                         }
                     }
                 }
@@ -466,6 +697,32 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
     }
 
     private fun setMaxValue() {
+//        if (assetAvail == 0.0) {
+//            binding.etAmount.text = "0${focusedData.currency}"
+//            binding.tvEuro.text = "~0 ${Constants.EURO}"
+//        } else {
+//            val balance =
+//                com.Lyber.dev.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetFrom!! }
+//            val asset =
+//                com.Lyber.dev.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.exchangeAssetFrom } }
+//
+//
+//            val priceCoin = balance!!.balanceData.euroBalance.toDouble()
+//                .div(balance.balanceData.balance.toDouble())
+//            binding.etAmount.invisible()
+//            binding.tvEuro.invisible()
+//            onMaxClick = true
+//            binding.ivCenterProgress.visible()
+//            binding.tvAssetConversion.invisible()
+//            binding.etAmount.text = "${
+//                maxValue.formattedAsset(priceCoin, RoundingMode.DOWN, asset!!.decimals)
+//            }${focusedData.currency}"
+//
+//        }
+//
+//
+//
+//
         var balance =
             com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
         if (balance == null) {
@@ -483,6 +740,11 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                 var roundDigits = decimal
                 if (mCurrency == Constants.EURO)
                     roundDigits = 2
+                binding.etAmount.invisible()
+                onMaxClick = true
+                binding.ivCenterProgress.visible()
+                binding.tvAssetConversion.invisible()
+                onMaxClick=true
                 binding.etAmount.text = "${
                     maxValue.toString().formattedAsset(priceCoin, RoundingMode.DOWN, roundDigits)
                 }" + spaceGap + mCurrency
@@ -499,6 +761,11 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                 if (mConversionCurrency == Constants.EURO)
                     roundDigits = 2
 
+                binding.etAmount.invisible()
+                onMaxClick = true
+                binding.ivCenterProgress.visible()
+                binding.tvAssetConversion.invisible()
+                onMaxClick=true
                 binding.etAmount.text = "${
                     maxValueOther.toString()
                         .formattedAsset(priceCoin, RoundingMode.DOWN, roundDigits)

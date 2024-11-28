@@ -799,59 +799,82 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
         try {
             // Make the API call (example using a suspend function)
             val balanceFromPrice = fetchAssetPrice(viewModel.exchangeAssetFrom.toString())
-//            val valueInEurosFromAsset =
-           exchangeFromPrice=     balanceFromPrice.body()!!.data.price.toDouble() // Assume 'price' is the fetched value
             val balanceToPrice = fetchAssetPrice(viewModel.exchangeAssetTo.toString())
-//            val valuesInEurosToAsset =
-            exchangeToPrice=    balanceToPrice.body()!!.data.price.toDouble() // Assume 'price' is the fetched value
-            Log.d("FromApi", "$exchangeFromPrice")
-            Log.d("FromApi", "$exchangeToPrice")
 
-            val numberToAssets = (valueAmount * exchangeFromPrice) / (exchangeToPrice)
-            val priceCoin = exchangeToPrice
-                .div(numberToAssets)
-            val conversion =
-                numberToAssets.toString().formattedAsset(priceCoin, RoundingMode.DOWN, decimalTo)
-            Log.d("FromApi", "$conversion")
-            if (valueAmount >= minAmount) {
-                activateButton(true)
-            }
-            when {
+            // Check if the response is successful
+            if (balanceFromPrice.isSuccessful && balanceToPrice.isSuccessful ) {
+                val body = balanceToPrice.body()
+                val body2 = balanceToPrice.body()
+                if (body?.data?.price != null && body2?.data?.price!=null) {
+                    exchangeFromPrice=     balanceFromPrice.body()!!.data.price.toDouble() // Assume 'price' is the fetched value
+                    exchangeToPrice=    balanceToPrice.body()!!.data.price.toDouble() // Assume 'price' is the fetched value
+                    Log.d("FromApi", "$exchangeFromPrice")
+                    Log.d("FromApi", "$exchangeToPrice")
 
-                valueAmount > 0 -> {
+                    val numberToAssets = (valueAmount * exchangeFromPrice) / (exchangeToPrice)
+                    val priceCoin = exchangeToPrice
+                        .div(numberToAssets)
+                    val conversion =
+                        numberToAssets.toString().formattedAsset(priceCoin, RoundingMode.DOWN, decimalTo)
+                    Log.d("FromApi", "$conversion")
+                    if (valueAmount >= minAmount) {
+                        activateButton(true)
+                    }
+                    when {
 
-                    when (focusedData.currency) {
+                        valueAmount > 0 -> {
 
-                        mCurrency -> {
+                            when (focusedData.currency) {
 
-                            val assetAmount = conversion
-                            viewModel.assetAmount = assetAmount
+                                mCurrency -> {
 
-                            binding.tvAssetConversion.text =
-                                "${
-                                    assetAmount.formattedAsset(
-                                        1.03,
-                                        RoundingMode.DOWN,
-                                        decimalTo
-                                    )
-                                }$mConversionCurrency"
-                            binding.tvEuro.text = "~${
-                                (valueAmount * exchangeToPrice).toString()
-                                    .formattedAsset(0.0, RoundingMode.DOWN, 2)
-                            } ${Constants.EURO}"
-                            Log.d("FromApi", "${binding.tvAssetConversion.text}")
-                            Log.d("FromApi", "${binding.tvEuro.text}")
-                            if (valueAmount > maxValue.toDouble()) {
-                                binding.etAmount.visible()
-                                binding.etAmount.shake()
-                                binding.ivCircularProgress.gone()
-                                binding.ivCenterProgress.gone()
-                                binding.tvAssetConversion.visible()
-                                binding.tvEuro.visible()
-                                Handler(Looper.getMainLooper()).postDelayed({
-                                    setMaxValue()
-                                }, 700)
+                                    val assetAmount = conversion
+                                    viewModel.assetAmount = assetAmount
 
+                                    binding.tvAssetConversion.text =
+                                        "${
+                                            assetAmount.formattedAsset(
+                                                1.03,
+                                                RoundingMode.DOWN,
+                                                decimalTo
+                                            )
+                                        }$mConversionCurrency"
+                                    binding.tvEuro.text = "~${
+//                                (valueAmount * exchangeToPrice).toString()
+                                        (valueAmount * exchangeFromPrice).toString()
+                                            .formattedAsset(0.0, RoundingMode.DOWN, 2)
+                                    } ${Constants.EURO}"
+                                    Log.d("FromApi", "${binding.tvAssetConversion.text}")
+                                    Log.d("FromApi", "${binding.tvEuro.text}")
+                                    if (valueAmount > maxValue.toDouble()) {
+                                        binding.etAmount.visible()
+                                        binding.etAmount.shake()
+                                        binding.ivCircularProgress.gone()
+                                        binding.ivCenterProgress.gone()
+                                        binding.tvAssetConversion.visible()
+                                        binding.tvEuro.visible()
+                                        Handler(Looper.getMainLooper()).postDelayed({
+                                            setMaxValue()
+                                        }, 700)
+
+
+                                    }
+
+                                }
+
+                                else -> {
+
+//                            val convertedValue = conversionFormula()
+                                    val convertedValue = conversion
+                                    binding.tvAssetConversion.text = "${
+                                        convertedValue.formattedAsset(1.03, RoundingMode.DOWN, decimalTo)
+                                    }$mCurrency"
+                                    binding.tvEuro.text = "~${
+                                        (valueAmount * exchangeFromPrice).toString()
+                                            .formattedAsset(0.0, RoundingMode.DOWN, 2)
+                                    } ${Constants.EURO}"
+                                    Log.d("FromApi", "${binding.tvEuro.text}")
+                                }
 
                             }
 
@@ -859,42 +882,36 @@ class AddAmountForExchangeFragment : BaseFragment<FragmentAddAmountBinding>(),
 
                         else -> {
 
-//                            val convertedValue = conversionFormula()
-                            val convertedValue = conversion
-                            binding.tvAssetConversion.text = "${
-                                convertedValue.formattedAsset(1.03, RoundingMode.DOWN, decimalTo)
-                            }$mCurrency"
-                            binding.tvEuro.text = "~${
-                                (valueAmount * exchangeFromPrice).toString()
-                                    .formattedAsset(0.0, RoundingMode.DOWN, 2)
-                            } ${Constants.EURO}"
-                            Log.d("FromApi", "${binding.tvEuro.text}")
+                            activateButton(false)
 
+                            viewModel.assetAmount = "0"
+
+                            binding.tvAssetConversion.text =
+                                if (focusedData.currency == mCurrency) "${"0".commaFormatted}$mConversionCurrency"
+                                else "${"0".commaFormatted}$mCurrency"
                         }
-
+                    }
+                    if (valueAmount <= maxValue.toDouble()) {
+                        binding.ivCircularProgress.gone()
+                        binding.ivCenterProgress.gone()
+                        binding.tvAssetConversion.visible()
+                        binding.tvEuro.visible()
+                        binding.etAmount.visible()
                     }
 
+
+                } else {
+                    // Handle case where price is null or not present
+                    println("Error: Price data is null")
+                    val errorBody = balanceToPrice.errorBody()
+                    val errorCode =
+                        CommonMethods.returnErrorCode(errorBody) // Extract the code from the body if needed
+                    super.onRetrofitError(errorCode.code, errorCode.error)
                 }
-
-                else -> {
-
-                    activateButton(false)
-
-                    viewModel.assetAmount = "0"
-
-                    binding.tvAssetConversion.text =
-                        if (focusedData.currency == mCurrency) "${"0".commaFormatted}$mConversionCurrency"
-                        else "${"0".commaFormatted}$mCurrency"
-                }
+            } else {
+                // Handle API error responses
+                println("Error: API call failed with status code ${balanceToPrice.code()} and message ${balanceToPrice.message()}")
             }
-            if (valueAmount <= maxValue.toDouble()) {
-                binding.ivCircularProgress.gone()
-                binding.ivCenterProgress.gone()
-                binding.tvAssetConversion.visible()
-                binding.tvEuro.visible()
-                binding.etAmount.visible()
-            }
-
 
         } catch (e: Exception) {
             e.printStackTrace()
