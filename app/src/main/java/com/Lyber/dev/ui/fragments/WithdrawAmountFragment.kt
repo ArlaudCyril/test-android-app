@@ -35,6 +35,7 @@ import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
 import com.Lyber.dev.utils.CommonMethods.Companion.gone
 import com.Lyber.dev.utils.CommonMethods.Companion.invisible
 import com.Lyber.dev.utils.CommonMethods.Companion.load
+import com.Lyber.dev.utils.CommonMethods.Companion.shake
 import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
@@ -114,7 +115,6 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 val lastPrice = it.data.price.toDouble()
                 valueConversion = 1.0 / lastPrice
-                Log.d("Conversion Price 2", "$valueConversion")
                 setValues()
             }
         }
@@ -206,25 +206,6 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
         return apiService.getCurrentPrice(assetId)
     }
 
-    fun View.shake() {
-        val keyframe1 = Keyframe.ofFloat(0f, 0f)
-        val keyframe2 = Keyframe.ofFloat(0.25f, 30f)
-        val keyframe3 = Keyframe.ofFloat(0.5f, -30f)
-        val keyframe4 = Keyframe.ofFloat(0.75f, 30f)
-        val keyframe5 = Keyframe.ofFloat(1f, 0f)
-
-        val propertyValuesHolder = PropertyValuesHolder.ofKeyframe(
-            "translationX",
-            keyframe1,
-            keyframe2,
-            keyframe3,
-            keyframe4,
-            keyframe5
-        )
-        val animator = ObjectAnimator.ofPropertyValuesHolder(this, propertyValuesHolder)
-        animator.duration = 500 // Duration in milliseconds
-        animator.start()
-    }
 
     private suspend fun fetchPriceAndConvert(amount: String) {
         val valueAmount =

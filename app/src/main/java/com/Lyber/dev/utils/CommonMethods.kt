@@ -1,5 +1,8 @@
 package com.Lyber.dev.utils
 
+import android.animation.Keyframe
+import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -2093,6 +2096,25 @@ class CommonMethods {
             }
             sortedJsonString.append("}")
             return sortedJsonString.toString()
+        }
+        fun View.shake() {
+            val keyframe1 = Keyframe.ofFloat(0f, 0f)
+            val keyframe2 = Keyframe.ofFloat(0.25f, 30f)
+            val keyframe3 = Keyframe.ofFloat(0.5f, -30f)
+            val keyframe4 = Keyframe.ofFloat(0.75f, 30f)
+            val keyframe5 = Keyframe.ofFloat(1f, 0f)
+
+            val propertyValuesHolder = PropertyValuesHolder.ofKeyframe(
+                "translationX",
+                keyframe1,
+                keyframe2,
+                keyframe3,
+                keyframe4,
+                keyframe5
+            )
+            val animator = ObjectAnimator.ofPropertyValuesHolder(this, propertyValuesHolder)
+            animator.duration = 500 // Duration in milliseconds
+            animator.start()
         }
 
     }
