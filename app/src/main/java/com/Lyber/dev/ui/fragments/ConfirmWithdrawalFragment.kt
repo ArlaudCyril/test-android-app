@@ -20,6 +20,8 @@ import com.Lyber.dev.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.VerificationBottomSheet2FA
 import com.Lyber.dev.utils.App
 import com.Lyber.dev.utils.CommonMethods
+import com.Lyber.dev.utils.CommonMethods.Companion.commaFormattedDecimal
+import com.Lyber.dev.utils.CommonMethods.Companion.decimalPoint
 import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
 import com.Lyber.dev.utils.CommonMethods.Companion.gone
 import com.Lyber.dev.utils.CommonMethods.Companion.returnErrorCode
@@ -129,8 +131,8 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                     openOtpScreen()
                 } else {
                     if (withdrawUSDC) {
-                         viewModel.getBalance()
-                      viewModel.selectedOption = Constants.ACTION_WITHDRAW_EURO
+                        viewModel.getBalance()
+                        viewModel.selectedOption = Constants.ACTION_WITHDRAW_EURO
                     } else
                         viewModel.selectedOption = Constants.USING_WITHDRAW
                     ConfirmationBottomSheet().show(childFragmentManager, "")
@@ -289,7 +291,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
             integrityTokenResponse?.addOnSuccessListener { response ->
                 Log.d("token", "${response.token()}")
                 CommonMethods.showProgressDialog(requireContext())
-                viewModel.transferToFriend(map,response.token())
+                viewModel.transferToFriend(map, response.token())
 
             }?.addOnFailureListener { exception ->
                 Log.d("token", "${exception}")
@@ -334,10 +336,10 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
     }
 
     private fun hitOtpWithdraw(action: String, details: String, isResend: Boolean) {
-      if (isResend)
-                viewModelSignup.getOtpForWithdraw( action, details)
-            else
-                viewModel.getOtpForWithdraw( action, details)
+        if (isResend)
+            viewModelSignup.getOtpForWithdraw(action, details)
+        else
+            viewModel.getOtpForWithdraw(action, details)
 
     }
 
@@ -431,11 +433,12 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                         val priceCoin = balance!!.balanceData.euroBalance.toDouble()
                             .div(balance.balanceData.balance.toDouble() ?: 1.0)
                         tvValueLyberFee.text =
-                            viewModel.selectedNetworkDeposit!!.withdrawFee.toString()
-                                .formattedAsset(
-                                    price = priceCoin,
-                                    rounding = RoundingMode.DOWN
-                                ) + " " + it!!.id.uppercase()
+                            viewModel.selectedNetworkDeposit!!.withdrawFee.toString() + " " + it!!.id.uppercase()
+//                                .formattedAsset(
+//                                    price = priceCoin,
+//                                    rounding = RoundingMode.DOWN
+//                                ) +
+                        " " + it!!.id.uppercase()
 
 
                         tvExchangeFrom.text = getString(R.string.address)
@@ -452,25 +455,36 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                                 .replace(it.id.uppercase(), "").toDouble()
                         tvValueTotal.text =
                             "${
-                                valueTotal.toString().formattedAsset(
-                                    price = priceCoin,
-                                    rounding = RoundingMode.DOWN
-                                )
+                                valueTotal.toString()
+//                                    .formattedAsset(
+//                                    price = priceCoin,
+//                                    rounding = RoundingMode.DOWN
+//                                )
                             } ${it.id.uppercase()}"
                         tvAmount.text =
                             "${
-                                valueTotal.toString().formattedAsset(
-                                    price = priceCoin,
-                                    rounding = RoundingMode.DOWN
-                                )
+                                valueTotal.toString()
+//                                    .formattedAsset(
+//                                    price = priceCoin,
+//                                    rounding = RoundingMode.DOWN
+//                                )
                             } ${it.id.uppercase()}"
                         val amount =
                             valueTotal - viewModel.selectedNetworkDeposit!!.withdrawFee.toDouble()
+                        var decimal = 3
+                        val asset =
+                            com.Lyber.dev.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
+                        if (asset != null) {
+                            decimal = asset.decimals
+                        }
+
                         tvNestedAmountValue.text = "${
-                            amount.toString().formattedAsset(
-                                price = priceCoin,
-                                rounding = RoundingMode.DOWN
-                            )
+                            amount.toString()
+                                .commaFormattedDecimal(decimal).decimalPoint()
+//                                .formattedAsset(
+//                                price = 8.0,
+//                                rounding = RoundingMode.DOWN
+//                            )
                         } ${it.id.uppercase()}"
 
                         btnConfirmInvestment.isEnabled = true
@@ -497,7 +511,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
 
                 btnConfirmInvestment -> {
                     confirmButtonClick()
-                   }
+                }
 
                 tvMoreDetails -> {
                     if (isExpand) {

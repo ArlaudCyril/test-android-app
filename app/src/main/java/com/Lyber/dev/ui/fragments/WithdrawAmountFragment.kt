@@ -58,6 +58,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
     private val focusedData: ValueHolder = ValueHolder()
     private val unfocusedData: ValueHolder = ValueHolder()
     private var valueConversion: Double = 1.0
+    private var lastPriceFromApi: Double = 1.0
     private var minAmount: String = "0.0"
     private val assetConversion get() = binding.tvAssetConversion.text.trim().toString()
     private var maxValue: Double = 0.0
@@ -97,7 +98,12 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
         binding.includedAsset.ivCopy.setOnClickListener(this)
         binding.ivMax.setOnClickListener(this)
         binding.btnPreviewInvestment.setOnClickListener(this)
-        decimal = viewModel.selectedNetworkDeposit!!.decimals
+//        decimal = viewModel.selectedNetworkDeposit!!.decimals
+        val asset =
+            com.Lyber.dev.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
+        if (asset != null) {
+            decimal = asset.decimals
+        }
         if (arguments != null && requireArguments().containsKey("assetIdWithdraw"))
             assetIdWithdraw = requireArguments().getString("assetIdWithdraw").toString()
         prepareView()
@@ -114,6 +120,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
         viewModel.currentPriceResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 val lastPrice = it.data.price.toDouble()
+                lastPriceFromApi=lastPrice
                 valueConversion = 1.0 / lastPrice
                 setValues()
             }
@@ -164,7 +171,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
             if (valueAmount == 0.0) {
                 activate = false
                 activateButton()
-               debounceJob?.cancel()
+                debounceJob?.cancel()
                 binding.tvAssetConversion.visible()
 //                binding.tvAssetFees.visible()
                 binding.ivCircularProgress.gone()
@@ -227,6 +234,22 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                 if (body?.data?.price != null) {
                     val price = body.data.price.toDouble()
                     valueConversion = 1 / price
+                    var balance =
+                        com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
+                    if (balance == null) {
+                        val balanceData = BalanceData("0", "0")
+                        balance = Balance("0", balanceData)
+                    }
+                    maxValue = balance.balanceData.balance.toDouble() / valueConversion
+                    if (maxValue < 0) {
+                        maxValue = 0.0
+                    }
+                    //calculating max value of other asset
+                    maxValueOther = maxValue / price
+
+//                    maxValueOther =
+//                        (balance.balanceData.euroBalance.toDouble() * valueConversion)
+
                     when {
                         valueAmount > 0 -> {
                             if (focusedData.currency.contains(mCurrency)) {
@@ -248,7 +271,10 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                     }
                     if (focusedData.currency.contains(mCurrency)) {
                         val valueAmountNew =
-                            if (assetConversion.contains(mCurrency)) assetConversion.replace(mCurrency, "")
+                            if (assetConversion.contains(mCurrency)) assetConversion.replace(
+                                mCurrency,
+                                ""
+                            )
                                 .replace("~", "").pointFormat.toDouble()
                             else assetConversion.replace(mConversionCurrency, "")
                                 .replace("~", "").pointFormat.toDouble()
@@ -465,85 +491,89 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
 //            }
         }
     }
-    private fun setValues(){
+
+    private fun setValues() {
         binding.apply {
-        viewModel.selectedAssetDetail.let {
-            mCurrency = Constants.EURO
-            mConversionCurrency = it!!.id.uppercase()
-            focusedData.currency = mCurrency
-            unfocusedData.currency = mConversionCurrency
+            viewModel.selectedAssetDetail.let {
+                mCurrency = Constants.EURO
+                mConversionCurrency = it!!.id.uppercase()
+                focusedData.currency = mCurrency
+                unfocusedData.currency = mConversionCurrency
 
-            "${getString(R.string.withdraw)} ${it.id.uppercase()}".also { tvTitle.text = it }
-            // calculate available balance and value conversion
-            var balance =
-                com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
-            if (balance == null) {
-                val balanceData = BalanceData("0", "0")
-                balance = Balance("0", balanceData)
-            }
-            val priceCoin = balance.balanceData.euroBalance.toDouble()
-                .div(balance.balanceData.balance.toDouble())
-            var roundDigits = decimal
-            if (
+                "${getString(R.string.withdraw)} ${it.id.uppercase()}".also { tvTitle.text = it }
+                // calculate available balance and value conversion
+                var balance =
+                    com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
+                if (balance == null) {
+                    val balanceData = BalanceData("0", "0")
+                    balance = Balance("0", balanceData)
+                }
+                val priceCoin = balance.balanceData.euroBalance.toDouble()
+                    .div(balance.balanceData.balance.toDouble())
+                var roundDigits = decimal
+                if (
 //                    viewModel.selectedAssetDetail!!.id.equals("usdt", ignoreCase = true) ||
-                viewModel.selectedAssetDetail!!.id.equals(Constants.EURO, ignoreCase = true))
-                roundDigits = 2
-            ("${
-                balance.balanceData.balance.formattedAsset(
-                    priceCoin,
-                    RoundingMode.DOWN,
-                    roundDigits
-                )
-            } " + getString(R.string.available)).also { tvSubTitle.text = it }
-//                valueConversion =
-//                    (balance.balanceData.balance.toDouble() / balance.balanceData.euroBalance.toDouble()).toString()
-//                        .formattedAsset(
-//                            priceCoin,
-//                            RoundingMode.DOWN,
-//                            10
-//                        ).toDouble()
-//                Log.d("Conversion Price", "$valueConversion")
-//                if (balance.balanceData.balance == "0") {
-//                    val balanceResume =
-//                        com.Lyber.dev.ui.activities.BaseActivity.balanceResume.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
-//                    valueConversion =
-//                        1.0 / balanceResume!!.priceServiceResumeData.lastPrice.toDouble()
-//                }
-            setAssetAmount("0.0")
-        }
-        viewModel.selectedNetworkDeposit.let {
-            var balance =
-                com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
-            if (balance == null) {
-                val balanceData = BalanceData("0", "0")
-                balance = Balance("0", balanceData)
+                    viewModel.selectedAssetDetail!!.id.equals(Constants.EURO, ignoreCase = true))
+                    roundDigits = 2
+                ("${
+                    balance.balanceData.balance.formattedAsset(
+                        priceCoin,
+                        RoundingMode.DOWN,
+                        roundDigits
+                    )
+                } " + getString(R.string.available)).also { tvSubTitle.text = it }
+                setAssetAmount("0.0")
             }
-            val priceCoin = balance!!.balanceData.euroBalance.toDouble()
-                .div(balance!!.balanceData.balance.toDouble())
+            viewModel.selectedNetworkDeposit.let {
+                var balance =
+                    com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
+                if (balance == null) {
+                    val balanceData = BalanceData("0", "0")
+                    balance = Balance("0", balanceData)
+                }
+                val priceCoin = balance!!.balanceData.euroBalance.toDouble()
+                    .div(balance!!.balanceData.balance.toDouble())
 
-            "${getString(R.string.fees)} ${
-                it!!.withdrawFee.formattedAsset(
-                    priceCoin,
-                    RoundingMode.DOWN,
-                    3
-                )
-            } ${balance!!.id.uppercase()}".also {
-                tvAssetFees.text = it
+                "${getString(R.string.fees)} ${
+                    it!!.withdrawFee.formattedAsset(
+                        priceCoin,
+                        RoundingMode.DOWN,
+                        3
+                    )
+                } ${balance!!.id.uppercase()}".also {
+                    tvAssetFees.text = it
+                }
+
+                var valueConversion1 =
+                    (balance!!.balanceData.balance.toDouble() / balance!!.balanceData.euroBalance.toDouble()).toString()
+                        .formattedAsset(
+                            priceCoin,
+                            RoundingMode.DOWN,
+                            10
+                        ).toDouble()
+                if (balance!!.balanceData.balance == "0") {
+                    val balanceResume =
+                        com.Lyber.dev.ui.activities.BaseActivity.balanceResume.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
+                    valueConversion1 =
+                        1.0 / balanceResume!!.priceServiceResumeData.lastPrice.toDouble()
+                }
+                //calculating max value of asset euro
+                maxValue = balance!!.balanceData.balance.toDouble() / valueConversion //21.56
+                if (maxValue < 0) {
+                    maxValue = 0.0
+                }
+                //calculating max value of other asset
+                maxValueOther = maxValue / lastPriceFromApi
+
+//            maxValueOther =
+//                (balance!!.balanceData.euroBalance.toDouble() * valueConversion) //22.65
+                //setting minimum withdrawal amount
+                minAmount = it.withdrawMin.formattedAsset(priceCoin, RoundingMode.DOWN)
+                (getString(R.string.minimum_withdrawl) + ": " + minAmount + " " + balance!!.id.uppercase()).also {
+                    tvMinAmount.text = it
+                }
             }
-            //calculating max value of asset euro
-            maxValue = balance!!.balanceData.balance.toDouble() / valueConversion //59.48
-            if (maxValue < 0) {
-                maxValue = 0.0
-            }
-            //calculating max value of other asset
-            maxValueOther =
-                (balance!!.balanceData.euroBalance.toDouble() * valueConversion) //64.35370783
-            //setting minimum withdrawal amount
-            minAmount = it.withdrawMin.formattedAsset(priceCoin, RoundingMode.DOWN)
-            (getString(R.string.minimum_withdrawl) + ": " + minAmount + " " + balance!!.id.uppercase()).also {
-                tvMinAmount.text = it
-            }
-        }}
+        }
     }
 
     override fun onClick(v: View?) {
@@ -580,9 +610,8 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                             binding.root,
                             requireActivity()
                         )
-                    }
-                    else if (activate) {
-                    if(!binding.ivCenterProgress.isVisible && !binding.ivCircularProgress.isVisible)    {
+                    } else if (activate) {
+                        if (!binding.ivCenterProgress.isVisible && !binding.ivCircularProgress.isVisible) {
                             if (focusedData.currency.contains(mCurrency)) {
                                 if (maxValueAsset <= balance.balanceData.balance.toDouble()) {
                                     if (viewModel.withdrawAddress != null) {
@@ -678,32 +707,51 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
     }
 
     private fun setMaxValue() {
-//        if (assetAvail == 0.0) {
-//            binding.etAmount.text = "0${focusedData.currency}"
-//            binding.tvEuro.text = "~0 ${Constants.EURO}"
-//        } else {
-//            val balance =
-//                com.Lyber.dev.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetFrom!! }
-//            val asset =
-//                com.Lyber.dev.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.exchangeAssetFrom } }
-//
-//
-//            val priceCoin = balance!!.balanceData.euroBalance.toDouble()
-//                .div(balance.balanceData.balance.toDouble())
-//            binding.etAmount.invisible()
-//            binding.tvEuro.invisible()
-//            onMaxClick = true
-//            binding.ivCenterProgress.visible()
-//            binding.tvAssetConversion.invisible()
-//            binding.etAmount.text = "${
-//                maxValue.formattedAsset(priceCoin, RoundingMode.DOWN, asset!!.decimals)
-//            }${focusedData.currency}"
-//
+
+//        var balance =
+//            com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
+//        if (balance == null) {
+//            val balanceData = BalanceData("0", "0")
+//            balance = Balance("0", balanceData)
 //        }
+//        val priceCoin = balance.balanceData.euroBalance.toDouble()
+//            .div(balance.balanceData.balance.toDouble())
+//        if (focusedData.currency.contains(mCurrency)) {
+//            val spaceGap = if (mCurrency == Constants.EURO)
+//                ""
+//            else
+//                " "
+//            if (maxValue > 0) {
+//                var roundDigits = decimal
+//                if (mCurrency == Constants.EURO)
+//                    roundDigits = 2
+//                binding.etAmount.text = "${
+//                    maxValue.toString().formattedAsset(priceCoin, RoundingMode.DOWN, roundDigits)
+//                }" + spaceGap + mCurrency
+//            } else {
+//                binding.etAmount.text = "0$spaceGap$mCurrency"
+//            }
+//        } else {
+//            val spaceGap = if (mConversionCurrency == Constants.EURO)
+//                ""
+//            else
+//                " "
+//            if (maxValueOther > 0) {
+//                var roundDigits = decimal
+//                if (mConversionCurrency == Constants.EURO)
+//                    roundDigits = 2
 //
+//                binding.etAmount.text = "${
+//                    maxValueOther.toString()
+//                        .formattedAsset(priceCoin, RoundingMode.DOWN, roundDigits)
+//                }$spaceGap${mConversionCurrency}"
 //
-//
-//
+//            } else {
+//                binding.etAmount.text = "${0}$spaceGap${mConversionCurrency}"
+//            }
+//        }
+
+
         var balance =
             com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
         if (balance == null) {
@@ -725,7 +773,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                 onMaxClick = true
                 binding.ivCenterProgress.visible()
                 binding.tvAssetConversion.invisible()
-                onMaxClick=true
+                onMaxClick = true
                 binding.etAmount.text = "${
                     maxValue.toString().formattedAsset(priceCoin, RoundingMode.DOWN, roundDigits)
                 }" + spaceGap + mCurrency
@@ -746,7 +794,7 @@ class WithdrawAmountFragment : BaseFragment<FragmentWithdrawAmountBinding>(), Vi
                 onMaxClick = true
                 binding.ivCenterProgress.visible()
                 binding.tvAssetConversion.invisible()
-                onMaxClick=true
+                onMaxClick = true
                 binding.etAmount.text = "${
                     maxValueOther.toString()
                         .formattedAsset(priceCoin, RoundingMode.DOWN, roundDigits)

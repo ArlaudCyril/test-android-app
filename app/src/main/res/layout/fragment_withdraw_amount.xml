@@ -97,11 +97,12 @@
             android:layout_marginTop="8dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/etAmount">
+
             <TextView
                 android:id="@+id/tvAssetConversion"
                 style="@style/SubheadMabry"
+                android:layout_centerHorizontal="true"
                 android:text="0 BTC"
-                android:layout_centerInParent="true"
                 android:textColor="@color/purple_gray_500"
                 android:visibility="visible" />
 

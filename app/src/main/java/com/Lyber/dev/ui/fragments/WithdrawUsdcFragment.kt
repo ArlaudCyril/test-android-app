@@ -1,5 +1,4 @@
 package com.Lyber.dev.ui.fragments
-
 import android.annotation.SuppressLint
 import android.os.Bundle
 import android.os.Handler
@@ -17,11 +16,8 @@ import com.Lyber.dev.models.Balance
 import com.Lyber.dev.models.BalanceData
 import com.Lyber.dev.models.CurrentPriceResponse
 import com.Lyber.dev.models.RIBData
-import com.Lyber.dev.models.WithdrawAddress
 import com.Lyber.dev.models.WithdrawEuroData
-import com.Lyber.dev.models.WithdrawEuroFee
 import com.Lyber.dev.network.RestClient
-import com.Lyber.dev.ui.activities.SplashActivity
 import com.Lyber.dev.ui.fragments.bottomsheetfragments.WithdrawalUsdcAddressBottomSheet
 import com.Lyber.dev.utils.CommonMethods
 import com.Lyber.dev.utils.CommonMethods.Companion.decimalPoint
@@ -29,24 +25,20 @@ import com.Lyber.dev.utils.CommonMethods.Companion.decimalPointUptoTwoPlaces
 import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
 import com.Lyber.dev.utils.CommonMethods.Companion.gone
 import com.Lyber.dev.utils.CommonMethods.Companion.invisible
-import com.Lyber.dev.utils.CommonMethods.Companion.load
 import com.Lyber.dev.utils.CommonMethods.Companion.shake
 import com.Lyber.dev.utils.CommonMethods.Companion.showToast
 import com.Lyber.dev.utils.CommonMethods.Companion.visible
 import com.Lyber.dev.utils.Constants
 import com.Lyber.dev.utils.OnTextChange
 import com.Lyber.dev.viewmodels.PortfolioViewModel
-import com.google.android.gms.tasks.Task
-import com.google.android.play.core.integrity.StandardIntegrityManager
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
-import org.json.JSONObject
 import retrofit2.Response
+import java.math.BigDecimal
 import java.math.RoundingMode
-import kotlin.math.min
 
 
 class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnClickListener {
@@ -55,12 +47,14 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
         WithdrawAmountFragment.ValueHolder()
     private val unfocusedData: WithdrawAmountFragment.ValueHolder =
         WithdrawAmountFragment.ValueHolder()
-    private var valueConversion: Double = 1.0
+    private var valueConversion: BigDecimal = 1.toBigDecimal()
+//    private var lastPriceFromApi: Double = 1.0
+    private var lastPriceFromApi: BigDecimal = 1.toBigDecimal()
     private var minAmount = 10.0
     private val assetConversion get() = binding.tvAssetConversion.text.trim().toString()
-    private var maxValue: Double = 0.0
-    private var maxValueOther: Double = 0.0
-    private var maxValueAsset: Double = 0.0
+    private var maxValue: BigDecimal = 0.toBigDecimal()
+    private var maxValueOther: BigDecimal = 0.toBigDecimal()
+    private var maxValueAsset: BigDecimal = 0.toBigDecimal()
     private var mCurrency: String = ""
     private var mConversionCurrency: String = ""
 
@@ -98,7 +92,12 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
         binding.includedAsset.ivCopy.setOnClickListener(this)
         binding.ivMax.setOnClickListener(this)
         binding.btnPreviewInvestment.setOnClickListener(this)
-//        decimal = viewModel.selectedNetworkDeposit!!.decimals
+
+        val asset =
+            com.Lyber.dev.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id ==viewModel.selectedAssetDetail!!.id } }
+        if (asset != null) {
+            decimal = asset.decimals
+        }
         prepareView()
         setObservers()
         binding.etAmount.addTextChangedListener(textOnTextChange)
@@ -130,8 +129,9 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
     private fun setObservers() {
         viewModel.currentPriceResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                val lastPrice = it.data.price.toDouble()
-                valueConversion = 1.0 / lastPrice
+//                val lastPrice = it.data.price.toBigDecimal()
+                lastPriceFromApi=it.data.price.toBigDecimal()
+                valueConversion = BigDecimal(1 / it.data.price.toDouble())
                 setValues()
             }
         }
@@ -178,6 +178,25 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
                     (getString(R.string.minimum_withdrawl) + ": ${minAmount}${Constants.EURO}").also {
                         binding.tvMinAmount.text = it
                     }
+                    var balance =
+                        com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
+                    if (balance == null) {
+                        val balanceData = BalanceData("0", "0")
+                        balance = Balance("0", balanceData)
+                    }
+                    val priceCoin = balance!!.balanceData.euroBalance.toDouble()
+                        .div(balance!!.balanceData.balance.toDouble())
+
+                    "${getString(R.string.fees)} ${
+                        withdrawFeeData.withdrawEuroFees.toString().formattedAsset(
+                            priceCoin,
+                            RoundingMode.DOWN,
+                            3
+                        )
+                    } ${Constants.EURO}".also {
+                        binding.tvAssetFees.text = it
+                    }
+                    binding.tvAssetFees.visible()
                 }
             }
         }
@@ -213,13 +232,18 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
                         roundDigits
                     )
                 } " + getString(R.string.available)).also { tvSubTitle.text = it }
-                maxValue = balance!!.balanceData.balance.toDouble() / valueConversion
-                if (maxValue < 0) {
-                    maxValue = 0.0
+                maxValue = balance.balanceData.balance.toBigDecimal() / valueConversion
+                if (maxValue < 0.toBigDecimal()) {
+                    maxValue = 0.toBigDecimal()
                 }
                 //calculating max value of other asset
-                maxValueOther =
-                    (balance!!.balanceData.euroBalance.toDouble() * valueConversion)
+//                maxValueOther =   balance.balanceData.balance.toBigDecimal()/lastPriceFromApi
+                maxValueOther =   maxValue/lastPriceFromApi
+//                / lastPriceFromApi
+
+//                (balance.balanceData.euroBalance.toDouble() * valueConversion)
+               //setting minimum withdrawal amount
+
                 //setting minimum withdrawal amount
 
 //                valueConversion =
@@ -248,7 +272,7 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
                 if (amount.contains(mCurrency)) amount.replace(mCurrency, "").pointFormat.toDouble()
                 else amount.replace(mConversionCurrency, "").pointFormat.toDouble()
 
-            if (valueAmount == 0.0) {
+            if (valueAmount.toBigDecimal() == 0.toBigDecimal()) {
                 activate = false
                 activateButton()
                 debounceJob?.cancel()
@@ -267,7 +291,8 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
                     }
                 }
             } else {
-                val input = amount.toString().trim()
+//                val input = amount.toString().trim()
+                val input = valueAmount
                 binding.tvAssetConversion.invisible()
 //                binding.tvAssetFees.invisible()
                 if (!onMaxClick)
@@ -319,7 +344,7 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
                     )
                 } $mConversionCurrency"
             maxValueAsset =
-                assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN, roundDigits).toDouble()
+                assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN, roundDigits).toBigDecimal()
 
             if (valueAmount > maxValue.toDouble()) {
                 binding.etAmount.visible()
@@ -347,7 +372,7 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
                     )
                 } $mCurrency"
             maxValueAsset =
-                assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN, roundDigits).toDouble()
+                assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN, roundDigits).toBigDecimal()
             if (valueAmount > maxValueOther.toDouble()) {
                 binding.etAmount.visible()
                 binding.etAmount.shake()
@@ -384,16 +409,20 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
                 ivRepeat -> swapConversion()
                 llAddress -> openAddressSheet()
                 btnPreviewInvestment -> {
+                    //todo for now in case of Euro Withdrawal replacing amountFinal with amountEuro as we have min value for Euro
                     val amountEuro = if (focusedData.currency.contains(mCurrency)) {
-                        amount.replace(mConversionCurrency, "")
+//                        amount.replace(mConversionCurrency, "")
+                        amount.replace(mCurrency, "")
                     } else {
-                        assetConversion.replace(mConversionCurrency, "").replace("~", "")
+//                        assetConversion.replace(mConversionCurrency, "").replace("~", "")
+                        assetConversion.replace(mCurrency, "").replace("~", "")
                     }
                     val amountFinal = if (focusedData.currency.contains(mCurrency)) {
                         assetConversion.replace(mConversionCurrency, "").replace("~", "")
                     } else {
                         amount.replace(mConversionCurrency, "")
                     }
+
                     val balance =
                         com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
 
@@ -404,8 +433,9 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
                         )
                     } else if (activate) {
                         if (focusedData.currency.contains(mCurrency)) {
-                            if (maxValueAsset <= balance.balanceData.balance.toDouble()) {
-                                if (minAmount.toDouble() >= amountFinal.toDouble())
+                            if (maxValueAsset <= balance.balanceData.balance.toBigDecimal()) {
+//                                if (minAmount.toDouble() >= amountFinal.toDouble())
+                                if (minAmount.toDouble() > amountEuro.toDouble())
 
                                     getString(R.string.withdrawal_amount_is_inferior).showToast(
                                         binding.root,
@@ -443,7 +473,8 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
                             }
                         } else if (focusedData.currency.contains(mConversionCurrency)) {
                             if (maxValueAsset <= maxValue) {
-                                if (minAmount.toDouble() >= amountFinal.toDouble())
+//                                if (minAmount.toDouble() >= amountFinal.toDouble())
+                                if (minAmount.toDouble() > amountEuro.toDouble())
                                     getString(R.string.withdrawal_amount_is_inferior).showToast(
                                         binding.root,
                                         requireContext()
@@ -597,7 +628,7 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
                     .formattedAsset(1.06, RoundingMode.DOWN, decimal)
             binding.etAmount.text = ("$valueTwo $mConversionCurrency")
 
-            setAssetAmount(valueOne)
+//            setAssetAmount(valueOne)
         } else {
             val currency = focusedData.currency
             focusedData.currency = unfocusedData.currency
@@ -613,7 +644,8 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
                     .formattedAsset(1.06, RoundingMode.DOWN, decimal)
                 binding.etAmount.text = ("${valueTwo}$mCurrency")
             }
-            setAssetAmount(valueOne)
+//            setAssetAmount(valueOne)
+
         }
 
 
@@ -633,7 +665,7 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
                 ""
             else
                 " "
-            if (maxValue > 0) {
+            if (maxValue > 0.toBigDecimal()) {
                 var roundDigits = decimal
                 if (mCurrency == Constants.EURO)
                     roundDigits = 2
@@ -653,7 +685,7 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
                 ""
             else
                 " "
-            if (maxValueOther > 0) {
+            if (maxValueOther > 0.toBigDecimal()) {
                 var roundDigits = decimal
                 if (mConversionCurrency == Constants.EURO)
                     roundDigits = 2
@@ -706,15 +738,16 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
     }
 
 
-    private suspend fun fetchPriceAndConvert(amount: String) {
-        val valueAmount =
-            try {
-                if (amount.contains(focusedData.currency)) amount.split(focusedData.currency)[0].pointFormat.toDouble()
-                else amount.split(unfocusedData.currency)[0].pointFormat.toDouble()
-            } catch (e: Exception) {
-                0.0
-            }
-        if (amount.isEmpty()) return // Ignore empty input
+    private suspend fun fetchPriceAndConvert(amount: Double) {
+        val valueAmount =amount
+//            try {
+//                if (amount.contains(focusedData.currency)) amount.split(focusedData.currency)[0].pointFormat.toBigDecimal()
+//                else amount.split(unfocusedData.currency)[0].pointFormat.toBigDecimal()
+//            } catch (e: Exception) {
+//                0.toBigDecimal()
+//            }
+
+        if (amount==0.0) return // Ignore empty input
 
         try {
             val balanceToPrice = fetchAssetPrice(viewModel.selectedAssetDetail!!.id)
@@ -724,16 +757,31 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
                 val body = balanceToPrice.body()
 
                 if (body?.data?.price != null) {
-                    val price = body.data.price.toDouble()
-                    valueConversion = 1 / price
+                    val price = body.data.price.toBigDecimal()
+                    valueConversion =BigDecimal(1.0 / body.data.price.toDouble())
+                    var balance =
+                        com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
+                    if (balance == null) {
+                        val balanceData = BalanceData("0", "0")
+                        balance = Balance("0", balanceData)
+                    }
+                    maxValue = balance.balanceData.balance.toBigDecimal() / valueConversion
+                    if (maxValue < 0.toBigDecimal()) {
+                        maxValue = 0.toBigDecimal()
+                    }
+                    //calculating max value of other asset
+                        maxValueOther = maxValue / price
+//                        maxValueOther = balance.balanceData.balance.toBigDecimal() / price
+//                        (balance.balanceData.euroBalance.toDouble() * valueConversion)
+
                     when {
-                        valueAmount > 0 -> {
+                        valueAmount > 0.0 -> {
                             if (focusedData.currency.contains(mCurrency)) {
-                                val assetAmount = (valueAmount * valueConversion).toString()
+                                val assetAmount = (valueAmount.toBigDecimal() * valueConversion).toString()
                                 viewModel.assetAmount = assetAmount
                                 setAssetAmount(assetAmount)
                             } else {
-                                val convertedValue = valueAmount / valueConversion
+                                val convertedValue = valueAmount.toBigDecimal() / valueConversion
                                 setAssetAmount(convertedValue.toString())
                             }
                         }
@@ -761,22 +809,23 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
                             activate = false
                             activateButton()
                         }
-                        if (valueAmount <= maxValue.toDouble()) {
+                        if (valueAmount.toBigDecimal() <= maxValue) {
                             binding.ivCircularProgress.gone()
                             binding.ivCenterProgress.gone()
                             binding.tvAssetConversion.visible()
 //                binding.tvAssetFees.visible()
                             binding.etAmount.visible()
                         }
-                    } else {
-                        if (valueAmount >= minAmount.toDouble()) {
+                    }
+                    else {
+                        if (valueAmount.toBigDecimal() >= minAmount.toBigDecimal()) {
                             activate = true
                             activateButton()
                         } else {
                             activate = false
                             activateButton()
                         }
-                        if (valueAmount <= maxValueOther.toDouble()) {
+                        if (valueAmount.toBigDecimal() <= maxValueOther) {
                             binding.ivCircularProgress.gone()
                             binding.ivCenterProgress.gone()
                             binding.tvAssetConversion.visible()
