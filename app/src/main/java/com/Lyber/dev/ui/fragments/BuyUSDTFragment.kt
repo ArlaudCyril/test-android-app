@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.animation.Keyframe
 import android.animation.ObjectAnimator
@@ -14,26 +14,26 @@ import android.view.animation.AnimationUtils
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentBuyUsdtBinding
-import com.Lyber.dev.models.Balance
-import com.Lyber.dev.models.BalanceData
-import com.Lyber.dev.models.CurrentPriceResponse
-import com.Lyber.dev.network.RestClient
-import com.Lyber.dev.ui.activities.SplashActivity
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.commaFormatted
-import com.Lyber.dev.utils.CommonMethods.Companion.decimalPoint
-import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.invisible
-import com.Lyber.dev.utils.CommonMethods.Companion.returnErrorCode
-import com.Lyber.dev.utils.CommonMethods.Companion.showErrorMessage
-import com.Lyber.dev.utils.CommonMethods.Companion.showSnack
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.utils.OnTextChange
-import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.Lyber.R
+import com.Lyber.databinding.FragmentBuyUsdtBinding
+import com.Lyber.models.Balance
+import com.Lyber.models.BalanceData
+import com.Lyber.models.CurrentPriceResponse
+import com.Lyber.network.RestClient
+import com.Lyber.ui.activities.SplashActivity
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.commaFormatted
+import com.Lyber.utils.CommonMethods.Companion.decimalPoint
+import com.Lyber.utils.CommonMethods.Companion.formattedAsset
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.invisible
+import com.Lyber.utils.CommonMethods.Companion.returnErrorCode
+import com.Lyber.utils.CommonMethods.Companion.showErrorMessage
+import com.Lyber.utils.CommonMethods.Companion.showSnack
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
+import com.Lyber.utils.OnTextChange
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.google.android.gms.tasks.Task
 import com.google.android.play.core.integrity.StandardIntegrityManager
 import com.google.gson.Gson
@@ -353,7 +353,7 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
                 tvTitle.text = it
             }
             var balance =
-                com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == Constants.MAIN_ASSET } }
+                com.Lyber.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == Constants.MAIN_ASSET } }
             if (balance == null) {
                 val balanceData = BalanceData("0", "0")
                 balance = Balance("0", balanceData)
@@ -364,7 +364,7 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
 
             viewModel.selectedNetworkDeposit.let {
                 var balance =
-                    com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == Constants.MAIN_ASSET } }
+                    com.Lyber.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == Constants.MAIN_ASSET } }
                 if (balance == null) {
                     val balanceData = BalanceData("0", "0")
                     balance = Balance("0", balanceData)

@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.os.Build
 import android.os.Bundle
@@ -11,26 +11,26 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.ViewModel
 import androidx.navigation.fragment.findNavController
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentConfirmInvestmentBinding
-import com.Lyber.dev.models.Balance
-import com.Lyber.dev.network.RestClient
-import com.Lyber.dev.ui.activities.SplashActivity
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.VerificationBottomSheet2FA
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.commaFormattedDecimal
-import com.Lyber.dev.utils.CommonMethods.Companion.decimalPoint
-import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.returnErrorCode
-import com.Lyber.dev.utils.CommonMethods.Companion.showSnack
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.utils.LoaderObject
-import com.Lyber.dev.viewmodels.PortfolioViewModel
-import com.Lyber.dev.viewmodels.SignUpViewModel
+import com.Lyber.R
+import com.Lyber.databinding.FragmentConfirmInvestmentBinding
+import com.Lyber.models.Balance
+import com.Lyber.network.RestClient
+import com.Lyber.ui.activities.SplashActivity
+import com.Lyber.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
+import com.Lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet2FA
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.commaFormattedDecimal
+import com.Lyber.utils.CommonMethods.Companion.decimalPoint
+import com.Lyber.utils.CommonMethods.Companion.formattedAsset
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.returnErrorCode
+import com.Lyber.utils.CommonMethods.Companion.showSnack
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
+import com.Lyber.utils.LoaderObject
+import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.viewmodels.SignUpViewModel
 import com.google.android.gms.tasks.Task
 import com.google.android.play.core.integrity.StandardIntegrityManager
 import okhttp3.ResponseBody
@@ -148,7 +148,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                     val balance = Balance(id = it.key, balanceData = it.value)
                     balances.add(balance)
                 }
-                com.Lyber.dev.ui.activities.BaseActivity.balances = balances
+                com.Lyber.ui.activities.BaseActivity.balances = balances
             }
         }
 
@@ -429,7 +429,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
 
                     viewModel.selectedAssetDetail.let {
                         val balance =
-                            com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
+                            com.Lyber.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
                         val priceCoin = balance!!.balanceData.euroBalance.toDouble()
                             .div(balance.balanceData.balance.toDouble() ?: 1.0)
                         tvValueLyberFee.text =
@@ -473,7 +473,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                             valueTotal - viewModel.selectedNetworkDeposit!!.withdrawFee.toDouble()
                         var decimal = 3
                         val asset =
-                            com.Lyber.dev.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
+                            com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
                         if (asset != null) {
                             decimal = asset.decimals
                         }

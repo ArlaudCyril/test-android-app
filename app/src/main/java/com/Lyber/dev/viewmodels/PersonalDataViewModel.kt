@@ -1,9 +1,9 @@
-package com.Lyber.dev.viewmodels
+package com.Lyber.viewmodels
 
 import androidx.lifecycle.MutableLiveData
-import com.Lyber.dev.models.MessageResponse
-import com.Lyber.dev.models.User
-import com.Lyber.dev.network.RestClient
+import com.Lyber.models.MessageResponse
+import com.Lyber.models.User
+import com.Lyber.network.RestClient
 import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

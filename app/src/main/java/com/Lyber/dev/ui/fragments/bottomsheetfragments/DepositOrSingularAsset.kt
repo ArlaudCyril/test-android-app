@@ -1,12 +1,12 @@
-package com.Lyber.dev.ui.fragments.bottomsheetfragments
+package com.Lyber.ui.fragments.bottomsheetfragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.DepositSingularAssetBottomSheetBinding
-import com.Lyber.dev.utils.Constants
+import com.Lyber.R
+import com.Lyber.databinding.DepositSingularAssetBottomSheetBinding
+import com.Lyber.utils.Constants
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 

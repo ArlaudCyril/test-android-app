@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments.bottomsheetfragments
+package com.Lyber.ui.fragments.bottomsheetfragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,14 +7,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.fragment.findNavController
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentEnterPhoneNumberBottomSheetBinding
-import com.Lyber.dev.ui.fragments.SendAmountFragment
-import com.Lyber.dev.ui.fragments.WithdrawUsdcFragment
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.requestKeyboard
-import com.Lyber.dev.utils.CommonMethods.Companion.showToast
-import com.Lyber.dev.utils.Constants
+import com.Lyber.R
+import com.Lyber.databinding.FragmentEnterPhoneNumberBottomSheetBinding
+import com.Lyber.ui.fragments.SendAmountFragment
+import com.Lyber.ui.fragments.WithdrawUsdcFragment
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
+import com.Lyber.utils.CommonMethods.Companion.showToast
+import com.Lyber.utils.Constants
 import com.au.countrycodepicker.CountryPicker
 
 

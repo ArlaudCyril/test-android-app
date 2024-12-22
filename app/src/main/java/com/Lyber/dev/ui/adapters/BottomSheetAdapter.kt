@@ -1,14 +1,14 @@
-package com.Lyber.dev.ui.adapters
+package com.Lyber.ui.adapters
 
 import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.ItemBottomSheetRecyclerViewBinding
-import com.Lyber.dev.models.DataBottomSheet
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.BottomSheetDialog
+import com.Lyber.R
+import com.Lyber.databinding.ItemBottomSheetRecyclerViewBinding
+import com.Lyber.models.DataBottomSheet
+import com.Lyber.ui.fragments.bottomsheetfragments.BottomSheetDialog
 
 class BottomSheetAdapter(
     private val listener: ItemListener,

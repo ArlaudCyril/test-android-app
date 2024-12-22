@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -9,14 +9,14 @@ import android.widget.ImageView
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentDefaultPicBinding
-import com.Lyber.dev.databinding.LoaderViewBinding
-import com.Lyber.dev.models.AvatarData
-import com.Lyber.dev.ui.adapters.BaseAdapter
-import com.Lyber.dev.utils.CommonMethods.Companion.replaceFragment
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.utils.ItemOffsetDecoration
+import com.Lyber.R
+import com.Lyber.databinding.FragmentDefaultPicBinding
+import com.Lyber.databinding.LoaderViewBinding
+import com.Lyber.models.AvatarData
+import com.Lyber.ui.adapters.BaseAdapter
+import com.Lyber.utils.CommonMethods.Companion.replaceFragment
+import com.Lyber.utils.Constants
+import com.Lyber.utils.ItemOffsetDecoration
 
 class DefaultImagesFragment : BaseFragment<FragmentDefaultPicBinding>() {
 

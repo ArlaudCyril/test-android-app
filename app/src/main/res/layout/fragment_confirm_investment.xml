@@ -311,7 +311,7 @@
                     android:textColor="@color/purple_gray_700"
                     android:textStyle="bold" />
 
-                <com.Lyber.dev.ui.fragments.AllocationView
+                <com.Lyber.ui.fragments.AllocationView
                     android:id="@+id/allocationView"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

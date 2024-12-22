@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.app.Activity
 import android.content.ContentValues.TAG
@@ -11,15 +11,15 @@ import androidx.activity.result.ActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityOptionsCompat
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentAddressBinding
-import com.Lyber.dev.models.AddressDataLocal
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.requestKeyboard
-import com.Lyber.dev.utils.CommonMethods.Companion.showToast
-import com.Lyber.dev.utils.CommonMethods.Companion.takesAlphabetOnly
-import com.Lyber.dev.viewmodels.PersonalDataViewModel
+import com.Lyber.R
+import com.Lyber.databinding.FragmentAddressBinding
+import com.Lyber.models.AddressDataLocal
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
+import com.Lyber.utils.CommonMethods.Companion.showToast
+import com.Lyber.utils.CommonMethods.Companion.takesAlphabetOnly
+import com.Lyber.viewmodels.PersonalDataViewModel
 import com.au.countrycodepicker.CountryPicker
 import com.google.android.libraries.places.api.model.Place
 import com.google.android.libraries.places.widget.Autocomplete

@@ -1,11 +1,11 @@
-package com.Lyber.dev.ui.fragments.bottomsheetfragments
+package com.Lyber.ui.fragments.bottomsheetfragments
 
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.view.WindowManager
-import com.Lyber.dev.databinding.BottomSheetInvestBinding
-import com.Lyber.dev.ui.portfolio.fragment.PortfolioHomeFragment
+import com.Lyber.databinding.BottomSheetInvestBinding
+import com.Lyber.ui.portfolio.fragment.PortfolioHomeFragment
 
 class InvestBottomSheet(val clickListener: (Boolean) -> Unit) :
     BaseBottomSheet<BottomSheetInvestBinding>(), View.OnClickListener {

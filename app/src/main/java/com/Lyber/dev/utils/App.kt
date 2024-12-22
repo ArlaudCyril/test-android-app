@@ -1,11 +1,11 @@
-package com.Lyber.dev.utils
+package com.Lyber.utils
 
 import android.app.Application
 import android.content.Context
 import android.util.Base64
 import android.util.Log
 import androidx.core.content.PackageManagerCompat.LOG_TAG
-import com.Lyber.dev.R
+import com.Lyber.R
 import com.google.android.libraries.places.api.Places
 import javax.crypto.SecretKey
 import com.appsflyer.AppsFlyerLib

@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -7,18 +7,18 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentEducationStrategyHolderBinding
-import com.Lyber.dev.models.MessageResponse
-import com.Lyber.dev.utils.ActivityCallbacks
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
-import com.Lyber.dev.utils.CommonMethods.Companion.dismissProgressDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.replaceFragment
-import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.viewmodels.NetworkViewModel
+import com.Lyber.R
+import com.Lyber.databinding.FragmentEducationStrategyHolderBinding
+import com.Lyber.models.MessageResponse
+import com.Lyber.utils.ActivityCallbacks
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods.Companion.checkInternet
+import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.replaceFragment
+import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
+import com.Lyber.utils.Constants
+import com.Lyber.viewmodels.NetworkViewModel
 
 class EducationStrategyHolderFragment : BaseFragment<FragmentEducationStrategyHolderBinding>(),
     ActivityCallbacks {
@@ -51,12 +51,12 @@ class EducationStrategyHolderFragment : BaseFragment<FragmentEducationStrategyHo
 
     override fun onResume() {
         super.onResume()
-        com.Lyber.dev.ui.activities.SplashActivity.activityCallbacks = this
+        com.Lyber.ui.activities.SplashActivity.activityCallbacks = this
     }
 
     override fun onStop() {
         super.onStop()
-        com.Lyber.dev.ui.activities.SplashActivity.activityCallbacks = null
+        com.Lyber.ui.activities.SplashActivity.activityCallbacks = null
     }
 
     private val observer = Observer<MessageResponse> {

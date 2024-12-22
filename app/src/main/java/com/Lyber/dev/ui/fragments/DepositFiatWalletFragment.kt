@@ -1,10 +1,10 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.os.Bundle
 import android.view.View
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentDepositFiatWalletBinding
-import com.Lyber.dev.utils.CommonMethods.Companion.replaceFragment
+import com.Lyber.R
+import com.Lyber.databinding.FragmentDepositFiatWalletBinding
+import com.Lyber.utils.CommonMethods.Companion.replaceFragment
 
 class DepositFiatWalletFragment : BaseFragment<FragmentDepositFiatWalletBinding>() {
 

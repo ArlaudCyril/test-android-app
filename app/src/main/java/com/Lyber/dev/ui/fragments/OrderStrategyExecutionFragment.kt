@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.os.Bundle
 import android.os.Handler
@@ -16,22 +16,22 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentOrderStrategyExecutionBinding
-import com.Lyber.dev.databinding.ItemMyAssetBinding
-import com.Lyber.dev.models.BalanceStrategy
-import com.Lyber.dev.models.BalanceStrategyData
-import com.Lyber.dev.ui.activities.SplashActivity
-import com.Lyber.dev.ui.adapters.BaseAdapter
-import com.Lyber.dev.viewmodels.PortfolioViewModel
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.commaFormatted
-import com.Lyber.dev.utils.CommonMethods.Companion.currencyFormatted
-import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.loadCircleCrop
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
+import com.Lyber.R
+import com.Lyber.databinding.FragmentOrderStrategyExecutionBinding
+import com.Lyber.databinding.ItemMyAssetBinding
+import com.Lyber.models.BalanceStrategy
+import com.Lyber.models.BalanceStrategyData
+import com.Lyber.ui.activities.SplashActivity
+import com.Lyber.ui.adapters.BaseAdapter
+import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.commaFormatted
+import com.Lyber.utils.CommonMethods.Companion.currencyFormatted
+import com.Lyber.utils.CommonMethods.Companion.formattedAsset
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
 import com.google.android.gms.tasks.Task
 import com.google.android.play.core.integrity.StandardIntegrityManager
 import okhttp3.ResponseBody
@@ -256,7 +256,7 @@ class OrderStrategyExecutionFragment : BaseFragment<FragmentOrderStrategyExecuti
                         try {
                             val balanceId = it.id
                             val currency =
-                                com.Lyber.dev.ui.activities.BaseActivity.assets.find { it.id == balanceId }
+                                com.Lyber.ui.activities.BaseActivity.assets.find { it.id == balanceId }
                             ivAssetIcon.loadCircleCrop(currency?.imageUrl ?: "")
                             tvAssetName.visible()
                             tvAssetName.text = currency?.fullName

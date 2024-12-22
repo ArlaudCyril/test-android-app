@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.adapters
+package com.Lyber.ui.adapters
 
 import android.annotation.SuppressLint
 import android.os.Build
@@ -7,15 +7,15 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.ItemAssetBinding
-import com.Lyber.dev.databinding.LoaderViewBinding
-import com.Lyber.dev.models.PriceServiceResume
-import com.Lyber.dev.utils.CommonMethods.Companion.commaFormatted
-import com.Lyber.dev.utils.CommonMethods.Companion.currencyFormatted
-import com.Lyber.dev.utils.CommonMethods.Companion.loadCircleCrop
-import com.Lyber.dev.utils.CommonMethods.Companion.loadImage
-import com.Lyber.dev.utils.CommonMethods.Companion.roundFloat
+import com.Lyber.R
+import com.Lyber.databinding.ItemAssetBinding
+import com.Lyber.databinding.LoaderViewBinding
+import com.Lyber.models.PriceServiceResume
+import com.Lyber.utils.CommonMethods.Companion.commaFormatted
+import com.Lyber.utils.CommonMethods.Companion.currencyFormatted
+import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
+import com.Lyber.utils.CommonMethods.Companion.loadImage
+import com.Lyber.utils.CommonMethods.Companion.roundFloat
 import kotlin.math.abs
 
 class AllAssetAdapter(private val clickListener: (PriceServiceResume) -> Unit = { _ -> }
@@ -76,7 +76,7 @@ class AllAssetAdapter(private val clickListener: (PriceServiceResume) -> Unit = 
                     val urlLineChart = it.priceServiceResumeData.squiggleURL
                     lineChart.loadImage(urlLineChart)
                     val id = it.id
-                    com.Lyber.dev.ui.activities.BaseActivity.assets.firstNotNullOfOrNull{ item -> item.takeIf {item.id == id}}
+                    com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull{ item -> item.takeIf {item.id == id}}
                         ?.let {
                                 it1 -> ivAsset.loadCircleCrop(it1.imageUrl); tvAssetName.text = it1.fullName
                             if (isExchange) {

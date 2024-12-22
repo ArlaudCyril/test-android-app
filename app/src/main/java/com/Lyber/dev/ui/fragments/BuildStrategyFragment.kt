@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.app.Dialog
 import android.content.Context
@@ -17,31 +17,31 @@ import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.BottomSheetSpinnerBinding
-import com.Lyber.dev.databinding.CustomDialogLayoutBinding
-import com.Lyber.dev.databinding.FragmentBuildStrategyBinding
-import com.Lyber.dev.models.AddedAsset
-import com.Lyber.dev.models.PriceServiceResume
-import com.Lyber.dev.ui.activities.SplashActivity
-import com.Lyber.dev.ui.adapters.BuildStrategyAdapter
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.AddAssetBottomSheet
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.BaseBottomSheet
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
-import com.Lyber.dev.utils.CommonMethods.Companion.dismissProgressDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.requestKeyboard
-import com.Lyber.dev.utils.CommonMethods.Companion.showErrorMessage
-import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.showSnack
-import com.Lyber.dev.utils.CommonMethods.Companion.showToast
-import com.Lyber.dev.utils.CommonMethods.Companion.toPx
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.Lyber.R
+import com.Lyber.databinding.BottomSheetSpinnerBinding
+import com.Lyber.databinding.CustomDialogLayoutBinding
+import com.Lyber.databinding.FragmentBuildStrategyBinding
+import com.Lyber.models.AddedAsset
+import com.Lyber.models.PriceServiceResume
+import com.Lyber.ui.activities.SplashActivity
+import com.Lyber.ui.adapters.BuildStrategyAdapter
+import com.Lyber.ui.fragments.bottomsheetfragments.AddAssetBottomSheet
+import com.Lyber.ui.fragments.bottomsheetfragments.BaseBottomSheet
+import com.Lyber.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.checkInternet
+import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
+import com.Lyber.utils.CommonMethods.Companion.showErrorMessage
+import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.showSnack
+import com.Lyber.utils.CommonMethods.Companion.showToast
+import com.Lyber.utils.CommonMethods.Companion.toPx
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.google.android.gms.tasks.Task
 import com.google.android.play.core.integrity.StandardIntegrityManager
 import okhttp3.ResponseBody
@@ -98,7 +98,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
         if (isEdit) {
             for (ada in viewModel.selectedStrategy!!.bundle) {
                 val priceServiceResume =
-                    com.Lyber.dev.ui.activities.BaseActivity.balanceResume.firstNotNullOfOrNull { item -> item.takeIf { item.id == ada.asset } }
+                    com.Lyber.ui.activities.BaseActivity.balanceResume.firstNotNullOfOrNull { item -> item.takeIf { item.id == ada.asset } }
                 val assest = AddedAsset(priceServiceResume!!, ada.share, false)
                 viewModel.addedAsset.apply {
                     add(assest)
@@ -406,7 +406,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
 //        viewModel.addedAsset[position].let {
 //            val allocationValue = it.allocation.toInt()
 //            val assest =
-//                com.Lyber.dev.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.addedAsset[position].addAsset.id } }
+//                com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.addedAsset[position].addAsset.id } }
 //            val assetsName = assest!!.fullName + " (${assest.id.uppercase()})"
 //            SpinnerBottomSheet(::manuallySelectedAllocation).apply {
 //                arguments = Bundle().apply {
@@ -706,7 +706,7 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                     viewModel.addedAsset[position].let {
                         val allocationValue = it.allocation.toInt()
                         val assest =
-                            com.Lyber.dev.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.addedAsset[position].addAsset.id } }
+                            com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.addedAsset[position].addAsset.id } }
                         val assetsName = assest!!.fullName + " (${assest.id.uppercase()})"
                         SpinnerBottomSheet(::manuallySelectedAllocation).apply {
                             arguments = Bundle().apply {

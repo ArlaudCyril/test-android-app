@@ -1,4 +1,4 @@
-package com.Lyber.dev.utils
+package com.Lyber.utils
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -15,7 +15,7 @@ import android.view.ViewGroup.LayoutParams.MATCH_PARENT
 import android.widget.RelativeLayout
 import android.widget.TextView
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
-import com.Lyber.dev.R
+import com.Lyber.R
 
 class CustomLineChart : RelativeLayout {
     constructor(context: Context) : this(context, null)

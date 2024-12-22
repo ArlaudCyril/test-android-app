@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.content.ActivityNotFoundException
 import android.content.Intent
@@ -15,18 +15,18 @@ import android.view.ViewGroup
 import android.widget.RelativeLayout
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.DownloadGoogleAuthenticatorBinding
-import com.Lyber.dev.databinding.FragmentTwoFactorAuthenticationBinding
-import com.Lyber.dev.ui.activities.SplashActivity
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.VerificationBottomSheet
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.dismissAlertDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.dismissProgressDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.showToast
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.viewmodels.SignUpViewModel
+import com.Lyber.R
+import com.Lyber.databinding.DownloadGoogleAuthenticatorBinding
+import com.Lyber.databinding.FragmentTwoFactorAuthenticationBinding
+import com.Lyber.ui.activities.SplashActivity
+import com.Lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.dismissAlertDialog
+import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.showToast
+import com.Lyber.utils.Constants
+import com.Lyber.viewmodels.SignUpViewModel
 import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.play.core.integrity.StandardIntegrityManager

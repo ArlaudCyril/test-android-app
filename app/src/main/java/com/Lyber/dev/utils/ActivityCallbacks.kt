@@ -1,4 +1,4 @@
-package com.Lyber.dev.utils
+package com.Lyber.utils
 
 interface ActivityCallbacks {
     fun onBackPressed(): Boolean

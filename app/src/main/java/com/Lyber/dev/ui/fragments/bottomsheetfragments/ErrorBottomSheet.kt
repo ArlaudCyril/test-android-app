@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments.bottomsheetfragments
+package com.Lyber.ui.fragments.bottomsheetfragments
 
 import android.content.DialogInterface
 import android.os.Bundle
@@ -6,14 +6,14 @@ import android.util.DisplayMetrics
 import android.view.View
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.ErrorBottomSheetBinding
-import com.Lyber.dev.ui.fragments.ChooseAssetForDepositFragment
-import com.Lyber.dev.ui.fragments.SelectAssestForBuy
-import com.Lyber.dev.ui.portfolio.fragment.PortfolioHomeFragment
-import com.Lyber.dev.viewmodels.PortfolioViewModel
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.Constants
+import com.Lyber.R
+import com.Lyber.databinding.ErrorBottomSheetBinding
+import com.Lyber.ui.fragments.ChooseAssetForDepositFragment
+import com.Lyber.ui.fragments.SelectAssestForBuy
+import com.Lyber.ui.portfolio.fragment.PortfolioHomeFragment
+import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.Constants
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 class ErrorBottomSheet(val clickListener: (Boolean) -> Unit) :

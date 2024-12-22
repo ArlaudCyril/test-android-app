@@ -1,14 +1,14 @@
-package com.Lyber.dev.ui.adapters
+package com.Lyber.ui.adapters
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.ItemAllAssestBinding
-import com.Lyber.dev.models.AssetBaseData
-import com.Lyber.dev.utils.CommonMethods.Companion.loadCircleCrop
+import com.Lyber.R
+import com.Lyber.databinding.ItemAllAssestBinding
+import com.Lyber.models.AssetBaseData
+import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
 
 class AllAssesstAdapterDeposit(
     private val clickListener: (AssetBaseData) -> Unit = { _ -> }, private val context: Context
@@ -34,7 +34,7 @@ class AllAssesstAdapterDeposit(
                 itemList[position]?.let { it ->
                     val id = it.id
                     val currency: AssetBaseData? =
-                        com.Lyber.dev.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == id } }
+                        com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == id } }
                     if (currency != null) {
                         ivAsset.loadCircleCrop(currency.imageUrl)
                     }

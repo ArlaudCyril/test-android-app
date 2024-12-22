@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -9,16 +9,16 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentConfirmInvestmentBinding
-import com.Lyber.dev.models.AssetBaseData
-import com.Lyber.dev.models.DataQuote
-import com.Lyber.dev.viewmodels.PortfolioViewModel
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
+import com.Lyber.R
+import com.Lyber.databinding.FragmentConfirmInvestmentBinding
+import com.Lyber.models.AssetBaseData
+import com.Lyber.models.DataQuote
+import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.formattedAsset
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
 import com.google.gson.Gson
 import okhttp3.ResponseBody
 import java.math.BigDecimal
@@ -146,14 +146,14 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
     private fun prepareView(data: DataQuote?) {
         binding.apply {
             val assetTo =
-                com.Lyber.dev.ui.activities.BaseActivity.assets.find { it1 -> it1.id == data!!.toAsset }
+                com.Lyber.ui.activities.BaseActivity.assets.find { it1 -> it1.id == data!!.toAsset }
             val assetFrom =
-                com.Lyber.dev.ui.activities.BaseActivity.assets.find { it1 -> it1.id == data!!.fromAsset }
+                com.Lyber.ui.activities.BaseActivity.assets.find { it1 -> it1.id == data!!.fromAsset }
             fromAsset = assetFrom!!
 //            toAsset = assetTo!!
             tvNestedAmount.text = getString(R.string.ratio)
             val balance =
-                com.Lyber.dev.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
+                com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
             var priceCoin = balance!!.balanceData.euroBalance.toDouble()
                 .div(balance.balanceData.balance.toDouble())
             tvNestedAmountValue.text = "1 : " + data!!.ratio
@@ -181,9 +181,9 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
                 } ${data.fromAsset.uppercase()}"
 
 //            val balanceFrom =
-//                com.Lyber.dev.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
+//                com.Lyber.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetFrom }
 //            val balanceTo =
-//                com.Lyber.dev.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetTo }
+//                com.Lyber.ui.activities.BaseActivity.balanceResume.find { it1 -> it1.id == viewModel.exchangeAssetTo }
 //            val balanceFromPrice = balanceFrom!!.priceServiceResumeData.lastPrice
 //            val balanceToPrice = balanceTo!!.priceServiceResumeData.lastPrice
             val valuesInEurosToAsset =
@@ -325,7 +325,7 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
 
             7000 -> {
                 val data1 =
-                    com.Lyber.dev.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.exchangeAssetFrom } }
+                    com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.exchangeAssetFrom } }
 
                 CommonMethods.showSnack(
                     binding.root,
@@ -338,7 +338,7 @@ class ConfirmExchangeFragment : BaseFragment<FragmentConfirmInvestmentBinding>()
 
             7001 -> {
                 val data1 =
-                    com.Lyber.dev.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.exchangeAssetTo } }
+                    com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.exchangeAssetTo } }
 
                 CommonMethods.showSnack(
                     binding.root,

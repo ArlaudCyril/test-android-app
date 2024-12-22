@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.os.Bundle
 import android.text.Editable
@@ -9,18 +9,18 @@ import android.view.View.OnClickListener
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentAddRibBinding
-import com.Lyber.dev.models.RIBData
-import com.Lyber.dev.ui.activities.SplashActivity
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.WithdrawalUsdcAddressBottomSheet
-import com.Lyber.dev.ui.portfolio.fragment.PortfolioDetailFragment
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.showToast
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.Lyber.R
+import com.Lyber.databinding.FragmentAddRibBinding
+import com.Lyber.models.RIBData
+import com.Lyber.ui.activities.SplashActivity
+import com.Lyber.ui.fragments.bottomsheetfragments.WithdrawalUsdcAddressBottomSheet
+import com.Lyber.ui.portfolio.fragment.PortfolioDetailFragment
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.showToast
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.au.countrycodepicker.CountryPicker
 import com.google.android.gms.tasks.Task
 import com.google.android.play.core.integrity.StandardIntegrityManager
@@ -96,7 +96,7 @@ class AddRibFragment : BaseFragment<FragmentAddRibBinding>(), OnClickListener {
                 CommonMethods.dismissProgressDialog()
 
                 if (!it.data.isNullOrEmpty())
-                    com.Lyber.dev.ui.activities.BaseActivity.ribWalletList =
+                    com.Lyber.ui.activities.BaseActivity.ribWalletList =
                         it.data as ArrayList<RIBData>
                 if (fromAssetDetail)
                     findNavController().navigate(R.id.action_addRibFragment_to_ribListingFragment_to_portfolioDetail)

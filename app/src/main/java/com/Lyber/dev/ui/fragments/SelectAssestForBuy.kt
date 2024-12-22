@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -9,19 +9,19 @@ import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.CustomDialogVerticalLayoutBinding
-import com.Lyber.dev.databinding.FragmentAllAssetsBinding
-import com.Lyber.dev.models.PriceServiceResume
-import com.Lyber.dev.ui.adapters.AllAssetAdapter
-import com.Lyber.dev.viewmodels.PortfolioViewModel
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.AppLifeCycleObserver
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.utils.OnTextChange
+import com.Lyber.R
+import com.Lyber.databinding.CustomDialogVerticalLayoutBinding
+import com.Lyber.databinding.FragmentAllAssetsBinding
+import com.Lyber.models.PriceServiceResume
+import com.Lyber.ui.adapters.AllAssetAdapter
+import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.utils.App
+import com.Lyber.utils.AppLifeCycleObserver
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
+import com.Lyber.utils.OnTextChange
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.tabs.TabLayout
 
@@ -65,8 +65,8 @@ class SelectAssestForBuy : BaseFragment<FragmentAllAssetsBinding>(), View.OnClic
                 topLosers.clear()
                 topGainers.clear()
                 stables.clear()
-                com.Lyber.dev.ui.activities.BaseActivity.balanceResume.clear()
-                com.Lyber.dev.ui.activities.BaseActivity.balanceResume.addAll(it)
+                com.Lyber.ui.activities.BaseActivity.balanceResume.clear()
+                com.Lyber.ui.activities.BaseActivity.balanceResume.addAll(it)
                 assets.addAll(it)
                 if (type == Constants.Exchange) {
                     for (asset in it) {
@@ -251,7 +251,7 @@ class SelectAssestForBuy : BaseFragment<FragmentAllAssetsBinding>(), View.OnClic
 
     private fun assetClicked(asset: PriceServiceResume) {
         val balance =
-            com.Lyber.dev.ui.activities.BaseActivity.balances.find { it1 -> it1.id == Constants.MAIN_ASSET }
+            com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == Constants.MAIN_ASSET }
         if (asset.id == Constants.MAIN_ASSET) {
 
             if (checkKyc()) {

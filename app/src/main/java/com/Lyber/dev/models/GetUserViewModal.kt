@@ -1,4 +1,4 @@
-package com.Lyber.dev.models
+package com.Lyber.models
 
 import android.app.Application
 import android.util.Log
@@ -7,10 +7,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
-import com.Lyber.dev.ui.activities.SplashActivity
-import com.Lyber.dev.ui.portfolio.fragment.PortfolioHomeFragment
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.viewmodels.NetworkViewModel
+import com.Lyber.ui.activities.SplashActivity
+import com.Lyber.ui.portfolio.fragment.PortfolioHomeFragment
+import com.Lyber.utils.App
+import com.Lyber.viewmodels.NetworkViewModel
 import com.google.android.gms.tasks.Task
 import com.google.android.play.core.integrity.StandardIntegrityManager
 import kotlinx.coroutines.Job
@@ -21,8 +21,8 @@ class GetUserViewModal() : ViewModel() {
 
     private val networkViewModel = NetworkViewModel()
 
-    private val _userLiveData = MutableLiveData<com.Lyber.dev.models.User>()
-    val userLiveData: LiveData<com.Lyber.dev.models.User> get() = _userLiveData
+    private val _userLiveData = MutableLiveData<com.Lyber.models.User>()
+    val userLiveData: LiveData<com.Lyber.models.User> get() = _userLiveData
     private var fetchingJob: Job? = null
 
     init {

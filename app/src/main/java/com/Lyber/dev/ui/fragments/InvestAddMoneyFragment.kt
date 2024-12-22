@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.animation.Keyframe
 import android.animation.ObjectAnimator
@@ -13,25 +13,25 @@ import android.view.View
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentInvestAddMoneyBinding
-import com.Lyber.dev.models.Balance
-import com.Lyber.dev.models.BalanceData
-import com.Lyber.dev.models.CurrentPriceResponse
-import com.Lyber.dev.models.Strategy
-import com.Lyber.dev.network.RestClient
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.FrequencyModel
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.invisible
-import com.Lyber.dev.utils.CommonMethods.Companion.setBackgroundTint
-import com.Lyber.dev.utils.CommonMethods.Companion.shake
-import com.Lyber.dev.utils.CommonMethods.Companion.showToast
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.utils.OnTextChange
-import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.Lyber.R
+import com.Lyber.databinding.FragmentInvestAddMoneyBinding
+import com.Lyber.models.Balance
+import com.Lyber.models.BalanceData
+import com.Lyber.models.CurrentPriceResponse
+import com.Lyber.models.Strategy
+import com.Lyber.network.RestClient
+import com.Lyber.ui.fragments.bottomsheetfragments.FrequencyModel
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.formattedAsset
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.invisible
+import com.Lyber.utils.CommonMethods.Companion.setBackgroundTint
+import com.Lyber.utils.CommonMethods.Companion.shake
+import com.Lyber.utils.CommonMethods.Companion.showToast
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
+import com.Lyber.utils.OnTextChange
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import kotlinx.coroutines.CoroutineScope
@@ -109,7 +109,7 @@ class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), Vi
 
     private fun prepareView() {
         val selectedAsset =
-            com.Lyber.dev.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == Constants.MAIN_ASSET } }
+            com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == Constants.MAIN_ASSET } }
         if (selectedAsset != null)
             decimal = selectedAsset.decimals
         for (asset in viewModel.selectedStrategy?.bundle!!) {
@@ -122,7 +122,7 @@ class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), Vi
         if (ceil(requiredAmount) != viewModel.selectedStrategy?.minAmount?.toFloat())
             requiredAmount = viewModel.selectedStrategy?.minAmount?.toFloat()!!
         var balance =
-            com.Lyber.dev.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == Constants.MAIN_ASSET } }
+            com.Lyber.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == Constants.MAIN_ASSET } }
         if (balance == null) {
             val balanceData = BalanceData("0", "0")
             balance = Balance("0", balanceData)
@@ -229,7 +229,7 @@ class InvestAddMoneyFragment : BaseFragment<FragmentInvestAddMoneyBinding>(), Vi
     private fun investment() {
         val finalAmount = amount.replace(mCurrency, "").pointFormat
         val balance =
-            com.Lyber.dev.ui.activities.BaseActivity.balances.find { it1 -> it1.id == Constants.MAIN_ASSET }
+            com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == Constants.MAIN_ASSET }
         val amount: Float = balance?.balanceData?.balance?.toFloat() ?: 0f
 
         if (finalAmount.toFloat() < requiredAmount) {

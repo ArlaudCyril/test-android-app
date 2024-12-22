@@ -1,11 +1,11 @@
-package com.Lyber.dev.ui.fragments.dialogs
+package com.Lyber.ui.fragments.dialogs
 
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.DialogDateTimePickerBinding
-import com.Lyber.dev.utils.CommonMethods
+import com.Lyber.R
+import com.Lyber.databinding.DialogDateTimePickerBinding
+import com.Lyber.utils.CommonMethods
 import java.util.Calendar
 import java.util.Locale
 

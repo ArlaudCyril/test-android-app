@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.portfolio.fragment
+package com.Lyber.ui.portfolio.fragment
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -22,44 +22,44 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.CustomDialogVerticalLayoutBinding
-import com.Lyber.dev.databinding.FragmentPortfolioDetailBinding
-import com.Lyber.dev.databinding.LottieViewBinding
-import com.Lyber.dev.databinding.ProgressBarNewBinding
-import com.Lyber.dev.models.Balance
-import com.Lyber.dev.models.Duration
-import com.Lyber.dev.ui.activities.BaseActivity
-import com.Lyber.dev.ui.activities.SplashActivity
-import com.Lyber.dev.ui.adapters.BalanceAdapter
-import com.Lyber.dev.ui.adapters.ResourcesAdapter
-import com.Lyber.dev.ui.fragments.AddAmountFragment
-import com.Lyber.dev.ui.fragments.BaseFragment
-import com.Lyber.dev.ui.fragments.PickYourStrategyFragment
-import com.Lyber.dev.ui.fragments.SelectAnAssetFragment
-import com.Lyber.dev.ui.fragments.SendMoneyOptionsFragment
-import com.Lyber.dev.ui.portfolio.bottomSheetFragment.PortfolioThreeDots
-import com.Lyber.dev.ui.portfolio.bottomSheetFragment.PortfolioThreeDotsDismissListener
-import com.Lyber.dev.viewmodels.PortfolioViewModel
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.AppLifeCycleObserver
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.commaFormatted
-import com.Lyber.dev.utils.CommonMethods.Companion.currencyFormatted
-import com.Lyber.dev.utils.CommonMethods.Companion.dismissAlertDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.loadCircleCrop
-import com.Lyber.dev.utils.CommonMethods.Companion.replaceFragment
-import com.Lyber.dev.utils.CommonMethods.Companion.returnErrorCode
-import com.Lyber.dev.utils.CommonMethods.Companion.setBackgroundTint
-import com.Lyber.dev.utils.CommonMethods.Companion.showErrorMessage
-import com.Lyber.dev.utils.CommonMethods.Companion.showSnack
-import com.Lyber.dev.utils.CommonMethods.Companion.showToast
-import com.Lyber.dev.utils.CommonMethods.Companion.toMilli
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.utils.ItemOffsetDecoration
+import com.Lyber.R
+import com.Lyber.databinding.CustomDialogVerticalLayoutBinding
+import com.Lyber.databinding.FragmentPortfolioDetailBinding
+import com.Lyber.databinding.LottieViewBinding
+import com.Lyber.databinding.ProgressBarNewBinding
+import com.Lyber.models.Balance
+import com.Lyber.models.Duration
+import com.Lyber.ui.activities.BaseActivity
+import com.Lyber.ui.activities.SplashActivity
+import com.Lyber.ui.adapters.BalanceAdapter
+import com.Lyber.ui.adapters.ResourcesAdapter
+import com.Lyber.ui.fragments.AddAmountFragment
+import com.Lyber.ui.fragments.BaseFragment
+import com.Lyber.ui.fragments.PickYourStrategyFragment
+import com.Lyber.ui.fragments.SelectAnAssetFragment
+import com.Lyber.ui.fragments.SendMoneyOptionsFragment
+import com.Lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDots
+import com.Lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDotsDismissListener
+import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.utils.App
+import com.Lyber.utils.AppLifeCycleObserver
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.commaFormatted
+import com.Lyber.utils.CommonMethods.Companion.currencyFormatted
+import com.Lyber.utils.CommonMethods.Companion.dismissAlertDialog
+import com.Lyber.utils.CommonMethods.Companion.formattedAsset
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
+import com.Lyber.utils.CommonMethods.Companion.replaceFragment
+import com.Lyber.utils.CommonMethods.Companion.returnErrorCode
+import com.Lyber.utils.CommonMethods.Companion.setBackgroundTint
+import com.Lyber.utils.CommonMethods.Companion.showErrorMessage
+import com.Lyber.utils.CommonMethods.Companion.showSnack
+import com.Lyber.utils.CommonMethods.Companion.showToast
+import com.Lyber.utils.CommonMethods.Companion.toMilli
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
+import com.Lyber.utils.ItemOffsetDecoration
 import com.airbnb.lottie.LottieAnimationView
 import com.appsflyer.AFInAppEventParameterName
 import com.appsflyer.AFInAppEventType
@@ -110,7 +110,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
     override fun onDestroyView() {
         Log.d(TAG, "onDestroyView: ")
         updateSocketValue = false
-        com.Lyber.dev.ui.activities.SplashActivity.activityCallbacks = null
+        com.Lyber.ui.activities.SplashActivity.activityCallbacks = null
         webSocket.close(1000, "Goodbye !")
         super.onDestroyView()
     }
@@ -283,7 +283,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                     val balance = Balance(id = it.key, balanceData = it.value)
                     balances.add(balance)
                 }
-                com.Lyber.dev.ui.activities.BaseActivity.balances = balances
+                com.Lyber.ui.activities.BaseActivity.balances = balances
                 loadAnimation()
 //                showLottieProgressDialog(requireActivity(), Constants.LOADING_SUCCESS)
                 dismissProgress()
@@ -535,7 +535,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
             "buy" -> {
                 val balance =
-                    com.Lyber.dev.ui.activities.BaseActivity.balances.find { it1 -> it1.id == Constants.MAIN_ASSET }
+                    com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == Constants.MAIN_ASSET }
                 viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
                 if (viewModel.selectedAsset!!.id == Constants.MAIN_ASSET) {
                     if (checkKyc())
@@ -646,7 +646,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                         if (viewModel.selectedAsset!!.id == Constants.MAIN_ASSET) {
 //                        findNavController().navigate(R.id.buyUsdt)
                             val balance =
-                                com.Lyber.dev.ui.activities.BaseActivity.balances.find { it1 -> it1.id == Constants.MAIN_ASSET }
+                                com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == Constants.MAIN_ASSET }
                             if (balance != null) {
                                 viewModel.exchangeAssetTo = Constants.MAIN_ASSET
                                 viewModel.exchangeAssetFrom = viewModel.selectedAsset!!.id
@@ -654,7 +654,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
                             }
                         } else {
                             val balance =
-                                com.Lyber.dev.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.selectedAsset!!.id }
+                                com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == viewModel.selectedAsset!!.id }
                             if (balance != null) {
                                 viewModel.exchangeAssetTo = Constants.MAIN_ASSET
                                 viewModel.exchangeAssetFrom = viewModel.selectedAsset!!.id
@@ -701,7 +701,7 @@ class PortfolioDetailFragment : BaseFragment<FragmentPortfolioDetailBinding>(),
 
                 btnBuy -> {
                     val balance =
-                        com.Lyber.dev.ui.activities.BaseActivity.balances.find { it1 -> it1.id == Constants.MAIN_ASSET }
+                        com.Lyber.ui.activities.BaseActivity.balances.find { it1 -> it1.id == Constants.MAIN_ASSET }
                     viewModel.selectedOption = Constants.USING_SINGULAR_ASSET
                     if (viewModel.selectedAsset!!.id == Constants.MAIN_ASSET) {
                         if (checkKyc())

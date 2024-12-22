@@ -1,19 +1,19 @@
-package com.Lyber.dev.ui.adapters
+package com.Lyber.ui.adapters
 
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.ItemMyAssetBinding
-import com.Lyber.dev.models.Balance
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods.Companion.commaFormatted
-import com.Lyber.dev.utils.CommonMethods.Companion.currencyFormatted
-import com.Lyber.dev.utils.CommonMethods.Companion.formattedAsset
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.loadCircleCrop
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
+import com.Lyber.R
+import com.Lyber.databinding.ItemMyAssetBinding
+import com.Lyber.models.Balance
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods.Companion.commaFormatted
+import com.Lyber.utils.CommonMethods.Companion.currencyFormatted
+import com.Lyber.utils.CommonMethods.Companion.formattedAsset
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
+import com.Lyber.utils.CommonMethods.Companion.visible
 import java.math.RoundingMode
 
 class BalanceAdapter(
@@ -38,7 +38,7 @@ class BalanceAdapter(
             (holder as AssetViewHolder).binding.apply {
                 itemList[position]?.let {
                     val balanceId = it.id
-                    val currency = com.Lyber.dev.ui.activities.BaseActivity.assets.find { it.id == balanceId }
+                    val currency = com.Lyber.ui.activities.BaseActivity.assets.find { it.id == balanceId }
                     ivAssetIcon.loadCircleCrop(currency?.imageUrl ?: "")
                     tvAssetName.visible()
                     tvAssetName.text = currency?.fullName
@@ -74,7 +74,7 @@ class BalanceAdapter(
 
                     try {
                         val balanceId = it.id
-                        val currency = com.Lyber.dev.ui.activities.BaseActivity.assets.find { it.id == balanceId }
+                        val currency = com.Lyber.ui.activities.BaseActivity.assets.find { it.id == balanceId }
                         ivAssetIcon.loadCircleCrop(currency?.imageUrl ?: "")
                         tvAssetName.visible()
                         tvAssetName.text = currency?.fullName

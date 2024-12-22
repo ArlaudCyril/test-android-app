@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
@@ -8,13 +8,13 @@ import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
 import androidx.lifecycle.Lifecycle
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentChooseLanguageBinding
-import com.Lyber.dev.ui.activities.SplashActivity
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.viewmodels.NetworkViewModel
+import com.Lyber.R
+import com.Lyber.databinding.FragmentChooseLanguageBinding
+import com.Lyber.ui.activities.SplashActivity
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.Constants
+import com.Lyber.viewmodels.NetworkViewModel
 import com.google.android.gms.tasks.Task
 import com.google.android.play.core.integrity.StandardIntegrityManager
 import org.json.JSONObject

@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.activities
+package com.Lyber.ui.activities
 
 import android.content.res.Configuration
 import android.content.res.Resources
@@ -7,15 +7,15 @@ import android.os.PersistableBundle
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewbinding.ViewBinding
-import com.Lyber.dev.models.AssetBaseData
-import com.Lyber.dev.models.Balance
-import com.Lyber.dev.models.Network
-import com.Lyber.dev.models.PriceServiceResume
-import com.Lyber.dev.models.RIBData
-import com.Lyber.dev.models.RIBResponse
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.Lyber.models.AssetBaseData
+import com.Lyber.models.Balance
+import com.Lyber.models.Network
+import com.Lyber.models.PriceServiceResume
+import com.Lyber.models.RIBData
+import com.Lyber.models.RIBResponse
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.google.android.gms.tasks.Task
 import com.google.android.play.core.integrity.StandardIntegrityManager
 import java.util.Locale

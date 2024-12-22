@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.activities
+package com.Lyber.ui.activities
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -18,14 +18,14 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.ActivitySplashBinding
-import com.Lyber.dev.ui.fragments.DiscoveryFragment
-import com.Lyber.dev.ui.portfolio.fragment.PortfolioHomeFragment
-import com.Lyber.dev.utils.ActivityCallbacks
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods.Companion.is30DaysOld
-import com.Lyber.dev.utils.Constants
+import com.Lyber.R
+import com.Lyber.databinding.ActivitySplashBinding
+import com.Lyber.ui.fragments.DiscoveryFragment
+import com.Lyber.ui.portfolio.fragment.PortfolioHomeFragment
+import com.Lyber.utils.ActivityCallbacks
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods.Companion.is30DaysOld
+import com.Lyber.utils.Constants
 import com.google.android.play.core.integrity.IntegrityManagerFactory
 import com.google.android.play.core.integrity.StandardIntegrityManager
 import java.util.Locale

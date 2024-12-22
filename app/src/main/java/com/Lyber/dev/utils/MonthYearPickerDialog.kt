@@ -1,12 +1,12 @@
-package com.Lyber.dev.utils
+package com.Lyber.utils
 
 import android.app.AlertDialog
 import android.app.DatePickerDialog.OnDateSetListener
 import android.app.Dialog
 import android.os.Bundle
 import androidx.fragment.app.DialogFragment
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.DatePickerDialogBinding
+import com.Lyber.R
+import com.Lyber.databinding.DatePickerDialogBinding
 import java.util.*
 
 

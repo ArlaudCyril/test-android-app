@@ -1,8 +1,8 @@
-package com.Lyber.dev.utils
+package com.Lyber.utils
 
 import android.accounts.Account
-import com.Lyber.dev.R
-import com.Lyber.dev.models.AvatarData
+import com.Lyber.R
+import com.Lyber.models.AvatarData
 
 object Constants {
 

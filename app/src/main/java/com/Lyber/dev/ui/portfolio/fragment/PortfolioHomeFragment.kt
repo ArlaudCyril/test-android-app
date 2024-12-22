@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.portfolio.fragment
+package com.Lyber.ui.portfolio.fragment
 
 import android.annotation.SuppressLint
 import android.content.res.Configuration
@@ -25,34 +25,34 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentPortfolioHomeBinding
-import com.Lyber.dev.databinding.LoaderViewBinding
-import com.Lyber.dev.models.*
-import com.Lyber.dev.ui.activities.SplashActivity
-import com.Lyber.dev.ui.adapters.*
-import com.Lyber.dev.ui.fragments.BaseFragment
-import com.Lyber.dev.ui.fragments.SendMoneyOptionsFragment
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.InvestBottomSheet
-import com.Lyber.dev.ui.portfolio.action.PortfolioFragmentActions
-import com.Lyber.dev.ui.portfolio.bottomSheetFragment.PortfolioThreeDots
-import com.Lyber.dev.utils.*
-import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
-import com.Lyber.dev.utils.CommonMethods.Companion.commaFormatted
-import com.Lyber.dev.utils.CommonMethods.Companion.dismissProgressDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.fadeIn
-import com.Lyber.dev.utils.CommonMethods.Companion.fadeOut
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.px
-import com.Lyber.dev.utils.CommonMethods.Companion.replaceFragment
-import com.Lyber.dev.utils.CommonMethods.Companion.setProfile
-import com.Lyber.dev.utils.CommonMethods.Companion.toFormat
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.CommonMethods.Companion.visibleFromLeft
-import com.Lyber.dev.utils.CommonMethods.Companion.zoomIn
-import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.Lyber.R
+import com.Lyber.databinding.FragmentPortfolioHomeBinding
+import com.Lyber.databinding.LoaderViewBinding
+import com.Lyber.models.*
+import com.Lyber.ui.activities.SplashActivity
+import com.Lyber.ui.adapters.*
+import com.Lyber.ui.fragments.BaseFragment
+import com.Lyber.ui.fragments.SendMoneyOptionsFragment
+import com.Lyber.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
+import com.Lyber.ui.fragments.bottomsheetfragments.InvestBottomSheet
+import com.Lyber.ui.portfolio.action.PortfolioFragmentActions
+import com.Lyber.ui.portfolio.bottomSheetFragment.PortfolioThreeDots
+import com.Lyber.utils.*
+import com.Lyber.utils.CommonMethods.Companion.checkInternet
+import com.Lyber.utils.CommonMethods.Companion.commaFormatted
+import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.fadeIn
+import com.Lyber.utils.CommonMethods.Companion.fadeOut
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.px
+import com.Lyber.utils.CommonMethods.Companion.replaceFragment
+import com.Lyber.utils.CommonMethods.Companion.setProfile
+import com.Lyber.utils.CommonMethods.Companion.toFormat
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.CommonMethods.Companion.visibleFromLeft
+import com.Lyber.utils.CommonMethods.Companion.zoomIn
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.gms.tasks.Task
 import com.google.android.material.tabs.TabLayout
@@ -69,7 +69,7 @@ import java.util.Locale
 
 class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), ActivityCallbacks,
     View.OnClickListener, PortfolioFragmentActions {
-    //    private val viewModel1: com.Lyber.dev.models.GetUserViewModal by activityViewModels()
+    //    private val viewModel1: com.Lyber.models.GetUserViewModal by activityViewModels()
 
     /* adapters */
     private lateinit var adapterBalance: BalanceAdapter
@@ -105,7 +105,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         }
         viewModel.listener = this
 
-        com.Lyber.dev.ui.activities.SplashActivity.activityCallbacks = this
+        com.Lyber.ui.activities.SplashActivity.activityCallbacks = this
         App.prefsManager.savedScreen = javaClass.name
 
         val navHostFragment =
@@ -331,7 +331,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 binding.rvRefresh.isRefreshing = false
 //                dismissProgressDialog()
                 App.prefsManager.assetBaseDataResponse = it
-                com.Lyber.dev.ui.activities.BaseActivity.assets =
+                com.Lyber.ui.activities.BaseActivity.assets =
                     it.data as ArrayList<AssetBaseData>
             }
         }
@@ -341,8 +341,8 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 binding.rvRefresh.isRefreshing = false
 //                dismissProgressDialog()
-                com.Lyber.dev.ui.activities.BaseActivity.balanceResume.clear()
-                com.Lyber.dev.ui.activities.BaseActivity.balanceResume.addAll(it)
+                com.Lyber.ui.activities.BaseActivity.balanceResume.clear()
+                com.Lyber.ui.activities.BaseActivity.balanceResume.addAll(it)
                 val filterUsdc = it.find { it.id == Constants.MAIN_ASSET }
                 var list = ArrayList<PriceServiceResume>()
                 if (filterUsdc != null) {
@@ -399,7 +399,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                     else
                         binding.tvValuePortfolioAndAssetPrice.text = "*****"
 //                    binding.lineChart.updateValueLastPoint(totalBalance.commaFormatted.toFloat())
-                    com.Lyber.dev.ui.activities.BaseActivity.balances = balances
+                    com.Lyber.ui.activities.BaseActivity.balances = balances
                     balances.sortByDescending { it.balanceData.euroBalance.toDoubleOrNull() }
                     adapterBalance.setList(balances)
                     responseFrom = "balance"
@@ -727,7 +727,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         viewModel.networkResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
 //                dismissProgressDialog()
-                com.Lyber.dev.ui.activities.BaseActivity.networkAddress =
+                com.Lyber.ui.activities.BaseActivity.networkAddress =
                     it.data as ArrayList<Network>
             }
         }
@@ -745,7 +745,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         viewModel.walletRibResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 if (!it.data.isNullOrEmpty())
-                    com.Lyber.dev.ui.activities.BaseActivity.ribWalletList =
+                    com.Lyber.ui.activities.BaseActivity.ribWalletList =
                         it.data as ArrayList<RIBData>
             }
         }
@@ -902,7 +902,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
     override fun onDestroyView() {
         Log.d(TAG, "onDestroyView: ")
-        com.Lyber.dev.ui.activities.SplashActivity.activityCallbacks = null
+        com.Lyber.ui.activities.SplashActivity.activityCallbacks = null
         super.onDestroyView()
     }
 

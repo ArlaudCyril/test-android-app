@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments.bottomsheetfragments
+package com.Lyber.ui.fragments.bottomsheetfragments
 
 import android.graphics.drawable.Icon
 import android.os.Bundle
@@ -11,22 +11,22 @@ import androidx.core.content.ContextCompat.getColor
 import androidx.lifecycle.Lifecycle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.AppItemLayoutBinding
-import com.Lyber.dev.databinding.LoaderViewBinding
-import com.Lyber.dev.databinding.PayWithModelBottomSheetBinding
-import com.Lyber.dev.models.AssetBaseData
-import com.Lyber.dev.models.WhitelistingResponse
-import com.Lyber.dev.models.Whitelistings
-import com.Lyber.dev.ui.adapters.BaseAdapter
-import com.Lyber.dev.ui.fragments.AddBankInfoFragment
-import com.Lyber.dev.ui.fragments.AddCryptoAddress
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.loadCircleCrop
-import com.Lyber.dev.utils.CommonMethods.Companion.replaceFragment
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.Lyber.R
+import com.Lyber.databinding.AppItemLayoutBinding
+import com.Lyber.databinding.LoaderViewBinding
+import com.Lyber.databinding.PayWithModelBottomSheetBinding
+import com.Lyber.models.AssetBaseData
+import com.Lyber.models.WhitelistingResponse
+import com.Lyber.models.Whitelistings
+import com.Lyber.ui.adapters.BaseAdapter
+import com.Lyber.ui.fragments.AddBankInfoFragment
+import com.Lyber.ui.fragments.AddCryptoAddress
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
+import com.Lyber.utils.CommonMethods.Companion.replaceFragment
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.google.gson.Gson
 
 class PayWithModel(

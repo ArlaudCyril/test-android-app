@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.annotation.SuppressLint
 import android.content.Context
@@ -8,21 +8,21 @@ import android.view.inputmethod.InputMethodManager
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentAllAssetsBinding
-import com.Lyber.dev.models.PriceServiceResume
-import com.Lyber.dev.ui.adapters.AllAssetAdapter
-import com.Lyber.dev.utils.AppLifeCycleObserver
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.checkInternet
-import com.Lyber.dev.utils.CommonMethods.Companion.dismissProgressDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.showProgressDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.utils.OnTextChange
-import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.Lyber.R
+import com.Lyber.databinding.FragmentAllAssetsBinding
+import com.Lyber.models.PriceServiceResume
+import com.Lyber.ui.adapters.AllAssetAdapter
+import com.Lyber.utils.AppLifeCycleObserver
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.checkInternet
+import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
+import com.Lyber.utils.OnTextChange
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.google.android.material.tabs.TabLayout
 
 class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickListener {
@@ -67,8 +67,8 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
                 topLosers.clear()
                 topGainers.clear()
                 stables.clear()
-                com.Lyber.dev.ui.activities.BaseActivity.balanceResume.clear()
-                com.Lyber.dev.ui.activities.BaseActivity.balanceResume.addAll(it)
+                com.Lyber.ui.activities.BaseActivity.balanceResume.clear()
+                com.Lyber.ui.activities.BaseActivity.balanceResume.addAll(it)
                 assets.addAll(it)
                 if (type == Constants.Exchange) {
                     for (asset in it) {

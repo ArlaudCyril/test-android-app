@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.portfolio.bottomSheetFragment
+package com.Lyber.ui.portfolio.bottomSheetFragment
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -12,13 +12,13 @@ import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.view.updatePadding
 import androidx.fragment.app.DialogFragment
 import androidx.navigation.fragment.findNavController
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.PortfolioThreeDotsBinding
-import com.Lyber.dev.ui.portfolio.fragment.PortfolioHomeFragment
-import com.Lyber.dev.viewmodels.PortfolioViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.Constants
+import com.Lyber.R
+import com.Lyber.databinding.PortfolioThreeDotsBinding
+import com.Lyber.ui.portfolio.fragment.PortfolioHomeFragment
+import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.Constants
 
 class PortfolioThreeDots(private val listenItemClicked: (String, String) -> Unit = { _, _ -> }) :
     View.OnClickListener, DialogFragment() {

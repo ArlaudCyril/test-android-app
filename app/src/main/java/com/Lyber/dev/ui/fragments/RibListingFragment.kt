@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.os.Bundle
 import android.util.Log
@@ -10,18 +10,18 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentRibListingBinding
-import com.Lyber.dev.databinding.ItemMyAssetBinding
-import com.Lyber.dev.models.RIBData
-import com.Lyber.dev.ui.activities.SplashActivity
-import com.Lyber.dev.ui.adapters.BaseAdapter
-import com.Lyber.dev.ui.fragments.bottomsheetfragments.AddAddressInfoBottomSheet
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.Lyber.R
+import com.Lyber.databinding.FragmentRibListingBinding
+import com.Lyber.databinding.ItemMyAssetBinding
+import com.Lyber.models.RIBData
+import com.Lyber.ui.activities.SplashActivity
+import com.Lyber.ui.adapters.BaseAdapter
+import com.Lyber.ui.fragments.bottomsheetfragments.AddAddressInfoBottomSheet
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.google.android.gms.tasks.Task
 import com.google.android.play.core.integrity.StandardIntegrityManager
 import com.google.gson.GsonBuilder
@@ -44,7 +44,7 @@ class RibListingFragment : BaseFragment<FragmentRibListingBinding>(), OnClickLis
             it.adapter = adapter
             it.layoutManager = layoutManager
         }
-        val list = com.Lyber.dev.ui.activities.BaseActivity.ribWalletList
+        val list = com.Lyber.ui.activities.BaseActivity.ribWalletList
         adapter.setList(list)
         binding.ivBack.setOnClickListener(this)
         binding.btnAdd.setOnClickListener(this)
@@ -65,7 +65,7 @@ class RibListingFragment : BaseFragment<FragmentRibListingBinding>(), OnClickLis
         viewModel.walletRibResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 CommonMethods.dismissProgressDialog()
-                com.Lyber.dev.ui.activities.BaseActivity.ribWalletList =
+                com.Lyber.ui.activities.BaseActivity.ribWalletList =
                     it.data as ArrayList<RIBData>
                 adapter.clearList()
                 adapter.setList(it.data)

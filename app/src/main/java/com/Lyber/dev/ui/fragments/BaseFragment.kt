@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.app.Activity
 import android.app.Dialog
@@ -18,27 +18,27 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.CustomDialogLayoutBinding
-import com.Lyber.dev.databinding.CustomDialogVerticalLayoutBinding
-import com.Lyber.dev.models.ErrorResponse
-import com.Lyber.dev.network.RestClient
-import com.Lyber.dev.ui.activities.SplashActivity
-import com.Lyber.dev.ui.activities.WebViewActivity
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.dismissAlertDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.dismissProgressDialog
-import com.Lyber.dev.utils.CommonMethods.Companion.showToast
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.utils.LoaderObject
-import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.Lyber.R
+import com.Lyber.databinding.CustomDialogLayoutBinding
+import com.Lyber.databinding.CustomDialogVerticalLayoutBinding
+import com.Lyber.models.ErrorResponse
+import com.Lyber.network.RestClient
+import com.Lyber.ui.activities.SplashActivity
+import com.Lyber.ui.activities.WebViewActivity
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.dismissAlertDialog
+import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.showToast
+import com.Lyber.utils.Constants
+import com.Lyber.utils.LoaderObject
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.play.core.integrity.StandardIntegrityManager
 
 abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.OnRetrofitError {
-    val viewModel1: com.Lyber.dev.models.GetUserViewModal by activityViewModels()
+    val viewModel1: com.Lyber.models.GetUserViewModal by activityViewModels()
 
     private var _binding: viewBinding? = null
 
@@ -266,7 +266,7 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
                     context.startActivity(
                         Intent(
                             context,
-                            com.Lyber.dev.ui.activities.SplashActivity::class.java
+                            com.Lyber.ui.activities.SplashActivity::class.java
                         ).apply {
                             putExtra("fromLogout", "fromLogout")
                             addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)

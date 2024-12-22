@@ -1,10 +1,10 @@
-package com.Lyber.dev.ui.adapters
+package com.Lyber.ui.adapters
 
 import android.view.animation.AnimationUtils
 import androidx.recyclerview.widget.RecyclerView
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.LoaderViewBinding
-import com.Lyber.dev.models.RIBData
+import com.Lyber.R
+import com.Lyber.databinding.LoaderViewBinding
+import com.Lyber.models.RIBData
 
 abstract class BaseAdapter<items> :
     RecyclerView.Adapter<RecyclerView.ViewHolder>() {

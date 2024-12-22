@@ -1,4 +1,4 @@
-package com.Lyber.dev.utils
+package com.Lyber.utils
 
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint

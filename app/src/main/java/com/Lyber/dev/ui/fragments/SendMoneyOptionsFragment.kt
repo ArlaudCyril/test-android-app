@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.os.Bundle
 import androidx.fragment.app.Fragment
@@ -7,13 +7,13 @@ import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentSendMoneyOptionsBinding
-import com.Lyber.dev.ui.portfolio.fragment.PortfolioDetailFragment
-import com.Lyber.dev.ui.portfolio.fragment.PortfolioHomeFragment
-import com.Lyber.dev.utils.CommonMethods.Companion.showToast
-import com.Lyber.dev.utils.Constants
-import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.Lyber.R
+import com.Lyber.databinding.FragmentSendMoneyOptionsBinding
+import com.Lyber.ui.portfolio.fragment.PortfolioDetailFragment
+import com.Lyber.ui.portfolio.fragment.PortfolioHomeFragment
+import com.Lyber.utils.CommonMethods.Companion.showToast
+import com.Lyber.utils.Constants
+import com.Lyber.viewmodels.PortfolioViewModel
 
 class SendMoneyOptionsFragment : BaseFragment<FragmentSendMoneyOptionsBinding>(), OnClickListener {
     private lateinit var viewModel: PortfolioViewModel

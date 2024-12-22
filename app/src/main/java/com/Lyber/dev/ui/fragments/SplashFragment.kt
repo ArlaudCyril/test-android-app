@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.content.Intent
 import android.os.Bundle
@@ -7,12 +7,12 @@ import android.os.Looper
 import android.view.View
 import androidx.navigation.fragment.findNavController
 import androidx.transition.Fade
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentSplashBinding
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.is30DaysOld
-import com.Lyber.dev.utils.Constants
+import com.Lyber.R
+import com.Lyber.databinding.FragmentSplashBinding
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.is30DaysOld
+import com.Lyber.utils.Constants
 
 class SplashFragment : BaseFragment<FragmentSplashBinding>() {
     private lateinit var handler: Handler

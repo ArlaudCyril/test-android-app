@@ -1,15 +1,15 @@
-package com.Lyber.dev.utils
+package com.Lyber.utils
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.Lyber.dev.models.AddressDataLocal
-import com.Lyber.dev.models.AssetBaseDataResponse
-import com.Lyber.dev.models.InvestmentExperienceLocal
-import com.Lyber.dev.models.InvestmentExperienceLocalIds
-import com.Lyber.dev.models.PersonalDataLocal
-import com.Lyber.dev.models.User
-import com.Lyber.dev.ui.activities.BaseActivity
-import com.Lyber.dev.viewmodels.PortfolioViewModel
+import com.Lyber.models.AddressDataLocal
+import com.Lyber.models.AssetBaseDataResponse
+import com.Lyber.models.InvestmentExperienceLocal
+import com.Lyber.models.InvestmentExperienceLocalIds
+import com.Lyber.models.PersonalDataLocal
+import com.Lyber.models.User
+import com.Lyber.ui.activities.BaseActivity
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.google.gson.Gson
 
 class PreferenceManager(context: Context) {

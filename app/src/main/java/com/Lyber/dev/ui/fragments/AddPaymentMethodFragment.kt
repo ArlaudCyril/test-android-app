@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.graphics.drawable.Icon
 import android.os.Bundle
@@ -6,12 +6,12 @@ import android.view.View
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.view.setPadding
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.AppItemLayoutBinding
-import com.Lyber.dev.databinding.FragmentAddPaymentMethodBinding
-import com.Lyber.dev.utils.CommonMethods.Companion.px
-import com.Lyber.dev.utils.CommonMethods.Companion.replaceFragment
-import com.Lyber.dev.utils.CommonMethods.Companion.setBackgroundTint
+import com.Lyber.R
+import com.Lyber.databinding.AppItemLayoutBinding
+import com.Lyber.databinding.FragmentAddPaymentMethodBinding
+import com.Lyber.utils.CommonMethods.Companion.px
+import com.Lyber.utils.CommonMethods.Companion.replaceFragment
+import com.Lyber.utils.CommonMethods.Companion.setBackgroundTint
 
 class AddPaymentMethodFragment : BaseFragment<FragmentAddPaymentMethodBinding>(),
     View.OnClickListener {

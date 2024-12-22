@@ -1,15 +1,15 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.lifecycle.Lifecycle
-import com.Lyber.dev.databinding.FragmentSelectedProfilePictureBinding
-import com.Lyber.dev.ui.activities.SplashActivity
-import com.Lyber.dev.viewmodels.PortfolioViewModel
-import com.Lyber.dev.utils.App
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.Constants
+import com.Lyber.databinding.FragmentSelectedProfilePictureBinding
+import com.Lyber.ui.activities.SplashActivity
+import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.utils.App
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.Constants
 import com.google.android.gms.tasks.Task
 import com.google.android.play.core.integrity.StandardIntegrityManager
 import org.json.JSONObject

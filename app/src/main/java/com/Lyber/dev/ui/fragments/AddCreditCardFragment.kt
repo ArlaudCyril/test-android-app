@@ -1,12 +1,12 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.os.Bundle
 import android.view.View
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentAddCreditCardBinding
-import com.Lyber.dev.utils.CommonMethods.Companion.requestKeyboard
-import com.Lyber.dev.utils.CommonMethods.Companion.showToast
-import com.Lyber.dev.utils.MonthYearPickerDialog
+import com.Lyber.R
+import com.Lyber.databinding.FragmentAddCreditCardBinding
+import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
+import com.Lyber.utils.CommonMethods.Companion.showToast
+import com.Lyber.utils.MonthYearPickerDialog
 
 class AddCreditCardFragment : BaseFragment<FragmentAddCreditCardBinding>(), View.OnClickListener {
 

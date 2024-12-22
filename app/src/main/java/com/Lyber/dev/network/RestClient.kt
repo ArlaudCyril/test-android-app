@@ -1,7 +1,7 @@
-package com.Lyber.dev.network
+package com.Lyber.network
 
-import com.Lyber.dev.utils.App.Companion.prefsManager
-import com.Lyber.dev.utils.Constants
+import com.Lyber.utils.App.Companion.prefsManager
+import com.Lyber.utils.Constants
 import com.google.gson.GsonBuilder
 import okhttp3.OkHttpClient
 import okhttp3.Protocol

@@ -1,8 +1,8 @@
-package com.Lyber.dev.ui.fragments.bottomsheetfragments
+package com.Lyber.ui.fragments.bottomsheetfragments
 
 import android.os.Bundle
 import android.view.View
-import com.Lyber.dev.databinding.ProfileBottomSheetBinding
+import com.Lyber.databinding.ProfileBottomSheetBinding
 
 class ProfileBottomSheet(private val clickListener: (Int) -> Unit = { _ -> }) :
     BaseBottomSheet<ProfileBottomSheetBinding>(), View.OnClickListener {

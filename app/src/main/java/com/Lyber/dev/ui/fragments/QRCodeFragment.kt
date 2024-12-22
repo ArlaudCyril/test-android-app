@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments
+package com.Lyber.ui.fragments
 
 import android.graphics.Bitmap
 import android.graphics.Color
@@ -8,9 +8,9 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.FragmentQRCodeBinding
-import com.Lyber.dev.utils.App
+import com.Lyber.R
+import com.Lyber.databinding.FragmentQRCodeBinding
+import com.Lyber.utils.App
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
 

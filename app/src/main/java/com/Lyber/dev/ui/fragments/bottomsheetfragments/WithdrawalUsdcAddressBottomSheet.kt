@@ -1,4 +1,4 @@
-package com.Lyber.dev.ui.fragments.bottomsheetfragments
+package com.Lyber.ui.fragments.bottomsheetfragments
 
 import android.os.Bundle
 import android.text.TextUtils
@@ -8,16 +8,16 @@ import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.Lyber.dev.R
-import com.Lyber.dev.databinding.AppItemLayoutBinding
-import com.Lyber.dev.databinding.BottomsheetWithdrawalAddressesBinding
-import com.Lyber.dev.databinding.LoaderViewBinding
-import com.Lyber.dev.models.RIBData
-import com.Lyber.dev.ui.adapters.BaseAdapter
-import com.Lyber.dev.utils.CommonMethods
-import com.Lyber.dev.utils.CommonMethods.Companion.gone
-import com.Lyber.dev.utils.CommonMethods.Companion.visible
-import com.Lyber.dev.utils.Constants
+import com.Lyber.R
+import com.Lyber.databinding.AppItemLayoutBinding
+import com.Lyber.databinding.BottomsheetWithdrawalAddressesBinding
+import com.Lyber.databinding.LoaderViewBinding
+import com.Lyber.models.RIBData
+import com.Lyber.ui.adapters.BaseAdapter
+import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.visible
+import com.Lyber.utils.Constants
 
 class WithdrawalUsdcAddressBottomSheet(
     private val addresses: MutableList<RIBData>,

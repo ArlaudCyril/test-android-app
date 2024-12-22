@@ -1,12 +1,12 @@
-package com.Lyber.dev.ui.fragments.bottomsheetfragments
+package com.Lyber.ui.fragments.bottomsheetfragments
 
 import android.os.Bundle
 import android.util.DisplayMetrics
 import android.view.View
 import android.view.ViewGroup
-import com.Lyber.dev.databinding.FragmentErrorResponseBottomSheetBinding
-import com.Lyber.dev.viewmodels.PortfolioViewModel
-import com.Lyber.dev.utils.CommonMethods
+import com.Lyber.databinding.FragmentErrorResponseBottomSheetBinding
+import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.utils.CommonMethods
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 
 
