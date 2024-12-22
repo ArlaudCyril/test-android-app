@@ -99,10 +99,10 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
         CommonMethods.checkInternet(binding.root, requireContext()) {
             binding.progressImage.animation =
                 AnimationUtils.loadAnimation(context, R.anim.rotate_drawable)
-           viewModel.getTransactionsListing(
-                    limit,
-                   offset
-                )
+            viewModel.getTransactionsListing(
+                limit,
+                offset
+            )
         }
 
 //        if (CommonMethods.isFaceIdAvail(requireContext()))
@@ -306,9 +306,9 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
     private fun handle(code: String) {
         checkInternet(binding.root, requireContext()) {
             isResend = true
-                viewModel.getOtpForWithdraw(
-                    Constants.ACTION_CLOSE_ACCOUNT, null
-                )
+            viewModel.getOtpForWithdraw(
+                Constants.ACTION_CLOSE_ACCOUNT, null
+            )
         }
 
 
@@ -358,7 +358,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                 it.tvPositiveButton.setOnClickListener {
                     dismiss()
                     CommonMethods.showProgressDialog(requireActivity())
-                        viewModel.logout()
+                    viewModel.logout()
 
                 }
                 show()
@@ -367,10 +367,9 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
     }
 
     private fun showCloseAccountDialog() {
-        if (com.Lyber.dev.ui.activities.BaseActivity.balances.size == 0)
-            {
-                   viewModel.getBalance()
-            }
+        if (com.Lyber.dev.ui.activities.BaseActivity.balances.size == 0) {
+            viewModel.getBalance()
+        }
         Dialog(requireActivity(), R.style.DialogTheme).apply {
             CustomDialogLayoutBinding.inflate(layoutInflater).let {
                 requestWindowFeature(Window.FEATURE_NO_TITLE)
@@ -412,8 +411,8 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                         dismiss()
                         checkInternet(binding.root, requireContext()) {
                             viewModel.getOtpForWithdraw(
-                                    Constants.ACTION_CLOSE_ACCOUNT, null
-                                )
+                                Constants.ACTION_CLOSE_ACCOUNT, null
+                            )
                         }
 
                     }
@@ -540,15 +539,15 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                         }
 
                         Constants.STRATEGY -> {
-                           ivItem.setImageResource(R.drawable.strategy)
-                            tvStartTitleCenter.text = "${it.strategyName.replaceFirstChar(Char::uppercase)}"
+                            ivItem.setImageResource(R.drawable.strategy)
+                            tvStartTitleCenter.text =
+                                "${it.strategyName.replaceFirstChar(Char::uppercase)}"
                             if (it.status == Constants.FAILURE)
                                 tvFailed.visibility = View.VISIBLE
                             else {
                                 if (it.successfulBundleEntries.isNotEmpty()) {
                                     try {
-                                        tvEndTitleCenter.text =
-                                            "${it.successfulBundleEntries[0].assetAmount}"
+                                        tvEndTitleCenter.text = "${it.totalStableAmountSpent} USDC"
                                         tvEndTitleCenter.visibility = View.VISIBLE
                                     } catch (ex: java.lang.Exception) {
 
@@ -604,7 +603,8 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
 //                            tvEndSubTitle.gone()
 
                             tvStartTitle.text = "EUR ${getString(R.string.withdrawal)}"
-                            tvStartSubTitle.text = it.status.lowercase().replaceFirstChar(Char::uppercase)
+                            tvStartSubTitle.text =
+                                it.status.lowercase().replaceFirstChar(Char::uppercase)
                             tvEndTitleCenter.text = "-${it.amount} ${it.asset.uppercase()}"
 //                            tvStartTitle1.text = "EUR ${getString(R.string.withdrawal)}"
 //                            tvStartSubTitle1.text = it.status.lowercase().replaceFirstChar(Char::uppercase)
@@ -626,7 +626,7 @@ class ProfileFragment : BaseFragment<FragmentProfileBinding>(), View.OnClickList
                     val detailBottomSheet = TransactionDetailsBottomSheetFragment()
                     val gson = GsonBuilder().create()
                     var data = ""
-                    data = gson.toJson(itemList[adapterPosition])
+                    data = gson.toJson(itemList[absoluteAdapterPosition])
                     detailBottomSheet.arguments = Bundle().apply {
                         putString("data", data)
                     }

@@ -232,7 +232,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             //anchorView = binding.tvAssetName
             width = 240.px
             height = 420.px
-          setOnItemClickListener { _, _, position, _ ->
+            setOnItemClickListener { _, _, position, _ ->
                 val actualItem = assetPopupAdapter.getItemAt(position)
                 if (actualItem != null) {
                     dismiss()
@@ -307,13 +307,14 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             viewModel.getAllPriceResume()
         }
     }
+
     private fun hitWalletApi() {
         val jsonObject = JSONObject()
         jsonObject.put("daily", daily)
         jsonObject.put("limit", limit)
         val jsonString = jsonObject.toString()
         // Generate the request hash
-         viewModel.getWalletHistoryPrice( daily, limit)
+        viewModel.getWalletHistoryPrice(daily, limit)
     }
 
     private fun addObservers() {
@@ -403,22 +404,11 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                     adapterBalance.setList(balances)
                     responseFrom = "balance"
 
-                } else
-                {
+                } else {
                     binding.tvNoAssets.visible()
                     binding.tvBuyUSDC.visible()
                     val totalBalance = 0.0
                     viewModel.totalPortfolio = totalBalance
-//                    if(timeGraphList.isNotEmpty() && timeGraphList[timeGraphList.size-1][1]!=viewModel.totalPortfolio){
-//                        timeGraphList.removeAt(timeGraphList.size - 1)
-//                        timeGraphList.add(
-//                            listOf(
-//                                System.currentTimeMillis().toDouble(),
-//                                viewModel.totalPortfolio
-//                            )
-//                        )
-//                    }
-
                     if (!App.prefsManager.hideAmount)
                         binding.tvValuePortfolioAndAssetPrice.text =
                             "${totalBalance.commaFormatted}${Constants.EURO}"
@@ -436,6 +426,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         viewModel.walletHistoryResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 binding.rvRefresh.isRefreshing = false
+//                if(it.data.isNotEmpty()) {
                 val dates = it.data.map { it.date }
                 var dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                 if (!daily)
@@ -451,28 +442,15 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 } as MutableList
                 Log.d("timeseries", "$timeSeries1")
                 timeGraphList = timeSeries1
-//                if (responseFrom.isNotEmpty() && responseFrom == "balance" && viewModel.totalPortfolio != 0.0) {
-//                    lastValueUpdated = true
-//                    timeGraphList.add(
-//                        listOf(
-//                            System.currentTimeMillis().toDouble(),
-//                            viewModel.totalPortfolio
-//                        )
-//                    )
-//                }
-//                if(isRefresh){
-//                    isRefresh=false
-                    if(timeGraphList[timeGraphList.size-1][1]!=viewModel.totalPortfolio){
-                        timeGraphList.removeAt(timeGraphList.size - 1)
-                        timeGraphList.add(
-                            listOf(
-                                System.currentTimeMillis().toDouble(),
-                                viewModel.totalPortfolio
-                            )
+                if (timeGraphList.isNotEmpty() && timeGraphList[timeGraphList.size - 1][1] != viewModel.totalPortfolio) {
+                    timeGraphList.removeAt(timeGraphList.size - 1)
+                    timeGraphList.add(
+                        listOf(
+                            System.currentTimeMillis().toDouble(),
+                            viewModel.totalPortfolio
                         )
-                    }
-//                }
-
+                    )
+                }
                 if (timeSeries1.isEmpty())
                     binding.lineChart.timeSeries = getLineData(viewModel.totalPortfolio)
                 else {
@@ -1073,11 +1051,12 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         fun getItemAt(position: Int): GetAssetsResponseItem? {
             try {
                 return list[position]
-            }catch (ex:Exception){
-                Log.d("Exc","${ex}")
-                return  null
+            } catch (ex: Exception) {
+                Log.d("Exc", "${ex}")
+                return null
             }
         }
+
         fun hasNoData(): Boolean {
             return list.isEmpty()
         }

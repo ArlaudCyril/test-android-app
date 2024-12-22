@@ -830,6 +830,7 @@
     <string name="rec_has_received">The recipient has received his cryptos on his\n Lyber account!</string>
     <string name="please_scan_valid_qr">The scanned QR code is in the wrong format</string>
     <string name="congrats">Congratulations</string>
+    <string name="total_usdc_spending">Total USDC spend</string>
 
     <!--    error messages-->
 

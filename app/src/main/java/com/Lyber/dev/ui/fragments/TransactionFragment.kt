@@ -280,12 +280,12 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
                             else {
                                 if (it.successfulBundleEntries.isNotEmpty()) {
                                     try {
-                                        tvEndTitleCenter.text =
-                                            "${it.successfulBundleEntries[0].assetAmount} ${
-                                                it.successfulBundleEntries[0].asset.uppercase(
-                                                    Locale.US
-                                                )
-                                            }"
+                                        tvEndTitleCenter.text ="${it.totalStableAmountSpent} USDC"
+//                                            "${it.successfulBundleEntries[0].assetAmount} ${
+//                                                it.successfulBundleEntries[0].asset.uppercase(
+//                                                    Locale.US
+//                                                )
+//                                            }"
 
                                     } catch (ex: Exception) {
 

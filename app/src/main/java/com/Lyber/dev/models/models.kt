@@ -762,7 +762,10 @@ data class TransactionData(
     val nextExecution: String?,
     val iban: String,
     val eurAmount: String,
-    val eurAmountDeductedLyberFees: String
+    val eurAmountDeductedLyberFees: String,
+    val totalEurAmountSpent: String,
+    val totalFeeSpent: String,
+    val totalRecreditedAmount: String
 
 )
 

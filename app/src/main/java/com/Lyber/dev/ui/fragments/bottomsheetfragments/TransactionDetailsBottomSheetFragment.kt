@@ -75,10 +75,21 @@ class TransactionDetailsBottomSheetFragment :
                     binding.tvFromValue.text = getString(R.string.single_execution)
                 binding.tvTo.visibility = View.GONE
                 binding.tvToValue.visibility = View.GONE
-                binding.tvFee.visibility = View.GONE
-                binding.tvFeePaid.visibility = View.GONE
-                binding.tvDate.visibility = View.GONE
-                binding.tvDateValue.visibility = View.GONE
+                binding.tvDate.text=getString(R.string.fees_paid)
+                binding.tvFee.text=getString(R.string.date)
+                binding.tvDateDeposit.text=getString(R.string.total_usdc_spending)
+                binding.tvDateValue.text ="${transactionData.totalFeeSpent}"
+                binding.tvDateDepositValue.text ="${transactionData.totalStableAmountSpent}"
+                binding.tvFeePaid.text =
+                    transactionData.date.toFormat("yyyy-MM-dd'T'hh:mm:ss", "dd MMMM yyyy HH:mm")
+
+                binding.tvFee.visibility = View.VISIBLE
+                binding.tvFeePaid.visibility = View.VISIBLE
+                binding.tvDate.visibility = View.VISIBLE
+                binding.tvDateValue.visibility = View.VISIBLE
+                binding.tvDateDeposit.visibility = View.VISIBLE
+                binding.tvDateDepositValue.visibility = View.VISIBLE
+                binding.ivTransactionHash.visibility = View.GONE
                 binding.ivCopyFrom.visibility = View.GONE
 
             }

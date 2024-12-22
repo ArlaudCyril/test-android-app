@@ -66,6 +66,8 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
     private var debounceJob: Job? = null // To hold the debounce coroutine job
     private val debounceDelay = 700L // Delay in milliseconds (0.7 seconds)
     private var onMaxClick: Boolean = false
+    private var onMax: Boolean = false
+
 
     private val amount get() = binding.etAmount.text.trim().toString()
 
@@ -671,12 +673,27 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
                     roundDigits = 2
                 binding.etAmount.invisible()
                 onMaxClick = true
+                onMax = true
                 binding.ivCenterProgress.visible()
                 binding.tvAssetConversion.invisible()
-                onMaxClick=true
+//                binding.etAmount.text = "${
+//                    maxValue.toString().formattedAsset(priceCoin, RoundingMode.DOWN, roundDigits)
+//                }" + spaceGap + mCurrency
+
+                val convertedValue = maxValueOther / valueConversion
                 binding.etAmount.text = "${
-                    maxValue.toString().formattedAsset(priceCoin, RoundingMode.DOWN, roundDigits)
+                    convertedValue.toString()
+                        .formattedAsset(priceCoin, RoundingMode.DOWN, roundDigits)
                 }" + spaceGap + mCurrency
+
+
+                binding.tvAssetConversion.text =
+                    "~${
+                        maxValueOther.toString()
+                            .formattedAsset(priceCoin, RoundingMode.DOWN, decimal)
+                    } $mConversionCurrency"
+                maxValueAsset = (maxValueOther)
+
             } else {
                 binding.etAmount.text = "0$spaceGap$mCurrency"
             }
@@ -694,7 +711,6 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
                 onMaxClick = true
                 binding.ivCenterProgress.visible()
                 binding.tvAssetConversion.invisible()
-                onMaxClick=true
                 binding.etAmount.text = "${
                     maxValueOther.toString()
                         .formattedAsset(priceCoin, RoundingMode.DOWN, roundDigits)
@@ -771,15 +787,38 @@ class WithdrawUsdcFragment : BaseFragment<FragmentWithdrawAmountBinding>(), OnCl
                     }
                     //calculating max value of other asset
                         maxValueOther = maxValue / price
+                    if (maxValue < 0.toBigDecimal()) {
+                        maxValue = 0.toBigDecimal()
+                    }
+                    //calculating max value of other asset
+//                    maxValueOther = maxValue / price
+                    var maxbal= binding.tvSubTitle.text.toString().replace(getString(R.string.available),"").trim()
+                    maxValueOther = BigDecimal(maxbal)
+
+
 //                        maxValueOther = balance.balanceData.balance.toBigDecimal() / price
 //                        (balance.balanceData.euroBalance.toDouble() * valueConversion)
 
                     when {
                         valueAmount > 0.0 -> {
                             if (focusedData.currency.contains(mCurrency)) {
-                                val assetAmount = (valueAmount.toBigDecimal() * valueConversion).toString()
-                                viewModel.assetAmount = assetAmount
-                                setAssetAmount(assetAmount)
+                                if (!onMax) {
+                                    val assetAmount = (valueAmount.toBigDecimal() * valueConversion).toString()
+                                    viewModel.assetAmount = assetAmount
+                                    setAssetAmount(assetAmount)
+                                } else {
+                                    if (valueAmount > maxValue.toDouble()) {
+                                        binding.etAmount.visible()
+                                        binding.etAmount.shake()
+                                        binding.ivCircularProgress.gone()
+                                        binding.ivCenterProgress.gone()
+                                        binding.tvAssetConversion.visible()
+                                        Handler(Looper.getMainLooper()).postDelayed({
+                                            setMaxValue()
+                                        }, 700)
+                                    }
+                                }
+                                onMax = false
                             } else {
                                 val convertedValue = valueAmount.toBigDecimal() / valueConversion
                                 setAssetAmount(convertedValue.toString())
