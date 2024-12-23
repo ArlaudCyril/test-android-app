@@ -123,25 +123,25 @@ class InvestmentExperienceFragment : BaseFragment<FragmentInvenstmentExperienceB
 
         when {
             cryptoExp.isEmpty() -> getString(R.string.please_tell_us_your_investment_experience_with_crypto).showToast(
-                requireContext()
+                binding.root,requireContext()
             )
 
             sourceIncome.isEmpty() -> getString(R.string.please_tell_us_your_source_of_income).showToast(
-                requireContext()
+                binding.root,requireContext()
             )
 
             workIndustry.isEmpty() -> getString(R.string.please_tell_us_which_work_industry_your_are_working).showToast(
-                requireContext()
+                binding.root, requireContext()
             )
 
             annualIncome.isEmpty() -> getString(R.string.please_tell_us_your_annual_income).showToast(
-                requireContext()
+                binding.root,requireContext()
             )
 
             personalAssets.isEmpty() -> {
                 binding.scrollView.scrollTo(0, binding.root.bottom)
                 getString(R.string.please_tell_us_what_do_you_plan_to_mainly_do).showToast(
-                    requireContext()
+                    binding.root, requireContext()
                 )
             }
 

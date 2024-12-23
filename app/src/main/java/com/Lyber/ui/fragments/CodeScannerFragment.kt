@@ -1,7 +1,6 @@
 package com.Lyber.ui.fragments
 
 import android.Manifest
-import android.app.Activity
 import android.app.Dialog
 import android.content.Intent
 import android.content.pm.PackageManager
@@ -17,18 +16,20 @@ import androidx.core.content.ContextCompat
 import com.Lyber.R
 import com.Lyber.databinding.CustomDialogLayoutBinding
 import com.Lyber.databinding.FragmentCodeScannerBinding
-import com.Lyber.utils.CommonMethods.Companion.showToast
-import com.Lyber.utils.Constants.SCANNED_ADDRESS
-import com.Lyber.utils.Constants.SCAN_COMPLETE
-import com.budiyev.android.codescanner.*
-import com.google.android.material.snackbar.Snackbar
+import com.Lyber.ui.fragments.bottomsheetfragments.BaseBottomSheet
+import com.budiyev.android.codescanner.AutoFocusMode
+import com.budiyev.android.codescanner.CodeScanner
+import com.budiyev.android.codescanner.DecodeCallback
+import com.budiyev.android.codescanner.ErrorCallback
+import com.budiyev.android.codescanner.ScanMode
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import io.github.g00fy2.quickie.QRResult
 import io.github.g00fy2.quickie.ScanCustomCode
-import io.github.g00fy2.quickie.ScanQRCode
 import io.github.g00fy2.quickie.config.BarcodeFormat
-import io.github.g00fy2.quickie.config.ScannerConfig
 
-class CodeScannerFragment : BaseFragment<FragmentCodeScannerBinding>() {
+class CodeScannerFragment(private val handle: (String, Boolean) -> Unit
+) :
+    BaseBottomSheet<FragmentCodeScannerBinding>() {
 
     private lateinit var codeScanner: CodeScanner
 
@@ -48,10 +49,12 @@ class CodeScannerFragment : BaseFragment<FragmentCodeScannerBinding>() {
 
 
         binding.ivTopAction.setOnClickListener {
-            requireActivity().onBackPressedDispatcher.onBackPressed()
+//            requireActivity().onBackPressedDispatcher.onBackPressed()
+            dismiss()
         }
         binding.scannerView.setOnClickListener {
-            codeScanner.startPreview()
+//            codeScanner.startPreview()
+            dismiss()
         }
 //        scanCustomCode.launch(
 //            ScannerConfig.build {
@@ -81,18 +84,46 @@ class CodeScannerFragment : BaseFragment<FragmentCodeScannerBinding>() {
         codeScanner.decodeCallback = DecodeCallback {
 
             requireActivity().runOnUiThread {
-                Log.d("text", "${trimAddress(it.text)}")
-                requireActivity().sendBroadcast(Intent(SCAN_COMPLETE).apply {
-                    putExtra(SCANNED_ADDRESS, trimAddress(it.text))
-                })
-                requireActivity().onBackPressedDispatcher.onBackPressed()
+
+                if (isQRCodeValid(it.text.trim().toString())) {
+                    val phnNo = it.text.trim().toString().replace("tel:", "")
+                    handle!!.invoke(phnNo,false)
+                    dismiss()
+//                    val args = Bundle().apply {
+//                        putString("selectedOption", Constants.USING_SEND_MONEY)
+//                        putString("phoneNo", phnNo)
+//                    }
+//                    findNavController().navigate(R.id.action_code_scanner_to_swap_withdraw,args)
+
+//                    requireActivity().sendBroadcast(Intent(SCAN_QR).apply {
+//                    putExtra("phoneNo", phnNo)
+//                    putExtra("selectedOption", Constants.USING_SEND_MONEY)
+//                })
+//                requireActivity().onBackPressedDispatcher.onBackPressed()
+                } else {
+                    handle.invoke(getString(R.string.please_scan_valid_qr),true)
+                    dismiss()
+                }
+//                requireActivity().sendBroadcast(Intent(SCAN_COMPLETE).apply {
+//                    putExtra(SCANNED_ADDRESS, trimAddress(it.text))
+//                })
+//                requireActivity().onBackPressedDispatcher.onBackPressed()
+
+// Then, pop Fragment B off the back stack
+//                findNavController().popBackStack(R.id.codeScannerFragment, true)
 
             }
+
         }
 //
         codeScanner.errorCallback = ErrorCallback { // or ErrorCallback.SUPPRESS
-            Log.d("textError", "$it")
-            it.showToast(requireContext())
+            try {
+                Log.d("textError", "$it")
+                handle.invoke(it.message.toString(),true)
+            }catch (e:Exception){
+
+            }
+            dismiss()
 //            requireActivity().runOnUiThread {
 //                Toast.makeText(
 //                    requireContext(), "Camera initialization error: ${it.message}",
@@ -101,7 +132,17 @@ class CodeScannerFragment : BaseFragment<FragmentCodeScannerBinding>() {
 //               BottomSheetFragment().show(requireActivity().supportFragmentManager,null)
 //            }
         }
+        behavior.state = BottomSheetBehavior.STATE_EXPANDED
 
+    }
+
+    fun isQRCodeValid(scannedText: String): Boolean {
+        // Define the regular expression for the format ABC-1234-XYZ
+//        val regexPattern = Regex("^tel:\\d{12}$")
+        val regexPattern = Regex("^tel:[0-9+]{5,15}$")
+
+        // Check if the scanned text matches the pattern
+        return regexPattern.matches(scannedText)
     }
 
     fun handleResult(result: QRResult) {
@@ -248,18 +289,18 @@ class CodeScannerFragment : BaseFragment<FragmentCodeScannerBinding>() {
             permissions.entries.forEach {
                 Log.d("TAG", "${it.key} = ${it.value}")
             }
-                if (permissions[Manifest.permission.CAMERA] == true &&
+            if (permissions[Manifest.permission.CAMERA] == true &&
                 permissions[Manifest.permission.WRITE_EXTERNAL_STORAGE] == true
-                    && permissions[Manifest.permission.READ_EXTERNAL_STORAGE] == true
-                ) {
-                    Log.d("requestMultiplePermissions", "Permission granted")
-                    // isPermissionGranted=true
+                && permissions[Manifest.permission.READ_EXTERNAL_STORAGE] == true
+            ) {
+                Log.d("requestMultiplePermissions", "Permission granted")
+                // isPermissionGranted=true
 //                        binding.ivOpenGallery.performClick()
 
-                } else {
-                    Log.d("requestMultiplePermissions", "Permission not granted")
+            } else {
+                Log.d("requestMultiplePermissions", "Permission not granted")
 
-                }
+            }
 
         }
 

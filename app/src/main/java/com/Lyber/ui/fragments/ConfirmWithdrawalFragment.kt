@@ -2,8 +2,6 @@ package com.Lyber.ui.fragments
 
 import android.os.Build
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
@@ -15,35 +13,41 @@ import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.FragmentConfirmInvestmentBinding
 import com.Lyber.models.Balance
-import com.Lyber.network.RestClient
+import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
-import com.Lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet
 import com.Lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet2FA
-import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
-import com.Lyber.utils.CommonMethods.Companion.formattedAsset
+import com.Lyber.utils.CommonMethods.Companion.commaFormattedDecimal
+import com.Lyber.utils.CommonMethods.Companion.decimalPoint
 import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.showSnack
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.utils.LoaderObject
 import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.viewmodels.SignUpViewModel
-import okhttp3.ResponseBody
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import org.json.JSONObject
-import java.math.RoundingMode
-import java.util.ArrayList
+import java.math.BigDecimal
 
 class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>(),
-    View.OnClickListener, RestClient.OnRetrofitError {
+    View.OnClickListener {
     private lateinit var viewModel: PortfolioViewModel
     private lateinit var viewModelSignup: SignUpViewModel
     private var valueTotal: Double = 0.0
+    private lateinit var valueTotalBigDecimal: BigDecimal
     private var valueTotalEuro: Double = 0.0
     private var isExpand = false
     private var isOtpScreen = false
     private var isResend = false
     private var withdrawUSDC = false
+    private var sendMoney = false
     private var withdrawEuroFee = 0.66
+    private lateinit var assetIdWithdraw: String
+    private lateinit var selectedAssetForSend: String
+    private lateinit var phoneNo: String
+    lateinit var bottomSheet: VerificationBottomSheet2FA
 
     override fun bind() = FragmentConfirmInvestmentBinding.inflate(layoutInflater)
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -52,15 +56,49 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         viewModelSignup = CommonMethods.getViewModel(requireActivity())
         viewModel.listener = this
         viewModelSignup.listener = this
-        if (arguments != null && requireArguments().containsKey(Constants.FROM) &&
-            requireArguments().getString(Constants.FROM) == WithdrawUsdcFragment::class.java.name
+        if (arguments != null && requireArguments().containsKey(Constants.FROM)
         ) {
-            withdrawUSDC = true
-            binding.title.text = getString(R.string.confirm_withdrawal)
-            if (requireArguments().containsKey(Constants.FEE))
-                withdrawEuroFee = requireArguments().getDouble(Constants.FEE)
+            if (requireArguments().getString(Constants.FROM) == WithdrawUsdcFragment::class.java.name) {
+                withdrawUSDC = true
+                binding.title.text = getString(R.string.confirm_withdrawal)
+                if (requireArguments().containsKey(Constants.FEE))
+                    withdrawEuroFee = requireArguments().getDouble(Constants.FEE)
+            } else if (requireArguments().getString(Constants.FROM) == SendAmountFragment::class.java.name) {
+                sendMoney = true
+                binding.title.text = getString(R.string.confirm_sending)
+                binding.btnConfirmInvestment.text = getString(R.string.confirm_sending)
+                binding.tvMoreDetails.gone()
+                binding.zzInfor.visible()
+                binding.tvAssetPrice.text = getString(R.string.surname)
+                binding.tvValueAssetPrice.text = requireArguments().getString("lastName")
+                binding.tvNestedAmount.text = getString(R.string.firstname)
+                binding.tvNestedAmountValue.text = requireArguments().getString("firstName")
+                selectedAssetForSend = requireArguments().getString("asset").toString()
+                phoneNo = requireArguments().getString("phoneNo").toString()
+                binding.tvFrequency.text = getString(R.string.total_assets, selectedAssetForSend)
+                val assetAm = requireArguments().getString("assetAmount")!!.trim().toString()
+                valueTotalBigDecimal = BigDecimal(assetAm)
+                binding.tvValueFrequency.text = "$valueTotalBigDecimal $selectedAssetForSend"
+                valueTotalEuro = requireArguments().getString("euroAmount")!!.toDouble()
+                binding.tvValueTotal.text =
+                    "$valueTotalEuro ${Constants.EUR}"
+                binding.tvAmount.text = "${valueTotalEuro} ${Constants.EURO}"
+
+                binding.tvLyberFee.gone()
+                binding.tvValueLyberFee.gone()
+                binding.tvDeposit.gone()
+                binding.tvValueDeposit.gone()
+                binding.tvDepositFee.gone()
+                binding.tvValueDepositFee.gone()
+                binding.tvAllocation.gone()
+                binding.allocationView.gone()
+                binding.tvInfo.gone()
+            }
+
         } else
             withdrawUSDC = false
+        if (arguments != null && requireArguments().containsKey("assetIdWithdraw"))
+            assetIdWithdraw = requireArguments().getString("assetIdWithdraw").toString()
 
         binding.tvTotalAmount.gone()
         binding.ivSingleAsset.gone()
@@ -106,13 +144,15 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
             }
         }
 
-//        viewModel.logoutResponse.observe(viewLifecycleOwner){
-//            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-//                App.prefsManager.logout()
-//                findNavController().popBackStack()
-//                findNavController().navigate(R.id.discoveryFragment)
-//            }
-//        }
+        viewModel.booleanResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                CommonMethods.dismissProgressDialog()
+                if (it.success) {
+                    viewModel.selectedOption = Constants.USING_SEND_MONEY
+                    ConfirmationBottomSheet().show(childFragmentManager, "")
+                }
+            }
+        }
     }
 
     private fun openOtpScreen() {
@@ -137,6 +177,7 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
             vc.show(childFragmentManager, "")
             val mainView = getView()?.rootView as ViewGroup
             mainView.addView(transparentView, viewParams)
+            bottomSheet = vc
         }
         isResend = false
     }
@@ -149,64 +190,149 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
             CommonMethods.showProgressDialog(requireActivity())
             isOtpScreen = false
             if (withdrawUSDC) {
-                viewModel.createWithdrawalEuroRequest(
-                    viewModel.ribDataAddress!!.ribId,
-                    viewModel.ribDataAddress!!.iban, viewModel.ribDataAddress!!.bic,
-                    valueTotalEuro, code
-                )
-            } else
-                viewModel.createWithdrawalRequest(
-                    viewModel.selectedAssetDetail!!.id,
-                    valueTotal,
-                    viewModel.withdrawAddress!!.address!!,
-                    viewModel.selectedNetworkDeposit!!.id,
-                    code
-                )
+
+                val jsonObject = JSONObject()
+                jsonObject.put("ribId", viewModel.ribDataAddress!!.ribId)
+                jsonObject.put("iban", viewModel.ribDataAddress!!.iban)
+                jsonObject.put("bic", viewModel.ribDataAddress!!.bic)
+                jsonObject.put("amount", valueTotalEuro)
+                jsonObject.put("otp", code)
+                val jsonString = CommonMethods.sortAndFormatJson(jsonObject)
+                // Generate the request hash
+                val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                    SplashActivity.integrityTokenProvider?.request(
+                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                            .setRequestHash(requestHash)
+                            .build()
+                    )
+                integrityTokenResponse1?.addOnSuccessListener { response ->
+                    Log.d("token", "${response.token()}")
+                    viewModel.createWithdrawalEuroRequest(
+                        viewModel.ribDataAddress!!.ribId,
+                        viewModel.ribDataAddress!!.iban, viewModel.ribDataAddress!!.bic,
+                        valueTotalEuro, code, response.token()
+                    )
+                }?.addOnFailureListener { exception ->
+                    Log.d("token", "${exception}")
+
+                }
+
+
+            } else {
+                CommonMethods.checkInternet(binding.root, requireContext()) {
+                    val jsonObject = JSONObject()
+                    jsonObject.put("asset", viewModel.selectedAssetDetail!!.id)
+                    jsonObject.put("amount", valueTotal)
+                    jsonObject.put("destination", viewModel.withdrawAddress!!.address!!)
+                    jsonObject.put("network", viewModel.selectedNetworkDeposit!!.id)
+                    jsonObject.put("otp", code)
+                    val jsonString = CommonMethods.sortAndFormatJson(jsonObject)
+                    // Generate the request hash
+                    val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                        SplashActivity.integrityTokenProvider?.request(
+                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                .setRequestHash(requestHash)
+                                .build()
+                        )
+                    integrityTokenResponse?.addOnSuccessListener { response ->
+                        Log.d("token", "${response.token()}")
+                        viewModel.createWithdrawalRequest(
+                            viewModel.selectedAssetDetail!!.id,
+                            valueTotal,
+                            viewModel.withdrawAddress!!.address!!,
+                            viewModel.selectedNetworkDeposit!!.id,
+                            code, response.token()
+                        )
+
+                    }?.addOnFailureListener { exception ->
+                        Log.d("token", "${exception}")
+
+                    }
+                }
+
+            }
         }
     }
 
     //    @RequiresApi(Build.VERSION_CODES.O)
     private fun confirmButtonClick() {
-        if (!isResend)
-            CommonMethods.showProgressDialog(requireActivity())
-        val map = HashMap<Any?, Any?>()
-        if (withdrawUSDC) {
-            map["destination"] = viewModel.ribDataAddress!!.iban
-            map["asset"] = "usdc"
+        if (sendMoney) {
+            val map = HashMap<String, Any>()
+            map["phone"] = phoneNo
+            map["asset"] = selectedAssetForSend
+            map["amount"] = valueTotalBigDecimal
+
+            val jsonObject = JSONObject()
+            jsonObject.put("phone", phoneNo)
+            jsonObject.put("asset", selectedAssetForSend)
+            jsonObject.put("amount", valueTotalBigDecimal)
+            val jsonString = CommonMethods.sortAndFormatJson(jsonObject)
+            // Generate the request hash
+            val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                SplashActivity.integrityTokenProvider?.request(
+                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                        .setRequestHash(requestHash)
+                        .build()
+                )
+            integrityTokenResponse?.addOnSuccessListener { response ->
+                Log.d("token", "${response.token()}")
+                CommonMethods.showProgressDialog(requireContext())
+                viewModel.transferToFriend(map, response.token())
+
+            }?.addOnFailureListener { exception ->
+                Log.d("token", "${exception}")
+            }
+
+        } else {
+            if (!isResend)
+                CommonMethods.showProgressDialog(requireActivity())
+            val map = HashMap<Any?, Any?>()
+            if (withdrawUSDC) {
+                map["destination"] = viewModel.ribDataAddress!!.iban
+                map["asset"] = "usdc"
 //            map["amount"] = valueTotal
-            map["amount"] = valueTotalEuro
-        } else {
-            map["asset"] = viewModel.selectedAssetDetail!!.id
-            map["amount"] = valueTotal
-            map["destination"] = viewModel.withdrawAddress!!.address
-            map["network"] = viewModel.selectedNetworkDeposit!!.id
+                map["amount"] = valueTotalEuro
+            } else {
+                map["asset"] = viewModel.selectedAssetDetail!!.id
+                map["amount"] = valueTotal
+                map["destination"] = viewModel.withdrawAddress!!.address
+                map["network"] = viewModel.selectedNetworkDeposit!!.id
+            }
+            val jso = JSONObject(map)
+
+            isOtpScreen = true
+            var encoded = ""
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                encoded =
+                    String(java.util.Base64.getEncoder().encode(jso.toString(4).toByteArray()))
+            else {
+                val jsonString = jso.toString(4) // Convert JSONObject to string with indentation
+
+                val bytes = jsonString.toByteArray() // Convert string to bytes
+
+                encoded =
+                    android.util.Base64.encodeToString(bytes, android.util.Base64.DEFAULT)
+            }
+            if (withdrawUSDC) {
+                hitOtpWithdraw(Constants.ACTION_WITHDRAW_EURO, encoded, isResend)
+            } else {
+                hitOtpWithdraw(Constants.ACTION_WITHDRAW, encoded, isResend)
+            }
         }
-        val jso = JSONObject(map)
+    }
 
-        isOtpScreen = true
-        var encoded = ""
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            encoded = String(java.util.Base64.getEncoder().encode(jso.toString(4).toByteArray()))
-        else {
-            val jsonString = jso.toString(4) // Convert JSONObject to string with indentation
+    private fun hitOtpWithdraw(action: String, details: String, isResend: Boolean) {
+        if (isResend)
+            viewModelSignup.getOtpForWithdraw(action, details)
+        else
+            viewModel.getOtpForWithdraw(action, details)
 
-            val bytes = jsonString.toByteArray() // Convert string to bytes
-
-            encoded =
-                android.util.Base64.encodeToString(bytes, android.util.Base64.DEFAULT)
-        }
-        if (withdrawUSDC) {
-            if (isResend)
-                viewModelSignup.getOtpForWithdraw(Constants.ACTION_WITHDRAW_EURO, encoded)
-            else
-                viewModel.getOtpForWithdraw(Constants.ACTION_WITHDRAW_EURO, encoded)
-
-        } else {
-            if (isResend)
-                viewModelSignup.getOtpForWithdraw(Constants.ACTION_WITHDRAW, encoded)
-            else
-                viewModel.getOtpForWithdraw(Constants.ACTION_WITHDRAW, encoded)
-        }
     }
 
     private fun prepareView() {
@@ -265,6 +391,8 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                     ""
                 ) + Constants.MAIN_ASSET_UPPER
 
+            } else if (sendMoney) {
+
             } else {
                 listOf(
                     tvNestedAmount,
@@ -297,11 +425,12 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                         val priceCoin = balance!!.balanceData.euroBalance.toDouble()
                             .div(balance.balanceData.balance.toDouble() ?: 1.0)
                         tvValueLyberFee.text =
-                            viewModel.selectedNetworkDeposit!!.withdrawFee.toString()
-                                .formattedAsset(
-                                    price = priceCoin,
-                                    rounding = RoundingMode.DOWN
-                                ) + " " + it!!.id.uppercase()
+                            viewModel.selectedNetworkDeposit!!.withdrawFee.toString() + " " + it!!.id.uppercase()
+//                                .formattedAsset(
+//                                    price = priceCoin,
+//                                    rounding = RoundingMode.DOWN
+//                                ) +
+                        " " + it!!.id.uppercase()
 
 
                         tvExchangeFrom.text = getString(R.string.address)
@@ -318,25 +447,36 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                                 .replace(it.id.uppercase(), "").toDouble()
                         tvValueTotal.text =
                             "${
-                                valueTotal.toString().formattedAsset(
-                                    price = priceCoin,
-                                    rounding = RoundingMode.DOWN
-                                )
+                                valueTotal.toString()
+//                                    .formattedAsset(
+//                                    price = priceCoin,
+//                                    rounding = RoundingMode.DOWN
+//                                )
                             } ${it.id.uppercase()}"
                         tvAmount.text =
                             "${
-                                valueTotal.toString().formattedAsset(
-                                    price = priceCoin,
-                                    rounding = RoundingMode.DOWN
-                                )
+                                valueTotal.toString()
+//                                    .formattedAsset(
+//                                    price = priceCoin,
+//                                    rounding = RoundingMode.DOWN
+//                                )
                             } ${it.id.uppercase()}"
                         val amount =
                             valueTotal - viewModel.selectedNetworkDeposit!!.withdrawFee.toDouble()
+                        var decimal = 3
+                        val asset =
+                            com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.selectedAssetDetail!!.id } }
+                        if (asset != null) {
+                            decimal = asset.decimals
+                        }
+
                         tvNestedAmountValue.text = "${
-                            amount.toString().formattedAsset(
-                                price = priceCoin,
-                                rounding = RoundingMode.DOWN
-                            )
+                            amount.toString()
+                                .commaFormattedDecimal(decimal).decimalPoint()
+//                                .formattedAsset(
+//                                price = 8.0,
+//                                rounding = RoundingMode.DOWN
+//                            )
                         } ${it.id.uppercase()}"
 
                         btnConfirmInvestment.isEnabled = true
@@ -357,8 +497,14 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
     override fun onClick(v: View?) {
         binding.apply {
             when (v!!) {
-                ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
-                btnConfirmInvestment -> confirmButtonClick()
+                ivTopAction -> {
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                }
+
+                btnConfirmInvestment -> {
+                    confirmButtonClick()
+                }
+
                 tvMoreDetails -> {
                     if (isExpand) {
                         zzInfor.gone()
@@ -384,14 +530,213 @@ class ConfirmWithdrawalFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         }
     }
 
-    override fun onRetrofitError(responseBody: ResponseBody?) {
+    override fun onRetrofitError(errorCode: Int, msg: String) {
         CommonMethods.dismissProgressDialog()
         CommonMethods.dismissAlertDialog()
         LoaderObject.hideLoader()
-        val code = CommonMethods.showErrorMessage(requireContext(), responseBody, binding.root)
-        Log.d("errorCode", "$code")
-        if (code == 7023 || code == 10041 || code == 7025 || code == 10043)
-            customDialog(code)
+        when (errorCode) {
+            10044 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_10044))
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
+            10045 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_10045))
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
+            26 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_26))
+            37 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_37))
+            40 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_40))
+            41 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_41))
+            57 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_57))
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
+            1000 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_1000))
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
+            10001 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_10001))
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
+            10005 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_10005))
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
+            10012 -> {
+                var asset = ""
+                if (withdrawUSDC)
+                    asset = "USDC"
+                else
+                    asset = viewModel.selectedAssetDetail!!.fullName
+
+                showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_10012, asset)
+                )
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
+            10021 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_10021))
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
+            10030 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_10030))
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
+            10032 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_10032))
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
+            10033 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_10033))
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
+            10013 -> {
+                val transactionType = getString(R.string.withdrawal)
+                var network = ""
+                if (viewModel.selectedNetworkDeposit != null)
+                    network = viewModel.selectedNetworkDeposit!!.id
+                var asset = ""
+                if (withdrawUSDC)
+                    asset = "USDC"
+                else
+                    asset = viewModel.selectedAssetDetail!!.fullName
+
+                showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_10013, transactionType, network, asset)
+                )
+                if (::assetIdWithdraw.isInitialized) {
+                    val bundle = Bundle().apply {
+                        putString(Constants.ID, assetIdWithdraw)
+                    }
+                    findNavController().navigate(
+                        R.id.action_confirm_withdraw_to_withdraw_on,
+                        bundle
+                    )
+                }
+            }
+
+            10024 -> {
+                showSnack(
+                    binding.root, requireContext(), getString(
+                        R.string.error_code_10024,
+                        viewModel.selectedNetworkDeposit!!.fullName
+                    )
+                )
+                if (::assetIdWithdraw.isInitialized) {
+                    val bundle = Bundle().apply {
+                        putString(Constants.ID, assetIdWithdraw)
+                    }
+                    findNavController().navigate(
+                        R.id.action_confirm_withdraw_to_withdraw_on,
+                        bundle
+                    )
+                }
+            }
+
+            10009 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_10009))
+                findNavController().navigate(R.id.action_confirm_withdraw_to_home_fragment)
+            }
+
+            10018 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_10018))
+                findNavController().navigate(R.id.action_confirm_withdraw_to_home_fragment)
+            }
+
+            10034 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_10034))
+                findNavController().navigate(R.id.action_confirm_withdraw_to_home_fragment)
+            }
+
+            10035 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_10035))
+                findNavController().navigate(R.id.action_confirm_withdraw_to_home_fragment)
+            }
+
+            10036 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_10036))
+                findNavController().navigate(R.id.action_confirm_withdraw_to_home_fragment)
+            }
+
+            10037 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_10037))
+                findNavController().navigate(R.id.action_confirm_withdraw_to_home_fragment)
+            }
+
+            10042 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_10042))
+                findNavController().navigate(R.id.action_confirm_withdraw_to_home_fragment)
+            }
+
+            3000 -> {
+                val transactionType = getString(R.string.withdraw)
+                showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_3000, transactionType)
+                )
+                findNavController().navigate(R.id.action_confirm_withdraw_to_home_fragment)
+            }
+
+            34 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_34))
+            }
+
+            35 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_35))
+            }
+
+            42 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_42))
+            }
+
+            24 -> bottomSheet.showErrorOnBottomSheet(24)
+            18 -> bottomSheet.showErrorOnBottomSheet(18)
+            38 -> bottomSheet.showErrorOnBottomSheet(38)
+            39 -> bottomSheet.showErrorOnBottomSheet(39)
+            43 -> bottomSheet.showErrorOnBottomSheet(43)
+            45 -> bottomSheet.showErrorOnBottomSheet(45)
+            10022 -> bottomSheet.showErrorOnBottomSheet(10022)
+            else -> super.onRetrofitError(errorCode, msg)
+
+        }
     }
 
 }

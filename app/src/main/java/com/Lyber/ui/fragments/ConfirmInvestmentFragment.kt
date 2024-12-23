@@ -4,13 +4,13 @@ import android.annotation.SuppressLint
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import androidx.core.view.marginTop
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.FragmentConfirmInvestmentBinding
+import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.ui.portfolio.fragment.PortfolioHomeFragment
-import com.Lyber.viewmodels.PortfolioViewModel
+import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.addFragment
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.clearBackStack
@@ -23,12 +23,17 @@ import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.appsflyer.AFInAppEventParameterName
 import com.appsflyer.AFInAppEventType
 import com.appsflyer.AppsFlyerLib
 import com.appsflyer.attribution.AppsFlyerRequestListener
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
+import org.json.JSONObject
 import java.util.*
 
+//TODO from invest add money : IAM
 class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>(),
     View.OnClickListener {
 
@@ -78,7 +83,7 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
                 val eventValues = HashMap<String, Any>()
-                eventValues[AFInAppEventParameterName.CONTENT_ID] =viewModel.amount.toDouble()
+                eventValues[AFInAppEventParameterName.CONTENT_ID] = viewModel.amount.toDouble()
                 eventValues[AFInAppEventParameterName.CONTENT_TYPE] =
                     Constants.APP_FLYER_TYPE_STRATEGY_EXECUTION
                 AppsFlyerLib.getInstance().logEvent(requireContext().applicationContext,
@@ -108,14 +113,16 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         binding.apply {
             when (v!!) {
 
-                ivTopAction -> requireActivity().onBackPressed()
+                ivTopAction -> {
+                    requireActivity().onBackPressed()
+                }
 
                 btnConfirmInvestment -> {
 
                     when (viewModel.selectedOption) {
                         Constants.USING_STRATEGY -> {
                             viewModel.selectedStrategy?.let {
-                                checkInternet(requireContext()) {
+                                checkInternet(binding.root, requireContext()) {
                                     /*frequency = "now" || "1d" || "1w" || "1m"*/
                                     val freq = when (viewModel.selectedFrequency) {
                                         "Once" -> null     //"now"
@@ -126,30 +133,103 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
                                     }
                                     showProgressDialog(requireContext())
                                     if (freq == "none") {
-                                        viewModel.oneTimeOrderStrategy(
-                                            viewModel.selectedStrategy!!.name,
-                                            viewModel.amount.toDouble(),
-                                            it.ownerUuid,
+                                        val jsonObject = JSONObject()
+                                        jsonObject.put("ownerUuid", it.ownerUuid)
+                                        jsonObject.put(
+                                            "strategyName",
+                                            viewModel.selectedStrategy!!.name
                                         )
+                                        val amountValue = viewModel.amount.toDouble()
+                                        val formattedAmount =
+                                            if (amountValue == amountValue.toInt().toDouble()) {
+                                                amountValue.toInt() // Convert to Int if there's no decimal part
+                                            } else {
+                                                amountValue // Keep as Double if it has decimals
+                                            }
+                                        jsonObject.put("amount", formattedAmount)
+                                        val jsonString = CommonMethods.sortAndFormatJson(jsonObject)
+                                        // Generate the request hash
+                                        val requestHash =
+                                            CommonMethods.generateRequestHash(jsonString)
+                                        val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                                            SplashActivity.integrityTokenProvider?.request(
+                                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                                    .setRequestHash(requestHash)
+                                                    .build()
+                                            )
+                                        integrityTokenResponse1?.addOnSuccessListener { response ->
+                                            Log.d("token", "${response.token()}")
+                                            viewModel.oneTimeOrderStrategy(
+                                                viewModel.selectedStrategy!!.name,
+                                                formattedAmount, it.ownerUuid,
+                                                response.token()
+                                            )
+
+                                        }?.addOnFailureListener { exception ->
+                                            Log.d("token", "${exception}")
+                                        }
                                     } else {
                                         if (arguments != null && requireArguments().getBoolean(
                                                 Constants.EDIT_ACTIVE_STRATEGY
                                             )
-                                        )
-                                            viewModel.editEnabledStrategy(
-                                                it.ownerUuid,
-                                                freq,
-                                                viewModel.amount.toDouble(),
-                                                viewModel.selectedStrategy!!.name
-                                            )
-                                        else
+                                        ) {
+                                            val amountValue = viewModel.amount.toDouble()
+                                            val formattedAmount =
+                                                if (amountValue == amountValue.toInt().toDouble()) {
+                                                    amountValue.toInt() // Convert to Int if there's no decimal part
+                                                } else {
+                                                    amountValue // Keep as Double if it has decimals
+                                                }
 
-                                            viewModel.investStrategy(
-                                                it.ownerUuid,
-                                                freq,
-                                                viewModel.amount.toDouble(),
+                                           viewModel.editEnabledStrategy(
+                                                    it.ownerUuid,
+                                                    freq,
+                                                    formattedAmount,
+                                                    viewModel.selectedStrategy!!.name
+                                                )
+                                        } else {
+                                            val jsonObject = JSONObject()
+                                            val amountValue = viewModel.amount.toDouble()
+                                            val formattedAmount =
+                                                if (amountValue == amountValue.toInt().toDouble()) {
+                                                    amountValue.toInt() // Convert to Int if there's no decimal part
+                                                } else {
+                                                    amountValue // Keep as Double if it has decimals
+                                                }
+                                            jsonObject.put("amount", formattedAmount)
+                                            jsonObject.put("ownerUuid", it.ownerUuid)
+                                            jsonObject.put(
+                                                "strategyName",
                                                 viewModel.selectedStrategy!!.name
                                             )
+//                                            jsonObject.put("amount",  viewModel.amount.toDouble() )
+                                            if (freq != null)
+                                                jsonObject.put("frequency", freq)
+                                            val jsonString =
+                                                CommonMethods.sortAndFormatJson(jsonObject)
+                                            // Generate the request hash
+                                            val requestHash =
+                                                CommonMethods.generateRequestHash(jsonString)
+                                         val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                                                SplashActivity.integrityTokenProvider?.request(
+                                                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                                        .setRequestHash(requestHash)
+                                                        .build()
+                                                )
+                                            integrityTokenResponse1?.addOnSuccessListener { response ->
+                                                Log.d("token", "${response.token()}")
+                                                viewModel.investStrategy(
+                                                    it.ownerUuid,
+                                                    freq,
+                                                    formattedAmount,
+                                                    viewModel.selectedStrategy!!.name,
+                                                    response.token()
+                                                )
+
+                                            }?.addOnFailureListener { exception ->
+                                                Log.d("token", "${exception}")
+                                            }
+                                        }
                                     }
                                 }
                             }
@@ -248,5 +328,109 @@ class ConfirmInvestmentFragment : BaseFragment<FragmentConfirmInvestmentBinding>
         }
     }
 
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        dismissProgressDialog()
+        when (errorCode) {
+            13006 -> {
+                var minInvest = ""
+                try {
+                    minInvest = viewModel.selectedStrategy?.minAmount?.toFloat()!!.toString()
 
+                } catch (_: Exception) {
+                }
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_13006, minInvest)
+                )
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
+            7024 -> {
+                //IAM
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_7024)
+                )
+                findNavController().navigate(R.id.action_confirmInvestment_to_investment_strategies)
+
+            }
+
+            13001 -> {
+                //IAM
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_13001)
+                )
+                findNavController().navigate(R.id.action_confirmInvestment_to_investment_strategies)
+            }
+
+            13003 -> {
+                //IAM
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_13003)
+                )
+                findNavController().navigate(R.id.action_confirmInvestment_to_investment_strategies)
+            }
+
+            13016 -> {
+                //IAM
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_13016)
+                )
+                findNavController().navigate(R.id.action_confirmInvestment_to_investment_strategies)
+            }
+
+            13017 -> {
+                //IAM
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_13017)
+                )
+                findNavController().navigate(R.id.action_confirmInvestment_to_investment_strategies)
+            }
+
+            13018 -> {
+                //IAM
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_13018)
+                )
+                findNavController().navigate(R.id.action_confirmInvestment_to_investment_strategies)
+            }
+
+            13019 -> {
+                //IAM
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_13019)
+                )
+                findNavController().navigate(R.id.action_confirmInvestment_to_investment_strategies)
+
+            }
+
+            13020 -> {
+                //IAM
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_13020)
+                )
+                findNavController().navigate(R.id.action_confirmInvestment_to_investment_strategies)
+
+            }
+
+            else -> super.onRetrofitError(errorCode, msg)
+
+        }
+    }
 }

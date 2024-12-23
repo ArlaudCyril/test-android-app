@@ -1,23 +1,18 @@
 package com.Lyber.ui.fragments
 
-import android.content.res.ColorStateList
-import android.graphics.PorterDuff
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.View.OnClickListener
 import androidx.appcompat.app.AppCompatActivity
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.FragmentAddRibBinding
 import com.Lyber.models.RIBData
-import com.Lyber.models.Strategy
 import com.Lyber.ui.fragments.bottomsheetfragments.WithdrawalUsdcAddressBottomSheet
 import com.Lyber.ui.portfolio.fragment.PortfolioDetailFragment
-import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.showToast
@@ -71,7 +66,7 @@ class AddRibFragment : BaseFragment<FragmentAddRibBinding>(), OnClickListener {
         viewModel.booleanResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 if (it.success) {
-                    viewModel.getWalletRib()
+                       viewModel.getWalletRib()
                 }
             }
         }
@@ -85,7 +80,8 @@ class AddRibFragment : BaseFragment<FragmentAddRibBinding>(), OnClickListener {
                     hashMap["name"] = binding.etRibName.text.trim().toString()
                     hashMap["userName"] = binding.etOwnerName.text.trim().toString()
                     hashMap["bankCountry"] = selectedCountry
-                    viewModel.addRib(hashMap)
+                   viewModel.addRib(hashMap)
+
                 }
             }
         }
@@ -122,19 +118,37 @@ class AddRibFragment : BaseFragment<FragmentAddRibBinding>(), OnClickListener {
                 tvBankCountry -> openCountryPicker()
                 btnAdd -> {
                     if (binding.etRibName.text.trim().toString().isEmpty())
-                        getString(R.string.please_complete_all_fields).showToast(requireContext())
+                        getString(R.string.please_complete_all_fields).showToast(
+                            binding.root,
+                            requireContext()
+                        )
                     else if (binding.etIBanNo.text.trim().toString().isEmpty())
-                        getString(R.string.please_complete_all_fields).showToast(requireContext())
+                        getString(R.string.please_complete_all_fields).showToast(
+                            binding.root,
+                            requireContext()
+                        )
                     else if (binding.etBic.text.trim().toString().isEmpty())
-                        getString(R.string.please_complete_all_fields).showToast(requireContext())
+                        getString(R.string.please_complete_all_fields).showToast(
+                            binding.root,
+                            requireContext()
+                        )
                     else if (binding.etOwnerName.text.trim().toString().isEmpty())
-                        getString(R.string.please_complete_all_fields).showToast(requireContext())
+                        getString(R.string.please_complete_all_fields).showToast(
+                            binding.root,
+                            requireContext()
+                        )
                     else if (selectedCountry.isEmpty())
-                        getString(R.string.please_complete_all_fields).showToast(requireContext())
+                        getString(R.string.please_complete_all_fields).showToast(
+                            binding.root,
+                            requireContext()
+                        )
                     else if (!isValidInput(binding.etOwnerName.text.trim().toString()))
-                        getString(R.string.owner_name_error).showToast(requireContext())
+                        getString(R.string.owner_name_error).showToast(
+                            binding.root,
+                            requireContext()
+                        )
                     else {
-                        CommonMethods.checkInternet(requireContext()) {
+                        CommonMethods.checkInternet(binding.root, requireContext()) {
                             CommonMethods.showProgressDialog(requireContext())
                             val hashMap = HashMap<String, Any>()
                             hashMap["iban"] = binding.etIBanNo.text.trim().toString()
@@ -143,10 +157,11 @@ class AddRibFragment : BaseFragment<FragmentAddRibBinding>(), OnClickListener {
                             hashMap["userName"] = binding.etOwnerName.text.trim().toString()
                             hashMap["bankCountry"] = selectedCountry
                             if (::ribData.isInitialized) {
-                                viewModel.deleteRIB(ribData.ribId)
-                            } else viewModel.addRib(
-                                hashMap
-                            )
+                               viewModel.deleteRIB(ribData.ribId)
+                            } else {
+                                viewModel.addRib(hashMap)
+
+                            }
                         }
                     }
                 }
@@ -170,4 +185,24 @@ class AddRibFragment : BaseFragment<FragmentAddRibBinding>(), OnClickListener {
         val regex = Regex("^[a-zA-Z\\s-]+$")
         return regex.matches(input)
     }
+
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        when (errorCode) {
+            10050 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_10050)
+            )
+
+            10051 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_10051)
+            )
+
+            else -> super.onRetrofitError(errorCode, msg)
+
+        }
+    }
+
 }

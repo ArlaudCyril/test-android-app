@@ -10,7 +10,6 @@ import com.Lyber.databinding.FragmentSwapFromBinding
 import com.Lyber.models.Balance
 import com.Lyber.ui.activities.BaseActivity
 import com.Lyber.ui.adapters.BalanceAdapter
-import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.commaFormatted
@@ -21,8 +20,10 @@ import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
 import com.Lyber.utils.CommonMethods.Companion.replaceFragment
 import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.showSnack
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
+import com.Lyber.viewmodels.PortfolioViewModel
 import java.math.RoundingMode
 
 class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnClickListener {
@@ -85,7 +86,7 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
     }
 
     private fun getData() {
-        checkInternet(requireContext()) {
+        checkInternet(binding.root, requireContext()) {
             showProgressDialog(requireContext())
             viewModel.getBalance()
         }
@@ -93,27 +94,45 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
 
     private fun prepareUi() {
 //        binding.tvLyberPortfolio.text = getString(R.string.a_precise_asset)
-        binding.tvTitle.text = getString(R.string.i_want_to_withdraw)
-        binding.rlAllPortfolio.gone()
-        binding.tvOnMyBank.visible()
-        binding.includedAsset.root.visible()
-        binding.includedAsset.llFiatWallet.gone()
-
-        val currency =
-            com.Lyber.ui.activities.BaseActivity.assets.find { it.id == Constants.MAIN_ASSET }
-        binding.includedAsset.ivAssetIcon.loadCircleCrop(currency?.imageUrl ?: "")
-        binding.includedAsset.ivDropIcon.setImageResource(R.drawable.ic_right_arrow_grey)
-        binding.includedAsset.tvAssetName.text = Constants.MAIN_ASSET_UPPER
-
+        if (arguments != null) {
+            binding.tvTitle.text = getString(R.string.i_want_to_send)
+            binding.rlAllPortfolio.gone()
+            binding.tvOnMyBank.gone()
+            binding.includedAsset.root.gone()
+            binding.includedAsset.llFiatWallet.gone()
+        } else {
+            binding.tvTitle.text = getString(R.string.i_want_to_withdraw)
+            binding.rlAllPortfolio.gone()
+            binding.tvOnMyBank.visible()
+            binding.includedAsset.root.visible()
+            binding.includedAsset.llFiatWallet.gone()
+            val currency =
+                com.Lyber.ui.activities.BaseActivity.assets.find { it.id == Constants.MAIN_ASSET }
+            binding.includedAsset.ivAssetIcon.loadCircleCrop(currency?.imageUrl ?: "")
+            binding.includedAsset.ivDropIcon.setImageResource(R.drawable.ic_right_arrow_grey)
+            binding.includedAsset.tvAssetName.text = "USDC"
+        }
     }
 
 
     private fun itemClicked(myAsset: Balance) {
-        val currency = com.Lyber.ui.activities.BaseActivity.assets.find { it.id == myAsset.id }
-        if (currency!!.isWithdrawalActive) {
+        if (arguments != null) {
             val bundle = Bundle()
             bundle.putString(Constants.ID, myAsset.id)
-            findNavController().navigate(R.id.withdrawlNetworksFragment, bundle)
+            if(requireArguments().containsKey(Constants.FROM))
+                bundle.putString(Constants.FROM,requireArguments().getString(Constants.FROM))
+            if(requireArguments().containsKey(Constants.SELECTED_METHOD))
+                bundle.putString(Constants.SELECTED_METHOD,requireArguments().getString(Constants.SELECTED_METHOD))
+            findNavController().navigate(R.id.sendAmountFragment,bundle)
+
+        } else {
+            val currency =
+                com.Lyber.ui.activities.BaseActivity.assets.find { it.id == myAsset.id }
+            if (currency!!.isWithdrawalActive) {
+                val bundle = Bundle()
+                bundle.putString(Constants.ID, myAsset.id)
+                findNavController().navigate(R.id.withdrawlNetworksFragment, bundle)
+            }
         }
     }
 
@@ -140,6 +159,24 @@ class SwapWithdrawFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.O
                 }
 
             }
+        }
+    }
+
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        dismissProgressDialog()
+        when (errorCode) {
+            3000 -> {
+                val transactionType = getString(R.string.withdraw)
+                showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_3000, transactionType)
+                )
+            }
+
+            3006 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_3006))
+            else -> super.onRetrofitError(errorCode, msg)
+
         }
     }
 }

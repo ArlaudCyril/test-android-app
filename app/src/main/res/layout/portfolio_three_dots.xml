@@ -52,6 +52,10 @@
     <include
         android:id="@+id/llDepositFiat"
         layout="@layout/app_item_layout" />
+    <include
+        android:id="@+id/llSendMoney"
+        android:visibility="gone"
+        layout="@layout/app_item_layout" />
 
 
 </LinearLayout>

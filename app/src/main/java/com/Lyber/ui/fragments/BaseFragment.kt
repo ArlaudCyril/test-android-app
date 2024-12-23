@@ -2,21 +2,14 @@ package com.Lyber.ui.fragments
 
 import android.app.Activity
 import android.app.Dialog
-import android.content.Context
 import android.content.Intent
-import android.graphics.Color
-import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.view.WindowManager
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
@@ -27,27 +20,22 @@ import androidx.viewbinding.ViewBinding
 import com.Lyber.R
 import com.Lyber.databinding.CustomDialogLayoutBinding
 import com.Lyber.databinding.CustomDialogVerticalLayoutBinding
-import com.Lyber.databinding.DocumentBeingVerifiedBinding
 import com.Lyber.network.RestClient
+import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.ui.activities.WebViewActivity
-import com.Lyber.ui.portfolio.fragment.PortfolioHomeFragment
-import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.dismissAlertDialog
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
-import com.Lyber.utils.CommonMethods.Companion.gone
-import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.showToast
-import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.utils.LoaderObject
-import com.airbnb.lottie.LottieAnimationView
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import okhttp3.ResponseBody
 
 abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.OnRetrofitError {
-     val viewModel1: com.Lyber.models.GetUserViewModal by activityViewModels()
+
+    val viewModel1: com.Lyber.models.GetUserViewModal by activityViewModels()
 
     private var _binding: viewBinding? = null
 
@@ -120,7 +108,6 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
 //                }
 //            }
 //        }
-
         return binding.root
     }
 
@@ -140,13 +127,13 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
                 if (App.isSign) {
                     activity?.runOnUiThread {
                         App.isSign = true
-                        App.isLoader=true
+                        App.isLoader = true
                         findNavController().popBackStack(R.id.portfolioHomeFragment, false)
-                       CommonMethods.showDocumentDialog(requireActivity(), Constants.LOADING, true)
+                        CommonMethods.showDocumentDialog(requireActivity(), Constants.LOADING, true)
                     }
                 } else {
                     App.isKyc = true
-                    App.isLoader=true
+                    App.isLoader = true
                     findNavController().popBackStack(R.id.portfolioHomeFragment, false)
                     CommonMethods.showDocumentDialog(requireActivity(), Constants.LOADING, false)
 
@@ -156,19 +143,32 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
             }
         }
 
-    override fun onRetrofitError(responseBody: ResponseBody?) {
+    override fun onRetrofitError(errorCode: Int, msg: String) {
         dismissProgressDialog()
         dismissAlertDialog()
         LoaderObject.hideLoader()
-        val code = CommonMethods.showErrorMessage(requireContext(), responseBody, binding.root)
-        Log.d("errorCode", "$code")
-        if (code == 7023 || code == 10041 || code == 7025 || code == 10043)
-            customDialog(code)
+        handleCommonErrors(errorCode, msg)
+//        val code = CommonMethods.showErrorMessage(requireContext(), responseBody, binding.root)
+//        Log.d("errorCode", "$code")
+//        val code=CommonMethods.returnErrorCode(responseBody)
+//        if (code == 7023 || code == 10041 || code == 7025 || code == 10043)
+//            customDialog(code)
+    }
+
+    private fun handleCommonErrors(errorCode: Int, msg: String) {
+        when (errorCode) {
+            7023, 10041 -> customDialog(7023)
+            7025, 10043 -> customDialog(7025)
+            else -> CommonMethods.showError(errorCode, requireContext(), msg, binding.root)
+        }
     }
 
     override fun onError() {
         dismissProgressDialog()
-        getString(R.string.unable_to_connect_to_the_server).showToast(requireContext())
+        getString(R.string.unable_to_connect_to_the_server).showToast(
+            binding.root,
+            requireContext()
+        )
     }
 
     private lateinit var bottomDialog: BottomSheetDialog
@@ -177,7 +177,7 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
             if (App.prefsManager.user!!.kycStatus != "REVIEW")
                 customDialog(7023)
             else
-                CommonMethods.showSnackBar(binding.root, requireContext(), null)
+                CommonMethods.showSnack(binding.root, requireContext(), null)
             return false
         } else if (App.prefsManager.user!!.yousignStatus != "SIGNED") {
             customDialog(7025)
@@ -222,14 +222,14 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
 
                 }
                 binding.tvPositiveButton.setOnClickListener {
-                    CommonMethods.checkInternet(requireContext()) {
+                    CommonMethods.checkInternet(binding.root, requireContext()) {
                         LoaderObject.showLoader(requireContext())
 //                        showProgressDialog(requireContext())
                         if (code == 7023 || code == 10041) {
-                            viewModel.startKyc()
+                             viewModel.startKyc()
                             bottomDialog.dismiss()
                         } else if (code == 7025 || code == 10043) {
-                            viewModel.startSignUrl()
+                         viewModel.startSignUrl()
                         }
                         bottomDialog.dismiss()
                     }
@@ -276,7 +276,7 @@ abstract class BaseFragment<viewBinding : ViewBinding> : Fragment(), RestClient.
         }
     }
 
-    fun startJob(){
+    fun startJob() {
         viewModel1.startFetchingUserData()
     }
 }

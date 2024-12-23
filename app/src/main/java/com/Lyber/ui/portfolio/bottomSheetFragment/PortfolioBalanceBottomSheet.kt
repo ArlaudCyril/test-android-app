@@ -2,13 +2,11 @@ package com.Lyber.ui.portfolio.bottomSheetFragment
 
 import android.annotation.SuppressLint
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -20,9 +18,6 @@ import com.Lyber.databinding.LoaderViewBinding
 import com.Lyber.models.Transaction
 import com.Lyber.ui.adapters.BaseAdapter
 import com.Lyber.ui.fragments.bottomsheetfragments.BaseBottomSheet
-import com.Lyber.utils.App
-import com.Lyber.utils.CommonMethods
-import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.decimalPoints
 import com.Lyber.utils.CommonMethods.Companion.dismissAlertDialog
@@ -32,7 +27,7 @@ import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.CommonMethods.Companion.zoomIn
 import com.Lyber.utils.Constants
 import com.Lyber.utils.ItemOffsetDecoration
-import okhttp3.ResponseBody
+import com.Lyber.viewmodels.PortfolioViewModel
 
 class PortfolioBalanceBottomSheet(private val clickListener: (BalanceInfo) -> Unit = { _ -> }) :
     BaseBottomSheet<BottomSheetBalanceDetailBinding>() {
@@ -111,9 +106,10 @@ class PortfolioBalanceBottomSheet(private val clickListener: (BalanceInfo) -> Un
 
     private fun getTransactions() {
         viewModel.selectedAsset?.let {
-            checkInternet(requireContext()) {
+            checkInternet(binding.root,requireContext()) {
                 showProgress()
-                viewModel.getTransactions(page, limit, it.id)
+                 viewModel.getTransactions(page, limit, it.id)
+
             }
         }
     }
@@ -276,8 +272,8 @@ class PortfolioBalanceBottomSheet(private val clickListener: (BalanceInfo) -> Un
         }
     }
 
-    override fun onRetrofitError(responseBody: ResponseBody?) {
-        super.onRetrofitError(responseBody)
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        super.onRetrofitError(errorCode, msg)
         dismissProgress()
         dismissAlertDialog()
     }

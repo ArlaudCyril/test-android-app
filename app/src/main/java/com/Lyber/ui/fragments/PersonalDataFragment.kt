@@ -1,3 +1,4 @@
+
 package com.Lyber.ui.fragments
 
 import android.annotation.SuppressLint
@@ -110,54 +111,54 @@ class PersonalDataFragment : BaseFragment<FragmentPersonalDataBinding>(), View.O
         when {
             firstName.isEmpty() -> {
                 binding.etFirstName.requestKeyboard()
-                getString(com.Lyber.R.string.please_enter_your_first_name).showToast(requireContext())
+                getString(com.Lyber.R.string.please_enter_your_first_name).showToast(binding.root,requireContext())
             }
 
             lastName.isEmpty() -> {
                 binding.etLastName.requestKeyboard()
                 getString(com.Lyber.R.string.please_enter_your_last_name).showToast(
-                    requireContext()
+                    binding.root, requireContext()
                 )
             }
 
             birthDate.isEmpty() -> getString(com.Lyber.R.string.please_enter_your_birth_date).showToast(
-                requireContext()
+                binding.root,requireContext()
             )
 
             birthPlace.isEmpty() -> {
                 binding.etBirthPlace.requestKeyboard()
                 getString(com.Lyber.R.string.please_enter_your_birth_place).showToast(
-                    requireContext()
+                    binding.root, requireContext()
                 )
             }
 
             birthCountry.isEmpty() -> getString(com.Lyber.R.string.please_select_your_birth_country).showToast(
-                requireContext()
+                binding.root, requireContext()
             )
 
             nationality.isEmpty() -> getString(com.Lyber.R.string.please_enter_your_nationality).showToast(
-                requireContext()
+                binding.root,requireContext()
             )
 
             birthDate.isEmpty() -> getString(com.Lyber.R.string.please_enter_your_birth_date).showToast(
-                requireContext()
+                binding.root,  requireContext()
             )
 
             birthPlace.isEmpty() -> {
                 binding.etBirthPlace.requestKeyboard()
-                getString(com.Lyber.R.string.please_enter_your_birth_place).showToast(requireContext())
+                getString(com.Lyber.R.string.please_enter_your_birth_place).showToast(binding.root,requireContext())
             }
 
             birthCountry.isEmpty() -> getString(com.Lyber.R.string.please_select_your_birth_country).showToast(
-                requireContext()
+                binding.root, requireContext()
             )
 
             nationality.isEmpty() -> getString(com.Lyber.R.string.please_enter_your_nationality).showToast(
-                requireContext()
+                binding.root,  requireContext()
             )
 
             specifiedUsPerson.isEmpty() -> getString(com.Lyber.R.string.please_tell_us_that_you_have_us_citizenship_or_not).showToast(
-                requireContext()
+                binding.root, requireContext()
             )
 
             else -> {

@@ -26,7 +26,10 @@ import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.SignUpViewModel
+import com.google.android.gms.tasks.Task
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.play.core.integrity.StandardIntegrityManager
+import org.json.JSONObject
 
 
 class VerificationBottomSheet2FA(private val handle: (String) -> Unit) :
@@ -103,9 +106,9 @@ class VerificationBottomSheet2FA(private val handle: (String) -> Unit) :
             handler = Handler(Looper.getMainLooper())
 
         binding.tvResendCode.setOnClickListener {
-            CommonMethods.checkInternet(requireContext()){
+            CommonMethods.checkInternet(binding.root,requireContext()){
                 CommonMethods.setProgressDialogAlert(requireContext())
-               fromResend=true
+                fromResend=true
                 handle.invoke("Resend")
             }
         }
@@ -279,28 +282,50 @@ class VerificationBottomSheet2FA(private val handle: (String) -> Unit) :
                     binding.etCodeSix -> {
                         if (getCode().length == 6) {
                             if(tag!=null && tag==Constants.ACTION_CLOSE_ACCOUNT){
-                                CommonMethods.showProgressDialog(requireContext())
-                                val hash = hashMapOf<String, Any>()
-                                hash["otp"] = getCode()
-                                Log.d("hash", "$hash")
-                                viewModel.closeAccount(hash)
-                            }
-                         else   {
-                                 if (viewModel.forLogin) {
-                                CommonMethods.showProgressDialog(requireContext())
-                                viewModel.verify2FA(code = getCode())
-                            } else {
-                                dismiss()
-                                handle.invoke(getCode())
-                            }
-                            //  viewModel.verify2FAWithdraw(code = getCode())
+                                CommonMethods.checkInternet(binding.root,requireContext()) {
+                                    val hash = hashMapOf<String, Any>()
+                                    hash["otp"] = getCode()
 
+                                    val jsonObject = JSONObject()
+                                    jsonObject.put("otp", getCode())
+                                    val jsonString = jsonObject.toString()
+                                    val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                                        SplashActivity.integrityTokenProvider?.request(
+                                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                                .setRequestHash(requestHash)
+                                                .build()
+                                        )
+                                    integrityTokenResponse?.addOnSuccessListener { response ->
+                                        CommonMethods.showProgressDialog(requireContext())
+                                        viewModel.closeAccount(
+                                            hash, token = response.token()
+                                        )
+                                    }?.addOnFailureListener { exception ->
+                                        Log.d("token", "${exception}")
+
+                                    }
+                                }
+                            }
+                            else   {
+                                if (viewModel.forLogin) {
+                                    CommonMethods.checkInternet(binding.root, requireContext()) {
+                                        CommonMethods.showProgressDialog(requireContext())
+                                        viewModel.verify2FA(code=getCode())
+                                    }
+                                } else {
+                                    dismiss()
+                                    handle.invoke(getCode())
+                                }
+                                //  viewModel.verify2FAWithdraw(code = getCode())
+
+                            }
                         }
                     }
                 }
-            }
 
-        }}
+            }}
 
         private fun nextEditText(modifiedEditText: EditText): EditText {
             when (modifiedEditText) {
@@ -358,5 +383,53 @@ class VerificationBottomSheet2FA(private val handle: (String) -> Unit) :
 
         }
     }
+    fun showErrorOnBottomSheet(code: Int) {
+        when (code) {
+            18 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_18)
+            )
 
+            24 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_24)
+                )
+            }
+
+            38 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_38)
+                )
+            }
+
+            39 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_39)
+            )
+
+            43 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_43)
+            )
+
+            45 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_45)
+            )
+            10022 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_10022)
+            )
+        }
+
+    }
 }

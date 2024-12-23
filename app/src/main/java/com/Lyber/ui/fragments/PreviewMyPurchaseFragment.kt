@@ -13,7 +13,6 @@ import com.Lyber.databinding.FragmentMyPurchaseBinding
 import com.Lyber.models.Balance
 import com.Lyber.models.BalanceData
 import com.Lyber.models.DataQuote
-import com.Lyber.network.RestClient
 import com.Lyber.ui.fragments.bottomsheetfragments.ErrorBottomSheet
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
@@ -37,7 +36,6 @@ import com.google.gson.Gson
 import com.stripe.android.PaymentConfiguration
 import com.stripe.android.googlepaylauncher.GooglePayEnvironment
 import com.stripe.android.googlepaylauncher.GooglePayLauncher
-import okhttp3.ResponseBody
 import org.json.JSONArray
 import org.json.JSONObject
 import java.math.BigDecimal
@@ -46,7 +44,7 @@ import java.util.Locale
 
 
 class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
-    View.OnClickListener, RestClient.OnRetrofitError {
+    View.OnClickListener {
     private var timer = 25
     private var isExpand = false
     private lateinit var clientSecret: String
@@ -166,7 +164,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
                 isGpayHit = true
                 googlePayLauncher.presentForPaymentIntent(clientSecret)
             } else
-                getString(R.string.you_must_install_gpay).showToast(requireContext())
+                getString(R.string.you_must_install_gpay).showToast(binding.root,requireContext())
         }
     }
 
@@ -261,7 +259,7 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
                         isGpayHit = true
                         googlePayLauncher.presentForPaymentIntent(clientSecret)
                     } else
-                        getString(R.string.you_must_install_gpay).showToast(requireContext())
+                        getString(R.string.you_must_install_gpay).showToast(binding.root,requireContext())
                 }
 
                 tvMoreDetails -> {
@@ -371,10 +369,31 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
 //            Log.d("timer", "$timer")
             if (timer < 2) {
                 if (!isApiHit) {
-                    CommonMethods.checkInternet(requireContext()) {
+                    CommonMethods.checkInternet(binding.root,requireContext()) {
                         isApiHit = true
 //                        CommonMethods.showProgressDialog(requireActivity())
                         viewModel.cancelQuote(hashMap)
+//                        val jsonObject = JSONObject()
+//                        jsonObject.put("paymentIntentId", hashMap["paymentIntentId"])
+//                        jsonObject.put("orderId",hashMap["orderId"])
+//                        jsonObject.put("userUuid", App.prefsManager.user?.uuid.toString())
+//                        val jsonString = jsonObject.toString()
+//                        // Generate the request hash
+//                        val requestHash = CommonMethods.generateRequestHash(jsonString)
+//                        val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+//                            SplashActivity.integrityTokenProvider?.request(
+//                                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+//                                    .setRequestHash(requestHash)
+//                                    .build()
+//                            )
+//                        integrityTokenResponse1?.addOnSuccessListener { response ->
+//                            Log.d("token", "${response.token()}")
+//                            viewModel.cancelQuote(hashMap)
+//
+//                        }?.addOnFailureListener { exception ->
+//                            Log.d("token", "${exception}")
+//
+//                        }
                     }
                 }
             }
@@ -403,23 +422,42 @@ class PreviewMyPurchaseFragment : BaseFragment<FragmentMyPurchaseBinding>(),
 
     private fun dismissList(clicked: Boolean) {
         if (clicked) {
-            checkInternet(requireActivity()) {
+            checkInternet(binding.root,requireActivity()) {
                 val data = Gson().fromJson(
                     requireArguments().getString(Constants.DATA_SELECTED),
                     DataQuote::class.java
                 )
                 CommonMethods.showProgressDialog(requireActivity())
-                viewModel.getQuote(
-                    "eur",
-                    Constants.MAIN_ASSET,
-                    data.fromAmount
-                )
+//                val jsonObject = JSONObject()
+//                jsonObject.put("fromAsset","eur")
+//                jsonObject.put("toAsset",Constants.MAIN_ASSET)
+//                jsonObject.put("fromAmount",data.fromAmount)
+//                val jsonString = jsonObject.toString()
+//                // Generate the request hash
+//                val requestHash = CommonMethods.generateRequestHash(jsonString)
+//                val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+//                    SplashActivity.integrityTokenProvider?.request(
+//                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+//                            .setRequestHash(requestHash)
+//                            .build()
+//                    )
+//                integrityTokenResponse1?.addOnSuccessListener { response ->
+//                    Log.d("token", "${response.token()}")
+                    viewModel.getQuote(
+                        "eur",
+                        Constants.MAIN_ASSET,
+                        data.fromAmount
+                    )
+//
+//                }?.addOnFailureListener { exception ->
+//                    Log.d("token", "${exception}")
+//                }
             }
         }
     }
 
-    override fun onRetrofitError(responseBody: ResponseBody?) {
-        super.onRetrofitError(responseBody)
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        super.onRetrofitError(errorCode, msg)
         CommonMethods.dismissProgressDialog()
         dismissAlertDialog()
         if (isApiHit)

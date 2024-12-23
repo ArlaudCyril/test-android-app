@@ -1,3 +1,4 @@
+
 package com.Lyber.ui.fragments.bottomsheetfragments
 
 import android.annotation.SuppressLint
@@ -12,21 +13,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.RelativeLayout
-import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.Lifecycle
 import com.Lyber.R
 import com.Lyber.databinding.BottomSheetVerificationBinding
-import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
 import com.Lyber.utils.CommonMethods.Companion.visible
-import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.PersonalDataViewModel
-import com.Lyber.viewmodels.SignUpViewModel
 
 class EmailVerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
     BaseBottomSheet<BottomSheetVerificationBinding>() {
@@ -123,7 +119,7 @@ class EmailVerificationBottomSheet(private val handle: ((String) -> Unit?)? = nu
             btnCancel.text = getString(R.string.back)
 //            tvResendCode.visible()
             tvResendCode.setOnClickListener {
-                CommonMethods.checkInternet(requireContext()) {
+                CommonMethods.checkInternet(binding.root,requireContext()) {
                     CommonMethods.setProgressDialogAlert(requireContext())
                     handle!!.invoke("tg")
                     fromResend = true
@@ -249,8 +245,14 @@ class EmailVerificationBottomSheet(private val handle: ((String) -> Unit?)? = nu
                     binding.etCodeSix -> {
                         if (getCode().length == 6) {
                             dismiss()
-                            CommonMethods.showProgressDialog(requireContext())
-                            viewModel.verifyEmail(getCode())
+                            CommonMethods.checkInternet(binding.root, requireContext()) {
+                                viewModel.verifyEmail(getCode())
+                            }
+
+
+
+
+
                         }
                     }
                 }

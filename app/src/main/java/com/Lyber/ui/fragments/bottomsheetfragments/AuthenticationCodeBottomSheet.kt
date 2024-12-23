@@ -16,7 +16,9 @@ import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.viewmodels.ProfileViewModel
 import com.google.android.material.bottomsheet.BottomSheetBehavior
-
+/*
+    * not in use
+ */
 class AuthenticationCodeBottomSheet : BaseBottomSheet<BottomSheetEnterCodeBinding>() {
 
     private val codeOne: String get() = binding.etCodeOne.text.trim().toString()
@@ -119,7 +121,7 @@ class AuthenticationCodeBottomSheet : BaseBottomSheet<BottomSheetEnterCodeBindin
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             if (completeCode.length == 6) {
-                CommonMethods.checkInternet(requireContext()) {
+                CommonMethods.checkInternet(binding.root,requireContext()) {
                     CommonMethods.showProgressDialog(requireContext())
                     viewModel.verifyStrongAuthentication(completeCode)
                 }

@@ -33,7 +33,7 @@ class WithdrawlNetworksFragment : BaseFragment<FragmentListingBinding>() {
         assetId = requireArguments().getString(Constants.ID, "")
         viewModel = CommonMethods.getViewModel(requireActivity())
         setObservers()
-        adapter = NetworkAdapter(requireActivity(), ::itemClicked)
+        adapter = NetworkAdapter(::itemClicked)
         val layoutManager = LinearLayoutManager(requireContext())
         binding.rvAddAsset.let {
             it.adapter = adapter
@@ -43,11 +43,16 @@ class WithdrawlNetworksFragment : BaseFragment<FragmentListingBinding>() {
             requireActivity().onBackPressedDispatcher.onBackPressed()
         }
         hitApi()
+        binding.rvRefresh.setOnRefreshListener {
+            binding.rvRefresh.isRefreshing = true
+           hitApi()
+        }
 
     }
 
     private fun hitApi() {
-        CommonMethods.checkInternet(requireActivity()) {
+        CommonMethods.checkInternet(binding.root,requireActivity()) {
+            if(!binding.rvRefresh.isRefreshing)
             CommonMethods.showProgressDialog(requireActivity())
             viewModel.getAssetDetailIncludeNetworks(assetId)
         }
@@ -64,6 +69,7 @@ class WithdrawlNetworksFragment : BaseFragment<FragmentListingBinding>() {
     private fun setObservers() {
         viewModel.getAssetDetail.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                binding.rvRefresh.isRefreshing=false
                 CommonMethods.dismissProgressDialog()
                 viewModel.selectedAssetDetail = it.data
                 adapter.setList(it.data.networks)
@@ -77,12 +83,12 @@ class WithdrawlNetworksFragment : BaseFragment<FragmentListingBinding>() {
             val bundle = Bundle()
             viewModel.selectedNetworkDeposit = myAsset
             bundle.putString(Constants.ID, myAsset.id)
+            bundle.putString("assetIdWithdraw", assetId)
             findNavController().navigate(R.id.withdrawAmountFragment, bundle)
         }
     }
 
     class NetworkAdapter(
-        private val context: Context,
         private val handle: (NetworkDeposit) -> Unit
     ) :
         BaseAdapter<NetworkDeposit>() {
@@ -94,7 +100,7 @@ class WithdrawlNetworksFragment : BaseFragment<FragmentListingBinding>() {
             RecyclerView.ViewHolder(binding.root) {
             init {
                 binding.root.setOnClickListener {
-                    handle(itemList[adapterPosition]!!)
+                    handle(itemList[absoluteAdapterPosition]!!)
                 }
             }
         }

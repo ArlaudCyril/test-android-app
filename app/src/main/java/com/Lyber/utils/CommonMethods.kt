@@ -1,5 +1,8 @@
 package com.Lyber.utils
 
+import android.animation.Keyframe
+import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -45,6 +48,7 @@ import androidx.appcompat.app.AlertDialog
 import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricManager.Authenticators.BIOMETRIC_WEAK
 import androidx.biometric.BiometricPrompt
+import androidx.coordinatorlayout.widget.CoordinatorLayout
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
@@ -57,20 +61,17 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelStoreOwner
 import androidx.navigation.Navigation.findNavController
 import com.Lyber.R
-import com.Lyber.databinding.CustomDialogVerticalLayoutBinding
 import com.Lyber.databinding.DocumentBeingVerifiedBinding
 import com.Lyber.databinding.ProgressBarBinding
 import com.Lyber.models.AssetBaseData
 import com.Lyber.models.Balance
 import com.Lyber.models.ErrorResponse
+import com.Lyber.models.ErrorResponseNew
 import com.Lyber.models.MonthsList
 import com.Lyber.models.Network
 import com.Lyber.models.PriceServiceResume
 import com.Lyber.network.RestClient
 import com.Lyber.utils.App.Companion.prefsManager
-import com.Lyber.utils.CommonMethods.Companion.formattedAsset
-import com.Lyber.utils.CommonMethods.Companion.toFormat
-import com.Lyber.utils.CommonMethods.Companion.toMilli
 import com.Lyber.utils.Constants.CAP_RANGE
 import com.Lyber.utils.Constants.SMALL_RANGE
 import com.airbnb.lottie.LottieAnimationView
@@ -82,11 +83,13 @@ import com.github.mikephil.charting.data.Entry
 import com.google.android.material.snackbar.BaseTransientBottomBar
 import com.google.android.material.snackbar.Snackbar
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import java.io.ByteArrayOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 import java.math.RoundingMode
+import java.security.MessageDigest
 import java.text.DateFormat
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
@@ -122,12 +125,12 @@ class CommonMethods {
         }
 
         @JvmStatic
-        fun getScreenWidth(activity: Context?): Int {
-            val w = activity!!.getSystemService(Context.WINDOW_SERVICE) as WindowManager
-            val size = Point()
-            w.defaultDisplay.getSize(size)
-            return size.x
-        }
+//        fun getScreenWidth(activity: Context?): Int {
+//            val w = activity!!.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+//            val size = Point()
+//            w.defaultDisplay.getSize(size)
+//            return size.x
+//        }
 
 
         fun showProgressDialog(context: Context) {
@@ -257,6 +260,7 @@ class CommonMethods {
 
         fun setBiometricPromptInfo(
             title: String,
+            enterPin: String,
             subtitle: String,
             description: String,
             allowDeviceCredential: Boolean
@@ -270,7 +274,7 @@ class CommonMethods {
             builder.apply {
                 if (allowDeviceCredential)
                     setAllowedAuthenticators(BIOMETRIC_WEAK)
-                else setNegativeButtonText("Cancel")
+                else setNegativeButtonText(enterPin)
             }
 
             return builder.build()
@@ -306,7 +310,6 @@ class CommonMethods {
                         .placeholder(placeHolderRes!!)
                         .error(placeHolderRes)
                         .listener(SvgSoftwareLayerSetter())
-
                 when (any) {
                     is String -> {
 //                        if (!any.contains("http"))
@@ -354,9 +357,9 @@ class CommonMethods {
             Glide.with(this).load(any).into(this)
         }
 
-        fun checkInternet(context: Context, handle: () -> Unit) {
+        fun checkInternet(view: View, context: Context, handle: () -> Unit) {
             if (isNetworkConnected(context)) handle()
-            else "Please check your internet connection".showToast(context)
+            else "Please check your internet connection".showToast(view, context)
         }
 
         @SuppressLint("NewApi", "MissingPermission")
@@ -381,6 +384,23 @@ class CommonMethods {
             return Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID)
         }
 
+        fun returnErrorCode(responseBody: ResponseBody?): ErrorResponseNew {
+            var errorCode = -100 // for dummy
+            try {
+                val errorConverter = RestClient.getRetrofitInstance()
+                    .responseBodyConverter<ErrorResponse>(
+                        ErrorResponse::class.java,
+                        arrayOfNulls<Annotation>(0)
+                    )
+
+                val errorRes: ErrorResponse? = errorConverter.convert(responseBody!!)
+//                errorCode= errorRes?.code!!
+                return ErrorResponseNew(errorRes!!.error, errorRes.code)
+            } catch (_: Exception) {
+                return ErrorResponseNew("", errorCode)
+            }
+        }
+
         fun showErrorMessage(context: Context, responseBody: ResponseBody?, root: View): Int {
 
             val errorConverter = RestClient.getRetrofitInstance()
@@ -398,30 +418,73 @@ class CommonMethods {
             } else if (errorRes?.code == 7023 || errorRes?.code == 10041 || errorRes?.code == 7025 || errorRes?.code == 10043) {
                 return errorRes.code
             } else if (errorRes?.code == 7024 || errorRes?.code == 10042) {
-                showSnackBar(root, context, null)
+                showSnack(root, context, null)
                 return errorRes.code
             } else
                 if ((errorRes?.error ?: "").isNotEmpty()) {
                     when (errorRes?.error) {
                         "Invalid UpdateExpression: Syntax error; token: \"0\", near: \", 0)\"" ->
-                            "Invalid OTP".showToast(context)
+                            "Invalid OTP".showToast(root, context)
 
-                        "Email already verified" -> "Email already exists".showToast(context)
-                        "Bad client credentials" -> "Invalid credentials".showToast(context)
+                        "Email already verified" -> "Email already exists".showToast(root, context)
+                        "Bad client credentials" -> "Invalid credentials".showToast(root, context)
                         "No user registerd with this email" -> "Invalid credentials".showToast(
-                            context
+                            root, context
                         )
 
                         else -> {
                             if (errorRes?.error!!.length <= 60)
-                                errorRes?.error?.showToast(context)
+                                errorRes?.error?.showToast(root, context)
                             else
-                                showSnackBar(root, context, errorRes?.error)
+                                showSnack(root, context, errorRes?.error)
                         }
                     }
                 }
             if (errorRes?.error == "UNAUTHORIZED" || errorRes?.error == "Unauthorized") {
 
+                prefsManager.logout()
+                val intent =
+                    Intent(context, com.Lyber.ui.activities.SplashActivity::class.java).apply {
+                       putExtra(Constants.IS_LOGOUT, true).flags =
+                            Intent.FLAG_ACTIVITY_CLEAR_TOP or
+                                    Intent.FLAG_ACTIVITY_CLEAR_TASK or
+                                    Intent.FLAG_ACTIVITY_NEW_TASK
+                    }
+
+                ContextCompat.startActivity(context, intent, null)
+            }
+            return 0
+        }
+
+        fun showError(errorCode: Int, context: Context, msg: String, root: View): Int {
+
+            if (errorCode == 19006 || errorCode == 19007 || errorCode == 19004) {
+                logOut(context)
+            } else if (errorCode == 19002 || errorCode == 19003) {
+                findNavController(root).navigate(R.id.underMaintenanceFragment)
+            } else if (errorCode == 7023 || errorCode == 10041 || errorCode == 7025 || errorCode == 10043) {
+                return errorCode
+            } else if (errorCode == 7024 || errorCode == 10042) {
+                showSnack(root, context, null)
+                return errorCode
+            } else
+                if ((msg ?: "").isNotEmpty()) {
+                    when (msg) {
+                        "Invalid UpdateExpression: Syntax error; token: \"0\", near: \", 0)\"" ->
+                            "Invalid OTP".showToast(root, context)
+
+                        "Email already verified" -> "Email already exists".showToast(root, context)
+                        "Bad client credentials" -> "Invalid credentials".showToast(root, context)
+                        "No user registerd with this email" -> "Invalid credentials".showToast(
+                            root, context
+                        )
+
+                        else -> {
+                            showSnack(root, context, msg)
+                        }
+                    }
+                }
+            if (msg == "UNAUTHORIZED" || msg == "Unauthorized") {
                 prefsManager.logout()
                 val intent =
                     Intent(context, com.Lyber.ui.activities.SplashActivity::class.java).apply {
@@ -700,12 +763,93 @@ class CommonMethods {
             return ViewModelProvider(owner)[T::class.java]
         }
 
-        fun <T> T.showToast(context: Context) {
-            Toast.makeText(context, toString(), Toast.LENGTH_SHORT).show()
+        fun <T> T.showToast(view: View, context: Context) {
+//            Toast.makeText(context, toString(), Toast.LENGTH_SHORT).show()
+            showSnackBar(view, context, toString())
+//            val customToastLayout = LayoutInflater.from(context)
+//                .inflate(R.layout.custom_toast, null)
+//            val textView = customToastLayout.findViewById<TextView>(R.id.tvToast)
+//            textView.text = toString()
+//            val customToast = Toast(context)
+//            customToast.view = customToastLayout
+//            customToast.setGravity(Gravity.TOP, 0, 152)
+//            customToast.duration = Toast.LENGTH_SHORT
+//            customToast.show()
+        }
+
+        private fun showSnackBar(view: View, context: Context, text: String) {
+            val snackbar = Snackbar.make(view, "", Snackbar.LENGTH_SHORT)
+//            val params = snackbar.view.layoutParams as FrameLayout.LayoutParams
+//            params.gravity = Gravity.TOP
+//            params.setMargins(24, 158, 24, 0)
+//
+//
+            val params = snackbar.view.layoutParams
+            if (params is CoordinatorLayout.LayoutParams) {
+                // Correctly cast to CoordinatorLayout.LayoutParams
+                params.gravity = Gravity.TOP
+                params.setMargins(32, 158, 32, 0)
+                snackbar.view.layoutParams = params
+            } else if (params is FrameLayout.LayoutParams) {
+                // Use FrameLayout.LayoutParams as fallback
+                params.gravity = Gravity.TOP
+                params.setMargins(32, 158, 32, 0)
+                snackbar.view.layoutParams = params
+            }
+
+
+
+            snackbar.view.background =
+                context.getDrawable(R.drawable.curved_background_toast)
+
+            snackbar.animationMode = BaseTransientBottomBar.ANIMATION_MODE_FADE
+            val layout = snackbar.view as Snackbar.SnackbarLayout
+            val textView =
+                layout.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
+            textView.visibility = View.INVISIBLE
+            val snackView =
+                LayoutInflater.from(context).inflate(R.layout.custom_toast, null)
+            val textViewMsg = snackView.findViewById<TextView>(R.id.tvToast)
+            val ivIcon = snackView.findViewById<ImageView>(R.id.ivIcon)
+            ivIcon.visible()
+            layout.setPadding(16, 32, 16, 32)
+            layout.addView(snackView, 0)
+            textViewMsg.text = text
+//                getString(R.string.new_pass_cannot_be_same_as_old) + getString(R.string.new_pass_cannot_be_same_as_old)
+            snackbar.show()
         }
 
         fun Fragment.showToast(string: String) {
             Toast.makeText(requireContext(), string, Toast.LENGTH_SHORT).show()
+        }
+
+        fun getTextLineCount(context: Context, text: String, textSizeInSp: Float): Int {
+            // Dynamically calculate the width (e.g., screen width minus padding)
+            val defaultPaddingDp = 16
+            val density = context.resources.displayMetrics.density
+            val padding = (defaultPaddingDp * density).toInt()
+            val textViewWidth =
+                getScreenWidth(context) - 2 * padding
+
+            // Create and measure the TextView as before
+            val textView = TextView(context)
+            textView.text = text
+            textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, textSizeInSp)
+
+            val widthMeasureSpec =
+                View.MeasureSpec.makeMeasureSpec(textViewWidth, View.MeasureSpec.AT_MOST)
+            val heightMeasureSpec =
+                View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+            textView.measure(widthMeasureSpec, heightMeasureSpec)
+
+            val totalHeight = textView.measuredHeight
+            val lineHeight = textView.lineHeight
+            return totalHeight / lineHeight
+        }
+
+        fun getScreenWidth(context: Context): Int {
+            val displayMetrics = context.resources.displayMetrics
+            return displayMetrics.widthPixels
         }
 
         fun EditText.requestKeyboard() {
@@ -1633,20 +1777,36 @@ class CommonMethods {
             return bMapRotate
         }
 
-        fun showSnackBar(root: View, context: Context, textMsg: String?) {
-            val snackbar = Snackbar.make(root, "", Snackbar.LENGTH_LONG)
-            val params = snackbar.view.layoutParams as FrameLayout.LayoutParams
-            params.gravity = Gravity.TOP
-            params.setMargins(0, 0, 0, 0)
-            snackbar.view.layoutParams = params
+        fun showSnack(root: View, context: Context, textMsg: String?) {
+            val snackbar = Snackbar.make(root, "", Snackbar.LENGTH_SHORT)
+//            val params = snackbar.view.layoutParams as FrameLayout.LayoutParams
+//            params.gravity = Gravity.TOP
+//            params.setMargins(24, 158, 24, 0)
+            val params = snackbar.view.layoutParams
+            if (params is CoordinatorLayout.LayoutParams) {
+                // Correctly cast to CoordinatorLayout.LayoutParams
+                params.gravity = Gravity.TOP
+                params.setMargins(24, 158, 24, 0)
+                snackbar.view.layoutParams = params
+            } else if (params is FrameLayout.LayoutParams) {
+                // Use FrameLayout.LayoutParams as fallback
+                params.gravity = Gravity.TOP
+                params.setMargins(24, 158, 24, 0)
+                snackbar.view.layoutParams = params
+            }
+//            snackbar.view.layoutParams = params
+            snackbar.view.background =
+                context.getDrawable(R.drawable.curved_background_toast)
+
             snackbar.animationMode = BaseTransientBottomBar.ANIMATION_MODE_FADE
+
             val layout = snackbar.view as Snackbar.SnackbarLayout
             val textView =
                 layout.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
             textView.visibility = View.INVISIBLE
             val snackView =
-                LayoutInflater.from(context).inflate(R.layout.custom_snackbar, null)
-            val textViewMsg = snackView.findViewById<TextView>(R.id.tvMsg)
+                LayoutInflater.from(context).inflate(R.layout.custom_toast, null)
+            val textViewMsg = snackView.findViewById<TextView>(R.id.tvToast)
             if (textMsg == null)
                 textViewMsg.text = context.getString(R.string.kyc_under_verification)
             else
@@ -1792,11 +1952,13 @@ class CommonMethods {
                         val tvDocVerified =
                             dialogVerification!!.findViewById<TextView>(R.id.tvDocVerified)
                         if (!tt)
-                            tvDocVerified.text = context.getString(R.string.kyc_under_verification_text)
+                            tvDocVerified.text =
+                                context.getString(R.string.kyc_under_verification_text)
                         else
                             tvDocVerified.text = context.getString(R.string.doc_being_verified)
                         tvDocVerified.visible()
-                        val imageView = dialogVerification!!.findViewById<ImageView>(R.id.ivCorrect)!!
+                        val imageView =
+                            dialogVerification!!.findViewById<ImageView>(R.id.ivCorrect)!!
                         when (typeOfLoader) {
 
 
@@ -1850,7 +2012,7 @@ class CommonMethods {
                         Log.d("Exception", "showProgressDialog: ${e.message}")
                     }
                 }
-            }catch (_:Exception){
+            } catch (_: Exception) {
 
             }
 
@@ -1879,20 +2041,86 @@ class CommonMethods {
             }
         }
 
-         fun getTruncatedText(text: String, maxLength: Int): String {
-            try {
-                if (text.length <= maxLength) {
+        fun getTruncatedText(text: String, maxLength: Int): String {
+              try {
+                    if (text.length <= maxLength) {
+                        return text
+                    }
+                    val startLength = (maxLength - 3) / 2
+                    val endLength = 6
+                    return text.substring(
+                        0,
+                        startLength
+                    ) + "..." + text.substring(text.length - endLength)
+
+                } catch (_: Exception) {
                     return text
                 }
-                val startLength = (maxLength - 3) / 2
-                val endLength = 6
-                return text.substring(0, startLength) + "..." + text.substring(text.length - endLength)
-
-            } catch (_: Exception) {
-                return text
             }
+
+            fun generateRequestHash(input: String): String {
+                val bytes = MessageDigest.getInstance("SHA-256").digest(input.toByteArray())
+                return bytes.joinToString("") { "%02x".format(it) }
+            }
+
+            //        fun sortAndFormatJson(jsonObject: JSONObject): String {
+//            // Get keys, sort them alphabetically, and convert to a list for reusability
+//            val sortedKeys = jsonObject.keys().asSequence().sorted().toList()
+//
+//            // Create a new JSON string in the sorted order
+//            val sortedJsonString = StringBuilder("{")
+//            sortedKeys.forEachIndexed { index, key ->
+//                sortedJsonString.append("\"$key\":\"${jsonObject.get(key)}\"")
+//                if (index < sortedKeys.size - 1) {
+//                    sortedJsonString.append(",")
+//                }
+//            }
+//            sortedJsonString.append("}")
+//            return sortedJsonString.toString()
+//        }
+            fun sortAndFormatJson(jsonObject: JSONObject): String {
+                // Get keys, sort them alphabetically, and convert to a list for reusability
+                val sortedKeys = jsonObject.keys().asSequence().sorted().toList()
+
+                // Create a new JSON string in the sorted order
+                val sortedJsonString = StringBuilder("{")
+                sortedKeys.forEachIndexed { index, key ->
+                    val value = jsonObject.get(key)
+                    // Check if the value is a number (Int, Double, etc.) and format it accordingly
+                    if (value is Number) {
+                        sortedJsonString.append("\"$key\":$value")
+                    } else {
+                        sortedJsonString.append("\"$key\":\"$value\"")
+                    }
+                    if (index < sortedKeys.size - 1) {
+                        sortedJsonString.append(",")
+                    }
+                }
+                sortedJsonString.append("}")
+                return sortedJsonString.toString()
+            }
+
+            fun View.shake() {
+                val keyframe1 = Keyframe.ofFloat(0f, 0f)
+                val keyframe2 = Keyframe.ofFloat(0.25f, 30f)
+                val keyframe3 = Keyframe.ofFloat(0.5f, -30f)
+                val keyframe4 = Keyframe.ofFloat(0.75f, 30f)
+                val keyframe5 = Keyframe.ofFloat(1f, 0f)
+
+                val propertyValuesHolder = PropertyValuesHolder.ofKeyframe(
+                    "translationX",
+                    keyframe1,
+                    keyframe2,
+                    keyframe3,
+                    keyframe4,
+                    keyframe5
+                )
+                val animator = ObjectAnimator.ofPropertyValuesHolder(this, propertyValuesHolder)
+                animator.duration = 500 // Duration in milliseconds
+                animator.start()
+            }
+
         }
     }
-}
 
 

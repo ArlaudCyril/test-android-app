@@ -26,6 +26,8 @@ import com.Lyber.utils.ActivityCallbacks
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods.Companion.is30DaysOld
 import com.Lyber.utils.Constants
+import com.google.android.play.core.integrity.IntegrityManagerFactory
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import java.util.Locale
 
 
@@ -35,6 +37,14 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
     lateinit var navController: NavController
     override fun bind() = ActivitySplashBinding.inflate(layoutInflater)
 
+    //    private var checkPermission: Boolean = false
+//    override fun onResume() {
+//        super.onResume()
+//        if(checkPermission) {
+//            checkPermission=false
+//            checkAndRequest()
+//        }
+//    }
     override fun onNewIntent(intent: Intent?) {
         super.onNewIntent(intent)
         setIntent(intent)
@@ -57,6 +67,25 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
 //        installSplashScreen().setKeepOnScreenCondition { keepSplashOnScreen }
 //        Handler(Looper.getMainLooper()).postDelayed({ keepSplashOnScreen = false }, delay)
         super.onCreate(savedInstanceState)
+        //        // Create an instance of a manager.
+        val standardIntegrityManager: StandardIntegrityManager =
+            IntegrityManagerFactory.createStandard(this.applicationContext)
+
+        val cloudProjectNumber: Long = 672116436946 // console id
+
+// Prepare integrity token. Can be called once in a while to keep internal state fresh.
+        standardIntegrityManager.prepareIntegrityToken(
+            StandardIntegrityManager.PrepareIntegrityTokenRequest.builder()
+                .setCloudProjectNumber(cloudProjectNumber)
+                .build()
+        ).addOnSuccessListener { tokenProvider ->
+            integrityTokenProvider = tokenProvider
+            Log.d("Token", "$integrityTokenProvider")
+        }.addOnFailureListener { exception ->
+//                        handleError(exception)
+            Log.d("Exception", "$exception")
+
+        }
 
         val navHostFragment =
             supportFragmentManager.findFragmentById(R.id.nav_host_fragment) as NavHostFragment
@@ -86,7 +115,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
                 }
             })
 
-
+//        checkAndRequest()
         if (App.prefsManager != null && App.prefsManager.user != null && !App.prefsManager.user?.language.isNullOrEmpty()) {
             App.prefsManager.setLanguage(App.prefsManager.user?.language!!)
             val code = App.prefsManager.getLanguage()
@@ -115,10 +144,12 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
             set(value) {
                 _activityCallbacks = value
             }
+        var integrityTokenProvider: StandardIntegrityManager.StandardIntegrityTokenProvider? = null
+
     }
 
     private fun handleExtras() {
-        Log.d("Language","${App.prefsManager.getLanguage()}")
+        Log.d("Language", "${App.prefsManager.getLanguage()}")
         if (App.prefsManager.getLanguage().isNotEmpty()) {
             val code = App.prefsManager.getLanguage()
             val locale = Locale(code)
@@ -160,7 +191,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
                         putString("resetToken", token)
                     }
                     navController.popBackStack(navController.graph.startDestinationId, false)
-                    navController.navigate(R.id.splashFragment, arguments) //todo
+                    navController.navigate(R.id.splashFragment, arguments)
 
 //                    navController.navigate(R.id.resetPasswordFragment, arguments)
                 } else {
@@ -172,6 +203,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
         else navController.navigate(R.id.splashFragment)
 //        else splashFragmentFunction()
     }
+
     fun splashFragmentFunction() {
         if (App.prefsManager.tokenSavedAt.is30DaysOld()) {
             App.prefsManager.logout()
@@ -192,17 +224,3 @@ class SplashActivity : BaseActivity<ActivitySplashBinding>() {
         }
     }
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-

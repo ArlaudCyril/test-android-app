@@ -19,7 +19,6 @@ import com.Lyber.models.MessageResponse
 import com.Lyber.models.Strategy
 import com.Lyber.ui.adapters.PickStrategyFragmentAdapter
 import com.Lyber.ui.fragments.bottomsheetfragments.InvestWithStrategyBottomSheet
-import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.App
 import com.Lyber.utils.AppLifeCycleObserver
 import com.Lyber.utils.CommonMethods
@@ -32,6 +31,7 @@ import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.utils.ItemOffsetDecoration
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.google.gson.GsonBuilder
 import java.lang.Math.abs
 
@@ -90,9 +90,10 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
 
         viewModel.pauseStrategyResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                checkInternet(requireContext()) {
+                checkInternet(binding.root,requireContext()) {
                     showProgressDialog(requireContext())
-                    viewModel.getStrategies()
+                   viewModel.getStrategies()
+
                 }
             }
         }
@@ -107,9 +108,10 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
         }
     }
     private fun hitApi(){
-        checkInternet(requireContext()) {
+        checkInternet(binding.root,requireContext()) {
             showProgressDialog(requireContext())
             viewModel.getStrategies()
+
         }
     }
 
@@ -189,19 +191,23 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
 
             1 -> {
                 if(checkKyc())
-                checkInternet(requireActivity()) {
+                checkInternet(binding.root,requireActivity()) {
                     CommonMethods.showProgressDialog(requireActivity())
-                    viewModel.pauseStrategy(
-                        viewModel.selectedStrategy!!.ownerUuid,
-                        viewModel.selectedStrategy!!.name
-                    )
+                     viewModel.pauseStrategy(
+                           viewModel.selectedStrategy!!.ownerUuid,
+                            viewModel.selectedStrategy!!.name
+                        )
+
                 }
             }
 
             2 -> {
-                checkInternet(requireActivity()) {
+                checkInternet(binding.root,requireActivity()) {
                     CommonMethods.showProgressDialog(requireActivity())
-                    viewModel.deleteStrategy(viewModel.selectedStrategy!!.name)
+                   viewModel.deleteStrategy(
+                            viewModel.selectedStrategy!!.name
+                        )
+
                 }
             }
 
@@ -254,16 +260,6 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
 
     class SlowLinearSmoothScroller(context: Context) : LinearSmoothScroller(context) {
 
-        //        companion object {
-//            private const val MILLISECONDS_PER_INCH = 1000f // Adjust as needed
-//        }
-//        private  val MILLISECONDS_PER_INCH = 50f // Adjust as needed
-//        private  val MAX_SCROLL_ON_FLING_DURATION = 500 // Adjust as needed
-//
-//
-//        override fun calculateSpeedPerPixel(displayMetrics: DisplayMetrics): Float {
-//            return MILLISECONDS_PER_INCH / displayMetrics.densityDpi
-//        }
         companion object {
             private const val SCROLL_DURATION =
                 300 // Adjust as needed (make it smaller for faster scrolling)
@@ -290,5 +286,19 @@ class PickYourStrategyFragment : BaseFragment<FragmentPickYourStrategyBinding>()
         }
     }
 
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        CommonMethods.dismissProgressDialog()
+
+        when (errorCode) {
+            13003 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_13003)
+            )
+
+            else ->  super.onRetrofitError(errorCode, msg)
+
+        }
+    }
 
 }

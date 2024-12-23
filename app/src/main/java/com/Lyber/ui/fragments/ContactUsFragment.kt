@@ -10,19 +10,17 @@ import android.text.TextPaint
 import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
-import android.text.style.UnderlineSpan
 import android.util.Log
 import android.view.View
 import android.view.View.OnClickListener
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.FragmentContactUsBinding
-import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.showToast
+import com.Lyber.viewmodels.PortfolioViewModel
 
 
 class ContactUsFragment : BaseFragment<FragmentContactUsBinding>(), OnClickListener {
@@ -39,7 +37,7 @@ class ContactUsFragment : BaseFragment<FragmentContactUsBinding>(), OnClickListe
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 CommonMethods.dismissProgressDialog()
                 if (it.success) {
-                    getString(R.string.msgHasBeenSent).showToast(requireContext())
+                    getString(R.string.msgHasBeenSent).showToast(binding.root,requireContext())
                     requireActivity().onBackPressedDispatcher.onBackPressed()
                 }
             }
@@ -84,15 +82,15 @@ class ContactUsFragment : BaseFragment<FragmentContactUsBinding>(), OnClickListe
                 ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
                 btnSend -> {
                     if (binding.etMsg.text.trim().toString().isEmpty())
-                        getString(R.string.msgIsEmpty).showToast(requireContext())
+                        getString(R.string.msgIsEmpty).showToast(binding.root,requireContext())
                     else
                         try {
-                            CommonMethods.checkInternet(requireContext()) {
-                                var msg = binding.etMsg.text.trim().toString()
-                                CommonMethods.showProgressDialog(requireContext())
-                                viewModel.contactSupport(msg)
-                            }
+                            CommonMethods.checkInternet(binding.root, requireContext()) {
+                                val msg = binding.etMsg.text.trim().toString()
+                                 CommonMethods.showProgressDialog(requireContext())
+                                    viewModel.contactSupport(msg)
 
+                            }
                         } catch (e: IndexOutOfBoundsException) {
                             Log.i("error", e.message.toString())
                         }

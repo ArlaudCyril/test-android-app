@@ -20,7 +20,6 @@ import androidx.core.content.ContextCompat.getColor
 import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -53,12 +52,14 @@ import com.Lyber.viewmodels.PortfolioViewModel
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.tabs.TabLayout
 import com.google.firebase.messaging.FirebaseMessaging
+import org.json.JSONObject
 import java.text.SimpleDateFormat
 import java.util.Locale
 
 
 class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), ActivityCallbacks,
     View.OnClickListener, PortfolioFragmentActions {
+    //    private val viewModel1: com.Lyber.models.GetUserViewModal by activityViewModels()
     /* adapters */
     private lateinit var adapterBalance: BalanceAdapter
     private lateinit var adapterRecurring: RecurringInvestmentAdapter
@@ -78,6 +79,8 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
     private lateinit var timeGraphList: MutableList<List<Double>>
     private var lastValueUpdated = false
     private var responseFrom = ""
+    private var isHide = false
+    private var isRefresh = false
 
     override fun bind() = FragmentPortfolioHomeBinding.inflate(layoutInflater)
 
@@ -102,7 +105,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
         /* initializing adapters for recycler views */
 
-        adapterBalance = BalanceAdapter(false, ::assetClicked)
+        adapterBalance = BalanceAdapter(false, ::assetClicked, true)
         adapterAllAsset = AvailableAssetAdapter(::availableAssetClicked)
         adapterRecurring =
             RecurringInvestmentAdapter(::recurringInvestmentClicked, requireActivity())
@@ -113,7 +116,8 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             binding.rvRefresh.isRefreshing = true
             responseFrom = ""
             lastValueUpdated = false
-            viewModel.getWalletHistoryPrice(daily, limit)
+//            viewModel.getWalletHistoryPrice(daily, limit)
+//            hitWalletApi()
             viewModel.getUser()
             viewModel.getBalance()
             viewModel.getAllPriceResume()
@@ -180,7 +184,8 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                             daily = true
                         }
                     }
-                    viewModel.getWalletHistoryPrice(daily, limit)
+//                    viewModel.getWalletHistoryPrice(daily, limit)
+                    hitWalletApi()
                 }
 
                 override fun onTabUnselected(tab: TabLayout.Tab?) {}
@@ -189,6 +194,12 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
 
             })
         }
+
+//        isHide = App.prefsManager.hideAmount
+        if (App.prefsManager.hideAmount)
+            binding.ivShowHideAmount.setBackgroundResource(R.drawable.visibility_off)
+        else
+            binding.ivShowHideAmount.setBackgroundResource(R.drawable.visibility)
 
         /* onclick listeners */
         binding.tvViewAll.setOnClickListener(this)
@@ -200,6 +211,8 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         binding.llVerifyIdentity.setOnClickListener(this)
         binding.llContract.setOnClickListener(this)
         binding.tvBuyUSDC.setOnClickListener(this)
+        binding.ivShowHideAmount.setOnClickListener(this)
+        binding.ivQrCode.setOnClickListener(this)
 
         /* pop up initialization */
         assetPopUpWindow = ListPopupWindow(requireContext()).apply {
@@ -209,20 +222,24 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             width = 240.px
             height = 420.px
             setOnItemClickListener { _, _, position, _ ->
-                assetPopupAdapter.getItemAt(position)?.let {
+                val actualItem = assetPopupAdapter.getItemAt(position)
+                if (actualItem != null) {
                     dismiss()
+                } else {
+                    Log.e("Error", "Invalid position or item is null.")
                 }
             }
         }
 
         binding.lineChart.clearYAxis()
-//        binding.lineChart.timeSeries = getLineData(viewModel.totalPortfolio)
-
+        binding.lineChart.hideAmount = true
         binding.tvInvestMoney.text = getString(R.string.invest_money)
         binding.tvPortfolioAssetPrice.text = getString(R.string.portfolio)
-        binding.tvValuePortfolioAndAssetPrice.text =
-            "${viewModel.totalPortfolio.commaFormatted}${Constants.EURO}"
-
+        if (!App.prefsManager.hideAmount)
+            binding.tvValuePortfolioAndAssetPrice.text =
+                "${viewModel.totalPortfolio.commaFormatted}${Constants.EURO}"
+        else
+            binding.tvValuePortfolioAndAssetPrice.text = "*****"
         addObservers()
 
         hitApis()
@@ -252,7 +269,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
     }
 
     private fun hitApis() {
-        checkInternet(requireContext()) {
+        checkInternet(binding.root, requireContext()) {
             if (viewModel.screenCount == 1) {
                 viewModel.getPrice(viewModel.chosenAssets?.id ?: "btc")
                 viewModel.getNews(viewModel.chosenAssets?.id ?: "btc")
@@ -269,14 +286,24 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             lastValueUpdated = false
             responseFrom = ""
             viewModel.getUser()
+
+            viewModel.getBalance()
+            viewModel.getWalletRib()
+            viewModel.getActiveStrategies()
             viewModel.getAllAssets()
             viewModel.getNetworks()
-            viewModel.getActiveStrategies()
-            viewModel.getWalletHistoryPrice(daily, limit)
-            viewModel.getBalance()
+//            hitWalletApi()
             viewModel.getAllPriceResume()
-            viewModel.getWalletRib()
         }
+    }
+
+    private fun hitWalletApi() {
+        val jsonObject = JSONObject()
+        jsonObject.put("daily", daily)
+        jsonObject.put("limit", limit)
+        val jsonString = jsonObject.toString()
+        // Generate the request hash
+        viewModel.getWalletHistoryPrice(daily, limit)
     }
 
     private fun addObservers() {
@@ -356,8 +383,11 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                         )
                         binding.lineChart.timeSeries = timeGraphList
                     }
-                    binding.tvValuePortfolioAndAssetPrice.text =
-                        "${totalBalance.commaFormatted}${Constants.EURO}"
+                    if (!App.prefsManager.hideAmount)
+                        binding.tvValuePortfolioAndAssetPrice.text =
+                            "${totalBalance.commaFormatted}${Constants.EURO}"
+                    else
+                        binding.tvValuePortfolioAndAssetPrice.text = "*****"
 //                    binding.lineChart.updateValueLastPoint(totalBalance.commaFormatted.toFloat())
                     com.Lyber.ui.activities.BaseActivity.balances = balances
                     balances.sortByDescending { it.balanceData.euroBalance.toDoubleOrNull() }
@@ -367,13 +397,26 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 } else {
                     binding.tvNoAssets.visible()
                     binding.tvBuyUSDC.visible()
+                    val totalBalance = 0.0
+                    viewModel.totalPortfolio = totalBalance
+                    if (!App.prefsManager.hideAmount)
+                        binding.tvValuePortfolioAndAssetPrice.text =
+                            "${totalBalance.commaFormatted}${Constants.EURO}"
+                    else
+                        binding.tvValuePortfolioAndAssetPrice.text = "*****"
+                    val balances = ArrayList<Balance>()
+                    adapterBalance.setList(balances)
+                    responseFrom = "balance"
+
                 }
+                hitWalletApi()
             }
         }
 
         viewModel.walletHistoryResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 binding.rvRefresh.isRefreshing = false
+//                if(it.data.isNotEmpty()) {
                 val dates = it.data.map { it.date }
                 var dateFormatter = SimpleDateFormat("yyyy-MM-dd", Locale.getDefault())
                 if (!daily)
@@ -389,8 +432,8 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 } as MutableList
                 Log.d("timeseries", "$timeSeries1")
                 timeGraphList = timeSeries1
-                if (responseFrom.isNotEmpty() && responseFrom == "balance" && viewModel.totalPortfolio != 0.0) {
-                    lastValueUpdated = true
+                if (timeGraphList.isNotEmpty() && timeGraphList[timeGraphList.size - 1][1] != viewModel.totalPortfolio) {
+                    timeGraphList.removeAt(timeGraphList.size - 1)
                     timeGraphList.add(
                         listOf(
                             System.currentTimeMillis().toDouble(),
@@ -400,8 +443,10 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 }
                 if (timeSeries1.isEmpty())
                     binding.lineChart.timeSeries = getLineData(viewModel.totalPortfolio)
-                else
+                else {
+                    timeGraphList = timeGraphList.filter { it[1].isFinite() }.toMutableList()
                     binding.lineChart.timeSeries = timeGraphList
+                }
 
                 responseFrom = "history"
             }
@@ -431,7 +476,8 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                     when (it.data.kycStatus) {
                         "LYBER_REFUSED" -> {
                             dismissProgressDialog()
-                            App.kycOK = true // set it to true because we don't want to run getUser in loop
+                            App.kycOK =
+                                true // set it to true because we don't want to run getUser in loop
                             Handler(Looper.getMainLooper()).postDelayed({
                                 CommonMethods.showDocumentDialog(
                                     requireActivity(),
@@ -561,7 +607,8 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                     when (it.kycStatus) {
                         "LYBER_REFUSED" -> {
                             dismissProgressDialog()
-                            App.kycOK = true // set it to true because we don't want to run getUser in loop
+                            App.kycOK =
+                                true // set it to true because we don't want to run getUser in loop
                             Handler(Looper.getMainLooper()).postDelayed({
                                 CommonMethods.showDocumentDialog(
                                     requireActivity(),
@@ -753,7 +800,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
     }
 
     override fun assetClicked(balance: Balance) {
-        checkInternet(requireContext()) {
+        checkInternet(binding.root, requireContext()) {
 
             navController.navigate(R.id.portfolioDetailFragment)
             viewModel.selectedAsset = CommonMethods.getAsset(balance.id)
@@ -762,7 +809,7 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
     }
 
     override fun availableAssetClicked(priceResume: PriceServiceResume) {
-        checkInternet(requireContext()) {
+        checkInternet(binding.root, requireContext()) {
             viewModel.selectedAsset = CommonMethods.getAsset(priceResume.id)
             viewModel.selectedBalance = CommonMethods.getBalance(priceResume.id)
             navController.navigate(R.id.portfolioDetailFragment)
@@ -797,6 +844,11 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
             "sell" -> {
                 viewModel.selectedOption = Constants.USING_SELL
                 navController.navigate(R.id.addAmountFragment)
+            }
+
+            Constants.USING_SEND_MONEY -> {
+                viewModel.selectedOption = Constants.USING_SEND_MONEY
+                navController.navigate(R.id.sendMoneyOptionsFragment)
             }
         }
     }
@@ -875,8 +927,8 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                 }
 
                 ivProfile -> navController.navigate(R.id.profileFragment)
-                ivProfile -> navController.navigate(R.id.profileFragment)
                 llThreeDot -> {
+                    viewModel.selectedAsset = null
                     PortfolioThreeDots(::menuOptionSelected).show(
                         childFragmentManager,
                         ""
@@ -939,6 +991,34 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
                     }
                     findNavController().navigate(R.id.buyUsdt, arguments)
                 }
+
+                ivShowHideAmount -> {
+                    if (!App.prefsManager.hideAmount)
+                        ivShowHideAmount.setBackgroundResource(R.drawable.visibility_off)
+                    else
+                        ivShowHideAmount.setBackgroundResource(R.drawable.visibility)
+
+                    App.prefsManager.hideAmount = !App.prefsManager.hideAmount
+                    if (!App.prefsManager.hideAmount)
+                        binding.tvValuePortfolioAndAssetPrice.text =
+                            "${viewModel.totalPortfolio.commaFormatted}${Constants.EURO}"
+                    else
+                        binding.tvValuePortfolioAndAssetPrice.text = "*****"
+                    adapterBalance.notifyDataSetChanged()
+                    binding.lineChart.showHideAmount()
+                }
+
+                ivQrCode -> {
+                    navController.navigate(R.id.qRCodeFragment)
+//                    viewModel.selectedOption = Constants.ACTION_TAILOR_STRATEGY
+////                    Constants.ACTION_WITHDRAW_EURO
+////                    Constants.USING_WITHDRAW
+////                    Constants.EXPORT_DONE
+////                    Constants.ACTION_TAILOR_STRATEGY
+//
+//                    ConfirmationBottomSheet().show(childFragmentManager, "")
+
+                }
             }
         }
     }
@@ -959,7 +1039,12 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         private val list = mutableListOf<GetAssetsResponseItem?>()
 
         fun getItemAt(position: Int): GetAssetsResponseItem? {
-            return list[position]
+            try {
+                return list[position]
+            } catch (ex: Exception) {
+                Log.d("Exc", "${ex}")
+                return null
+            }
         }
 
         fun hasNoData(): Boolean {
@@ -1029,5 +1114,49 @@ class PortfolioHomeFragment : BaseFragment<FragmentPortfolioHomeBinding>(), Acti
         val fragmentPortfolio get() = _fragmentPortfolio!!
     }
 
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        when (errorCode) {
+            8 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_8)
+                )
+                CommonMethods.logOut(requireContext())
+            }
+
+            9 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_9)
+                )
+                CommonMethods.logOut(requireContext())
+            }
+
+            27 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_27)
+                )
+                CommonMethods.logOut(requireContext())
+            }
+
+
+            52 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_52)
+                )
+                CommonMethods.logOut(requireContext())
+            }
+
+            else -> super.onRetrofitError(errorCode, msg)
+
+        }
+
+    }
 }
 

@@ -1,13 +1,10 @@
 package com.Lyber.network
 
-
 import com.Lyber.utils.App.Companion.prefsManager
 import com.Lyber.utils.Constants
 import com.google.gson.GsonBuilder
-import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Protocol
-import okhttp3.Response
 import okhttp3.ResponseBody
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -21,7 +18,8 @@ import javax.net.SocketFactory
 object RestClient {
 
     interface OnRetrofitError {
-        fun onRetrofitError(responseBody: ResponseBody?)
+        fun onRetrofitError(errorCode: Int, msg: String)
+//        fun onRetrofitError(errorCode: Int, responseBody: ResponseBody?)
         fun onError()
     }
 
@@ -98,6 +96,7 @@ object RestClient {
     }
 
     private fun getOkHttpClient2(
+        token: String,
         signature: String,
         timestamp: String
     ): OkHttpClient {
@@ -119,6 +118,7 @@ object RestClient {
                 )
                     .header("X-Signature", signature)
                     .header("X-Timestamp", timestamp.toString())
+                    .header("x-integrity-token", token)
                     .header("x-api-version", Constants.API_VERSION)
                     .header("User-Agent", "${Constants.APP_NAME}/${Constants.VERSION}")
                 val build = header.build()
@@ -128,15 +128,64 @@ object RestClient {
             .build()
     }
 
-    fun setPhone(
-        baseUrl: String = Constants.BASE_URL,
+    fun setPhoneInstance(
+        token: String,
         signature: String,
         timestamp: String
     ): Api {
 
         retrofit = Retrofit.Builder()
-            .baseUrl(baseUrl)
-            .client(getOkHttpClient2(signature, timestamp))
+            .baseUrl(Constants.BASE_URL)
+            .client(getOkHttpClient2(token,signature, timestamp))
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(
+                GsonConverterFactory.create(
+                    GsonBuilder().setLenient()
+                        .disableHtmlEscaping()
+                        .create()
+                )
+            )
+            .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
+            .build()
+
+        REST_CLIENT = retrofit.create(Api::class.java)
+        return REST_CLIENT
+    }
+
+    private fun getOkHttpClientSecure(
+        token: String
+    ): OkHttpClient {
+        val httpLoggingInterceptor = HttpLoggingInterceptor()
+        httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
+
+        return OkHttpClient.Builder()
+            .protocols(Collections.singletonList(Protocol.HTTP_1_1))
+            .connectTimeout(5, TimeUnit.MINUTES)
+            .readTimeout(5, TimeUnit.MINUTES)
+            .socketFactory(SocketFactory.getDefault())
+            .retryOnConnectionFailure(true)
+            .addNetworkInterceptor(httpLoggingInterceptor)
+            .addInterceptor { chain ->
+                val request = chain.request()
+                val header = request.newBuilder().header(
+                    "Authorization",
+                    "Bearer " +  prefsManager.accessToken
+                )
+                    .header("x-integrity-token", token)
+                    .header("x-api-version", Constants.API_VERSION)
+                val build = header.build()
+                chain.proceed(build)
+            }
+//            .addInterceptor(RequestInterceptor(accessToken, apiVersion, signature, timestamp))
+            .build()
+    }
+    fun getRetrofitInstanceSecure(
+       token: String
+    ): Api {
+
+        retrofit = Retrofit.Builder()
+            .baseUrl(Constants.BASE_URL)
+            .client(getOkHttpClientSecure(token))
             .addConverterFactory(ScalarsConverterFactory.create())
             .addConverterFactory(
                 GsonConverterFactory.create(

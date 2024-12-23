@@ -22,13 +22,13 @@ class BuildStrategyAdapter(
         init {
             bind.root.setOnClickListener {
                 if (BuildStrategyFragment.isAnyItemSwiped(rv))
-                    callback.invoke(adapterPosition, "setView")
+                    callback.invoke(absoluteAdapterPosition, "setView")
             }
             bind.rlDelete.setOnClickListener {
-                callback.invoke(adapterPosition, "delete")
+                callback.invoke(absoluteAdapterPosition, "delete")
             }
             bind.llAllocation.setOnClickListener {
-                callback(adapterPosition, "allocation")
+                callback(absoluteAdapterPosition, "allocation")
             }
         }
     }

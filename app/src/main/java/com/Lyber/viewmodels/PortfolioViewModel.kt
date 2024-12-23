@@ -5,6 +5,7 @@ import com.Lyber.models.AddedAsset
 import com.Lyber.models.AssetBaseData
 import com.Lyber.models.AssetDetailBaseData
 import com.Lyber.models.Balance
+import com.Lyber.models.ChooseAssets
 import com.Lyber.models.NetworkDeposit
 import com.Lyber.models.PersonalDataResponse
 import com.Lyber.models.PriceServiceResume
@@ -20,17 +21,17 @@ class PortfolioViewModel : NetworkViewModel() {
         set(value) {
             _selectedAsset = value
         }
-    private var _withdrawAddress: WithdrawAddress?=null
+    private var _withdrawAddress: WithdrawAddress? = null
     var withdrawAddress
         get() = _withdrawAddress
-        set(value){
+        set(value) {
             _withdrawAddress = value
         }
-    private var _ribAddress: RIBData?=null
+    private var _ribAddress: RIBData? = null
 
     var ribDataAddress
         get() = _ribAddress
-        set(value){
+        set(value) {
             _ribAddress = value
         }
 
@@ -51,10 +52,10 @@ class PortfolioViewModel : NetworkViewModel() {
     var selectedNetworkDeposit
         get() = _selectedNetworkDeposit
         set(value) {
-            _selectedNetworkDeposit= value
+            _selectedNetworkDeposit = value
         }
 
-    var selectedBalance : Balance? = null
+    var selectedBalance: Balance? = null
 
     private var _personalData: PersonalDataResponse? = null
     var personalData
@@ -122,7 +123,6 @@ class PortfolioViewModel : NetworkViewModel() {
     /* to check whether the live data instance contains data or not */
 
 
-
     private var _totalPortfolio: Double = 0.0
     var totalPortfolio
         get() = _totalPortfolio
@@ -169,7 +169,6 @@ class PortfolioViewModel : NetworkViewModel() {
         }
 
 
-
     private var _exchangeAssetFrom: String? = null
     var exchangeAssetFrom
         get() = _exchangeAssetFrom
@@ -183,7 +182,6 @@ class PortfolioViewModel : NetworkViewModel() {
         set(value) {
             _exchangeAssetTo = value
         }
-
 
 
     var allMyPortfolio: String = ""
@@ -208,23 +206,49 @@ class PortfolioViewModel : NetworkViewModel() {
 
     /* apis */
 
-    fun chooseStrategy() {
-        selectedStrategy?.let {
-            chooseStrategy(it)
-        }
-    }
-    fun startKyc(){
+    //    fun chooseStrategy() {
+//        selectedStrategy?.let {
+//            chooseStrategy(it)
+//        }
+//    }
+    fun startKyc() {
         startKYC()
     }
 
     fun buildOwnStrategy(strategyName: String) {
-        buildOwnStrategy(strategyName, addedAsset)
-    }
-    fun editOwnStrategy(strategyName: String) {
-        editOwnStrategy(strategyName, addedAsset)
+        val list = arrayListOf<ChooseAssets>()
+        var total = 0
+        for (i in addedAsset) {
+            total += i.allocation.toInt()
+            list.add(
+                ChooseAssets(
+                    i.addAsset.id,
+                    i.allocation.toInt()
+                )
+            )
+        }
+        // Generate the request hash
+           buildOwnStrategy(strategyName, addedAsset)
+
     }
 
-    fun getBalance(){
+    fun editOwnStrategy(strategyName: String) {
+        val list = arrayListOf<ChooseAssets>()
+        var total = 0
+        for (i in addedAsset) {
+            total += i.allocation.toInt()
+            list.add(
+                ChooseAssets(
+                    i.addAsset.id,
+                    i.allocation.toInt()
+                )
+            )
+        }
+      editOwnStrategy(strategyName, addedAsset)
+
+    }
+
+    fun getBalance() {
         getBalanceApi()
     }
 
@@ -236,7 +260,6 @@ class PortfolioViewModel : NetworkViewModel() {
     fun contactSupport(msg: String) {
         sendMsgToSupport(msg)
     }
-
 
 
 }

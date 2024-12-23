@@ -6,14 +6,12 @@ import android.content.ClipboardManager
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
 import android.view.animation.AnimationUtils
 import android.widget.ListPopupWindow
-import android.widget.Toast
 import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
@@ -22,20 +20,17 @@ import com.Lyber.databinding.AppItemLayoutBinding
 import com.Lyber.databinding.FragmentChooseAssetDepositBinding
 import com.Lyber.databinding.LoaderViewBinding
 import com.Lyber.models.AssetBaseData
-import com.Lyber.models.ErrorResponse
 import com.Lyber.models.NetworkDeposit
-import com.Lyber.network.RestClient
-import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.fadeIn
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
-import com.Lyber.utils.CommonMethods.Companion.showErrorMessage
+import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
-import okhttp3.ResponseBody
+import com.Lyber.viewmodels.PortfolioViewModel
 import java.util.*
 
 class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBinding>(),
@@ -80,7 +75,8 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                         binding.ivNetwork.visible()
                         binding.etAssets.updatePadding(0)
                         binding.etAssets.setText(
-                            "${sa.fullName.replaceFirstChar {
+                            "${
+                                sa.fullName.replaceFirstChar {
                                     if (it.isLowerCase()) it.titlecase(
                                         Locale.ROOT
                                     ) else it.toString()
@@ -90,8 +86,7 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                         if (sa.id.equals(Constants.MAIN_ASSET, ignoreCase = true)) {
                             binding.btnBuyTether.visible()
                             binding.tvOr.visible()
-                        }
-                        else {
+                        } else {
                             binding.btnBuyTether.gone()
                             binding.tvOr.gone()
                         }
@@ -104,7 +99,7 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
             }
         viewModel.getAddress.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-                isAddress=false
+                isAddress = false
                 CommonMethods.dismissProgressDialog()
                 binding.etAddress.text = it.data.address
             }
@@ -117,9 +112,12 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                 for (networkq in it.data.networks) {
                     if (networkq.isDepositActive) {
                         binding.etNetwork.text = networkq.fullName
-                        CommonMethods.showProgressDialog(requireActivity())
-                        isAddress=true
-                        viewModel.getAddress(networkq.id, network!!.id)
+                         isAddress = true
+                            CommonMethods.showProgressDialog(requireActivity())
+                            viewModel.getAddress(
+                                networkq.id,
+                                network!!.id
+                            )
                         binding.tvNote.text = getString(
                             R.string.send_only_to_this_address_using_the_protocol,
                             network!!.fullName,
@@ -149,8 +147,7 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                 if (it.id.equals(Constants.MAIN_ASSET, ignoreCase = true)) {
                     binding.btnBuyTether.visible()
                     binding.tvOr.visible()
-                }
-                else {
+                } else {
                     binding.btnBuyTether.gone()
                     binding.tvOr.gone()
                 }
@@ -164,8 +161,11 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
             assetAdapterNetwork.getItemAt(position)?.let {
                 binding.etNetwork.text = it.fullName
                 CommonMethods.showProgressDialog(requireActivity())
-                isAddress=true
-                viewModel.getAddress(it.id, network!!.id)
+                    isAddress=true
+                    viewModel.getAddress(
+                        it.id,
+                        network?.id ?: "",
+                    )
                 binding.tvNote.text = getString(
                     R.string.send_only_to_this_address_using_the_protocol,
                     network!!.fullName,
@@ -319,8 +319,9 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                     val arguments = Bundle().apply {
                         putString(Constants.FROM, ChooseAssetForDepositFragment::class.java.name)
                     }
-                    findNavController().navigate(R.id.buyUsdt,arguments)
+                    findNavController().navigate(R.id.buyUsdt, arguments)
                 }
+
                 ivCopy -> {
                     if (binding.etAddress.text.toString().isNotEmpty()) {
                         val clipboard =
@@ -331,21 +332,21 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                                 binding.etAddress.text.toString()
                             )
                         clipboard.setPrimaryClip(clip)
-                        Toast.makeText(
-                            requireActivity(),
-                            getString(R.string.adress_copied), Toast.LENGTH_SHORT
-                        ).show()
+                        getString(R.string.adress_copied).showToast(binding.root, requireContext())
                     }
                 }
+
                 etNetwork -> {
                     assetPopupNetwork.show()
                 }
+
                 etAssets -> {
                     if (assetAdapter.hasNoData()) {
                         assetAdapter.addProgress()
                     }
                     assetPopup.show()
                 }
+
                 ivScan -> {
                     if (binding.etAddress.text.toString().isNotEmpty())
                         startActivity(
@@ -359,10 +360,145 @@ class ChooseAssetForDepositFragment : BaseFragment<FragmentChooseAssetDepositBin
                                 )
                         )
                 }
+
                 ivTopAction -> {
-                    requireActivity().onBackPressed()
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
                 }
             }
+        }
+    }
+
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        when (errorCode) {
+            -1 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_1_negative)
+            )
+
+            10012 -> {
+                val asset = binding.etAssets.text.toString()
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_10012, asset)
+                )
+            }
+
+            10013 -> {
+                val transactionType = getString(R.string.deposit)
+                val network = binding.etNetwork.text.toString()
+                val asset = binding.etAssets.text.toString()
+
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_10013, transactionType, network, asset)
+                )
+            }
+
+            10030 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_10030)
+            )
+
+            15002 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_15002)
+            )
+
+            18000 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_18000)
+            )
+
+            26 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_26)
+                )
+                findNavController().navigate(R.id.action_choose_asset_for_deposit_to_home_fragment)
+            }
+
+            3000 -> {
+                val transactionType = getString(R.string.deposit)
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_3000, transactionType)
+                )
+                findNavController().navigate(R.id.action_choose_asset_for_deposit_to_home_fragment)
+            }
+
+            3006 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_3006)
+                )
+                findNavController().navigate(R.id.action_choose_asset_for_deposit_to_home_fragment)
+            }
+
+            10023 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_10023)
+                )
+                findNavController().navigate(R.id.action_choose_asset_for_deposit_to_home_fragment)
+            }
+
+            10034 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_10034)
+                )
+                findNavController().navigate(R.id.action_choose_asset_for_deposit_to_home_fragment)
+            }
+
+            10035 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_10035)
+                )
+                findNavController().navigate(R.id.action_choose_asset_for_deposit_to_home_fragment)
+            }
+
+            10036 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_10036)
+                )
+                findNavController().navigate(R.id.action_choose_asset_for_deposit_to_home_fragment)
+            }
+
+            10037 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_10037)
+                )
+                findNavController().navigate(R.id.action_choose_asset_for_deposit_to_home_fragment)
+            }
+
+            10042 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_10042)
+                )
+                findNavController().navigate(R.id.action_choose_asset_for_deposit_to_home_fragment)
+            }
+
+            else -> super.onRetrofitError(errorCode, msg)
+
         }
     }
 }

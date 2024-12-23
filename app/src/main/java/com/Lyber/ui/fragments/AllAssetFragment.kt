@@ -222,7 +222,7 @@ class AllAssetFragment : BaseFragment<FragmentAllAssetsBinding>(), View.OnClickL
         }
     }
     private fun hitApi() {
-        checkInternet(requireContext()) {
+        checkInternet(binding.root,requireContext()) {
             showProgressDialog(requireContext())
             viewModel.getAllPriceResume()
         }

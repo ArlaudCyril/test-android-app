@@ -25,6 +25,8 @@ import com.Lyber.databinding.YAxisTextBinding
 import com.Lyber.utils.CommonMethods.Companion.currencyFormatted
 import com.Lyber.utils.CommonMethods.Companion.lineData
 import com.Lyber.utils.CommonMethods.Companion.toGraphTime
+import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.visible
 import com.bumptech.glide.Glide
 import font.FontSize
 import java.math.BigDecimal
@@ -33,6 +35,7 @@ import java.util.Locale
 
 class NewCustomLineChart : RelativeLayout {
 
+    private var markerAmount = ""
 
     constructor(context: Context) : this(context, null)
     constructor(context: Context, attributeSet: AttributeSet?) : this(context, attributeSet, 0)
@@ -119,6 +122,7 @@ class NewCustomLineChart : RelativeLayout {
     private var drawableView: ImageView
     private var textView: TextView
     private var dottedLineView: View
+    var hideAmount = false
 
 
     var xUnit: Int = 0
@@ -137,7 +141,8 @@ class NewCustomLineChart : RelativeLayout {
     var bottomPadding: Int = 24
 
     var lineThickness = 7f
-//    var lineThickness = 9f
+
+    //    var lineThickness = 9f
     var lineColor = context.getColor(R.color.purple_500)
 
     var mCanvas: Canvas? = null
@@ -236,7 +241,7 @@ class NewCustomLineChart : RelativeLayout {
             for (i in 0 until lineData.count()) {
                 val startX: Float =
                     ((width - (horizontalPadding * 2)) * ((i / (lineData.count() - 1).toFloat()))) + horizontalPadding
-                val startY =(height - ((height * heightFraction)))
+                val startY = (height - ((height * heightFraction)))
                 if (lineData[i] == max) pointMax = Point(width.toFloat(), startY)
                 else if (lineData[i] == min) pointMin = Point(width.toFloat(), startY)
 
@@ -320,12 +325,21 @@ class NewCustomLineChart : RelativeLayout {
             color = Color.LTGRAY
             strokeWidth = 4f
         }
-
-        lastPoint?.let {
-            mCanvas.drawLine(
-                it.x - xF, 0F,
-                it.x - xF, height.toFloat(), paint
-            )
+        if (!(hideAmount && App.prefsManager.hideAmount)) {
+            lastPoint?.let {
+                mCanvas.drawLine(
+                    it.x - xF, 0F,
+                    it.x - xF, height.toFloat(), paint
+                )
+            }
+            maxText.tvY.visible()
+            minText.tvY.visible()
+            midText.tvY.visible()
+        } else
+        {
+            maxText.tvY.gone()
+            minText.tvY.gone()
+            midText.tvY.gone()
         }
     }
 
@@ -341,11 +355,11 @@ class NewCustomLineChart : RelativeLayout {
     private fun pointSelected(x: Float, y: Float, position: Int) {
         try {
             dottedLineView.visibility = View.GONE
-
-            binding.tvPrice.text = "${lineData[position].toString().currencyFormatted}"
-//            commaFormat(lineData[position])
-//        binding.tvPrice.text =(lineData[position]).commaFormatted + "€"
-
+            markerAmount = "${lineData[position].toString().currencyFormatted}"
+            if (hideAmount && App.prefsManager.hideAmount)
+                binding.tvPrice.text = "*****"
+            else
+                binding.tvPrice.text = "${lineData[position].toString().currencyFormatted}"
             binding.tvDate.text = System.currentTimeMillis().toGraphTime()
             if (timeSeries.isNotEmpty())
                 binding.tvDate.text = timeSeries[position][0].toLong().toGraphTime()
@@ -409,6 +423,15 @@ class NewCustomLineChart : RelativeLayout {
         }
     }
 
+    fun showHideAmount() {
+        if (hideAmount && App.prefsManager.hideAmount) {
+            binding.tvPrice.text = "*****"
+        } else {
+            binding.tvPrice.text = markerAmount
+        }
+        invalidate()
+    }
+
     fun updateValueLastPoint(value: Float) {
         try {
 
@@ -417,7 +440,11 @@ class NewCustomLineChart : RelativeLayout {
                 listOf(Date().time.toDouble(), lineData.last().toDouble())
 //            calculatePoints()
             if (selectedPoint == points.last() && lineData[lineData.lastIndex] != value) {
-                binding.tvPrice.text = value.toString().currencyFormatted
+                markerAmount = value.toString().currencyFormatted.toString()
+                if (hideAmount && App.prefsManager.hideAmount)
+                    binding.tvPrice.text = "*****"
+                else
+                    binding.tvPrice.text = value.toString().currencyFormatted
                 binding.tvDate.text = System.currentTimeMillis().toGraphTime()
             }
 //            invalidate()

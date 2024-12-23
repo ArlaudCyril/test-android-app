@@ -10,12 +10,12 @@ import com.Lyber.databinding.FragmentSwapFromBinding
 import com.Lyber.models.Balance
 import com.Lyber.ui.adapters.BalanceAdapter
 import com.Lyber.utils.AppLifeCycleObserver
-import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.commaFormatted
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
+import com.Lyber.viewmodels.PortfolioViewModel
 
 class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnClickListener {
 
@@ -83,9 +83,9 @@ class ExchangeFromFragment : BaseFragment<FragmentSwapFromBinding>(), View.OnCli
     }
 
     private fun getData() {
-        CommonMethods.checkInternet(requireContext()) {
+        CommonMethods.checkInternet(binding.root,requireContext()) {
             CommonMethods.showProgressDialog(requireContext())
-            viewModel.getBalance()
+                viewModel.getBalance()
         }
     }
 

@@ -3,7 +3,6 @@ package com.Lyber.ui.fragments
 import android.annotation.SuppressLint
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.util.Log
@@ -11,11 +10,9 @@ import android.view.MotionEvent
 import android.view.View
 import android.view.View.OnClickListener
 import androidx.core.view.isVisible
-import androidx.lifecycle.viewModelScope
 import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.FragmentDiscoveryBinding
-import com.Lyber.network.RestClient
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.visible
@@ -24,7 +21,6 @@ import com.appsflyer.AFInAppEventParameterName
 import com.appsflyer.AFInAppEventType
 import com.appsflyer.AppsFlyerLib
 import com.appsflyer.attribution.AppsFlyerRequestListener
-import kotlinx.coroutines.launch
 import java.util.Locale
 
 class DiscoveryFragment : BaseFragment<FragmentDiscoveryBinding>(), OnClickListener {
@@ -56,7 +52,15 @@ class DiscoveryFragment : BaseFragment<FragmentDiscoveryBinding>(), OnClickListe
         binding.ivLanguage.setOnClickListener(this)
         binding.tvEnglish.setOnClickListener(this)
         binding.tvFrench.setOnClickListener(this)
-         Log.d("AndroidID","${Settings.Secure.getString(requireContext().contentResolver, Settings.Secure.ANDROID_ID)}")
+        Log.d(
+            "AndroidID",
+            "${
+                Settings.Secure.getString(
+                    requireContext().contentResolver,
+                    Settings.Secure.ANDROID_ID
+                )
+            }"
+        )
 
 
         binding.root.setOnTouchListener { _, event ->

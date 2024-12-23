@@ -5,6 +5,7 @@ import android.graphics.PorterDuff
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -15,11 +16,14 @@ import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.Lifecycle
 import com.Lyber.R
 import com.Lyber.databinding.FragmentForgotPasswordBinding
+import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
-import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.SignUpViewModel
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
+import org.json.JSONObject
 
 
 class ForgotPasswordFragment : BaseFragment<FragmentForgotPasswordBinding>(), OnClickListener {
@@ -29,6 +33,7 @@ class ForgotPasswordFragment : BaseFragment<FragmentForgotPasswordBinding>(), On
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = CommonMethods.getViewModel(this)
+        viewModel.listener=this
         binding.etEmail.addTextChangedListener(onTextChange)
         binding.btnSendResetLink.setOnClickListener(this)
         binding.ivTopAction.setOnClickListener(this)
@@ -87,8 +92,29 @@ class ForgotPasswordFragment : BaseFragment<FragmentForgotPasswordBinding>(), On
                 btnSendResetLink -> {
                     if (buttonClicked) {
                         val email = binding.etEmail.text.trim().toString().lowercase()
-                        CommonMethods.showProgressDialog(requireContext())
-                        viewModel.forgotPass(email)
+                       CommonMethods.checkInternet(binding.root,requireContext()) {
+                            val jsonObject = JSONObject()
+                            jsonObject.put("email", email)
+                            val jsonString = jsonObject.toString()
+                            // Generate the request hash
+                            val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                            val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                                SplashActivity.integrityTokenProvider?.request(
+                                    StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                        .setRequestHash(requestHash)
+                                        .build()
+                                )
+                            integrityTokenResponse?.addOnSuccessListener { response ->
+                                CommonMethods.showProgressDialog(requireContext())
+                                viewModel.forgotPass(
+                                    email, token = response.token()
+                                )
+                            }?.addOnFailureListener { exception ->
+                                Log.d("token", "${exception}")
+
+                            }
+                        }
                     }
 
                 }

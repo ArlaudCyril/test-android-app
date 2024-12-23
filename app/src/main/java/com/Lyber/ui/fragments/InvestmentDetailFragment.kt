@@ -110,9 +110,10 @@ class InvestmentDetailFragment : BaseFragment<FragmentInvestmentDetailBinding>()
 
 
         binding.btnCancelInvestment.setOnClickListener {
-            checkInternet(requireContext()) {
+            checkInternet(binding.root,requireContext()) {
                 showProgressDialog(requireContext())
                 viewModel.cancelRecurringInvestment(investmentId)
+
             }
         }
 
@@ -132,9 +133,10 @@ class InvestmentDetailFragment : BaseFragment<FragmentInvestmentDetailBinding>()
     }
 
     private fun hitApi() {
-        checkInternet(requireContext()) {
+        checkInternet(binding.root,requireContext()) {
             showProgressDialog(requireContext())
-            viewModel.getRecurringInvestmentDetail(investmentId)
+             viewModel.getRecurringInvestmentDetail(investmentId)
+
         }
     }
     // adapter for history items

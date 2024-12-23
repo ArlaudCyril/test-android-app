@@ -145,13 +145,13 @@ class ExportOperationsFragment : BaseFragment<FragmentExportOperationsBinding>()
                 }
 
                 btnExport -> {
+
                     if (::selectedDate.isInitialized)
                         try {
-                            CommonMethods.checkInternet(requireContext()) {
-                                CommonMethods.showProgressDialog(requireContext())
-                                viewModel.getExportOperations(selectedDate)
+                            CommonMethods.checkInternet(binding.root, requireContext()) {
+                                 CommonMethods.showProgressDialog(requireContext())
+                                    viewModel.getExportOperations(selectedDate)
                             }
-
                         } catch (e: IndexOutOfBoundsException) {
                             Log.i("error", e.message.toString())
                         }

@@ -74,7 +74,7 @@ class SelectAnAssestDepositFragment : BaseFragment<FragmentSelectAssestForDepost
     }
 
     private fun hitApi(){
-        checkInternet(requireContext()){
+        checkInternet(binding.root,requireContext()){
             CommonMethods.showProgressDialog(requireContext())
             viewModel.getAllAssets()
         }

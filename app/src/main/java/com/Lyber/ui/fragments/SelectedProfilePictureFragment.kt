@@ -4,10 +4,10 @@ import android.os.Bundle
 import android.view.View
 import androidx.lifecycle.Lifecycle
 import com.Lyber.databinding.FragmentSelectedProfilePictureBinding
-import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.Constants
+import com.Lyber.viewmodels.PortfolioViewModel
 
 class SelectedProfilePictureFragment : BaseFragment<FragmentSelectedProfilePictureBinding>() {
 
@@ -41,16 +41,18 @@ class SelectedProfilePictureFragment : BaseFragment<FragmentSelectedProfilePictu
             //requireActivity().supportFragmentManager.popBackStack()
         }
         binding.btnSave.setOnClickListener {
-            CommonMethods.checkInternet(requireActivity()) {
-                CommonMethods.showProgressDialog(requireActivity())
+            CommonMethods.checkInternet(binding.root, requireActivity()) {
                 App.prefsManager.defaultImage = profilePIc
-                viewModel.updateAvtaar(profilePIc.toString())
+               CommonMethods.showProgressDialog(requireActivity())
+                    viewModel.updateAvtaar(profilePIc.toString())
+
+
             }
         }
 
 
-        viewModel.updateUserInfoResponse.observe(viewLifecycleOwner){
-            if (lifecycle.currentState == Lifecycle.State.RESUMED){
+        viewModel.updateUserInfoResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 CommonMethods.dismissProgressDialog()
                 requireActivity().supportFragmentManager.popBackStack()
                 requireActivity().supportFragmentManager.popBackStack()

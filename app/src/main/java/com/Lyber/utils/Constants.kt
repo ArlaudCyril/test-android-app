@@ -46,10 +46,8 @@ object Constants {
     const val IS_LOGOUT: String = "is_logout"
 
 
-    //staging
 
 //    const val BASE_URL = "https://staging.lyber.com/"
-//    const val NEW_BASE_URL = "https://staging.lyber.com/"
 //    const val SOCKET_BASE_URL = "wss://ws.lyber.com/websocket/"
 //    const val STRIPE_KEY =
 //        "pk_test_51NVVY7F2A3romcuHdC3JDD9evsFhQvyZ5cYS6wpy9OznXgmYzLvWTG81Zfj2nWGQFZ2zs8RboA3uMLCNPpPV08Zk00McUdiPAt"
@@ -57,7 +55,6 @@ object Constants {
 
     //Live also change environment on PreviewMyPurchase
     const val BASE_URL = "https://prod.lyber.com/"
-    const val NEW_BASE_URL = "https://prod.lyber.com/"
     const val SOCKET_BASE_URL = "wss://ws.lyber.com/websocket/"
     const val STRIPE_KEY =
         "pk_live_51NVVY7F2A3romcuHShL3mg16ls7OVvdPNIQkPuU14mCEZNKfci5BLj0eEjcxQyi5MkD5wf9AF0lajeYhjo8OFpkb00akLPszlE"
@@ -83,12 +80,14 @@ object Constants {
     const val TO_EDIT = "toEdit"
     const val USING_EXCHANGE = "using_exchange"
     const val USING_SELL = "using_sell"
+    const val USING_SEND_MONEY = "send_money"
     const val NAME = "name"
     const val USING_ALL_PORTFOLIO = "using_all_portfolio"
     const val USING_WITHDRAW_FIAT = "using_withdraw_fiat"
     const val EMAIL_SENT = "emailSent"
     const val EXPORT_DONE = "exportDone"
     const val STRATEGY_TYPE = "SingleAsset"
+    const val ACTION_TAILOR_STRATEGY = "tailorStrategy"
 
     /* icons */
     const val EURO = "€"
@@ -118,6 +117,7 @@ object Constants {
     const val BASE_IMAGE_URL_MEDIUM: String = "https://lyberblob.blob.core.windows.net/medium/"
 
     const val SCAN_COMPLETE = "scan-complete"
+    const val SCAN_QR = "scan-qr"
     const val SCANNED_ADDRESS = "scanned-address"
     const val ONE_TIME = "oneTime"
 
@@ -227,6 +227,7 @@ object Constants {
     const val WHITELISTING = "whitelisting"
     const val GOOGLE = "google"
     const val PHONE = "phone"
+    const val QR = "qrCode"
     const val EMAIL = "email"
     const val SCOPE = "scope"
     const val WITHDRAW = "withdraw"
@@ -298,7 +299,8 @@ object Constants {
     const val MAIN_ASSET_UPPER = "USDC"
     const val API_VERSION = "0.2"
     const val APP_NAME = "Lyber"
-    const val VERSION = "1.1"
+//    const val VERSION = "1.1"
+    const val VERSION = "1.2"
 //    const val key="409f3hui4rbf2d2E/4-39u2!-9di4b23-01C*SRFV2d12jbf)2DBFG3i4f24f"
     const val key="dE/rt09f3hujd24-54u2D!B2D4if!23-F3i4f2856V*SFRV-94bOR2d12jxf)" //prod
     const val APP_FLYER_KEY="G9y3U7W29YR7RSCN6AdBRC"
@@ -307,4 +309,12 @@ object Constants {
     const val APP_FLYER_TYPE_CRYPTO="Order"
     const val APP_FLYER_TYPE_ACTIVATE_STRATEGY="ActivateStrategy"
     const val APP_FLYER_TYPE_STRATEGY_EXECUTION="ExecuteStrategy"
+
+    const val SELECTED_METHOD="selectedMethod"
+
+//    APP_ID_DEV: sandbox-sq0idb-EXkM4DtCjCk44_OX5ux5qw
+//    APP_ID_PROD:sq0idp-XH6VB8q8rZysqg6RIMCB6w
+//    LOCATION_ID_DEV:LHQ5F3FFV8X4J
+//    LOCATION ID PROD:LYYK7HFJV28KJ (edited)
+
 }

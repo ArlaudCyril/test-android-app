@@ -2,11 +2,8 @@ package com.Lyber.ui.fragments
 
 import android.os.Bundle
 import android.view.View
-import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.FragmentConfirmPinBinding
-import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
@@ -14,7 +11,7 @@ import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.OnTextChange
 import com.Lyber.viewmodels.ProfileViewModel
-import okhttp3.ResponseBody
+
 /*
         Not in use
  */
@@ -66,17 +63,18 @@ class ConfirmNewPinFragment : BaseFragment<FragmentConfirmPinBinding>() {
         }
         if (pinCount == 4) {
             if (viewModel.createPin == confirmPin) {
-                CommonMethods.checkInternet(requireContext()) {
+                CommonMethods.checkInternet(binding.root,requireContext()) {
                     showProgressDialog(requireContext())
                     viewModel.updatePin(confirmPin)
                     clearField()
                 }
-            } else getString(R.string.pin_doesn_t_matches).showToast(requireContext())
+            } else getString(R.string.pin_doesn_t_matches).showToast(binding.root,requireContext())
         }
     }
 
-    override fun onRetrofitError(responseBody: ResponseBody?) {
+    override fun onRetrofitError(errorCode: Int, msg: String) {
           clearField()
+        super.onRetrofitError(errorCode,msg)
     }
 
 

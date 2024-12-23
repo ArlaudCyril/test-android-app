@@ -1,6 +1,5 @@
 package com.Lyber.ui.fragments
 
-import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.PorterDuff
 import android.os.Bundle
@@ -18,13 +17,16 @@ import com.Lyber.databinding.FragmentResetPasswordBinding
 import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.sortAndFormatJson
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.SignUpViewModel
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import com.nimbusds.srp6.SRP6ClientSession
 import com.nimbusds.srp6.SRP6CryptoParams
 import com.nimbusds.srp6.SRP6VerifierGenerator
 import com.nimbusds.srp6.XRoutineWithUserIdentity
-import okhttp3.ResponseBody
+import org.json.JSONObject
 import java.math.BigInteger
 
 
@@ -61,7 +63,6 @@ class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>(), OnCl
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
 //                CommonMethods.dismissProgressDialog()
                 val password = binding.etPassword.text!!.trim().toString()
-                Log.d("res", "${it.data}")
                 val emailSalt = BigInteger(1, generator.generateRandomSalt())
                 val emailVerifier = generator.generateVerifier(
                     emailSalt, it.data.email.lowercase(), password
@@ -71,14 +72,35 @@ class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>(), OnCl
                 val phoneVerifier = generator.generateVerifier(
                     phoneSalt, it.data.phoneNo, password
                 )
-                Log.d("emailSalt", "$emailSalt")
-                Log.d("emailVerifier", " $emailVerifier  ")
-                Log.d("phoneSalt", "  $phoneSalt ")
-                Log.d("phoneVerifier", "   $phoneVerifier")
-                viewModel.resetNewPass(
-                    emailSalt.toString(), emailVerifier.toString(),
-                    phoneSalt.toString(), phoneVerifier.toString()
-                )
+                CommonMethods.checkInternet(binding.root,requireContext()) {
+                    val jsonObject = JSONObject()
+                    jsonObject.put("emailSalt", emailSalt.toString())
+                    jsonObject.put("emailVerifier", emailVerifier.toString())
+                    jsonObject.put("phoneSalt", phoneSalt.toString())
+                    jsonObject.put("phoneVerifier", phoneVerifier.toString())
+                    val jsonString = sortAndFormatJson(jsonObject)
+                    // Generate the request hash
+                    val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                        SplashActivity.integrityTokenProvider?.request(
+                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                .setRequestHash(requestHash)
+                                .build()
+                        )
+                    integrityTokenResponse?.addOnSuccessListener { response ->
+                        viewModel.resetNewPass(
+                            emailSalt.toString(),emailVerifier.toString(),
+                            phoneSalt.toString(),phoneVerifier.toString(),
+                            token = response.token()
+                        )
+//                            viewModel.switchOffAuthentication(detail, Constants.TYPE)
+
+                    }?.addOnFailureListener { exception ->
+                        Log.d("token", "${exception}")
+
+                    }
+                }
             }
         }
         viewModel.booleanResponse.observe(viewLifecycleOwner) {
@@ -93,13 +115,7 @@ class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>(), OnCl
                 }
             }
         }
-//        viewModel.logoutResponse.observe(viewLifecycleOwner){
-//            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-//                App.prefsManager.logout()
-//                findNavController().popBackStack()
-//                findNavController().navigate(R.id.discoveryFragment)
-//            }
-//        }
+
         requireActivity().onBackPressedDispatcher.addCallback(this) {
             // Handle back button press
             findNavController().popBackStack()
@@ -107,12 +123,30 @@ class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>(), OnCl
         }
     }
 
-    override fun onRetrofitError(responseBody: ResponseBody?) {
+    override fun onRetrofitError(errorCode: Int, msg: String) {
         CommonMethods.dismissProgressDialog()
         CommonMethods.dismissAlertDialog()
-         CommonMethods.showErrorMessage(requireContext(), responseBody, binding.root)
-//        if(code==7023 || code == 10041)
-//            customDialog(code)
+        when (errorCode) {
+            48 -> {
+                // Handle back button press
+                // Keep popping the stack until it can't pop anymore
+                while (findNavController().navigateUp()) {
+                }
+
+// Now navigate to ForgotPasswordFragment
+                findNavController().navigate(R.id.forgotPasswordFragment)
+
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_48)
+                )
+            }
+
+            else -> super.onRetrofitError(errorCode, msg)
+
+
+        }
     }
 
     private val onTextChange = object : TextWatcher {
@@ -129,7 +163,7 @@ class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>(), OnCl
                             )
                         )
                     binding.btnSendResetLink.backgroundTintList = colorStateList
-                    binding.tvPassValidMsg.text=getString(R.string.you_have_strong_password)
+                    binding.tvPassValidMsg.text = getString(R.string.you_have_strong_password)
                     binding.tvPassValidMsg.setTextColor(
                         ContextCompat.getColor(
                             requireContext(),
@@ -148,7 +182,7 @@ class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>(), OnCl
                             )
                         )
                     binding.btnSendResetLink.backgroundTintList = colorStateList
-                    binding.tvPassValidMsg.text=getString(R.string.pass_valid_msg)
+                    binding.tvPassValidMsg.text = getString(R.string.pass_valid_msg)
                     binding.tvPassValidMsg.setTextColor(
                         ContextCompat.getColor(
                             requireContext(),
@@ -173,9 +207,14 @@ class ResetPasswordFragment : BaseFragment<FragmentResetPasswordBinding>(), OnCl
                 ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
                 btnSendResetLink -> {
                     if (buttonClicked) {
-                        CommonMethods.showProgressDialog(requireContext())
-                        App.prefsManager.accessToken = resetToken
-                        viewModel.getResetPass()
+                         CommonMethods.checkInternet(binding.root,requireContext()) {
+                          CommonMethods.showProgressDialog(requireContext())
+                                App.prefsManager.accessToken = resetToken
+                                viewModel.getResetPass(
+                                )
+
+                        }
+
                     }
 
                 }

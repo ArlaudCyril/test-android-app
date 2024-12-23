@@ -5,7 +5,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.Lyber.ui.portfolio.fragment.PortfolioHomeFragment
 import com.Lyber.utils.App
 import com.Lyber.viewmodels.NetworkViewModel
 import kotlinx.coroutines.Job
@@ -59,7 +58,8 @@ class GetUserViewModal() : ViewModel() {
         // For example:
         // kycOK = fetchedData.kycStatus == "COMPLETED"
 
-        networkViewModel.getUser() // Assuming this returns a User object
+           networkViewModel.getUser() //  this returns a User object
+
         networkViewModel.getUserResponse.observeForever { user ->
             _userLiveData.postValue(user.data)
             // Assuming user?.kycStatus is the desired check for kycOK

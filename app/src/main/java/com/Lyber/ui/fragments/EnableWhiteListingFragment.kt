@@ -13,10 +13,10 @@ import com.Lyber.databinding.FragmentManageWhitelistingBinding
 import com.Lyber.databinding.ItemExtraSecurityBinding
 import com.Lyber.ui.adapters.BaseAdapter
 import com.Lyber.utils.App
-import com.Lyber.utils.CommonMethods.Companion.checkInternet
+import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
-import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.showSnack
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.NetworkViewModel
 
@@ -43,7 +43,7 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
                     1 -> Constants.HOURS_24
                     else -> Constants.NO_EXTRA_SECURITY
                 }
-                App.prefsManager.user!!.withdrawalLock=security
+                App.prefsManager.user!!.withdrawalLock = security
                 App.prefsManager.withdrawalLockSecurity = security
                 requireActivity().onBackPressed()
             }
@@ -69,7 +69,7 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
 
             0 -> {
                 binding.tvSecurityText.text =
-                    getString(R.string.selcted_72h)
+                    getString(R.string.a_delay_of_72_hours_will_be_required_before_you_can_withdraw_to_any_address_newly_added_to_your_address_book)
             }
 
             2 -> {
@@ -96,15 +96,9 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
                 1 -> hashMap["withdrawalLock"] = Constants.HOURS_24
                 else -> hashMap["withdrawalLock"] = Constants.NO_EXTRA_SECURITY
             }
-//            when (selectedPosition) {
-//                0 -> Constants.HOURS_72
-//                1 -> Constants.HOURS_24
-//                else -> Constants.NO_EXTRA_SECURITY
-//            }
-            checkInternet(requireContext()) {
-                showProgressDialog(requireContext())
+           CommonMethods.showProgressDialog(requireActivity())
                 viewModel.updateUserInfo(hashMap)
-            }
+
         }
     }
 
@@ -204,7 +198,7 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
             init {
                 binding.root.setOnClickListener {
 //                    if (!App.prefsManager.isWhitelisting())
-                    itemClicked(adapterPosition)
+                    itemClicked(absoluteAdapterPosition)
                 }
             }
         }
@@ -212,4 +206,15 @@ class EnableWhiteListingFragment : BaseFragment<FragmentManageWhitelistingBindin
     }
 
     data class ExtraSecurity(val title: String, var isSelected: Boolean)
+
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        when (errorCode) {
+            57 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_57))
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
+            else -> super.onRetrofitError(errorCode, msg)
+        }
+    }
 }

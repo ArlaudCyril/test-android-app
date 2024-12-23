@@ -53,7 +53,7 @@
                     android:id="@+id/tvSubTitleTransaction"
                     style="@style/SubheadMabry"
                     android:layout_marginHorizontal="24dp"
-                    android:lineSpacingExtra="8sp"
+                    android:lineSpacingExtra="8dp"
                     android:text="@string/list_of_all_operations_purchase_exchange_or_withdrawal_made_on_your_account"
                     android:textColor="@color/purple_gray_500" />
 

@@ -46,7 +46,10 @@ import com.appsflyer.AFInAppEventParameterName
 import com.appsflyer.AFInAppEventType
 import com.appsflyer.AppsFlyerLib
 import com.appsflyer.attribution.AppsFlyerRequestListener
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import okhttp3.ResponseBody
+import org.json.JSONObject
 import java.io.File
 import java.io.IOException
 
@@ -342,8 +345,10 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
                     overridePendingTransition(0, 0)
 
                 } else {
-                    CommonMethods.showProgressDialog(this@WebViewActivity)
-                    portfolioViewModel.finishRegistration()
+                    CommonMethods.checkInternet(binding.root, this@WebViewActivity) {
+                        CommonMethods.showProgressDialog(this@WebViewActivity)
+                        portfolioViewModel.finishRegistration()
+                    }
                 }
                 return true
             }
@@ -598,15 +603,15 @@ class WebViewActivity : BaseActivity<ActivityWebViewBinding>(), RestClient.OnRet
         return null
     }
 
-    override fun onRetrofitError(responseBody: ResponseBody?) {
+    override fun onRetrofitError(errorCode: Int, msg: String) {
         CommonMethods.dismissAlertDialog()
         CommonMethods.dismissProgressDialog()
-        CommonMethods.showErrorMessage(this, responseBody, binding.root)
+        CommonMethods.showError(errorCode,this, msg, binding.root)
     }
 
     override fun onError() {
         CommonMethods.dismissProgressDialog()
-        getString(R.string.unable_to_connect_to_the_server).showToast(this)
+        getString(R.string.unable_to_connect_to_the_server).showToast(binding.root,this)
 
     }
 

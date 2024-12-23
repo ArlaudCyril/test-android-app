@@ -1,3 +1,4 @@
+
 package com.Lyber.ui.fragments.bottomsheetfragments
 
 import android.app.Activity
@@ -20,28 +21,23 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.findNavController
 import androidx.viewbinding.ViewBinding
 import com.Lyber.R
 import com.Lyber.databinding.CustomDialogVerticalLayoutBinding
 import com.Lyber.databinding.DocumentBeingVerifiedBinding
 import com.Lyber.network.RestClient
-import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.ui.activities.WebViewActivity
-import com.Lyber.utils.App
-import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.gone
-import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.utils.LoaderObject
+import com.Lyber.viewmodels.PortfolioViewModel
 import com.airbnb.lottie.LottieAnimationView
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import okhttp3.ResponseBody
 
 abstract class BaseBottomSheet<viewBinding : ViewBinding> : BottomSheetDialogFragment(),
     RestClient.OnRetrofitError {
@@ -122,19 +118,22 @@ abstract class BaseBottomSheet<viewBinding : ViewBinding> : BottomSheetDialogFra
             }
         }
 
-    override fun onRetrofitError(responseBody: ResponseBody?) {
+    override fun onRetrofitError(errorCode: Int, msg: String) {
         CommonMethods.dismissProgressDialog()
         CommonMethods.dismissAlertDialog()
         LoaderObject.hideLoader()
-        val code = CommonMethods.showErrorMessage(requireContext(), responseBody, binding.root)
-        Log.d("errorCode", "$code")
-        if (code == 7023 || code == 10041 || code == 7025 || code == 10043)
-            customDialog(code)
+        handleCommonErrors(errorCode, msg)
     }
-
+    private fun handleCommonErrors(errorCode: Int, msg: String) {
+        when (errorCode) {
+            7023, 10041 -> customDialog(7023)
+            7025, 10043 -> customDialog(7025)
+            else -> CommonMethods.showError(errorCode, requireContext(), msg, binding.root)
+        }
+    }
     override fun onError() {
         CommonMethods.dismissProgressDialog()
-        "Error occurred!".showToast(requireContext())
+        "Error occurred!".showToast(binding.root,requireContext())
     }
 
     private lateinit var bottomDialog: BottomSheetDialog
@@ -157,12 +156,15 @@ abstract class BaseBottomSheet<viewBinding : ViewBinding> : BottomSheetDialogFra
                     dismiss()
                 }
                 binding.tvPositiveButton.setOnClickListener {
-                    CommonMethods.checkInternet(requireContext()) {
+                    CommonMethods.checkInternet(binding.root,requireContext()) {
                         CommonMethods.showProgressDialog(requireContext())
-                        if (code == 7023 || code == 10041)
+                        if (code == 7023 || code == 10041) {
                             viewModel.startKyc()
-                        else if (code == 7025 || code == 10043)
+
+                        }
+                        else if (code == 7025 || code == 10043) {
                             viewModel.startSignUrl()
+                        }
                     }
                 }
                 show()

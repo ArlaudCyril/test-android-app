@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/top_curved_layout"
+    android:backgroundTint="@color/purple_gray_00"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.LinearLayoutCompat
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/title"
+            style="@style/HeadingStyle"
+            android:layout_gravity="center"
+            android:layout_marginTop="24dp"
+            android:fontFamily="@font/mabry_pro_bold"
+            android:text="@string/enter_rec_phone_no"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/subtitle"
+            style="@style/SubheadMabry"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="24dp"
+            android:layout_marginTop="4dp"
+            android:text="@string/please_enter_phn_no_person"
+            android:textColor="@color/purple_gray_600" />
+
+        <RelativeLayout
+            android:id="@+id/rlPhoneNumber"
+            android:layout_width="match_parent"
+            android:layout_height="?attr/actionBarSize"
+            android:layout_marginTop="24dp"
+            android:layout_marginHorizontal="16dp"
+            android:visibility="visible">
+
+            <TextView
+                android:id="@+id/tvCountryCode"
+                style="@style/EditTextTheme"
+                android:layout_width="wrap_content"
+                android:layout_marginEnd="4dp"
+                android:background="@drawable/curved_button"
+                android:backgroundTint="@color/purple_gray_50"
+                android:gravity="center"
+                android:paddingHorizontal="20dp"
+                android:text="+33"
+                app:drawableEndCompat="@drawable/ic_drop_down" />
+
+            <EditText
+                android:id="@+id/etPhone"
+                style="@style/EditTextTheme"
+                android:layout_width="match_parent"
+                android:layout_marginStart="4dp"
+                android:layout_toEndOf="@id/tvCountryCode"
+                android:background="@drawable/edit_text_background"
+                android:digits="1234567890"
+                android:hint="@string/hint_enter_phone_number"
+                android:inputType="phone"
+                android:maxLength="15"
+                android:paddingHorizontal="12dp" />
+
+
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/btnSendCrypto"
+            style="@style/ButtonStyle"
+            android:layout_width="match_parent"
+            android:layout_marginVertical="24dp"
+            android:layout_marginHorizontal="32dp"
+            android:background="@drawable/curved_button"
+            android:backgroundTint="@color/purple_500"
+            android:fitsSystemWindows="true"
+            android:text="@string/send_crypto"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:textColor="@color/white" />
+
+    </androidx.appcompat.widget.LinearLayoutCompat>
+
+</ScrollView>

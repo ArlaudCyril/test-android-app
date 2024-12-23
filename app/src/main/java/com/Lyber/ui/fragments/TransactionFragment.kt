@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.Lyber.R
 import com.Lyber.databinding.FragmentTransactionBinding
-import com.Lyber.databinding.ItemTransactionBinding
+import com.Lyber.databinding.ItemTransactionNewBinding
 import com.Lyber.databinding.LoaderViewBinding
 import com.Lyber.models.TransactionData
 import com.Lyber.ui.adapters.BaseAdapter
@@ -50,9 +50,12 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
     override fun bind() = FragmentTransactionBinding.inflate(layoutInflater)
 
     private fun hitApi() {
-        CommonMethods.checkInternet(requireContext()) {
+        CommonMethods.checkInternet(binding.root,requireContext()) {
             CommonMethods.showProgressDialog(requireContext())
-            viewModel.getTransactions(limit, offset)
+                viewModel.getTransactionsListing(
+                    limit,
+                    offset
+                )
         }
     }
 
@@ -85,9 +88,13 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
                         offset = offset + limit + 1
                         isLoading = true
                         adapter.addProgress()
-                        CommonMethods.checkInternet(requireContext()) {
-                            viewModel.getTransactions(limit, offset)
+                        CommonMethods.checkInternet(binding.root,requireContext()) {
+                          viewModel.getTransactionsListing(
+                                    limit,
+                                    offset
+                                )
                         }
+
                     }
                 }
 
@@ -106,7 +113,13 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
             binding.rvRefresh.isRefreshing = true
             offset = 0
             positionList.clear()
-            viewModel.getTransactions(limit, offset)
+            CommonMethods.checkInternet(binding.root,requireContext()) {
+                viewModel.getTransactionsListing(
+                        limit,
+                        offset
+                    )
+            }
+
         }
         viewModel.getTransactionListingResponse.observe(viewLifecycleOwner) { response ->
             response?.let {
@@ -188,7 +201,7 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             return when (viewType) {
                 ORDINARY_VIEW -> TransactionViewHolder(
-                    ItemTransactionBinding.inflate(
+                    ItemTransactionNewBinding.inflate(
                         LayoutInflater.from(parent.context), parent, false
                     )
                 )
@@ -262,12 +275,12 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
                             else {
                                 if (it.successfulBundleEntries.isNotEmpty()) {
                                     try {
-                                        tvEndTitleCenter.text =
-                                            "${it.successfulBundleEntries[0].assetAmount} ${
-                                                it.successfulBundleEntries[0].asset.uppercase(
-                                                    Locale.US
-                                                )
-                                            }"
+                                        tvEndTitleCenter.text ="${it.totalStableAmountSpent} USDC"
+//                                            "${it.successfulBundleEntries[0].assetAmount} ${
+//                                                it.successfulBundleEntries[0].asset.uppercase(
+//                                                    Locale.US
+//                                                )
+//                                            }"
 
                                     } catch (ex: Exception) {
 
@@ -318,7 +331,7 @@ class TransactionFragment : BaseFragment<FragmentTransactionBinding>() {
         }
 
 
-        inner class TransactionViewHolder(val binding: ItemTransactionBinding) :
+        inner class TransactionViewHolder(val binding: ItemTransactionNewBinding) :
             RecyclerView.ViewHolder(binding.root) {
             init {
                 binding.root.setOnClickListener {

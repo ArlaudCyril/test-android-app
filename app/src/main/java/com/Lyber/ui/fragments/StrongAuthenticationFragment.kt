@@ -4,7 +4,6 @@ import android.annotation.SuppressLint
 import android.content.Intent
 import android.net.Uri
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.ViewGroup
 import android.widget.RelativeLayout
@@ -20,9 +19,9 @@ import com.Lyber.utils.CommonMethods.Companion.dismissAlertDialog
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.encodeToBase64
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
+import com.Lyber.utils.CommonMethods.Companion.showSnack
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.SignUpViewModel
-import okhttp3.ResponseBody
 
 class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBinding>(),
     View.OnClickListener {
@@ -31,12 +30,13 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
     private lateinit var clickedOn: String
     private lateinit var clickedSwitch: String
     private lateinit var scopeType: String
+    private lateinit var bottomSheet: VerificationBottomSheet
 
 
     override fun bind() = FragmentStrongAuthenticationBinding.inflate(layoutInflater)
     private var switchOff: Boolean = false
     private var qrCodeUrl = ""
-     var resendCode = -1
+    var resendCode = -1
     private var resetView = false
 
     @SuppressLint("SuspiciousIndentation")
@@ -52,7 +52,9 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
             binding.tvNumber.text = "${getString(R.string.to)} +${App.prefsManager.user?.phoneNo}"
         setView()
         if (App.prefsManager.user?.type2FA != Constants.GOOGLE) {
-            viewModel.qrCodeUrl()
+                CommonMethods.checkInternet(binding.root, requireContext()) {
+                     viewModel.qrCodeUrl()
+                }
             viewModel.qrCodeResponse.observe(viewLifecycleOwner) {
                 if (Lifecycle.State.RESUMED == lifecycle.currentState) {
                     qrCodeUrl = it.data.url
@@ -95,11 +97,12 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                         vc.show(childFragmentManager, App.prefsManager.user?.type2FA)
                         val mainView = getView()?.rootView as ViewGroup
                         mainView.addView(transparentView, viewParams)
+                        bottomSheet = vc
                     }
                     resetView = false
 
                 } else if (switchOff) {
-                    if(!resetView) {
+                    if (!resetView) {
                         val transparentView = View(context)
                         transparentView.setBackgroundColor(
                             ContextCompat.getColor(
@@ -124,17 +127,23 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                         vc.show(childFragmentManager, App.prefsManager.user?.type2FA)
                         val mainView = getView()?.rootView as ViewGroup
                         mainView.addView(transparentView, viewParams)
+                        bottomSheet = vc
                     }
-                    resetView=false
+                    resetView = false
                 } else {
-                    viewModel.getUser()
+                        viewModel.getUser()
                 }
             }
         }
         viewModel.updateAuthenticateResponse.observe(viewLifecycleOwner) {
             if (Lifecycle.State.RESUMED == lifecycle.currentState) {
-                viewModel.getUser()
+                if (::bottomSheet.isInitialized)
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
 
+                    }
+                viewModel.getUser()
             }
         }
         viewModel.getUserResponse.observe(viewLifecycleOwner) {
@@ -150,29 +159,38 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
             if (button.isPressed) {
                 if (isChecked) {
                     switchOff = false
-                    CommonMethods.showProgressDialog(requireContext())
-                    val hash = hashMapOf<String, Any>()
-                    if (binding.switchValidateWithdraw.isChecked) hash["scope2FA"] =
-                        listOf(Constants.WHITELISTING, Constants.WITHDRAWAL)
-                    else hash["scope2FA"] = listOf(Constants.WHITELISTING)
-                    clickedSwitch = Constants.WHITELISTING
-                    viewModel.updateAuthentication(hash)
-                } else {
-                    switchOff = true
-                    binding.switchWhitelisting.isChecked = true
-                    resendCode = 3
-                    CommonMethods.showProgressDialog(requireContext())
-                    var json = ""
-                    if (binding.switchValidateWithdraw.isChecked) {
-                        json = """{"scope2FA":["withdrawal"]}""".trimMargin()
-                        clickedOn = Constants.WITHDRAWAL
-                    } else {
-                        json = """{"scope2FA":[]}""".trimMargin()
-                        clickedOn = ""
+                    CommonMethods.checkInternet(binding.root, requireContext()) {
+                        val hash = hashMapOf<String, Any>()
+                        if (binding.switchValidateWithdraw.isChecked) hash["scope2FA"] =
+                            listOf(Constants.WHITELISTING, Constants.WITHDRAWAL)
+                        else hash["scope2FA"] = listOf(Constants.WHITELISTING)
+                        clickedSwitch = Constants.WHITELISTING
+                       CommonMethods.showProgressDialog(requireContext())
+                            viewModel.updateAuthentication(hash)
                     }
-                    val detail = encodeToBase64(json)
-                    scopeType = Constants.SCOPE
-                    viewModel.switchOffAuthentication(detail, scopeType)
+                } else {
+                    CommonMethods.checkInternet(binding.root, requireContext()) {
+                        switchOff = true
+                        binding.switchWhitelisting.isChecked = true
+                        resendCode = 3
+                        var json = ""
+                        if (binding.switchValidateWithdraw.isChecked) {
+                            json = """{"scope2FA":["withdrawal"]}""".trimMargin()
+                            clickedOn = Constants.WITHDRAWAL
+                        } else {
+                            json = """{"scope2FA":[]}""".trimMargin()
+                            clickedOn = ""
+                        }
+                        val detail = encodeToBase64(json)
+                        scopeType = Constants.SCOPE
+
+                       CommonMethods.showProgressDialog(requireContext())
+                            viewModel.switchOffAuthentication(
+                                detail,
+                                scopeType
+                            )
+
+                    }
                 }
             }
         }
@@ -180,29 +198,38 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
             if (button.isPressed) {
                 if (isChecked) {
                     switchOff = false
-                    CommonMethods.showProgressDialog(requireContext())
-                    val hash = hashMapOf<String, Any>()
-                    if (binding.switchWhitelisting.isChecked) hash["scope2FA"] =
-                        listOf(Constants.WHITELISTING, Constants.WITHDRAWAL)
-                    else hash["scope2FA"] = listOf(Constants.WITHDRAWAL)
-                    clickedSwitch = Constants.WITHDRAWAL
-                    viewModel.updateAuthentication(hash)
-                } else {
-                    switchOff = true
-                    resendCode=4
-                    binding.switchValidateWithdraw.isChecked = true
-                    CommonMethods.showProgressDialog(requireContext())
-                    var json = ""
-                    if (binding.switchWhitelisting.isChecked) {
-                        json = """{"scope2FA":["whitelisting"]}""".trimMargin()
-                        clickedOn = Constants.WHITELISTING
-                    } else {
-                        json = """{"scope2FA":[]}""".trimMargin()
-                        clickedOn = ""
+                    CommonMethods.checkInternet(binding.root, requireContext()) {
+                        val hash = hashMapOf<String, Any>()
+                        if (binding.switchWhitelisting.isChecked) hash["scope2FA"] =
+                            listOf(Constants.WHITELISTING, Constants.WITHDRAWAL)
+                        else hash["scope2FA"] = listOf(Constants.WITHDRAWAL)
+                        clickedSwitch = Constants.WITHDRAWAL
+                        CommonMethods.showProgressDialog(requireContext())
+                            viewModel.updateAuthentication(hash)
+
                     }
-                    val detail = encodeToBase64(json)
-                    scopeType = Constants.SCOPE
-                    viewModel.switchOffAuthentication(detail, scopeType)
+                } else {
+                    CommonMethods.checkInternet(binding.root, requireContext()) {
+                        switchOff = true
+                        resendCode = 4
+                        binding.switchValidateWithdraw.isChecked = true
+                        var json = ""
+                        if (binding.switchWhitelisting.isChecked) {
+                            json = """{"scope2FA":["whitelisting"]}""".trimMargin()
+                            clickedOn = Constants.WHITELISTING
+                        } else {
+                            json = """{"scope2FA":[]}""".trimMargin()
+                            clickedOn = ""
+                        }
+                        val detail = encodeToBase64(json)
+                        scopeType = Constants.SCOPE
+                         CommonMethods.showProgressDialog(requireContext())
+                            viewModel.switchOffAuthentication(
+                                detail,
+                                scopeType
+                            )
+
+                    }
                 }
             }
         }
@@ -265,13 +292,20 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                 rlEmail -> {
                     if (App.prefsManager.user?.type2FA != Constants.EMAIL) {
                         if (App.prefsManager.user?.type2FA != Constants.GOOGLE) {
-                            CommonMethods.showProgressDialog(requireContext())
-                            resendCode = 2
-                            var json = """{"type2FA" : "email"}""".trimMargin()
-                            val detail = encodeToBase64(json)
-                            scopeType = Constants.TYPE
-                            clickedOn = Constants.EMAIL
-                            viewModel.switchOffAuthentication(detail, scopeType)
+                            CommonMethods.checkInternet(binding.root, requireContext()) {
+                                CommonMethods.showProgressDialog(requireContext())
+                                resendCode = 2
+                                var json = """{"type2FA" : "email"}""".trimMargin()
+                                val detail = encodeToBase64(json)
+                                scopeType = Constants.TYPE
+                                clickedOn = Constants.EMAIL
+                                  CommonMethods.showProgressDialog(requireContext())
+                                    viewModel.switchOffAuthentication(
+                                        detail,
+                                        scopeType
+                                    )
+
+                            }
                         } else {
                             val transparentView = View(context)
                             transparentView.setBackgroundColor(
@@ -294,6 +328,7 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                             vc.show(childFragmentManager, App.prefsManager.user?.type2FA)
                             val mainView = getView()?.rootView as ViewGroup
                             mainView.addView(transparentView, viewParams)
+                            bottomSheet = vc
                         }
                     }
                 }
@@ -301,13 +336,18 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                 rlBySms -> {
                     if (App.prefsManager.user?.type2FA != Constants.PHONE) {
                         if (App.prefsManager.user?.type2FA != Constants.GOOGLE) {
-                            CommonMethods.showProgressDialog(requireContext())
-                            resendCode = 1
-                            var json = """{"type2FA" : "phone"}""".trimMargin()
-                            val detail = encodeToBase64(json)
-                            scopeType = Constants.TYPE
-                            clickedOn = Constants.PHONE
-                            viewModel.switchOffAuthentication(detail, scopeType)
+                            CommonMethods.checkInternet(binding.root, requireContext()) {
+                                resendCode = 1
+                                var json = """{"type2FA" : "phone"}""".trimMargin()
+                                val detail = encodeToBase64(json)
+                                scopeType = Constants.TYPE
+                                clickedOn = Constants.PHONE
+                                  CommonMethods.showProgressDialog(requireContext())
+                                    viewModel.switchOffAuthentication(
+                                        detail,
+                                        scopeType
+                                    )
+                            }
                         } else {
                             val transparentView = View(context)
                             transparentView.setBackgroundColor(
@@ -330,7 +370,7 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                             vc.show(childFragmentManager, App.prefsManager.user?.type2FA)
                             val mainView = getView()?.rootView as ViewGroup
                             mainView.addView(transparentView, viewParams)
-
+                            bottomSheet = vc
                         }
                     }
                 }
@@ -339,8 +379,53 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
     }
 
 
-    override fun onRetrofitError(responseBody: ResponseBody?) {
-        super.onRetrofitError(responseBody)
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        dismissProgressDialog()
+        dismissAlertDialog()
+        when (errorCode) {
+            26 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_26))
+            37 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_37))
+            40 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_40))
+            41 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_41))
+            44 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_44))
+            34 -> {
+                if (::bottomSheet.isInitialized)
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_34))
+            }
+
+            35 -> {
+                if (::bottomSheet.isInitialized)
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_35))
+            }
+
+            42 -> {
+                if (::bottomSheet.isInitialized)
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_42))
+            }
+
+            24 -> bottomSheet.showErrorOnBottomSheet(24)
+            18 -> bottomSheet.showErrorOnBottomSheet(18)
+            38 -> bottomSheet.showErrorOnBottomSheet(38)
+            39 -> bottomSheet.showErrorOnBottomSheet(39)
+            43 -> bottomSheet.showErrorOnBottomSheet(43)
+            45 -> bottomSheet.showErrorOnBottomSheet(45)
+            else -> super.onRetrofitError(errorCode, msg)
+        }
         if (App.prefsManager.user?.scope2FA != null && App.prefsManager.user?.scope2FA!!.isNotEmpty())
             for (i in App.prefsManager.user?.scope2FA!!) when (i) {
                 Constants.LOGIN -> binding.switchLoginAcc.isChecked = true
@@ -354,6 +439,7 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                 binding.switchValidateWithdraw.isChecked = false
         }
     }
+
     fun handle(txt: String) {
         resetView = true
         when (resendCode) {
@@ -362,7 +448,7 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                 val detail = encodeToBase64(json)
                 scopeType = Constants.TYPE
                 clickedOn = Constants.PHONE
-                viewModel.switchOffAuthentication(detail, scopeType)
+                hitApi(detail, scopeType)
             }
 
             2 -> {
@@ -370,8 +456,7 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                 val detail = encodeToBase64(json)
                 scopeType = Constants.TYPE
                 clickedOn = Constants.EMAIL
-                viewModel.switchOffAuthentication(detail, scopeType)
-
+                hitApi(detail, scopeType)
             }
 
             3 -> {
@@ -387,9 +472,10 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                 }
                 val detail = encodeToBase64(json)
                 scopeType = Constants.SCOPE
-                viewModel.switchOffAuthentication(detail, scopeType)
+                hitApi(detail, scopeType)
             }
-            4->{
+
+            4 -> {
                 switchOff = true
                 binding.switchValidateWithdraw.isChecked = true
                 var json = ""
@@ -402,9 +488,19 @@ class StrongAuthenticationFragment : BaseFragment<FragmentStrongAuthenticationBi
                 }
                 val detail = encodeToBase64(json)
                 scopeType = Constants.SCOPE
-                viewModel.switchOffAuthentication(detail, scopeType)
+                hitApi(detail, scopeType)
             }
         }
     }
 
+    private fun hitApi(detail: String, scope: String) {
+        CommonMethods.checkInternet(binding.root, requireContext()) {
+              CommonMethods.showProgressDialog(requireContext())
+                viewModel.switchOffAuthentication(
+                    detail,
+                    scope
+                )
+        }
+
+    }
 }

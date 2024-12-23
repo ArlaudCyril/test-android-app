@@ -43,9 +43,9 @@
     },
     {
       "client_info": {
-        "mobilesdk_app_id": "1:672116436946:android:8f7cf7e192acb3469ca20b",
+        "mobilesdk_app_id": "1:672116436946:android:edde2f5f11a78b269ca20b",
         "android_client_info": {
-          "package_name": "com.au.liber"
+          "package_name": "com.Lyber"
         }
       },
       "oauth_client": [

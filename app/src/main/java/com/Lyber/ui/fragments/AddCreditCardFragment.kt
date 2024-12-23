@@ -29,27 +29,27 @@ class AddCreditCardFragment : BaseFragment<FragmentAddCreditCardBinding>(), View
     private fun checkData(): Boolean {
         return when {
             name.isEmpty() -> {
-                getString(R.string.please_enter_your_name).showToast(requireContext())
+                getString(R.string.please_enter_your_name).showToast(binding.root,requireContext())
                 binding.etName.requestKeyboard()
                 false
             }
             cardNumber.isEmpty() -> {
-                getString(R.string.please_enter_your_card_number).showToast(requireContext())
+                getString(R.string.please_enter_your_card_number).showToast(binding.root,requireContext())
                 binding.etCardNumber.requestKeyboard()
                 false
             }
             cvv.isEmpty() -> {
-                getString(R.string.please_enter_your_cvv).showToast(requireContext())
+                getString(R.string.please_enter_your_cvv).showToast(binding.root,requireContext())
                 binding.etCVV.requestKeyboard()
                 false
             }
             zipCode.isEmpty() -> {
-                getString(R.string.please_enter_zip_code).showToast(requireContext())
+                getString(R.string.please_enter_zip_code).showToast(binding.root,requireContext())
                 binding.etZipCode.requestKeyboard()
                 false
             }
             expiry.isEmpty() -> {
-                getString(R.string.please_provide_cards_expiry_date).showToast(requireContext())
+                getString(R.string.please_provide_cards_expiry_date).showToast(binding.root,requireContext())
                 false
             }
             else -> {
@@ -63,7 +63,7 @@ class AddCreditCardFragment : BaseFragment<FragmentAddCreditCardBinding>(), View
             when (v!!) {
                 btnAdd -> {
                     if (checkData()) {
-                        getString(R.string.credit_card_added).showToast(requireContext())
+                        getString(R.string.credit_card_added).showToast(binding.root,requireContext())
                         requireActivity().onBackPressed()
                     }
                 }

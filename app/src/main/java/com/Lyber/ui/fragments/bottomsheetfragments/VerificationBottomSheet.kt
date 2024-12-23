@@ -1,3 +1,4 @@
+
 package com.Lyber.ui.fragments.bottomsheetfragments
 
 import android.annotation.SuppressLint
@@ -67,6 +68,13 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
             imm?.hideSoftInputFromWindow(view?.windowToken, 0)
             dismiss()
         }
+        binding.title.setOnClickListener {
+            CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_38)
+            )
+        }
 //        setOnResendCodeClickListener(object : OnResendCode {
 //
 //            override fun onResend() {
@@ -81,7 +89,7 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
 //            }
 //        })
         binding.tvResendCode.setOnClickListener {
-            CommonMethods.checkInternet(requireContext()) {
+            CommonMethods.checkInternet(binding.root, requireContext()) {
                 if (googleOTP.isNotEmpty()) {
                     googleOTP = ""
                     binding.tvResendCode.gone()
@@ -376,47 +384,65 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
 
                             if (tag!!.isNotEmpty()) {
                                 if (arguments != null && requireArguments().containsKey("clickedOn")) {
-                                    dismiss()
-                                    var args = requireArguments().getString("clickedOn")
-                                    Log.d("text", args!!)
+                                    CommonMethods.checkInternet(binding.root, requireContext()) {
+                                        val args = requireArguments().getString("clickedOn")
+                                        val hash = hashMapOf<String, Any>()
+                                        if (args == "")
+                                            hash["scope2FA"] = listOf("login")
+                                        else
+                                            hash["scope2FA"] = listOf(args)
+                                        hash["otp"] = getCode()
+                                        CommonMethods.showProgressDialog(requireContext())
+                                        viewModel.updateAuthentication(
+                                            hash
+                                        )
 
-                                    val hash = hashMapOf<String, Any>()
-                                    if (args == "")
-                                        hash["scope2FA"] = listOf("login")
-                                    else
-                                        hash["scope2FA"] = listOf(args)
-                                    hash["otp"] = getCode()
-                                    Log.d("hash", "$hash")
-                                    CommonMethods.showProgressDialog(requireContext())
-                                    viewModel.updateAuthentication(hash)
+                                    }
                                 } else if (arguments != null && requireArguments().containsKey(
                                         Constants.TYPE
                                     )
                                 ) {
                                     var args = requireArguments().getString(Constants.TYPE)
                                     if (requireArguments().containsKey("changeType")) {
-                                        dismiss()
-                                        Log.d("text", args!!)
-                                        val hash = hashMapOf<String, Any>()
-                                        hash["type2FA"] =
-                                            requireArguments().getString("changeType").toString()
-                                        hash["otp"] = getCode()
-                                        Log.d("hash", "$hash")
-                                        CommonMethods.showProgressDialog(requireContext())
-                                        viewModel.updateAuthentication(hash)
+                                        CommonMethods.checkInternet(
+                                            binding.root,
+                                            requireContext()
+                                        ) {
+                                            Log.d("text", args!!)
+                                            val hash = hashMapOf<String, Any>()
+                                            hash["type2FA"] =
+                                                requireArguments().getString("changeType").toString()
+                                            hash["otp"] = getCode()
+                                            Log.d("hash", "$hash")
+                                            CommonMethods.showProgressDialog(requireContext())
+                                            viewModel.updateAuthentication(
+                                                hash
+                                            )
+
+                                        }
+
+
+
                                     }
                                     if (args == Constants.GOOGLE) {
                                         if (googleOTP.isNotEmpty()) {
-                                            dismiss()
-                                            Log.d("text", args)
-                                            val hash = hashMapOf<String, Any>()
-                                            hash["type2FA"] = args
-                                            hash["otp"] = getCode()
-                                            hash["googleOtp"] = googleOTP
-                                            Log.d("hash", "$hash")
-                                            TwoFactorAuthenticationFragment.showOtp = true
-                                            CommonMethods.showProgressDialog(requireContext())
-                                            viewModel.updateAuthentication(hash)
+                                            CommonMethods.checkInternet(
+                                                binding.root,
+                                                requireContext()
+                                            ) {
+                                                val hash = hashMapOf<String, Any>()
+                                                hash["type2FA"] = args
+                                                hash["otp"] = getCode()
+                                                hash["googleOtp"] = googleOTP
+                                                Log.d("hash", "$hash")
+                                                TwoFactorAuthenticationFragment.showOtp = true
+                                                CommonMethods.showProgressDialog(requireContext())
+                                                viewModel.updateAuthentication(
+                                                    hash
+                                                )
+                                            }
+
+
                                         } else {
                                             googleOTP = getCode()
                                             if (App.prefsManager.user!!.type2FA == Constants.EMAIL)
@@ -443,27 +469,39 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
                                         }
 
                                     } else {
-                                        dismiss()
-                                        Log.d("text", args!!)
-                                        val hash = hashMapOf<String, Any>()
-                                        hash["type2FA"] = args
-                                        hash["otp"] = getCode()
-                                        Log.d("hash", "$hash")
-                                        CommonMethods.showProgressDialog(requireContext())
-                                        viewModel.updateAuthentication(hash)
+                                        CommonMethods.checkInternet(
+                                            binding.root,
+                                            requireContext()
+                                        ) {
+                                            val hash = hashMapOf<String, Any>()
+                                            hash["type2FA"] = args!!
+                                            hash["otp"] = getCode()
+                                            Log.d("hash", "$hash")
+                                            CommonMethods.showProgressDialog(requireContext())
+                                            viewModel.updateAuthentication(hash  )
+
+                                        }
                                     }
                                 }
                             } else if (::typeVerification.isInitialized && typeVerification != null && typeVerification == Constants.CHANGE_PASSWORD) {
-                                dismiss()
-                                CommonMethods.showProgressDialog(requireContext())
-                                viewModel.verifyPasswordChange(code = getCode())
+                                CommonMethods.checkInternet(binding.root,requireContext()) {
+                                    CommonMethods.showProgressDialog(requireContext())
+                                    viewModel.verifyPasswordChange(
+                                        getCode()
+                                    )
+                                }
                             } else if (viewModel.forLogin) {
-                                dismiss()
-                                viewModel.verify2FA(code = getCode())
+                                CommonMethods.checkInternet(binding.root, requireContext()) {
+                                    viewModel.verify2FA(
+                                        code = getCode()
+                                    )
+
+                                }
                             } else {
-                                dismiss()
-                                CommonMethods.showProgressDialog(requireContext())
-                                viewModel.verifyPhone(getCode())
+                                CommonMethods.checkInternet(binding.root, requireContext()) {
+                                    viewModel.verifyPhone(getCode())
+
+                                }
                             }
                         }
                     }
@@ -501,6 +539,51 @@ class VerificationBottomSheet(private val handle: ((String) -> Unit?)? = null) :
         } catch (_: Exception) {
 
         }
+    }
+
+    fun showErrorOnBottomSheet(code: Int) {
+        when (code) {
+            18 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_18)
+            )
+
+            24 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_24)
+                )
+            }
+
+            38 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_38)
+                )
+            }
+
+            39 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_39)
+            )
+
+            43 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_43)
+            )
+
+            45 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_45)
+            )
+        }
+
     }
 
 }

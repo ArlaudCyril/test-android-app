@@ -16,7 +16,6 @@ import com.Lyber.databinding.FragmentAddAmountBinding
 import com.Lyber.models.Whitelistings
 import com.Lyber.ui.fragments.bottomsheetfragments.FrequencyModel
 import com.Lyber.ui.fragments.bottomsheetfragments.PayWithModel
-import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.clearBackStack
 import com.Lyber.utils.CommonMethods.Companion.commaFormatted
@@ -33,6 +32,7 @@ import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.utils.OnTextChange
+import com.Lyber.viewmodels.PortfolioViewModel
 
 class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClickListener {
 
@@ -226,8 +226,8 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
 
                 Constants.USING_WITHDRAW -> {
 
-                    checkInternet(requireContext()) {
-                        viewModel.getWhiteListings()
+                    checkInternet(binding.root,requireContext()) {
+                          viewModel.getWhiteListings()
                     }
 
                     btnAddFrequency.gone()
@@ -295,12 +295,9 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                 }
 
                 Constants.USING_WITHDRAW_FIAT -> {
-
-
-                    checkInternet(requireContext()) {
+                    checkInternet(binding.root,requireContext()) {
                         viewModel.getWhiteListings()
                     }
-
                     btnAddFrequency.gone()
                     ivMax.visible()
                     tvAssetConversion.gone()
@@ -408,7 +405,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                             Constants.USING_STRATEGY -> {
                                 if (selectedFrequency.isEmpty()) {
                                     getString(R.string.please_select_frequency).showToast(
-                                        requireContext()
+                                        binding.root,requireContext()
                                     )
                                     return
                                 } else viewModel.selectedFrequency = selectedFrequency
@@ -434,7 +431,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                             Constants.USING_WITHDRAW -> {
 
                                 if (viewModel.allMyPortfolio.isNotEmpty()) {
-                                    checkInternet(requireContext()) {
+                                    checkInternet(binding.root,requireContext()) {
                                         showProgressDialog(requireContext())
                                         viewModel.withdrawFiat(viewModel.amount)
                                     }
@@ -449,7 +446,7 @@ class AddAmountFragment : BaseFragment<FragmentAddAmountBinding>(), View.OnClick
                             }
 
                             Constants.USING_WITHDRAW_FIAT -> {
-                                checkInternet(requireContext()) {
+                                checkInternet(binding.root,requireContext()) {
                                     showProgressDialog(requireContext())
                                     viewModel.withdrawFiat(viewModel.amount)
                                 }

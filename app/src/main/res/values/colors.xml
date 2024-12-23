@@ -70,5 +70,6 @@
     <color name="usdcColor">#2775CA</color>
     <color name="greenBackColor">#4AC27A</color>
     <color name="orangeBackColor">#FFC043</color>
+    <color name="orangeColor">#ff8001</color>
 
 </resources>

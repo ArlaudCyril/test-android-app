@@ -91,84 +91,84 @@ class SignUpViewModel : NetworkViewModel() {
     private var _verifyPinResponse = MutableLiveData<MessageResponse>()
     val verifyPinResponse get() = _verifyPinResponse
 
-    fun enterPhone(deviceType: String = "ANDROID") {
-        try {
-            viewModelScope.launch(exceptionHandler) {
-                val hashMap: HashMap<String, Any> = hashMapOf()
-                hashMap["phone_no"] = mobileNumber
-                hashMap["country_code"] = countryCode
-                hashMap["device_type"] = deviceType
-                val res = RestClient.get().enterPhone(hashMap)
-                if (res.isSuccessful)
-                    _enterPhoneResponse.postValue(res.body())
-                else listener?.onRetrofitError(res.errorBody())
-            }
-        } catch (e: Exception) {
-            listener?.onError()
-        }
-    }
+//    fun enterPhone(deviceType: String = "ANDROID") {
+//        try {
+//            viewModelScope.launch(exceptionHandler) {
+//                val hashMap: HashMap<String, Any> = hashMapOf()
+//                hashMap["phone_no"] = mobileNumber
+//                hashMap["country_code"] = countryCode
+//                hashMap["device_type"] = deviceType
+//                val res = RestClient.get().enterPhone(hashMap)
+//                if (res.isSuccessful)
+//                    _enterPhoneResponse.postValue(res.body())
+//                else listener?.onRetrofitError(errorCode, res.errorBody())
+//            }
+//        } catch (e: Exception) {
+//            listener?.onError()
+//        }
+//    }
 
-    fun login(deviceType: String = "ANDROID") {
-        try {
-            viewModelScope.launch(exceptionHandler) {
-                val hashMap: HashMap<String, Any> = hashMapOf()
+//    fun login(deviceType: String = "ANDROID") {
+//        try {
+//            viewModelScope.launch(exceptionHandler) {
+//                val hashMap: HashMap<String, Any> = hashMapOf()
+//
+//                if (email.isEmpty()) {
+//                    hashMap["phone_no"] = mobileNumber
+//                    hashMap["country_code"] = countryCode
+//                } else {
+//                    hashMap["email"] = email
+//                }
+//                hashMap["device_type"] = deviceType
+//                val res = RestClient.get().login(hashMap)
+//                if (res.isSuccessful)
+//                    _enterPhoneResponse.postValue(res.body())
+//                else listener?.onRetrofitError(errorCode, res.errorBody())
+//            }
+//        } catch (e: Exception) {
+//            listener?.onError()
+//        }
+//    }
 
-                if (email.isEmpty()) {
-                    hashMap["phone_no"] = mobileNumber
-                    hashMap["country_code"] = countryCode
-                } else {
-                    hashMap["email"] = email
-                }
-                hashMap["device_type"] = deviceType
-                val res = RestClient.get().login(hashMap)
-                if (res.isSuccessful)
-                    _enterPhoneResponse.postValue(res.body())
-                else listener?.onRetrofitError(res.errorBody())
-            }
-        } catch (e: Exception) {
-            listener?.onError()
-        }
-    }
+//    fun enterOtp(otp: String) {
+//        try {
+//            viewModelScope.launch(exceptionHandler) {
+//                val res = RestClient.get().enterOtp(hashMapOf("otp" to otp.toInt()))
+//                if (res.isSuccessful)
+//                    _enterOtpResponse.postValue(res.body())
+//                else listener?.onRetrofitError(errorCode, res.errorBody())
+//            }
+//        } catch (e: Exception) {
+//            listener?.onError()
+//        }
+//    }
 
-    fun enterOtp(otp: String) {
-        try {
-            viewModelScope.launch(exceptionHandler) {
-                val res = RestClient.get().enterOtp(hashMapOf("otp" to otp.toInt()))
-                if (res.isSuccessful)
-                    _enterOtpResponse.postValue(res.body())
-                else listener?.onRetrofitError(res.errorBody())
-            }
-        } catch (e: Exception) {
-            listener?.onError()
-        }
-    }
+//    fun resendOtp() {
+//        try {
+//            viewModelScope.launch(exceptionHandler) {
+//                val res = RestClient.get().resendOtp()
+//                if (res.isSuccessful)
+//                    _resendOtp.postValue(res.body())
+//                else listener?.onRetrofitError(errorCode, res.errorBody())
+//            }
+//        } catch (e: Exception) {
+//            listener?.onError()
+//        }
+//    }
 
-    fun resendOtp() {
-        try {
-            viewModelScope.launch(exceptionHandler) {
-                val res = RestClient.get().resendOtp()
-                if (res.isSuccessful)
-                    _resendOtp.postValue(res.body())
-                else listener?.onRetrofitError(res.errorBody())
-            }
-        } catch (e: Exception) {
-            listener?.onError()
-        }
-    }
-
-    fun setPin() {
-        try {
-            viewModelScope.launch(exceptionHandler) {
-                val res = RestClient.get()
-                    .setPin(hashMapOf("login_pin" to confirmPin.toInt()))
-                if (res.isSuccessful)
-                    _setPinResponse.postValue(res.body())
-                else listener?.onRetrofitError(res.errorBody())
-            }
-        } catch (e: Exception) {
-            listener?.onError()
-        }
-    }
+//    fun setPin() {
+//        try {
+//            viewModelScope.launch(exceptionHandler) {
+//                val res = RestClient.get()
+//                    .setPin(hashMapOf("login_pin" to confirmPin.toInt()))
+//                if (res.isSuccessful)
+//                    _setPinResponse.postValue(res.body())
+//                else listener?.onRetrofitError(errorCode, res.errorBody())
+//            }
+//        } catch (e: Exception) {
+//            listener?.onError()
+//        }
+//    }
 
 
 //    fun enableNotification(enable: Boolean = true) {
@@ -186,26 +186,26 @@ class SignUpViewModel : NetworkViewModel() {
 //        }
 //    }
 
-    fun emailVerification() {
-        try {
-            CoroutineScope(Dispatchers.Main).launch {
-                val res = RestClient.get().checkEmailVerification()
-                if (res.isSuccessful) _emailVerificationResponse.postValue(res.body())
-                else listener?.onRetrofitError(res.errorBody())
-            }
-        } catch (e: Exception) {
-            listener?.onError()
-        }
-    }
+//    fun emailVerification() {
+//        try {
+//            CoroutineScope(Dispatchers.Main).launch {
+//                val res = RestClient.get().checkEmailVerification()
+//                if (res.isSuccessful) _emailVerificationResponse.postValue(res.body())
+//                else listener?.onRetrofitError(errorCode, res.errorBody())
+//            }
+//        } catch (e: Exception) {
+//            listener?.onError()
+//        }
+//    }
 
-    fun verifyPin(pin: String) {
-        viewModelScope.launch {
-            val res = RestClient.get().verifyPin(hashMapOf("login_pin" to pin.toInt()))
-            if (res.isSuccessful)
-                _verifyPinResponse.postValue(res.body())
-            else listener?.onRetrofitError(res.errorBody())
-        }
-    }
+//    fun verifyPin(pin: String) {
+//        viewModelScope.launch {
+//            val res = RestClient.get().verifyPin(hashMapOf("login_pin" to pin.toInt()))
+//            if (res.isSuccessful)
+//                _verifyPinResponse.postValue(res.body())
+//            else listener?.onRetrofitError(errorCode, res.errorBody())
+//        }
+//    }
 
     companion object {
         private const val TAG = "SignUpViewModel"

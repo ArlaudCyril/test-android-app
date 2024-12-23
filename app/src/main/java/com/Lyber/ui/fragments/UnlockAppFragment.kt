@@ -1,24 +1,15 @@
 package com.Lyber.ui.fragments
 
-import android.Manifest
 import android.annotation.SuppressLint
-import android.content.Context
-import android.content.Intent
-import android.content.pm.PackageManager
 import android.content.res.Configuration
 import android.content.res.Resources
-import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import android.util.Log
 import android.view.View
-import android.widget.Toast
-import androidx.activity.result.contract.ActivityResultContracts
-import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
-import androidx.biometric.BiometricManager
 import androidx.biometric.BiometricPrompt
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
@@ -26,10 +17,8 @@ import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import androidx.transition.Fade
 import com.Lyber.R
-import com.Lyber.databinding.DownloadGoogleAuthenticatorBinding
 import com.Lyber.databinding.FragmentUnlockAppBinding
 import com.Lyber.ui.activities.SplashActivity
-import com.Lyber.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
@@ -39,25 +28,19 @@ import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.is1DayOld
 import com.Lyber.utils.CommonMethods.Companion.logOut
 import com.Lyber.utils.CommonMethods.Companion.setBiometricPromptInfo
-import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.CommonMethods.Companion.visible
-import com.Lyber.utils.Constants
 import com.Lyber.utils.OnTextChange
 import com.Lyber.viewmodels.NetworkViewModel
-import com.google.android.gms.tasks.OnCompleteListener
-import com.google.android.material.bottomsheet.BottomSheetDialog
-import com.google.firebase.messaging.FirebaseMessaging
-import com.google.firebase.messaging.FirebaseMessagingService
-import okhttp3.ResponseBody
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
+import org.json.JSONObject
 import java.util.Locale
-import java.util.concurrent.Executor
 
 class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClickListener {
 
     private val pin get() = binding.etPin.text.trim().toString()
     private lateinit var viewModel: NetworkViewModel
-
     override fun bind() = FragmentUnlockAppBinding.inflate(layoutInflater)
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -71,6 +54,7 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
         viewModel = getViewModel(this)
         viewModel.listener = this
         viewModel.getUser()
+
         viewModel.userLoginResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 dismissProgressDialog()
@@ -87,22 +71,22 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
                 logOut(requireContext())
             }
         }
-       viewModel.getUserResponse.observe(viewLifecycleOwner) {
+        viewModel.getUserResponse.observe(viewLifecycleOwner) {
 //            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-               try {
-                   App.prefsManager.user = it.data
-                   if (it.data.language.isNotEmpty()) {
-                       App.prefsManager.setLanguage(it.data.language)
-                       val locale = Locale(it.data.language)
-                       Locale.setDefault(locale)
-                       val resources: Resources = resources
-                       val config: Configuration = resources.configuration
-                       config.setLocale(locale)
-                       resources.updateConfiguration(config, resources.displayMetrics)
-                   }
-               }catch (_:Exception){
+            try {
+                App.prefsManager.user = it.data
+                if (it.data.language.isNotEmpty()) {
+                    App.prefsManager.setLanguage(it.data.language)
+                    val locale = Locale(it.data.language)
+                    Locale.setDefault(locale)
+                    val resources: Resources = resources
+                    val config: Configuration = resources.configuration
+                    config.setLocale(locale)
+                    resources.updateConfiguration(config, resources.displayMetrics)
+                }
+            } catch (_: Exception) {
 
-               }
+            }
 
 //            }
         }
@@ -118,43 +102,32 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
         binding.tvEight.setOnClickListener(this)
         binding.tvNine.setOnClickListener(this)
         binding.tvZero.setOnClickListener(this)
-//        binding.tvBioMetric.setOnClickListener(this)
+        binding.tvBioMetric.setOnClickListener(this)
         binding.tvBackArrow.setOnClickListener(this)
         binding.tvLogOut.setOnClickListener(this)
-//        val biometricManager = BiometricManager.from(requireContext())
-//        when (biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK or BiometricManager.Authenticators.BIOMETRIC_STRONG)) {
-//            BiometricManager.BIOMETRIC_SUCCESS ->
-//                ("Biometric authentication is available").showToast(requireContext())
-//
-//            BiometricManager.BIOMETRIC_ERROR_NO_HARDWARE ->
-//                ("This device doesn't support biometric authentication").showToast(requireContext())
-//
-//            BiometricManager.BIOMETRIC_ERROR_HW_UNAVAILABLE ->
-//                ("Biometric authentication is currently unavailable").showToast(requireContext())
-//
-//            BiometricManager.BIOMETRIC_ERROR_NONE_ENROLLED ->
-//                ("No biometric credentials are enrolled").showToast(requireContext())
-//        }
-//        "face id enabled: ${isFaceIdEnabled(requireContext())}".showToast(requireContext())
-
-    }
+  }
 
     override fun onResume() {
         super.onResume()
 //        if (CommonMethods.isFaceIdAvail(requireContext()) && CommonMethods.isBiometricReady(requireActivity())) {
-//            binding.tvOr.visible()
-//            binding.tvBioMetric.visible()
-//        } else {
+        if (App.prefsManager.faceIdEnabled && CommonMethods.isBiometricReady(requireActivity())) {
+            binding.tvOr.visible()
+            binding.tvBioMetric.visible()
+            val auth=getString(R.string.authenticate)
+            val enterPin=getString(R.string.enter_your_pin)
+            try {
+
+                initBiometricPrompt(requireActivity() as AppCompatActivity).authenticate(
+                    setBiometricPromptInfo(auth, enterPin,"", "", false)
+                )
+            }catch (_:Exception){
+
+            }
+        } else {
         binding.tvOr.gone()
         binding.tvBioMetric.gone()
-//        }
+        }
     }
-
-    private fun isFaceIdEnabled(context: Context): Boolean {
-        val biometricManager = BiometricManager.from(context)
-        return biometricManager.canAuthenticate(BiometricManager.Authenticators.BIOMETRIC_WEAK) == BiometricManager.BIOMETRIC_SUCCESS
-    }
-
 
     private val onTextChange = object : OnTextChange {
         override fun onTextChange() {
@@ -185,9 +158,29 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
             }
 
             App.prefsManager.refreshTokenSavedAt.is1DayOld() -> {
-                checkInternet(requireContext()) {
-                    showProgressDialog(requireContext())
-                    viewModel.refreshToken()
+                checkInternet(binding.root,requireContext()) {
+                   val jsonObject = JSONObject()
+                    jsonObject.put("method","refresh_token")
+                    jsonObject.put("refresh_token", App.prefsManager.refreshToken)
+                    val jsonString = CommonMethods.sortAndFormatJson(jsonObject)
+                    // Generate the request hash
+                    val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                        SplashActivity.integrityTokenProvider?.request(
+                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                .setRequestHash(requestHash)
+                                .build()
+                        )
+                    integrityTokenResponse?.addOnSuccessListener { response ->
+                        Log.d("token", "${response.token()}")
+                        CommonMethods.showProgressDialog(requireActivity())
+                        viewModel.refreshToken(response.token())
+
+                    }?.addOnFailureListener { exception ->
+                        Log.d("token", "${exception}")
+
+                    }
                 }
             }
 
@@ -218,15 +211,17 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
                 }
 
                 tvBioMetric -> {
+                    val auth=getString(R.string.authenticate)
+                    val enterPin=getString(R.string.enter_your_pin)
                     initBiometricPrompt(requireActivity() as AppCompatActivity).authenticate(
-                        setBiometricPromptInfo("Authentications", "", "", false)
+                        setBiometricPromptInfo(auth, enterPin,"", "", false)
                     )
                 }
 
                 tvLogOut -> {
-                    CommonMethods.checkInternet(requireContext()) {
-                        CommonMethods.showProgressDialog(requireContext())
-                        viewModel.logout()
+                    CommonMethods.checkInternet(binding.root,requireContext()) {
+                          CommonMethods.showProgressDialog(requireActivity())
+                            viewModel.logout()
                     }
                 }
 
@@ -257,7 +252,7 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
                     if (pin == App.prefsManager.userPin)
                         verified()
                     else {
-                        getString(R.string.incorrect_pin).showToast(requireContext())
+                        getString(R.string.incorrect_pin).showToast(binding.root,requireContext())
                         binding.etPin.setText("")
                     }
                 }, 200)
@@ -303,8 +298,8 @@ class UnlockAppFragment : BaseFragment<FragmentUnlockAppBinding>(), View.OnClick
     }
 
     @SuppressLint("SuspiciousIndentation")
-    override fun onRetrofitError(responseBody: ResponseBody?) {
-        super.onRetrofitError(responseBody)
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        super.onRetrofitError(errorCode, msg)
         binding.etPin.setText("")
     }
 

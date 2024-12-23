@@ -3,23 +3,19 @@ package com.Lyber.ui.fragments
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.util.Log
 import android.view.KeyEvent
 import android.view.View
-import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.findNavController
-import com.Lyber.R
 import com.Lyber.databinding.FragmentEnterOtpBinding
-import com.Lyber.utils.App
-import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
 import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
 import com.Lyber.viewmodels.ProfileViewModel
-import okhttp3.ResponseBody
 
+/*
+    //not in use
+ */
 class VerifyPhoneForPinFragment : BaseFragment<FragmentEnterOtpBinding>() {
 
     private lateinit var viewModel: ProfileViewModel
@@ -88,7 +84,7 @@ class VerifyPhoneForPinFragment : BaseFragment<FragmentEnterOtpBinding>() {
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             if (getCode().length == 4) {
-                checkInternet(requireContext()) {
+                checkInternet(binding.root,requireContext()) {
                     showProgressDialog(requireContext())
                     viewModel.verifyPhoneForPin(getCode())
                 }
@@ -112,8 +108,8 @@ class VerifyPhoneForPinFragment : BaseFragment<FragmentEnterOtpBinding>() {
         }
     }
 
-    override fun onRetrofitError(responseBody: ResponseBody?) {
-        super.onRetrofitError(responseBody)
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        super.onRetrofitError(errorCode, msg)
         clearFields()
     }
 

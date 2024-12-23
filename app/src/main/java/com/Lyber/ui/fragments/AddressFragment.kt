@@ -199,28 +199,28 @@ class AddressFragment : BaseFragment<FragmentAddressBinding>() {
     fun checkData(): Boolean {
         when {
             country.isEmpty() -> getString(R.string.please_enter_country_name).showToast(
-                requireContext()
+                binding.root,requireContext()
             )
 
             streetAddress.isEmpty() -> {
-                getString(R.string.please_enter_address_).showToast(requireContext())
+                getString(R.string.please_enter_address_).showToast(binding.root,requireContext())
             }
 
 
             city.isEmpty() -> {
-                getString(R.string.please_enter_city_name).showToast(requireContext())
+                getString(R.string.please_enter_city_name).showToast(binding.root,requireContext())
                 binding.etCity.requestKeyboard()
             }
 
 
             zipCode.isEmpty() -> {
-                getString(R.string.please_enter_zip_code).showToast(requireContext())
+                getString(R.string.please_enter_zip_code).showToast(binding.root,requireContext())
                 binding.etZipCode.requestKeyboard()
             }
 
 
             specifiedUsPerson.isEmpty() -> getString(R.string.please_tell_us_that_you_have_us_citizenship_or_not).showToast(
-                requireContext()
+                binding.root,   requireContext()
             )
 
             else -> {

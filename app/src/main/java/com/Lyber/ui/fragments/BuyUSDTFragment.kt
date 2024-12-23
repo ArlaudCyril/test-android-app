@@ -1,7 +1,13 @@
+
 package com.Lyber.ui.fragments
 
+import android.animation.Keyframe
+import android.animation.ObjectAnimator
+import android.animation.PropertyValuesHolder
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.text.Editable
 import android.util.Log
 import android.view.View
@@ -13,21 +19,36 @@ import com.Lyber.R
 import com.Lyber.databinding.FragmentBuyUsdtBinding
 import com.Lyber.models.Balance
 import com.Lyber.models.BalanceData
+import com.Lyber.models.CurrentPriceResponse
 import com.Lyber.network.RestClient
+import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.commaFormatted
 import com.Lyber.utils.CommonMethods.Companion.decimalPoint
 import com.Lyber.utils.CommonMethods.Companion.formattedAsset
 import com.Lyber.utils.CommonMethods.Companion.gone
+import com.Lyber.utils.CommonMethods.Companion.invisible
+import com.Lyber.utils.CommonMethods.Companion.returnErrorCode
+import com.Lyber.utils.CommonMethods.Companion.showErrorMessage
+import com.Lyber.utils.CommonMethods.Companion.showSnack
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.utils.OnTextChange
 import com.Lyber.viewmodels.PortfolioViewModel
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import com.google.gson.Gson
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 import okhttp3.ResponseBody
+import org.json.JSONObject
+import retrofit2.Response
 import java.math.RoundingMode
 
-class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickListener,
-    RestClient.OnRetrofitError {
+class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickListener {
     override fun bind() = FragmentBuyUsdtBinding.inflate(layoutInflater)
     private var valueConversion: Double = 1.0
     private val assetConversion get() = binding.tvAssetConversion.text.trim().toString()
@@ -36,14 +57,17 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
     private val unfocusedData: ValueHolder = ValueHolder()
     private var mCurrency: String = ""
     private var mConversionCurrency: String = ""
-    private lateinit var from:String
+    private lateinit var from: String
+    private var debounceJob: Job? = null // To hold the debounce coroutine job
+    private val debounceDelay = 700L // Delay in milliseconds (0.7 seconds)
+
     private val amount get() = binding.etAmount.text.trim().toString()
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = CommonMethods.getViewModel(requireActivity())
         viewModel.listener = this
-        if(arguments!=null && requireArguments().containsKey(Constants.FROM))
-            from= requireArguments().getString(Constants.FROM).toString()
+        if (arguments != null && requireArguments().containsKey(Constants.FROM))
+            from = requireArguments().getString(Constants.FROM).toString()
         binding.tvBackArrow.setOnClickListener(this)
         binding.tvDot.setOnClickListener(this)
         binding.tvZero.setOnClickListener(this)
@@ -74,11 +98,11 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
                 binding.progress.gone()
                 val bundle = Bundle().apply {
                     putString(Constants.DATA_SELECTED, Gson().toJson(it.data))
-                    if(::from.isInitialized)
-                    putString(Constants.FROM, from)
+                    if (::from.isInitialized)
+                        putString(Constants.FROM, from)
                 }
                 findNavController().navigate(R.id.previewMyPurchaseFragment, bundle)
-          }
+            }
         }
     }
 
@@ -88,44 +112,36 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
 
         @SuppressLint("SetTextI18n")
         override fun onTextChange() {
-
-
             val valueAmount =
-                if (amount.contains(mCurrency)) amount.replace(mCurrency, "").pointFormat.toDouble()
-                else amount.replace(mConversionCurrency, "").pointFormat.toDouble()
+                try {
+                    if (amount.contains(focusedData.currency)) amount.split(focusedData.currency)[0].pointFormat.toDouble()
+                    else amount.split(unfocusedData.currency)[0].pointFormat.toDouble()
+                } catch (e: Exception) {
+                    0.0
+                }
+            if (valueAmount == 0.0) {
+                debounceJob?.cancel()
+                binding.tvAssetConversion.visible()
+                binding.ivCircularProgress.gone()
+                activateButton(false)
+                when (focusedData.currency) {
+                    mCurrency -> {
+                        binding.tvAssetConversion.text = "0$mConversionCurrency"
+                    }
 
-
-            when {
-
-                valueAmount > 0 -> {
-                    if (focusedData.currency.contains(mCurrency)) {
-                        val assetAmount = (valueAmount * valueConversion).toString()
-                        viewModel.assetAmount = assetAmount
-                        setAssesstAmount(assetAmount)
-                    } else {
-                        val convertedValue = valueAmount / valueConversion
-                        setAssesstAmount(convertedValue.toString())
+                    else -> {
+                        binding.tvAssetConversion.text = "0$mCurrency"
                     }
                 }
-
-                else -> {
-
-                    activateButton(false)
-
-                    viewModel.assetAmount = "0"
-
-                    setAssesstAmount("0")
-                }
-            }
-            if (focusedData.currency.contains(mCurrency)) {
-                val valueAmountNew =
-                    if (assetConversion.contains(mCurrency)) assetConversion.replace(mCurrency, "")
-                        .replace("~", "").pointFormat.toDouble()
-                    else assetConversion.replace(mConversionCurrency, "")
-                        .replace("~", "").pointFormat.toDouble()
-                activateButton(true)
             } else {
-                activateButton(true)
+                val input = amount.toString().trim()
+                binding.tvAssetConversion.invisible()
+                binding.ivCircularProgress.visible()
+                debounceJob?.cancel() // Cancel any ongoing debounce job
+                debounceJob = CoroutineScope(Dispatchers.Main).launch {
+                    delay(debounceDelay) // Wait for 0.7 seconds
+                    fetchPriceAndConvert(input) // Call the function to fetch price and perform conversion
+                }
             }
 
         }
@@ -135,16 +151,162 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
         }
     }
 
-    override fun onRetrofitError(responseBody: ResponseBody?) {
-        super.onRetrofitError(responseBody)
-
-            binding.progress.clearAnimation()
-            binding.progress.visibility = View.GONE
-            binding.btnPreviewInvestment.text = getString(R.string.preview_my_purchase)
-
+    private suspend fun fetchAssetPrice(assetId: String): Response<CurrentPriceResponse> {
+        // Example API call using a suspend function (use Retrofit, OkHttp, etc.)
+        val apiService = RestClient.get() // Replace with your actual API service
+        return apiService.getCurrentPrice(assetId)
     }
 
-    private fun setAssesstAmount(assetAmount: String) {
+
+    private suspend fun fetchPriceAndConvert(amount: String) {
+        val valueAmount =
+            if (amount.contains(mCurrency)) amount.replace(mCurrency, "").pointFormat.toDouble()
+            else amount.replace(mConversionCurrency, "").pointFormat.toDouble()
+
+        if (amount.isEmpty()) return // Ignore empty input
+
+        try {
+            // Make the API call (example using a suspend function)
+            val balanceFromPrice = fetchAssetPrice(Constants.MAIN_ASSET)
+
+            // Check if the response is successful
+            if (balanceFromPrice.isSuccessful) {
+                val body = balanceFromPrice.body()
+                if (body?.data?.price != null) {
+                    val price = body.data.price.toDouble()
+                    valueConversion = 1 / price
+                    when {
+                        valueAmount > 0 -> {
+                            if (focusedData.currency.contains(mCurrency)) {
+                                val assetAmount = (valueAmount * valueConversion).toString()
+                                viewModel.assetAmount = assetAmount
+                                setAssetAmount(assetAmount)
+                            } else {
+                                val convertedValue = valueAmount / valueConversion
+                                setAssetAmount(convertedValue.toString())
+                            }
+                        }
+
+                        else -> {
+
+                            activateButton(false)
+
+                            viewModel.assetAmount = "0"
+
+                            setAssetAmount("0")
+                        }
+                    }
+                    if (focusedData.currency.contains(mCurrency)) {
+                        val valueAmountNew =
+                            if (assetConversion.contains(mCurrency)) assetConversion.replace(
+                                mCurrency,
+                                ""
+                            )
+                                .replace("~", "").pointFormat.toDouble()
+                            else assetConversion.replace(mConversionCurrency, "")
+                                .replace("~", "").pointFormat.toDouble()
+                        activateButton(true)
+                    } else {
+                        activateButton(true)
+                    }
+
+                } else {
+                    // Handle case where price is null or not present
+                    println("Error: Price data is null")
+                    val errorBody = balanceFromPrice.errorBody()
+                    val errorCode =
+                        CommonMethods.returnErrorCode(errorBody) // Extract the code from the body if needed
+                    super.onRetrofitError(errorCode.code, errorCode.error)
+                }
+            } else {
+                // Handle API error responses
+                println("Error: API call failed with status code ${balanceFromPrice.code()} and message ${balanceFromPrice.message()}")
+            }
+
+        } catch (e: Exception) {
+            e.printStackTrace()
+            // Handle error (e.g., show error message)
+        }
+    }
+
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        binding.progress.clearAnimation()
+        binding.progress.visibility = View.GONE
+        binding.btnPreviewInvestment.text = getString(R.string.preview_my_purchase)
+        when (errorCode) {
+            7026 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_7026))
+            7027 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_7026))
+            7000 -> {
+                showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_7000, "USDC")
+                )
+                findNavController().navigate(R.id.action_buy_usdc_to_home_fragment)
+            }
+
+            7001 -> {
+                showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_7001, "USDC")
+                )
+                findNavController().navigate(R.id.action_buy_usdc_to_home_fragment)
+            }
+
+            7002 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_7002))
+                findNavController().navigate(R.id.action_buy_usdc_to_home_fragment)
+            }
+
+            7014 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_7014))
+                findNavController().navigate(R.id.action_buy_usdc_to_home_fragment)
+            }
+
+            7015 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_7015))
+                findNavController().navigate(R.id.action_buy_usdc_to_home_fragment)
+            }
+
+            7018 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_7018))
+                findNavController().navigate(R.id.action_buy_usdc_to_home_fragment)
+            }
+
+            7019 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_7019))
+                findNavController().navigate(R.id.action_buy_usdc_to_home_fragment)
+            }
+
+            7020 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_7020))
+                findNavController().navigate(R.id.action_buy_usdc_to_home_fragment)
+            }
+
+            7021 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_7021))
+                findNavController().navigate(R.id.action_buy_usdc_to_home_fragment)
+            }
+
+            7022 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_7022))
+                findNavController().navigate(R.id.action_buy_usdc_to_home_fragment)
+            }
+
+            7024 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_7024))
+                findNavController().navigate(R.id.action_buy_usdc_to_home_fragment)
+            }
+
+            else -> super.onRetrofitError(errorCode, msg)
+
+        }
+    }
+
+    private fun setAssetAmount(assetAmount: String) {
+        binding.ivCircularProgress.gone()
+
         val valueAmount =
             if (amount.contains(mCurrency)) amount.replace(mCurrency, "").pointFormat.toDouble()
             else amount.replace(mConversionCurrency, "").pointFormat.toDouble()
@@ -160,7 +322,8 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
             binding.tvAssetConversion.text =
                 "~${assetAmount.formattedAsset(priceCoin, RoundingMode.DOWN)} $mCurrency"
         }
-
+        binding.etAmount.visible()
+        binding.tvAssetConversion.visible()
 
     }
 
@@ -187,25 +350,18 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
             focusedData.currency = mCurrency
             unfocusedData.currency = mConversionCurrency
 
-            "${getString(R.string.buy)} ${Constants.MAIN_ASSET.uppercase()}".also { tvTitle.text = it }
+            "${getString(R.string.buy)} ${Constants.MAIN_ASSET.uppercase()}".also {
+                tvTitle.text = it
+            }
             var balance =
                 com.Lyber.ui.activities.BaseActivity.balances.firstNotNullOfOrNull { item -> item.takeIf { item.id == Constants.MAIN_ASSET } }
             if (balance == null) {
                 val balanceData = BalanceData("0", "0")
                 balance = Balance("0", balanceData)
             }
-            var priceCoin = balance!!.balanceData.euroBalance.toDouble()
-                .div(balance.balanceData.balance.toDouble())
 
-            valueConversion =
-                (balance.balanceData.balance.toDouble() / balance.balanceData.euroBalance.toDouble())
-            if (balance.balanceData.balance == "0") {
-                val balanceResume =
-                    com.Lyber.ui.activities.BaseActivity.balanceResume.firstNotNullOfOrNull { item -> item.takeIf { item.id == Constants.MAIN_ASSET } }
 
-                valueConversion = 1.0 / balanceResume!!.priceServiceResumeData.lastPrice.toDouble()
-            }
-            setAssesstAmount("0.0")
+            setAssetAmount("0.0")
 
             viewModel.selectedNetworkDeposit.let {
                 var balance =
@@ -223,7 +379,10 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
     override fun onClick(v: View?) {
         binding.apply {
             when (v) {
-                ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
+                ivTopAction -> {
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
+                }
+
                 tvBackArrow -> backspace()
                 tvDot -> type('.')
                 tvOne -> type('1')
@@ -251,11 +410,30 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
         binding.progress.animation =
             AnimationUtils.loadAnimation(requireActivity(), R.anim.rotate_drawable)
         binding.btnPreviewInvestment.text = ""
-        viewModel.getQuote(
-            "eur",
-            Constants.MAIN_ASSET,
-            amount.split(focusedData.currency)[0].pointFormat
-        )
+        val jsonObject = JSONObject()
+        jsonObject.put("fromAsset", "eur")
+        jsonObject.put("toAsset", Constants.MAIN_ASSET)
+        jsonObject.put("fromAmount", amount.split(focusedData.currency)[0].pointFormat)
+        val jsonString = jsonObject.toString()
+        // Generate the request hash
+        val requestHash = CommonMethods.generateRequestHash(jsonString)
+        val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+            SplashActivity.integrityTokenProvider?.request(
+                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                    .setRequestHash(requestHash)
+                    .build()
+            )
+        integrityTokenResponse1?.addOnSuccessListener { response ->
+            Log.d("token", "${response.token()}")
+            viewModel.getQuote(
+                "eur",
+                Constants.MAIN_ASSET,
+                amount.split(focusedData.currency)[0].pointFormat
+            )
+
+        }?.addOnFailureListener { exception ->
+            Log.d("token", "${exception}")
+        }
 
 
     }
@@ -331,6 +509,8 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
 
     @SuppressLint("SetTextI18n")
     private fun swapConversion() {
+        binding.tvAssetConversion.invisible()
+        binding.ivCircularProgress.visible()
         if (focusedData.currency.contains(mCurrency)) {
             val currency = focusedData.currency
             focusedData.currency = unfocusedData.currency
@@ -340,7 +520,7 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
                 .replace("~", "").pointFormat.decimalPoint()
             binding.etAmount.text = ("${valueTwo}$mConversionCurrency")
 
-            setAssesstAmount(valueOne.toString())
+//            setAssetAmount(valueOne.toString())
         } else {
             val currency = focusedData.currency
             focusedData.currency = unfocusedData.currency
@@ -351,7 +531,7 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
 
             binding.etAmount.text = ("${valueTwo}$mCurrency")
 
-            setAssesstAmount(valueOne.toString())
+//            setAssetAmount(valueOne.toString())
         }
 
 
@@ -365,4 +545,5 @@ class BuyUSDTFragment : BaseFragment<FragmentBuyUsdtBinding>(), View.OnClickList
         get() = replace(",", "", true)
 
     data class ValueHolder(var value: Double = 0.0, var currency: String = Constants.EURO)
+
 }

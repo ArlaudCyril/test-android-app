@@ -106,7 +106,7 @@ class EducationStrategyHolderFragment : BaseFragment<FragmentEducationStrategyHo
 
     fun moveNext() {
         if (mPosition == 2) {
-            checkInternet(requireContext()) {
+            checkInternet(binding.root,requireContext()) {
                 showProgressDialog(requireContext())
                 viewModel.educationStrategy()
             }

@@ -14,29 +14,36 @@ import androidx.core.content.ContextCompat
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
+import com.Lyber.R
 import com.Lyber.databinding.FragmentCreateAccountBinding
+import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.fadeIn
 import com.Lyber.utils.CommonMethods.Companion.fadeOut
+import com.Lyber.utils.CommonMethods.Companion.generateRequestHash
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.isValidEmail
 import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
 import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.showSnack
 import com.Lyber.utils.CommonMethods.Companion.showToast
+import com.Lyber.utils.CommonMethods.Companion.sortAndFormatJson
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
+import com.Lyber.utils.EncryptionHelper
 import com.Lyber.viewmodels.SignUpViewModel
 import com.au.countrycodepicker.CountryPicker
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import com.nimbusds.srp6.SRP6ClientSession
 import com.nimbusds.srp6.SRP6CryptoParams
 import com.nimbusds.srp6.SRP6VerifierGenerator
 import com.nimbusds.srp6.XRoutineWithUserIdentity
-import com.Lyber.R
-import com.Lyber.utils.EncryptionHelper
+import org.json.JSONObject
 import javax.crypto.Mac
 import javax.crypto.spec.SecretKeySpec
 
@@ -53,6 +60,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
     lateinit var client: SRP6ClientSession
     private var resendCode = -1
     private var fromResend = false
+    private lateinit var bottomSheet: VerificationBottomSheet
 
     // Define the secret key
 
@@ -98,7 +106,6 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
             binding.ivBack.visible()
         binding.ivBack.setOnClickListener(this)
         binding.tvLoginViaEmail.setOnClickListener(this)
-        binding.tvForgotPassword.setOnClickListener(this)
         binding.tvLoginViaPhone.setOnClickListener(this)
         binding.btnNext.setOnClickListener(this)
         binding.tvForgotPassword.setOnClickListener(this)
@@ -114,16 +121,41 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
     private fun setObservers() {
         viewModel.userChallengeResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-
-                App.prefsManager.accessToken = it.data.token
-                App.accessToken = it.data.token
-
-                val creds =
-                    client.step2(config, it.data.salt.toBigInteger(), it.data.B.toBigInteger())
+                checkInternet(binding.root, requireContext()) {
+                    App.prefsManager.accessToken = it.data.token
+                    App.accessToken = it.data.token
 
 
-                checkInternet(requireContext()) {
-                    viewModel.authenticateUser(creds.A.toString(), creds.M1.toString())
+                    val creds =
+                        client.step2(config, it.data.salt.toBigInteger(), it.data.B.toBigInteger())
+
+                    val jsonObject = JSONObject()
+                    jsonObject.put("method", "srp")
+                    jsonObject.put("A", creds.A.toString())
+                    jsonObject.put("M1", creds.M1.toString())
+
+                    val jsonString = sortAndFormatJson(jsonObject)
+//                        jsonObject.toString()
+                    // Generate the request hash
+                    val requestHash = generateRequestHash(jsonString)
+                    val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                        SplashActivity.integrityTokenProvider?.request(
+                            StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                                .setRequestHash(requestHash)
+                                .build()
+                        )
+                    integrityTokenResponse?.addOnSuccessListener { response ->
+                        Log.d("token", "${response.token()}")
+                        viewModel.authenticateUser(
+                            creds.A.toString(),
+                            creds.M1.toString(),
+                            response.token()
+                        )
+                    }?.addOnFailureListener { exception ->
+                        Log.d("token", "${exception}")
+
+                    }
+
                 }
 
             }
@@ -131,9 +163,17 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         viewModel.userLoginResponse.observe(viewLifecycleOwner) {
 
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+
+
                 CommonMethods.dismissProgressDialog()
                 CommonMethods.dismissAlertDialog()
                 if (it.data.access_token != null) {
+                    if (::bottomSheet.isInitialized)
+                        try {
+                            bottomSheet.dismiss()
+                        } catch (_: Exception) {
+
+                        }
                     binding.etEmail.setText("")
                     binding.etPhone.setText("")
                     binding.etPassword.setText("")
@@ -175,13 +215,13 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                     // Add the transparent view to the RelativeLayout
                     val mainView = getView()?.rootView as ViewGroup
                     mainView.addView(transparentView, viewParams)
-
+                    bottomSheet = vc
                 }
                 fromResend = false
             }
         }
         viewModel.setPhoneResponse.observe(viewLifecycleOwner) {
-            App.prefsManager.userSmsTimestamps=System.currentTimeMillis()
+            App.prefsManager.userSmsTimestamps = System.currentTimeMillis()
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 App.prefsManager.accessToken = it.data.token
                 App.accessToken = it.data.token
@@ -213,6 +253,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                     // Add the transparent view to the RelativeLayout
                     val mainView = getView()?.rootView as ViewGroup
                     mainView.addView(transparentView, viewParams)
+                    bottomSheet = vc
                 }
             }
             fromResend = false
@@ -231,6 +272,10 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
             }
         }
     }
+
+    data class UserRequest(
+        val email: String
+    )
 
 
     override fun onClick(v: View?) {
@@ -291,7 +336,6 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                 }
 
                 btnNext -> {
-
                     // login case
                     if (viewModel.forLogin) {
                         App.prefsManager.accessToken = ""
@@ -307,9 +351,8 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                             etPhone.isShown -> when {
 
                                 verifyMobile() && verifyPassword() ->
-                                    checkInternet(requireContext()) {
-                                        showProgressDialog(requireContext())
-                                        resendCode = 1
+                                    checkInternet(binding.root, requireContext()) {
+
                                         val modifiedMobile =
                                             if (mobile.startsWith("0")) mobile.removeRange(
                                                 0,
@@ -319,22 +362,22 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                                         viewModel.mobileNumber = modifiedMobile
                                         viewModel.countryCode = countryCode
                                         viewModel.password = password
-
+                                        // Generate the request hash
+                                        showProgressDialog(requireContext())
+                                        resendCode = 1
                                         client.step1(
                                             countryCode.substring(1) + modifiedMobile,
                                             password
                                         )
                                         viewModel.userChallenge(phone = "${countryCode}$modifiedMobile")
-//                                        viewModel.userChallenge(phone = mobile)
-
+//
                                     }
-
                             }
 
                             // email case
                             else -> when {
                                 verifyEmail() && verifyPassword() ->
-                                    checkInternet(requireContext()) {
+                                    checkInternet(binding.root, requireContext()) {
                                         showProgressDialog(requireContext())
                                         resendCode = 2
                                         viewModel.email = email.lowercase()
@@ -343,7 +386,9 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                                             email.lowercase(),
                                             password
                                         )
-                                        viewModel.userChallenge(email = viewModel.email)
+                                        viewModel.userChallenge(
+                                            email = viewModel.email
+                                        )
                                     }
                             }
 
@@ -354,7 +399,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                     else
                         when {
                             verifyMobile() ->
-                                checkInternet(requireContext()) {
+                                checkInternet(binding.root, requireContext()) {
                                     resendCode = 3
                                     val modifiedMobile =
                                         if (mobile.startsWith("0")) mobile.removeRange(
@@ -379,7 +424,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                                         getString(
                                             R.string.you_have_to_wait,
                                             seconds.toString()
-                                        ).showToast(requireContext())
+                                        ).showToast(binding.root, requireContext())
 
                                     }
 //                                    viewModel.setPhone(
@@ -420,12 +465,18 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         return when {
             mobile.isEmpty() -> {
                 binding.etPhone.requestKeyboard()
-                getString(R.string.please_enter_phone_number).showToast(requireContext())
+                getString(R.string.please_enter_phone_number).showToast(
+                    binding.root,
+                    requireContext()
+                )
                 false
             }
 
             mobile.length !in 7..15 -> {
-                getString(R.string.please_enter_valid_phone_number).showToast(requireContext())
+                getString(R.string.please_enter_valid_phone_number).showToast(
+                    binding.root,
+                    requireContext()
+                )
                 false
             }
 
@@ -437,12 +488,18 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         return when {
             email.isEmpty() -> {
                 binding.etEmail.requestKeyboard()
-                getString(R.string.please_enter_email_address).showToast(requireContext())
+                getString(R.string.please_enter_email_address).showToast(
+                    binding.root,
+                    requireContext()
+                )
                 false
             }
 
             !isValidEmail(email) -> {
-                getString(R.string.please_enter_valid_email).showToast(requireContext())
+                getString(R.string.please_enter_valid_email).showToast(
+                    binding.root,
+                    requireContext()
+                )
                 binding.etEmail.requestKeyboard()
                 false
             }
@@ -454,7 +511,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
     private fun verifyPassword(): Boolean {
         return when {
             password.isEmpty() -> {
-                getString(R.string.please_enter_password).showToast(requireContext())
+                getString(R.string.please_enter_password).showToast(binding.root, requireContext())
                 binding.etPassword.requestFocus()
                 false
             }
@@ -490,9 +547,6 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                     Log.d("ViewTreeObserver", "closed")
                 } else {
                     Log.d("ViewTreeObserver", "opened")
-                    /*(requireParentFragment() as SignUpFragment).binding.apply {
-                        scrollView.smoothScrollTo(0, scrollView.height)
-                    }*/
                 }
 
                 mLastContentHeight = currentContentHeight
@@ -505,14 +559,13 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         super.onConfigurationChanged(newConfig)
 
         when (newConfig.hardKeyboardHidden) {
-            Configuration.HARDKEYBOARDHIDDEN_NO -> "closed".showToast(requireContext())
+            Configuration.HARDKEYBOARDHIDDEN_NO -> "closed".showToast(
+                binding.root,
+                requireContext()
+            )
 
             Configuration.HARDKEYBOARDHIDDEN_YES -> {
-                "opened".showToast(requireContext())
-                /* (requireParentFragment() as SignUpFragment).view?.findViewById<ScrollView>(R.id.scrollView)
-                     ?.let {
-                         it.smoothScrollTo(0, it.height)
-                     }*/
+                "opened".showToast(binding.root, requireContext())
             }
 
             else -> {
@@ -535,23 +588,25 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                 viewModel.mobileNumber = modifiedMobile
                 viewModel.countryCode = countryCode
                 viewModel.password = password
-
                 client.step1(
                     countryCode.substring(1) + modifiedMobile,
                     password
                 )
                 viewModel.userChallenge(phone = "${countryCode}$modifiedMobile")
-//
             }
 
             2 -> {
-                viewModel.email = email.lowercase()
-                viewModel.password = password
-                client.step1(
-                    email.lowercase(),
-                    password
-                )
-                viewModel.userChallenge(email = viewModel.email)
+               viewModel.email = email.lowercase()
+                    viewModel.password = password
+                    client.step1(
+                        email.lowercase(),
+                        password
+                    )
+                    viewModel.userChallenge(
+                        email = viewModel.email
+                    )
+
+
             }
 
             3 -> {
@@ -560,10 +615,6 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
 
                 viewModel.mobileNumber = modifiedMobile
                 viewModel.countryCode = countryCode
-//                val payload = """{"countryCode":${viewModel.countryCode.substring(1)},"phoneNo":${viewModel.mobileNumber}}"""
-//
-//// Generate the signature
-//                val signature = createSignature(secretKey, payload, timestamp)
                 if (canSendSms())
                     makeApiRequest()
                 else {
@@ -578,7 +629,7 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
                     if (time > 0L)
                         seconds = (time / 1000) % 60
                     getString(R.string.you_have_to_wait, seconds.toString()).showToast(
-                        requireContext()
+                        binding.root, requireContext()
                     )
                 }
             }
@@ -586,109 +637,42 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
     }
 
     private fun makeApiRequest() {
-        val timestamp = (System.currentTimeMillis() / 1000).toString()
+        val jsonObject = JSONObject()
+        jsonObject.put("countryCode", viewModel.countryCode.substring(1).toInt())
+        jsonObject.put("phoneNo", viewModel.mobileNumber)
+        val jsonString = sortAndFormatJson(jsonObject)
+
+        // Generate the request hash
+        val requestHash = generateRequestHash(jsonString)
+        val integrityTokenResponse1: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+            SplashActivity.integrityTokenProvider?.request(
+                StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                    .setRequestHash(requestHash)
+                    .build()
+            )
+        integrityTokenResponse1?.addOnSuccessListener { response ->
+            Log.d("token", "${response.token()}")
+            val timestamp = (System.currentTimeMillis() / 1000).toString()
 //        val timestamp = Instant.now().epochSecond.toString()
-        val payload =
-            """{"countryCode":${viewModel.countryCode.substring(1)},"phoneNo":"${viewModel.mobileNumber}"}"""
+            val payload =
+                """{"countryCode":${
+                    viewModel.countryCode.substring(1).toInt()
+                },"phoneNo":"${viewModel.mobileNumber}"}"""
+            val decryptedText = EncryptionHelper.decrypt(App.secretKey, App.encryptedKey)
+            val signature = createSignature(decryptedText, payload, timestamp)
+            viewModel.setPhone(
+                viewModel.countryCode.substring(1).toInt(),
+                viewModel.mobileNumber, signature, timestamp, response.token()
+            )
 
-        val decryptedText = EncryptionHelper.decrypt(App.secretKey, App.encryptedKey)
-
-        val signature = createSignature(decryptedText, payload, timestamp)
-
-        viewModel.setPhone(
-            viewModel.countryCode.substring(1),
-            viewModel.mobileNumber, signature, timestamp
-        )
-//        val okHttpClient = RestClient.getOkHttpClient2(
-//            signature,
-//            timestamp
-//        )
-//        val requestBody = RequestBody.create(
-//            "application/json; charset=utf-8".toMediaTypeOrNull(),
-//            payload
-//        )
-//
-//        val request = Request.Builder()
-//            .url(Constants.BASE_URL + "user-service/set-phone")
-//            .post(requestBody)
-//            .build()
-//        okHttpClient.newCall(request).enqueue(object : Callback {
-//            override fun onFailure(call: Call, e: IOException) {
-//                // Handle failure
-//                activity?.runOnUiThread {
-//                    CommonMethods.dismissProgressDialog()
-//                    CommonMethods.dismissAlertDialog()
-//                    getString(R.string.unable_to_connect_to_the_server).showToast(requireContext())
-//                }
-//            }
-//
-//            override fun onResponse(call: Call, response: Response) {
-//                // Handle response
-//                if (!response.isSuccessful) {
-//                    activity?.runOnUiThread {
-//                        // Handle unsuccessful response
-//                        CommonMethods.dismissProgressDialog()
-//                        CommonMethods.dismissAlertDialog()
-////                    val errorBody = response.errorBody()?.string() ?: "Unknown error occurred"
-////                    CommonMethods.showErrorMessage(requireContext(), response.errorBody(), binding.root)
-//                    }
-//                    return
-//                }
-//                activity?.runOnUiThread {
-//                    App.prefsManager.userSmsTimestamps=System.currentTimeMillis()
-//
-//                    // Parse the response body
-//                    response.body?.let { responseBody ->
-//                        val responseData = responseBody.string()
-//                        val gson = Gson()
-//                        val it = gson.fromJson(responseData, SetPhoneResponse::class.java)
-//
-//                        if (lifecycle.currentState == Lifecycle.State.RESUMED) {
-//                            App.prefsManager.accessToken = it.data.token
-//                            App.accessToken = it.data.token
-//                            CommonMethods.dismissProgressDialog()
-//                            CommonMethods.dismissAlertDialog()
-//                            if (!fromResend) {
-//                                val transparentView = View(context)
-//                                transparentView.setBackgroundColor(
-//                                    ContextCompat.getColor(
-//                                        requireContext(),
-//                                        R.color.semi_transparent_dark
-//                                    )
-//                                )
-//
-//                                // Set layout parameters for the transparent view
-//                                val viewParams = RelativeLayout.LayoutParams(
-//                                    RelativeLayout.LayoutParams.MATCH_PARENT,
-//                                    RelativeLayout.LayoutParams.MATCH_PARENT
-//                                )
-//
-//                                val vc = VerificationBottomSheet(::handle)
-//
-//                                vc.viewToDelete = transparentView
-//                                vc.mainView = getView()?.rootView as ViewGroup
-//                                vc.viewModel = viewModel
-//                                vc.fromSignUp = true
-//                                vc.show(childFragmentManager, "")
-//
-//                                // Add the transparent view to the RelativeLayout
-//                                val mainView = getView()?.rootView as ViewGroup
-//                                mainView.addView(transparentView, viewParams)
-//                            } else
-//                                resendCodeParam!!.onResend()
-//
-//                        }
-//                        fromResend = false
-//                    }
-//                }
-//            }
-//        })
-
+        }?.addOnFailureListener { exception ->
+            Log.d("token", "${exception}")
+        }
     }
 
 
     private fun createSignature(secretKey: String, payload: String, timestamp: String): String {
-        val message = "$timestamp.$payload"
+      val message = "$timestamp.$payload"
         val hmacSHA256 = "HmacSHA256"
         val secretKeySpec = SecretKeySpec(secretKey.toByteArray(), hmacSHA256)
         val mac = Mac.getInstance(hmacSHA256)
@@ -697,4 +681,145 @@ class CreateAccountFragment : BaseFragment<FragmentCreateAccountBinding>(), View
         return hash.joinToString("") { String.format("%02x", it) }
     }
 
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        CommonMethods.dismissProgressDialog()
+        CommonMethods.dismissAlertDialog()
+
+        when (errorCode) {
+            1 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_1))
+            }
+
+            3 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_3))
+            }
+
+            10 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_10))
+            11 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_11))
+            12 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_12))
+            14 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_14))
+            15 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_15)
+                )
+            }
+
+            16 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_16))
+            18 -> bottomSheet.showErrorOnBottomSheet(18)
+            20 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_20)
+                )
+            }
+
+            24 -> bottomSheet.showErrorOnBottomSheet(24)
+            26 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_26))
+            28 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_28))
+            29 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_29))
+            30 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_30))
+            34 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_34)
+                )
+            }
+
+            35 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_35)
+                )
+            }
+
+            37 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_37))
+            38 -> bottomSheet.showErrorOnBottomSheet(38)
+            39 -> bottomSheet.showErrorOnBottomSheet(39)
+            40 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_40))
+            41 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_41))
+            42 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_42)
+                )
+            }
+
+            43 -> bottomSheet.showErrorOnBottomSheet(43)
+            45 -> bottomSheet.showErrorOnBottomSheet(45)
+            50 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_50))
+            53 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_53)
+                )
+            }
+
+            else -> super.onRetrofitError(errorCode, msg)
+
+
+        }
+    }
 }

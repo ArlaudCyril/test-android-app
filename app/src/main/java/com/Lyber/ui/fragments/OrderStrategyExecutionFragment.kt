@@ -31,7 +31,6 @@ import com.Lyber.utils.CommonMethods.Companion.loadCircleCrop
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.PortfolioViewModel
-import okhttp3.ResponseBody
 import java.math.RoundingMode
 
 
@@ -200,8 +199,8 @@ class OrderStrategyExecutionFragment : BaseFragment<FragmentOrderStrategyExecuti
         }
     }
 
-    override fun onRetrofitError(responseBody: ResponseBody?) {
-        super.onRetrofitError(responseBody)
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        super.onRetrofitError(errorCode, msg)
         stopRepeatingTask()
     }
 
@@ -209,8 +208,10 @@ class OrderStrategyExecutionFragment : BaseFragment<FragmentOrderStrategyExecuti
         handler.postDelayed(object : Runnable {
             override fun run() {
                 // Your statement to be executed every 5 seconds
-                CommonMethods.checkInternet(requireContext()) {
-                    viewModel.strategyStatus(executionID)
+                CommonMethods.checkInternet(binding.root, requireContext()) {
+                    viewModel.strategyStatus(
+                            executionID
+                        )
                 }
                 // Schedule the next execution after the delay
                 handler.postDelayed(this, delayMillis)

@@ -16,7 +16,10 @@ data class ErrorResponse(
     val type: String,
     val code: Int
 )
-
+data class ErrorResponseNew(
+    val error: String,
+    val code: Int
+)
 data class CommonResponse(val success: String, val message: String, val withdrawalId: String)
 
 data class CommonResponseVerfiy(val success: String, val message: String, val withdrawalId: String)
@@ -760,7 +763,10 @@ data class TransactionData(
     val nextExecution: String?,
     val iban: String,
     val eurAmount: String,
-    val eurAmountDeductedLyberFees: String
+    val eurAmountDeductedLyberFees: String,
+    val totalEurAmountSpent: String,
+    val totalFeeSpent: String,
+    val totalRecreditedAmount: String
 
 )
 
@@ -928,4 +934,20 @@ data class WithdrawEuroFee(
 data class WithdrawEuroData(
     val withdrawEuroFees: Double,
     val withdrawEuroMin: Double
+)
+data class UserByPhoneResponse(
+    val `data`: UserByPhone
+)
+
+data class UserByPhone(
+    val firstName: String,
+    val lastName: String,
+    val phoneNo: String
+)
+data class CurrentPriceResponse(
+    val `data`: CurrentPrice
+)
+
+data class CurrentPrice(
+    val price: String
 )

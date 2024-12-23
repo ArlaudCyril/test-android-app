@@ -6,30 +6,29 @@ import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.Gravity
-import android.view.LayoutInflater
 import android.view.View
 import android.view.View.OnClickListener
 import android.view.ViewGroup
-import android.widget.FrameLayout
 import android.widget.RelativeLayout
-import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import com.Lyber.R
 import com.Lyber.databinding.FragmentChangePasswordBinding
+import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.ui.fragments.bottomsheetfragments.VerificationBottomSheet
 import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods
+import com.Lyber.utils.CommonMethods.Companion.showSnack
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.SignUpViewModel
-import com.google.android.material.snackbar.BaseTransientBottomBar
-import com.google.android.material.snackbar.Snackbar
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
 import com.nimbusds.srp6.SRP6ClientSession
 import com.nimbusds.srp6.SRP6CryptoParams
 import com.nimbusds.srp6.SRP6VerifierGenerator
 import com.nimbusds.srp6.XRoutineWithUserIdentity
+import org.json.JSONObject
 import java.math.BigInteger
 
 
@@ -40,7 +39,9 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
     private lateinit var config: SRP6CryptoParams
     lateinit var generator: SRP6VerifierGenerator
     lateinit var client: SRP6ClientSession
-    private var resendCode=false
+    private var resendCode = false
+    private lateinit var bottomSheet: VerificationBottomSheet
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         viewModel = CommonMethods.getViewModel(this)
@@ -60,7 +61,7 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 CommonMethods.dismissProgressDialog()
                 CommonMethods.dismissAlertDialog()
-                if(!resendCode) {
+                if (!resendCode) {
                     val transparentView = View(context)
                     transparentView.setBackgroundColor(
                         ContextCompat.getColor(
@@ -85,14 +86,22 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
                     // Add the transparent view to the RelativeLayout
                     val mainView = getView()?.rootView as ViewGroup
                     mainView.addView(transparentView, viewParams)
+                    bottomSheet = vc
                 }
-                resendCode=false
+                resendCode = false
             }
         }
         viewModel.exportOperationResponse.observe(viewLifecycleOwner) {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
                 CommonMethods.dismissProgressDialog()
-                getString(R.string.pass_changed_success).showToast(requireContext())
+                getString(R.string.pass_changed_success).showToast(binding.root, requireContext())
                 requireActivity().onBackPressedDispatcher.onBackPressed()
             }
         }
@@ -115,12 +124,6 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
                 val phoneVerifier = generator.generateVerifier(
                     phoneSalt, App.prefsManager.user?.phoneNo, password
                 )
-                Log.d("A", creds.A.toString())
-                Log.d("M1", creds.M1.toString())
-                Log.d("emailSalt", "$emailSalt")
-                Log.d("emailVerifier", " $emailVerifier  ")
-                Log.d("phoneSalt", "  $phoneSalt ")
-                Log.d("phoneVerifier", "   $phoneVerifier")
                 val hashMap = hashMapOf<String, Any>()
                 hashMap["A"] = creds.A.toString()
                 hashMap["M1"] = creds.M1.toString()
@@ -128,7 +131,35 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
                 hashMap["emailVerifier"] = emailVerifier.toString()
                 hashMap["phoneSalt"] = phoneSalt.toString()
                 hashMap["phoneVerifier"] = phoneVerifier.toString()
-                viewModel.changePassword(hashMap)
+
+                val jsonObject = JSONObject()
+                jsonObject.put("A", creds.A.toString())
+                jsonObject.put("M1", creds.M1.toString())
+                jsonObject.put("emailSalt", emailSalt.toString())
+                jsonObject.put("emailVerifier", emailVerifier.toString())
+                jsonObject.put("phoneSalt", phoneSalt.toString())
+                jsonObject.put("phoneVerifier", phoneVerifier.toString())
+
+                val jsonString = CommonMethods.sortAndFormatJson(jsonObject)
+
+                // Generate the request hash
+                val requestHash = CommonMethods.generateRequestHash(jsonString)
+
+                val integrityTokenResponse: Task<StandardIntegrityManager.StandardIntegrityToken>? =
+                    SplashActivity.integrityTokenProvider?.request(
+                        StandardIntegrityManager.StandardIntegrityTokenRequest.builder()
+                            .setRequestHash(requestHash)
+                            .build()
+                    )
+                integrityTokenResponse?.addOnSuccessListener { response ->
+                    viewModel.changePassword(
+                        hashMap,
+                        token = response.token()
+                    )
+                }?.addOnFailureListener { exception ->
+                    Log.d("token", "${exception}")
+
+                }
             }
         }
 
@@ -195,50 +226,40 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
 
     }
 
-    private fun handle(txt:String){
-        CommonMethods.checkInternet(requireActivity()) {
-            resendCode=true
-            viewModel.getPasswordChangeChallenge()
+    private fun handle(txt: String) {
+        CommonMethods.checkInternet(binding.root, requireActivity()) {
+             resendCode = true
+                viewModel.getPasswordChangeChallenge()
         }
+
     }
+
     override fun onClick(v: View?) {
         binding.apply {
             when (v) {
                 ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
                 btnSavePass -> {
-                    val snackbar = Snackbar.make(binding.root, "", Snackbar.LENGTH_LONG)
-                    val params = snackbar.view.layoutParams as FrameLayout.LayoutParams
-                    params.gravity = Gravity.TOP
-                    params.setMargins(0, 0, 0, 0)
-                    snackbar.view.layoutParams = params
-
-                    snackbar.animationMode = BaseTransientBottomBar.ANIMATION_MODE_FADE
-                    val layout = snackbar.view as Snackbar.SnackbarLayout
-                    val textView =
-                        layout.findViewById<TextView>(com.google.android.material.R.id.snackbar_text)
-                    textView.visibility = View.INVISIBLE
-                    val snackView =
-                        LayoutInflater.from(context).inflate(R.layout.custom_snackbar, null)
-                    val textViewMsg = snackView.findViewById<TextView>(R.id.tvMsg)
-                    layout.setPadding(0, 0, 0, 0)
-                    layout.addView(snackView, 0)
                     if (buttonClicked) {
                         if (binding.etPasswordOld.text.trim().toString()
                                 .equals(binding.etPassword.text.trim().toString())
                         ) {
-                            textViewMsg.text= getString(R.string.new_pass_cannot_be_same_as_old)
-                            snackbar.show()
+                            getString(R.string.new_pass_cannot_be_same_as_old).showToast(
+                                binding.root,
+                                requireContext()
+                            )
                         } else if (!binding.etPassword.text.trim().toString()
                                 .equals(binding.etPasswordConfirm.text.trim().toString())
                         ) {
-                            textViewMsg.text= getString(R.string.pass_should_be_same)
-                            snackbar.show()
-                        }
-                        else {
-                            CommonMethods.checkInternet(requireActivity()) {
-                                CommonMethods.showProgressDialog(requireContext())
-                                viewModel.getPasswordChangeChallenge()
+                            getString(R.string.pass_should_be_same).showToast(
+                                binding.root,
+                                requireContext()
+                            )
+                        } else {
+                            CommonMethods.checkInternet(binding.root, requireActivity()) {
+                                   CommonMethods.showProgressDialog(requireContext())
+                                    viewModel.getPasswordChangeChallenge()
                             }
+
                         }
                     }
                 }
@@ -246,6 +267,69 @@ class ChangePasswordFragment : BaseFragment<FragmentChangePasswordBinding>(), On
             }
         }
 
+    }
+
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        CommonMethods.dismissProgressDialog()
+        CommonMethods.dismissAlertDialog()
+        when (errorCode) {
+            13 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_13))
+            14 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_14))
+            18 -> bottomSheet.showErrorOnBottomSheet(18)
+            26 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_26))
+            }
+
+            34 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_34))
+            }
+
+            35 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_35))
+            }
+
+            37 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_37))
+            40 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_40))
+            41 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_41))
+            42 -> {
+                if (::bottomSheet.isInitialized) {
+                    try {
+                        bottomSheet.dismiss()
+                    } catch (_: Exception) {
+
+                    }
+                }
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_42))
+            }
+
+            24 -> bottomSheet.showErrorOnBottomSheet(24)
+            38 -> bottomSheet.showErrorOnBottomSheet(38)
+            39 -> bottomSheet.showErrorOnBottomSheet(39)
+            43 -> bottomSheet.showErrorOnBottomSheet(43)
+            45 -> bottomSheet.showErrorOnBottomSheet(45)
+            else -> super.onRetrofitError(errorCode, msg)
+        }
     }
 
 }

@@ -1,3 +1,4 @@
+
 package com.Lyber.ui.adapters
 
 
@@ -7,6 +8,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.Lyber.R
 import com.Lyber.databinding.ItemMyAssetBinding
 import com.Lyber.models.Balance
+import com.Lyber.utils.App
 import com.Lyber.utils.CommonMethods.Companion.commaFormatted
 import com.Lyber.utils.CommonMethods.Companion.currencyFormatted
 import com.Lyber.utils.CommonMethods.Companion.formattedAsset
@@ -17,7 +19,7 @@ import java.math.RoundingMode
 
 class BalanceAdapter(
     private val isFromWithdraw:Boolean = false,private val listener: (Balance) -> Unit = { _ ->
-    },
+    },private val hideBalanceFeature:Boolean=false
 ) :
     BaseAdapter<Balance>() {
 
@@ -57,12 +59,18 @@ class BalanceAdapter(
                             tvAssetNameCode.visible()
                         }
                     }
-                    tvAssetAmount.text = balance.euroBalance.commaFormatted.currencyFormatted
-                    tvAssetAmountInCrypto.text =
-                        balance.balance.formattedAsset(
-                            priceCoin,
-                            rounding = RoundingMode.DOWN,currency?.decimals ?: 4
-                        )
+                    if(hideBalanceFeature && App.prefsManager.hideAmount) {
+                        tvAssetAmount.text = "*****"
+                        tvAssetAmountInCrypto.text = "*****"
+                    }
+                    else {
+                        tvAssetAmount.text = balance.euroBalance.commaFormatted.currencyFormatted
+                        tvAssetAmountInCrypto.text =
+                            balance.balance.formattedAsset(
+                                priceCoin,
+                                rounding = RoundingMode.DOWN, currency?.decimals ?: 4
+                            )
+                    }
 //                    +" ${balanceId.uppercase()}"
 
                     try {
@@ -87,12 +95,18 @@ class BalanceAdapter(
                                 tvAssetNameCode.visible()
                             }
                         }
-                        tvAssetAmount.text = balance.euroBalance.commaFormatted.currencyFormatted
-                        tvAssetAmountInCrypto.text =
-                            balance.balance.formattedAsset(
-                                priceCoin,
-                                rounding = RoundingMode.DOWN,currency!!.decimals
-                            )
+                        if(hideBalanceFeature && App.prefsManager.hideAmount) {
+                            tvAssetAmount.text = "*****"
+                            tvAssetAmountInCrypto.text = "*****"
+                        } else {
+                            tvAssetAmount.text =
+                                balance.euroBalance.commaFormatted.currencyFormatted
+                            tvAssetAmountInCrypto.text =
+                                balance.balance.formattedAsset(
+                                    priceCoin,
+                                    rounding = RoundingMode.DOWN, currency!!.decimals
+                                )
+                        }
 //                        +" ${balanceId.uppercase()}"
                     }catch (_:Exception){
 

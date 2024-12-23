@@ -19,14 +19,14 @@ android {
         applicationId "com.Lyber"
         minSdk 24
         targetSdk 34
-        versionCode 27
-        versionName "1"
+        versionCode 28
+        versionName "1.1"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
     buildTypes {
         release {
-            debuggable true
+            debuggable false
             shrinkResources true
             minifyEnabled true
             signingConfig signingConfigs.release
@@ -62,7 +62,7 @@ dependencies {
 
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 
-    implementation 'androidx.core:core-ktx:1.12.0'
+    implementation 'androidx.core:core-ktx:1.13.1'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.11.0'
     implementation 'androidx.constraintlayout:constraintlayout:2.1.4'
@@ -70,7 +70,7 @@ dependencies {
     implementation 'androidx.navigation:navigation-ui-ktx:2.7.6'
     implementation("androidx.fragment:fragment-ktx:1.6.2")
     implementation 'androidx.fragment:fragment:1.6.2'
-    implementation 'androidx.core:core-ktx:+'
+//    implementation 'androidx.core:core-ktx:+'
     testImplementation 'junit:junit:4.13.2'
     androidTestImplementation 'androidx.test.ext:junit:1.1.5'
     androidTestImplementation 'androidx.test.espresso:espresso-core:3.5.1'
@@ -109,7 +109,8 @@ dependencies {
 
 //    implementation 'com.ms-square:expandableTextView:0.1.4'
 
-    implementation 'com.budiyev.android:code-scanner:2.1.0'
+//    implementation 'com.budiyev.android:code-scanner:2.3.0'
+    implementation 'com.github.yuriy-budiyev:code-scanner:2.3.0'
     implementation 'com.caverock:androidsvg-aar:1.4'
 //    implementation 'com.auth0.android:jwtdecode:2.0.1'
 
@@ -140,6 +141,7 @@ dependencies {
     implementation "androidx.security:security-crypto:1.1.0-alpha03"
     implementation 'com.appsflyer:af-android-sdk:6.13.1'
     implementation 'com.android.installreferrer:installreferrer:2.2'
+    implementation 'com.google.android.play:integrity:1.4.0'
 }
 configurations.all {
     resolutionStrategy {

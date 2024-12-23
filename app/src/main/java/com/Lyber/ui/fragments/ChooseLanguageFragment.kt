@@ -91,22 +91,18 @@ class ChooseLanguageFragment : BaseFragment<FragmentChooseLanguageBinding>(), On
             when (v) {
                 ivTopAction -> requireActivity().onBackPressedDispatcher.onBackPressed()
                 rlEnglish -> {
-                    hashMap.clear()
-                    hashMap["language"] = Constants.ENGLISH
-                    CommonMethods.checkInternet(requireContext()) {
-                        CommonMethods.showProgressDialog(requireContext())
+                        hashMap.clear()
+                        hashMap["language"] = Constants.ENGLISH
+                        CommonMethods.showProgressDialog(requireActivity())
                         viewModel.updateUserInfo(hashMap)
-                    }
+
                 }
 
                 rlFrench -> {
-                    hashMap.clear()
-                    hashMap["language"] = Constants.FRENCH
-                    CommonMethods.checkInternet(requireContext()) {
-                        CommonMethods.showProgressDialog(requireContext())
+                      hashMap.clear()
+                        hashMap["language"] = Constants.FRENCH
+                        CommonMethods.showProgressDialog(requireActivity())
                         viewModel.updateUserInfo(hashMap)
-                    }
-
                 }
             }
         }

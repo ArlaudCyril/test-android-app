@@ -2,7 +2,9 @@ package com.Lyber.ui.fragments.bottomsheetfragments
 
 import android.content.DialogInterface
 import android.os.Bundle
+import android.util.DisplayMetrics
 import android.view.View
+import android.view.ViewGroup
 import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.ErrorBottomSheetBinding
@@ -24,7 +26,17 @@ class ErrorBottomSheet(val clickListener: (Boolean) -> Unit) :
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        val displayMetrics = DisplayMetrics()
+        requireActivity().windowManager.defaultDisplay.getMetrics(displayMetrics)
+        val screenHeight = displayMetrics.heightPixels
+        val marginInDp = 50
+        val marginInPx = (marginInDp * displayMetrics.density).toInt()
+        val bottomSheet = binding.root.parent as ViewGroup
+        val layoutParams = bottomSheet.layoutParams
+        layoutParams.height = screenHeight - marginInPx
+        bottomSheet.layoutParams = layoutParams
 
+        behavior.state = BottomSheetBehavior.STATE_EXPANDED
         viewModel = CommonMethods.getViewModel(requireActivity())
        if(arguments!=null && requireArguments().containsKey(Constants.FROM))
            fromFragment=requireArguments().getString(Constants.FROM).toString()
@@ -41,8 +53,6 @@ class ErrorBottomSheet(val clickListener: (Boolean) -> Unit) :
             dismiss()
         }
 
-
-        behavior.state = BottomSheetBehavior.STATE_EXPANDED
     }
 
     private fun clearBackStack1() {

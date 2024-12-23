@@ -1,19 +1,16 @@
 package com.Lyber.ui.fragments
 
-import android.app.Dialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.view.ViewGroup
-import android.view.Window
 import android.widget.RelativeLayout
 import androidx.activity.addCallback
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.Lyber.R
-import com.Lyber.databinding.CustomDialogLayoutBinding
 import com.Lyber.databinding.FragmentEmailAddressBinding
 import com.Lyber.ui.fragments.bottomsheetfragments.EmailVerificationBottomSheet
 import com.Lyber.utils.App
@@ -23,7 +20,6 @@ import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.PersonalDataViewModel
-import com.nimbusds.srp6.SRP6ClientSession
 import com.nimbusds.srp6.SRP6CryptoParams
 import com.nimbusds.srp6.SRP6VerifierGenerator
 import com.nimbusds.srp6.XRoutineWithUserIdentity
@@ -102,7 +98,7 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
             binding.etEmail.clearFocus()
             binding.etPassword.clearFocus()
             if (checkData()) {
-                checkInternet(requireActivity()) {
+                checkInternet(binding.root, requireActivity()) {
                     CommonMethods.showProgressDialog(requireContext())
 
                     val emailSalt = BigInteger(1, generator.generateRandomSalt())
@@ -116,14 +112,14 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
                     val phoneVerifier = generator.generateVerifier(
                         phoneSalt, App.prefsManager.getPhone(), binding.etPassword.text.toString()
                     )
+                 viewModel.setEmail(
+                            binding.etEmail.text.toString().lowercase(),
+                            emailSalt.toString(),
+                            emailVerifier.toString(),
+                            phoneSalt.toString(),
+                            phoneVerifier.toString()
+                        )
 
-                    viewModel.setEmail(
-                        binding.etEmail.text.toString().lowercase(),
-                        emailSalt.toString(),
-                        emailVerifier.toString(),
-                        phoneSalt.toString(),
-                        phoneVerifier.toString()
-                    )
                 }
             }
         }
@@ -146,7 +142,7 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 CommonMethods.dismissProgressDialog()
                 CommonMethods.dismissAlertDialog()
-                if(!fromResend) {
+                if (!fromResend) {
                     App.prefsManager.personalDataSteps = Constants.EMAIL_ADDRESS
                     val transparentView = View(context)
                     transparentView.setBackgroundColor(
@@ -173,13 +169,13 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
                     val mainView = view?.rootView as ViewGroup
                     mainView.addView(transparentView, viewParams)
                 }
-                fromResend=false
+                fromResend = false
 
             }
         }
     }
 
-    private fun handle(txt:String) {
+    private fun handle(txt: String) {
         fromResend = true
         config = SRP6CryptoParams.getInstance(2048, "SHA-512")
         generator = SRP6VerifierGenerator(config)
@@ -187,7 +183,7 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
         binding.etEmail.clearFocus()
         binding.etPassword.clearFocus()
         if (checkData()) {
-            checkInternet(requireActivity()) {
+            checkInternet(binding.root, requireActivity()) {
                 val emailSalt = BigInteger(1, generator.generateRandomSalt())
                 val emailVerifier = generator.generateVerifier(
                     emailSalt,
@@ -199,14 +195,14 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
                 val phoneVerifier = generator.generateVerifier(
                     phoneSalt, App.prefsManager.getPhone(), binding.etPassword.text.toString()
                 )
+                   viewModel.setEmail(
+                        binding.etEmail.text.toString().lowercase(),
+                        emailSalt.toString(),
+                        emailVerifier.toString(),
+                        phoneSalt.toString(),
+                        phoneVerifier.toString()
+                    )
 
-                viewModel.setEmail(
-                    binding.etEmail.text.toString().lowercase(),
-                    emailSalt.toString(),
-                    emailVerifier.toString(),
-                    phoneSalt.toString(),
-                    phoneVerifier.toString()
-                )
             }
         }
     }
@@ -214,12 +210,18 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
     fun checkData(): Boolean {
         when {
             email.isEmpty() -> {
-                getString(R.string.please_enter_your_email).showToast(requireContext())
+                getString(R.string.please_enter_your_email).showToast(
+                    binding.root,
+                    requireContext()
+                )
                 binding.etEmail.requestKeyboard()
             }
 
             !CommonMethods.isValidEmail(email) -> {
-                getString(R.string.please_enter_a_valid_email_address).showToast(requireContext())
+                getString(R.string.please_enter_a_valid_email_address).showToast(
+                    binding.root,
+                    requireContext()
+                )
                 binding.etEmail.requestKeyboard()
             }
 
@@ -235,6 +237,39 @@ class EmailAddressFragment : BaseFragment<FragmentEmailAddressBinding>() {
             }
         }
         return false
+    }
+
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        CommonMethods.dismissProgressDialog()
+        CommonMethods.dismissAlertDialog()
+        when ( errorCode ) {
+            5 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_5)
+            )
+
+            6 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_6)
+            )
+
+            7 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_7)
+            )
+
+            24 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_24)
+            )
+
+            else ->  super.onRetrofitError(errorCode, msg)
+
+        }
     }
 
 

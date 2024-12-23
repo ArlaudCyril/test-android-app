@@ -47,18 +47,18 @@ class EnterWalletAddressFragment : BaseFragment<FragmentEnterWalletAddressBindin
 
         binding.btnWithdraw.setOnClickListener {
             if (address.isNotEmpty()) {
-                checkInternet(requireContext()) {
+                checkInternet(binding.root,requireContext()) {
                     showProgressDialog(requireContext())
                     if (viewModel.allMyPortfolio.isNotEmpty())
                         viewModel.withdrawFiat(viewModel.amount)
                     else {
                         viewModel.selectedAsset?.let {
-                            viewModel.withdraw(it.id,viewModel.amount,viewModel.assetAmount.toFloat(),address)
+                          viewModel.withdraw(it.id,viewModel.amount,viewModel.assetAmount.toFloat(),address)
                         }
                     }
                 }
             } else {
-                getString(R.string.please_enter_wallet_address).showToast(requireContext())
+                getString(R.string.please_enter_wallet_address).showToast(binding.root,requireContext())
                 binding.etWalletAddress.requestKeyboard()
             }
         }

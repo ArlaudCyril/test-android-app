@@ -1,13 +1,10 @@
 package com.Lyber.ui.fragments
 
-import android.app.Activity
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.NavController
@@ -16,10 +13,7 @@ import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.CustomDialogVerticalLayoutBinding
 import com.Lyber.databinding.FragmentVerifyYourIdentityBinding
-import com.Lyber.network.RestClient
 import com.Lyber.ui.activities.WebViewActivity
-import com.Lyber.utils.App
-import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.dismissAlertDialog
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
@@ -29,11 +23,10 @@ import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.PortfolioViewModel
 import com.Lyber.viewmodels.VerifyIdentityViewModel
 import com.google.android.material.bottomsheet.BottomSheetDialog
-import okhttp3.ResponseBody
 
 
 class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBinding>(),
-    View.OnClickListener, RestClient.OnRetrofitError {
+    View.OnClickListener {
     private lateinit var navController: NavController
     private lateinit var verifyIdentityViewModel: VerifyIdentityViewModel
     private lateinit var portfolioViewModel: PortfolioViewModel
@@ -155,8 +148,8 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
     }
 
 
-    override fun onRetrofitError(responseBody: ResponseBody?) {
-        super.onRetrofitError(responseBody)
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        super.onRetrofitError(errorCode, msg)
         dismissAlertDialog()
         isApiHit = false
         dismissAnimation()
@@ -168,27 +161,29 @@ class VerifyYourIdentityFragment : BaseFragment<FragmentVerifyYourIdentityBindin
         binding.btnContinue.text = getString(R.string.start_identity_verifications)
     }
 
-    private var resultLauncher =
-        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-            if (result.resultCode == Activity.RESULT_FIRST_USER) {
-                val bundle = Bundle().apply {
-                    putBoolean(Constants.IS_REVIEW, true)
-                }
-                findNavController().navigate(R.id.fillDetailFragment, bundle)
-            } else if (result.resultCode == Activity.RESULT_OK) {
-                CommonMethods.showProgressDialog(requireContext())
-                portfolioViewModel.finishRegistration()
-            }
-        }
+//    private var resultLauncher =
+//        registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
+//            if (result.resultCode == Activity.RESULT_FIRST_USER) {
+//                val bundle = Bundle().apply {
+//                    putBoolean(Constants.IS_REVIEW, true)
+//                }
+//                findNavController().navigate(R.id.fillDetailFragment, bundle)
+//            } else if (result.resultCode == Activity.RESULT_OK) {
+//                CommonMethods.showProgressDialog(requireContext())
+//                portfolioViewModel.finishRegistration()
+//
+//            }
+//        }
 
     private fun hitAcpi() {
-        checkInternet(requireActivity()) {
+        checkInternet(binding.root,requireActivity()) {
             isApiHit = true
             binding.progress.visible()
             binding.progress.animation =
                 AnimationUtils.loadAnimation(requireActivity(), R.anim.rotate_drawable)
             binding.btnContinue.text = ""
-            portfolioViewModel.startKYCIdentity()
+              portfolioViewModel.startKYCIdentity()
+
         }
 
     }

@@ -1,3 +1,4 @@
+
 package com.Lyber.ui.fragments
 
 import android.app.Dialog
@@ -23,21 +24,29 @@ import com.Lyber.databinding.CustomDialogLayoutBinding
 import com.Lyber.databinding.FragmentBuildStrategyBinding
 import com.Lyber.models.AddedAsset
 import com.Lyber.models.PriceServiceResume
+import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.ui.adapters.BuildStrategyAdapter
 import com.Lyber.ui.fragments.bottomsheetfragments.AddAssetBottomSheet
 import com.Lyber.ui.fragments.bottomsheetfragments.BaseBottomSheet
+import com.Lyber.ui.fragments.bottomsheetfragments.ConfirmationBottomSheet
 import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
 import com.Lyber.utils.CommonMethods.Companion.getViewModel
 import com.Lyber.utils.CommonMethods.Companion.gone
 import com.Lyber.utils.CommonMethods.Companion.requestKeyboard
+import com.Lyber.utils.CommonMethods.Companion.showErrorMessage
 import com.Lyber.utils.CommonMethods.Companion.showProgressDialog
+import com.Lyber.utils.CommonMethods.Companion.showSnack
 import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.CommonMethods.Companion.toPx
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.PortfolioViewModel
+import com.google.android.gms.tasks.Task
+import com.google.android.play.core.integrity.StandardIntegrityManager
+import okhttp3.ResponseBody
+import org.json.JSONObject
 import kotlin.math.ceil
 import kotlin.math.roundToInt
 
@@ -50,9 +59,6 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
 
     private var minInvestPerAsset = 10f
     private var requiredAmount = 0f
-//    private lateinit var viewModel: NetworkViewModel
-//    private val viewModel: PortfolioViewModel by viewModels()
-
 
     private var canBuildStrategy: Boolean = false
     private var isEdit = false
@@ -76,7 +82,11 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                 requireActivity().onBackPressedDispatcher.onBackPressed()
             }
         }
-
+        viewModel.investStrategyResponse.observe(viewLifecycleOwner) {
+            if (lifecycle.currentState == Lifecycle.State.RESUMED) {
+                viewModel.editOwnStrategy(viewModel.selectedStrategy!!.name)
+            }
+        }
         adapter = BuildStrategyAdapter(binding.rvAssets, ::assetClicked)
         layoutManager = LinearLayoutManager(requireContext())
         binding.rvAssets.let {
@@ -213,7 +223,6 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                     binding.tvAllocationInfo.text =
                         getString(R.string.your_strategy_is_ready_to_be_saved)
                     binding.btnSaveMyStrategy.setBackgroundResource(R.drawable.button_purple_500)
-//                        ContextCompat.getDrawable(requireContext(), R.drawable.button_purple_500)
                     canBuildStrategy = true
                 }
 
@@ -255,31 +264,42 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                 ivTopAction -> requireActivity().onBackPressed()
                 btnSaveMyStrategy -> {
                     if (isEdit && canBuildStrategy) {
-                        checkInternet(requireContext()) {
+                        checkInternet(binding.root, requireContext()) {
                             if (viewModel.selectedStrategy!!.expectedYield != null) {
                                 showProgressDialog(requireContext())
-                                viewModel.buildOwnStrategy(viewModel.selectedStrategy!!.name + " (Copy)")
-                            }   else{
-                                if(viewModel.selectedStrategy?.activeStrategy != null) {
-                                    for (asset in viewModel.addedAsset){
+                                viewModel.buildOwnStrategy(viewModel.selectedStrategy!!.name)
+                            } else {
+                                if (viewModel.selectedStrategy?.activeStrategy != null) {
+                                    requiredAmount = 0f
+                                    for (asset in viewModel.addedAsset) {
                                         val newAmount =
                                             minInvestPerAsset / (asset.allocation / 100)
                                         if (newAmount > requiredAmount) {
                                             requiredAmount = newAmount
                                         }
                                     }
-                                    requiredAmount= ceil(requiredAmount)
-                                    if (requiredAmount > viewModel.selectedStrategy!!.activeStrategy!!.amount!!)
-//
-                                    CommonMethods.showSnackBar(binding.root, requireContext(), getString(R.string.tailorStrategyError))
-                                    else {
+                                    requiredAmount = ceil(requiredAmount)
+                                    if (requiredAmount > viewModel.selectedStrategy!!.activeStrategy!!.amount!!) {
+                                        viewModel.selectedOption = Constants.ACTION_TAILOR_STRATEGY
+                                        ConfirmationBottomSheet().apply {
+                                            arguments = Bundle().apply {
+                                                putDouble(
+                                                    "currentAmount",
+                                                    viewModel.selectedStrategy!!.activeStrategy!!.amount!!
+                                                )
+                                                putFloat("requiredAmount", requiredAmount)
+                                            }
+                                        }.show(childFragmentManager, "")
+
+                                    } else {
                                         showProgressDialog(requireContext())
                                         viewModel.editOwnStrategy(viewModel.selectedStrategy!!.name)
-                                    }   }
-                                else {
+                                    }
+                                } else {
                                     showProgressDialog(requireContext())
                                     viewModel.editOwnStrategy(viewModel.selectedStrategy!!.name)
-                                }  }
+                                }
+                            }
 //                                viewModel.editOwnStrategy(viewModel.selectedStrategy!!.name)
                         }
                     } else {
@@ -328,33 +348,43 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
                     when {
                         name.isEmpty() -> {
                             getString(R.string.please_enter_name_for_your_strategy).showToast(
-                                requireContext()
+                                binding.root, requireContext()
                             )
                             bind.etInput.requestKeyboard()
                         }
 
                         else -> {
-                            checkInternet(requireContext()) {
+                            checkInternet(binding.root, requireContext()) {
                                 mainView.removeView(transparentView)
                                 dismiss()
-                                checkInternet(requireContext()) {
+                                checkInternet(binding.root, requireContext()) {
                                     showProgressDialog(requireContext())
                                     if (isEdit) {
-                                        if(viewModel.selectedStrategy?.activeStrategy != null) {
-                                            for (asset in viewModel.addedAsset){
+                                        if (viewModel.selectedStrategy?.activeStrategy != null) {
+                                            requiredAmount = 0f
+                                            for (asset in viewModel.addedAsset) {
                                                 val newAmount =
                                                     minInvestPerAsset / (asset.allocation / 100)
                                                 if (newAmount > requiredAmount) {
                                                     requiredAmount = newAmount
                                                 }
                                             }
-                                            requiredAmount= ceil(requiredAmount)
-                                            if (requiredAmount > viewModel.selectedStrategy!!.activeStrategy!!.amount!!)
-                                                CommonMethods.showSnackBar(binding.root, requireContext(), getString(R.string.tailorStrategyError))
-                                            else
+                                            requiredAmount = ceil(requiredAmount)
+                                            if (requiredAmount > viewModel.selectedStrategy!!.activeStrategy!!.amount!!) {
+                                                viewModel.selectedOption =
+                                                    Constants.ACTION_TAILOR_STRATEGY
+                                                ConfirmationBottomSheet().apply {
+                                                    arguments = Bundle().apply {
+                                                        putDouble(
+                                                            "currentAmount",
+                                                            viewModel.selectedStrategy!!.activeStrategy!!.amount!!
+                                                        )
+                                                        putFloat("requiredAmount", requiredAmount)
+                                                    }
+                                                }.show(childFragmentManager, "")
+                                            } else
                                                 viewModel.editOwnStrategy(name)
-                                        }
-                                        else
+                                        } else
                                             viewModel.editOwnStrategy(name)
                                     } else {
                                         viewModel.buildOwnStrategy(name)
@@ -373,21 +403,21 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
 
     /* callbacks */
 
-    private fun clickListener(position: Int) {
-        viewModel.addedAsset[position].let {
-            val allocationValue = it.allocation.toInt()
-            val assest =
-                com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.addedAsset[position].addAsset.id } }
-            val assetsName = assest!!.fullName + " (${assest.id.uppercase()})"
-            SpinnerBottomSheet(::manuallySelectedAllocation).apply {
-                arguments = Bundle().apply {
-                    putString("assetsName", assetsName)
-                    putInt("allocationValue", allocationValue)
-                    putInt("position", position)
-                }
-            }.show(parentFragmentManager, "")
-        }
-    }
+//    private fun clickListener(position: Int) {
+//        viewModel.addedAsset[position].let {
+//            val allocationValue = it.allocation.toInt()
+//            val assest =
+//                com.Lyber.ui.activities.BaseActivity.assets.firstNotNullOfOrNull { item -> item.takeIf { item.id == viewModel.addedAsset[position].addAsset.id } }
+//            val assetsName = assest!!.fullName + " (${assest.id.uppercase()})"
+//            SpinnerBottomSheet(::manuallySelectedAllocation).apply {
+//                arguments = Bundle().apply {
+//                    putString("assetsName", assetsName)
+//                    putInt("allocationValue", allocationValue)
+//                    putInt("position", position)
+//                }
+//            }.show(parentFragmentManager, "")
+//        }
+//    }
 
     private fun manuallySelectedAllocation(value: Int, position: Int) {
         adapter.getItem(position)?.allocation = value.toFloat()
@@ -745,69 +775,22 @@ class BuildStrategyFragment : BaseFragment<FragmentBuildStrategyBinding>(), View
 
         }
     }
-//    class SwipeController(private val adapter: BuildStrategyAdapter) : ItemTouchHelper.SimpleCallback(
-//        0, ItemTouchHelper.LEFT
-//    ) {
-//
-//        private val SWIPE_THRESHOLD = 0.5f
-//
-//        override fun onMove(
-//            recyclerView: RecyclerView,
-//            viewHolder: RecyclerView.ViewHolder,
-//            target: RecyclerView.ViewHolder
-//        ): Boolean {
-//            return false
-//        }
-//
-//        override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
-//            val position = viewHolder.adapterPosition
-//            val itemView = viewHolder.itemView
-//
-//            if (direction == ItemTouchHelper.LEFT) {
-//                // Calculate the swipe percentage
-//                val swipePercentage = (itemView.width - itemView.right) / itemView.width.toFloat()
-//
-//                // Show button on half swipe
-//                if (swipePercentage < SWIPE_THRESHOLD) {
-//                    adapter.showButton(position)
-//                } else {
-//                    // Delete item on full swipe
-//                    adapter.removeItem(position)
-//                }
-//            }
-//        }
-//
-//        override fun onChildDraw(
-//            c: Canvas,
-//            recyclerView: RecyclerView,
-//            viewHolder: RecyclerView.ViewHolder,
-//            dX: Float,
-//            dY: Float,
-//            actionState: Int,
-//            isCurrentlyActive: Boolean
-//        ) {
-//            super.onChildDraw(c, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-//
-//            // Customize the drawing of the view during the swipe
-//            val itemView = viewHolder.itemView
-//            val icon = ContextCompat.getDrawable(itemView.context, R.drawable.ic_delete)!!
-//            val iconMargin = (itemView.height - icon.intrinsicHeight) / 2
-//
-//            // Calculate the swipe percentage
-//            val swipePercentage = (itemView.width - itemView.right) / itemView.width.toFloat()
-//
-//            // Show button on half swipe
-//            if (swipePercentage < SWIPE_THRESHOLD) {
-//                icon.setBounds(
-//                    itemView.left + iconMargin,
-//                    itemView.top + iconMargin,
-//                    itemView.left + iconMargin + icon.intrinsicWidth,
-//                    itemView.bottom - iconMargin
-//                )
-//                icon.draw(c)
-//            }
-//        }
-//    }
 
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        dismissProgressDialog()
+        when (errorCode) {
+            13009 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_13009))
+            13010 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_13010))
+            13011 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_13011))
+            13012 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_13012))
+            13013 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_13013))
+            13015 -> showSnack(binding.root, requireContext(), getString(R.string.error_code_13015))
+            13001 -> {
+                showSnack(binding.root, requireContext(), getString(R.string.error_code_13001))
+                requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
 
+            else -> super.onRetrofitError(errorCode, msg)
+        }
+    }
 }

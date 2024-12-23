@@ -1,21 +1,18 @@
 package com.Lyber.ui.fragments
 
-import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
 import android.view.View
-import android.view.Window
 import android.widget.ImageView
 import androidx.fragment.app.FragmentManager
 import androidx.lifecycle.Lifecycle
 import androidx.navigation.fragment.findNavController
 import com.Lyber.R
-import com.Lyber.databinding.CustomDialogLayoutBinding
 import com.Lyber.databinding.FragmentTestFillDetailBinding
+import com.Lyber.ui.activities.SplashActivity
 import com.Lyber.utils.ActivityCallbacks
 import com.Lyber.utils.App
 import com.Lyber.utils.App.Companion.prefsManager
-import com.Lyber.utils.CommonMethods
 import com.Lyber.utils.CommonMethods.Companion.add
 import com.Lyber.utils.CommonMethods.Companion.checkInternet
 import com.Lyber.utils.CommonMethods.Companion.dismissProgressDialog
@@ -217,7 +214,7 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
 
             3 -> {
                 //TODO check if in use ornot
-//                checkInternet(requireContext()) {
+//                checkInternet(binding.root,requireContext()) {
 //                    showProgressDialog(requireContext())
 //                    viewModel.finishRegistration()
 //                }
@@ -253,6 +250,22 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
         }
     }
 
+    fun hitSetUser() {
+        val hashMap = hashMapOf<String, Any>()
+        if (viewModel.streetNumber.isNotEmpty())
+            hashMap["streetNumber"] = viewModel.streetNumber
+//            if (street.isNotEmpty())
+        hashMap["street"] = viewModel.street.toString()
+        hashMap["city"] = viewModel.city
+        hashMap["zipCode"] = viewModel.zipCode
+        hashMap["country"] = viewModel.country
+        hashMap["isUSCitizen"] = false
+        showProgressDialog(requireActivity())
+        viewModel.setUserAddress(
+            hashMap
+        )
+
+    }
 
     private fun buttonClicked(position: Int) {
 
@@ -261,34 +274,35 @@ class FillDetailFragment : BaseFragment<FragmentTestFillDetailBinding>(), View.O
         when (position) {
             0 -> (fragment as AddressFragment).let {
                 if (it.checkData()) {
-
-                    checkInternet(requireContext()) {
-                        showProgressDialog(requireContext())
-                        viewModel.setUserInfo(requireContext())
-                        viewModel.setUserAddress(
-                            viewModel.streetNumber,
-                            viewModel.street,
-                            viewModel.city,
-                            viewModel.zipCode,
-                            viewModel.country,false
-                        )
-
+                    val hashMap = hashMapOf<String, Any>()
+                    if (App.prefsManager.getLanguage().isNotEmpty())
+                        hashMap["language"] = App.prefsManager.getLanguage()
+                    else {
+                        val configuration = requireContext().resources.configuration.locales[0]
+                        if (configuration.language.uppercase() == Constants.FRENCH)
+                            hashMap["language"] = Constants.FRENCH
+                        else
+                            hashMap["language"] = Constants.ENGLISH
                     }
+                       showProgressDialog(requireActivity())
+                        viewModel.setUserInfo(hashMap)
+                        hitSetUser()
 
                 }
             }
 
             1 -> (fragment as InvestmentExperienceFragment).let {
-               if (it.checkData()) {
-                    checkInternet(requireContext()) {
-                        showProgressDialog(requireContext())
-                        viewModel.setInvestmentExp(
-                            viewModel.cryptoExp,
-                            viewModel.sourceOfIncome,
-                            viewModel.workIndustry,
-                            viewModel.annualIncome,
-                            viewModel.personalAssets
-                        )
+                if (it.checkData()) {
+                    checkInternet(binding.root, requireContext()) {
+                         showProgressDialog(requireContext())
+                            viewModel.setInvestmentExp(
+                                viewModel.cryptoExp,
+                                viewModel.sourceOfIncome,
+                                viewModel.workIndustry,
+                                viewModel.annualIncome,
+                                viewModel.personalAssets
+                            )
+
                     }
                 }
             }

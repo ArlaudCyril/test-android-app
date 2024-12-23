@@ -18,23 +18,19 @@ import android.provider.Settings
 import android.text.Editable
 import android.text.TextWatcher
 import android.util.Log
-import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.MotionEvent
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
 import android.view.animation.AnimationUtils
-import android.widget.FrameLayout
 import android.widget.ListPopupWindow
-import android.widget.TextView
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.core.content.ContextCompat
 import androidx.core.content.ContextCompat.getColor
 import androidx.core.content.ContextCompat.getDrawable
 import androidx.core.view.updatePadding
 import androidx.lifecycle.Lifecycle
-import androidx.navigation.fragment.findNavController
 import com.Lyber.R
 import com.Lyber.databinding.AppItemLayoutBinding
 import com.Lyber.databinding.CustomDialogLayoutBinding
@@ -57,13 +53,10 @@ import com.Lyber.utils.CommonMethods.Companion.showToast
 import com.Lyber.utils.CommonMethods.Companion.visible
 import com.Lyber.utils.Constants
 import com.Lyber.viewmodels.ProfileViewModel
-import com.google.android.material.snackbar.BaseTransientBottomBar
-import com.google.android.material.snackbar.Snackbar
 import io.github.g00fy2.quickie.QRResult
 import io.github.g00fy2.quickie.ScanCustomCode
 import io.github.g00fy2.quickie.config.BarcodeFormat
 import io.github.g00fy2.quickie.config.ScannerConfig
-import java.lang.Exception
 
 class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.OnClickListener {
 
@@ -162,20 +155,22 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
             if (lifecycle.currentState == Lifecycle.State.RESUMED) {
                 val format = address.addressMatched(it.data.addressRegex)
                 if (format) {
-//                    Log.d("network","$network")
-                    viewModel.addAddress(
-                        addressName,
-                        network?.id ?: "",
-                        address,
-                        origin,
-                        binding.etExchange.text.toString() ?: "",
-                        network?.imageUrl ?: ""
-                    )
+                     viewModel.addAddress(
+                            addressName,
+                            network?.id ?: "",
+                            address,
+                            origin,
+                            binding.etExchange.text.toString() ?: ""
+                        )
+
                 } else {
                     CommonMethods.dismissProgressDialog()
                     binding.etAddress.requestKeyboard()
                     binding.ttlAddress.helperText = getString(R.string.please_enter_valid_address)
-                    getString(R.string.please_enter_valid_address).showToast(requireContext())
+                    getString(R.string.please_enter_valid_address).showToast(
+                        binding.root,
+                        requireContext()
+                    )
 
                 }
             }
@@ -304,7 +299,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
             }
         }
 
-        checkInternet(requireContext()) {
+        checkInternet(binding.root, requireContext()) {
             if (toEdit) {
                 showProgressDialog(requireContext())
             }
@@ -440,19 +435,28 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
 
                         addressName.isEmpty() -> {
                             binding.etAddressName.requestKeyboard()
-                            getString(R.string.please_enter_address_name).showToast(requireContext())
+                            getString(R.string.please_enter_address_name).showToast(
+                                binding.root,
+                                requireContext()
+                            )
                         }
 
                         network == null -> {
                             binding.etNetwork.requestFocus()
-                            getString(R.string.please_select_a_network).showToast(requireContext())
+                            getString(R.string.please_select_a_network).showToast(
+                                binding.root,
+                                requireContext()
+                            )
                         }
 
                         address.isEmpty() -> {
                             binding.etAddress.requestKeyboard()
                             binding.ttlAddress.helperText =
                                 getString(R.string.please_enter_address, network?.fullName ?: "")
-                            getString(R.string.please_enter_address_).showToast(requireContext())
+                            getString(R.string.please_enter_address_).showToast(
+                                binding.root,
+                                requireContext()
+                            )
                         }
 
 
@@ -460,7 +464,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
 
                             if (originSelectedPosition == 0) {
                                 getString(R.string.please_select_a_exchange).showToast(
-                                    requireContext()
+                                    binding.root, requireContext()
                                 )
                             } else {
                                 addAddress()
@@ -500,7 +504,7 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
     }
 
     private fun addAddress() {
-        checkInternet(requireActivity()) {
+        checkInternet(binding.root, requireActivity()) {
             showProgressDialog(requireActivity())
             viewModel.getNetwork(network!!.id)
         }
@@ -566,44 +570,44 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
     var firstTimeGallery = false
     private fun checkPermissions() {
 //        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
-            if ( ContextCompat.checkSelfPermission(
-                    requireContext(),
-                    Manifest.permission.CAMERA
-                ) ==
-                PackageManager.PERMISSION_GRANTED
-            ) {
+        if (ContextCompat.checkSelfPermission(
+                requireContext(),
+                Manifest.permission.CAMERA
+            ) ==
+            PackageManager.PERMISSION_GRANTED
+        ) {
 //                findNavController().navigate(R.id.codeScannerFragment)
-                scanCustomCode.launch(
-                    ScannerConfig.build {
-                        setBarcodeFormats(listOf(BarcodeFormat.FORMAT_QR_CODE)) // set interested barcode formats
-                        setHapticSuccessFeedback(false) // enable (default) or disable haptic feedback when a barcode was detected
-                        setShowTorchToggle(false) // show or hide (default) torch/flashlight toggle button
-                        setShowCloseButton(true) // show or hide (default) close button
-                        setHorizontalFrameRatio(1f) // set the horizontal overlay ratio (default is 1 / square frame)
-                        setUseFrontCamera(false) // use the front camera
-                        setOverlayStringRes(R.string.empty) // string resource used for the scanner overlay
-                        setOverlayDrawableRes(null) // drawable resource used for the scanner overlay
+            scanCustomCode.launch(
+                ScannerConfig.build {
+                    setBarcodeFormats(listOf(BarcodeFormat.FORMAT_QR_CODE)) // set interested barcode formats
+                    setHapticSuccessFeedback(false) // enable (default) or disable haptic feedback when a barcode was detected
+                    setShowTorchToggle(false) // show or hide (default) torch/flashlight toggle button
+                    setShowCloseButton(true) // show or hide (default) close button
+                    setHorizontalFrameRatio(1f) // set the horizontal overlay ratio (default is 1 / square frame)
+                    setUseFrontCamera(false) // use the front camera
+                    setOverlayStringRes(R.string.empty) // string resource used for the scanner overlay
+                    setOverlayDrawableRes(null) // drawable resource used for the scanner overlay
 
-                    }
+                }
+            )
+        } else if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+            requestMultiplePermissions.launch(
+                arrayOf(
+                    Manifest.permission.CAMERA
                 )
-            } else if (shouldShowRequestPermissionRationale(Manifest.permission.CAMERA)) {
+            )
+        } else {
+            if (firstTimeGallery)
+                permissionDeniedDialog()
+            // Directly ask for the permission
+            if (!firstTimeGallery)
                 requestMultiplePermissions.launch(
                     arrayOf(
                         Manifest.permission.CAMERA
                     )
                 )
-            } else {
-                if (firstTimeGallery)
-                    permissionDeniedDialog()
-                // Directly ask for the permission
-                if (!firstTimeGallery)
-                    requestMultiplePermissions.launch(
-                        arrayOf(
-                            Manifest.permission.CAMERA
-                        )
-                    )
-                firstTimeGallery = true
-            }
+            firstTimeGallery = true
+        }
 //        }
 //        else {
 //            if (ContextCompat.checkSelfPermission(
@@ -726,22 +730,26 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
     }
 
     private fun handleResult(result: QRResult) {
-        Log.d("result", "$result")
-        val pattern = Regex("rawValue=([^,\\]\\)]+)")
+        try {
+            Log.d("result", "$result")
+            val pattern = Regex("rawValue=([^,\\]\\)]+)")
 
-        // Find rawValue using regex
-        val matchResult = pattern.find(result.toString())
-        val rawValue = matchResult?.groups?.get(1)?.value
+            // Find rawValue using regex
+            val matchResult = pattern.find(result.toString())
+            val rawValue = matchResult?.groups?.get(1)?.value
 
-        println("Raw value: $rawValue")
+            println("Raw value: $rawValue")
 
-        var address = rawValue
-        val index = rawValue!!.indexOf(":")
-        if (index != -1) {
-            val intIndex = index + 1
-            address = rawValue.substring(intIndex)
+            var address = rawValue
+            val index = rawValue!!.indexOf(":")
+            if (index != -1) {
+                val intIndex = index + 1
+                address = rawValue.substring(intIndex)
+            }
+            binding.etAddress.setText(address)
+        } catch (_: Exception) {
+
         }
-        binding.etAddress.setText(address)
     }
 
     override fun onDestroy() {
@@ -755,6 +763,56 @@ class AddCryptoAddress : BaseFragment<FragmentAddBitcoinAddressBinding>(), View.
         private const val TO_EDIT = "toEdit"
 
 
+    }
+
+    override fun onRetrofitError(errorCode: Int, msg: String) {
+        dismissProgressDialog()
+        when (errorCode) {
+            10024 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(
+                        R.string.error_code_10024,
+                        network!!.fullName
+                    )
+                )
+                if (toEdit)
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
+            }
+
+            10028 -> {
+
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(
+                        R.string.error_code_10028,
+                        network!!.fullName
+                    )
+                )
+                if (toEdit)
+                    requireActivity().onBackPressedDispatcher.onBackPressed()
+
+            }
+
+            10048 -> {
+                CommonMethods.showSnack(
+                    binding.root,
+                    requireContext(),
+                    getString(R.string.error_code_10048)
+                )
+
+            }
+
+            18000 -> CommonMethods.showSnack(
+                binding.root,
+                requireContext(),
+                getString(R.string.error_code_18000)
+            )
+
+            else -> super.onRetrofitError(errorCode, msg)
+        }
     }
 
 }
