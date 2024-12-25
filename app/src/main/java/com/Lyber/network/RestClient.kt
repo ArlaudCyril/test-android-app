@@ -83,6 +83,7 @@ object RestClient {
             val originalRequest = chain.request()
             val modifiedRequest = originalRequest.newBuilder()
                 .header("Authorization", "Bearer ${prefsManager.accessToken ?: ""}")
+//                .header("User-Agent", Constants.USER_AGENT)
                 .header("User-Agent", "${Constants.APP_NAME}/${Constants.VERSION}")
                 .header("x-api-version", Constants.API_VERSION)
                 .build()
@@ -121,6 +122,7 @@ object RestClient {
                     .header("x-integrity-token", token)
                     .header("x-api-version", Constants.API_VERSION)
                     .header("User-Agent", "${Constants.APP_NAME}/${Constants.VERSION}")
+//                    .header("User-Agent", Constants.USER_AGENT)
                 val build = header.build()
                 chain.proceed(build)
             }

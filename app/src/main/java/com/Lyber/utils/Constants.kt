@@ -311,6 +311,8 @@ object Constants {
     const val APP_FLYER_TYPE_STRATEGY_EXECUTION="ExecuteStrategy"
 
     const val SELECTED_METHOD="selectedMethod"
+    const val USER_AGENT = "okhttp/5.0.0-alpha.3"
+
 
 //    APP_ID_DEV: sandbox-sq0idb-EXkM4DtCjCk44_OX5ux5qw
 //    APP_ID_PROD:sq0idp-XH6VB8q8rZysqg6RIMCB6w
