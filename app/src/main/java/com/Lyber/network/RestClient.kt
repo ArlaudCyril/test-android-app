@@ -66,24 +66,16 @@ object RestClient {
         httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
 
         val builder = OkHttpClient.Builder()
-        builder.protocols(Collections.singletonList(Protocol.HTTP_1_1))
+        builder.protocols(listOf(Protocol.HTTP_1_1))
         builder.connectTimeout(5, TimeUnit.MINUTES)
         builder.readTimeout(5, TimeUnit.MINUTES)
         builder.socketFactory(SocketFactory.getDefault())
         builder.retryOnConnectionFailure(true)
         builder.addNetworkInterceptor(httpLoggingInterceptor)
         builder.addInterceptor { chain ->
-//            val request = chain.request()
-//            val header = request.newBuilder().header(
-//                "Authorization",
-//                "Bearer " + prefsManager.accessToken
-//            )
-//                .header("x-api-version", Constants.API_VERSION)
-//            val build = header.build()
             val originalRequest = chain.request()
             val modifiedRequest = originalRequest.newBuilder()
                 .header("Authorization", "Bearer ${prefsManager.accessToken ?: ""}")
-//                .header("User-Agent", Constants.USER_AGENT)
                 .header("User-Agent", "${Constants.APP_NAME}/${Constants.VERSION}")
                 .header("x-api-version", Constants.API_VERSION)
                 .build()
@@ -105,7 +97,7 @@ object RestClient {
         httpLoggingInterceptor.level = HttpLoggingInterceptor.Level.BODY
 
         return OkHttpClient.Builder()
-            .protocols(Collections.singletonList(Protocol.HTTP_1_1))
+            .protocols(listOf(Protocol.HTTP_1_1))
             .connectTimeout(5, TimeUnit.MINUTES)
             .readTimeout(5, TimeUnit.MINUTES)
             .socketFactory(SocketFactory.getDefault())
@@ -175,6 +167,8 @@ object RestClient {
                 )
                     .header("x-integrity-token", token)
                     .header("x-api-version", Constants.API_VERSION)
+                    .header("User-Agent", "${Constants.APP_NAME}/${Constants.VERSION}")
+
                 val build = header.build()
                 chain.proceed(build)
             }
